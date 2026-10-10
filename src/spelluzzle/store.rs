@@ -38,12 +38,30 @@ pub fn stars_key(profile: &str, lang: &str, tier: Tier) -> String {
 pub fn pencil_key(profile: &str, lang: &str, tier: Tier) -> String {
     format!("spell_spz_pencil_v1:{profile}:{lang}:{}", tier.name())
 }
+pub fn par_progress_key(profile: &str, lang: &str, tier: Tier) -> String {
+    format!("spell_spz_parprogress_v1:{profile}:{lang}:{}", tier.name())
+}
+pub fn par_stars_key(profile: &str, lang: &str, tier: Tier) -> String {
+    format!("spell_spz_parstars_v1:{profile}:{lang}:{}", tier.name())
+}
+pub fn prefs_key(profile: &str) -> String {
+    format!("spell_spz_prefs_v1:{profile}")
+}
 pub fn streak_key(profile: &str) -> String {
     format!("spell_spz_streak_v1:{profile}")
 }
 
 /// Every key the mode writes, for the store-registry and the no-writes test (I8).
-pub const KEY_PREFIXES: [&str; 5] = ["spell_spz_progress_v1", "spell_spz_history_v1", "spell_spz_stars_v1", "spell_spz_streak_v1", "spell_spz_pencil_v1"];
+pub const KEY_PREFIXES: [&str; 8] = [
+    "spell_spz_progress_v1",
+    "spell_spz_history_v1",
+    "spell_spz_stars_v1",
+    "spell_spz_streak_v1",
+    "spell_spz_pencil_v1",
+    "spell_spz_parprogress_v1",
+    "spell_spz_parstars_v1",
+    "spell_spz_prefs_v1",
+];
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct History {
@@ -78,6 +96,11 @@ pub struct Progress {
     pub gen_version: u32,
     pub hash: u64,
     pub snapshot: Snapshot,
+    /// F15: a Par board's par and its pool indexes, so it can be rebuilt on resume.
+    #[serde(default)]
+    pub par: Option<u8>,
+    #[serde(default)]
+    pub par_words: Vec<u16>,
 }
 
 impl Progress {
@@ -132,4 +155,11 @@ impl Streak {
 pub struct PencilSave {
     pub hash: u64,
     pub marks: Vec<(u8, char)>,
+}
+
+/// F22: the last board type chosen, per profile (languageNeutral).
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Prefs {
+    #[serde(default)]
+    pub board_type: String,
 }

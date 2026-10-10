@@ -51,6 +51,8 @@ pub struct Snapshot {
     pub listened: Vec<usize>,
     pub first_commit: Vec<(usize, String)>,
     pub secret_undecoded_at_first: Option<bool>,
+    #[serde(default)]
+    pub post_listen_first: Vec<(usize, String)>,
 }
 
 #[derive(Clone, Debug)]
@@ -63,6 +65,8 @@ pub struct Play {
     pub listened: BTreeSet<usize>,
     first_commit: BTreeMap<usize, Vec<char>>,
     secret_undecoded_at_first: Option<bool>,
+    /// F15 / D34: each listened slot's first commit AFTER its Listen (Sharp ear on a Par board).
+    post_listen_first: BTreeMap<usize, Vec<char>>,
 }
 
 impl Play {
@@ -75,7 +79,18 @@ impl Play {
             listened: BTreeSet::new(),
             first_commit: BTreeMap::new(),
             secret_undecoded_at_first: None,
+            post_listen_first: BTreeMap::new(),
         }
+    }
+
+    /// F15: the par of this board, if it is a Par board.
+    pub fn par(&self) -> Option<u8> {
+        self.board.par
+    }
+
+    /// F15: Listens bought so far. A replay of a heard word is free.
+    pub fn listens(&self) -> usize {
+        self.listened.len()
     }
 
     pub fn is_jr(&self) -> bool {
@@ -157,6 +172,9 @@ impl Play {
             }
             self.first_commit.insert(slot, typed.clone());
         }
+        if self.listened.contains(&slot) && !self.post_listen_first.contains_key(&slot) {
+            self.post_listen_first.insert(slot, typed.clone());
+        }
         self.entries.insert(slot, typed);
         if self.solved() {
             Outcome::Success
@@ -211,6 +229,12 @@ impl Play {
         if !self.solved() {
             return None;
         }
+        // F15 / D34: on a Par board Sharp ear is "every slot you listened to was right the first time
+        // you spelled it after the Listen", and Codebreaker is "solved at par or fewer Listens" (D21).
+        if let Some(par) = self.board.par {
+            let sharp_ear = self.listened.iter().all(|i| self.post_listen_first.get(i) == Some(&self.board.slots[*i].answer));
+            return Some(Stars { solved: true, sharp_ear, codebreaker: self.listened.len() <= par as usize });
+        }
         let first_right = |slot: usize| self.first_commit.get(&slot) == Some(&self.board.slots[slot].answer);
         let sharp_ear = (0..self.board.slots.len()).filter(|&i| self.board.slots[i].kind == SlotKind::Spoken).all(first_right);
         let secret = self.board.slots.len() - 1;
@@ -229,6 +253,7 @@ impl Play {
             listened: self.listened.iter().copied().collect(),
             first_commit: self.first_commit.iter().map(|(i, v)| (*i, s(v))).collect(),
             secret_undecoded_at_first: self.secret_undecoded_at_first,
+            post_listen_first: self.post_listen_first.iter().map(|(i, v)| (*i, s(v))).collect(),
         }
     }
 
@@ -243,6 +268,7 @@ impl Play {
         p.listened = snap.listened.iter().copied().filter(|i| *i < n).collect();
         p.first_commit = c(&snap.first_commit);
         p.secret_undecoded_at_first = snap.secret_undecoded_at_first;
+        p.post_listen_first = c(&snap.post_listen_first);
         p
     }
 

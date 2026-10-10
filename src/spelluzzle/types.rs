@@ -103,6 +103,9 @@ pub struct Board {
     pub gen_version: u32,
     pub slots: Vec<Slot>,
     pub rune_unit: Vec<char>,
+    /// F15: the par of a Par board (fewest Listens that finish it by one-short steps). None on a
+    /// Classic board. A Par board has six silent slots and the secret, every word listenable.
+    pub par: Option<u8>,
 }
 
 impl Board {
@@ -122,7 +125,7 @@ impl Board {
         let mut slots: Vec<Slot> = spoken.iter().map(|w| mk(SlotKind::Spoken, w)).collect();
         slots.extend(silent.iter().map(|w| mk(SlotKind::Silent, w)));
         slots.push(mk(SlotKind::Secret, secret));
-        Board { lang: lang.to_string(), tier, seed, gen_version: GEN_VERSION, slots, rune_unit: rune_order }
+        Board { lang: lang.to_string(), tier, seed, gen_version: GEN_VERSION, slots, rune_unit: rune_order, par: None }
     }
 
     /// A board with runes in sorted-unit order. For fixtures and tests only: a
@@ -155,6 +158,9 @@ impl Board {
     pub fn hash(&self) -> u64 {
         let mut ws: Vec<String> = self.slots.iter().map(|s| format!("{:?}:{}", s.kind, s.answer.iter().collect::<String>())).collect();
         ws.sort();
-        fnv(format!("{}|{}|{}", self.lang, self.tier.name(), ws.join(",")).as_bytes())
+        // A Par board of the same words is a different board, so it hashes differently; a
+        // Classic board's hash is exactly what it was.
+        let kind = if self.par.is_some() { "|par" } else { "" };
+        fnv(format!("{}|{}|{}{}", self.lang, self.tier.name(), ws.join(","), kind).as_bytes())
     }
 }

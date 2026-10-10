@@ -138,7 +138,9 @@ pub fn board_html_with(p: &Play, view: &[RuneState], tr: Tr, opts: &Opts) -> Str
         if s.kind == SlotKind::Secret {
             head.push_str(&format!("<span class=\"sz-label\">{}</span>", esc(&tr("spz.secret", &[]))));
         }
-        if p.is_silent(i) {
+        // F15 / census C21: on a Par board every word is silent, so Listen is one shared bar above the
+        // keyboard (`par_bar_html`), not a button on every row.
+        if p.is_silent(i) && p.board.par.is_none() {
             head.push_str(&format!(
                 "<button type=\"button\" class=\"sz-listen\" data-listen=\"{i}\">{}</button><span class=\"sz-cost\">{}</span>",
                 esc(&tr("spz.listen", &[])),
@@ -237,4 +239,34 @@ pub fn strip_html(p: &Play, view: &[RuneState], tr: Tr, opts: &Opts) -> String {
         ));
     }
     h
+}
+
+/// F15: "Listens n · Par p".
+pub fn par_header(p: &Play, tr: Tr) -> String {
+    match p.par() {
+        Some(par) => tr("spz.par.header", &[("n", &p.listens().to_string()), ("p", &par.to_string())]),
+        None => String::new(),
+    }
+}
+
+/// F15: the one Listen button, for the selected word. Enabled only on a silent word that has not
+/// been bought; the secret word never has one (v1 F6).
+pub fn par_bar_html(p: &Play, tr: Tr) -> String {
+    let Some(i) = p.selected else { return String::new() };
+    if p.par().is_none() || !p.is_silent(i) || p.board.slots[i].kind == SlotKind::Secret {
+        return String::new();
+    }
+    format!("<button type=\"button\" class=\"sz-listen sz-bar-listen\" data-listen=\"{i}\">{}</button>", esc(&tr("spz.listen", &[])))
+}
+
+/// F15 / D34: the result line, shown when the board is solved.
+pub fn par_result(p: &Play, tr: Tr) -> String {
+    let (Some(par), true) = (p.par(), p.solved()) else { return String::new() };
+    let l = p.listens() as i64;
+    let par = par as i64;
+    match l.cmp(&par) {
+        std::cmp::Ordering::Equal => tr("spz.type.par", &[]),
+        std::cmp::Ordering::Less => tr("spz.par.under", &[("n", &(par - l).to_string())]),
+        std::cmp::Ordering::Greater => tr("spz.par.over", &[("n", &(l - par).to_string())]),
+    }
 }

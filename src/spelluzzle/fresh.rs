@@ -61,3 +61,34 @@ pub fn fresh_verified(
     }
     best.map(|(_, b, s)| (b, s))
 }
+
+/// F15: a Par board from the verified records. The board for a record is fixed, so the overlap rule
+/// is met by choosing among records, as `fresh_verified` does for Medium to Expert.
+pub fn fresh_par(
+    lex: &Lexicon,
+    tier: Tier,
+    records: &[super::par::ParRecord],
+    history: &History,
+    previous: &[String],
+    mut pick: impl FnMut(usize) -> usize,
+) -> Option<(Board, super::par::ParRecord)> {
+    if records.is_empty() {
+        return None;
+    }
+    let mut best: Option<(usize, Board, super::par::ParRecord)> = None;
+    for _ in 0..200 {
+        let rec = &records[pick(records.len()) % records.len()];
+        let Some(board) = super::par::board_from_record(lex, tier, rec) else { continue };
+        if history.contains(board.hash()) {
+            continue;
+        }
+        let shared = board.words().iter().filter(|w| previous.contains(w)).count();
+        if shared <= super::gen::MAX_SHARED {
+            return Some((board, rec.clone()));
+        }
+        if best.as_ref().map_or(true, |(s, _, _)| shared < *s) {
+            best = Some((shared, board, rec.clone()));
+        }
+    }
+    best.map(|(_, b, r)| (b, r))
+}

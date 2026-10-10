@@ -17,6 +17,7 @@ pub mod gates;
 pub mod gen;
 pub mod lex;
 pub mod offer;
+pub mod par;
 pub mod pencil;
 pub mod play;
 pub mod render;

@@ -27,6 +27,9 @@ pub struct SeedFile {
     #[serde(default)]
     pub validity_words: usize,
     pub tiers: std::collections::BTreeMap<String, Vec<u32>>,
+    /// F15: verified Par boards per tier, each `[seed, par, w0..w6]` with the words as pool indexes.
+    #[serde(default)]
+    pub par: std::collections::BTreeMap<String, Vec<Vec<u32>>>,
 }
 
 pub fn file() -> Option<SeedFile> {
@@ -53,4 +56,27 @@ pub fn verified(lex: &Lexicon, tier: Tier) -> Vec<u32> {
 /// Is this tier playable? Jr and Easy always are; the others need verified seeds.
 pub fn usable(lex: &Lexicon, tier: Tier) -> bool {
     !needs_seeds(tier) || !verified(lex, tier).is_empty()
+}
+
+/// The verified Par boards for `tier` (Hard, Expert), or none if the file is stale for this bank.
+pub fn par_records(lex: &Lexicon, tier: Tier) -> Vec<super::par::ParRecord> {
+    let Some(f) = file() else { return Vec::new() };
+    if f.lang != lex.lang || f.gen_version != GEN_VERSION || f.fingerprint != fingerprint_hex(lex) {
+        return Vec::new();
+    }
+    f.par
+        .get(tier.name())
+        .map(|v| {
+            v.iter()
+                .filter(|r| r.len() == 2 + super::par::NW)
+                .map(|r| {
+                    let mut w = [0u16; super::par::NW];
+                    for (k, x) in r[2..].iter().enumerate() {
+                        w[k] = *x as u16;
+                    }
+                    super::par::ParRecord { seed: r[0] as u64, par: r[1] as u8, words: w }
+                })
+                .collect()
+        })
+        .unwrap_or_default()
 }

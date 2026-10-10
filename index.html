@@ -715,6 +715,13 @@
   .sz-fade{animation:szFade .2s ease-out}
   @keyframes szFade{from{opacity:.55}to{opacity:1}}
   @media (prefers-reduced-motion:reduce){.sz-fade{animation:szFade .2s ease-out}}
+  /* CC-SPELLUZZLE v1.1 Phase F: Par boards. One shared Listen bar above the keyboard (census C21). */
+  .sz-par{text-align:center;font-weight:700;color:var(--amber,#f2c14e);flex:none;min-height:1.2em}
+  .sz-par[hidden]{display:none}
+  .sz-parbar{display:flex;justify-content:center;flex:none}
+  .sz-parbar:empty{display:none}
+  .sz-parbar .sz-bar-listen{min-height:44px;min-width:160px;font-size:1rem}
+  .sz-parres{margin:0 0 4px;text-align:center;font-weight:700;color:var(--amber,#f2c14e)}
   /* SPELLUZZLE:END */
 
   /* CC-IMPOSTOR F1 */
@@ -2951,16 +2958,19 @@
     </div>
     <div class="sz-startpane" id="szStartPane">
       <p id="szTagline"></p>
+      <div class="sz-opt" id="szTypes"></div>
       <div class="sz-opt" id="szTiers"></div>
       <div class="bg-note" id="szNote" aria-live="polite"></div>
       <button class="btn btn-check" id="szStart" data-i18n="bg.start">Start</button>
     </div>
     <div class="sz-play" id="szPlay" hidden>
+      <div class="sz-par" id="szParLine" hidden></div>
       <div class="sz-board" id="szBoard"></div>
       <div class="sz-msg" id="szMsg" aria-live="polite"></div>
       <div class="sz-sub"><span class="sz-count" id="szCount" aria-live="polite"></span><button type="button" class="sz-btn sz-pclear" id="szPencilClear" data-i18n="spz.pencil.clear" hidden>Clear pencil marks</button></div>
       <div class="sz-result" id="szResult"></div>
       <div class="sz-runekey" id="szRunes"></div>
+      <div class="sz-parbar" id="szParBar"></div>
       <div class="sz-kb" id="szKb" hidden>
         <div id="szKbKeys"></div>
       </div>

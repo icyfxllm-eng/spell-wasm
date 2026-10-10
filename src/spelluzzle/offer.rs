@@ -27,3 +27,28 @@ pub fn tiers_for(lang: &str, kid: bool) -> Vec<Tier> {
     }
     ENABLED.iter().copied().filter(|t| *t != Tier::Jr).collect()
 }
+
+/// F22: the board types a start screen can offer.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BoardType {
+    Classic,
+    Par,
+}
+
+impl BoardType {
+    pub fn name(self) -> &'static str {
+        match self {
+            BoardType::Classic => "classic",
+            BoardType::Par => "par",
+        }
+    }
+    pub fn from_name(s: &str) -> Option<BoardType> {
+        [BoardType::Classic, BoardType::Par].into_iter().find(|b| b.name() == s)
+    }
+}
+
+/// F15 / D48: Par is Hard and Expert, never in Spell Jr, and only for a language that is offered.
+/// (Whether verified boards exist for the tier is `seeds::par_records`, which the screen asks.)
+pub fn par_offered(lang: &str, kid: bool, tier: Tier) -> bool {
+    !kid && language_offered(lang) && super::par::offered_tier(tier)
+}

@@ -144,6 +144,13 @@ pub fn spelluzzle_ripple() -> bool {
     spelluzzle() && resolve(stored("spelluzzle_ripple").as_deref(), false)
 }
 
+/// CC-SPELLUZZLE v1.1 F15 -- Par boards. **Default OFF**, requires `spelluzzle` (D25).
+/// `localStorage['spell_flag_spelluzzle_par'] = 'on'`.
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_par() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_par").as_deref(), false)
+}
+
 /// F13: one flag per language, so a language can be pulled on its own. English is the
 /// only one built; the others stay off, and F12 keeps ko zh ja ar hi out whatever this says.
 #[cfg(not(feature = "web"))]

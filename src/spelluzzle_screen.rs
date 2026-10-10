@@ -19,14 +19,15 @@ use wasm_bindgen::JsCast;
 use crate::boardgame_input::{self as input, Key};
 use crate::spelluzzle::{
     bank,
-    fresh::{fresh_board, fresh_verified},
+    fresh::{fresh_board, fresh_par, fresh_verified},
     gen::generate_after,
     lex::Lexicon,
-    offer,
+    offer::{self, BoardType},
+    par::{self, ParRecord},
     pencil::{self, Pencil},
     play::{Outcome, Play},
     render, seeds,
-    store::{self, BestStars, History, PencilSave, Progress, Streak},
+    store::{self, BestStars, History, PencilSave, Prefs, Progress, Streak},
     types::{Tier, GEN_VERSION},
     view::{board_view, RuneState},
 };
@@ -56,6 +57,8 @@ struct Ui {
     highlight: Option<u8>,
     /// F18: runes the ripple is still holding back.
     pending: BTreeSet<u8>,
+    /// F15: the record a Par board was built from (None on a Classic board).
+    par_rec: Option<ParRecord>,
 }
 
 fn pencil_on() -> bool {
@@ -79,7 +82,13 @@ thread_local! {
     static LP_FIRED: Cell<bool> = const { Cell::new(false) };
     /// Ripple token: bumped to cancel a running ripple.
     static RIPPLE: Cell<u32> = const { Cell::new(0) };
+    /// F22: the board type the start screen is set to, and the Par record in flight to `show`.
+    static BTYPE: Cell<BoardType> = const { Cell::new(BoardType::Classic) };
+    static PAR_REC: RefCell<Option<ParRecord>> = const { RefCell::new(None) };
 }
+
+/// F15: the first Par board shows its explainer once.
+const PAR_HOW_KEY: &str = "spell_spz_par_how_v1";
 
 /// F16: how long a press must be held to pencil a rune.
 const LONG_PRESS_MS: i32 = 450;
@@ -142,6 +151,8 @@ pub fn wire(app: &App) {
     dom::on_click("szHowBtn", || show_how(true));
     dom::on_click("szHowOk", || show_how(false));
     dom::on::<web_sys::MouseEvent, _>("szTiers", "click", tier_tap);
+    dom::on::<web_sys::MouseEvent, _>("szTypes", "click", type_tap);
+    dom::on::<web_sys::MouseEvent, _>("szParBar", "click", board_tap);
     dom::on::<web_sys::MouseEvent, _>("szBoard", "click", board_tap);
     dom::on::<web_sys::MouseEvent, _>("szKb", "click", key_tap);
     // Phase E (each is a no-op while its flag is off).
@@ -178,6 +189,8 @@ pub fn open(app: &App) {
     // I11: nothing for a language that is not offered. The registry already hides the row.
     let Some(&tier) = tiers.first() else { return };
     CTX.with(|c| *c.borrow_mut() = (lang.clone(), kid, tier));
+    let prefs: Prefs = storage::get_json(&store::prefs_key(store::profile(kid))).unwrap_or_default();
+    BTYPE.with(|b| b.set(if flags::spelluzzle_par() { BoardType::from_name(&prefs.board_type).unwrap_or(BoardType::Classic) } else { BoardType::Classic }));
     for id in ["szBoard", "szKb"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
             let _ = e.set_attribute("lang", &lang);
@@ -210,12 +223,54 @@ fn streak_now(kid: bool) -> u32 {
     s.current(&today(), &yesterday())
 }
 
+/// F22: the board types this start screen can offer right now. Classic always; Par when its flag is
+/// on and verified Par boards exist for a tier the profile may open (I11: absent, never locked).
+fn offered_types(lex: &Lexicon, lang: &str, kid: bool) -> Vec<BoardType> {
+    let mut v = vec![BoardType::Classic];
+    if flags::spelluzzle_par() && [Tier::Hard, Tier::Expert].iter().any(|t| offer::par_offered(lang, kid, *t) && !seeds::par_records(lex, *t).is_empty()) {
+        v.push(BoardType::Par);
+    }
+    v
+}
+
+fn tiers_for_type(lex: &Lexicon, lang: &str, kid: bool, ty: BoardType) -> Vec<Tier> {
+    match ty {
+        BoardType::Classic => offer::tiers_for(lang, kid).into_iter().filter(|t| seeds::usable(lex, *t)).collect(),
+        BoardType::Par => [Tier::Hard, Tier::Expert].into_iter().filter(|t| offer::par_offered(lang, kid, *t) && !seeds::par_records(lex, *t).is_empty()).collect(),
+    }
+}
+
 fn render_setup() {
-    let (lang, kid, tier) = CTX.with(|c| c.borrow().clone());
+    let (lang, kid, mut tier) = CTX.with(|c| c.borrow().clone());
     dom::set_text("szTagline", &tr("spz.tagline", &[]));
-    let lex = lexicon(&lang);
+    let Some(lex) = lexicon(&lang) else { return };
+    // F22: the board-type row is absent when only Classic is offered.
+    let types = offered_types(&lex, &lang, kid);
+    let mut ty = BTYPE.with(Cell::get);
+    if !types.contains(&ty) {
+        ty = BoardType::Classic;
+        BTYPE.with(|b| b.set(ty));
+    }
+    let th: String = if types.len() < 2 {
+        String::new()
+    } else {
+        types
+            .iter()
+            .map(|b| {
+                let key = if *b == BoardType::Par { "spz.type.par" } else { "spz.type.classic" };
+                format!("<button type=\"button\" class=\"sz-btn{}\" data-type=\"{}\">{}</button>", if *b == ty { " on" } else { "" }, b.name(), dom::escape_html(&tr(key, &[])))
+            })
+            .collect()
+    };
+    dom::set_html("szTypes", &th);
     // I11: a tier whose verified seeds do not match this bank is absent, never shown locked.
-    let tiers: Vec<Tier> = offer::tiers_for(&lang, kid).into_iter().filter(|t| lex.as_ref().is_some_and(|l| seeds::usable(l, *t))).collect();
+    let tiers = tiers_for_type(&lex, &lang, kid, ty);
+    if !tiers.contains(&tier) {
+        if let Some(&t) = tiers.first() {
+            tier = t;
+            CTX.with(|c| c.borrow_mut().2 = t);
+        }
+    }
     // Spell Jr has one fixed shape and no picker; a standard player with one tier sees none either.
     let h: String = if kid || tiers.len() < 2 {
         String::new()
@@ -228,6 +283,15 @@ fn render_setup() {
     dom::set_html("szTiers", &h);
     let n = streak_now(kid);
     dom::set_text("szStreak", &if n > 0 { tr("daily.streakDays", &[("n", &n.to_string())]) } else { String::new() });
+}
+
+fn type_tap(e: web_sys::MouseEvent) {
+    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-type]").ok().flatten()) else { return };
+    let Some(b) = el.get_attribute("data-type").and_then(|n| BoardType::from_name(&n)) else { return };
+    BTYPE.with(|c| c.set(b));
+    let (_, kid, _) = CTX.with(|c| c.borrow().clone());
+    storage::set_json(&store::prefs_key(store::profile(kid)), &Prefs { board_type: b.name().to_string() });
+    render_setup();
 }
 
 fn tier_tap(e: web_sys::MouseEvent) {
@@ -266,6 +330,11 @@ fn begin(tier: Tier, allow_resume: bool) {
             dom::set_text("szMsg", &tr("climb.loading", &[]));
         }
     });
+    PAR_REC.with(|r| *r.borrow_mut() = None);
+    if BTYPE.with(Cell::get) == BoardType::Par && par::offered_tier(tier) {
+        begin_par(lex, lang, kid, tier, token, allow_resume);
+        return;
+    }
     let saved: Option<Progress> = if allow_resume { storage::get_json(&store::progress_key(profile, &lang, tier)) } else { None };
     if let Some(p) = saved {
         if let Ok(g) = generate_after(p.seed, tier, &lex, &p.previous) {
@@ -278,6 +347,40 @@ fn begin(tier: Tier, allow_resume: bool) {
         storage::remove(&store::progress_key(profile, &lang, tier));
     }
     draw(lex, lang, kid, tier, token, 1);
+}
+
+/// F15: resume the saved Par board if its record still rebuilds to the same board, else draw one.
+fn begin_par(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, token: u32, allow_resume: bool) {
+    let profile = store::profile(kid);
+    let key = store::par_progress_key(profile, &lang, tier);
+    let saved: Option<Progress> = if allow_resume { storage::get_json(&key) } else { None };
+    if let Some(p) = saved {
+        if let (Some(par), true) = (p.par, p.par_words.len() == par::NW) {
+            let mut w = [0u16; par::NW];
+            w.copy_from_slice(&p.par_words);
+            let rec = ParRecord { seed: p.seed, par, words: w };
+            if let Some(board) = par::board_from_record(&lex, tier, &rec) {
+                if p.matches(board.hash()) {
+                    let play = Play::restore(board, &p.snapshot);
+                    PAR_REC.with(|r| *r.borrow_mut() = Some(rec));
+                    ready(lex, lang, kid, tier, p.seed, Vec::new(), Some(play), token, 1);
+                    return;
+                }
+            }
+        }
+        storage::remove(&key);
+    }
+    let history = load_history(&lang, kid);
+    let records = seeds::par_records(&lex, tier);
+    let pick = |n: usize| (js_sys::Math::random() * n as f64) as usize;
+    match fresh_par(&lex, tier, &records, &history, &history.last_words, pick) {
+        Some((board, rec)) => {
+            let seed = rec.seed;
+            PAR_REC.with(|r| *r.borrow_mut() = Some(rec));
+            ready(lex, lang, kid, tier, seed, Vec::new(), Some(Play::new(board)), token, 1);
+        }
+        None => unavailable(),
+    }
 }
 
 fn draw(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, token: u32, attempt: u32) {
@@ -321,7 +424,11 @@ fn ready(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, seed: u
         if ok.iter().all(|x| *x) {
             show(play, lang, kid, tier, seed, previous);
         } else if attempt < AUDIO_TRIES {
-            draw(lex, lang, kid, tier, token, attempt + 1);
+            if par::offered_tier(tier) && BTYPE.with(Cell::get) == BoardType::Par {
+                begin_par(lex, lang, kid, tier, token, false);
+            } else {
+                draw(lex, lang, kid, tier, token, attempt + 1);
+            }
         } else {
             unavailable();
         }
@@ -351,14 +458,19 @@ fn show(play: Play, lang: String, kid: bool, tier: Tier, seed: u64, previous: Ve
         Pencil::default()
     };
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { play, lang, kid, tier, seed, previous, finished, keys, pencil, target: None, highlight: None, pending: BTreeSet::new() })
+        *u.borrow_mut() = Some(Ui { play, lang, kid, tier, seed, previous, finished, keys, pencil, target: None, highlight: None, pending: BTreeSet::new(), par_rec: PAR_REC.with(|r| r.borrow_mut().take()) })
     });
     render_keys();
     save_progress();
     render();
     let has_silent = with_ui(|u| u.play.board.slots.iter().any(|s| s.kind == crate::spelluzzle::types::SlotKind::Silent)).unwrap_or(false);
+    let par = with_ui(|u| u.play.par()).flatten();
     if storage::get_raw(HOW_KEY).as_deref() != Some("1") {
         show_how(true);
+    } else if let (Some(p), true) = (par, storage::get_raw(PAR_HOW_KEY).as_deref() != Some("1")) {
+        dom::set_html("szHowText", &format!("<p>{}</p>", dom::escape_html(&tr("spz.par.how", &[("p", &p.to_string())]))));
+        dom::set_hidden("szHow", false);
+        storage::set_raw(PAR_HOW_KEY, "1");
     } else if has_silent && storage::get_raw(HOW2_KEY).as_deref() != Some("1") {
         show_how_silent();
     }
@@ -378,6 +490,7 @@ fn new_board() {
         return;
     };
     storage::remove(&store::progress_key(store::profile(kid), &lang, tier));
+    storage::remove(&store::par_progress_key(store::profile(kid), &lang, tier));
     speech_out::stop();
     UI.with(|u| *u.borrow_mut() = None);
     begin(tier, false);
@@ -404,12 +517,20 @@ fn show_how(on: bool) {
 
 fn save_progress() {
     let _ = with_ui(|u| {
-        let key = store::progress_key(store::profile(u.kid), &u.lang, u.tier);
+        let profile = store::profile(u.kid);
+        let key = match &u.par_rec {
+            Some(_) => store::par_progress_key(profile, &u.lang, u.tier),
+            None => store::progress_key(profile, &u.lang, u.tier),
+        };
         if u.finished {
             storage::remove(&key);
             return;
         }
-        let p = Progress { seed: u.seed, previous: u.previous.clone(), gen_version: GEN_VERSION, hash: u.play.board.hash(), snapshot: u.play.snapshot() };
+        let (par, par_words) = match &u.par_rec {
+            Some(r) => (Some(r.par), r.words.to_vec()),
+            None => (None, Vec::new()),
+        };
+        let p = Progress { seed: u.seed, previous: u.previous.clone(), gen_version: GEN_VERSION, hash: u.play.board.hash(), snapshot: u.play.snapshot(), par, par_words };
         storage::set_json(&key, &p);
     });
 }
@@ -417,7 +538,8 @@ fn save_progress() {
 fn record_solved() {
     let Some((kid, lang, tier, stars)) = with_ui(|u| (u.kid, u.lang.clone(), u.tier, u.play.stars().map(|s| s.count()).unwrap_or(0))) else { return };
     let profile = store::profile(kid);
-    let key = store::stars_key(profile, &lang, tier);
+    let is_par = with_ui(|u| u.par_rec.is_some()).unwrap_or(false);
+    let key = if is_par { store::par_stars_key(profile, &lang, tier) } else { store::stars_key(profile, &lang, tier) };
     let mut best: BestStars = storage::get_json(&key).unwrap_or_default();
     best.record(stars);
     storage::set_json(&key, &best);
@@ -499,7 +621,19 @@ fn render() {
         dom::toggle_class("szScreen", "typing", typing);
         dom::toggle_class("szScreen", "v11", pencil_on() || strip_on() || ripple_on());
         dom::set_hidden("szPencilClear", !(pencil_on() && !u.pencil.is_empty()));
-        let msg = if solved { render::stars_html(&u.play, &tr) } else { String::new() };
+        // F15: the Par header, the one Listen bar and the result line.
+        let header = render::par_header(&u.play, &tr);
+        dom::set_text("szParLine", &header);
+        dom::set_hidden("szParLine", header.is_empty());
+        dom::set_html("szParBar", &render::par_bar_html(&u.play, &tr));
+        let mut msg = String::new();
+        if solved {
+            let line = render::par_result(&u.play, &tr);
+            if !line.is_empty() {
+                msg.push_str(&format!("<p class=\"sz-parres\">{}</p>", dom::escape_html(&line)));
+            }
+            msg.push_str(&render::stars_html(&u.play, &tr));
+        }
         dom::set_html("szResult", &msg);
         dom::set_text("szMsg", &render::check_text(&u.play, &tr));
     });

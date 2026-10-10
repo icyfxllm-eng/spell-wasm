@@ -678,7 +678,7 @@ fn the_streak_counts_once_a_day_with_no_replay_gate() {
 fn saved_progress_resumes_only_for_the_same_board() {
     let lex = en();
     let b = board_of(lex, Tier::Easy, 6);
-    let p = Progress { seed: b.seed, previous: vec![], gen_version: super::types::GEN_VERSION, hash: b.hash(), snapshot: Play::new(b.clone()).snapshot() };
+    let p = Progress { seed: b.seed, previous: vec![], gen_version: super::types::GEN_VERSION, hash: b.hash(), snapshot: Play::new(b.clone()).snapshot(), par: None, par_words: vec![] };
     assert!(p.matches(b.hash()));
     assert!(!p.matches(b.hash() ^ 1));
     let json = serde_json::to_string(&p).unwrap();
@@ -1123,4 +1123,307 @@ fn pencil_and_strip_markup_carries_no_answer() {
     let save = super::store::PencilSave { hash: p.board.hash(), marks: vec![(r, 'z')] };
     let back: super::store::PencilSave = serde_json::from_str(&serde_json::to_string(&save).unwrap()).unwrap();
     assert_eq!(back, save);
+}
+
+// ---- v1.1 Phase F: Par boards ----------------------------------------------
+
+use super::fresh::fresh_par;
+use super::par::{self, ParRecord};
+
+/// Par and par sets by definition, with its own data structures: every subset of the six
+/// listenable words, closure by one-short steps, found by a linear scan of the validity list.
+fn reference_par(b: &Board, lex: &Lexicon) -> (usize, Vec<u8>) {
+    let n = b.slots.len();
+    let rs: Vec<u16> = b.slots.iter().map(|s| s.runes.iter().fold(0u16, |m, &r| m | 1 << r)).collect();
+    let fits = |w: usize, known: u16| -> usize {
+        let s = &b.slots[w];
+        lex.all_valid()
+            .iter()
+            .filter(|c| c.len() == s.answer.len())
+            .filter(|c| {
+                // Same pattern, decoded runes equal their units, the unknown rune takes an unused unit.
+                let mut map: Vec<Option<char>> = vec![None; b.n_runes()];
+                let mut used: Vec<char> = (0..b.n_runes()).filter(|&r| known >> r & 1 == 1).map(|r| b.rune_unit[r]).collect();
+                for (&r, &u) in s.runes.iter().zip(c.iter()) {
+                    if known >> r & 1 == 1 {
+                        if b.rune_unit[r as usize] != u {
+                            return false;
+                        }
+                    } else {
+                        match map[r as usize] {
+                            Some(x) if x != u => return false,
+                            Some(_) => {}
+                            None => {
+                                if used.contains(&u) {
+                                    return false;
+                                }
+                                map[r as usize] = Some(u);
+                                used.push(u);
+                            }
+                        }
+                    }
+                }
+                true
+            })
+            .count()
+    };
+    let finishes = |set: u8| -> bool {
+        let mut done = set as u32;
+        let mut known = (0..n).filter(|&w| set >> w & 1 == 1).fold(0u16, |m, w| m | rs[w]);
+        loop {
+            let mut moved = false;
+            for w in 0..n {
+                if done >> w & 1 == 1 {
+                    continue;
+                }
+                let und = rs[w] & !known;
+                let ok = und == 0 || (und.count_ones() == 1 && fits(w, known) == 1);
+                if ok {
+                    done |= 1 << w;
+                    known |= rs[w];
+                    moved = true;
+                }
+            }
+            if !moved {
+                break;
+            }
+        }
+        done == (1 << n) - 1
+    };
+    let mut best: Option<usize> = None;
+    let mut sets = Vec::new();
+    for k in 0..n {
+        for set in 0u8..(1 << (n - 1)) {
+            if set.count_ones() as usize == k && finishes(set) {
+                best = Some(k);
+                sets.push(set);
+            }
+        }
+        if best.is_some() {
+            break;
+        }
+    }
+    (best.unwrap_or(n - 1), sets)
+}
+
+fn par_boards(tier: Tier, n: usize) -> Vec<Board> {
+    let lex = en();
+    let mut out = Vec::new();
+    let mut seed = 0u64;
+    while out.len() < n && seed < 2000 {
+        if let Some(g) = par::generate_par(seed, tier, lex) {
+            out.push(g.board);
+        }
+        seed += 1;
+    }
+    out
+}
+
+#[test]
+fn a24_par_is_exact() {
+    let lex = en();
+    for tier in [Tier::Hard, Tier::Expert] {
+        for b in par_boards(tier, n_seeds(6)) {
+            let (rp, rsets) = reference_par(&b, lex);
+            let v = par::par_of(&b, lex);
+            assert_eq!(v.par, rp, "{tier:?}: the checker and the independent definition disagree on par");
+            assert_eq!(v.par_sets, rsets, "{tier:?}: par sets");
+            assert_eq!(b.par, Some(rp as u8));
+            // P1 to P4.
+            assert!(b.slots.iter().all(|s| !lex.has_homophone(&s.answer)), "P1");
+            assert!(rp == 3 || (tier == Tier::Hard && rp == 2), "P3: {tier:?} par {rp}");
+            assert!(rsets.len() >= 2, "P4: a real choice");
+            // I17: no smaller set finishes it.
+            assert!(rsets.iter().all(|s| s.count_ones() as usize == rp));
+        }
+    }
+}
+
+#[test]
+fn a25_par_boards_have_one_answer_with_a_par_set_heard() {
+    let lex = en();
+    for tier in [Tier::Hard, Tier::Expert] {
+        for b in par_boards(tier, n_seeds(5)) {
+            let v = par::par_of(&b, lex);
+            for set in &v.par_sets {
+                let mut heard = b.clone();
+                for (i, s) in heard.slots.iter_mut().enumerate() {
+                    s.kind = if i == b.slots.len() - 1 { SlotKind::Secret } else if set >> i & 1 == 1 { SlotKind::Spoken } else { SlotKind::Silent };
+                }
+                assert_eq!(count_solutions(&heard, lex, 2), 1, "{tier:?} set {set:#b}: checker");
+                assert_eq!(reference_count(&heard, lex, 2), 1, "{tier:?} set {set:#b}: independent solver");
+            }
+        }
+    }
+}
+
+#[test]
+fn a26_any_heard_word_is_cross_checked() {
+    // I18: every rune of every word is in at least two words, so any single wrong entry clashes.
+    let lex = en();
+    for tier in [Tier::Hard, Tier::Expert] {
+        for b in par_boards(tier, n_seeds(15)) {
+            let correct: Entries = b.slots.iter().enumerate().map(|(i, s)| (i, s.answer.clone())).collect();
+            for i in 0..b.slots.len() {
+                let ans = &b.slots[i].answer;
+                for k in 0..ans.len() {
+                    for &u in &lex.alphabet {
+                        if u == ans[k] {
+                            continue;
+                        }
+                        let mut w = ans.clone();
+                        w[k] = u;
+                        let mut e = correct.clone();
+                        e.insert(i, w);
+                        assert!(board_view(&b, &e).contains(&RuneState::Contested), "{tier:?} slot {i} cell {k}");
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn par_play_rules_and_stars() {
+    let lex = en();
+    let b = par_boards(Tier::Hard, 1).remove(0);
+    let n = b.slots.len();
+    let par = b.par.unwrap() as usize;
+    // Everything but the secret is silent at load, and the secret never has a Listen.
+    let mut p = Play::new(b.clone());
+    assert!((0..n - 1).all(|i| p.is_silent(i)));
+    assert_eq!(p.listens(), 0);
+    assert!(p.listen(n - 1).is_none() || b.slots[n - 1].kind == SlotKind::Secret);
+    // A Par set solves it at par: Listen each, spell each, then the rest unheard.
+    let v = par::par_of(&b, lex);
+    let set = v.par_sets[0];
+    let mut p = Play::new(b.clone());
+    let mut order: Vec<usize> = (0..n - 1).filter(|i| set >> i & 1 == 1).collect();
+    for &i in &order {
+        assert!(p.listen(i).is_some());
+        let w = p.board.slots[i].answer.clone();
+        type_word(&mut p, i, &w);
+    }
+    order = (0..n).filter(|i| !(set >> i & 1 == 1 && *i < n - 1)).collect();
+    for i in order {
+        let w = p.board.slots[i].answer.clone();
+        type_word(&mut p, i, &w);
+    }
+    assert!(p.solved());
+    assert_eq!(p.listens(), par);
+    let s = p.stars().unwrap();
+    assert!(s.solved && s.sharp_ear && s.codebreaker, "{s:?}");
+    // One Listen over par loses Codebreaker, keeps Sharp ear.
+    let mut q = Play::new(b.clone());
+    let extra = (0..n - 1).find(|i| set >> i & 1 == 0).unwrap();
+    q.listen(extra);
+    for &i in &(0..n - 1).filter(|i| set >> i & 1 == 1).collect::<Vec<_>>() {
+        q.listen(i);
+    }
+    for i in 0..n {
+        let w = q.board.slots[i].answer.clone();
+        type_word(&mut q, i, &w);
+    }
+    let s = q.stars().unwrap();
+    assert!(s.solved && s.sharp_ear && !s.codebreaker, "{s:?}");
+    // A Par board hashes differently from a Classic board of the same words.
+    let mut classic = b.clone();
+    classic.par = None;
+    assert_ne!(classic.hash(), b.hash());
+    // Header and result lines.
+    use super::render::{par_header, par_result};
+    assert_eq!(par_header(&Play::new(b.clone()), &plain_tr), "§0".to_string() + &par.to_string());
+    assert_eq!(par_result(&p, &plain_tr), "§");
+}
+
+#[test]
+fn par_offering_rules() {
+    use super::offer::par_offered;
+    assert!(par_offered("en", false, Tier::Hard) && par_offered("en", false, Tier::Expert));
+    for t in [Tier::Jr, Tier::Easy, Tier::Medium] {
+        assert!(!par_offered("en", false, t), "{t:?}");
+    }
+    assert!(!par_offered("en", true, Tier::Hard), "Spell Jr has no Par (D48)");
+    for lang in ["ko", "zh", "ja", "ar", "hi", "es", "vi"] {
+        assert!(!par_offered(lang, false, Tier::Hard), "{lang}");
+    }
+}
+
+#[test]
+fn par_records_are_current_and_rebuild_the_same_board() {
+    let lex = en();
+    for tier in [Tier::Hard, Tier::Expert] {
+        let recs = seeds::par_records(lex, tier);
+        assert!(recs.len() >= 1000, "{tier:?} has only {} verified Par boards: run scripts/spelluzzle-seeds.sh", recs.len());
+        let step = (recs.len() / n_seeds(40)).max(1);
+        for rec in recs.iter().step_by(step) {
+            let b = par::board_from_record(lex, tier, rec).expect("pool still has the indexes");
+            assert_eq!(b.par, Some(rec.par));
+            // It is what the generator makes for that seed, and it passes the bank-only gates.
+            let g = par::generate_par(rec.seed, tier, lex).expect("the seed regenerates");
+            assert_eq!(g.board.hash(), b.hash(), "{tier:?} seed {}", rec.seed);
+            assert!(check_board(&b, lex).is_ok(), "{tier:?} seed {}", rec.seed);
+            assert!(tier != Tier::Expert || rec.par == 3, "Expert Par is par 3 only");
+        }
+    }
+}
+
+#[test]
+fn par_boards_stay_fresh_and_share_at_most_two_words() {
+    let lex = en();
+    let recs: Vec<ParRecord> = seeds::par_records(lex, Tier::Hard);
+    let mut state = 99u64;
+    let mut rng = move |n: usize| {
+        state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        ((state >> 33) as usize) % n
+    };
+    let mut history = History::default();
+    let mut prev: Vec<String> = Vec::new();
+    for i in 0..n_seeds(150) {
+        let (b, rec) = fresh_par(lex, Tier::Hard, &recs, &history, &prev, &mut rng).unwrap_or_else(|| panic!("board {i}"));
+        assert!(!history.contains(b.hash()), "board {i} repeated");
+        assert!(b.words().iter().filter(|w| prev.contains(w)).count() <= 2, "board {i} shares too many words");
+        assert_eq!(b.par, Some(rec.par));
+        history.push(b.hash());
+        prev = b.words();
+    }
+}
+
+/// Build-time audit of the Par records with the large list (not run by `cargo test`):
+///   SPZ_VALIDITY_FILE=/path/en_US.dic SPZ_N=300 cargo test --release spelluzzle::tests::audit_par -- --ignored --nocapture
+/// Each sampled record's board must have the recorded par under the large list, by the checker
+/// and by the independent definition, and one answer with each par set heard.
+#[test]
+#[ignore]
+fn audit_par() {
+    let path = std::env::var("SPZ_VALIDITY_FILE").expect("SPZ_VALIDITY_FILE");
+    let dic = std::fs::read_to_string(path).unwrap();
+    let st: std::collections::BTreeSet<String> = dic.lines().skip(1).filter_map(|l| {
+        let w = l.split('/').next()?.trim();
+        (!w.is_empty() && w.chars().all(|c| c.is_ascii_lowercase())).then(|| w.to_string())
+    }).collect();
+    let mut words: Vec<String> = st.iter().cloned().collect();
+    for w in &st {
+        for suf in ["s", "es", "ed", "d", "ing", "er", "ers", "est", "ly", "y", "ies"] {
+            words.push(format!("{w}{suf}"));
+        }
+    }
+    let small = bank::load("en", Vec::new()).unwrap();
+    let big = bank::load("en", words).unwrap();
+    for tier in [Tier::Hard, Tier::Expert] {
+        let recs = seeds::par_records(&small, tier);
+        let step = (recs.len() / n_seeds(100)).max(1);
+        let mut checked = 0;
+        for rec in recs.iter().step_by(step) {
+            let b = par::board_from_record(&small, tier, rec).unwrap();
+            let v = par::check_par(&b, &big, true).unwrap_or_else(|e| panic!("{tier:?} seed {}: {e:?}", rec.seed));
+            assert_eq!(v.par as u8, rec.par, "{tier:?} seed {}: recorded par", rec.seed);
+            if checked < 8 {
+                let (rp, _) = reference_par(&b, &big);
+                assert_eq!(rp, v.par, "{tier:?} seed {}: independent par", rec.seed);
+            }
+            checked += 1;
+        }
+        println!("audit par {tier:?}: {checked} sampled records hold their par and one answer under the large list");
+    }
 }

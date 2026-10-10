@@ -66,6 +66,13 @@ fn rune_sets(board: &Board) -> Vec<u16> {
 }
 
 pub fn check_board(board: &Board, lex: &Lexicon) -> Result<Metrics, GateFail> {
+    // F15: a Par board has its own gates (G1, G2, G4, G6 and P1 to P5); v1's G3, G5 and G7 to G11
+    // describe a fixed spoken set, which it does not have.
+    if board.par.is_some() {
+        super::par::check_par(board, lex, false)?;
+        let z = Frac::new(0, 1);
+        return Ok(Metrics { runes: board.n_runes(), cells: board.cells(), earned: z, cascade: z });
+    }
     let shape = board.tier.shape();
     let ns = shape.spoken;
     let slots = &board.slots;
