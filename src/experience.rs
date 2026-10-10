@@ -75,7 +75,8 @@ pub fn of_kid(kid: bool) -> Experience {
 
 /// CC-PICK-QUEUE D4/I7 -- what the lineup offers `exp`. ONE function, the same
 /// shape for every language: Spell Jr is tap-to-line-up only, five picks, and the
-/// extras (sort, search, stars) are absent rather than locked.
+/// extras (sort, search, stars, and "Just these", an F3 feature) are absent
+/// rather than locked.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PickCaps {
     pub max_picks: Option<usize>,

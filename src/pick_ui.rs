@@ -81,7 +81,8 @@ pub fn row_class(surface: &str, list: &str, lang: &str, word: &str, enabled: boo
 }
 
 /// Hint line + the start button and its "Just these" toggle, for one scope.
-pub fn footer_html(surface: &str, list: &str, lang: &str) -> String {
+pub fn footer_html(surface: &str, list: &str, lang: &str, kid: bool) -> String {
+    let extras = crate::experience::pick_caps(crate::experience::of_kid(kid)).extras;
     let scope = pq::scope_id(surface, list, lang);
     let (n, just) = pq::read(|l| (l.picks(&scope).len(), l.just_these(&scope)));
     let mut html = format!("<div class=\"lists-head\" role=\"note\">{}</div>", esc(&t("pick.hint")));
@@ -92,15 +93,25 @@ pub fn footer_html(surface: &str, list: &str, lang: &str) -> String {
         html.push_str(&format!(
             "<div class=\"lists-actions pq-actions\">\
                <button type=\"button\" class=\"btn btn-check\" data-pq-start data-pq-surface=\"{s}\" data-pq-list=\"{li}\" data-pq-lang=\"{la}\">{start}</button>\
-               <button type=\"button\" class=\"ghost{on}\" data-pq-just data-pq-surface=\"{s}\" data-pq-list=\"{li}\" data-pq-lang=\"{la}\" aria-pressed=\"{p}\">{jt}</button>\
+               {just_btn}\
              </div>",
             s = esc(surface),
             li = esc(list),
             la = esc(lang),
             start = esc(&i18n::tp("pick.start", &[("n", &n.to_string())])),
-            on = if just { " on" } else { "" },
-            p = if just { "true" } else { "false" },
-            jt = esc(&t("pick.justThese")),
+            just_btn = if extras {
+                format!(
+                    "<button type=\"button\" class=\"ghost{}\" data-pq-just data-pq-surface=\"{}\" data-pq-list=\"{}\" data-pq-lang=\"{}\" aria-pressed=\"{}\">{}</button>",
+                    if just { " on" } else { "" },
+                    esc(surface),
+                    esc(list),
+                    esc(lang),
+                    if just { "true" } else { "false" },
+                    esc(&t("pick.justThese")),
+                )
+            } else {
+                String::new()
+            },
         ));
     }
     html
@@ -161,6 +172,10 @@ pub fn handle_click(app: &App, el: &web_sys::Element, close: &dyn Fn()) -> bool 
         return true;
     }
     if has("data-pq-just") {
+        // Spell Jr has no such control (D4); a stray tap changes nothing.
+        if !crate::experience::pick_caps(crate::experience::of_kid(app.borrow().kid)).extras {
+            return true;
+        }
         let id = pq::scope_id(&attr("data-pq-surface"), &attr("data-pq-list"), &attr("data-pq-lang"));
         pq::write(|l| {
             let on = !l.just_these(&id);
@@ -194,7 +209,7 @@ fn start(app: &App, surface: &str, list: &str, lang: &str, close: &dyn Fn()) {
     if app.borrow().review {
         crate::game::exit_review(app, None);
     }
-    pq::begin_session(&id);
+    pq::begin_session(&id, app.borrow().kid);
     close();
     if surface == SURFACE_MINE {
         crate::lists_ui::play(app, &[list.to_string()]);
@@ -326,7 +341,7 @@ fn render_misses(app: &App) {
     if rows.is_empty() {
         html.push_str(&format!("<div class=\"lists-empty\">{}</div>", esc(&t("pick.empty"))));
     }
-    html.push_str(&footer_html(SURFACE_MISSES, "", &lang));
+    html.push_str(&footer_html(SURFACE_MISSES, "", &lang, s.kid));
     for m in rows {
         html.push_str(&format!(
             "<div class=\"lists-entry {}\">{}<span class=\"lists-chip\">{}</span></div>",

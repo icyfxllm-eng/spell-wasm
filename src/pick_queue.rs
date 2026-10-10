@@ -304,8 +304,14 @@ pub fn clear_lang(lang: &str) {
 
 // ---------- the session ----------
 
-pub fn begin_session(scope: &str) {
-    let just = read(|l| l.just_these(scope));
+/// Whether a stored "Just these" flag takes effect for this player. Junior has
+/// no such control (D4), so a persisted true is ignored, never rewritten.
+pub fn effective_just_these(stored: bool, kid: bool) -> bool {
+    stored && crate::experience::pick_caps(crate::experience::of_kid(kid)).extras
+}
+
+pub fn begin_session(scope: &str, kid: bool) {
+    let just = effective_just_these(read(|l| l.just_these(scope)), kid);
     SESSION.with(|c| {
         *c.borrow_mut() = Some(Session { scope: scope.to_string(), just_these: just, served: Vec::new(), served_words: Vec::new(), last_word: None })
     });
@@ -482,6 +488,20 @@ mod tests {
     }
 
     #[test]
+    fn jr_never_runs_just_these_even_when_the_store_says_so() {
+        assert!(effective_just_these(true, false));
+        assert!(!effective_just_these(true, true));
+        assert!(!effective_just_these(false, false));
+        // The persisted flag is untouched by the kid check.
+        let mut l = Lineups::default();
+        let id = sid();
+        l.toggle(&id, SURFACE_MISSES, "", "en", pk("cat"), None);
+        l.set_just_these(&id, true);
+        assert!(l.just_these(&id));
+        assert!(!effective_just_these(l.just_these(&id), true));
+    }
+
+    #[test]
     fn scopes_never_mix_languages_or_lists() {
         let mut l = Lineups::default();
         let en = scope_id(SURFACE_MISSES, "", "en");
@@ -555,7 +575,7 @@ mod tests {
         l.toggle(&id, SURFACE_MISSES, "", "en", pk("cat"), None);
         l.toggle(&id, SURFACE_MISSES, "", "en", pk("dog"), None);
         set_for_test(l);
-        begin_session(&id);
+        begin_session(&id, false);
         let live = |_: &Pick| true;
         assert_eq!(next_for_misses(live), Serve::Pick(pk("cat")));
         assert!(served_by_lineup("cat"));
@@ -579,7 +599,7 @@ mod tests {
         l.toggle(&id, SURFACE_MINE, "l1", "en", pk("dog"), None);
         l.toggle(&id, SURFACE_MINE, "l1", "en", pk("cat"), None);
         set_for_test(l);
-        begin_session(&id);
+        begin_session(&id, false);
         let pool: Vec<String> = ["ant", "cat", "dog", "eel"].iter().map(|s| s.to_string()).collect();
         // A different list is selected: the lineup says nothing (D9).
         assert_eq!(next_for_mine(&pool, || vec!["l2".into()]), Serve::Open);
@@ -594,7 +614,7 @@ mod tests {
         l.toggle(&id, SURFACE_MINE, "l1", "en", pk("gone"), None);
         l.set_just_these(&id, true);
         set_for_test(l);
-        begin_session(&id);
+        begin_session(&id, false);
         assert_eq!(next_for_mine(&pool, || vec!["l1".into()]), Serve::Exhausted);
         // No session at all (zero picks, never started): untouched queue (A2).
         end_session();
