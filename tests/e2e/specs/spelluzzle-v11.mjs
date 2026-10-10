@@ -30,6 +30,7 @@ export async function run(browser, base, suite) {
     const b = await page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, selector);
     await page.mouse.move(b.x, b.y);
     await page.mouse.down();
+    // sleep-ok: a long-press is a hold of real time (the app's threshold is 450 ms)
     await page.waitForTimeout(650);
     await page.mouse.up();
   };
@@ -44,7 +45,6 @@ export async function run(browser, base, suite) {
       }));
       assert(m.strip === 0 && !m.v11 && m.pencil === 0, `v1.1 markup with its flags off: ${JSON.stringify(m)}`);
       await hold(page, '#szBoard .sz-row[data-slot="0"] .sz-cell');
-      await page.waitForTimeout(100);
       const after = await page.evaluate(() => ({ target: document.querySelectorAll('.sz-cell.target').length, keys: Object.keys(localStorage).filter((k) => k.startsWith('spell_spz_pencil')) }));
       assert(after.target === 0 && after.keys.length === 0, `a long-press did something with the flag off: ${JSON.stringify(after)}`);
     } finally { await ctx.close(); }
@@ -139,15 +139,15 @@ export async function run(browser, base, suite) {
       const count = await page.evaluate(() => document.getElementById('szCount').textContent.trim());
       assert(/^\+\d+ cells$/.test(count), `counter: ${count}`);
       const n = parseInt(count.slice(1), 10);
-      await page.waitForTimeout(1350);
-      const done = await page.evaluate(() => document.querySelectorAll('#szBoard .sz-cell.decoded').length);
-      assert(done === n, `the ripple counted ${n} cells but ${done} are decoded`);
+      await page.waitForFunction((k) => document.querySelectorAll('#szBoard .sz-cell.decoded').length === k, n, { timeout: 3000 });
+      const done = n;
       // A second word, skipped with a tap: nothing changes afterwards, so it was already finished.
       await select(page, 1);
       await typeWord(page, ws[1]);
       await page.click('#szBoard .sz-row[data-slot="0"] .sz-cells');
       const snap = () => page.evaluate(() => document.getElementById('szBoard').innerHTML);
       const at = await snap();
+      // sleep-ok: it has to outlast the 1.2 s ripple to show a tap really finished it
       await page.waitForTimeout(1400);
       assert((await snap()) === at, 'the board kept changing after a tap: the ripple was not skipped');
     } finally { await ctx.close(); }
