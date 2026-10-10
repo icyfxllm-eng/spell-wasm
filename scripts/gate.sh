@@ -7,6 +7,46 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 LOG="${TMPDIR:-/tmp}/spell-gate-e2e.log"
 
+# ---------------------------------------------------------------------------
+# PREFLIGHT. Fail in a second with the command to run, rather than forty
+# minutes in with a stack trace.
+#
+# This gate is usually run from a WORKTREE, and a fresh worktree is not a
+# ready checkout. On 2026-10-09 a run spent ~40 minutes through cargo test
+# and the app build before e2e died on `ERR_MODULE_NOT_FOUND` -- node
+# dependencies were simply absent, and nothing had said so. The same shape
+# cost a run earlier that week when cmudict was still gitignored; that one
+# is fixed differently (the file is committed now), which is why only the
+# node side is checked here.
+#
+# Everything below must be cheap. A preflight that takes a minute is just
+# another step that can fail late.
+# ---------------------------------------------------------------------------
+preflight_fail() {
+  echo ""
+  echo "GATE FAIL: preflight — this checkout is not ready to be gated."
+  echo "  $1"
+  echo "  fix:  $2"
+  echo ""
+  echo "  (Fresh git worktrees need this. The main checkout usually has it"
+  echo "   already, which is why the gate can pass there and not here.)"
+  exit 1
+}
+
+if [ ! -d node_modules ]; then
+  preflight_fail "node_modules is missing, so the e2e step cannot import playwright." \
+                 "npm ci"
+fi
+if [ ! -d node_modules/playwright ]; then
+  preflight_fail "node_modules exists but playwright is not in it." \
+                 "npm ci"
+fi
+if ! command -v python3 >/dev/null 2>&1; then
+  preflight_fail "python3 is not on PATH; the manifest and collision checks need it." \
+                 "install python3, or run the gate from a shell that has it"
+fi
+echo "== gate: preflight OK"
+
 echo "== gate: manifest check (schema + D5 + Done #7 audits)"
 python3 tools/manifest_check.py
 
