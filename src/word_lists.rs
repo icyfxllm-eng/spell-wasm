@@ -389,11 +389,19 @@ pub fn all_words(lists: &Lists) -> Vec<ListEntry> {
 /// lists; `Order::InMyOrder` keeps each list's own order with starred entries
 /// first, `Mixed` hands them over in saved order for the adaptive picker.
 pub fn play_entries(lists: &Lists, chosen: &[String]) -> Vec<ListEntry> {
+    play_entries_with(lists, chosen, true)
+}
+
+/// `play_entries`, with the choice of whether stars lead under `InMyOrder`.
+/// CC-PICK-QUEUE Phase B: Spell Jr shows no stars, so with the stars flag on a
+/// persisted star is ignored for Jr (`honour_stars == false`). `true` is
+/// exactly `play_entries`.
+pub fn play_entries_with(lists: &Lists, chosen: &[String], honour_stars: bool) -> Vec<ListEntry> {
     let mut out: Vec<ListEntry> = Vec::new();
     for id in chosen {
         let Some(l) = lists.lists.iter().find(|l| &l.id == id && l.live()) else { continue };
         let mut entries: Vec<ListEntry> = l.entries.clone();
-        if l.order == Order::InMyOrder {
+        if l.order == Order::InMyOrder && honour_stars {
             let (starred, rest): (Vec<ListEntry>, Vec<ListEntry>) =
                 entries.into_iter().partition(|e| e.starred);
             entries = starred.into_iter().chain(rest).collect();
@@ -505,6 +513,63 @@ pub fn store(lists: &Lists) {
     let mut out = lists.clone();
     out.v = VERSION;
     storage::set_json(LISTS_KEY, &out);
+}
+
+// ---------- focus stars (CC-PICK-QUEUE Phase B) ----------
+//
+// The star is `ListEntry.starred`, the same one "In my order" has always used
+// (CC-MYWORDS-LISTS D3). These are read/clear helpers over it; nothing here
+// adds a field or a store.
+
+/// How many DISTINCT starred words (text + language) the live lists hold in
+/// `lang`. A word starred in two lists counts once.
+pub fn starred_count(lists: &Lists, lang: &str) -> usize {
+    let mut seen: Vec<(String, String)> = Vec::new();
+    for l in lists.lists.iter().filter(|l| l.live()) {
+        for e in l.entries.iter().filter(|e| e.starred && e.lang == lang) {
+            let k = entry_key(&e.text, &e.lang);
+            if !seen.contains(&k) {
+                seen.push(k);
+            }
+        }
+    }
+    seen.len()
+}
+
+/// Whether the word is starred in ANY live list (so a word saved to several
+/// lists leads once, however many stars it carries).
+pub fn starred_words(lists: &Lists, chosen: &[String]) -> Vec<(String, String)> {
+    let mut out: Vec<(String, String)> = Vec::new();
+    for id in chosen {
+        let Some(l) = lists.lists.iter().find(|l| &l.id == id && l.live()) else { continue };
+        for e in l.entries.iter().filter(|e| e.starred) {
+            let k = entry_key(&e.text, &e.lang);
+            if !out.iter().any(|(t, g)| entry_key(t, g) == k) {
+                out.push((e.text.clone(), e.lang.clone()));
+            }
+        }
+    }
+    out
+}
+
+/// O-E: Reset this language clears that language's stars. `lang == MINE` (the
+/// My Words study language) stands for every list, as it does for lineups.
+/// Returns true if anything changed.
+pub fn clear_stars(lists: &mut Lists, lang: &str, now: f64) -> bool {
+    let all = lang == crate::consts::MINE;
+    let mut changed = false;
+    for l in lists.lists.iter_mut() {
+        let mut here = false;
+        for e in l.entries.iter_mut().filter(|e| e.starred && (all || e.lang == lang)) {
+            e.starred = false;
+            here = true;
+        }
+        if here {
+            l.updated_at = now;
+            changed = true;
+        }
+    }
+    changed
 }
 
 #[cfg(test)]
@@ -768,5 +833,81 @@ mod tests {
         assert!(!migrate_flat(&mut empty, &custom(&[], "en-US"), "Saved before", T0));
         assert!(empty.lists.is_empty(), "AT6.4: no list, no crash");
         assert!(empty.migrated, "and it does not run again tomorrow");
+    }
+
+    // ---- CC-PICK-QUEUE Phase B: focus stars reuse ListEntry.starred ----
+
+    fn starred_lists() -> (Lists, String, String) {
+        let (mut l, a) = with_list("A", T0);
+        add_entries(
+            &mut l,
+            &a,
+            &[("cat".into(), "en".into()), ("dog".into(), "en".into()), ("hund".into(), "de".into())],
+            T0,
+        );
+        let b = create(&mut l, "B", ListSource::Manual, T0 + 1.0);
+        add_entries(&mut l, &b, &[("cat".into(), "en".into()), ("eel".into(), "en".into())], T0 + 1.0);
+        (l, a, b)
+    }
+
+    #[test]
+    fn the_star_count_is_per_language_and_a_word_in_two_lists_counts_once() {
+        let (mut l, a, b) = starred_lists();
+        set_star(&mut l, &a, 0, true, T0); // cat in A
+        set_star(&mut l, &b, 0, true, T0); // cat in B: the same word
+        set_star(&mut l, &a, 2, true, T0); // hund (de)
+        assert_eq!(starred_count(&l, "en"), 1);
+        assert_eq!(starred_count(&l, "de"), 1);
+        assert_eq!(starred_count(&l, "fr"), 0);
+    }
+
+    #[test]
+    fn removing_a_word_removes_its_star_and_frees_the_slot() {
+        let (mut l, a, _b) = starred_lists();
+        set_star(&mut l, &a, 1, true, T0); // dog
+        assert_eq!(starred_count(&l, "en"), 1);
+        l.lists[0].entries.remove(1);
+        assert_eq!(starred_count(&l, "en"), 0, "O-D: removal is learned, the star goes with the entry");
+    }
+
+    #[test]
+    fn starred_words_lists_chosen_lists_only_each_word_once() {
+        let (mut l, a, b) = starred_lists();
+        set_star(&mut l, &a, 0, true, T0); // cat
+        set_star(&mut l, &b, 0, true, T0); // cat again
+        set_star(&mut l, &b, 1, true, T0); // eel
+        assert_eq!(
+            starred_words(&l, &[b.clone(), a.clone()]),
+            vec![("cat".to_string(), "en".to_string()), ("eel".to_string(), "en".to_string())]
+        );
+        assert_eq!(starred_words(&l, &[a]), vec![("cat".to_string(), "en".to_string())]);
+    }
+
+    #[test]
+    fn reset_this_language_clears_that_languages_stars_only() {
+        let (mut l, a, _b) = starred_lists();
+        set_star(&mut l, &a, 0, true, T0);
+        set_star(&mut l, &a, 2, true, T0);
+        assert!(clear_stars(&mut l, "de", T0 + 5.0));
+        assert_eq!(starred_count(&l, "de"), 0);
+        assert_eq!(starred_count(&l, "en"), 1, "English is untouched");
+        assert!(!clear_stars(&mut l, "de", T0 + 6.0), "nothing left to clear");
+        // The My Words study language stands for every list.
+        assert!(clear_stars(&mut l, crate::consts::MINE, T0 + 7.0));
+        assert_eq!(starred_count(&l, "en"), 0);
+    }
+
+    #[test]
+    fn jr_ignores_persisted_stars_in_the_pool_order_and_standard_does_not() {
+        let (mut l, a, _b) = starred_lists();
+        set_order(&mut l, &a, Order::InMyOrder, T0);
+        set_star(&mut l, &a, 1, true, T0); // dog leads
+        let texts = |honour| -> Vec<String> {
+            play_entries_with(&l, &[a.clone()], honour).into_iter().map(|e| e.text).collect()
+        };
+        assert_eq!(texts(true), vec!["dog", "cat", "hund"]);
+        assert_eq!(texts(false), vec!["cat", "dog", "hund"], "saved order, star ignored");
+        // And honour=true is exactly play_entries (flag off is today's app).
+        assert_eq!(play_entries(&l, &[a.clone()]), play_entries_with(&l, &[a], true));
     }
 }

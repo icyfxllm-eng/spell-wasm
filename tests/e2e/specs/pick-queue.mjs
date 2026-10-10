@@ -1,5 +1,7 @@
 // pick-queue.spec -- CC-PICK-QUEUE v1 Phase A: tap words to line them up, in
 // Misses and in My Words, behind `spell_flag_pick_queue_a` (default OFF).
+// Phase B (focus stars) rides the same file behind `spell_flag_pick_queue_b`,
+// also default OFF and only live while Phase A is on.
 //
 // Browser-only claims: the stored bytes (`spell_lineup_v1`), the real tap and
 // badge wiring, persistence across a force reload (A7), and that the flag-off
@@ -16,6 +18,24 @@ const DAY = 86400000;
 
 const FLAG_ON = () => localStorage.setItem('spell_flag_pick_queue_a', 'on');
 const FLAG_OFF = () => localStorage.setItem('spell_flag_pick_queue_a', 'off');
+// Phase B: both flags on / lineups only (B explicitly off).
+const FLAG_AB = () => {
+  localStorage.setItem('spell_flag_pick_queue_a', 'on');
+  localStorage.setItem('spell_flag_pick_queue_b', 'on');
+};
+const FLAG_A_ONLY = () => {
+  localStorage.setItem('spell_flag_pick_queue_a', 'on');
+  localStorage.setItem('spell_flag_pick_queue_b', 'off');
+};
+const STARS_KEY = 'spell_stars_v1';
+const stars = (page) => page.evaluate((k) => JSON.parse(localStorage.getItem(k) || 'null'), STARS_KEY);
+const starWords = async (page) => ((await stars(page))?.stars || []).map((p) => p.word);
+const starBtn = (scope, word) => `${scope} [data-pq-star][data-pq-word="${word}"]`;
+const tapStar = async (page, scope, word) => {
+  await page.click(starBtn(scope, word));
+  await domSettled(page);
+};
+const listsData = (page) => page.evaluate((k) => JSON.parse(localStorage.getItem(k) || 'null'), LISTS_KEY);
 
 const lineup = (page) => page.evaluate((k) => JSON.parse(localStorage.getItem(k) || 'null'), LINEUP_KEY);
 const scopes = async (page) => Object.values((await lineup(page))?.scopes || {});
@@ -42,6 +62,7 @@ async function bootMisses(page, base, words) {
   await page.evaluate(([k, rows]) => {
     localStorage.setItem(k, JSON.stringify(rows));
     localStorage.removeItem('spell_lineup_v1');
+    localStorage.removeItem('spell_stars_v1');
   }, [MISS_KEY, rows]);
   await reload(page, base);
 }
@@ -51,6 +72,7 @@ async function bootMine(page, base, words, wordLang = {}) {
     localStorage.setItem(ck, JSON.stringify(set));
     localStorage.removeItem(lk);
     localStorage.removeItem('spell_lineup_v1');
+    localStorage.removeItem('spell_stars_v1');
   }, [CUSTOM_KEY, LISTS_KEY, { words, speakLang: 'en-US', wordLang }]);
   await reload(page, base);
 }
@@ -332,6 +354,282 @@ export async function run(browser, base, suite) {
       await tapWord(page, '#pickBody', 'apple');
       await tapWord(page, '#pickBody', 'finch');
       assertEq((await picksOf(page)).length, 5);
+    } finally { await ctx.close(); }
+  });
+
+  // ================= Phase B: focus stars =================
+
+  // Dual config: stars flag OFF (lineups ON) is Phase A exactly -- no star
+  // control anywhere, nothing written to spell_stars_v1.
+  await suite.test('pick_stars_flag_off_has_no_star_control_and_writes_nothing', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_A_ONLY });
+    try {
+      await bootMisses(page, base, FIVE);
+      await openMisses(page);
+      assertEq((await badges(page)).length, 5, 'the lineup surface is there');
+      assert((await page.$('#pickBody [data-pq-star]')) === null, 'no star control in Misses');
+      await tapWord(page, '#pickBody', 'apple');
+      assertEq((await stars(page)), null, 'nothing written');
+      await bootMine(page, base, ['cat', 'dog']);
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      assert((await page.$('#listsBody [data-pq-star]')) === null, 'no star control in My Words');
+    } finally { await ctx.close(); }
+  });
+
+  // A1/A2/A7/I2/I3 for stars in Misses: stars lead the session in the order
+  // they were starred, once each, then today's queue; persists across reload.
+  await suite.test('pick_stars_misses_star_leads_every_session_and_persists', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMisses(page, base, FIVE);
+      await openMisses(page);
+      assert(await page.$(starBtn('#pickBody', 'crane')), 'a star control on every row');
+      // The star sits at the top-right (inline END) of the row, the badge at the START.
+      const pos = await page.$eval(starBtn('#pickBody', 'crane'), (el) => {
+        const cs = getComputedStyle(el);
+        return { position: cs.position, insetInlineEnd: cs.insetInlineEnd, dir: getComputedStyle(el.closest('.lists-entry')).direction };
+      });
+      assertEq(pos.position, 'absolute');
+      await tapStar(page, '#pickBody', 'eagle');
+      await tapStar(page, '#pickBody', 'crane');
+      assertEq((await starWords(page)).join(','), 'eagle,crane', 'stored in the order starred');
+      assertEq(await page.$eval(starBtn('#pickBody', 'eagle'), (e) => e.getAttribute('aria-pressed')), 'true');
+      await reload(page, base);
+      assertEq((await starWords(page)).join(','), 'eagle,crane', 'survived a hard reload (A7)');
+      await openMisses(page);
+      assertEq(await page.$eval(starBtn('#pickBody', 'crane'), (e) => e.getAttribute('aria-pressed')), 'true', 'still starred on screen');
+      await page.click('#pickBody [data-pq-all]');
+      await domSettled(page);
+      assert(await inReview(page), 'ordinary practice began');
+      const served = [];
+      for (let i = 0; i < 5; i++) {
+        served.push(await serve(page));
+        await answerCorrect(page);
+      }
+      assertEq(served.slice(0, 2).join(','), 'eagle,crane', 'starred words lead, in star order');
+      assertEq([...served].sort().join(','), 'apple,bread,crane,delta,eagle', 'then the rest; nothing repeated (I3)');
+      // Answering correctly on a due word does not unstar it: a star lasts
+      // until the word is LEARNED, which only the unchanged schedule decides.
+      assertEq((await starWords(page)).join(','), 'eagle,crane', 'stars are still there');
+    } finally { await ctx.close(); }
+  });
+
+  // Ordering when both exist: picks first (tap order), then stars, then the queue.
+  await suite.test('pick_stars_picks_lead_then_stars_then_the_rest', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMisses(page, base, FIVE);
+      await openMisses(page);
+      await tapStar(page, '#pickBody', 'apple');
+      await tapStar(page, '#pickBody', 'bread');
+      await tapWord(page, '#pickBody', 'delta');
+      await tapWord(page, '#pickBody', 'bread'); // picked AND starred: served once, as a pick
+      await page.click('#pickBody [data-pq-start]');
+      await domSettled(page);
+      const served = [];
+      for (let i = 0; i < 4; i++) {
+        served.push(await serve(page));
+        await answerCorrect(page);
+      }
+      assertEq(served.join(',').startsWith('delta,bread,apple,'), true, `picks, then stars, then the queue (${served})`);
+      assertEq(new Set(served).size, 4, 'no repeats');
+    } finally { await ctx.close(); }
+  });
+
+  // D3 / I6 / A5 for stars: a not-due starred miss leads, counts as practice,
+  // but is neither cleared nor does its next spaced check move.
+  await suite.test('pick_stars_not_due_star_keeps_its_schedule_when_answered', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMisses(page, base, [['alpha', 3], ['bravo', -1]]);
+      const before = (await misses(page)).find((m) => m.word === 'alpha');
+      await openMisses(page);
+      await tapStar(page, '#pickBody', 'alpha');
+      await page.click('#pickBody [data-pq-all]');
+      await domSettled(page);
+      assertEq(await serve(page), 'alpha', 'the not-due star leads');
+      await answerCorrect(page);
+      const after = (await misses(page)).find((m) => m.word === 'alpha');
+      assert(after, 'still in Misses: not cleared');
+      assertEq(after.due, before.due, 'its next due date did not move');
+      assertEq(after.misses, before.misses, 'miss count untouched');
+      assertEq((await starWords(page)).join(','), 'alpha', 'and the star stays until it is learned');
+    } finally { await ctx.close(); }
+  });
+
+  // A6: the 11th star in a language is refused, visibly.
+  await suite.test('pick_stars_the_eleventh_star_is_refused_with_a_visible_message', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      const words = ['ant', 'bat', 'cow', 'dog', 'eel', 'fox', 'gnu', 'hen', 'ibis', 'jay', 'kiwi', 'lark'];
+      await bootMisses(page, base, words.map((w) => [w, -1]));
+      await openMisses(page);
+      for (const w of words.slice(0, 10)) await tapStar(page, '#pickBody', w);
+      assertEq((await starWords(page)).length, 10, 'ten stars fit');
+      assert((await page.$('#pickBody .pq-note')) === null, 'and no complaint yet');
+      await tapStar(page, '#pickBody', 'kiwi');
+      assertEq((await starWords(page)).length, 10, 'the eleventh was refused');
+      assert(!(await starWords(page)).includes('kiwi'));
+      const note = await page.$('#pickBody .pq-note[role="status"]');
+      assert(note, 'a status message is on screen');
+      assert(await note.isVisible(), 'and it is visible');
+      assert(/ten/i.test(await note.textContent()), 'and it says why');
+      assertEq(await page.$eval(starBtn('#pickBody', 'kiwi'), (e) => e.getAttribute('aria-pressed')), 'false');
+      // Unstarring is always allowed and makes room.
+      await tapStar(page, '#pickBody', 'ant');
+      await tapStar(page, '#pickBody', 'kiwi');
+      assertEq((await starWords(page)).length, 10);
+      assert((await starWords(page)).includes('kiwi'));
+    } finally { await ctx.close(); }
+  });
+
+  // O-E: Reset this language clears that language's stars; sign-out is not tested here.
+  await suite.test('pick_stars_reset_this_language_clears_its_stars', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMisses(page, base, FIVE);
+      await openMisses(page);
+      await tapStar(page, '#pickBody', 'apple');
+      assertEq((await starWords(page)).length, 1);
+      await page.evaluate(() => document.getElementById('resetStats').click());
+      await page.waitForFunction((k) => {
+        const l = JSON.parse(localStorage.getItem(k) || 'null');
+        return !l || l.stars.length === 0;
+      }, STARS_KEY, { timeout: 5000 });
+      assertEq((await starWords(page)).length, 0, 'cleared');
+    } finally { await ctx.close(); }
+  });
+
+  // A newer build's blob is read as empty and never overwritten.
+  await suite.test('pick_stars_a_newer_blob_is_kept_byte_for_byte', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMisses(page, base, FIVE);
+      const blob = JSON.stringify({ v: 99, stars: [{ key: 'x', word: 'apple', lang: 'en' }], future: true });
+      await page.evaluate(([k, b]) => localStorage.setItem(k, b), [STARS_KEY, blob]);
+      await reload(page, base);
+      await openMisses(page);
+      assertEq(await page.$eval(starBtn('#pickBody', 'apple'), (e) => e.getAttribute('aria-pressed')), 'false', 'read as empty');
+      await tapStar(page, '#pickBody', 'bread');
+      assertEq(await page.evaluate((k) => localStorage.getItem(k), STARS_KEY), blob, 'never overwritten');
+    } finally { await ctx.close(); }
+  });
+
+  // My Words: the star IS ListEntry.starred (O-A), leads the session in a Mixed
+  // list, persists, and removing the word takes its star (O-D).
+  await suite.test('pick_stars_my_words_star_reuses_the_entry_star_and_leads', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMine(page, base, ['cat', 'dog', 'fox', 'owl']);
+      await openMyWords(page);
+      await page.waitForSelector('#listsScreen.show');
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      assert((await page.$('#listsBody [data-e-star]')) === null, 'one star control per word, not two');
+      await tapStar(page, '#listsBody', 'owl');
+      let d = await listsData(page);
+      assertEq(d.lists[0].entries.find((e) => e.text === 'owl').starred, true, 'the existing entry field');
+      assertEq(await stars(page), null, 'no second store for My Words stars');
+      await reload(page, base);
+      d = await listsData(page);
+      assertEq(d.lists[0].entries.find((e) => e.text === 'owl').starred, true, 'survived a hard reload (A7)');
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      await page.click('#listsBody [data-l-play]');
+      await page.waitForFunction(() => window.__spelltest.currentLang() === '__mine', null, { timeout: 5000 });
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      assertEq(await page.evaluate(() => window.__spelltest.currentWord()), 'owl', 'the starred word leads');
+      await answerCorrect(page);
+      const next = await serve(page);
+      assert(next !== 'owl', `and is not repeated (${next})`);
+      // Removing the word from My Words removes its star.
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      const idx = await page.$$eval('#listsBody .lists-entry', (rows) =>
+        rows.findIndex((r) => r.querySelector('.pq-word')?.textContent === 'owl'));
+      await page.click(`#listsBody [data-e-remove="${idx}"]`);
+      await domSettled(page);
+      d = await listsData(page);
+      assert(!d.lists[0].entries.some((e) => e.text === 'owl'), 'owl is gone');
+      assertEq(d.lists[0].entries.filter((e) => e.starred).length, 0, 'and no star is left behind');
+    } finally { await ctx.close(); }
+  });
+
+  // A6 in My Words: same component, same cap, same message.
+  await suite.test('pick_stars_my_words_eleventh_star_is_refused_with_a_message', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      const words = ['ant', 'bat', 'cow', 'dog', 'eel', 'fox', 'gnu', 'hen', 'ibis', 'jay', 'kiwi', 'lark'];
+      await bootMine(page, base, words);
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      for (const w of words.slice(0, 10)) await tapStar(page, '#listsBody', w);
+      await tapStar(page, '#listsBody', 'kiwi');
+      const d = await listsData(page);
+      assertEq(d.lists[0].entries.filter((e) => e.starred).length, 10, 'still ten');
+      const note = await page.$('#listsBody .pq-note[role="status"]');
+      assert(note && (await note.isVisible()), 'the message is visible');
+    } finally { await ctx.close(); }
+  });
+
+  // I7: Spell Jr shows no stars at all, and a persisted star changes nothing.
+  await suite.test('pick_stars_spell_jr_has_no_stars_and_ignores_persisted_ones', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID, init: FLAG_AB });
+    try {
+      assert(await page.evaluate(() => document.body.classList.contains('kid')), 'a Spell Jr player');
+      await bootMisses(page, base, FIVE);
+      await page.evaluate(([k, v]) => localStorage.setItem(k, v), [STARS_KEY,
+        JSON.stringify({ v: 1, stars: [{ key: 'en::eagle', word: 'eagle', lang: 'en' }] })]);
+      await reload(page, base);
+      await openMisses(page);
+      assertEq((await badges(page)).length, 5, 'the lineup surface is there');
+      assert((await page.$('#pickBody [data-pq-star]')) === null, 'no star control rendered');
+      // And in My Words order: the persisted entry star does not lead for Jr.
+      await bootMine(page, base, ['cat', 'dog', 'fox', 'owl']);
+      await page.evaluate((k) => {
+        const d = JSON.parse(localStorage.getItem(k));
+        d.lists[0].order = 'InMyOrder';
+        d.lists[0].entries[3].starred = true;
+        localStorage.setItem(k, JSON.stringify(d));
+      }, LISTS_KEY);
+      await reload(page, base);
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      assert((await page.$('#listsBody [data-pq-star],#listsBody [data-e-star]')) === null, 'no star control in My Words either');
+      await page.click('#listsBody [data-l-play]');
+      await page.waitForFunction(() => window.__spelltest.currentLang() === '__mine', null, { timeout: 5000 });
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      assertEq(await page.evaluate(() => window.__spelltest.currentWord()), 'cat', 'saved order; the star is ignored');
+    } finally { await ctx.close(); }
+  });
+
+  // Flag OFF entirely: the existing in-my-order star is exactly today's.
+  await suite.test('pick_stars_everything_off_keeps_the_in_my_order_star', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_OFF });
+    try {
+      await bootMine(page, base, ['cat', 'dog', 'fox', 'owl']);
+      await page.evaluate((k) => {
+        const d = JSON.parse(localStorage.getItem(k));
+        d.lists[0].order = 'InMyOrder';
+        localStorage.setItem(k, JSON.stringify(d));
+      }, LISTS_KEY);
+      await reload(page, base);
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      assert(await page.$('#listsBody [data-e-star="3"]'), 'the old star control is there');
+      assert((await page.$('#listsBody [data-pq-star]')) === null, 'and no new one');
+      await page.click('#listsBody [data-e-star="3"]');
+      await domSettled(page);
+      const d = await listsData(page);
+      assertEq(d.lists[0].entries[3].starred, true);
+      assertEq(await stars(page), null, 'nothing else written');
     } finally { await ctx.close(); }
   });
 }

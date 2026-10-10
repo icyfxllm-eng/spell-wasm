@@ -373,6 +373,21 @@ pub fn pick_queue_a() -> bool {
     false
 }
 
+/// CC-PICK-QUEUE v1 Phase B -- focus stars: a starred word leads every session
+/// until it is learned (cap ten per language). Its OWN flag, **default OFF**,
+/// and it only takes effect while `pick_queue_a` is also on, because the stars
+/// live on Phase A's surfaces (see `pick_stars::enabled`). Permanently false in
+/// the site build (O-F). Develop with `localStorage['spell_flag_pick_queue_b'] = 'on'`.
+#[cfg(not(feature = "web"))]
+pub fn pick_queue_b() -> bool {
+    resolve(stored("pick_queue_b").as_deref(), false)
+}
+
+#[cfg(feature = "web")]
+pub fn pick_queue_b() -> bool {
+    false
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:

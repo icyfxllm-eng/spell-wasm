@@ -954,5 +954,9 @@
   "pick.running": "Ćwiczysz swoją kolejkę — wybrano {n}.",
   "pick.done": "To był ostatni wybór.",
   "pick.end": "Zakończ kolejkę",
-  "pick.ended": "Kolejka zakończona."
+  "pick.ended": "Kolejka zakończona.",
+  "star.add": "Oznacz {word} gwiazdką, aby ćwiczyć to słowo zawsze na początku",
+  "star.remove": "Usuń gwiazdkę ze słowa {word}",
+  "star.hint": "Oznacz słowo gwiazdką, aby ćwiczyć je na początku każdej sesji, dopóki go nie opanujesz.",
+  "star.cap": "Dziesięć gwiazdek to maksimum dla jednego języka. Usuń gwiazdkę ze słowa, aby oznaczyć inne."
 }

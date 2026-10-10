@@ -954,5 +954,9 @@
   "pick.running": "Practicing your lineup — {n} picked.",
   "pick.done": "That was your last pick.",
   "pick.end": "End lineup",
-  "pick.ended": "Lineup ended."
+  "pick.ended": "Lineup ended.",
+  "star.add": "Star {word} to practice it first every time",
+  "star.remove": "Remove the star from {word}",
+  "star.hint": "Star a word to practice it first, every session, until you learn it.",
+  "star.cap": "Ten stars is the most for one language. Unstar a word to star another."
 }

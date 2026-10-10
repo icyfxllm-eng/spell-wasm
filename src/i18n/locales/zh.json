@@ -954,5 +954,9 @@
   "pick.running": "正在练习你的队列 — 已选 {n} 个。",
   "pick.done": "这是你的最后一个选择。",
   "pick.end": "结束队列",
-  "pick.ended": "队列已结束。"
+  "pick.ended": "队列已结束。",
+  "star.add": "给 {word} 加星标，每次优先练习",
+  "star.remove": "取消 {word} 的星标",
+  "star.hint": "给单词加星标，学会之前每次练习都会先练它。",
+  "star.cap": "每种语言最多 10 个星标。取消一个星标后才能再标记其他单词。"
 }

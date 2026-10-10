@@ -152,6 +152,9 @@ pub fn promote_miss_at(state: &mut AppState, word: &str, lang: &str, grade: crat
             let lang = state.misses[idx].lang.clone();
             crate::journal::note_today(&lang, &date, |e| e.mastered.push(w));
         }
+        // CC-PICK-QUEUE Phase B (O-D): a starred miss that graduates loses its
+        // star silently. Flag off: a no-op.
+        crate::pick_stars::on_miss_graduated(&key);
         state.misses.remove(idx);
         cleared = state.misses.is_empty();
     }
@@ -226,5 +229,70 @@ mod pick_tests {
         add_miss_at(&mut st, "cat", "en", "easy", T0 + 5_000.0);
         assert_eq!(st.misses[0].misses, 2);
         assert_eq!(st.misses[0].due, T0 + 5_000.0);
+    }
+
+    // ---- Phase B: focus stars ----
+
+    /// A5 analogue: a star-led correct answer on a NOT-DUE miss counts as
+    /// practice, does not clear it and does not move its next spaced check.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_star_led_correct_answer_on_a_not_due_miss_leaves_its_schedule_alone() {
+        crate::flags::set_test_override(Some("on"));
+        let mut st = state_with("cat");
+        promote_miss_at(&mut st, "cat", "en", Grade::Good, T0 + 1_000.0);
+        let before = st.misses[0].clone();
+        crate::pick_stars::set_for_test(crate::pick_stars::Stars {
+            v: 1,
+            stars: vec![crate::pick_queue::Pick { key: miss_key("cat", "en"), word: "cat".into(), lang: "en".into() }],
+        });
+        crate::pick_queue::set_for_test(Default::default());
+        crate::pick_queue::begin_star_session(false, "en");
+        let served = crate::pick_queue::next_for_misses(false, "en", |_| true);
+        assert!(matches!(served, crate::pick_queue::Serve::Pick(_)), "the star leads");
+        let picked = crate::pick_queue::served_by_lineup("cat");
+        assert!(picked);
+        let cleared = promote_miss_picked_at(&mut st, "cat", "en", Grade::Good, T0 + 2_000.0, picked);
+        assert!(!cleared);
+        assert_eq!(st.misses.len(), 1, "not cleared");
+        assert_eq!(st.misses[0].due, before.due, "next spaced check not skipped");
+        assert_eq!(st.misses[0].review.as_ref().map(|r| r.step), before.review.as_ref().map(|r| r.step));
+        crate::pick_queue::end_session();
+        crate::flags::set_test_override(None);
+    }
+
+    /// O-D: when a starred miss graduates, its star is pruned silently, and
+    /// grading itself is the ordinary path (A12): the same call graduates it
+    /// with or without a star.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_starred_miss_that_graduates_loses_its_star() {
+        crate::flags::set_test_override(Some("on"));
+        let key = miss_key("cat", "en");
+        crate::pick_stars::set_for_test(crate::pick_stars::Stars {
+            v: 1,
+            stars: vec![crate::pick_queue::Pick { key: key.clone(), word: "cat".into(), lang: "en".into() }],
+        });
+        let mut starred = state_with("cat");
+        let mut plain = state_with("cat");
+        let mut t = T0;
+        let mut guard = 0;
+        while !starred.misses.is_empty() && guard < 20 {
+            t = starred.misses[0].due.max(t) + 1.0;
+            promote_miss_at(&mut starred, "cat", "en", Grade::Good, t);
+            guard += 1;
+        }
+        let mut t2 = T0;
+        for _ in 0..guard {
+            if plain.misses.is_empty() {
+                break;
+            }
+            t2 = plain.misses[0].due.max(t2) + 1.0;
+            promote_miss_at(&mut plain, "cat", "en", Grade::Good, t2);
+        }
+        assert!(starred.misses.is_empty(), "it graduated");
+        assert_eq!(plain.misses.len(), starred.misses.len(), "a star never changes what learned means");
+        assert!(!crate::pick_stars::read(|s| s.has(&key)), "its star went with it");
+        crate::flags::set_test_override(None);
     }
 }

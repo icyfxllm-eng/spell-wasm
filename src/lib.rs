@@ -187,6 +187,7 @@ mod wordcross_ui; // CC-WORDGRID v1 Phase B — the Spell Cross screen (app only
 #[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
 mod pick_queue; // CC-PICK-QUEUE v1 Phase A: the lineup model + queue guards (flag off; permanently off in the site build)
+mod pick_stars; // CC-PICK-QUEUE v1 Phase B: focus stars (Misses store; My Words reuses ListEntry.starred; flag off)
 #[cfg(not(feature = "web"))]
 mod pick_ui; // CC-PICK-QUEUE v1 Phase A: the shared lineup component (app only)
 #[cfg(not(feature = "web"))]
@@ -1472,6 +1473,16 @@ fn wire_stats_board_modal(app: &App) {
             crate::learner::reset(&lang);
             // CC-PICK-QUEUE (O-E): Reset this language clears that language's lineup.
             pick_queue::clear_lang(&lang);
+            // Phase B (O-E): and that language's focus stars. Flag off: no-op.
+            pick_stars::clear_lang(&lang);
+            #[cfg(not(feature = "web"))]
+            if pick_stars::enabled() {
+                let mut lists = word_lists::load();
+                if word_lists::clear_stars(&mut lists, &lang, js_sys::Date::now()) {
+                    word_lists::store(&lists);
+                    lists_ui::refresh_pool(&a);
+                }
+            }
             stats::reset_current_lang(&mut a.borrow_mut());
             // Also clear adaptive word stats (the only reset affordance today).
             wordstats::clear();

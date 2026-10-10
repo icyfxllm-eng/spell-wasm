@@ -954,5 +954,9 @@
   "pick.running": "Du übst deine Auswahl — {n} gewählt.",
   "pick.done": "Das war deine letzte Auswahl.",
   "pick.end": "Auswahl beenden",
-  "pick.ended": "Auswahl beendet."
+  "pick.ended": "Auswahl beendet.",
+  "star.add": "{word} mit einem Stern markieren, um es immer zuerst zu üben",
+  "star.remove": "Stern von {word} entfernen",
+  "star.hint": "Markiere ein Wort mit einem Stern, um es in jeder Runde zuerst zu üben, bis du es kannst.",
+  "star.cap": "Zehn Sterne sind das Maximum pro Sprache. Entferne einen Stern, um ein anderes Wort zu markieren."
 }

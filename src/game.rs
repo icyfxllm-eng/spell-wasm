@@ -1564,8 +1564,11 @@ pub fn next_word(app: &App) {
         // CC-PICK-QUEUE: the lineup's say over the Misses queue. `Open` (flag
         // off, no session, nothing left to line up) falls straight through to
         // the branches below untouched.
+        // The word the previous serve led with is history now (D3); flag off
+        // and no session: a no-op.
+        crate::pick_queue::clear_last_served();
         let pick_serve = if s.review && !s.daily.active {
-            crate::pick_queue::next_for_misses(|p| {
+            crate::pick_queue::next_for_misses(s.kid, &s.lang, |p| {
                 s.misses.iter().any(|m| misses::miss_key(&m.word, &m.lang) == p.key)
             })
         } else {
@@ -1695,9 +1698,26 @@ pub fn next_word(app: &App) {
                 // deck. It bypasses `pool` (and so the length-tier filter) and
                 // never calls Deck::next, so the persisted pass is not shifted.
                 let pick_serve = if s.lang == MINE {
-                    crate::pick_queue::next_for_mine(&s.list_words, || {
-                        crate::word_lists::play_selection(&crate::word_lists::load())
-                    })
+                    crate::pick_queue::next_for_mine(
+                        s.kid,
+                        &s.list_words,
+                        s.list_sequential,
+                        || crate::word_lists::play_selection(&crate::word_lists::load()),
+                        // Phase B: the focus stars of the chosen lists, each in
+                        // its own language (the list order they sit in).
+                        || {
+                            let lists = crate::word_lists::load();
+                            let chosen = crate::word_lists::play_selection(&lists);
+                            crate::word_lists::starred_words(&lists, &chosen)
+                                .into_iter()
+                                .map(|(text, lang)| crate::pick_queue::Pick {
+                                    key: crate::word_id::word_id0(&lang, &text),
+                                    word: text,
+                                    lang,
+                                })
+                                .collect()
+                        },
+                    )
                 } else {
                     crate::pick_queue::Serve::Open
                 };
@@ -1743,7 +1763,10 @@ pub fn next_word(app: &App) {
                     // not come round again from the deck. Flag off / no
                     // session: `already_served` is false and this never loops.
                     let mut guard = 0;
-                    while crate::pick_queue::already_served(&w) && guard < pool.len() {
+                    while (crate::pick_queue::already_served(&w)
+                        || (s.lang == MINE && crate::pick_queue::star_served(&w)))
+                        && guard < pool.len()
+                    {
                         w = s.decks.entry(key.clone()).or_default().next(&pool);
                         guard += 1;
                     }
@@ -3638,6 +3661,12 @@ pub fn enter_review(app: &App) {
         return;
     }
     app.borrow_mut().review = true;
+    {
+        // CC-PICK-QUEUE Phase B: a session for the focus stars to lead (and not
+        // repeat) in. A lineup session already running is left alone.
+        let s = app.borrow();
+        crate::pick_queue::begin_star_session(s.kid, &s.lang);
+    }
     stop_timer(true);
     crate::ghost::hide_pace(); // F6: leaving Climb for Misses review
     clear_meaning();

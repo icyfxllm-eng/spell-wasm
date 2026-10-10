@@ -954,5 +954,9 @@
   "pick.running": "Practicando tu fila — {n} elegidas.",
   "pick.done": "Esa fue tu última elección.",
   "pick.end": "Terminar fila",
-  "pick.ended": "Fila terminada."
+  "pick.ended": "Fila terminada.",
+  "star.add": "Marca {word} con una estrella para practicarla primero siempre",
+  "star.remove": "Quita la estrella de {word}",
+  "star.hint": "Marca una palabra con una estrella para practicarla primero en cada sesión, hasta que la aprendas.",
+  "star.cap": "Diez estrellas es el máximo por idioma. Quita la estrella de una palabra para marcar otra."
 }

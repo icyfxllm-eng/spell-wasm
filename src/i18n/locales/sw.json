@@ -954,5 +954,9 @@
   "pick.running": "Unafanya mazoezi ya orodha yako — {n} zimechaguliwa.",
   "pick.done": "Hiyo ilikuwa chaguo lako la mwisho.",
   "pick.end": "Maliza orodha",
-  "pick.ended": "Orodha imekwisha."
+  "pick.ended": "Orodha imekwisha.",
+  "star.add": "Weka nyota kwenye {word} ili ifanyiwe mazoezi kwanza kila mara",
+  "star.remove": "Ondoa nyota kwenye {word}",
+  "star.hint": "Weka nyota kwenye neno ili lifanyiwe mazoezi kwanza kila kipindi, hadi ulijue.",
+  "star.cap": "Nyota kumi ndizo nyingi zaidi kwa lugha moja. Ondoa nyota kwenye neno ili uweke nyingine."
 }
