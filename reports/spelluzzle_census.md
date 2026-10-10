@@ -1,7 +1,7 @@
 # CC-SPELLUZZLE §4 census
 
 **Run 2026-10-09 against `origin/main` c052f07c. Read-only: no repo code, bank or registry changed.**
-**STOP — Phases A–D are blocked on Eric's review and on O1–O3.**
+**Phases A–C are built (2026-10-09). v1.1 additions are in the section at the end.**
 
 Compiled from three read-only surveys (appendices). C7 ran a Python prototype generator and an independent checker on the real English bank; it is a feasibility measurement, not the Rust implementation.
 
@@ -297,6 +297,22 @@ Budget for the board with keyboard up, rune key hidden: chrome ~129 pt (pad 8 + 
 - Caveats: if each row also carries a left gutter (play button / role marker), usable width shrinks: 28 pt gutter+6 gap -> 33.0 pt, 44 pt gutter+6 gap -> 31.2 pt (fails 32, passes 28). Big Text/Kid on the main keyboard (keys 56 high, ~261 pt with margin) leaves grid height 277 -> height-bound cell 37.0, so still ~36.8 overall (zero spare; with a 20 pt top inset it drops to ~34). On a 320x568 (SE 1st gen): width-bound 30.7, still >=28 but <32.
 
 ---
+
+
+## v1.1 decisions recorded (Eric, 2026-10-10: "The fixes seem reasonable")
+
+Eric accepted the recommended fix for every v1.1 census finding. Recorded here so the build has a source:
+
+1. **Expeditions (C15):** verify runs offline and ship the word indexes (about 2,000 runs per tier), so the device only picks one. Keep the 24-rune cap and make the guided generator part of the spec. Fallback if the run lists are not wanted: Medium and Hard only.
+2. **My Words (C17, O5):** the bank match is computed when the board is built (`word_index::canonical`); no stored id. The kid filter is applied inside Spelluzzle for Jr profiles.
+3. **Ripple sound (C19):** a small oscillator tick beside `audio_boost::chime()`, no asset file, following the silent switch.
+4. **Duel NPC (C20):** extract a public `npc_accuracy_milli(variant, difficulty, hits, attempts)` and public clamp constants in the Board Game engine, keeping its golden digest. Another session is working in that module, so this edit is coordinated before it is made, at Phase H.
+5. **Layout (C21):** one shared action bar (Listen, Spell unheard) above the keyboard replaces per-row Listen heads on Par and Duel; the glyph shrinks to 52% or less in a pencilled cell so an 11 pt mark fits; the rune strip is stacked (glyph over a count-and-letter caption, 44 pt) and hidden while the keyboard is up.
+6. **Par (C14):** Expert Par requires par 3 (Hard stays par 2 or 3), re-measured when built. "Most cells first" means the Listen that decodes the most hidden cells.
+7. **Accepted as is:** Easy Duel draws (up to 12.6%); Spanish Easy below the floor (Par and Duel Easy stay absent for it).
+8. **C12:** the stale STOP line at the top of this report is corrected, and this section is the v1.1 sign-off record.
+
+Next: Phase E (pencil runes, rune strip, ripple) when Eric says start.
 
 # CC-SPELLUZZLE v1.1 census additions (run 2026-10-10, origin/main 27280a81)
 
