@@ -982,5 +982,15 @@
   "star.add": "Star {word} to practice it first every time",
   "star.remove": "Remove the star from {word}",
   "star.hint": "Star a word to practice it first, every session, until you learn it.",
-  "star.cap": "Ten stars is the most for one language. Unstar a word to star another."
+  "star.cap": "Ten stars is the most for one language. Unstar a word to star another.",
+  "pick.sortLabel": "Sort",
+  "pick.sort.listed": "As listed",
+  "pick.sort.missed": "Missed most",
+  "pick.sort.due": "Due now",
+  "pick.sort.newest": "Newest",
+  "pick.sort.never": "Never practiced",
+  "pick.search": "Search words",
+  "pick.toughest": "Toughest {n}",
+  "pick.hidden": "{n} lined up but hidden by your search",
+  "pick.noMatch": "No words match your search."
 }

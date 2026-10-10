@@ -982,5 +982,15 @@
   "star.add": "Marca {word} con una estrella para practicarla primero siempre",
   "star.remove": "Quita la estrella de {word}",
   "star.hint": "Marca una palabra con una estrella para practicarla primero en cada sesión, hasta que la aprendas.",
-  "star.cap": "Diez estrellas es el máximo por idioma. Quita la estrella de una palabra para marcar otra."
+  "star.cap": "Diez estrellas es el máximo por idioma. Quita la estrella de una palabra para marcar otra.",
+  "pick.sortLabel": "Ordenar",
+  "pick.sort.listed": "Como está",
+  "pick.sort.missed": "Más falladas",
+  "pick.sort.due": "Toca ya",
+  "pick.sort.newest": "Más nuevas",
+  "pick.sort.never": "Sin practicar",
+  "pick.search": "Buscar palabras",
+  "pick.toughest": "Las {n} más difíciles",
+  "pick.hidden": "{n} en tu selección, ocultas por la búsqueda",
+  "pick.noMatch": "Ninguna palabra coincide con tu búsqueda."
 }

@@ -152,7 +152,7 @@ struct Pq<'a> {
     kid: bool,
 }
 
-fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: bool, pq: Option<&Pq>) -> String {
+fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: bool, frozen: bool, pq: Option<&Pq>) -> String {
     if !editable {
         return format!(
             "<div class=\"lists-entry\"><span class=\"le-word\">{}</span>\
@@ -186,8 +186,8 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: boo
         format!(
             "<button type=\"button\" class=\"ghost\" data-e-up=\"{idx}\"{}>↑</button>\
              <button type=\"button\" class=\"ghost\" data-e-down=\"{idx}\"{}>↓</button>",
-            if idx == 0 { " disabled" } else { "" },
-            if last { " disabled" } else { "" },
+            if idx == 0 || frozen { " disabled" } else { "" },
+            if last || frozen { " disabled" } else { "" },
         )
     } else if ordered {
         format!(
@@ -196,8 +196,8 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: boo
              <button type=\"button\" class=\"ghost\" data-e-down=\"{idx}\"{}>↓</button>",
             if e.starred { "true" } else { "false" },
             if e.starred { "\u{2605}" } else { "\u{2606}" },
-            if idx == 0 { " disabled" } else { "" },
-            if last { " disabled" } else { "" },
+            if idx == 0 || frozen { " disabled" } else { "" },
+            if last || frozen { " disabled" } else { "" },
         )
     } else {
         String::new()
@@ -237,7 +237,7 @@ fn row_cls(c: &str) -> String {
     format!(" {c}")
 }
 
-fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
+fn detail_html(lists: &Lists, id: &str, kid: bool, misses: &[crate::model::MissEntry]) -> String {
     let back = format!(
         "<div class=\"lists-row\"><button type=\"button\" class=\"ghost\" data-l-back>{}</button></div>",
         esc(&t("fd.back"))
@@ -245,7 +245,7 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
     if id == ALL {
         let all = word_lists::all_words(lists);
         let rows: String =
-            all.iter().enumerate().map(|(i, e)| entry_row(i, e, false, false, false, None)).collect();
+            all.iter().enumerate().map(|(i, e)| entry_row(i, e, false, false, false, false, None)).collect();
         return format!(
             "{back}<div class=\"lists-head\">{} · {}</div>\
              <div class=\"lists-actions\">\
@@ -291,23 +291,34 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
     } else {
         None
     };
-    let rows: String = l
-        .entries
+    // The footer follows the lineup in progress, or the first row's language.
+    let pq_lang = pq.as_ref().map(|p| {
+        p.active.clone().or_else(|| l.entries.first().map(|e| e.lang.clone())).unwrap_or_default()
+    });
+    // CC-PICK-QUEUE Phase C: sort / search / Toughest 5. Flag off, or Spell Jr:
+    // the identity (every row, stored order, no controls).
+    let help = match (&pq, &pq_lang) {
+        (Some(p), Some(lang)) => crate::pick_ui::help_for(
+            crate::pick_queue::SURFACE_MINE,
+            p.list,
+            lang,
+            kid,
+            &crate::pick_ui::mine_rows(&l.entries, misses),
+        ),
+        _ => crate::pick_ui::Help { order: (0..l.entries.len()).collect(), controls: String::new(), frozen: false },
+    };
+    let rows: String = help
+        .order
         .iter()
-        .enumerate()
-        .map(|(i, e)| entry_row(i, e, true, mine, i + 1 == l.entries.len(), pq.as_ref()))
+        .map(|&i| entry_row(i, &l.entries[i], true, mine, i + 1 == l.entries.len(), help.frozen, pq.as_ref()))
         .collect();
-    let pq_head = match &pq {
-        Some(p) => {
-            // The footer follows the lineup in progress, or the first row's language.
-            let lang = p
-                .active
-                .clone()
-                .or_else(|| l.entries.first().map(|e| e.lang.clone()))
-                .unwrap_or_default();
-            crate::pick_ui::footer_html(crate::pick_queue::SURFACE_MINE, p.list, &lang, kid)
-        }
-        None => String::new(),
+    let pq_head = match (&pq, &pq_lang) {
+        (Some(p), Some(lang)) => format!(
+            "{}{}",
+            crate::pick_ui::footer_html(crate::pick_queue::SURFACE_MINE, p.list, lang, kid),
+            help.controls
+        ),
+        _ => String::new(),
     };
     // D3: how this list hands its words to play.
     let order = format!(
@@ -375,10 +386,11 @@ fn render(app: &App) {
     let lists = word_lists::load();
     let kid = app.borrow().kid;
     let html = match OPEN_LIST.with(|c| c.borrow().clone()) {
-        Some(id) => detail_html(&lists, &id, kid),
+        Some(id) => detail_html(&lists, &id, kid, &app.borrow().misses),
         None => home_html(&lists),
     };
     dom::set_html("listsBody", &html);
+    crate::pick_ui::restore_search_focus();
 }
 
 // ---------- the undo bar ----------
@@ -453,6 +465,7 @@ pub fn open(app: &App) {
 /// Open straight into one list — the save sheet's "Open" lands here.
 pub fn open_list(app: &App, id: &str) {
     open(app);
+    crate::pick_ui::reset_help(crate::pick_queue::SURFACE_MINE, id);
     OPEN_LIST.with(|c| *c.borrow_mut() = Some(id.to_string()));
     render(app);
 }
@@ -467,6 +480,16 @@ fn attr(el: &web_sys::Element, name: &str) -> Option<String> {
 }
 
 pub fn wire(app: &App) {
+    // CC-PICK-QUEUE Phase C: the shared search box. Inert unless the box
+    // exists (flag on, Standard player).
+    for kind in ["input", "compositionend"] {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("listsScreen", kind, move |ev| {
+            if crate::pick_ui::handle_search_event(&a, &ev) {
+                render(&a);
+            }
+        });
+    }
     {
         let a = app.clone();
         dom::on_click("listsClose", move || {
@@ -490,7 +513,8 @@ pub fn wire(app: &App) {
                  [data-l-play],[data-l-play-all],[data-l-order],[data-l-puzzle],[data-l-cross],\
                  [data-e-edit],[data-e-save],[data-e-cancel],[data-e-remove],\
                  [data-e-star],[data-e-up],[data-e-down],\
-                 [data-pq-toggle],[data-pq-star],[data-pq-start],[data-pq-just]",
+                 [data-pq-toggle],[data-pq-star],[data-pq-start],[data-pq-just],\
+                 [data-pq-sort],[data-pq-toughest]",
             )
             .ok()
             .flatten()
@@ -502,7 +526,9 @@ pub fn wire(app: &App) {
             && (el.has_attribute("data-pq-toggle")
                 || el.has_attribute("data-pq-star")
                 || el.has_attribute("data-pq-start")
-                || el.has_attribute("data-pq-just"))
+                || el.has_attribute("data-pq-just")
+                || el.has_attribute("data-pq-sort")
+                || el.has_attribute("data-pq-toughest"))
         {
             if crate::pick_ui::handle_click(&a, &el, &|| close()) {
                 render(&a);
@@ -575,6 +601,8 @@ pub fn wire(app: &App) {
             }
             render(&a);
         } else if let Some(id) = attr(&el, "data-l-open") {
+            // A new visit to a list: sort and search start from today's order.
+            crate::pick_ui::reset_help(crate::pick_queue::SURFACE_MINE, &id);
             OPEN_LIST.with(|c| *c.borrow_mut() = Some(id));
             EDITING.with(|c| c.set(None));
             CONFIRMING.with(|c| c.set(false));

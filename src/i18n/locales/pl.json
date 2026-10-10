@@ -982,5 +982,15 @@
   "star.add": "Oznacz {word} gwiazdką, aby ćwiczyć to słowo zawsze na początku",
   "star.remove": "Usuń gwiazdkę ze słowa {word}",
   "star.hint": "Oznacz słowo gwiazdką, aby ćwiczyć je na początku każdej sesji, dopóki go nie opanujesz.",
-  "star.cap": "Dziesięć gwiazdek to maksimum dla jednego języka. Usuń gwiazdkę ze słowa, aby oznaczyć inne."
+  "star.cap": "Dziesięć gwiazdek to maksimum dla jednego języka. Usuń gwiazdkę ze słowa, aby oznaczyć inne.",
+  "pick.sortLabel": "Sortuj",
+  "pick.sort.listed": "Jak na liście",
+  "pick.sort.missed": "Najczęściej błędne",
+  "pick.sort.due": "Do powtórki teraz",
+  "pick.sort.newest": "Najnowsze",
+  "pick.sort.never": "Nigdy nie ćwiczone",
+  "pick.search": "Szukaj słów",
+  "pick.toughest": "{n} najtrudniejszych",
+  "pick.hidden": "{n} w twoim wyborze, ukrytych przez wyszukiwanie",
+  "pick.noMatch": "Żadne słowo nie pasuje do wyszukiwania."
 }

@@ -142,6 +142,30 @@ impl Lineups {
         Toggled::Added(sc.picks.len())
     }
 
+    /// CC-PICK-QUEUE Phase C ("Toughest 5"): append `picks` in the order given,
+    /// skipping any word already lined up (those keep their position and
+    /// number) and stopping at `cap` when there is one. Returns how many were
+    /// appended and whether the cap cut the list short. Appending is the ONLY
+    /// thing it does: nothing already picked moves (I5).
+    pub fn add_many(&mut self, id: &str, surface: &str, list: &str, lang: &str, picks: Vec<Pick>, cap: Option<usize>) -> (usize, bool) {
+        let mut added = 0;
+        let mut cut = false;
+        for p in picks {
+            if self.picks(id).iter().any(|x| x.key == p.key) {
+                continue;
+            }
+            match self.toggle(id, surface, list, lang, p, cap) {
+                Toggled::Added(_) => added += 1,
+                Toggled::Refused => {
+                    cut = true;
+                    break;
+                }
+                Toggled::Removed => {}
+            }
+        }
+        (added, cut)
+    }
+
     pub fn set_just_these(&mut self, id: &str, on: bool) {
         if let Some(s) = self.scopes.get_mut(id) {
             s.just_these = on;
@@ -305,6 +329,13 @@ pub fn set_for_test(l: Lineups) {
 
 pub fn enabled() -> bool {
     crate::flags::pick_queue_a()
+}
+
+/// Phase C: append several picks at once (the Toughest 5 quick pick), through
+/// the same cap as a single tap.
+pub fn add_many(id: &str, surface: &str, list: &str, lang: &str, picks: Vec<Pick>, kid: bool) -> (usize, bool) {
+    let cap = crate::experience::pick_caps(crate::experience::of_kid(kid)).max_picks;
+    write(|l| l.add_many(id, surface, list, lang, picks, cap))
 }
 
 pub fn toggle(id: &str, surface: &str, list: &str, lang: &str, pick: Pick, kid: bool) -> Toggled {

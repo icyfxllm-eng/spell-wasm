@@ -187,6 +187,7 @@ mod wordcross_ui; // CC-WORDGRID v1 Phase B — the Spell Cross screen (app only
 #[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
 mod pick_queue; // CC-PICK-QUEUE v1 Phase A: the lineup model + queue guards (flag off; permanently off in the site build)
+mod pick_help; // CC-PICK-QUEUE v1 Phase C: sort, search and Toughest 5 for the lineup surfaces (pure; flag off)
 mod pick_stars; // CC-PICK-QUEUE v1 Phase B: focus stars (Misses store; My Words reuses ListEntry.starred; flag off)
 #[cfg(not(feature = "web"))]
 mod pick_ui; // CC-PICK-QUEUE v1 Phase A: the shared lineup component (app only)

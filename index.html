@@ -1938,6 +1938,14 @@
   .pq-star{position:absolute;inset-block-start:4px;inset-inline-end:0;min-width:32px;height:32px;
     background:none;border:0;border-radius:8px;color:var(--muted-2);font-size:20px;line-height:1;cursor:pointer}
   .pq-star.on{color:var(--amber)}
+  /* Phase C help choosing: sort chips, search box, Toughest 5. Logical
+     properties only, so the row mirrors in RTL; the chips wrap, never clip. */
+  .pq-help{display:flex;flex-direction:column;gap:8px;margin-block:8px}
+  .pq-sorts{flex-wrap:wrap;gap:6px}
+  .pq-sortlabel{color:var(--muted-2);font-size:.85em;margin-inline-end:2px}
+  .pq-find{gap:8px}
+  .pq-find .ghost{flex:0 0 auto;white-space:nowrap}
+  .pq-find .ghost[disabled]{opacity:.45;cursor:default}
   /* PICKQUEUE:END */
   .lists-screen input[type=text]{flex:1;min-width:0;background:var(--panel-2);border:1.5px solid var(--edge);
     border-radius:10px;padding:10px;color:var(--ink);font-family:var(--body);font-size:16px}

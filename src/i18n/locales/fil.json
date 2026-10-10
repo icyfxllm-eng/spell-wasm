@@ -982,5 +982,15 @@
   "star.add": "Lagyan ng bituin ang {word} para laging unahin itong pag-aralan",
   "star.remove": "Alisin ang bituin sa {word}",
   "star.hint": "Lagyan ng bituin ang isang salita para unahin ito sa bawat sesyon hanggang matutunan mo ito.",
-  "star.cap": "Sampung bituin ang pinakamarami para sa isang wika. Alisin ang bituin ng isang salita para makapaglagay ng iba."
+  "star.cap": "Sampung bituin ang pinakamarami para sa isang wika. Alisin ang bituin ng isang salita para makapaglagay ng iba.",
+  "pick.sortLabel": "Ayusin",
+  "pick.sort.listed": "Ayon sa listahan",
+  "pick.sort.missed": "Pinakamadalas na mali",
+  "pick.sort.due": "Dapat na ngayon",
+  "pick.sort.newest": "Pinakabago",
+  "pick.sort.never": "Hindi pa nasasanay",
+  "pick.search": "Maghanap ng salita",
+  "pick.toughest": "Pinakamahirap na {n}",
+  "pick.hidden": "{n} na napili ay nakatago dahil sa paghahanap",
+  "pick.noMatch": "Walang salitang tumutugma sa paghahanap mo."
 }

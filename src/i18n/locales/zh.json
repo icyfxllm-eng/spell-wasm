@@ -982,5 +982,15 @@
   "star.add": "给 {word} 加星标，每次优先练习",
   "star.remove": "取消 {word} 的星标",
   "star.hint": "给单词加星标，学会之前每次练习都会先练它。",
-  "star.cap": "每种语言最多 10 个星标。取消一个星标后才能再标记其他单词。"
+  "star.cap": "每种语言最多 10 个星标。取消一个星标后才能再标记其他单词。",
+  "pick.sortLabel": "排序",
+  "pick.sort.listed": "按列表顺序",
+  "pick.sort.missed": "错得最多",
+  "pick.sort.due": "该复习了",
+  "pick.sort.newest": "最新",
+  "pick.sort.never": "从未练习",
+  "pick.search": "搜索单词",
+  "pick.toughest": "最难的 {n} 个",
+  "pick.hidden": "已选的 {n} 个被搜索隐藏",
+  "pick.noMatch": "没有符合搜索的单词。"
 }

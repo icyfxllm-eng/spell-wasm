@@ -120,7 +120,17 @@
     "star.add",
     "star.remove",
     "star.hint",
-    "star.cap"
+    "star.cap",
+    "pick.sortLabel",
+    "pick.sort.listed",
+    "pick.sort.missed",
+    "pick.sort.due",
+    "pick.sort.newest",
+    "pick.sort.never",
+    "pick.search",
+    "pick.toughest",
+    "pick.hidden",
+    "pick.noMatch"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -248,7 +258,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -367,7 +387,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "de": [
       "hub.group.spell_it",
@@ -486,7 +516,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -605,7 +645,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -724,7 +774,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -843,7 +903,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -962,7 +1032,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -1081,7 +1161,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -1200,7 +1290,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -1319,7 +1419,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -1438,7 +1548,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -1557,7 +1677,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -1676,7 +1806,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -1795,7 +1935,17 @@
       "star.add",
       "star.remove",
       "star.hint",
-      "star.cap"
+      "star.cap",
+      "pick.sortLabel",
+      "pick.sort.listed",
+      "pick.sort.missed",
+      "pick.sort.due",
+      "pick.sort.newest",
+      "pick.sort.never",
+      "pick.search",
+      "pick.toughest",
+      "pick.hidden",
+      "pick.noMatch"
     ]
   }
 }
