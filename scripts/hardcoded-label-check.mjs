@@ -50,8 +50,6 @@ const AWAITING_AUDIT = [
   'vs',
   'Save to board',
   'Chain broken!',
-  'No chains yet — be the first to start one.',
-  'Spell a few words to start tracking your accuracy by difficulty.',
   '🏔 The Climb',
 ];
 
@@ -100,7 +98,14 @@ export function findings(root = '.') {
       const text = raw.replace(/\s+/g, ' ')
         .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
         .replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
-      if (!covered && !skipped && WORD.test(text) && !written.has(top.id)) {
+      // ANY ancestor being Rust-written covers the text, not just the
+      // immediate parent. set_html replaces a container's whole subtree, so
+      // everything inside it is a placeholder: #boardList and #statsBody
+      // both render their empty state from i18n in Rust, while the English
+      // sits in an unnamed child <li>/<div>. Checking only the nearest
+      // parent reported both as untranslated when they were already right.
+      const writtenAncestor = stack.some((f) => f.id && written.has(f.id));
+      if (!covered && !skipped && WORD.test(text) && !writtenAncestor) {
         out.push({ id: top.id || '-', tag: top.tag, text });
       }
     }
@@ -156,6 +161,8 @@ function selftest() {
     ['a bare label is found', '<div>Hello there</div>', '', 1],
     ['a child of a keyed element is clean', '<div data-i18n="a.b"><span>Hi there</span></div>', '', 0],
     ['a Rust-written placeholder is clean', '<div id="x">Hello</div>', 'set_text("x", &v);', 0],
+    ['a child of a Rust-written container is clean too',
+      '<div id="x"><li class="empty">No chains yet</li></div>', 'set_html("x", &v);', 0],
     ['digits are not a label', '<div>0</div>', '', 0],
     ['script contents are not a label', '<script>var hello = 1;</script>', '', 0],
     ['data-i18n-html covers visible text', '<div data-i18n-html="a.b"><b>Hi there</b></div>', '', 0],
