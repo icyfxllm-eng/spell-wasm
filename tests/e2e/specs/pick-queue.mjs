@@ -326,6 +326,8 @@ export async function run(browser, base, suite) {
       assert(await page.$('#pickBody .pq-note'), 'and the child is told why');
       assert((await page.$('#pickBody [data-pq-sort],#pickBody [data-pq-search],#pickBody [data-pq-star]')) === null,
         'no sort, search or stars (absent, not locked)');
+      assert((await page.$('#pickBody [data-pq-just]')) === null, 'no Just these control for Spell Jr (D4)');
+      assert(await page.$('#pickBody [data-pq-start]'), 'but the start button is there');
       // Taking one off makes room.
       await tapWord(page, '#pickBody', 'apple');
       await tapWord(page, '#pickBody', 'finch');

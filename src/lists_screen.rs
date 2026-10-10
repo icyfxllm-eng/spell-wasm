@@ -284,7 +284,7 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
                 .clone()
                 .or_else(|| l.entries.first().map(|e| e.lang.clone()))
                 .unwrap_or_default();
-            crate::pick_ui::footer_html(crate::pick_queue::SURFACE_MINE, p.list, &lang)
+            crate::pick_ui::footer_html(crate::pick_queue::SURFACE_MINE, p.list, &lang, kid)
         }
         None => String::new(),
     };
