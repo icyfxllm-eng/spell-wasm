@@ -958,5 +958,15 @@
   "star.add": "{word}に星をつけて、毎回最初に練習する",
   "star.remove": "{word}の星をはずす",
   "star.hint": "単語に星をつけると、覚えるまで毎回最初に練習します。",
-  "star.cap": "星は1つの言語につき10個までです。ほかの単語につけるには、どれかの星をはずしてください。"
+  "star.cap": "星は1つの言語につき10個までです。ほかの単語につけるには、どれかの星をはずしてください。",
+  "pick.sortLabel": "並べ替え",
+  "pick.sort.listed": "リスト順",
+  "pick.sort.missed": "まちがいが多い順",
+  "pick.sort.due": "復習の時間",
+  "pick.sort.newest": "新しい順",
+  "pick.sort.never": "未練習",
+  "pick.search": "単語を検索",
+  "pick.toughest": "いちばん難しい{n}個",
+  "pick.hidden": "選んだ{n}個が検索で非表示です",
+  "pick.noMatch": "検索に合う単語がありません。"
 }

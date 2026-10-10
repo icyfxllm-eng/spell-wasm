@@ -958,5 +958,15 @@
   "star.add": "{word}에 별표를 달아 항상 먼저 연습하기",
   "star.remove": "{word}의 별표 해제",
   "star.hint": "단어에 별표를 달면 익힐 때까지 매 세션마다 먼저 연습해요.",
-  "star.cap": "언어당 별표는 최대 10개예요. 다른 단어에 달려면 먼저 하나를 해제하세요."
+  "star.cap": "언어당 별표는 최대 10개예요. 다른 단어에 달려면 먼저 하나를 해제하세요.",
+  "pick.sortLabel": "정렬",
+  "pick.sort.listed": "목록 순서",
+  "pick.sort.missed": "가장 많이 틀린 순",
+  "pick.sort.due": "복습할 차례",
+  "pick.sort.newest": "최신순",
+  "pick.sort.never": "아직 연습 안 함",
+  "pick.search": "단어 검색",
+  "pick.toughest": "가장 어려운 {n}개",
+  "pick.hidden": "고른 단어 {n}개가 검색 때문에 숨겨졌어요",
+  "pick.noMatch": "검색과 맞는 단어가 없어요."
 }

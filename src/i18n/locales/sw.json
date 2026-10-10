@@ -958,5 +958,15 @@
   "star.add": "Weka nyota kwenye {word} ili ifanyiwe mazoezi kwanza kila mara",
   "star.remove": "Ondoa nyota kwenye {word}",
   "star.hint": "Weka nyota kwenye neno ili lifanyiwe mazoezi kwanza kila kipindi, hadi ulijue.",
-  "star.cap": "Nyota kumi ndizo nyingi zaidi kwa lugha moja. Ondoa nyota kwenye neno ili uweke nyingine."
+  "star.cap": "Nyota kumi ndizo nyingi zaidi kwa lugha moja. Ondoa nyota kwenye neno ili uweke nyingine.",
+  "pick.sortLabel": "Panga",
+  "pick.sort.listed": "Kama ilivyo",
+  "pick.sort.missed": "Zilizokosewa zaidi",
+  "pick.sort.due": "Zinazostahili sasa",
+  "pick.sort.newest": "Mpya zaidi",
+  "pick.sort.never": "Hazijafanyiwa mazoezi",
+  "pick.search": "Tafuta maneno",
+  "pick.toughest": "{n} magumu zaidi",
+  "pick.hidden": "{n} ulizochagua zimefichwa na utafutaji",
+  "pick.noMatch": "Hakuna neno linalolingana na utafutaji wako."
 }

@@ -958,5 +958,15 @@
   "star.add": "{word} mit einem Stern markieren, um es immer zuerst zu üben",
   "star.remove": "Stern von {word} entfernen",
   "star.hint": "Markiere ein Wort mit einem Stern, um es in jeder Runde zuerst zu üben, bis du es kannst.",
-  "star.cap": "Zehn Sterne sind das Maximum pro Sprache. Entferne einen Stern, um ein anderes Wort zu markieren."
+  "star.cap": "Zehn Sterne sind das Maximum pro Sprache. Entferne einen Stern, um ein anderes Wort zu markieren.",
+  "pick.sortLabel": "Sortieren",
+  "pick.sort.listed": "Wie gelistet",
+  "pick.sort.missed": "Am häufigsten falsch",
+  "pick.sort.due": "Jetzt fällig",
+  "pick.sort.newest": "Neueste",
+  "pick.sort.never": "Nie geübt",
+  "pick.search": "Wörter suchen",
+  "pick.toughest": "Die {n} schwersten",
+  "pick.hidden": "{n} in deiner Auswahl, durch die Suche ausgeblendet",
+  "pick.noMatch": "Kein Wort passt zu deiner Suche."
 }

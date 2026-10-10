@@ -11,6 +11,7 @@
 
 use std::cell::{Cell, RefCell};
 
+use crate::pick_help::{self as help, Row, Sort};
 use crate::pick_queue::{self as pq, Pick, Toggled, SURFACE_MINE, SURFACE_MISSES};
 use crate::pick_stars::{self as stars, StarToggled};
 use crate::{dom, i18n, i18n::t, App};
@@ -24,6 +25,9 @@ thread_local! {
     static REFUSED: Cell<bool> = const { Cell::new(false) };
     /// Set when the ten-star cap refused a star (A6); the next render says why.
     static STAR_REFUSED: Cell<bool> = const { Cell::new(false) };
+    /// Phase C: the search box was just typed in; the re-render that follows
+    /// puts the caret back where it was so typing is not interrupted.
+    static SEARCH_CARET: Cell<Option<u32>> = const { Cell::new(None) };
 }
 
 const SCREEN: &str = "pickScreen";
@@ -161,6 +165,158 @@ pub fn footer_html(surface: &str, list: &str, lang: &str, kid: bool) -> String {
     html
 }
 
+// ---------- help choosing (Phase C) ----------
+
+/// What a surface renders for sort/search/Toughest 5. With the flag off, or for
+/// Spell Jr, this is the identity: every row in today's order, no markup, and
+/// `frozen` false -- so the caller's output is byte-identical to before.
+pub struct Help {
+    /// Indices into the caller's rows: visible, in display order.
+    pub order: Vec<usize>,
+    /// The sort/search/Toughest-5 controls plus the hidden-picks and no-match
+    /// notes; empty when the controls do not exist.
+    pub controls: String,
+    /// The display order is no longer the stored order, so the My Words
+    /// up/down arrows (which move a stored position) are disabled.
+    pub frozen: bool,
+}
+
+fn search_id(surface: &str) -> String {
+    format!("pqSearch_{surface}")
+}
+
+/// Shared by Misses and My Words (D10). `rows` are ALL the surface's rows in
+/// today's order; `lang` is the scope's language (the Toughest 5 scope).
+pub fn help_for(surface: &str, list: &str, lang: &str, kid: bool, rows: &[Row]) -> Help {
+    if !help::active(kid) {
+        return Help { order: (0..rows.len()).collect(), controls: String::new(), frozen: false };
+    }
+    let st = help::state(surface, list);
+    let scope = pq::scope_id(surface, list, lang);
+    let picks = pq::read(|l| l.picks(&scope).to_vec());
+    let v = help::view(rows, st.sort, &st.query, &picks, js_sys::Date::now());
+    let mut h = String::from("<div class=\"pq-help\">");
+    h.push_str(&format!(
+        "<div class=\"lists-row pq-sorts\" role=\"group\" aria-label=\"{}\"><span class=\"pq-sortlabel\" aria-hidden=\"true\">{}</span>",
+        esc(&t("pick.sortLabel")),
+        esc(&t("pick.sortLabel")),
+    ));
+    for sort in help::sorts_for(surface) {
+        let on = sort == st.sort;
+        h.push_str(&format!(
+            "<button type=\"button\" class=\"ghost{}\" data-pq-sort=\"{}\" data-pq-surface=\"{}\" data-pq-list=\"{}\" aria-pressed=\"{}\">{}</button>",
+            if on { " on" } else { "" },
+            sort.id(),
+            esc(surface),
+            esc(list),
+            if on { "true" } else { "false" },
+            esc(&t(sort.label_key())),
+        ));
+    }
+    h.push_str("</div>");
+    let can_toughest = !help::toughest(&scope_rows(rows, lang), help::TOUGHEST_N).is_empty();
+    let n = help::TOUGHEST_N.to_string();
+    h.push_str(&format!(
+        "<div class=\"lists-row pq-find\">\
+           <input type=\"text\" id=\"{id}\" dir=\"auto\" data-pq-search value=\"{q}\" \
+             data-pq-surface=\"{s}\" data-pq-list=\"{li}\" aria-label=\"{lbl}\" placeholder=\"{lbl}\" \
+             autocomplete=\"off\" autocapitalize=\"off\" spellcheck=\"false\" enterkeyhint=\"search\" />\
+           <button type=\"button\" class=\"ghost\" data-pq-toughest data-pq-surface=\"{s}\" data-pq-list=\"{li}\" \
+             data-pq-lang=\"{la}\"{dis}>{tough}</button>\
+         </div>",
+        id = search_id(surface),
+        q = esc(&st.query),
+        s = esc(surface),
+        li = esc(list),
+        la = esc(lang),
+        lbl = esc(&t("pick.search")),
+        dis = if can_toughest { "" } else { " disabled" },
+        tough = esc(&i18n::tp("pick.toughest", &[("n", &n)])),
+    ));
+    if v.hidden_picks > 0 {
+        h.push_str(&format!(
+            "<div class=\"pq-note\" role=\"status\">{}</div>",
+            esc(&i18n::tp("pick.hidden", &[("n", &v.hidden_picks.to_string())]))
+        ));
+    }
+    if v.visible.is_empty() && v.filtered_out > 0 {
+        h.push_str(&format!("<div class=\"lists-empty\" role=\"status\">{}</div>", esc(&t("pick.noMatch"))));
+    }
+    h.push_str("</div>");
+    Help { order: v.visible, controls: h, frozen: st.sort != Sort::AsListed || !st.query.is_empty() }
+}
+
+fn scope_rows(rows: &[Row], lang: &str) -> Vec<Row> {
+    rows.iter().filter(|r| r.lang == lang).cloned().collect()
+}
+
+/// A new visit to a surface starts at As listed with nothing typed.
+pub fn reset_help(surface: &str, list: &str) {
+    help::reset(surface, list);
+}
+
+/// The rows a surface shows today, for the Toughest 5 handler (so the tap
+/// reads exactly what the render read). Misses: that language's entries;
+/// My Words: the list's entries.
+fn rows_of(app: &App, surface: &str, list: &str, lang: &str) -> Vec<Row> {
+    if surface == SURFACE_MINE {
+        let lists = crate::word_lists::load();
+        let Some(l) = lists.lists.iter().find(|l| l.id == list && l.live()) else { return Vec::new() };
+        mine_rows(&l.entries, &app.borrow().misses)
+    } else {
+        let s = app.borrow();
+        let rows: Vec<&crate::model::MissEntry> = s.misses.iter().filter(|m| m.lang == lang).collect();
+        help::rows_for_misses(&rows)
+    }
+}
+
+/// My Words rows: miss data from the Misses store, practice history from the
+/// solo word stats (read once for the whole list).
+pub fn mine_rows(entries: &[crate::word_lists::ListEntry], misses: &[crate::model::MissEntry]) -> Vec<Row> {
+    let words: Vec<&str> = entries.iter().map(|e| e.text.as_str()).collect();
+    // wordstats keys My Words rounds under the study language, MINE.
+    let attempts = crate::wordstats::attempts_of(crate::consts::MINE, &words);
+    help::rows_for_mine(entries, misses, &attempts)
+}
+
+/// Put the caret back in the search box after the surface re-rendered because
+/// of a keystroke. A no-op unless a keystroke just happened.
+pub fn restore_search_focus() {
+    let Some(caret) = SEARCH_CARET.with(|c| c.take()) else { return };
+    for surface in [SURFACE_MISSES, SURFACE_MINE] {
+        let Some(el) = dom::doc().get_element_by_id(&search_id(surface)) else { continue };
+        // Only the one the player is typing in (the other surface's screen may
+        // still be in the DOM, hidden).
+        if let Ok(input) = el.dyn_into::<web_sys::HtmlInputElement>() {
+            if input.offset_parent().is_none() {
+                continue;
+            }
+            let _ = input.focus();
+            let _ = input.set_selection_range(caret, caret);
+            return;
+        }
+    }
+}
+
+/// The search box's `input` / `compositionend` events. Returns true when the
+/// query changed and the host should re-render. Mid-composition keystrokes (an
+/// IME building a character) are left alone until the composition ends.
+pub fn handle_search_event(app: &App, ev: &web_sys::Event) -> bool {
+    if ev.type_() == "input" && ev.dyn_ref::<web_sys::InputEvent>().map(|e| e.is_composing()).unwrap_or(false) {
+        return false;
+    }
+    let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return false };
+    if !target.has_attribute("data-pq-search") || !help::active(app.borrow().kid) {
+        return false;
+    }
+    let (surface, list) = (target.get_attribute("data-pq-surface").unwrap_or_default(), target.get_attribute("data-pq-list").unwrap_or_default());
+    let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() else { return false };
+    let caret = input.selection_start().ok().flatten().unwrap_or_else(|| input.value().chars().count() as u32);
+    help::set_query(&surface, &list, &input.value());
+    SEARCH_CARET.with(|c| c.set(Some(caret)));
+    true
+}
+
 /// The language of the lineup already in progress in this list, if any: while
 /// one exists, words in other languages are not tappable (D9).
 pub fn active_lang(surface: &str, list: &str) -> Option<String> {
@@ -246,6 +402,27 @@ pub fn handle_click(app: &App, el: &web_sys::Element, close: &dyn Fn()) -> bool 
             let on = !l.just_these(&id);
             l.set_just_these(&id, on);
         });
+        return true;
+    }
+    if has("data-pq-sort") {
+        // Spell Jr has no sort menu (I7); a stray tap changes nothing.
+        if help::active(app.borrow().kid) {
+            if let Some(sort) = Sort::from_id(&attr("data-pq-sort")) {
+                help::set_sort(&attr("data-pq-surface"), &attr("data-pq-list"), sort);
+            }
+        }
+        return true;
+    }
+    if has("data-pq-toughest") {
+        let kid = app.borrow().kid;
+        if !help::active(kid) {
+            return true;
+        }
+        let (surface, list, lang) = (attr("data-pq-surface"), attr("data-pq-list"), attr("data-pq-lang"));
+        // The CURRENT scope only: this list, this language (D9).
+        let scope: Vec<Row> = rows_of(app, &surface, &list, &lang).into_iter().filter(|r| r.lang == lang).collect();
+        let id = pq::scope_id(&surface, &list, &lang);
+        pq::add_many(&id, &surface, &list, &lang, help::toughest_picks(&scope, help::TOUGHEST_N), kid);
         return true;
     }
     if has("data-pq-start") {
@@ -365,7 +542,10 @@ fn ensure_screen() {
         let Some(app) = APP.with(|a| a.borrow().clone()) else { return };
         let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(el) = target
-            .closest("[data-pq-toggle],[data-pq-star],[data-pq-start],[data-pq-just],[data-pq-langchip],[data-pq-all]")
+            .closest(
+                "[data-pq-toggle],[data-pq-star],[data-pq-start],[data-pq-just],[data-pq-langchip],[data-pq-all],\
+                 [data-pq-sort],[data-pq-toughest]",
+            )
             .ok()
             .flatten()
         else {
@@ -375,6 +555,16 @@ fn ensure_screen() {
             render_misses(&app);
         }
     });
+    // Phase C: the search box. Re-render on each keystroke (and when an IME
+    // composition ends), with the caret put back.
+    for kind in ["input", "compositionend"] {
+        dom::on::<web_sys::Event, _>(SCREEN, kind, move |ev| {
+            let Some(app) = APP.with(|a| a.borrow().clone()) else { return };
+            if handle_search_event(&app, &ev) {
+                render_misses(&app);
+            }
+        });
+    }
 }
 
 fn close_misses() {
@@ -387,6 +577,8 @@ fn close_misses() {
 /// tap on the Misses button; "Practice all misses" is the old behaviour.
 pub fn open_misses(app: &App) {
     ensure_screen();
+    // A new visit: sort and search start from today's list (Phase C).
+    reset_help(SURFACE_MISSES, "");
     prune_misses(app);
     render_misses(app);
     dom::add_class(SCREEN, "show");
@@ -434,7 +626,13 @@ fn render_misses(app: &App) {
         html.push_str(&format!("<div class=\"lists-empty\">{}</div>", esc(&t("pick.empty"))));
     }
     html.push_str(&footer_html(SURFACE_MISSES, "", &lang, s.kid));
-    for m in rows {
+    // Phase C: with the flag off (or for Jr) `order` is every row in today's
+    // order and `controls` is empty, so nothing below changes.
+    let help = help_for(SURFACE_MISSES, "", &lang, s.kid, &help::rows_for_misses(&rows));
+    if !rows.is_empty() {
+        html.push_str(&help.controls);
+    }
+    for m in help.order.iter().map(|&i| rows[i]) {
         html.push_str(&format!(
             "<div class=\"lists-entry {}{}\">{}<span class=\"lists-chip\">{}</span>{}</div>",
             row_class(SURFACE_MISSES, "", &m.lang, &m.word, true),
@@ -449,4 +647,5 @@ fn render_misses(app: &App) {
         esc(&t("pick.practiceAll")),
     ));
     dom::set_html(BODY, &html);
+    restore_search_focus();
 }

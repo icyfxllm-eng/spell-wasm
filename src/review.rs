@@ -105,6 +105,15 @@ pub fn on_correct(r: &mut ReviewState, grade: Grade, now: f64) -> Outcome {
     }
 }
 
+/// CC-PICK-QUEUE Phase C: has this card been through nothing but its own
+/// first miss -- still on learning step 0, one FSRS rep (the miss itself), no
+/// lapse? A read-only question about a schedule, not a schedule: it computes
+/// no due time and so is not a second rule (I5). It lives here because this
+/// file is the only consumer allowed to read the FSRS state.
+pub fn untouched(r: &ReviewState) -> bool {
+    r.step == 0 && r.fsrs.reps <= 1 && r.fsrs.lapses == 0
+}
+
 /// Carry-over from the Leitner boxes (signed 2026-09-19): the entry keeps
 /// its due time. Boxes 1-2 were the same-day steps; boxes 3, 4 and 5 had
 /// 1, 3 and 7-day gaps, which become the FSRS stability. Every queued word

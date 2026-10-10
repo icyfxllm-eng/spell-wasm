@@ -958,5 +958,15 @@
   "star.add": "Mettre une étoile à {word} pour la travailler en premier à chaque fois",
   "star.remove": "Retirer l’étoile de {word}",
   "star.hint": "Mets une étoile à un mot pour le travailler en premier à chaque séance, jusqu’à ce que tu le saches.",
-  "star.cap": "Dix étoiles, c’est le maximum pour une langue. Retire l’étoile d’un mot pour en marquer un autre."
+  "star.cap": "Dix étoiles, c’est le maximum pour une langue. Retire l’étoile d’un mot pour en marquer un autre.",
+  "pick.sortLabel": "Trier",
+  "pick.sort.listed": "Ordre actuel",
+  "pick.sort.missed": "Les plus ratés",
+  "pick.sort.due": "À revoir maintenant",
+  "pick.sort.newest": "Plus récents",
+  "pick.sort.never": "Jamais travaillés",
+  "pick.search": "Chercher des mots",
+  "pick.toughest": "Les {n} plus difficiles",
+  "pick.hidden": "{n} dans ta sélection, masqués par la recherche",
+  "pick.noMatch": "Aucun mot ne correspond à ta recherche."
 }

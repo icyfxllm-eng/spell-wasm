@@ -388,6 +388,21 @@ pub fn pick_queue_b() -> bool {
     false
 }
 
+/// CC-PICK-QUEUE v1 Phase C -- help choosing: sort, search and "Toughest 5" on
+/// the lineup surfaces. Its OWN flag, **default OFF**, and it only takes effect
+/// while `pick_queue_a` is also on, because the controls live on Phase A's
+/// surfaces (see `pick_help::enabled`). Permanently false in the site build
+/// (O-F). Develop with `localStorage['spell_flag_pick_queue_c'] = 'on'`.
+#[cfg(not(feature = "web"))]
+pub fn pick_queue_c() -> bool {
+    resolve(stored("pick_queue_c").as_deref(), false)
+}
+
+#[cfg(feature = "web")]
+pub fn pick_queue_c() -> bool {
+    false
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:
