@@ -127,6 +127,23 @@ pub fn spelluzzle() -> bool {
     resolve(stored("spelluzzle").as_deref(), true)
 }
 
+/// CC-SPELLUZZLE v1.1 F22 -- pencil runes (F16), the rune strip (F17) and the ripple (F18).
+/// Each is **default OFF** and requires the `spelluzzle` flag (D25). With all three off the
+/// mode is v1 byte for byte (I13). Switch one on with `localStorage['spell_flag_spelluzzle_pencil']
+/// = 'on'` (and `_strip`, `_ripple`).
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_pencil() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_pencil").as_deref(), false)
+}
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_strip() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_strip").as_deref(), false)
+}
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_ripple() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_ripple").as_deref(), false)
+}
+
 /// F13: one flag per language, so a language can be pulled on its own. English is the
 /// only one built; the others stay off, and F12 keeps ko zh ja ar hi out whatever this says.
 #[cfg(not(feature = "web"))]

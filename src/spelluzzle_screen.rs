@@ -23,12 +23,15 @@ use crate::spelluzzle::{
     gen::generate_after,
     lex::Lexicon,
     offer,
+    pencil::{self, Pencil},
     play::{Outcome, Play},
     render, seeds,
-    store::{self, BestStars, History, Progress, Streak},
+    store::{self, BestStars, History, PencilSave, Progress, Streak},
     types::{Tier, GEN_VERSION},
+    view::{board_view, RuneState},
 };
-use crate::{dom, feedback, haptics, i18n, speech_out, storage, App};
+use std::collections::BTreeSet;
+use crate::{audio_boost, dom, feedback, flags, haptics, i18n, speech_out, storage, App};
 
 const HOW_KEY: &str = "spell_spz_how_v1";
 /// F13: a second card on the first board that has a silent word.
@@ -45,6 +48,24 @@ struct Ui {
     previous: Vec<String>,
     finished: bool,
     keys: Vec<Vec<Key>>,
+    /// F16: the player's own notes. Drawn over the board, never part of it (I14).
+    pencil: Pencil,
+    /// F16: the rune a long-press is waiting to mark.
+    target: Option<u8>,
+    /// F17: the rune whose cells are lit.
+    highlight: Option<u8>,
+    /// F18: runes the ripple is still holding back.
+    pending: BTreeSet<u8>,
+}
+
+fn pencil_on() -> bool {
+    flags::spelluzzle_pencil()
+}
+fn strip_on() -> bool {
+    flags::spelluzzle_strip()
+}
+fn ripple_on() -> bool {
+    flags::spelluzzle_ripple()
 }
 
 thread_local! {
@@ -53,7 +74,15 @@ thread_local! {
     static CTX: RefCell<(String, bool, Tier)> = RefCell::new((String::new(), false, Tier::Easy));
     static TOKEN: Cell<u32> = const { Cell::new(0) };
     static COUNTER: Cell<u64> = const { Cell::new(0) };
+    /// Long-press timer token, and whether the last press fired (so its click is swallowed).
+    static LP: Cell<u32> = const { Cell::new(0) };
+    static LP_FIRED: Cell<bool> = const { Cell::new(false) };
+    /// Ripple token: bumped to cancel a running ripple.
+    static RIPPLE: Cell<u32> = const { Cell::new(0) };
 }
+
+/// F16: how long a press must be held to pencil a rune.
+const LONG_PRESS_MS: i32 = 450;
 
 fn with_ui<R>(f: impl FnOnce(&mut Ui) -> R) -> Option<R> {
     UI.with(|u| u.borrow_mut().as_mut().map(f))
@@ -115,6 +144,26 @@ pub fn wire(app: &App) {
     dom::on::<web_sys::MouseEvent, _>("szTiers", "click", tier_tap);
     dom::on::<web_sys::MouseEvent, _>("szBoard", "click", board_tap);
     dom::on::<web_sys::MouseEvent, _>("szKb", "click", key_tap);
+    // Phase E (each is a no-op while its flag is off).
+    dom::on::<web_sys::Event, _>("szBoard", "pointerdown", lp_down);
+    dom::on::<web_sys::Event, _>("szRunes", "pointerdown", lp_down);
+    for id in ["szBoard", "szRunes"] {
+        for kind in ["pointermove", "pointerleave"] {
+            dom::on::<web_sys::Event, _>(id, kind, |_| lp_cancel());
+        }
+        for kind in ["pointerup", "pointercancel"] {
+            dom::on::<web_sys::Event, _>(id, kind, |_| lp_release());
+        }
+        dom::on::<web_sys::Event, _>(id, "contextmenu", |e| {
+            if pencil_on() {
+                e.prevent_default();
+            }
+        });
+    }
+    dom::on::<web_sys::MouseEvent, _>("szRunes", "click", strip_tap);
+    dom::on_click("szPencilClear", pencil_clear);
+    // F18: any tap finishes a running ripple at once; input is never blocked.
+    dom::on::<web_sys::Event, _>("szScreen", "click", |_| ripple_finish());
 }
 
 pub fn open(app: &App) {
@@ -147,6 +196,7 @@ pub fn open(app: &App) {
 
 fn close() {
     bump();
+    ripple_finish();
     speech_out::stop();
     save_progress();
     UI.with(|u| *u.borrow_mut() = None);
@@ -294,7 +344,15 @@ fn show(play: Play, lang: String, kid: bool, tier: Tier, seed: u64, previous: Ve
     storage::set_json(&store::history_key(profile, &lang), &h);
     let finished = play.solved();
     let keys = input::layout(&lang, kid, &[]);
-    UI.with(|u| *u.borrow_mut() = Some(Ui { play, lang, kid, tier, seed, previous, finished, keys }));
+    let pencil = if pencil_on() {
+        let saved: Option<PencilSave> = storage::get_json(&store::pencil_key(profile, &lang, tier));
+        saved.filter(|p| p.hash == play.board.hash()).map(|p| Pencil::from_all(&p.marks)).unwrap_or_default()
+    } else {
+        Pencil::default()
+    };
+    UI.with(|u| {
+        *u.borrow_mut() = Some(Ui { play, lang, kid, tier, seed, previous, finished, keys, pencil, target: None, highlight: None, pending: BTreeSet::new() })
+    });
     render_keys();
     save_progress();
     render();
@@ -329,7 +387,12 @@ fn show_how(on: bool) {
     if on {
         dom::set_html(
             "szHowText",
-            &["spz.how.runes", "spz.how.tap", "spz.how.amber"].iter().map(|k| format!("<p>{}</p>", dom::escape_html(&tr(k, &[])))).collect::<String>(),
+            &["spz.how.runes", "spz.how.tap", "spz.how.amber"]
+                .iter()
+                .copied()
+                .chain(pencil_on().then_some("spz.pencil.how"))
+                .map(|k| format!("<p>{}</p>", dom::escape_html(&tr(k, &[]))))
+                .collect::<String>(),
         );
     } else {
         storage::set_raw(HOW_KEY, "1");
@@ -405,23 +468,201 @@ fn render_keys() {
 
 fn render() {
     let _ = with_ui(|u| {
-        dom::set_html("szBoard", &render::board_html(&u.play, &tr));
-        dom::set_html("szRunes", &render::rune_key_html(&u.play, &tr));
+        let view = board_view(&u.play.board, &u.play.entries);
+        // F18: runes the ripple has not reached yet still show their glyph.
+        let mut shown = view.clone();
+        for &r in &u.pending {
+            if let Some(v) = shown.get_mut(r as usize) {
+                *v = RuneState::Unknown;
+            }
+        }
+        let opts = render::Opts {
+            marks: if pencil_on() { u.pencil.visible(&view) } else { Default::default() },
+            highlight: u.highlight,
+            target: u.target,
+        };
+        // With every Phase E flag off this is the v1 call, so the markup is v1's (I13).
+        let board = if u.pending.is_empty() && opts.marks.is_empty() && opts.highlight.is_none() && opts.target.is_none() {
+            render::board_html(&u.play, &tr)
+        } else {
+            render::board_html_with(&u.play, &shown, &tr, &opts)
+        };
+        dom::set_html("szBoard", &board);
+        let runes = if strip_on() { render::strip_html(&u.play, &shown, &tr, &opts) } else { render::rune_key_html(&u.play, &tr) };
+        dom::set_html("szRunes", &runes);
         let solved = u.play.solved();
-        // The keyboard shows while a slot is open for typing; the rune key shows otherwise.
-        let typing = u.play.selected.is_some() && !solved;
+        // The keyboard shows while a slot is open for typing, or a rune is waiting for its pencil
+        // mark; the rune key or strip shows otherwise.
+        let typing = (u.play.selected.is_some() || u.target.is_some()) && !solved;
         dom::set_hidden("szKb", !typing);
         dom::set_hidden("szRunes", typing);
         dom::toggle_class("szScreen", "typing", typing);
+        dom::toggle_class("szScreen", "v11", pencil_on() || strip_on() || ripple_on());
+        dom::set_hidden("szPencilClear", !(pencil_on() && !u.pencil.is_empty()));
         let msg = if solved { render::stars_html(&u.play, &tr) } else { String::new() };
         dom::set_html("szResult", &msg);
         dom::set_text("szMsg", &render::check_text(&u.play, &tr));
     });
 }
 
+// ------------------------------------------------------------------ Phase E: pencil, strip, ripple
+
+fn save_pencil() {
+    let _ = with_ui(|u| {
+        if !pencil_on() {
+            return;
+        }
+        let key = store::pencil_key(store::profile(u.kid), &u.lang, u.tier);
+        if u.pencil.is_empty() {
+            storage::remove(&key);
+        } else {
+            storage::set_json(&key, &PencilSave { hash: u.play.board.hash(), marks: u.pencil.all() });
+        }
+    });
+}
+
+/// The rune number on the element under a press, if it is an undecoded cell or strip entry.
+fn pressed_rune(e: &web_sys::Event) -> Option<u8> {
+    let el = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok())?;
+    let el = el.closest("[data-rune]").ok().flatten()?;
+    if el.get_attribute("data-state").as_deref() != Some("unknown") {
+        return None;
+    }
+    el.get_attribute("data-rune").and_then(|r| r.parse::<u8>().ok())
+}
+
+fn lp_down(e: web_sys::Event) {
+    // A new press: a click swallowed for an earlier long-press is no longer owed.
+    LP_FIRED.with(|f| f.set(false));
+    if !pencil_on() {
+        return;
+    }
+    let Some(rune) = pressed_rune(&e) else { return };
+    let token = LP.with(|c| {
+        c.set(c.get().wrapping_add(1));
+        c.get()
+    });
+    dom::after_ms(LONG_PRESS_MS, move || {
+        if LP.with(Cell::get) != token {
+            return;
+        }
+        LP_FIRED.with(|f| f.set(true));
+        haptics::key_tap();
+        with_ui(|u| {
+            u.target = Some(rune);
+            u.highlight = None;
+        });
+        render();
+    });
+}
+
+fn lp_cancel() {
+    LP.with(|c| c.set(c.get().wrapping_add(1)));
+}
+
+/// The release of a press. The click that follows a fired long-press is swallowed, but the
+/// ripple of re-rendering can leave that click without a target, so the flag is cleared a beat
+/// after the release rather than waiting for a click that may never arrive.
+fn lp_release() {
+    lp_cancel();
+    if LP_FIRED.with(Cell::get) {
+        dom::after_ms(80, || LP_FIRED.with(|f| f.set(false)));
+    }
+}
+
+fn strip_tap(e: web_sys::MouseEvent) {
+    if LP_FIRED.with(|f| f.replace(false)) {
+        return; // the release of a long-press, not a tap
+    }
+    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-rune]").ok().flatten()) else { return };
+    let Some(r) = el.get_attribute("data-rune").and_then(|r| r.parse::<u8>().ok()) else { return };
+    with_ui(|u| u.highlight = if u.highlight == Some(r) { None } else { Some(r) });
+    render();
+}
+
+fn pencil_clear() {
+    with_ui(|u| {
+        u.pencil.clear_all();
+        u.target = None;
+    });
+    save_pencil();
+    render();
+}
+
+fn reduce_motion() -> bool {
+    use js_sys::{Function, Reflect};
+    let win = dom::window();
+    let Some(f) = Reflect::get(&win, &"matchMedia".into()).ok().and_then(|f| f.dyn_into::<Function>().ok()) else { return false };
+    let Ok(m) = f.call1(&win, &"(prefers-reduced-motion: reduce)".into()) else { return false };
+    Reflect::get(&m, &"matches".into()).ok().and_then(|v| v.as_bool()).unwrap_or(false)
+}
+
+/// F18: finish a running ripple at once.
+fn ripple_finish() {
+    RIPPLE.with(|c| c.set(c.get().wrapping_add(1)));
+    let had = with_ui(|u| {
+        let had = !u.pending.is_empty();
+        u.pending.clear();
+        had
+    })
+    .unwrap_or(false);
+    if had {
+        render();
+    }
+}
+
+/// F18: reveal the newly decoded runes, one at a time, in strip order, from two views.
+fn start_ripple(before: Vec<RuneState>, committed: usize) {
+    let Some((r, kid)) = with_ui(|u| {
+        let slots: Vec<&[u8]> = u.play.board.slots.iter().map(|s| s.runes.as_slice()).collect();
+        let order = pencil::strip_order(&slots, u.play.board.n_runes());
+        let after = board_view(&u.play.board, &u.play.entries);
+        (pencil::ripple(&slots, &order, &before, &after, committed), u.kid)
+    }) else {
+        return;
+    };
+    if r.runes.is_empty() {
+        dom::set_text("szCount", "");
+        return;
+    }
+    dom::set_text("szCount", &tr("spz.ripple.cells", &[("n", &r.cells.to_string())]));
+    if reduce_motion() {
+        // One short cross-fade, one tick, the final count.
+        audio_boost::tick(0, true);
+        dom::add_class("szBoard", "sz-fade");
+        dom::after_ms(pencil::REDUCED_MS as i32, || dom::remove_class("szBoard", "sz-fade"));
+        return;
+    }
+    let token = RIPPLE.with(|c| {
+        c.set(c.get().wrapping_add(1));
+        c.get()
+    });
+    with_ui(|u| u.pending = r.runes.iter().copied().collect());
+    let step = pencil::step_ms(r.runes.len()) as i32;
+    for (i, rune) in r.runes.iter().copied().enumerate() {
+        dom::after_ms(step * (i as i32 + 1), move || {
+            if RIPPLE.with(Cell::get) != token {
+                return;
+            }
+            with_ui(|u| {
+                u.pending.remove(&rune);
+            });
+            audio_boost::tick(i as u32, kid);
+            render();
+        });
+    }
+}
+
 // ------------------------------------------------------------------ input
 
 fn board_tap(e: web_sys::MouseEvent) {
+    if LP_FIRED.with(|f| f.replace(false)) {
+        return; // the release of a long-press, not a tap
+    }
+    with_ui(|u| {
+        u.target = None;
+        u.highlight = None;
+    });
     let Some(target) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
     if let Some(el) = target.closest("[data-listen]").ok().flatten() {
         let Some(i) = el.get_attribute("data-listen").and_then(|d| d.parse::<usize>().ok()) else { return };
@@ -459,9 +700,31 @@ fn key_tap(e: web_sys::MouseEvent) {
     let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
     let Some(c) = u.chars().next() else { return };
     haptics::key_tap();
+    // F16: with a rune held, the next key is its pencil mark and nothing else.
+    let marked = with_ui(|ui| match ui.target.take() {
+        Some(r) => {
+            ui.pencil.set(r, c);
+            true
+        }
+        None => false,
+    })
+    .unwrap_or(false);
+    if marked {
+        save_pencil();
+        render();
+        return;
+    }
+    ripple_finish();
+    let before = with_ui(|ui| board_view(&ui.play.board, &ui.play.entries));
+    let slot = with_ui(|ui| ui.play.selected).flatten();
     let out = with_ui(|ui| ui.play.type_unit(c)).flatten();
     if let Some(o) = out {
         on_commit(o);
+        if ripple_on() {
+            if let (Some(b), Some(s)) = (before, slot) {
+                start_ripple(b, s);
+            }
+        }
     }
     save_progress();
     render();
@@ -469,6 +732,20 @@ fn key_tap(e: web_sys::MouseEvent) {
 
 fn delete() {
     haptics::key_tap();
+    // F16: backspace with a rune held clears its mark.
+    let cleared = with_ui(|u| match u.target.take() {
+        Some(r) => {
+            u.pencil.clear(r);
+            true
+        }
+        None => false,
+    })
+    .unwrap_or(false);
+    if cleared {
+        save_pencil();
+        render();
+        return;
+    }
     with_ui(|u| u.play.backspace());
     save_progress();
     render();

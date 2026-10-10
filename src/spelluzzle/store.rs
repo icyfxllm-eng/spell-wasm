@@ -34,12 +34,16 @@ pub fn history_key(profile: &str, lang: &str) -> String {
 pub fn stars_key(profile: &str, lang: &str, tier: Tier) -> String {
     format!("spell_spz_stars_v1:{profile}:{lang}:{}", tier.name())
 }
+/// F16: the pencil marks of the board in progress, with its hash so a different board never inherits them.
+pub fn pencil_key(profile: &str, lang: &str, tier: Tier) -> String {
+    format!("spell_spz_pencil_v1:{profile}:{lang}:{}", tier.name())
+}
 pub fn streak_key(profile: &str) -> String {
     format!("spell_spz_streak_v1:{profile}")
 }
 
 /// Every key the mode writes, for the store-registry and the no-writes test (I8).
-pub const KEY_PREFIXES: [&str; 4] = ["spell_spz_progress_v1", "spell_spz_history_v1", "spell_spz_stars_v1", "spell_spz_streak_v1"];
+pub const KEY_PREFIXES: [&str; 5] = ["spell_spz_progress_v1", "spell_spz_history_v1", "spell_spz_stars_v1", "spell_spz_streak_v1", "spell_spz_pencil_v1"];
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct History {
@@ -121,4 +125,11 @@ impl Streak {
             0
         }
     }
+}
+
+/// The pencil marks of one board.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub struct PencilSave {
+    pub hash: u64,
+    pub marks: Vec<(u8, char)>,
 }

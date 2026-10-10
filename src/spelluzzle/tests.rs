@@ -947,3 +947,180 @@ fn audit_seeds() {
         println!("audit {tier:?}: {checked} sampled seeds all have one answer under the large list");
     }
 }
+
+// ---- v1.1 Phase E: pencil, strip, ripple -----------------------------------
+
+use super::pencil::{self, Pencil};
+use super::render::{board_html, board_html_with, strip_html, Opts};
+
+#[test]
+fn a21_pencil_layer() {
+    let lex = en();
+    let b = board_of(lex, Tier::Easy, 21);
+    let mut p = Play::new(b);
+    let mut pencil = Pencil::default();
+    // Mark the first rune of slot 0.
+    let r = p.board.slots[0].runes[0];
+    pencil.set(r, 'q');
+    let v0 = board_view(&p.board, &p.entries);
+    assert_eq!(pencil.visible(&v0).get(&r), Some(&'q'), "an undecoded rune shows its mark");
+    // Commit a word that decodes that rune: the mark is hidden, not deleted.
+    let w = p.board.slots[0].answer.clone();
+    type_word(&mut p, 0, &w);
+    let v1 = board_view(&p.board, &p.entries);
+    assert!(pencil.visible(&v1).is_empty(), "a decoded rune hides its mark");
+    assert_eq!(pencil.get(r), Some('q'), "...but does not delete it");
+    // Clear the word: the rune is undecoded again and the mark is drawn again.
+    p.clear_word(0);
+    let v2 = board_view(&p.board, &p.entries);
+    assert_eq!(pencil.visible(&v2).get(&r), Some(&'q'));
+    // A mark is never an entry.
+    assert!(p.entries.is_empty() && p.drafts.is_empty());
+    // One mark per rune; two runes may carry the same letter.
+    let r2 = p.board.slots[1].runes.iter().copied().find(|x| *x != r).unwrap();
+    pencil.set(r, 'a');
+    pencil.set(r2, 'a');
+    assert_eq!(pencil.all().len(), 2);
+    pencil.clear_all();
+    assert!(pencil.is_empty());
+}
+
+#[test]
+fn a20_pencil_is_inert() {
+    // Replay a scripted solve twice, once with pencil marks injected between every step.
+    // Everything the game decides must be identical.
+    let lex = en();
+    for tier in [Tier::Jr, Tier::Easy] {
+        for seed in 0..20u64 {
+            let b = board_of(lex, tier, seed);
+            let n = b.slots.len();
+            let mut plain = Play::new(b.clone());
+            let mut marked = Play::new(b.clone());
+            let mut pen = Pencil::default();
+            let mut rng = crate::spelldoku::rng::Rng::new(seed);
+            let order: Vec<usize> = (n..n).chain((0..n).rev()).collect();
+            for &i in &order {
+                let w = plain.board.slots[i].answer.clone();
+                // Put a mark (or several) on random runes between steps.
+                for _ in 0..3 {
+                    pen.set(rng.below(b.n_runes()) as u8, lex.alphabet[rng.below(lex.alphabet.len())]);
+                }
+                let _ = pen.visible(&board_view(&marked.board, &marked.entries));
+                type_word(&mut plain, i, &w);
+                type_word(&mut marked, i, &w);
+                assert_eq!(board_view(&plain.board, &plain.entries), board_view(&marked.board, &marked.entries));
+                assert_eq!(plain.check(), marked.check());
+                assert_eq!(plain.snapshot(), marked.snapshot());
+            }
+            assert_eq!(plain.stars(), marked.stars());
+        }
+    }
+}
+
+#[test]
+fn a22_strip_counts_and_order() {
+    let lex = en();
+    let n = n_seeds(60);
+    each_tier_boards(n, |tier, seed, b| {
+        let slots: Vec<&[u8]> = b.slots.iter().map(|s| s.runes.as_slice()).collect();
+        let view = board_view(b, &Entries::new());
+        let strip = pencil::strip(&slots, &view, &Default::default());
+        assert_eq!(strip.len(), b.n_runes(), "{tier:?} {seed}: one entry per rune");
+        for e in &strip {
+            let cells = slots.iter().flat_map(|s| s.iter()).filter(|&&r| r == e.rune).count();
+            assert_eq!(e.cells, cells, "{tier:?} {seed}: count for rune {}", e.rune);
+        }
+        // D36: most cells first, ties by first appearance in reading order.
+        let first = |r: u8| slots.iter().flat_map(|s| s.iter()).position(|&x| x == r).unwrap();
+        for w in strip.windows(2) {
+            assert!(w[0].cells > w[1].cells || (w[0].cells == w[1].cells && first(w[0].rune) < first(w[1].rune)), "{tier:?} {seed}: order");
+        }
+    });
+    // The order does not move during play.
+    let b = board_of(lex, Tier::Easy, 3);
+    let slots: Vec<&[u8]> = b.slots.iter().map(|s| s.runes.as_slice()).collect();
+    let mut p = Play::new(b.clone());
+    let before: Vec<u8> = pencil::strip(&slots, &board_view(&p.board, &p.entries), &Default::default()).iter().map(|e| e.rune).collect();
+    let w = p.board.slots[1].answer.clone();
+    type_word(&mut p, 1, &w);
+    let after: Vec<u8> = pencil::strip(&slots, &board_view(&p.board, &p.entries), &Default::default()).iter().map(|e| e.rune).collect();
+    assert_eq!(before, after);
+}
+
+#[test]
+fn a23_ripple_is_blind_and_bounded() {
+    // Bounded: 1 to 16 runes never exceed 1.2 s.
+    for n in 1..=16usize {
+        assert!(pencil::step_ms(n) as usize * n <= pencil::MAX_MS as usize, "{n} runes");
+        assert!(pencil::step_ms(n) > 0);
+    }
+    assert_eq!(pencil::step_ms(0), 0);
+    // Blind: it is a function of two views. A right commit and a wrong commit that produce the
+    // same view change give the same ripple.
+    let b = Board::from_words_sorted("en", Tier::Easy, &["abc", "abd", "bcd"], &[], "cab");
+    let slots: Vec<&[u8]> = b.slots.iter().map(|s| s.runes.as_slice()).collect();
+    let order = pencil::strip_order(&slots, b.n_runes());
+    let before = board_view(&b, &Entries::new());
+    let mut right = Entries::new();
+    right.insert(0, chars("abc"));
+    let after_right = board_view(&b, &right);
+    // A "wrong" entry decoding the same runes the same way is the same view, so the same ripple.
+    let r1 = pencil::ripple(&slots, &order, &before, &after_right, 0);
+    let r2 = pencil::ripple(&slots, &order, &before, &after_right.clone(), 0);
+    assert_eq!(r1, r2);
+    assert_eq!(r1.runes.len(), 3, "three runes newly decoded");
+    // Cells counted are outside the committed slot: a, b in `abd`, b, c in `bcd`, c, a, b in the secret.
+    assert_eq!(r1.cells, 2 + 2 + 3);
+    // A commit that decodes nothing new shows no ripple.
+    assert!(pencil::ripple(&slots, &order, &after_right, &after_right, 0).runes.is_empty());
+    // A contested rune does not ripple.
+    let mut clash = right.clone();
+    clash.insert(1, chars("xbd"));
+    let after_clash = board_view(&b, &clash);
+    let rc = pencil::ripple(&slots, &order, &before, &after_clash, 1);
+    let ids: Vec<u8> = rc.runes.clone();
+    for r in ids {
+        assert!(matches!(after_clash[r as usize], RuneState::Decoded(_)));
+    }
+}
+
+#[test]
+fn a19_flags_off_is_v1_markup() {
+    // With every Phase E option at its default, the board and rune key are v1's, byte for byte.
+    let lex = en();
+    for tier in [Tier::Jr, Tier::Easy] {
+        let b = board_of(lex, tier, 9);
+        let mut p = Play::new(b);
+        let w = p.board.slots[0].answer.clone();
+        type_word(&mut p, 0, &w);
+        let view = board_view(&p.board, &p.entries);
+        assert_eq!(board_html(&p, &plain_tr), board_html_with(&p, &view, &plain_tr, &Opts::default()));
+    }
+}
+
+#[test]
+fn pencil_and_strip_markup_carries_no_answer() {
+    let lex = en();
+    let b = board_of(lex, Tier::Easy, 7);
+    let mut p = Play::new(b);
+    let r = p.board.slots[2].runes[0];
+    let mut marks = std::collections::BTreeMap::new();
+    marks.insert(r, 'z');
+    let opts = Opts { marks: marks.clone(), highlight: Some(r), target: None };
+    let view = board_view(&p.board, &p.entries);
+    let html = board_html_with(&p, &view, &plain_tr, &opts) + &strip_html(&p, &view, &plain_tr, &opts);
+    for w in p.board.words() {
+        assert!(!html.contains(&w), "answer {w} is in the Phase E markup");
+    }
+    // The only letter shown on an untouched board is the player's own mark.
+    for t in text_nodes(&html) {
+        for c in t.chars().filter(|c| c.is_alphabetic()) {
+            assert_eq!(c, 'z', "an untouched board with one mark shows only that mark, saw {c}");
+        }
+    }
+    assert!(html.contains("sz-pencil") && html.contains("pencilled") && html.contains("hl"));
+    // Marks are saved with their board's hash.
+    let save = super::store::PencilSave { hash: p.board.hash(), marks: vec![(r, 'z')] };
+    let back: super::store::PencilSave = serde_json::from_str(&serde_json::to_string(&save).unwrap()).unwrap();
+    assert_eq!(back, save);
+}

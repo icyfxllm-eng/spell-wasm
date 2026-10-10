@@ -139,6 +139,31 @@ pub fn chime() {
     }
 }
 
+/// CC-SPELLUZZLE F18 / D37: one soft tick for a rune the ripple reveals. `step` raises the
+/// pitch one semitone per rune (capped at an octave); `flat` holds it level, as Spell Jr does.
+/// A synthesized oscillator like `chime()`, so no asset file, and routed through the same
+/// shared gain node, so the volume setting applies and word audio is never drowned out.
+pub fn tick(step: u32, flat: bool) {
+    let Some((ctx, gain)) = ensure_ctx() else { return };
+    if ctx.state() == web_sys::AudioContextState::Suspended {
+        let _ = ctx.resume();
+    }
+    let semis = if flat { 0 } else { step.min(12) } as f32;
+    let freq = 660.0 * 2f32.powf(semis / 12.0);
+    let now = ctx.current_time();
+    let Ok(osc) = ctx.create_oscillator() else { return };
+    let Ok(env) = ctx.create_gain() else { return };
+    osc.frequency().set_value(freq);
+    let g = env.gain();
+    let _ = g.set_value_at_time(0.0001, now);
+    let _ = g.linear_ramp_to_value_at_time(0.07, now + 0.005);
+    let _ = g.exponential_ramp_to_value_at_time(0.0001, now + 0.07);
+    let _ = osc.connect_with_audio_node(&env);
+    let _ = env.connect_with_audio_node(&gain);
+    let _ = osc.start_with_when(now);
+    let _ = osc.stop_with_when(now + 0.1);
+}
+
 /// Routes a freshly-created `<audio>` element through the shared gain node
 /// — but only when a boost is actually requested (gain != 100%). Once an
 /// element is tapped into a Web Audio graph, its normal direct-to-speakers

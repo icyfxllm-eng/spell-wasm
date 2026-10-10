@@ -8,6 +8,9 @@
 
 use crate::spelldoku::rng::{mix, Rng};
 
+use std::collections::BTreeMap;
+
+use super::pencil;
 use super::play::{Check, Play, Stars};
 use super::types::{Board, SlotKind};
 use super::view::{board_view, RuneState};
@@ -39,28 +42,62 @@ fn cell(class: &str, state: &str, rune: u8, aria: &str, inner: &str) -> String {
     format!("<span class=\"sz-cell {class}\" data-state=\"{state}\" data-rune=\"{rune}\" aria-label=\"{}\">{inner}</span>", esc(aria))
 }
 
+/// Phase E layers drawn over the v1 board. `Default` is v1, byte for byte (I13).
+#[derive(Default, Clone)]
+pub struct Opts {
+    /// F16: marks to draw (the caller passes only the visible ones).
+    pub marks: BTreeMap<u8, char>,
+    /// F17: the rune whose cells are lit.
+    pub highlight: Option<u8>,
+    /// F16: the rune a long-press is waiting to mark.
+    pub target: Option<u8>,
+}
+
+impl Opts {
+    fn is_default(&self) -> bool {
+        self.marks.is_empty() && self.highlight.is_none() && self.target.is_none()
+    }
+}
+
 fn rune_label(tr: Tr, rune: u8) -> String {
     tr("spz.runeLabel", &[("k", &(rune as u32 + 1).to_string())])
 }
 
 /// One slot's cells.
-fn slot_cells_html(p: &Play, view: &[RuneState], glyphs: &[usize], slot: usize, tr: Tr) -> String {
+fn slot_cells_html(p: &Play, view: &[RuneState], glyphs: &[usize], slot: usize, tr: Tr, opts: &Opts) -> String {
     let s = &p.board.slots[slot];
     let typed: Option<&Vec<char>> = p.entries.get(&slot).or_else(|| p.drafts.get(&slot));
     let mut h = String::new();
     for (k, &r) in s.runes.iter().enumerate() {
         let st = view[r as usize];
         let amber = st == RuneState::Contested;
-        if let Some(u) = typed.and_then(|t| t.get(k)) {
+        let mut c = if let Some(u) = typed.and_then(|t| t.get(k)) {
             let class = if amber { "typed amber" } else { "typed" };
-            h.push_str(&cell(class, if amber { "contested" } else { "typed" }, r, &format!("{} {}", rune_label(tr, r), u), &esc(&u.to_string())));
-            continue;
+            cell(class, if amber { "contested" } else { "typed" }, r, &format!("{} {}", rune_label(tr, r), u), &esc(&u.to_string()))
+        } else {
+            match st {
+                RuneState::Unknown => match opts.marks.get(&r) {
+                    // F16: a pencilled cell keeps its glyph, smaller, with the mark in the corner.
+                    Some(m) => cell(
+                        "pencilled",
+                        "unknown",
+                        r,
+                        &format!("{} {}", rune_label(tr, r), tr("spz.pencil.label", &[("unit", &m.to_string())])),
+                        &format!("{}<small class=\"sz-pencil\">{}</small>", glyph_svg(glyphs[r as usize]), esc(&m.to_string())),
+                    ),
+                    None => cell("", "unknown", r, &rune_label(tr, r), &glyph_svg(glyphs[r as usize])),
+                },
+                RuneState::Contested => cell("amber", "contested", r, &rune_label(tr, r), &glyph_svg(glyphs[r as usize])),
+                RuneState::Decoded(u) => cell("decoded", "decoded", r, &format!("{} {}", rune_label(tr, r), u), &esc(&u.to_string())),
+            }
+        };
+        if opts.highlight == Some(r) {
+            c = c.replacen("class=\"sz-cell ", "class=\"sz-cell hl ", 1);
         }
-        match st {
-            RuneState::Unknown => h.push_str(&cell("", "unknown", r, &rune_label(tr, r), &glyph_svg(glyphs[r as usize]))),
-            RuneState::Contested => h.push_str(&cell("amber", "contested", r, &rune_label(tr, r), &glyph_svg(glyphs[r as usize]))),
-            RuneState::Decoded(u) => h.push_str(&cell("decoded", "decoded", r, &format!("{} {}", rune_label(tr, r), u), &esc(&u.to_string()))),
+        if opts.target == Some(r) {
+            c = c.replacen("class=\"sz-cell ", "class=\"sz-cell target ", 1);
         }
+        h.push_str(&c);
     }
     h
 }
@@ -68,6 +105,11 @@ fn slot_cells_html(p: &Play, view: &[RuneState], glyphs: &[usize], slot: usize, 
 /// The whole board: one row per slot.
 pub fn board_html(p: &Play, tr: Tr) -> String {
     let view = board_view(&p.board, &p.entries);
+    board_html_with(p, &view, tr, &Opts::default())
+}
+
+/// The board under an explicit view (the ripple holds some runes back) and Phase E options.
+pub fn board_html_with(p: &Play, view: &[RuneState], tr: Tr, opts: &Opts) -> String {
     let glyphs = glyph_map(&p.board);
     let check = p.check();
     let off: Vec<usize> = match &check {
@@ -109,7 +151,7 @@ pub fn board_html(p: &Play, tr: Tr) -> String {
         if !head.is_empty() {
             h.push_str(&format!("<div class=\"sz-head\">{head}</div>"));
         }
-        h.push_str(&format!("<div class=\"sz-cells\" dir=\"ltr\">{}</div></div>", slot_cells_html(p, &view, &glyphs, i, tr)));
+        h.push_str(&format!("<div class=\"sz-cells\" dir=\"ltr\">{}</div></div>", slot_cells_html(p, view, &glyphs, i, tr, opts)));
     }
     h
 }
@@ -160,4 +202,39 @@ pub fn stars_html(p: &Play, tr: Tr) -> String {
     let Some(Stars { solved, sharp_ear, codebreaker }) = p.stars() else { return String::new() };
     let one = |on: bool, key: &str| format!("<li class=\"sz-star{}\"><span aria-hidden=\"true\">{}</span> {}</li>", if on { " on" } else { "" }, if on { "\u{2605}" } else { "\u{2606}" }, esc(&tr(key, &[])));
     format!("<ul class=\"sz-stars\">{}{}{}</ul>", one(solved, "spz.star.solved"), one(sharp_ear, "spz.star.ear"), one(codebreaker, "spz.star.code"))
+}
+
+/// F17: the rune strip. One entry per rune: its glyph, its cell count, and its unit once
+/// decoded (or the pencil mark). Built from rune counts and the view only (I15).
+pub fn strip_html(p: &Play, view: &[RuneState], tr: Tr, opts: &Opts) -> String {
+    let glyphs = glyph_map(&p.board);
+    let slots: Vec<&[u8]> = p.board.slots.iter().map(|s| s.runes.as_slice()).collect();
+    let mut h = String::new();
+    for e in pencil::strip(&slots, view, &opts.marks) {
+        let (class, state, letter) = match e.state {
+            RuneState::Unknown => ("", "unknown", e.mark.map(|m| m.to_string()).unwrap_or_default()),
+            RuneState::Decoded(u) => ("decoded", "decoded", u.to_string()),
+            RuneState::Contested => ("amber", "contested", String::new()),
+        };
+        let mut aria = tr("spz.strip.label", &[("k", &(e.rune as u32 + 1).to_string()), ("n", &e.cells.to_string())]);
+        if let RuneState::Decoded(u) = e.state {
+            aria.push_str(&format!(" {u}"));
+        }
+        let mut cls = format!("sz-k sz-s {class}");
+        if opts.highlight == Some(e.rune) {
+            cls.push_str(" hl");
+        }
+        if opts.target == Some(e.rune) {
+            cls.push_str(" target");
+        }
+        h.push_str(&format!(
+            "<button type=\"button\" class=\"{cls}\" data-rune=\"{}\" data-state=\"{state}\" aria-label=\"{}\">{}<small>{}<b>{}</b></small></button>",
+            e.rune,
+            esc(&aria),
+            glyph_svg(glyphs[e.rune as usize]),
+            e.cells,
+            esc(&letter)
+        ));
+    }
+    h
 }

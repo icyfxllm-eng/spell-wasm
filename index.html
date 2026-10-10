@@ -696,6 +696,25 @@
     padding:calc(var(--sz-inset-top) + 16px) 24px 24px;background:var(--bg,#0e1420);text-align:center}
   .sz-card p{margin:0;font-size:1.05rem}
   @media (prefers-reduced-motion:reduce){.sz-row.off .sz-cell{animation:none}}
+  /* CC-SPELLUZZLE v1.1 Phase E: pencil marks, the rune strip, the ripple. Scoped to .v11 so v1 is untouched. */
+  .sz-sub{display:flex;gap:10px;align-items:center;justify-content:center;flex:none;min-height:0}
+  .sz-sub:has(#szCount:empty):has(#szPencilClear[hidden]){display:none}
+  .sz-count{font-weight:700;color:var(--amber,#f2c14e)}
+  .sz-pclear{min-height:36px;padding:0 12px;font-size:.8rem}
+  .sz-pclear[hidden]{display:none}
+  .sz-screen.v11 .sz-cell{position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  /* A pencilled cell: the glyph drops to 50% so a clean 11 px mark fits in the corner (census C21). */
+  .sz-screen.v11 .sz-cell.pencilled .sz-rune{width:50%;height:50%;margin:auto}
+  .sz-pencil{position:absolute;top:1px;inset-inline-end:3px;font-size:11px;line-height:1;font-weight:700;opacity:.9;pointer-events:none}
+  .sz-screen.v11 .sz-cell.hl,.sz-screen.v11 .sz-k.hl{outline:2px solid #ffffffcc;outline-offset:-2px}
+  .sz-screen.v11 .sz-cell.target,.sz-screen.v11 .sz-k.target{outline:2px dashed var(--amber,#f2c14e);outline-offset:-2px}
+  .sz-k.sz-s{flex-direction:column;gap:1px;padding:3px 4px;min-width:34px;border:none;color:inherit;font:inherit}
+  .sz-k.sz-s .sz-rune{width:16px;height:16px}
+  .sz-k.sz-s small{font-size:11px;line-height:1.1;opacity:.85}
+  .sz-k.sz-s small b{margin-inline-start:2px}
+  .sz-fade{animation:szFade .2s ease-out}
+  @keyframes szFade{from{opacity:.55}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.sz-fade{animation:szFade .2s ease-out}}
   /* SPELLUZZLE:END */
 
   /* CC-IMPOSTOR F1 */
@@ -2939,6 +2958,7 @@
     <div class="sz-play" id="szPlay" hidden>
       <div class="sz-board" id="szBoard"></div>
       <div class="sz-msg" id="szMsg" aria-live="polite"></div>
+      <div class="sz-sub"><span class="sz-count" id="szCount" aria-live="polite"></span><button type="button" class="sz-btn sz-pclear" id="szPencilClear" data-i18n="spz.pencil.clear" hidden>Clear pencil marks</button></div>
       <div class="sz-result" id="szResult"></div>
       <div class="sz-runekey" id="szRunes"></div>
       <div class="sz-kb" id="szKb" hidden>
