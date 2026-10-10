@@ -5,7 +5,8 @@
 // unchanged engine golden and A9 table, run by cargo test.)
 import { openApp, assert, assertEq, domSettled } from '../harness.mjs';
 
-const FLAG = () => localStorage.setItem('spell_flag_boardgame', 'on');
+// D-P25 (Oct 9 2026): the three rule flags default ON for TestFlight, so a spec that tests the flag-off game switches them off explicitly.
+const FLAG = () => { localStorage.setItem('spell_flag_boardgame', 'on'); for (const f of ['boardStretch', 'boardBoosts', 'boardStreak']) localStorage.setItem('spell_flag_' + f, 'off'); };
 const SIZES = [[375, 667], [393, 852], [820, 1180]];
 // The allowed Full shapes in portrait (w <= h), the spec's table. Mirrors boardgame_ring::FULL_SHAPES on purpose:
 // the test restates the rule instead of reading it back from the code under test.

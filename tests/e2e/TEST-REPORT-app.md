@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**289/289 passed** across 38 areas.
+**295/295 passed** across 38 areas.
 
 ## drawer — 21/21
 - ✅ every drawer row presses something that can receive it (en)
@@ -212,7 +212,7 @@
 - ✅ spell_cross_spell_jr_gets_jr_only
 - ✅ spell_cross_daily_is_the_same_for_everyone
 
-## boardgame — 40/40
+## boardgame — 41/41
 - ✅ boardgame_pass_and_play_handoff_hit_and_miss
 - ✅ boardgame_pass_and_play_reaches_the_podium
 - ✅ boardgame_npc_run_is_fast_and_never_shows_keys
@@ -252,9 +252,10 @@
 - ✅ boardgame_boost_effects_are_named_in_the_stage_and_resolve
 - ✅ boardgame_boost_grayscale_boost_diamond_vs_trap_circle
 - ✅ boardgame_boost_four_chips_with_markers_fit_375
-- ✅ boardgame_boost_npc_runs_stay_inside_the_budget_and_tap_applies_final_positions
+- ✅ boardgame_boost_npc_runs_stay_inside_the_budget_and_tap_applies_final_positions_effects
+- ✅ boardgame_boost_npc_runs_stay_inside_the_budget_and_tap_applies_final_positions_shipped_defaults
 
-## spelluzzle — 10/10
+## spelluzzle — 15/15
 - ✅ spelluzzle_exit_is_top_left_and_leaves
 - ✅ spelluzzle_first_board_shows_the_explainer_once
 - ✅ spelluzzle_untouched_board_shows_runes_never_letters
@@ -265,6 +266,11 @@
 - ✅ spelluzzle_jr_gets_jr_boards_only
 - ✅ spelluzzle_leaving_saves_and_playing_again_resumes
 - ✅ spelluzzle_a_clip_that_will_not_load_replaces_the_board_then_says_unavailable
+- ✅ spelluzzle_medium_has_1_silent_words_and_listen_costs_the_star
+- ✅ spelluzzle_hard_has_2_silent_words_and_listen_costs_the_star
+- ✅ spelluzzle_expert_has_3_silent_words_and_listen_costs_the_star
+- ✅ spelluzzle_second_explainer_shows_once_on_the_first_silent_board
+- ✅ spelluzzle_expert_layout_floor_at_375x667
 
 ## translate-screen — 10/10
 - ✅ translate_state_matrix_holds_the_action_row_still

@@ -109,11 +109,13 @@ pub fn boardgame() -> bool {
 }
 
 /// CC-BOARD-GAME-POLISH v1 Feature 1 (D-P16) -- Stretch words in the Board Game.
-/// **Default OFF** until Eric turns it on (it needs O-P1, signed, and A-P13 green).
-/// `localStorage['spell_flag_boardStretch'] = 'on'`. Compiled out with the mode.
+/// **Default ON**. TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
+/// Kill-switch: `localStorage['spell_flag_boardStretch'] = 'off'`. Compiled out with the mode.
+/// Stretch stays structurally off in Spell Jr whatever this says (O-P2).
 #[cfg(not(feature = "web"))]
 pub fn board_stretch() -> bool {
-    resolve(stored("boardStretch").as_deref(), false)
+    // TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
+    resolve(stored("boardStretch").as_deref(), true)
 }
 
 /// CC-SPELLUZZLE v1 F13 -- the rune cipher puzzle. **Default ON** (Eric, 2026-10-09:
@@ -132,18 +134,22 @@ pub fn spelluzzle_lang(lang: &str) -> bool {
     resolve(stored(&format!("spelluzzle_{lang}")).as_deref(), lang == "en")
 }
 
-/// CC-BOARD-GAME-POLISH v1 Feature 2 (D-P16) -- boost tiles in the Board Game. **Default OFF**.
-/// `localStorage['spell_flag_boardBoosts'] = 'on'`. Compiled out with the mode.
+/// CC-BOARD-GAME-POLISH v1 Feature 2 (D-P16) -- boost tiles in the Board Game. **Default ON**.
+/// TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
+/// Kill-switch: `localStorage['spell_flag_boardBoosts'] = 'off'`. Compiled out with the mode.
 #[cfg(not(feature = "web"))]
 pub fn board_boosts() -> bool {
-    resolve(stored("boardBoosts").as_deref(), false)
+    // TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
+    resolve(stored("boardBoosts").as_deref(), true)
 }
 
-/// CC-BOARD-GAME-POLISH v1 Feature 3 (D-P16) -- the hot streak. **Default OFF**.
-/// `localStorage['spell_flag_boardStreak'] = 'on'`. Compiled out with the mode.
+/// CC-BOARD-GAME-POLISH v1 Feature 3 (D-P16) -- the hot streak. **Default ON**.
+/// TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
+/// Kill-switch: `localStorage['spell_flag_boardStreak'] = 'off'`. Compiled out with the mode.
 #[cfg(not(feature = "web"))]
 pub fn board_streak() -> bool {
-    resolve(stored("boardStreak").as_deref(), false)
+    // TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
+    resolve(stored("boardStreak").as_deref(), true)
 }
 
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
@@ -449,6 +455,15 @@ mod tests {
         set_test_override(Some("off"));
         assert!(!is_on("ghost_racing"));
         set_test_override(None);
+    }
+
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn board_game_rule_flags_default_on_for_testflight() {
+        // D-P25 (Oct 9 2026). Absent storage reads the default; "off" is the kill-switch.
+        set_test_override(None);
+        assert!(board_stretch() && board_boosts() && board_streak(), "TestFlight default ON; set back before a public release");
+        assert!(!resolve(Some("off"), true), "spell_flag_<name>=off kills each rule");
     }
 
     #[test]

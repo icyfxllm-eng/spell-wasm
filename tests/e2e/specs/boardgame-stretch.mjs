@@ -4,8 +4,10 @@
 import { openApp, assert, assertEq, domSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
-const FLAG_ON = () => { localStorage.setItem('spell_flag_boardgame', 'on'); localStorage.setItem('spell_flag_boardStretch', 'on'); };
-const FLAG_OFF = () => { localStorage.setItem('spell_flag_boardgame', 'on'); };
+// D-P25 (Oct 9 2026): the three rule flags default ON for TestFlight, so a spec that tests the flag-off game switches them off explicitly.
+// Stretch alone: the exact-distance assertions here must not meet a Tailwind or a streak bonus.
+const FLAG_ON = () => { localStorage.setItem('spell_flag_boardgame', 'on'); localStorage.setItem('spell_flag_boardStretch', 'on'); localStorage.setItem('spell_flag_boardBoosts', 'off'); localStorage.setItem('spell_flag_boardStreak', 'off'); };
+const FLAG_OFF = () => { localStorage.setItem('spell_flag_boardgame', 'on'); for (const f of ['boardStretch', 'boardBoosts', 'boardStreak']) localStorage.setItem('spell_flag_' + f, 'off'); };
 
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.boardgameState() || 'null'));
 const cite = (w) => w.split('|')[0];

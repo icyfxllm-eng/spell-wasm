@@ -7,6 +7,7 @@
 import { openApp, assert, domSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
+// D-P25 (Oct 9 2026): only the mode flag is set, so Stretch, boosts and the streak run at their shipped defaults (ON).
 const FLAG = () => localStorage.setItem('spell_flag_boardgame', 'on');
 const LANGS = ['en', 'es', 'fr', 'de', 'pt', 'pl', 'ru', 'vi', 'ko', 'ja', 'fil', 'zh', 'ar', 'sw', 'hi'];
 const SIZES = [[375, 667], [390, 844], [430, 932]];
@@ -24,13 +25,17 @@ const measure = () => {
   const add = (name, el) => { if (el) leaves.push({ name, ...r(el) }); };
   add('view', document.getElementById('bgView'));
   add('orb', document.getElementById('bgOrb'));
-  add('field', document.getElementById('bgField'));
+  // In the Stretch choice the spelling panel is not up yet, so its parts are not measured.
+  const choosing = !document.getElementById('bgStretch').hidden;
+  if (!choosing) add('field', document.getElementById('bgField'));
   add('exit', document.getElementById('bgExit'));
   document.querySelectorAll('#bgChips .bg-chip').forEach((c, i) => add(`chip${i}`, c));
   document.querySelectorAll('#bgResults .bg-res').forEach((c, i) => add(`res${i}`, c));
-  add('del', document.getElementById('bgDel'));
-  add('go', document.getElementById('bgGo'));
-  const keys = [...document.querySelectorAll('#bgKeys .bg-key')];
+  // D-P25: the Stretch choice is part of default play for adults.
+  document.querySelectorAll('#bgStretch:not([hidden]) .bg-st-opt').forEach((c, i) => add(`stretch${i}`, c));
+  if (!choosing) add('del', document.getElementById('bgDel'));
+  if (!choosing) add('go', document.getElementById('bgGo'));
+  const keys = choosing ? [] : [...document.querySelectorAll('#bgKeys .bg-key')];
   keys.forEach((k, i) => add(`key${i}`, k));
   const problems = [];
   for (const e of leaves) {
@@ -48,9 +53,13 @@ const measure = () => {
     const el = document.getElementById(id);
     if (el.scrollHeight > el.clientHeight + 1) problems.push(`${id} scrolls (${el.scrollHeight} > ${el.clientHeight})`);
   }
+  // Streak counts, the +1 marker and the Ward marker live inside the chips: none may be clipped or wrapped out.
+  document.querySelectorAll('#bgChips .bg-chip').forEach((c, i) => { if (c.scrollWidth > c.clientWidth + 1) problems.push(`chip${i} clips its content (${c.scrollWidth} > ${c.clientWidth})`); });
+  const rowEl = document.getElementById('bgChips');
+  if (rowEl.scrollWidth > rowEl.clientWidth + 1) problems.push(`the chip row scrolls sideways (${rowEl.scrollWidth} > ${rowEl.clientWidth})`);
   const kh = Math.min(...keys.map((k) => k.getBoundingClientRect().height));
   if (kh < 45.5) problems.push(`keys shrank to ${kh.toFixed(1)}px`);
-  const kw = Math.min(...keys.map((k) => k.getBoundingClientRect().width));
+  const kw = keys.length ? Math.min(...keys.map((k) => k.getBoundingClientRect().width)) : 0;
   return { problems, rows: document.querySelectorAll('#bgKeys .bg-row').length, keys: keys.length, kw: Math.round(kw) };
 };
 
@@ -89,6 +98,13 @@ const measureTrack = () => {
   const inside = tiles.every((t) => t.left >= view.left - 0.5 && t.right <= view.right + 0.5 && t.top >= view.top - 0.5 && t.bottom <= view.bottom + 0.5);
   return { mode: 'track', span, problem: span < 0.8 ? `track spans ${(span * 100).toFixed(0)}% of the panel width` : !inside ? 'track tiles leave the panel' : null };
 };
+/// Roll, and if Stretch is on offer take the normal move, so the spelling state is reached either way (D-P25).
+const rollToSpelling = async (page) => {
+  await page.click('#bgOrb');
+  await page.waitForFunction(() => ['AwaitSpelling', 'AwaitStretch'].includes(JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase), null, { timeout: 5000 });
+  if ((await page.evaluate(() => JSON.parse(window.__spelltest.boardgameState()).phase)) === 'AwaitStretch') await page.click('#bgStretch [data-st="0"]');
+  await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+};
 const setInsets = (page, top, bottom) => page.evaluate(([t, b]) => {
   const el = document.getElementById('bgScreen');
   el.style.setProperty('--bg-inset-top', t + 'px'); el.style.setProperty('--bg-inset-bottom', b + 'px');
@@ -98,21 +114,47 @@ export async function run(browser, base, suite) {
   await suite.test('boardgame_layout_every_language_every_phone', async () => {
     const failed = [];
     const fitted = [];
-    let checked = 0;
+    let checked = 0, offered = 0;
     for (const lang of LANGS) {
       for (const kid of [false, true]) {
+        // A roll onto an Expert tile has nothing harder to stretch to; deal again so every adult language measures the choice.
+        for (let attempt = 0; attempt < 6; attempt++) {
         const { ctx, page } = await openApp(browser, base, { lang, age: kid ? KID : undefined, init: FLAG });
         try {
           await page.evaluate(() => document.getElementById('bgOpenBtn').click());
           await page.waitForSelector('#bgScreen.show', { timeout: 8000 });
-          if (await page.$eval('#bgStart', (b) => b.disabled)) { failed.push(`${lang}${kid ? '/jr' : ''}: Start is disabled (coming soon)`); continue; }
+          if (await page.$eval('#bgStart', (b) => b.disabled)) { failed.push(`${lang}${kid ? '/jr' : ''}: Start is disabled (coming soon)`); break; }
           await page.click('[data-bg="mode:pass"]');
           await page.click('[data-bg="count:4"]'); // four chips must fit
           await page.click('#bgStart');
           await page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
           await page.click('#bgHandGo');
+          // The worst case for the chips: every seat holds a Ward and a +1 pending (the roll spends the roller's).
+          await page.evaluate(() => { for (let i = 0; i < 4; i++) { window.__spelltest.boardgameForce(`ward:${i}`); window.__spelltest.boardgameForce(`bonus:${i}`); } });
           await page.click('#bgOrb');
-          await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+          await page.waitForFunction(() => ['AwaitSpelling', 'AwaitStretch'].includes(JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase), null, { timeout: 5000 });
+          const st0 = await page.evaluate(() => JSON.parse(window.__spelltest.boardgameState()));
+          const stretchState = st0.phase === 'AwaitStretch';
+          // Offered to adults unless the roll landed on an Expert tile (nothing harder to stretch to); never in Spell Jr.
+          if (kid && stretchState) failed.push(`${lang}/jr: Spell Jr was offered Stretch`);
+          if (!kid && !stretchState && st0.tier !== 'expert') failed.push(`${lang}: Stretch not offered on a ${st0.tier} landing`);
+          if (!kid && !stretchState && attempt < 5) continue;
+          if (stretchState) offered++;
+          if (stretchState) {
+            // The choice itself must fit at every phone size, with both buttons and the chip markers on screen.
+            for (const [w, h] of SIZES) {
+              await page.setViewportSize({ width: w, height: h });
+              await domSettled(page);
+              const m = await page.evaluate(measure);
+              checked++;
+              if (!(await page.isVisible('#bgStretch'))) failed.push(`${lang}@${w}x${h}: the Stretch choice is not on screen`);
+              if (m.problems.length) failed.push(`${lang}@${w}x${h} stretch choice: ${m.problems.slice(0, 3).join('; ')}`);
+            }
+            await page.click('#bgStretch [data-st="0"]');
+            await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+          }
+          const mk = await page.evaluate(() => ({ ward: document.querySelectorAll('#bgChips [data-ward]').length, plus: document.querySelectorAll('#bgChips .bg-sk.bonus').length, sk: document.querySelectorAll('#bgChips .bg-sk').length }));
+          if (mk.ward !== 4 || mk.plus !== 3 || mk.sk !== 4) failed.push(`${lang}${kid ? '/jr' : ''}: chip markers missing in default play (ward ${mk.ward}, +1 ${mk.plus} of 3 non-rollers, streak ${mk.sk})`);
           for (const [w, h] of SIZES) {
             await page.setViewportSize({ width: w, height: h });
             await domSettled(page);
@@ -149,10 +191,13 @@ export async function run(browser, base, suite) {
               if (di.exit.w < 48 || di.exit.h < 48 || di.exit.r > 24 || di.exit.b > 24 || di.exit.cx < w / 2 || di.exit.cy < h / 2) failed.push(`${id}: exit not a 48pt bottom-right target ${JSON.stringify(di.exit)}`);
             }
           }
+          break;
         } finally { await ctx.close(); }
+        }
       }
     }
-    process.stdout.write(`  boardgame layout: ${checked} combinations measured\n`);
+    if (offered < LANGS.length) failed.push(`the Stretch choice was measured in only ${offered} of ${LANGS.length} adult languages`);
+    process.stdout.write(`  boardgame layout: ${checked} combinations measured, Stretch choice in ${offered} languages\n`);
     assert(failed.length === 0, `${failed.length} layout problem(s):\n    ${failed.join('\n    ')}`);
   });
   await runMore(browser, base, suite);
@@ -209,8 +254,7 @@ async function runMore(browser, base, suite) {
   await suite.test('boardgame_spell_state_exit_works', async () => {
     const { ctx, page } = await open({ width: 390, height: 844 });
     try {
-      await page.click('#bgOrb');
-      await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+      await rollToSpelling(page);
       await domSettled(page);
       const hit = await page.evaluate(() => { const b = document.getElementById('bgExit').getBoundingClientRect(); return document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2).closest('#bgExit') !== null; });
       assert(hit, 'something covers the exit button in the spell state');
@@ -228,8 +272,7 @@ async function runMore(browser, base, suite) {
       await page.click('#bgStart');
       await page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
       await page.click('#bgHandGo');
-      await page.click('#bgOrb');
-      await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+      await rollToSpelling(page);
       await domSettled(page);
       const field = () => page.$eval('#bgField', (f) => f.textContent);
       const key = (k) => page.click(`#bgKeys [data-k="${k}"]`);
@@ -261,8 +304,7 @@ async function runMore(browser, base, suite) {
         await page.click('#bgStart');
         await page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
         await page.click('#bgHandGo');
-        await page.click('#bgOrb');
-        await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+        await rollToSpelling(page);
         await domSettled(page);
         const m = await page.evaluate(() => {
           const tiles = [...document.querySelectorAll('#bgBoard .bg-t')].map((t) => ({ slot: Number(t.getAttribute('data-slot')), l: t.getBoundingClientRect().left }));
@@ -289,8 +331,7 @@ async function runMore(browser, base, suite) {
     // x 12 px of panel: 375x600 now keeps a 12 px ring, and the track starts below that (375x520).
     const { ctx, page } = await open({ width: 375, height: 520 });
     try {
-      await page.click('#bgOrb');
-      await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+      await rollToSpelling(page);
       await domSettled(page);
       const m = await page.evaluate(() => ({ strip: document.getElementById('bgView').classList.contains('strip'), tiles: document.querySelectorAll('#bgBoard .bg-t').length }));
       assert(m.strip && m.tiles >= 8 && m.tiles <= 12, `expected the unrolled track at 375x520, got ${JSON.stringify(m)}`);

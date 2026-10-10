@@ -13,6 +13,8 @@ const FLAGS = () => {
   localStorage.setItem('spell_flag_boardBoosts', 'on');
   localStorage.setItem('spell_flag_boardStreak', 'on');
 };
+// D-P25: with only the mode flag set, every rule flag is at its shipped default (Stretch, boosts and streak ON).
+const DEFAULTS = () => localStorage.setItem('spell_flag_boardgame', 'on');
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.boardgameState() || 'null'));
 const raw = (page) => page.evaluate(() => window.__spelltest.boardgameState());
 const cite = (w) => w.split('|')[0];
@@ -21,8 +23,8 @@ async function typeIt(page, typed) {
   for (const ch of typed) await page.click(`#bgKeys [data-k="u:${ch}"]`);
 }
 
-async function openGame(browser, base, { viewport = { width: 393, height: 852 }, mode = 'pass', count = 2, size = 'sprint' } = {}) {
-  const o = await openApp(browser, base, { lang: 'en', viewport, init: FLAGS });
+async function openGame(browser, base, { viewport = { width: 393, height: 852 }, mode = 'pass', count = 2, size = 'sprint', flags = FLAGS } = {}) {
+  const o = await openApp(browser, base, { lang: 'en', viewport, init: flags });
   const { page } = o;
   await page.evaluate(() => document.getElementById('bgOpenBtn').click());
   await page.waitForSelector('#bgScreen.show', { timeout: 8000 });
@@ -319,8 +321,8 @@ export async function run(browser, base, suite) {
 
   // D10 with effects on: a whole solo game, every NPC run (untapped) stays inside 7 s for three NPCs; a tap ends the
   // run within a second and every piece is drawn on the tile the engine says it stands on (final positions applied).
-  await suite.test('boardgame_boost_npc_runs_stay_inside_the_budget_and_tap_applies_final_positions', async () => {
-    const { ctx, page } = await openGame(browser, base, { mode: 'solo', count: 3, size: 'sprint' });
+  for (const [label, flags] of [['effects', FLAGS], ['shipped_defaults', DEFAULTS]]) await suite.test(`boardgame_boost_npc_runs_stay_inside_the_budget_and_tap_applies_final_positions_${label}`, async () => {
+    const { ctx, page } = await openGame(browser, base, { mode: 'solo', count: 3, size: 'sprint', flags });
     try {
       let untappedMax = 0, tappedMax = 0, runs = 0, tapRuns = 0, longRuns = 0;
       // Steps per run, counted in the page (a seat change while an NPC is up is one step); a run can be longer than
@@ -374,6 +376,7 @@ export async function run(browser, base, suite) {
         }
         const before = await raw(page);
         if (s.phase === 'AwaitRoll') { await page.click('#bgOrb'); await page.waitForFunction((b) => window.__spelltest.boardgameState() !== b, before, { timeout: 5000 }).catch(() => {}); continue; }
+        if (s.phase === 'AwaitStretch') { await page.click('#bgStretch [data-st="0"]'); await page.waitForFunction((b) => window.__spelltest.boardgameState() !== b, before, { timeout: 5000 }).catch(() => {}); continue; }
         if (s.phase === 'AwaitSpelling') { await typeIt(page, cite(s.word)); await page.click('#bgGo'); await page.waitForFunction((b) => window.__spelltest.boardgameState() !== b, before, { timeout: 5000 }).catch(() => {}); continue; }
         if (s.phase === 'AwaitSwitchTarget') { await page.click('[data-sw="none"]'); await page.waitForFunction((b) => window.__spelltest.boardgameState() !== b, before, { timeout: 5000 }).catch(() => {}); continue; }
         await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState()).phase !== 'AwaitSpelling' || document.getElementById('bgOver')?.hidden === false, null, { timeout: 3000 }).catch(() => {});

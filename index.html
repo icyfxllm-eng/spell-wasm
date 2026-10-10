@@ -502,7 +502,7 @@
   .bg-sw{width:16px;height:16px;border-radius:5px;display:inline-grid;place-items:center;font-style:normal;font-size:.7rem;background:#ffffff40;flex:none}
   .bg-sw.t-easy{background:#3f8f6a}.bg-sw.t-medium{background:#4a79b8}.bg-sw.t-hard{background:#b8803a}.bg-sw.t-expert{background:#a24a5a}
   .bg-sw.trap{background:#f2c14e;color:#36210a}
-  .bg-chip{display:inline-flex;align-items:center;justify-content:center;gap:3px;padding:3px 6px;border-radius:999px;
+  .bg-chip{display:inline-flex;align-items:center;justify-content:center;gap:2px;padding:3px 5px;border-radius:999px;
     flex:0 1 auto;min-width:0;max-width:25%;overflow:hidden;
     background:#ffffff12;font-size:.8rem;white-space:nowrap;border:2px solid transparent}
   .bg-chip.on{border-color:var(--amber,#f2c14e);background:#ffffff22}
@@ -549,7 +549,8 @@
   .bg-boost{font-size:.34px;text-anchor:middle;dominant-baseline:central}
   .bg-boostbg{fill:#8fd3c8;stroke:#0e2b27;stroke-width:.04}
   .bg-sw.boost{background:#8fd3c8;color:#0e2b27}
-  .bg-chip em{font-style:normal;font-size:.7rem;margin-inline-start:4px}
+  /* Markers (streak count, +1, Ward) sit tight: four chips each carrying all three must fit a 375pt row unclipped. */
+  .bg-chip em{font-style:normal;font-size:.66rem;margin-inline-start:0}
   .bg-sk.bonus{outline:1px solid var(--amber,#f2c14e);border-radius:6px;padding-inline:2px}
   /* Polish Feature 6: pieces are persistent elements over the board (so a hop can animate),
      1.6 x the tile on a coloured base disc per piece. Sizes and positions are set inline. */

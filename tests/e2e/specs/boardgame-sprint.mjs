@@ -4,7 +4,8 @@
 import { openApp, assert, assertEq, domSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
-const FLAG = () => localStorage.setItem('spell_flag_boardgame', 'on');
+// D-P25 (Oct 9 2026): the three rule flags default ON for TestFlight, so a spec that tests the flag-off game switches them off explicitly.
+const FLAG = () => { localStorage.setItem('spell_flag_boardgame', 'on'); for (const f of ['boardStretch', 'boardBoosts', 'boardStreak']) localStorage.setItem('spell_flag_' + f, 'off'); };
 const SIZES = [[375, 667], [393, 852], [820, 1180]];
 // Restated from the spec, not read back from the code under test.
 const SPRINT = [[11, 12], [10, 13]];
