@@ -941,5 +941,18 @@
   "bg.boost.ward": "Nhận được hộ thân",
   "bg.wardBlocked": "Hộ thân đã chặn: {trap}",
   "bg.streak": "Chuỗi {n}",
-  "bg.streakBonus": "+1 ở lượt tung sau"
+  "bg.streakBonus": "+1 ở lượt tung sau",
+  "pick.title": "Xếp các lỗi của bạn",
+  "pick.hint": "Chạm vào từ để luyện chúng trước.",
+  "pick.start": "Luyện {n} từ trước",
+  "pick.justThese": "Chỉ những từ này",
+  "pick.practiceAll": "Luyện tất cả lỗi",
+  "pick.empty": "Không có lỗi nào để xếp.",
+  "pick.add": "Thêm {word} vào hàng của bạn",
+  "pick.remove": "Bỏ {word}, số {n}, khỏi hàng của bạn",
+  "pick.capJr": "Tối đa là năm. Chạm vào một từ để bỏ nó.",
+  "pick.running": "Đang luyện hàng của bạn — đã chọn {n}.",
+  "pick.done": "Đó là lựa chọn cuối cùng của bạn.",
+  "pick.end": "Kết thúc hàng",
+  "pick.ended": "Đã kết thúc hàng."
 }

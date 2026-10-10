@@ -55,6 +55,8 @@ pub enum NextWordReason {
     InOrder,
     /// The Daily Challenge sequence.
     Daily,
+    /// A word the player lined up (CC-PICK-QUEUE). Order only; grading unchanged.
+    Picked,
 }
 
 /// Totals for the guardian view. Skill detail is [`LearnerQuery::skill_states`].

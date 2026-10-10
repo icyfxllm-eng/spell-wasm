@@ -358,6 +358,21 @@ pub fn sd_tier_mode() -> bool {
     resolve(stored("sd_tier_mode").as_deref(), false)
 }
 
+/// CC-PICK-QUEUE v1 Phase A -- tap words in Misses and My Words to line them up
+/// and practice them first. **Default OFF** until Eric signs the strings (they
+/// are machine drafts in `needs_audit`). App only (O-F): the site build is
+/// permanently false, so the site cannot reach any of it. Develop with
+/// `localStorage['spell_flag_pick_queue_a'] = 'on'`.
+#[cfg(not(feature = "web"))]
+pub fn pick_queue_a() -> bool {
+    resolve(stored("pick_queue_a").as_deref(), false)
+}
+
+#[cfg(feature = "web")]
+pub fn pick_queue_a() -> bool {
+    false
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:

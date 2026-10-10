@@ -941,5 +941,18 @@
   "bg.boost.ward": "Ulinzi umepatikana",
   "bg.wardBlocked": "Ulinzi ulizuia: {trap}",
   "bg.streak": "Mfululizo {n}",
-  "bg.streakBonus": "+1 kwenye kete ijayo"
+  "bg.streakBonus": "+1 kwenye kete ijayo",
+  "pick.title": "Panga makosa yako",
+  "pick.hint": "Gusa maneno ili uyafanyie mazoezi kwanza.",
+  "pick.start": "Fanya mazoezi ya {n} kwanza",
+  "pick.justThese": "Haya tu",
+  "pick.practiceAll": "Fanya mazoezi ya makosa yote",
+  "pick.empty": "Hakuna makosa ya kupanga.",
+  "pick.add": "Ongeza {word} kwenye orodha yako",
+  "pick.remove": "Ondoa {word}, nambari {n}, kwenye orodha yako",
+  "pick.capJr": "Tano ndizo nyingi zaidi. Gusa neno ili kuliondoa.",
+  "pick.running": "Unafanya mazoezi ya orodha yako — {n} zimechaguliwa.",
+  "pick.done": "Hiyo ilikuwa chaguo lako la mwisho.",
+  "pick.end": "Maliza orodha",
+  "pick.ended": "Orodha imekwisha."
 }

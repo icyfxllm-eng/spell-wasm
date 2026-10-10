@@ -144,7 +144,14 @@ fn home_html(lists: &Lists) -> String {
     html
 }
 
-fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: bool) -> String {
+/// CC-PICK-QUEUE: what a My Words row needs to be pickable -- the list it is in
+/// and the language of the lineup already running there (None = any).
+struct Pq<'a> {
+    list: &'a str,
+    active: Option<String>,
+}
+
+fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: bool, pq: Option<&Pq>) -> String {
     if !editable {
         return format!(
             "<div class=\"lists-entry\"><span class=\"le-word\">{}</span>\
@@ -182,17 +189,31 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: boo
     } else {
         String::new()
     };
+    // The word cell: today's span, or (flag on) the shared lineup tap target.
+    let (cls, cell) = match pq {
+        Some(p) => {
+            let ok = p.active.as_ref().map(|l| *l == e.lang).unwrap_or(true);
+            (
+                row_cls(crate::pick_ui::row_class(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, ok)),
+                crate::pick_ui::word_html(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, ok),
+            )
+        }
+        None => (String::new(), format!("<span class=\"le-word\">{}</span>", esc(&e.text))),
+    };
     format!(
-        "<div class=\"lists-entry\"><span class=\"le-word\">{}</span>\
+        "<div class=\"lists-entry{cls}\">{cell}\
            <span class=\"lists-chip\">{}</span>{ordering}\
            <button type=\"button\" class=\"ghost\" data-e-edit=\"{idx}\">{}</button>\
            <button type=\"button\" class=\"ghost\" data-e-remove=\"{idx}\">{}</button>\
          </div>",
-        esc(&e.text),
         esc(&e.lang),
         esc(&t("lists.edit")),
         esc(&t("lists.remove")),
     )
+}
+
+fn row_cls(c: &str) -> String {
+    format!(" {c}")
 }
 
 fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
@@ -203,7 +224,7 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
     if id == ALL {
         let all = word_lists::all_words(lists);
         let rows: String =
-            all.iter().enumerate().map(|(i, e)| entry_row(i, e, false, false, false)).collect();
+            all.iter().enumerate().map(|(i, e)| entry_row(i, e, false, false, false, None)).collect();
         return format!(
             "{back}<div class=\"lists-head\">{} · {}</div>\
              <div class=\"lists-actions\">\
@@ -241,12 +262,32 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
         )
     };
     let mine = l.order == word_lists::Order::InMyOrder;
+    // CC-PICK-QUEUE (flag off: None, and every line below is today's).
+    let pq = if crate::pick_queue::enabled() {
+        let live: Vec<(String, String)> = l.entries.iter().map(|e| (e.text.clone(), e.lang.clone())).collect();
+        crate::pick_ui::prune_mine(&l.id, &live);
+        Some(Pq { list: &l.id, active: crate::pick_ui::active_lang(crate::pick_queue::SURFACE_MINE, &l.id) })
+    } else {
+        None
+    };
     let rows: String = l
         .entries
         .iter()
         .enumerate()
-        .map(|(i, e)| entry_row(i, e, true, mine, i + 1 == l.entries.len()))
+        .map(|(i, e)| entry_row(i, e, true, mine, i + 1 == l.entries.len(), pq.as_ref()))
         .collect();
+    let pq_head = match &pq {
+        Some(p) => {
+            // The footer follows the lineup in progress, or the first row's language.
+            let lang = p
+                .active
+                .clone()
+                .or_else(|| l.entries.first().map(|e| e.lang.clone()))
+                .unwrap_or_default();
+            crate::pick_ui::footer_html(crate::pick_queue::SURFACE_MINE, p.list, &lang)
+        }
+        None => String::new(),
+    };
     // D3: how this list hands its words to play.
     let order = format!(
         "<div class=\"lists-row\">\
@@ -286,7 +327,7 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
            <button type=\"button\" class=\"btn btn-check\" data-l-play=\"{id}\">{}</button>\
            {puzzle}{cross}\
          </div>\
-         {order}{rows}\
+         {order}{pq_head}{rows}\
          <div class=\"lists-actions\">\
            <button type=\"button\" class=\"ghost\" data-l-add=\"{id}\">{}</button>\
            {danger}\
@@ -427,7 +468,8 @@ pub fn wire(app: &App) {
                  [data-l-del],[data-l-del-ask],[data-l-del-cancel],[data-l-add],[data-l-snap],\
                  [data-l-play],[data-l-play-all],[data-l-order],[data-l-puzzle],[data-l-cross],\
                  [data-e-edit],[data-e-save],[data-e-cancel],[data-e-remove],\
-                 [data-e-star],[data-e-up],[data-e-down]",
+                 [data-e-star],[data-e-up],[data-e-down],\
+                 [data-pq-toggle],[data-pq-start],[data-pq-just]",
             )
             .ok()
             .flatten()
@@ -435,6 +477,14 @@ pub fn wire(app: &App) {
             return;
         };
 
+        if crate::pick_queue::enabled()
+            && (el.has_attribute("data-pq-toggle") || el.has_attribute("data-pq-start") || el.has_attribute("data-pq-just"))
+        {
+            if crate::pick_ui::handle_click(&a, &el, &|| close()) {
+                render(&a);
+            }
+            return;
+        }
         if let Some(id) = attr(&el, "data-l-cross") {
             if crate::wordcross_ui::open_list(&a, &id) {
                 close();
@@ -449,12 +499,14 @@ pub fn wire(app: &App) {
             // F4.1: this list becomes what play serves, and the screen gets out
             // of the way.
             close();
+            crate::pick_queue::end_session(); // a plain Play is not a lineup session
             crate::lists_ui::play(&a, &[id]);
             return;
         } else if attr(&el, "data-l-play-all").is_some() {
             let lists = word_lists::load();
             let every: Vec<String> = word_lists::visible(&lists).iter().map(|l| l.id.clone()).collect();
             close();
+            crate::pick_queue::end_session();
             crate::lists_ui::play(&a, &every);
             return;
         } else if let Some(kind) = attr(&el, "data-l-order") {

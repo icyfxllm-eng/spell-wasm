@@ -941,5 +941,18 @@
   "bg.boost.ward": "守りを獲得",
   "bg.wardBlocked": "守りが防いだ: {trap}",
   "bg.streak": "連続 {n}",
-  "bg.streakBonus": "次のロールで +1"
+  "bg.streakBonus": "次のロールで +1",
+  "pick.title": "まちがいを並べる",
+  "pick.hint": "単語をタップして先に練習します。",
+  "pick.start": "先に{n}個を練習",
+  "pick.justThese": "これだけ",
+  "pick.practiceAll": "まちがいをすべて練習",
+  "pick.empty": "並べるまちがいはありません。",
+  "pick.add": "{word}をリストに追加",
+  "pick.remove": "リストから{word}（{n}番）を外す",
+  "pick.capJr": "最大は5つです。単語をタップすると外せます。",
+  "pick.running": "リストを練習中 — {n}個を選択。",
+  "pick.done": "これが最後の1つでした。",
+  "pick.end": "リストを終える",
+  "pick.ended": "リストを終了しました。"
 }

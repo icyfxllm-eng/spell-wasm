@@ -941,5 +941,18 @@
   "bg.boost.ward": "Schutz erhalten",
   "bg.wardBlocked": "Schutz blockte: {trap}",
   "bg.streak": "Serie {n}",
-  "bg.streakBonus": "+1 beim nächsten Wurf"
+  "bg.streakBonus": "+1 beim nächsten Wurf",
+  "pick.title": "Ordne deine Fehler",
+  "pick.hint": "Tippe Wörter an, um sie zuerst zu üben.",
+  "pick.start": "Zuerst {n} üben",
+  "pick.justThese": "Nur diese",
+  "pick.practiceAll": "Alle Fehler üben",
+  "pick.empty": "Keine Fehler zum Einordnen.",
+  "pick.add": "{word} zu deiner Auswahl hinzufügen",
+  "pick.remove": "{word}, Nummer {n}, aus deiner Auswahl entfernen",
+  "pick.capJr": "Fünf sind das Maximum. Tippe ein Wort an, um es zu entfernen.",
+  "pick.running": "Du übst deine Auswahl — {n} gewählt.",
+  "pick.done": "Das war deine letzte Auswahl.",
+  "pick.end": "Auswahl beenden",
+  "pick.ended": "Auswahl beendet."
 }

@@ -941,5 +941,18 @@
   "bg.boost.ward": "Nakuha ang Proteksyon",
   "bg.wardBlocked": "Hinarang ng Proteksyon: {trap}",
   "bg.streak": "Sunod-sunod {n}",
-  "bg.streakBonus": "+1 sa susunod na hagis"
+  "bg.streakBonus": "+1 sa susunod na hagis",
+  "pick.title": "Ayusin ang iyong mga mali",
+  "pick.hint": "I-tap ang mga salita para unahin silang sanayin.",
+  "pick.start": "Sanayin muna ang {n}",
+  "pick.justThese": "Ito lang",
+  "pick.practiceAll": "Sanayin ang lahat ng mali",
+  "pick.empty": "Walang mali na aayusin.",
+  "pick.add": "Idagdag ang {word} sa iyong linya",
+  "pick.remove": "Alisin ang {word}, numero {n}, sa iyong linya",
+  "pick.capJr": "Lima ang pinakamarami. I-tap ang salita para alisin ito.",
+  "pick.running": "Sinasanay ang iyong linya — {n} ang napili.",
+  "pick.done": "Iyon na ang huli mong pinili.",
+  "pick.end": "Tapusin ang linya",
+  "pick.ended": "Tapos na ang linya."
 }

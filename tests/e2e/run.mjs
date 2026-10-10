@@ -63,6 +63,7 @@ import * as learnerReset from './specs/learner-reset.mjs';
 import * as reviewQueue from './specs/review-queue.mjs';
 import * as inspector from './specs/inspector.mjs';
 import * as audioRescue from './specs/audio-rescue.mjs';
+import * as pickQueue from './specs/pick-queue.mjs';
 
 const SPECS = [
   ['drawer', drawerNav, placement, learnerSurfaces, learnerReset],
@@ -81,6 +82,7 @@ const SPECS = [
   ['front-door', frontDoor],
   ['jr-climb', jrClimb],
   ['mywords-lists', myWordsLists],
+  ['pick-queue', pickQueue],
   ['spelldoku', spellDoku, spellDokuTier],
   ['spell-search', spellSearch],
   ['spell-cross', spellCross],
