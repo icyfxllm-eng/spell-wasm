@@ -1918,6 +1918,21 @@
     border:1px solid var(--edge);border-radius:12px;padding:10px 14px;margin-top:12px;max-width:480px;margin-inline:auto}
   .lists-empty{color:var(--muted-2);text-align:center;padding:24px 8px;line-height:1.6}
   .lists-row .ghost.on{border-color:var(--teal);color:var(--teal)}
+  /* PICKQUEUE:BEGIN CC-PICK-QUEUE v1 Phase A -- the lineup (app only; cut from the
+     site build like the other app-only blocks). Logical properties only, so the
+     badge sits at the START corner (top-right in RTL) and the row mirrors. */
+  .pq-row{position:relative}
+  .pq-row .pq-word{padding-inline-start:28px}
+  .pq-word{background:none;border:0;color:inherit;font:inherit;text-align:start;cursor:pointer;
+    padding-block:0;padding-inline-end:0}
+  .pq-row.on .pq-word{color:var(--teal);font-weight:700}
+  .pq-row.pq-off{opacity:.45}
+  .pq-badge{position:absolute;inset-block-start:6px;inset-inline-start:0;min-width:22px;height:22px;
+    padding-inline:6px;box-sizing:border-box;border-radius:11px;background:var(--teal);color:#07201f;
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;unicode-bidi:isolate}
+  .pq-note{color:var(--amber);font-size:.85em;margin-block:4px}
+  .pq-end{margin-block-start:6px}
+  /* PICKQUEUE:END */
   .lists-screen input[type=text]{flex:1;min-width:0;background:var(--panel-2);border:1.5px solid var(--edge);
     border-radius:10px;padding:10px;color:var(--ink);font-family:var(--body);font-size:16px}
   .tr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;

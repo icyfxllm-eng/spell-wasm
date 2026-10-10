@@ -965,5 +965,18 @@
   "bg.boost.ward": "Protection obtenue",
   "bg.wardBlocked": "La protection a bloqué : {trap}",
   "bg.streak": "Série {n}",
-  "bg.streakBonus": "+1 au prochain lancer"
+  "bg.streakBonus": "+1 au prochain lancer",
+  "pick.title": "Classe tes erreurs",
+  "pick.hint": "Touche des mots pour les travailler en premier.",
+  "pick.start": "Travailler {n} d'abord",
+  "pick.justThese": "Seulement ceux-ci",
+  "pick.practiceAll": "Travailler toutes les erreurs",
+  "pick.empty": "Aucune erreur à classer.",
+  "pick.add": "Ajouter {word} à ta sélection",
+  "pick.remove": "Retirer {word}, numéro {n}, de ta sélection",
+  "pick.capJr": "Cinq au maximum. Touche un mot pour le retirer.",
+  "pick.running": "Tu travailles ta sélection — {n} choisis.",
+  "pick.done": "C'était ton dernier choix.",
+  "pick.end": "Terminer la sélection",
+  "pick.ended": "Sélection terminée."
 }

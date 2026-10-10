@@ -965,5 +965,18 @@
   "bg.boost.ward": "방어 획득",
   "bg.wardBlocked": "방어가 막음: {trap}",
   "bg.streak": "연속 {n}",
-  "bg.streakBonus": "다음 굴리기에 +1"
+  "bg.streakBonus": "다음 굴리기에 +1",
+  "pick.title": "틀린 단어 줄 세우기",
+  "pick.hint": "단어를 눌러 먼저 연습하세요.",
+  "pick.start": "{n}개 먼저 연습",
+  "pick.justThese": "이것만",
+  "pick.practiceAll": "틀린 단어 모두 연습",
+  "pick.empty": "줄 세울 틀린 단어가 없어요.",
+  "pick.add": "{word}을(를) 목록에 추가",
+  "pick.remove": "목록에서 {word}({n}번) 빼기",
+  "pick.capJr": "최대 다섯 개예요. 단어를 눌러 빼세요.",
+  "pick.running": "목록 연습 중 — {n}개 선택됨.",
+  "pick.done": "마지막으로 고른 단어였어요.",
+  "pick.end": "목록 끝내기",
+  "pick.ended": "목록을 끝냈어요."
 }

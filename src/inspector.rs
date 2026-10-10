@@ -33,6 +33,7 @@ fn reason_label(r: NextWordReason) -> &'static str {
         NextWordReason::Deck => "deck order (no-repeat shuffle)",
         NextWordReason::InOrder => "list order",
         NextWordReason::Daily => "daily challenge",
+        NextWordReason::Picked => "lined up by the player",
     }
 }
 

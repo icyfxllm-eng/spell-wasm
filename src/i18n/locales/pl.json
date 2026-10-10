@@ -965,5 +965,18 @@
   "bg.boost.ward": "Ochrona zdobyta",
   "bg.wardBlocked": "Ochrona zablokowała: {trap}",
   "bg.streak": "Seria {n}",
-  "bg.streakBonus": "+1 przy następnym rzucie"
+  "bg.streakBonus": "+1 przy następnym rzucie",
+  "pick.title": "Ułóż swoje błędy",
+  "pick.hint": "Dotknij słów, aby ćwiczyć je najpierw.",
+  "pick.start": "Najpierw ćwicz {n}",
+  "pick.justThese": "Tylko te",
+  "pick.practiceAll": "Ćwicz wszystkie błędy",
+  "pick.empty": "Brak błędów do ułożenia.",
+  "pick.add": "Dodaj {word} do swojej kolejki",
+  "pick.remove": "Usuń {word}, numer {n}, z kolejki",
+  "pick.capJr": "Pięć to maksimum. Dotknij słowa, aby je usunąć.",
+  "pick.running": "Ćwiczysz swoją kolejkę — wybrano {n}.",
+  "pick.done": "To był ostatni wybór.",
+  "pick.end": "Zakończ kolejkę",
+  "pick.ended": "Kolejka zakończona."
 }

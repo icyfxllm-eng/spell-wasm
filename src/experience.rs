@@ -73,6 +73,24 @@ pub fn of_kid(kid: bool) -> Experience {
     if kid { Experience::Junior } else { Experience::Standard }
 }
 
+/// CC-PICK-QUEUE D4/I7 -- what the lineup offers `exp`. ONE function, the same
+/// shape for every language: Spell Jr is tap-to-line-up only, five picks, and the
+/// extras (sort, search, stars) are absent rather than locked.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PickCaps {
+    pub max_picks: Option<usize>,
+    pub extras: bool,
+}
+
+pub const JR_MAX_PICKS: usize = 5;
+
+pub fn pick_caps(exp: Experience) -> PickCaps {
+    match exp {
+        Experience::Standard => PickCaps { max_picks: None, extras: true },
+        Experience::Junior => PickCaps { max_picks: Some(JR_MAX_PICKS), extras: false },
+    }
+}
+
 fn policies() -> &'static HashMap<String, String> {
     static P: OnceLock<HashMap<String, String>> = OnceLock::new();
     P.get_or_init(|| crate::modes::all().into_iter().map(|m| (m.id, m.junior_policy)).collect())

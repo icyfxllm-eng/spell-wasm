@@ -82,7 +82,35 @@ pub fn add_miss_at(state: &mut AppState, word: &str, lang: &str, tier: &str, now
 /// A correct answer on a queued word, graded Hard or Good (L0 D3), through
 /// `review.rs`. Returns true if the word graduated and the list is now empty.
 pub fn promote_miss(state: &mut AppState, word: &str, lang: &str, grade: crate::review::Grade) -> bool {
-    promote_miss_at(state, word, lang, grade, now_ms())
+    // CC-PICK-QUEUE D3: flag OFF, or a word the lineup did not serve, is
+    // `promote_miss_at` exactly as before.
+    let picked = crate::pick_queue::served_by_lineup(word);
+    promote_miss_picked_at(state, word, lang, grade, now_ms(), picked)
+}
+
+/// CC-PICK-QUEUE D3/I6 (O-G): a correct answer on a word the LINEUP served
+/// counts as practice, but when that miss is not yet due it neither graduates
+/// nor advances its schedule -- the next spaced check stays exactly where it
+/// was. `picked == false`, or a due miss, is `promote_miss_at` unchanged, so
+/// the ordinary path is byte-identical. The schedule is never computed here:
+/// skipping is the absence of a call into `review.rs` (L0 I5).
+pub fn promote_miss_picked_at(
+    state: &mut AppState,
+    word: &str,
+    lang: &str,
+    grade: crate::review::Grade,
+    now: f64,
+    picked: bool,
+) -> bool {
+    if picked {
+        let key = miss_key(word, lang);
+        if let Some(e) = state.misses.iter().find(|x| miss_key(&x.word, &x.lang) == key) {
+            if e.due > now {
+                return false;
+            }
+        }
+    }
+    promote_miss_at(state, word, lang, grade, now)
 }
 
 /// `promote_miss` with an injected clock (host tests have no JS clock).
@@ -129,4 +157,74 @@ pub fn promote_miss_at(state: &mut AppState, word: &str, lang: &str, grade: crat
     }
     save(state);
     cleared
+}
+
+#[cfg(test)]
+mod pick_tests {
+    use super::*;
+    use crate::review::Grade;
+
+    const T0: f64 = 1_000_000_000_000.0;
+
+    fn state_with(word: &str) -> AppState {
+        let mut st = AppState::default();
+        add_miss_at(&mut st, word, "en", "easy", T0);
+        st
+    }
+
+    /// A5/I6/D3: a correct answer on a lineup pick that is NOT due counts as
+    /// practice but changes nothing about its schedule and does not clear it.
+    #[test]
+    fn a_picked_correct_answer_on_a_not_due_miss_leaves_its_schedule_alone() {
+        let mut st = state_with("cat");
+        // Move it into the future the ordinary way: one Good answer.
+        promote_miss_at(&mut st, "cat", "en", Grade::Good, T0 + 1_000.0);
+        let before = st.misses[0].clone();
+        assert!(before.due > T0 + 2_000.0, "now scheduled for later");
+        let cleared = promote_miss_picked_at(&mut st, "cat", "en", Grade::Good, T0 + 2_000.0, true);
+        assert!(!cleared);
+        assert_eq!(st.misses.len(), 1, "not cleared");
+        assert_eq!(st.misses[0].due, before.due, "next spaced check not skipped");
+        assert_eq!(st.misses[0].review.as_ref().map(|r| r.step), before.review.as_ref().map(|r| r.step));
+        assert_eq!(st.misses[0].misses, before.misses);
+    }
+
+    /// The ordinary path is untouched: not picked, same call advances the
+    /// schedule exactly as `promote_miss_at` always did (grading untouched, A12).
+    #[test]
+    fn not_picked_is_exactly_promote_miss_at() {
+        let mut a = state_with("cat");
+        let mut b = state_with("cat");
+        promote_miss_at(&mut a, "cat", "en", Grade::Good, T0 + 1_000.0);
+        promote_miss_at(&mut b, "cat", "en", Grade::Good, T0 + 1_000.0);
+        promote_miss_at(&mut a, "cat", "en", Grade::Good, T0 + 2_000.0);
+        promote_miss_picked_at(&mut b, "cat", "en", Grade::Good, T0 + 2_000.0, false);
+        assert_eq!(a.misses[0].due, b.misses[0].due);
+        assert_eq!(
+            a.misses[0].review.as_ref().map(|r| r.step),
+            b.misses[0].review.as_ref().map(|r| r.step)
+        );
+    }
+
+    /// A picked word that IS due is graded like any other: it advances (and may
+    /// graduate), so what makes a Miss "learned" is untouched (I1, A12).
+    #[test]
+    fn a_picked_due_miss_is_graded_normally() {
+        let mut a = state_with("cat");
+        let mut b = state_with("cat");
+        promote_miss_at(&mut a, "cat", "en", Grade::Good, T0);
+        promote_miss_picked_at(&mut b, "cat", "en", Grade::Good, T0, true);
+        assert_eq!(a.misses.len(), b.misses.len());
+        assert_eq!(a.misses.first().map(|m| m.due), b.misses.first().map(|m| m.due));
+    }
+
+    /// A wrong answer on a picked word records a miss exactly as before
+    /// (add_miss_at has no lineup input at all).
+    #[test]
+    fn a_wrong_answer_is_recorded_the_same() {
+        let mut st = state_with("cat");
+        add_miss_at(&mut st, "cat", "en", "easy", T0 + 5_000.0);
+        assert_eq!(st.misses[0].misses, 2);
+        assert_eq!(st.misses[0].due, T0 + 5_000.0);
+    }
 }

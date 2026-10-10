@@ -1561,6 +1561,16 @@ pub fn next_word(app: &App) {
         // easy to medium is the same cause, because a placement serve sets
         // cur_tier from the WORD LENGTH rather than from the Climb.
         PLACEMENT_LIVE.with(|c| c.set(false));
+        // CC-PICK-QUEUE: the lineup's say over the Misses queue. `Open` (flag
+        // off, no session, nothing left to line up) falls straight through to
+        // the branches below untouched.
+        let pick_serve = if s.review && !s.daily.active {
+            crate::pick_queue::next_for_misses(|p| {
+                s.misses.iter().any(|m| misses::miss_key(&m.word, &m.lang) == p.key)
+            })
+        } else {
+            crate::pick_queue::Serve::Open
+        };
         if s.daily.active {
             let w = s.daily.words[s.daily.idx].clone();
             s.daily.idx += 1;
@@ -1568,6 +1578,22 @@ pub fn next_word(app: &App) {
             s.cur_tier = length_tier(&w).to_string();
             crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Daily);
             s.word = w;
+        } else if matches!(pick_serve, crate::pick_queue::Serve::Exhausted) {
+            // "Just these" and every pick has had its turn (A9).
+            drop(s);
+            exit_review(app, Some(&crate::i18n::t("pick.done")));
+            return;
+        } else if let crate::pick_queue::Serve::Pick(p) = &pick_serve {
+            let m = s
+                .misses
+                .iter()
+                .find(|m| misses::miss_key(&m.word, &m.lang) == p.key)
+                .cloned()
+                .expect("a served pick has a miss entry behind it");
+            s.cur_lang = m.lang.clone();
+            s.word = m.word.clone();
+            s.cur_tier = m.tier.clone();
+            crate::learner_query::note_serve(&m.word, crate::learner_query::NextWordReason::Picked);
         } else if s.review {
             let due = misses::due_misses(&s);
             // CC-ZH-TONE F3: the tone drill is a SEPARATE study, so it is served
@@ -1665,7 +1691,26 @@ pub fn next_word(app: &App) {
                 // The word the promote chose and which rule chose it, so the
                 // serve can report its reason (L0 nextWordReason).
                 let promoted: std::cell::RefCell<Option<(String, crate::learner_query::NextWordReason)>> = std::cell::RefCell::new(None);
-                if crate::flags::learner_select() {
+                // CC-PICK-QUEUE: a lined-up My Words word is served before the
+                // deck. It bypasses `pool` (and so the length-tier filter) and
+                // never calls Deck::next, so the persisted pass is not shifted.
+                let pick_serve = if s.lang == MINE {
+                    crate::pick_queue::next_for_mine(&s.list_words, || {
+                        crate::word_lists::play_selection(&crate::word_lists::load())
+                    })
+                } else {
+                    crate::pick_queue::Serve::Open
+                };
+                if matches!(pick_serve, crate::pick_queue::Serve::Exhausted) {
+                    drop(s);
+                    exit_review(app, Some(&crate::i18n::t("pick.done")));
+                    return;
+                }
+                let picked_word = match &pick_serve {
+                    crate::pick_queue::Serve::Pick(p) => Some(p.word.clone()),
+                    _ => None,
+                };
+                if picked_word.is_none() && crate::flags::learner_select() {
                     let st = crate::learner::load_for(&s.cur_lang);
                     let day = crate::learner::current_day();
                     let lang = s.cur_lang.clone();
@@ -1686,14 +1731,26 @@ pub fn next_word(app: &App) {
                 // first, one after another. Everything else keeps the no-repeat
                 // deck it has always used.
                 let in_order = s.lang == MINE && s.list_sequential;
-                let w = if in_order {
+                let w = if let Some(pw) = picked_word.clone() {
+                    pw
+                } else if in_order {
                     let i = s.list_cursor % pool.len();
                     s.list_cursor = s.list_cursor.wrapping_add(1);
                     pool[i].clone()
                 } else {
-                    s.decks.entry(key.clone()).or_default().next(&pool)
+                    let mut w = s.decks.entry(key.clone()).or_default().next(&pool);
+                    // I3: a word the lineup already served this session does
+                    // not come round again from the deck. Flag off / no
+                    // session: `already_served` is false and this never loops.
+                    let mut guard = 0;
+                    while crate::pick_queue::already_served(&w) && guard < pool.len() {
+                        w = s.decks.entry(key.clone()).or_default().next(&pool);
+                        guard += 1;
+                    }
+                    w
                 };
                 let reason = match promoted.into_inner() {
+                    _ if picked_word.is_some() => crate::learner_query::NextWordReason::Picked,
                     _ if in_order => crate::learner_query::NextWordReason::InOrder,
                     Some((pw, r)) if pw == w => r,
                     _ => crate::learner_query::NextWordReason::Deck,
@@ -3572,7 +3629,10 @@ pub fn enter_review(app: &App) {
         return;
     }
     let due = misses::due_misses(&app.borrow()).len();
-    if due == 0 {
+    // CC-PICK-QUEUE (O-G): a lineup may name misses that are not due yet; the
+    // player asked for them, so the session starts. Flag off: always false.
+    let lineup = crate::pick_queue::session_active();
+    if due == 0 && !lineup {
         dom::set_text("feedback", &if total == 1 { crate::i18n::t("fb.allCaughtOne") } else { crate::i18n::tp("fb.allCaughtMany", &[("n", &total.to_string())]) });
         dom::el("feedback").set_class_name("feedback");
         return;
@@ -3594,12 +3654,22 @@ pub fn enter_review(app: &App) {
     render_letters(app, false);
     dom::set_text("hintLine", "");
     render_tries(app);
-    dom::set_text("feedback", &format!("Practicing your misses \u{2014} {} due now.", due));
+    if lineup {
+        let n = crate::pick_queue::session_pick_count();
+        dom::set_text("feedback", &crate::i18n::tp("pick.running", &[("n", &n.to_string())]));
+    } else {
+        dom::set_text("feedback", &format!("Practicing your misses \u{2014} {} due now.", due));
+    }
     dom::el("feedback").set_class_name("feedback");
     refresh_mode_buttons(app);
 }
 
 pub fn exit_review(app: &App, msg: Option<&str>) {
+    // CC-PICK-QUEUE: the session is over; the lineup itself stays unless the
+    // player explicitly ended it (the End control / the Misses exit).
+    crate::pick_queue::end_session();
+    #[cfg(not(feature = "web"))]
+    crate::pick_ui::sync_end_control();
     app.borrow_mut().review = false;
     stop_timer(true);
     clear_meaning();

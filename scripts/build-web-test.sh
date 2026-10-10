@@ -42,7 +42,9 @@ for pair in (("<!-- SPELL-PICTURE:BEGIN", "<!-- SPELL-PICTURE:END -->"),
              ("/* BOARDGAME:BEGIN", "/* BOARDGAME:END */"),
              # CC-SPELLUZZLE O1: the same cut for Spelluzzle's markup and CSS.
              ("<!-- SPELLUZZLE:BEGIN", "<!-- SPELLUZZLE:END -->"),
-             ("/* SPELLUZZLE:BEGIN", "/* SPELLUZZLE:END */")):
+             ("/* SPELLUZZLE:BEGIN", "/* SPELLUZZLE:END */"),
+             # CC-PICK-QUEUE O-F: app only; the site build carries none of it.
+             ("/* PICKQUEUE:BEGIN", "/* PICKQUEUE:END */")):
     while pair[0] in src:
         a = src.index(pair[0]); b = src.index(pair[1], a) + len(pair[1])
         src = src[:a] + src[b:]

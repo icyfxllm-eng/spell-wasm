@@ -965,5 +965,18 @@
   "bg.boost.ward": "Ward gained",
   "bg.wardBlocked": "Ward blocked {trap}",
   "bg.streak": "Streak {n}",
-  "bg.streakBonus": "+1 on the next roll"
+  "bg.streakBonus": "+1 on the next roll",
+  "pick.title": "Line up your misses",
+  "pick.hint": "Tap words to practice them first.",
+  "pick.start": "Practice {n} first",
+  "pick.justThese": "Just these",
+  "pick.practiceAll": "Practice all misses",
+  "pick.empty": "No misses to line up.",
+  "pick.add": "Add {word} to your lineup",
+  "pick.remove": "Remove {word}, number {n}, from your lineup",
+  "pick.capJr": "Five is the most. Tap a word to take it off.",
+  "pick.running": "Practicing your lineup — {n} picked.",
+  "pick.done": "That was your last pick.",
+  "pick.end": "End lineup",
+  "pick.ended": "Lineup ended."
 }

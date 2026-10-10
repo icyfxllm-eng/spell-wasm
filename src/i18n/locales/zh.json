@@ -965,5 +965,18 @@
   "bg.boost.ward": "获得守护",
   "bg.wardBlocked": "守护挡住了：{trap}",
   "bg.streak": "连对 {n}",
-  "bg.streakBonus": "下次掷骰 +1"
+  "bg.streakBonus": "下次掷骰 +1",
+  "pick.title": "排好你的错词",
+  "pick.hint": "点按单词，优先练习它们。",
+  "pick.start": "先练习 {n} 个",
+  "pick.justThese": "仅这些",
+  "pick.practiceAll": "练习所有错词",
+  "pick.empty": "没有可排列的错词。",
+  "pick.add": "把 {word} 加入队列",
+  "pick.remove": "把 {word}（第 {n} 个）移出队列",
+  "pick.capJr": "最多五个。点按单词即可移除。",
+  "pick.running": "正在练习你的队列 — 已选 {n} 个。",
+  "pick.done": "这是你的最后一个选择。",
+  "pick.end": "结束队列",
+  "pick.ended": "队列已结束。"
 }

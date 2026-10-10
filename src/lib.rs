@@ -186,6 +186,9 @@ mod wordcross; // CC-WORDGRID v1 Phase B — Spell Cross engine (app only)
 mod wordcross_ui; // CC-WORDGRID v1 Phase B — the Spell Cross screen (app only)
 #[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
+mod pick_queue; // CC-PICK-QUEUE v1 Phase A: the lineup model + queue guards (flag off; permanently off in the site build)
+#[cfg(not(feature = "web"))]
+mod pick_ui; // CC-PICK-QUEUE v1 Phase A: the shared lineup component (app only)
 #[cfg(not(feature = "web"))]
 mod lists_screen; // CC-MYWORDS-LISTS F3 — the My Words screen (app only)
 mod word_stories;
@@ -296,6 +299,7 @@ pub fn start() -> Result<(), JsValue> {
     {
         lists_ui::wire(); // CC-MYWORDS-LISTS F1: the save destination, both sheets
         lists_screen::wire(&app); // CC-MYWORDS-LISTS F3: the My Words screen
+        pick_ui::wire(&app); // CC-PICK-QUEUE: the lineup component (inert with the flag off)
         lists_ui::refresh_pool(&app); // F4: the remembered list is what play serves
         spelldoku_ui::wire(&app); // CC-SPELLDOKU v1
         wordsearch_ui::wire(&app); // CC-WORDGRID v1 Phase A: Spell Search
@@ -916,7 +920,16 @@ fn wire_modes(app: &App) {
         let a = app.clone();
         dom::on_click("missesBtn", move || {
             if a.borrow().review {
+                // CC-PICK-QUEUE: leaving a lineup session is the player ending
+                // it, which is what clears its lineup. No session: a no-op.
+                pick_queue::clear_session_scope();
                 game::exit_review(&a, Some("Back to normal play."));
+            } else if pick_queue::enabled() {
+                // Flag on: the Misses list surface (the lineup lives there).
+                #[cfg(not(feature = "web"))]
+                pick_ui::open_misses(&a);
+                #[cfg(feature = "web")]
+                game::enter_review(&a);
             } else {
                 game::enter_review(&a);
             }
@@ -979,6 +992,10 @@ fn wire_source_level(app: &App) {
                 s.lang = v.clone();
                 s.cur_lang = v.clone();
             }
+            // CC-PICK-QUEUE (D9): a lineup session never follows a language switch.
+            pick_queue::end_session();
+            #[cfg(not(feature = "web"))]
+            pick_ui::sync_end_control();
             // UI language follows the word-list selector (one setting). Keep the
             // last built-in locale when "My Words" is picked (it isn't a locale).
             if i18n::is_supported(&v) {
@@ -1453,6 +1470,8 @@ fn wire_stats_board_modal(app: &App) {
             // about it (Done #8). Read the language before stats clears.
             let lang = a.borrow().lang.clone();
             crate::learner::reset(&lang);
+            // CC-PICK-QUEUE (O-E): Reset this language clears that language's lineup.
+            pick_queue::clear_lang(&lang);
             stats::reset_current_lang(&mut a.borrow_mut());
             // Also clear adaptive word stats (the only reset affordance today).
             wordstats::clear();

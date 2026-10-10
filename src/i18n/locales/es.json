@@ -965,5 +965,18 @@
   "bg.boost.ward": "Protección obtenida",
   "bg.wardBlocked": "La protección bloqueó: {trap}",
   "bg.streak": "Racha {n}",
-  "bg.streakBonus": "+1 en la próxima tirada"
+  "bg.streakBonus": "+1 en la próxima tirada",
+  "pick.title": "Ordena tus fallos",
+  "pick.hint": "Toca palabras para practicarlas primero.",
+  "pick.start": "Practicar {n} primero",
+  "pick.justThese": "Solo estas",
+  "pick.practiceAll": "Practicar todos los fallos",
+  "pick.empty": "No hay fallos para ordenar.",
+  "pick.add": "Añadir {word} a tu fila",
+  "pick.remove": "Quitar {word}, número {n}, de tu fila",
+  "pick.capJr": "Cinco es el máximo. Toca una palabra para quitarla.",
+  "pick.running": "Practicando tu fila — {n} elegidas.",
+  "pick.done": "Esa fue tu última elección.",
+  "pick.end": "Terminar fila",
+  "pick.ended": "Fila terminada."
 }
