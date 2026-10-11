@@ -47,9 +47,22 @@ const EXEMPT_TEXT = [
 // Player-facing and genuinely untranslated. Each needs an audited string in
 // fifteen languages before it can leave this list. Eric's, 2026-10-09.
 const AWAITING_AUDIT = [
-  'vs',
   'Save to board',
   'Chain broken!',
+];
+
+// English ON PURPOSE, which is not the same as untranslated. Eric,
+// 2026-10-11, asked directly: both stay English in every locale.
+//   "vs"          reads as a symbol rather than a word in most of the
+//                 fifteen, and the Spell Off screen around it is keyed.
+//   "🏔 The Climb"  a feature name, treated as a proper noun — the rest of
+//                 the Climb copy (climb.*, fd.nameTitle, ghost.screen.*)
+//                 is keyed and translated around it.
+// They live here rather than in AWAITING_AUDIT so the difference between
+// "decided" and "not got to yet" survives in the file. Moving a string
+// here needs a decision, not a shrug.
+const ENGLISH_BY_DECISION = [
+  'vs',
   '🏔 The Climb',
 ];
 
@@ -128,7 +141,7 @@ export function findings(root = '.') {
 }
 
 export function problems(root = '.') {
-  const allowed = new Set([...EXEMPT_TEXT, ...AWAITING_AUDIT]);
+  const allowed = new Set([...EXEMPT_TEXT, ...AWAITING_AUDIT, ...ENGLISH_BY_DECISION]);
   const seen = new Set();
   const out = [];
   for (const f of findings(root)) {
@@ -138,9 +151,10 @@ export function problems(root = '.') {
   }
   // A list that outlives its entries stops being a record and starts being
   // a place to hide things.
-  for (const t of AWAITING_AUDIT) {
+  for (const [list, t] of [...AWAITING_AUDIT.map((t) => ['AWAITING_AUDIT', t]),
+                           ...ENGLISH_BY_DECISION.map((t) => ['ENGLISH_BY_DECISION', t])]) {
     if (!seen.has(t)) {
-      out.push(`AWAITING_AUDIT still lists ${JSON.stringify(t)} but it is no longer in `
+      out.push(`${list} still lists ${JSON.stringify(t)} but it is no longer in `
         + 'index.html — if it was translated or removed, drop it from the list');
     }
   }
@@ -197,5 +211,5 @@ if (RUN_AS_CLI && process.argv.includes('--selftest')) {
     console.error('  so the debt is named rather than lost.');
     process.exit(1);
   }
-  console.log(`hardcoded-label-check: OK — ${AWAITING_AUDIT.length} label(s) awaiting an auditor, all still present`);
+  console.log(`hardcoded-label-check: OK — ${AWAITING_AUDIT.length} label(s) awaiting an auditor, ${ENGLISH_BY_DECISION.length} English by decision, all still present`);
 }
