@@ -133,41 +133,41 @@ pub fn spelluzzle() -> bool {
 /// = 'on'` (and `_strip`, `_ripple`).
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_pencil() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_pencil").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_pencil").as_deref(), true)
 }
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_strip() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_strip").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_strip").as_deref(), true)
 }
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_ripple() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_ripple").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_ripple").as_deref(), true)
 }
 
-/// CC-SPELLUZZLE v1.1 F15 -- Par boards. **Default OFF**, requires `spelluzzle` (D25).
+/// CC-SPELLUZZLE v1.1 F15 -- Par boards. **Default ON** (device pass, 2026-10-10), requires `spelluzzle` (D25).
 /// `localStorage['spell_flag_spelluzzle_par'] = 'on'`.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_par() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_par").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_par").as_deref(), true)
 }
 
-/// CC-SPELLUZZLE v1.1 F19 -- Expeditions, and F21 -- My Words boards. **Default OFF**, each
+/// CC-SPELLUZZLE v1.1 F19 -- Expeditions, and F21 -- My Words boards. **Default ON** (device pass, 2026-10-10), each
 /// requires `spelluzzle` (D25). `localStorage['spell_flag_spelluzzle_expedition'] = 'on'` and
 /// `...spelluzzle_mywords`.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_expedition() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_expedition").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_expedition").as_deref(), true)
 }
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_mywords() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_mywords").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_mywords").as_deref(), true)
 }
 
-/// CC-SPELLUZZLE v1.1 F20 -- Rune Duel. **Default OFF**, requires `spelluzzle` (D25).
+/// CC-SPELLUZZLE v1.1 F20 -- Rune Duel. **Default ON** (device pass, 2026-10-10), requires `spelluzzle` (D25).
 /// `localStorage['spell_flag_spelluzzle_duel'] = 'on'`.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_duel() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_duel").as_deref(), false)
+    spelluzzle() && resolve(stored("spelluzzle_duel").as_deref(), true)
 }
 
 /// F13: one flag per language, so a language can be pulled on its own. English is the

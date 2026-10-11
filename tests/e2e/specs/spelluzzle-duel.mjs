@@ -11,7 +11,7 @@ const ON = () => {
   const orig = HTMLMediaElement.prototype.play;
   HTMLMediaElement.prototype.play = function () { try { window.__plays.push(this.src || this.currentSrc || ''); } catch (_) {} return orig.apply(this, arguments); };
 };
-const OFF = () => { localStorage.setItem('spell_flag_spelluzzle', 'on'); localStorage.setItem('spell_spz_how_v1', '1'); };
+const OFF = () => { localStorage.setItem('spell_flag_spelluzzle', 'on'); for (const f of ['pencil', 'strip', 'ripple', 'par', 'expedition', 'mywords', 'duel']) localStorage.setItem('spell_flag_spelluzzle_' + f, 'off'); localStorage.setItem('spell_spz_how_v1', '1'); };
 
 export async function run(browser, base, suite) {
   const start = async ({ init = ON, viewport = { width: 390, height: 844 }, age, tier = 'easy', cpu = false, diff = null } = {}) => {

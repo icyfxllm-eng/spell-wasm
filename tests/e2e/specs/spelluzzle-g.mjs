@@ -44,7 +44,7 @@ export async function run(browser, base, suite) {
   const MW = (w) => `localStorage.setItem('spell_flag_spelluzzle_mywords','on'); localStorage.setItem('byear_word_lists_v1', ${JSON.stringify(lists(w))});`;
 
   await suite.test('spelluzzle_expedition_is_absent_with_its_flag_off_and_for_jr', async () => {
-    for (const [extra, age] of [['', null], [EXP, KID]]) {
+    for (const [extra, age] of [["localStorage.setItem('spell_flag_spelluzzle_expedition','off');", null], [EXP, KID]]) {
       const o = await open({ extra, ...(age ? { age } : {}) });
       try {
         const n = await o.page.evaluate(() => [...document.querySelectorAll('#szTypes [data-type]')].filter((b) => b.dataset.type === 'expedition').length);

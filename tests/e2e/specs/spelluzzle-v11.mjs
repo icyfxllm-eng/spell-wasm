@@ -3,7 +3,7 @@
 import { openApp, assert, domSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
-const V1 = () => { localStorage.setItem('spell_flag_spelluzzle', 'on'); localStorage.setItem('spell_spz_how_v1', '1'); };
+const V1 = () => { localStorage.setItem('spell_flag_spelluzzle', 'on'); for (const f of ['pencil', 'strip', 'ripple', 'par', 'expedition', 'mywords', 'duel']) localStorage.setItem('spell_flag_spelluzzle_' + f, 'off'); localStorage.setItem('spell_spz_how_v1', '1'); };
 const E = () => {
   localStorage.setItem('spell_flag_spelluzzle', 'on');
   localStorage.setItem('spell_flag_spelluzzle_pencil', 'on');
