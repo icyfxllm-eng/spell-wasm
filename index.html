@@ -733,6 +733,19 @@
   #szLists:empty{display:none}
   .sz-row{position:relative}
   .sz-topup{position:absolute;top:2px;inset-inline-start:2px;width:16px;height:16px;line-height:16px;text-align:center;border-radius:8px;background:#ffffff26;font-size:.7rem}
+  /* CC-SPELLUZZLE v1.1 Phase H: Rune Duel. Ownership is a shape, never a colour alone (F14). */
+  .sz-duelhdr{text-align:center;font-weight:700;flex:none}
+  .sz-screen.duel .sz-par,.sz-screen.duel .sz-duelhdr{font-size:.9rem;line-height:1.15;min-height:0}
+  .sz-screen.duel .sz-board{gap:2px}
+  .sz-duelhdr[hidden]{display:none}
+  #szOpp:empty{display:none}
+  .sz-parbar{gap:8px;flex-wrap:wrap}
+  .sz-duel.heard::before{content:"\1F50A";position:absolute;top:2px;inset-inline-start:4px;font-size:.7rem;opacity:.8;pointer-events:none}
+  .sz-duel.solved,.sz-duel.locked{opacity:.8}
+  .sz-cell{position:relative}
+  .sz-own{position:absolute;bottom:2px;inset-inline-end:2px;width:9px;height:9px;background:currentColor;opacity:.9;pointer-events:none}
+  .sz-own.a{border-radius:50%}
+  .sz-own.b{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
   /* SPELLUZZLE:END */
 
   /* CC-IMPOSTOR F1 */
@@ -2972,11 +2985,13 @@
       <div class="sz-opt" id="szTypes"></div>
       <div class="sz-opt" id="szTiers"></div>
       <div class="sz-opt" id="szLists"></div>
+      <div class="sz-opt" id="szOpp"></div>
       <div class="bg-note" id="szNote" aria-live="polite"></div>
       <button class="btn btn-check" id="szStart" data-i18n="bg.start">Start</button>
     </div>
     <div class="sz-play" id="szPlay" hidden>
       <div class="sz-hdr"><div class="sz-par" id="szParLine" hidden></div><div class="sz-tabs" id="szRunTabs"></div></div>
+      <div class="sz-duelhdr" id="szDuelHdr" hidden></div>
       <div class="sz-board" id="szBoard"></div>
       <div class="sz-msg" id="szMsg" aria-live="polite"></div>
       <div class="sz-sub"><span class="sz-count" id="szCount" aria-live="polite"></span><button type="button" class="sz-btn sz-pclear" id="szPencilClear" data-i18n="spz.pencil.clear" hidden>Clear pencil marks</button></div>

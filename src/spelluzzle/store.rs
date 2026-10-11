@@ -47,6 +47,9 @@ pub fn par_stars_key(profile: &str, lang: &str, tier: Tier) -> String {
 pub fn run_key(profile: &str, lang: &str, tier: Tier) -> String {
     format!("spell_spz_run_v1:{profile}:{lang}:{}", tier.name())
 }
+pub fn duel_key(profile: &str, lang: &str) -> String {
+    format!("spell_spz_duel_v1:{profile}:{lang}")
+}
 pub fn mywords_key(profile: &str, lang: &str, list_id: &str) -> String {
     format!("spell_spz_mw_v1:{profile}:{lang}:{list_id}")
 }
@@ -58,7 +61,7 @@ pub fn streak_key(profile: &str) -> String {
 }
 
 /// Every key the mode writes, for the store-registry and the no-writes test (I8).
-pub const KEY_PREFIXES: [&str; 10] = [
+pub const KEY_PREFIXES: [&str; 11] = [
     "spell_spz_progress_v1",
     "spell_spz_history_v1",
     "spell_spz_stars_v1",
@@ -69,6 +72,7 @@ pub const KEY_PREFIXES: [&str; 10] = [
     "spell_spz_prefs_v1",
     "spell_spz_run_v1",
     "spell_spz_mw_v1",
+    "spell_spz_duel_v1",
 ];
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]

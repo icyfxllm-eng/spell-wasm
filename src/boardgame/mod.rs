@@ -471,6 +471,14 @@ pub struct BoardGameState {
     pub turns: u32,
 }
 
+/// D13/D27: a human's running accuracy in thousandths from `hits` of `attempts`, with the variant's
+/// starting counts `prior` = (hits, attempts) in thousandths of a spelling. A free function so
+/// another mode can use the same formula (see `engine::npc_accuracy_milli`).
+pub fn human_accuracy_milli(prior: (i64, i64), hits: i64, attempts: i64) -> i64 {
+    let (ph, pa) = prior;
+    (ph + hits * 1000) * 1000 / (pa + attempts * 1000)
+}
+
 impl BoardGameState {
     pub fn current_seat(&self) -> u8 {
         self.order[self.turn]
@@ -490,8 +498,7 @@ impl BoardGameState {
             .find(|p| !p.seat.npc)
             .map(|p| (p.hits as i64, p.attempts as i64))
             .unwrap_or((0, 0));
-        let (ph, pa) = self.cfg.variant.cfg().prior();
-        (ph + h * 1000) * 1000 / (pa + a * 1000)
+        human_accuracy_milli(self.cfg.variant.cfg().prior(), h, a)
     }
 
     /// The seats from first to last: a finisher first, then by position

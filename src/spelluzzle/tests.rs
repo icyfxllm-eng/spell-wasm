@@ -1689,3 +1689,222 @@ fn a_saved_my_words_board_rebuilds_from_its_words_alone() {
     assert_eq!(again.hash(), mb.board.hash());
     assert_eq!(again.rune_unit, mb.board.rune_unit, "same seed, same runes");
 }
+
+// ---- v1.1 Phase H: Rune Duel (F20) -----------------------------------------
+
+use super::duel::{self, Duel, How, LegState, Opponent, Refused, SlotState, NpcDone};
+use crate::spelldoku::rng::Rng as TestRng;
+
+fn duel_boards(tier: Tier, n: usize) -> Vec<Board> {
+    let lex = en();
+    (0..n as u64).filter_map(|s| duel::generate_board(s, tier, lex, &[])).collect()
+}
+
+/// The fixture board of Appendix B: afterward, formality, clockwise, ascend, anatomy, slime, keyword.
+fn fixture_duel() -> Duel {
+    let words = ["afterward", "formality", "clockwise", "ascend", "anatomy", "slime", "keyword"];
+    let b = duel::board_from_words("en", Tier::Hard, 1, &words.map(String::from)).unwrap();
+    let b2 = duel::board_from_words("en", Tier::Hard, 2, &["amateur", "quarter", "pleased", "monster", "stained", "lighter", "tourist"].map(String::from)).unwrap();
+    Duel::new(vec![b, b2], Tier::Hard, Opponent::Friend, 0)
+}
+
+#[test]
+fn a34_fixture_duel_script() {
+    let mut d = fixture_duel();
+    let ty = |s: &str| s.chars().collect::<Vec<char>>();
+    // 1. A: Listen and spell afterward, correct. A claims 7.
+    assert_eq!(d.turn, 0);
+    assert_eq!(d.listen(0).unwrap(), "afterward");
+    let r = d.submit(0, &ty("afterward"), How::Heard).unwrap();
+    assert!(r.correct && r.claimed.len() == 7 && r.points == 7);
+    assert_eq!(d.state().points, [7, 0]);
+    // 2. B: Listen and spell clockwise, types clockwize: wrong, nothing decodes, slot heard.
+    assert_eq!(d.turn, 1);
+    d.listen(2).unwrap();
+    let r = d.submit(2, &ty("clockwize"), How::Heard).unwrap();
+    assert!(!r.correct && r.claimed.is_empty());
+    assert_eq!(d.slot_state(2), SlotState::Heard);
+    // 3. A: clockwise is heard, so Spell unheard is not offered; Listen and spell, correct.
+    assert_eq!(d.submit(2, &ty("clockwise"), How::Unheard), Err(Refused::NotOffered));
+    d.listen(2).unwrap();
+    let r = d.submit(2, &ty("clockwise"), How::Heard).unwrap();
+    assert_eq!(r.claimed.len(), 6);
+    assert_eq!(d.state().points, [13, 0]);
+    // 4. B: Spell unheard on the secret, correct: one rune at triple.
+    assert_eq!(d.listen(6), Err(Refused::NotOffered), "the secret has no Listen");
+    let r = d.submit(6, &ty("keyword"), How::Unheard).unwrap();
+    assert!(r.correct && r.claimed.len() == 1 && r.points == 3);
+    assert_eq!(d.state().points, [13, 3]);
+    // 5. A: Spell unheard ascend: one rune at double.
+    let r = d.submit(3, &ty("ascend"), How::Unheard).unwrap();
+    assert!(r.correct && r.points == 2);
+    assert_eq!(d.state().points, [15, 3]);
+    // 6. B: Listen and spell slime: one rune.
+    d.listen(5).unwrap();
+    let r = d.submit(5, &ty("slime"), How::Heard).unwrap();
+    assert!(r.correct && r.points == 1);
+    assert_eq!(d.legs[0].points, [15, 4]);
+    // 7. formality and anatomy have nothing left to claim and lock; the leg ends; each rune has one owner.
+    assert!(d.legs[0].over);
+    assert!(d.legs[0].locked[1] && d.legs[0].locked[4]);
+    assert_eq!(d.legs[0].owner.iter().filter(|o| **o == Some(0)).count(), 14);
+    assert_eq!(d.legs[0].owner.iter().filter(|o| **o == Some(1)).count(), 2);
+    assert!(d.legs[0].owner.iter().all(|o| o.is_some()), "every rune of a fully solved leg is claimed once (D31)");
+    // Leg 2 is started by the other player (I22), and the totals carry.
+    assert_eq!(d.leg, 1);
+    assert_eq!(d.turn, 1);
+    assert_eq!(d.totals(), [15, 4]);
+}
+
+#[test]
+fn a35_duel_rules() {
+    let mut d = fixture_duel();
+    let ty = |s: &str| s.chars().collect::<Vec<char>>();
+    // A heard slot offers no Spell unheard; an unheard slot cannot be spelled as heard.
+    assert_eq!(d.submit(0, &ty("afterward"), How::Heard), Err(Refused::NotHeard));
+    d.listen(0).unwrap();
+    assert_eq!(d.submit(0, &ty("afterward"), How::Unheard), Err(Refused::NotOffered));
+    // Two passes in a row end the leg; a spelling in between resets the count.
+    let mut d = fixture_duel();
+    d.pass();
+    assert!(!d.legs[0].over);
+    d.submit(0, &ty("afterwards"), How::Unheard).unwrap();
+    d.pass();
+    assert!(!d.legs[0].over, "a spelling between passes resets the count");
+    d.pass();
+    assert!(d.legs[0].over && d.leg == 1);
+    // Each player starts exactly one leg.
+    let starters: Vec<u8> = {
+        let mut d = fixture_duel();
+        let mut v = vec![d.turn];
+        d.pass();
+        d.pass();
+        v.push(d.turn);
+        v
+    };
+    assert_eq!(starters[0] + starters[1], 1, "the two legs have different starters");
+    // A wrong entry never contests anything: the decoded set only grows from solved words.
+    let mut d = fixture_duel();
+    d.submit(2, &ty("xxxxxxxxx"), How::Unheard).unwrap();
+    assert!(d.state().decoded.iter().all(|x| !x));
+    assert_eq!(d.state().points, [0, 0]);
+}
+
+#[test]
+fn a37_the_computer_never_reads_an_answer() {
+    let lex = en();
+    for b in duel_boards(Tier::Hard, 6) {
+        let mut d = Duel::new(vec![b.clone(), b.clone()], Tier::Hard, Opponent::Computer(1), 0);
+        // Play a few turns so the table has decoded runes.
+        let mut rng = TestRng::new(5);
+        for _ in 0..3 {
+            d.npc_turn_at(lex, &mut rng, 800);
+        }
+        let move_a = d.npc_choice(lex);
+        // Change the units of every UNDECODED rune (so the undecoded answers change) and the choice
+        // must not move: it sees rune numbers and decoded units only.
+        let mut other = Duel::new(vec![b.clone(), b.clone()], Tier::Hard, Opponent::Computer(1), 0);
+        other.legs = d.legs.clone();
+        other.leg = d.leg;
+        other.turn = d.turn;
+        other.hits = d.hits;
+        other.attempts = d.attempts;
+        let und: Vec<usize> = (0..other.boards[other.leg].n_runes()).filter(|&r| !other.legs[other.leg].decoded[r]).collect();
+        if und.len() >= 2 {
+            let (x, y) = (und[0], und[und.len() - 1]);
+            let bd = &mut other.boards[other.leg];
+            // Swap two undecoded runes' units and fix the answers to match.
+            let (ux, uy) = (bd.rune_unit[x], bd.rune_unit[y]);
+            bd.rune_unit.swap(x, y);
+            for s in &mut bd.slots {
+                for (c, &r) in s.answer.iter_mut().zip(&s.runes) {
+                    if r as usize == x {
+                        *c = uy;
+                    } else if r as usize == y {
+                        *c = ux;
+                    }
+                }
+            }
+        }
+        assert_eq!(other.npc_choice(lex), move_a, "the computer's choice depended on an undecoded answer");
+    }
+}
+
+#[test]
+fn a32_a33_duel_is_fair_between_equal_players_and_ownership_holds() {
+    let lex = en();
+    let n = n_seeds(200);
+    for tier in [Tier::Easy, Tier::Hard] {
+        let boards = duel_boards(tier, 24);
+        assert!(boards.len() >= 20, "{tier:?}: only {} boards", boards.len());
+        for acc in [600i64, 750, 900] {
+            let (mut wins, mut draws) = (0.0f64, 0u32);
+            for m in 0..n {
+                let mut rng = TestRng::new(0x0D0E ^ (m as u64) << 8 ^ acc as u64);
+                let b1 = rng.below(boards.len());
+                let mut b2 = rng.below(boards.len());
+                while b2 == b1 {
+                    b2 = rng.below(boards.len());
+                }
+                let starter = rng.below(2) as u8;
+                let mut d = Duel::new(vec![boards[b1].clone(), boards[b2].clone()], tier, Opponent::Friend, starter);
+                let mut guard = 0;
+                while !d.match_over() && guard < 500 {
+                    d.npc_turn_at(lex, &mut rng, acc);
+                    guard += 1;
+                }
+                assert!(d.match_over(), "a match must finish");
+                // A33: no rune owned twice by construction; claims add up to the scores.
+                for (leg, st) in d.legs.iter().enumerate() {
+                    let owned = |p: u8| st.owner.iter().filter(|o| **o == Some(p)).count();
+                    assert_eq!(owned(0) + owned(1), st.decoded.iter().filter(|x| **x).count(), "leg {leg}");
+                    assert!(st.points[0] >= owned(0) as i64 && st.points[1] >= owned(1) as i64, "points are at least one per rune claimed");
+                }
+                let t = d.totals();
+                wins += if t[starter as usize] > t[1 - starter as usize] { 1.0 } else if t[0] == t[1] { 0.5 } else { 0.0 };
+                draws += (t[0] == t[1]) as u32;
+            }
+            let rate = wins / n as f64 * 100.0;
+            let (lo, hi) = if n >= 5000 { (45.0, 55.0) } else { (38.0, 62.0) };
+            println!("A32 {tier:?} acc {acc}: starter {rate:.1}%, draws {:.1}%", draws as f64 / n as f64 * 100.0);
+            assert!((lo..=hi).contains(&rate), "{tier:?} acc {acc}: the leg-1 starter wins {rate:.1}% of matches between equal players");
+        }
+    }
+}
+
+#[test]
+fn duel_saves_and_restores_mid_match() {
+    let lex = en();
+    let boards = duel_boards(Tier::Medium, 2);
+    let mut d = Duel::new(boards, Tier::Medium, Opponent::Computer(2), 1);
+    let mut rng = TestRng::new(9);
+    for _ in 0..4 {
+        d.npc_turn_at(lex, &mut rng, 700);
+    }
+    let save = d.save();
+    let json = serde_json::to_string(&save).unwrap();
+    let back: duel::DuelSave = serde_json::from_str(&json).unwrap();
+    let r = Duel::restore("en", &back).unwrap();
+    assert_eq!(r.legs, d.legs);
+    assert_eq!((r.leg, r.turn, r.starter, r.hits, r.attempts), (d.leg, d.turn, d.starter, d.hits, d.attempts));
+    assert_eq!(r.boards[0].words(), d.boards[0].words());
+    let _ = (NpcDone::Passed, LegState::clone);
+}
+
+#[test]
+fn duel_offering_and_gates() {
+    use super::offer::duel_offered;
+    for t in [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert] {
+        assert!(duel_offered("en", false, t));
+        assert!(!duel_offered("en", true, t), "Spell Jr has no Duel (O4)");
+    }
+    assert!(!duel_offered("en", false, Tier::Jr));
+    assert!(!duel_offered("ko", false, Tier::Hard));
+    let lex = en();
+    for tier in [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert] {
+        for b in duel_boards(tier, 5) {
+            assert!(duel::check_duel_board(&b, lex).is_ok());
+            assert!(b.slots.iter().all(|s| !lex.has_homophone(&s.answer)), "P1");
+        }
+    }
+}

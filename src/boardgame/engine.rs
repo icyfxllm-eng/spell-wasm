@@ -7,8 +7,15 @@ use super::board::generate;
 use super::*;
 use crate::spelldoku::rng::Rng;
 
-const NPC_FLOOR_MILLI: i64 = 300;
-const NPC_CEIL_MILLI: i64 = 950;
+pub const NPC_FLOOR_MILLI: i64 = 300;
+pub const NPC_CEIL_MILLI: i64 = 950;
+
+/// D13: an NPC's accuracy, `clamp(human - delta, 0.30, 0.95)`, in thousandths. A free function so
+/// that another mode (Spelluzzle's Rune Duel) can ask the Board Game's own formula instead of
+/// copying it; `BoardGameState::npc_acc_milli` is this with the state's own numbers.
+pub fn npc_accuracy_milli(human_acc_milli: i64, delta_milli: i64) -> i64 {
+    (human_acc_milli - delta_milli).clamp(NPC_FLOOR_MILLI, NPC_CEIL_MILLI)
+}
 
 /// A fresh game. All randomness comes from `seed`, in a fixed order: board
 /// tiers, traps, first player, then each tier's word order.
@@ -558,7 +565,7 @@ impl BoardGameState {
 
     /// D13: `clamp(human_acc - delta, 0.30, 0.95)`, in thousandths.
     pub fn npc_acc_milli(&self) -> i64 {
-        (self.human_acc_milli() - self.cfg.variant.cfg().delta(self.cfg.difficulty)).clamp(NPC_FLOOR_MILLI, NPC_CEIL_MILLI)
+        npc_accuracy_milli(self.human_acc_milli(), self.cfg.variant.cfg().delta(self.cfg.difficulty))
     }
 
     /// One whole NPC turn. NPCs draw no words (I11): their outcomes come from

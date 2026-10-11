@@ -163,6 +163,13 @@ pub fn spelluzzle_mywords() -> bool {
     spelluzzle() && resolve(stored("spelluzzle_mywords").as_deref(), false)
 }
 
+/// CC-SPELLUZZLE v1.1 F20 -- Rune Duel. **Default OFF**, requires `spelluzzle` (D25).
+/// `localStorage['spell_flag_spelluzzle_duel'] = 'on'`.
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_duel() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_duel").as_deref(), false)
+}
+
 /// F13: one flag per language, so a language can be pulled on its own. English is the
 /// only one built; the others stay off, and F12 keeps ko zh ja ar hi out whatever this says.
 #[cfg(not(feature = "web"))]

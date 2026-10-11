@@ -12,6 +12,7 @@
 //!   every candidate to `gates::check_board` and serves only what that accepts.
 
 pub mod bank;
+pub mod duel;
 pub mod fresh;
 pub mod gates;
 pub mod gen;

@@ -280,3 +280,56 @@ pub fn par_result(p: &Play, tr: Tr) -> String {
         std::cmp::Ordering::Greater => tr("spz.par.over", &[("n", &(l - par).to_string())]),
     }
 }
+
+/// F20: the Duel table. Rows are words in one of four states (unheard, heard, solved, locked);
+/// a decoded rune shows its letter and the mark of the player who claimed it. Ownership is a
+/// shape (a circle or a diamond), never a colour alone (F14).
+pub fn duel_board_html(d: &super::duel::Duel, selected: Option<usize>, draft: &[char], tr: Tr) -> String {
+    use super::duel::SlotState;
+    let b = d.board();
+    let st = d.state();
+    let glyphs = glyph_map(b);
+    let mut h = String::new();
+    for (i, s) in b.slots.iter().enumerate() {
+        let state = d.slot_state(i);
+        let cls = match state {
+            SlotState::Unheard => "unheard",
+            SlotState::Heard => "heard",
+            SlotState::Solved => "solved",
+            SlotState::Locked => "locked",
+        };
+        let sel = if selected == Some(i) { " sel" } else { "" };
+        let secret = if i + 1 == b.slots.len() { " secret" } else { "" };
+        h.push_str(&format!("<div class=\"sz-row sz-duel {cls}{sel}{secret}\" id=\"szRow{i}\" data-slot=\"{i}\" data-state=\"{cls}\">"));
+        let mut head = String::new();
+        if i + 1 == b.slots.len() {
+            head.push_str(&format!("<span class=\"sz-label\">{}</span>", esc(&tr("spz.secret", &[]))));
+        }
+        if state == SlotState::Locked {
+            head.push_str(&format!("<span class=\"sz-cost\">{}</span>", esc(&tr("spz.duel.locked", &[]))));
+        }
+        if !head.is_empty() {
+            h.push_str(&format!("<div class=\"sz-head\">{head}</div>"));
+        }
+        h.push_str("<div class=\"sz-cells\" dir=\"ltr\">");
+        for (k, &r) in s.runes.iter().enumerate() {
+            let own = match st.owner[r as usize] {
+                Some(0) => "<i class=\"sz-own a\" aria-hidden=\"true\"></i>",
+                Some(_) => "<i class=\"sz-own b\" aria-hidden=\"true\"></i>",
+                None => "",
+            };
+            let typed = if selected == Some(i) { draft.get(k) } else { None };
+            if let Some(u) = typed {
+                h.push_str(&cell("typed", "typed", r, &format!("{} {}", rune_label(tr, r), u), &esc(&u.to_string())));
+            } else if st.decoded[r as usize] {
+                let u = b.rune_unit[r as usize];
+                let c = cell("decoded", "decoded", r, &format!("{} {}", rune_label(tr, r), u), &format!("{}{}", esc(&u.to_string()), own));
+                h.push_str(&c);
+            } else {
+                h.push_str(&cell("", "unknown", r, &rune_label(tr, r), &glyph_svg(glyphs[r as usize])));
+            }
+        }
+        h.push_str("</div></div>");
+    }
+    h
+}

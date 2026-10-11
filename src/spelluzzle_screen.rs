@@ -19,6 +19,7 @@ use wasm_bindgen::JsCast;
 use crate::boardgame_input::{self as input, Key};
 use crate::spelluzzle::{
     bank,
+    duel::{self, Duel, How, NpcDone, Opponent},
     fresh::{fresh_board, fresh_par, fresh_run, fresh_verified},
     gen::generate_after,
     lex::Lexicon,
@@ -66,6 +67,19 @@ struct Ui {
     run: Option<RunState>,
     /// F21: a My Words board's own words, kept whole for saving.
     mw: Option<MyWordsSave>,
+    /// F20: a Rune Duel in play (the `play` field is then an unused placeholder).
+    duel: Option<DuelUi>,
+}
+
+/// A Duel on the table: the rules object plus what the player has half done.
+struct DuelUi {
+    d: Duel,
+    selected: Option<usize>,
+    /// The action chosen for the selected word, once the player has chosen one.
+    mode: Option<How>,
+    draft: Vec<char>,
+    /// The last thing that happened, shown as a one-line verdict (D23).
+    note: String,
 }
 
 /// An Expedition in play: three boards, one of them on screen.
@@ -108,6 +122,11 @@ thread_local! {
     static EXTRA_WORDS: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
     /// F21: the list the player picked.
     static LIST_ID: RefCell<Option<String>> = const { RefCell::new(None) };
+    /// F20: the opponent chosen on the start screen, and the Duel in flight to `show`.
+    static OPP: RefCell<Opponent> = const { RefCell::new(Opponent::Friend) };
+    static DUEL_CTX: RefCell<Option<Duel>> = const { RefCell::new(None) };
+    /// Bumped to cancel a pending computer turn.
+    static NPC: Cell<u32> = const { Cell::new(0) };
 }
 
 /// F15: the first Par board shows its explainer once.
@@ -179,6 +198,7 @@ pub fn wire(app: &App) {
     dom::on::<web_sys::MouseEvent, _>("szRunTabs", "click", run_tab_tap);
     dom::on_click("szNext", run_next);
     dom::on::<web_sys::MouseEvent, _>("szLists", "click", list_tap);
+    dom::on::<web_sys::MouseEvent, _>("szOpp", "click", opp_tap);
     dom::on::<web_sys::MouseEvent, _>("szBoard", "click", board_tap);
     dom::on::<web_sys::MouseEvent, _>("szKb", "click", key_tap);
     // Phase E (each is a no-op while its flag is off).
@@ -262,6 +282,9 @@ fn offered_types(lex: &Lexicon, lang: &str, kid: bool) -> Vec<BoardType> {
     if flags::spelluzzle_mywords() && !my_lists(lang, kid).is_empty() {
         v.push(BoardType::MyWords);
     }
+    if flags::spelluzzle_duel() && offer::duel_offered(lang, kid, Tier::Easy) {
+        v.push(BoardType::Duel);
+    }
     v
 }
 
@@ -304,6 +327,7 @@ fn tiers_for_type(lex: &Lexicon, lang: &str, kid: bool, ty: BoardType) -> Vec<Ti
         BoardType::Expedition => [Tier::Medium, Tier::Hard, Tier::Expert].into_iter().filter(|t| offer::expedition_offered(lang, kid, *t) && !seeds::run_records(lex, *t).is_empty()).collect(),
         // F21: a My Words board has no tier of its own.
         BoardType::MyWords => Vec::new(),
+        BoardType::Duel => [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert].into_iter().filter(|t| offer::duel_offered(lang, kid, *t)).collect(),
     }
 }
 
@@ -329,6 +353,7 @@ fn render_setup() {
                     BoardType::Par => "spz.type.par",
                     BoardType::Expedition => "spz.type.expedition",
                     BoardType::MyWords => "top.myWords",
+                    BoardType::Duel => "spz.type.duel",
                 };
                 format!("<button type=\"button\" class=\"sz-btn{}\" data-type=\"{}\">{}</button>", if *b == ty { " on" } else { "" }, b.name(), dom::escape_html(&tr(key, &[])))
             })
@@ -374,6 +399,27 @@ fn render_setup() {
         String::new()
     };
     dom::set_html("szLists", &lh);
+    // F20: who you play, and how hard the computer is.
+    let oh: String = if ty == BoardType::Duel {
+        let opp = OPP.with(|o| o.borrow().clone());
+        let on = |b: bool| if b { " on" } else { "" };
+        let mut h = format!(
+            "<button type=\"button\" class=\"sz-btn{}\" data-opp=\"friend\">{}</button><button type=\"button\" class=\"sz-btn{}\" data-opp=\"cpu\">{}</button>",
+            on(opp == Opponent::Friend),
+            dom::escape_html(&tr("spz.duel.friend", &[])),
+            on(opp != Opponent::Friend),
+            dom::escape_html(&tr("spz.duel.cpu", &[]))
+        );
+        if let Opponent::Computer(dn) = opp {
+            for (i, k) in ["bg.diff.easy", "bg.diff.normal", "bg.diff.tough"].iter().enumerate() {
+                h.push_str(&format!("<button type=\"button\" class=\"sz-btn{}\" data-diff=\"{i}\">{}</button>", on(dn as usize == i), dom::escape_html(&tr(k, &[]))));
+            }
+        }
+        h
+    } else {
+        String::new()
+    };
+    dom::set_html("szOpp", &oh);
     let n = streak_now(kid);
     dom::set_text("szStreak", &if n > 0 { tr("daily.streakDays", &[("n", &n.to_string())]) } else { String::new() });
 }
@@ -384,6 +430,19 @@ fn type_tap(e: web_sys::MouseEvent) {
     BTYPE.with(|c| c.set(b));
     let (_, kid, _) = CTX.with(|c| c.borrow().clone());
     storage::set_json(&store::prefs_key(store::profile(kid)), &Prefs { board_type: b.name().to_string() });
+    render_setup();
+}
+
+fn opp_tap(e: web_sys::MouseEvent) {
+    let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+    if let Some(el) = t.closest("[data-opp]").ok().flatten() {
+        let o = if el.get_attribute("data-opp").as_deref() == Some("cpu") { Opponent::Computer(1) } else { Opponent::Friend };
+        OPP.with(|c| *c.borrow_mut() = o);
+    } else if let Some(el) = t.closest("[data-diff]").ok().flatten() {
+        if let Some(i) = el.get_attribute("data-diff").and_then(|d| d.parse::<u8>().ok()) {
+            OPP.with(|c| *c.borrow_mut() = Opponent::Computer(i.min(2)));
+        }
+    }
     render_setup();
 }
 
@@ -446,6 +505,11 @@ fn begin(tier: Tier, allow_resume: bool) {
         begin_mywords(lex, lang, kid, token, allow_resume);
         return;
     }
+    DUEL_CTX.with(|r| *r.borrow_mut() = None);
+    if BTYPE.with(Cell::get) == BoardType::Duel && duel::offered_tier(tier) {
+        begin_duel(lex, lang, kid, tier, token, allow_resume);
+        return;
+    }
     let saved: Option<Progress> = if allow_resume { storage::get_json(&store::progress_key(profile, &lang, tier)) } else { None };
     if let Some(p) = saved {
         if let Ok(g) = generate_after(p.seed, tier, &lex, &p.previous) {
@@ -492,6 +556,43 @@ fn begin_par(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, tok
         }
         None => unavailable(),
     }
+}
+
+/// F20: resume the saved match if it still rebuilds, else deal two boards for a new one.
+fn begin_duel(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, token: u32, allow_resume: bool) {
+    let profile = store::profile(kid);
+    let key = store::duel_key(profile, &lang);
+    let saved: Option<duel::DuelSave> = if allow_resume { storage::get_json(&key) } else { None };
+    if let Some(sv) = saved {
+        if let Some(d) = Duel::restore(&lang, &sv) {
+            if !d.match_over() {
+                let words: Vec<String> = d.boards.iter().flat_map(|b| b.words()).collect();
+                EXTRA_WORDS.with(|e| *e.borrow_mut() = words);
+                let play = Play::new(d.boards[0].clone());
+                let seed = d.boards[0].seed;
+                DUEL_CTX.with(|r| *r.borrow_mut() = Some(d));
+                ready(lex, lang, kid, d_tier(&sv.tier, tier), seed, Vec::new(), Some(play), token, 1);
+                return;
+            }
+        }
+        storage::remove(&key);
+    }
+    let opp = OPP.with(|o| o.borrow().clone());
+    let s1 = next_seed();
+    let Some(b1) = duel::generate_board(s1, tier, &lex, &[]) else { return unavailable() };
+    let s2 = next_seed();
+    let Some(b2) = duel::generate_board(s2, tier, &lex, &b1.words()) else { return unavailable() };
+    let starter = (js_sys::Math::random() * 2.0) as u8;
+    let d = Duel::new(vec![b1, b2], tier, opp, starter);
+    let words: Vec<String> = d.boards.iter().flat_map(|b| b.words()).collect();
+    EXTRA_WORDS.with(|e| *e.borrow_mut() = words);
+    let play = Play::new(d.boards[0].clone());
+    DUEL_CTX.with(|r| *r.borrow_mut() = Some(d));
+    ready(lex, lang, kid, tier, s1, Vec::new(), Some(play), token, 1);
+}
+
+fn d_tier(saved: &str, fallback: Tier) -> Tier {
+    Tier::from_name(saved).unwrap_or(fallback)
 }
 
 /// F19: resume the saved run if its record still rebuilds to the same boards, else draw one.
@@ -637,6 +738,8 @@ fn ready(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, seed: u
                 begin_run(lex, lang, kid, tier, token, false);
             } else if BTYPE.with(Cell::get) == BoardType::MyWords {
                 begin_mywords(lex, lang, kid, token, false);
+            } else if BTYPE.with(Cell::get) == BoardType::Duel {
+                begin_duel(lex, lang, kid, tier, token, false);
             } else {
                 draw(lex, lang, kid, tier, token, attempt + 1);
             }
@@ -659,6 +762,14 @@ fn show(play: Play, lang: String, kid: bool, tier: Tier, seed: u64, previous: Ve
     let mut h = load_history(&lang, kid);
     let run_ctx = RUN_CTX.with(|r| r.borrow_mut().take());
     let mw_ctx = MW_CTX.with(|r| r.borrow_mut().take());
+    let duel_ctx = DUEL_CTX.with(|r| r.borrow_mut().take());
+    if let Some(d) = &duel_ctx {
+        // Both legs go into the history, so a match's boards are not drawn again soon (F11).
+        for b in &d.boards {
+            h.push(b.hash());
+        }
+        h.last_words = d.boards.iter().flat_map(|b| b.words()).collect();
+    }
     match &run_ctx {
         // A run goes into the history as one entry, with all sixteen words as "the last board".
         Some(r) => {
@@ -680,11 +791,15 @@ fn show(play: Play, lang: String, kid: bool, tier: Tier, seed: u64, previous: Ve
         Pencil::default()
     };
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { play, lang, kid, tier, seed, previous, finished, keys, pencil, target: None, highlight: None, pending: BTreeSet::new(), par_rec: PAR_REC.with(|r| r.borrow_mut().take()), run: run_ctx, mw: mw_ctx })
+        *u.borrow_mut() = Some(Ui { play, lang, kid, tier, seed, previous, finished, keys, pencil, target: None, highlight: None, pending: BTreeSet::new(), par_rec: PAR_REC.with(|r| r.borrow_mut().take()), run: run_ctx, mw: mw_ctx, duel: duel_ctx.map(|d| DuelUi { d, selected: None, mode: None, draft: Vec::new(), note: String::new() }) })
     });
     render_keys();
     save_progress();
     render();
+    if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
+        duel_after_action();
+        return;
+    }
     let has_silent = with_ui(|u| u.play.board.slots.iter().any(|s| s.kind == crate::spelluzzle::types::SlotKind::Silent)).unwrap_or(false);
     let par = with_ui(|u| u.play.par()).flatten();
     if storage::get_raw(HOW_KEY).as_deref() != Some("1") {
@@ -719,6 +834,8 @@ fn new_board() {
         st.active = None;
         storage::set_json(&rkey, &st);
     }
+    storage::remove(&store::duel_key(store::profile(kid), &lang));
+    NPC.with(|n| n.set(n.get().wrapping_add(1)));
     // F21: a new My Words board for the same list.
     if let Some(id) = LIST_ID.with(|l| l.borrow().clone()) {
         storage::remove(&store::mywords_key(store::profile(kid), &lang, &id));
@@ -750,6 +867,16 @@ fn show_how(on: bool) {
 fn save_progress() {
     let _ = with_ui(|u| {
         let profile = store::profile(u.kid);
+        // F20: one match in progress per profile and language.
+        if let Some(du) = &u.duel {
+            let key = store::duel_key(profile, &u.lang);
+            if du.d.match_over() {
+                storage::remove(&key);
+            } else {
+                storage::set_json(&key, &du.d.save());
+            }
+            return;
+        }
         // F19: an Expedition saves as one run, with a snapshot per board.
         if let Some(r) = u.run.as_mut() {
             r.snaps[r.cur] = u.play.snapshot();
@@ -856,6 +983,11 @@ fn render_keys() {
 }
 
 fn render() {
+    if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
+        duel_render();
+        return;
+    }
+    dom::remove_class("szScreen", "duel");
     let _ = with_ui(|u| {
         let view = board_view(&u.play.board, &u.play.entries);
         // F18: runes the ripple has not reached yet still show their glyph.
@@ -1084,6 +1216,10 @@ fn start_ripple(before: Vec<RuneState>, committed: usize) {
 // ------------------------------------------------------------------ input
 
 fn board_tap(e: web_sys::MouseEvent) {
+    if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
+        duel_tap(e);
+        return;
+    }
     if LP_FIRED.with(|f| f.replace(false)) {
         return; // the release of a long-press, not a tap
     }
@@ -1120,6 +1256,10 @@ fn board_tap(e: web_sys::MouseEvent) {
 }
 
 fn key_tap(e: web_sys::MouseEvent) {
+    if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
+        duel_key(e);
+        return;
+    }
     if e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-del]").ok().flatten()).is_some() {
         delete();
         return;
@@ -1271,9 +1411,264 @@ fn run_next() {
     }
 }
 
+// ------------------------------------------------------------------ Rune Duel
+
+fn duel_name(du: &DuelUi, p: u8) -> String {
+    if du.d.is_computer(p) {
+        tr("spz.duel.cpuName", &[])
+    } else {
+        tr(if p == 0 { "spz.duel.p1" } else { "spz.duel.p2" }, &[])
+    }
+}
+
+fn duel_render() {
+    let _ = with_ui(|u| {
+        let Some(du) = u.duel.as_ref() else { return };
+        let d = &du.d;
+        dom::set_html("szBoard", &render::duel_board_html(d, du.selected, &du.draft, &tr));
+        dom::add_class("szScreen", "duel");
+        let legs = tr("spz.run.board", &[("k", &(d.leg + 1).to_string()), ("n", "2")]);
+        let head = if d.match_over() {
+            match d.winner() {
+                Some(w) => tr("spz.duel.wins", &[("name", &duel_name(du, w))]),
+                None => tr("spz.duel.draw", &[]),
+            }
+        } else {
+            format!("{legs} \u{b7} {}", tr("spz.duel.turn", &[("name", &duel_name(du, d.turn))]))
+        };
+        dom::set_text("szParLine", &head);
+        dom::set_hidden("szParLine", false);
+        let t = d.totals();
+        dom::set_text("szDuelHdr", &format!("{}: {} \u{b7} {}: {}", duel_name(du, 0), t[0], duel_name(du, 1), t[1]));
+        dom::set_hidden("szDuelHdr", false);
+        dom::set_html("szRunTabs", "");
+        dom::set_html("szRunes", "");
+        dom::set_hidden("szRunes", true);
+        dom::set_hidden("szNext", true);
+        dom::set_html("szResult", "");
+        dom::set_text("szMsg", &du.note);
+        dom::set_text("szNew", &tr("spz.duel.new", &[]));
+        // The action bar: what the human may do now.
+        let mine = !d.match_over() && !d.is_computer(d.turn);
+        let mut bar = String::new();
+        if mine {
+            if let Some(i) = du.selected {
+                use crate::spelluzzle::duel::SlotState;
+                let st = d.slot_state(i);
+                let secret = i + 1 == duel::WORDS;
+                if du.mode.is_some() {
+                    bar.push_str(&format!("<button type=\"button\" class=\"sz-btn on\" data-act=\"check\">{}</button>", dom::escape_html(&tr("btn.check", &[]))));
+                } else if matches!(st, SlotState::Unheard | SlotState::Heard) {
+                    if !secret {
+                        bar.push_str(&format!("<button type=\"button\" class=\"sz-btn\" data-act=\"listen\">{}</button>", dom::escape_html(&tr("spz.duel.listen", &[]))));
+                    }
+                    if st == SlotState::Unheard {
+                        let m = if secret { duel::SECRET_PTS } else { duel::UNHEARD_PTS };
+                        bar.push_str(&format!("<button type=\"button\" class=\"sz-btn\" data-act=\"unheard\">{}</button>", dom::escape_html(&tr("spz.duel.unheard", &[("m", &m.to_string())]))));
+                    }
+                }
+            }
+            bar.push_str(&format!("<button type=\"button\" class=\"sz-btn\" data-act=\"pass\">{}</button>", dom::escape_html(&tr("spz.duel.pass", &[]))));
+        }
+        dom::set_html("szParBar", &bar);
+        let typing = mine && du.mode.is_some();
+        dom::set_hidden("szKb", !typing);
+        dom::toggle_class("szScreen", "typing", typing);
+    });
+}
+
+fn duel_tap(e: web_sys::MouseEvent) {
+    let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+    // The action bar sits outside the board but shares this handler.
+    if let Some(el) = t.closest("[data-act]").ok().flatten() {
+        let Some(act) = el.get_attribute("data-act") else { return };
+        duel_act(&act);
+        return;
+    }
+    let Some(el) = t.closest("[data-slot]").ok().flatten() else { return };
+    let Some(i) = el.get_attribute("data-slot").and_then(|d| d.parse::<usize>().ok()) else { return };
+    with_ui(|u| {
+        if let Some(du) = u.duel.as_mut() {
+            let open = !du.d.match_over() && !du.d.is_computer(du.d.turn) && !matches!(du.d.slot_state(i), crate::spelluzzle::duel::SlotState::Solved | crate::spelluzzle::duel::SlotState::Locked);
+            // A word half-typed is dropped when another is chosen; the choice of action is made again.
+            if open && du.selected != Some(i) {
+                du.selected = Some(i);
+                du.mode = None;
+                du.draft.clear();
+                du.note.clear();
+            } else if open {
+                du.selected = Some(i);
+            }
+        }
+    });
+    duel_render();
+}
+
+fn duel_act(act: &str) {
+    match act {
+        "listen" => {
+            let r = with_ui(|u| {
+                let du = u.duel.as_mut()?;
+                let i = du.selected?;
+                let w = du.d.listen(i).ok()?;
+                du.mode = Some(How::Heard);
+                du.draft.clear();
+                du.note.clear();
+                Some((w, u.lang.clone()))
+            })
+            .flatten();
+            if let Some((w, l)) = r {
+                speak(&w, &l);
+            }
+            duel_render();
+        }
+        "unheard" => {
+            with_ui(|u| {
+                if let Some(du) = u.duel.as_mut() {
+                    du.mode = Some(How::Unheard);
+                    du.draft.clear();
+                    du.note.clear();
+                }
+            });
+            duel_render();
+        }
+        "check" => duel_check(),
+        "pass" => {
+            with_ui(|u| {
+                if let Some(du) = u.duel.as_mut() {
+                    du.d.pass();
+                    du.selected = None;
+                    du.mode = None;
+                    du.draft.clear();
+                    du.note.clear();
+                }
+            });
+            duel_after_action();
+        }
+        _ => {}
+    }
+}
+
+fn duel_key(e: web_sys::MouseEvent) {
+    let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+    haptics::key_tap();
+    if t.closest("[data-del]").ok().flatten().is_some() {
+        with_ui(|u| {
+            if let Some(du) = u.duel.as_mut() {
+                du.draft.pop();
+            }
+        });
+        duel_render();
+        return;
+    }
+    let Some(el) = t.closest("[data-k]").ok().flatten() else { return };
+    let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
+    let Some(c) = u.chars().next() else { return };
+    with_ui(|ui| {
+        if let Some(du) = ui.duel.as_mut() {
+            if let (Some(i), Some(_)) = (du.selected, du.mode) {
+                // Filling the last cell does not submit: a Duel entry cannot be taken back, so it
+                // waits for Check.
+                if du.draft.len() < du.d.board().slots[i].answer.len() {
+                    du.draft.push(c);
+                }
+            }
+        }
+    });
+    duel_render();
+}
+
+fn duel_check() {
+    let r = with_ui(|u| {
+        let du = u.duel.as_mut()?;
+        let (i, how) = (du.selected?, du.mode?);
+        if du.draft.len() != du.d.board().slots[i].answer.len() {
+            return None; // not a whole word yet
+        }
+        let typed = du.draft.clone();
+        let out = du.d.submit(i, &typed, how).ok()?;
+        du.selected = None;
+        du.mode = None;
+        du.draft.clear();
+        // D23: the verdict, every turn.
+        du.note = if out.correct { format!("\u{2713} +{}", out.points) } else { "\u{2717}".to_string() };
+        Some(out.correct)
+    })
+    .flatten();
+    match r {
+        Some(true) => haptics::correct(),
+        Some(false) => haptics::incorrect(false),
+        None => return,
+    }
+    duel_after_action();
+}
+
+/// After anything that ends a turn: save, redraw, and hand the table to the computer if it is up.
+fn duel_after_action() {
+    save_progress();
+    duel_render();
+    let Some((over, cpu)) = with_ui(|u| u.duel.as_ref().map(|du| (du.d.match_over(), du.d.is_computer(du.d.turn)))).flatten() else { return };
+    if over {
+        record_duel_end();
+        return;
+    }
+    if cpu {
+        let token = NPC.with(|n| {
+            n.set(n.get().wrapping_add(1));
+            n.get()
+        });
+        // Its turn is one short beat: it lists nothing and never takes more than two seconds.
+        dom::after_ms(1400, move || duel_npc_step(token));
+    }
+}
+
+fn duel_npc_step(token: u32) {
+    if NPC.with(Cell::get) != token {
+        return;
+    }
+    let Some(lex) = with_ui(|u| lexicon(&u.lang)).flatten() else { return };
+    let mut rng = crate::spelldoku::rng::Rng::new(next_seed());
+    let done = with_ui(|u| {
+        let du = u.duel.as_mut()?;
+        if du.d.match_over() || !du.d.is_computer(du.d.turn) {
+            return None;
+        }
+        let r = du.d.npc_turn(&lex, &mut rng);
+        du.selected = None;
+        du.mode = None;
+        du.draft.clear();
+        let name = tr("spz.duel.cpuName", &[]);
+        du.note = match &r {
+            NpcDone::Passed => format!("{name}: {}", tr("spz.duel.pass", &[])),
+            NpcDone::Spelled { spelled, .. } => format!("{name} {}", if spelled.correct { format!("\u{2713} +{}", spelled.points) } else { "\u{2717}".to_string() }),
+        };
+        Some((r, u.lang.clone()))
+    })
+    .flatten();
+    if let Some((NpcDone::Spelled { heard_word: Some(w), .. }, l)) = &done {
+        // When it listens, the player hears the word too.
+        speak(w, l);
+    }
+    if done.is_some() {
+        duel_after_action();
+    }
+}
+
+/// A finished match counts toward nothing but itself (D46: a Duel is not a streak day); the saved
+/// match is cleared by `save_progress`.
+fn record_duel_end() {}
+
 /// Test seam (observation only, like `currentWord`): the answers on the open board, as a
 /// JSON array in slot order, or "[]" when none is open. The e2e suite reads it to know
 /// what to type, and types through the real keys.
 pub fn seam_words() -> String {
-    with_ui(|u| serde_json::to_string(&u.play.board.words()).unwrap_or_default()).unwrap_or_else(|| "[]".to_string())
+    // In a Duel the leg on the table; otherwise the board in play.
+    with_ui(|u| {
+        let words = match &u.duel {
+            Some(du) => du.d.board().words(),
+            None => u.play.board.words(),
+        };
+        serde_json::to_string(&words).unwrap_or_default()
+    })
+    .unwrap_or_else(|| "[]".to_string())
 }

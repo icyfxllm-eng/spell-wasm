@@ -35,6 +35,7 @@ pub enum BoardType {
     Par,
     Expedition,
     MyWords,
+    Duel,
 }
 
 impl BoardType {
@@ -44,10 +45,11 @@ impl BoardType {
             BoardType::Par => "par",
             BoardType::Expedition => "expedition",
             BoardType::MyWords => "mywords",
+            BoardType::Duel => "duel",
         }
     }
     pub fn from_name(s: &str) -> Option<BoardType> {
-        [BoardType::Classic, BoardType::Par, BoardType::Expedition, BoardType::MyWords].into_iter().find(|b| b.name() == s)
+        [BoardType::Classic, BoardType::Par, BoardType::Expedition, BoardType::MyWords, BoardType::Duel].into_iter().find(|b| b.name() == s)
     }
 }
 
@@ -60,4 +62,10 @@ pub fn par_offered(lang: &str, kid: bool, tier: Tier) -> bool {
 /// F19 / D48: Expeditions are Medium to Expert, never in Spell Jr.
 pub fn expedition_offered(lang: &str, kid: bool, tier: Tier) -> bool {
     !kid && language_offered(lang) && super::run::offered_tier(tier)
+}
+
+/// F20 / O4: a Duel is Easy to Expert and never in Spell Jr (it would need Jr bands and an amber
+/// "not yet" in place of a wrong verdict, so it is its own amendment).
+pub fn duel_offered(lang: &str, kid: bool, tier: Tier) -> bool {
+    !kid && language_offered(lang) && super::duel::offered_tier(tier)
 }
