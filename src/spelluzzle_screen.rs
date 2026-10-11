@@ -239,8 +239,7 @@ pub fn open(app: &App) {
     BTYPE.with(|b| b.set(BoardType::from_name(&prefs.board_type).unwrap_or(BoardType::Classic)));
     for id in ["szBoard", "szKb"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
-            let _ = e.set_attribute("lang", &lang);
-            let _ = e.set_attribute("dir", crate::consts::dir_attr(&lang));
+            dom::set_lang_dir(&e, &lang);
         }
     }
     dom::set_hidden("szStartPane", false);

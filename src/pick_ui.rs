@@ -633,9 +633,10 @@ fn render_misses(app: &App) {
     }
     for m in help.order.iter().map(|&i| rows[i]) {
         html.push_str(&format!(
-            "<div class=\"lists-entry {}{}\">{}<span class=\"lists-chip\">{}</span>{}</div>",
+            "<div class=\"lists-entry {}{}\" dir=\"{}\">{}<span class=\"lists-chip\">{}</span>{}</div>",
             row_class(SURFACE_MISSES, "", &m.lang, &m.word, true),
             star_row_class(s.kid),
+            crate::consts::dir_attr(&m.lang),
             word_html(SURFACE_MISSES, "", &m.lang, &m.word, true),
             esc(&m.lang),
             star_html(SURFACE_MISSES, "", &m.lang, &m.word, miss_starred(&m.lang, &m.word), s.kid),
@@ -645,6 +646,8 @@ fn render_misses(app: &App) {
         "<div class=\"lists-actions\"><button type=\"button\" class=\"ghost\" data-pq-all>{}</button></div>",
         esc(&t("pick.practiceAll")),
     ));
+    // CC-RTL D3: the whole sheet reads in the lineup language's direction.
+    dom::set_dir(&dom::el(SCREEN), &lang);
     dom::set_html(BODY, &html);
     restore_search_focus();
 }

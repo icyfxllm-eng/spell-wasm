@@ -109,8 +109,9 @@ fn close() {
 }
 
 fn set_card_lang(card: &str, word_el: &str, lang: &str) {
-    let rtl = !lang.is_empty() && crate::consts::direction(lang) == crate::consts::Direction::Rtl;
-    let _ = dom::el(card).set_attribute("dir", if rtl { "rtl" } else { "ltr" });
+    // An empty language (no card language yet) reads LTR: `dir_attr` maps any
+    // language the registry does not know, "" included, to "ltr".
+    dom::set_dir(&dom::el(card), lang);
     let _ = dom::el(word_el).set_attribute("lang", lang);
 }
 

@@ -69,11 +69,9 @@ fn score() -> u32 {
 /// composed word and the ribbon are all word surfaces, and Arabic is a live
 /// chain language — its hooks read right-to-left.
 fn reflect_direction(lang: &str) {
-    let dir = crate::consts::dir_attr(lang);
     for id in ["cnHook", "cnWord", "cnRibbon", "cnKeys", "cnOverBody"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
-            let _ = e.set_attribute("lang", lang);
-            let _ = e.set_attribute("dir", dir);
+            dom::set_lang_dir(&e, lang);
         }
     }
 }

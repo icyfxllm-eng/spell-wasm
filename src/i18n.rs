@@ -193,6 +193,11 @@ pub fn translate_page() {
     update_tagline();
     if let Some(de) = dom::doc().document_element() {
         let _ = de.set_attribute("lang", &current());
+        // `dir` is deliberately NOT set here. Mirroring the document root for an
+        // Arabic locale was tried (2026-10-11) and regresses the Arabic key grid
+        // (physical order mirrors), the board game track (mirrors against its
+        // numbering and pieces) and the settings switches. Direction is
+        // per-surface via dom::set_dir; the root stays as authored (CC-RTL D3).
         // data-lang drives the per-language accent tokens (F3); only ja/zh have a
         // theme block, every other language falls through to the default palette.
         let _ = de.set_attribute("data-lang", &current());

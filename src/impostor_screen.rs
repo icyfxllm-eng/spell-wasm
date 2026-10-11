@@ -55,11 +55,9 @@ fn best_key(lang: &str) -> String {
 
 /// A word surface with no direction is a bug (CC-RTL F1), and every card is one.
 fn reflect_direction(lang: &str) {
-    let dir = crate::consts::dir_attr(lang);
     for id in ["impCards", "impWhy", "impOverBody"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
-            let _ = e.set_attribute("lang", lang);
-            let _ = e.set_attribute("dir", dir);
+            dom::set_lang_dir(&e, lang);
         }
     }
 }

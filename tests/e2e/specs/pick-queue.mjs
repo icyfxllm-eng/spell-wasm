@@ -783,4 +783,75 @@ export async function run(browser, base, suite) {
       assert(back >= 3 && back <= 5, `apple came back ${back} words later (${seq.join(',')})`);
     } finally { await ctx.close(); }
   });
+
+  // ================= CC-RTL D3: the lineup reads in the language's direction =================
+
+  // Arabic lineup: the sheet root, its rows, and the My Words footer container
+  // carry dir=rtl (from the registry via dom::set_dir), the badge sits at the
+  // physical RIGHT of its row, and English stays ltr.
+  const AR_MISSES = ['\u0642\u0637\u0629', '\u0643\u0644\u0628', '\u0628\u064a\u062a'];
+  const bootArMisses = async (page, base, lang) => {
+    const now = Date.now();
+    const rows = AR_MISSES.map((word, i) => ({ word, lang, tier: 'easy', misses: 1 + i, box_: 1, due: now - DAY, ts: now - i * 1000 }));
+    await page.evaluate(([k, rows]) => {
+      localStorage.setItem(k, JSON.stringify(rows));
+      localStorage.removeItem('spell_lineup_v1');
+      localStorage.removeItem('spell_stars_v1');
+    }, [MISS_KEY, rows]);
+    await reload(page, base);
+  };
+
+  await suite.test('pick_queue_rtl_misses_sheet_is_rtl_in_arabic_and_ltr_in_english', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'ar', init: FLAG_AB });
+    try {
+      await bootArMisses(page, base, 'ar');
+      await openMisses(page);
+      assertEq(await page.$eval('#pickScreen', (e) => e.getAttribute('dir')), 'rtl', 'sheet root is rtl');
+      const rows = await page.$$eval('#pickBody .lists-entry', (r) => r.map((e) => e.getAttribute('dir')));
+      assert(rows.length === 3 && rows.every((d) => d === 'rtl'), `every Arabic row is rtl (${rows})`);
+      await tapWord(page, '#pickBody', AR_MISSES[0]);
+      // The badge is at the START corner: the physical right in RTL.
+      const geo = await page.evaluate(() => {
+        const row = document.querySelector('#pickBody .pq-row.on');
+        const b = row.querySelector('.pq-badge').getBoundingClientRect();
+        const r = row.getBoundingClientRect();
+        return { toRight: r.right - b.right, toLeft: b.left - r.left };
+      });
+      assert(geo.toRight < geo.toLeft, `the badge sits at the right edge in RTL (${JSON.stringify(geo)})`);
+      assertEq(await page.$eval('#pickBody .pq-actions', (e) => getComputedStyle(e).direction), 'rtl', 'the footer actions resolve rtl');
+    } finally { await ctx.close(); }
+    const en = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMisses(en.page, base, FIVE);
+      await openMisses(en.page);
+      assertEq(await en.page.$eval('#pickScreen', (e) => e.getAttribute('dir')), 'ltr', 'English sheet stays ltr');
+      const rows = await en.page.$$eval('#pickBody .lists-entry', (r) => r.map((e) => e.getAttribute('dir')));
+      assert(rows.every((d) => d === 'ltr'), `English rows are ltr (${rows})`);
+    } finally { await en.ctx.close(); }
+  });
+
+  await suite.test('pick_queue_rtl_my_words_footer_is_rtl_in_arabic_and_ltr_in_english', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'ar', init: FLAG_AB });
+    try {
+      const wl = Object.fromEntries(AR_MISSES.map((w) => [w, 'ar-SA']));
+      await bootMine(page, base, AR_MISSES, wl);
+      await openMyWords(page);
+      await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(page);
+      assertEq(await page.$eval('#pqHead', (e) => e.getAttribute('dir')), 'rtl', 'footer container is rtl');
+      const rows = await page.$$eval('#listsBody .lists-entry', (r) => r.map((e) => e.getAttribute('dir')));
+      assert(rows.length === 3 && rows.every((d) => d === 'rtl'), `every Arabic row is rtl (${rows})`);
+      await tapWord(page, '#listsBody', AR_MISSES[1]);
+      assertEq(await page.$eval('#pqHead', (e) => e.getAttribute('dir')), 'rtl', 'still rtl after a re-render');
+      assertEq(await page.$eval('#pqHead .pq-actions', (e) => getComputedStyle(e).direction), 'rtl', 'start row resolves rtl');
+    } finally { await ctx.close(); }
+    const en = await openApp(browser, base, { lang: 'en', init: FLAG_AB });
+    try {
+      await bootMine(en.page, base, ['cat', 'dog']);
+      await openMyWords(en.page);
+      await en.page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+      await domSettled(en.page);
+      assertEq(await en.page.$eval('#pqHead', (e) => e.getAttribute('dir')), 'ltr', 'English footer container stays ltr');
+    } finally { await en.ctx.close(); }
+  });
 }

@@ -256,11 +256,9 @@ pub fn open(app: &App) {
             s.diff = Difficulty::Normal;
         }
     });
-    let dir = crate::consts::dir_attr(&lang);
     for id in ["bgField", "bgKeys"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
-            let _ = e.set_attribute("lang", &lang);
-            let _ = e.set_attribute("dir", dir);
+            dom::set_lang_dir(&e, &lang);
         }
     }
     refresh_gate();

@@ -124,11 +124,9 @@ pub fn wire(app: &App) {
 /// it would strip tracking for an Arabic speaker forging English words while
 /// leaving it on for an English speaker forging Arabic ones.
 fn reflect_direction(lang: &str) {
-    let dir = crate::consts::dir_attr(lang);
     for id in ["fgWord", "fgComb", "fgFound", "fgRemainingList"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
-            let _ = e.set_attribute("lang", lang);
-            let _ = e.set_attribute("dir", dir);
+            dom::set_lang_dir(&e, lang);
         }
     }
 }

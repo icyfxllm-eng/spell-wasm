@@ -210,8 +210,17 @@ pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = LANGS_BASE;
 /// from nothing else. An unknown language reads left-to-right — the safe default,
 /// since a wrong `dir` on Latin is visible immediately while a missing one on
 /// Arabic is not.
+///
+/// A My Words entry carries the list's speak-language tag as the user's device
+/// or importer wrote it ("ar-SA", "es-ES"), not a registry code. The registry is
+/// still the only source of direction, so a tag that is not a registry code is
+/// looked up by its base subtag ("ar-SA" -> "ar") rather than falling through to
+/// LTR, which for an Arabic list would be the silent failure this guards.
 pub fn direction(lang: &str) -> Direction {
-    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, _, d)| *d).unwrap_or(Ltr)
+    let find = |code: &str| BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == code).map(|(_, _, _, d)| *d);
+    find(lang)
+        .or_else(|| lang.split(['-', '_']).next().filter(|b| *b != lang).and_then(|b| find(&b.to_lowercase())))
+        .unwrap_or(Ltr)
 }
 
 /// The `dir` attribute value for `lang` — `"rtl"` or `"ltr"`. What surfaces write.
@@ -668,6 +677,13 @@ mod registry_tests {
         // visible rather than silent.
         assert_eq!(direction("__mine"), Ltr);
         assert_eq!(direction("qqq"), Ltr);
+        assert_eq!(dir_attr(""), "ltr", "an empty language reads LTR");
+        assert_eq!(dir_attr("qqq"), "ltr");
+        // A speak-language tag is looked up by its base subtag (My Words rows).
+        assert_eq!(dir_attr("ar-SA"), "rtl");
+        assert_eq!(dir_attr("ar_EG"), "rtl");
+        assert_eq!(dir_attr("es-ES"), "ltr");
+        assert_eq!(dir_attr("en-US"), "ltr");
     }
 
     /// The activation gate and the rendering must never disagree about which

@@ -393,7 +393,6 @@ fn reflect_play_direction(app: &App) {
     } else {
         code
     };
-    let dir = crate::consts::dir_attr(&code);
     // `hintLine` shows the same word masked, so it carries the same direction and
     // was simply missed by F1's first pass — a word surface with no direction is
     // the bug F1 exists to prevent, just somewhere less obvious than #letters.
@@ -405,8 +404,7 @@ fn reflect_play_direction(app: &App) {
     // different word — F1's own mistake, one surface over.
     for id in ["letters", "feedback", "meaning", "hintLine"] {
         let el = dom::el(id);
-        let _ = el.set_attribute("lang", &code);
-        let _ = el.set_attribute("dir", dir);
+        dom::set_lang_dir(&el, &code);
     }
 }
 

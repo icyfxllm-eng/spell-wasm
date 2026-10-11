@@ -221,8 +221,11 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: boo
         }
         None => (String::new(), format!("<span class=\"le-word\">{}</span>", esc(&e.text))),
     };
+    // CC-RTL D3: with the lineup on, a row reads in its own word's direction
+    // (the badge sits at the START corner and mirrors). Flag off: no attribute.
+    let dir = if pq.is_some() { format!(" dir=\"{}\"", crate::consts::dir_attr(&e.lang)) } else { String::new() };
     format!(
-        "<div class=\"lists-entry{cls}\">{cell}\
+        "<div class=\"lists-entry{cls}\"{dir}>{cell}\
            <span class=\"lists-chip\">{}</span>{ordering}\
            <button type=\"button\" class=\"ghost\" data-e-edit=\"{idx}\">{}</button>\
            <button type=\"button\" class=\"ghost\" data-e-remove=\"{idx}\">{}</button>\
@@ -313,8 +316,10 @@ fn detail_html(lists: &Lists, id: &str, kid: bool, misses: &[crate::model::MissE
         .map(|&i| entry_row(i, &l.entries[i], true, mine, i + 1 == l.entries.len(), help.frozen, pq.as_ref()))
         .collect();
     let pq_head = match (&pq, &pq_lang) {
+        // The footer container carries the scope language's direction (CC-RTL D3).
         (Some(p), Some(lang)) => format!(
-            "{}{}",
+            "<div class=\"pq-head\" id=\"pqHead\" dir=\"{}\">{}{}</div>",
+            crate::consts::dir_attr(lang),
             crate::pick_ui::footer_html(crate::pick_queue::SURFACE_MINE, p.list, lang, kid),
             help.controls
         ),

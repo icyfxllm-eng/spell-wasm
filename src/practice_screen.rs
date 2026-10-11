@@ -415,9 +415,7 @@ fn start_word(app: &App) {
     // picks its word from its own curriculum, so keying off the play surface's
     // word would put one word's direction on another.
     {
-        let el = dom::el("prWord");
-        let _ = el.set_attribute("lang", &lang);
-        let _ = el.set_attribute("dir", crate::consts::dir_attr(&lang));
+        dom::set_lang_dir(&dom::el("prWord"), &lang);
     }
 
     GEN.with(|g| g.set(g.get() + 1));

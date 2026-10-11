@@ -66,11 +66,9 @@ fn best_key(lang: &str) -> String {
 
 /// Every word surface carries the language being spelled (CC-RTL F1).
 fn reflect_direction(lang: &str) {
-    let dir = crate::consts::dir_attr(lang);
     for id in ["beeWord", "beeKeys", "beeSpelling", "beeStrip"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
-            let _ = e.set_attribute("lang", lang);
-            let _ = e.set_attribute("dir", dir);
+            dom::set_lang_dir(&e, lang);
         }
     }
 }

@@ -37,6 +37,20 @@ pub fn rendered(id: &str) -> bool {
     r.width() > 0.0 && r.height() > 0.0
 }
 
+/// THE one place a language's reading direction is written to an element
+/// (CC-RTL D3): the value comes from the registry via `consts::dir_attr`, never
+/// from a per-screen branch. An unknown or empty language reads LTR.
+pub fn set_dir(el: &Element, lang: &str) {
+    let _ = el.set_attribute("dir", crate::consts::dir_attr(lang));
+}
+
+/// `set_dir` plus the `lang` attribute: what every surface that shows words in
+/// `lang` writes, so `:lang()` rules (fonts) and direction agree.
+pub fn set_lang_dir(el: &Element, lang: &str) {
+    let _ = el.set_attribute("lang", lang);
+    set_dir(el, lang);
+}
+
 pub fn el(id: &str) -> Element {
     doc().get_element_by_id(id).unwrap_or_else(|| panic!("missing element #{id}"))
 }
