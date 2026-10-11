@@ -39,13 +39,32 @@ pub fn code_for(state: &AppState, key: &str) -> String {
 /// keyboard and native audio, not just English.
 pub fn mine_lang(state: &AppState) -> Option<&'static str> {
     let code = if state.custom.speak_lang.is_empty() { "en" } else { state.custom.speak_lang.as_str() };
-    match code.split(['-', '_']).next().unwrap_or("") {
-        "en" => Some("en"), "es" => Some("es"), "fr" => Some("fr"), "de" => Some("de"),
-        "pt" => Some("pt"), "pl" => Some("pl"), "vi" => Some("vi"),
-        "ko" => Some("ko"), "ja" => Some("ja"), "fil" => Some("fil"),
-        "cmn" | "zh" => Some("zh"),
-        _ => None,
-    }
+    mine_lang_for(code)
+}
+
+/// The registry code for a "Speak in" tag ("ko-KR" -> "ko", "ar-SA" -> "ar",
+/// "cmn-CN" -> "zh"), or None for a language the registry does not carry.
+///
+/// Derived from `consts::BUILTIN_LANGS` rather than a hand-kept list, so a
+/// language added to the registry gets its keyboard and backend voice here
+/// without a second edit. The old list silently lacked ru, ar, sw and hi, which
+/// the "Speak in" picker offers: those lists got the English keyboard and
+/// browser voice.
+pub fn mine_lang_for(tag: &str) -> Option<&'static str> {
+    let base = tag.split(['-', '_']).next().unwrap_or("");
+    // The picker's Mandarin tag is "cmn-CN"; the registry code is "zh".
+    let base = if base == "cmn" { "zh" } else { base };
+    crate::consts::BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == base).map(|(c, _, _, _)| *c)
+}
+
+/// Whether the script of `lang` joins (Arabic, Devanagari) and so must reach the
+/// shaper as one run. `lang` may be the My Words pseudo-language, which has no
+/// script of its own: its script is the list's "Speak in" language. Asking
+/// `script_joins("__mine")` is always false, which rendered an Arabic or Hindi
+/// My Words answer as per-letter spans and broke the joining.
+fn joins_for(state: &AppState, lang: &str) -> bool {
+    let effective = if lang == MINE { mine_lang(state).unwrap_or("") } else { lang };
+    crate::consts::script_joins(effective)
 }
 
 /// My Words can route through the backend's real TTS (reliable, unlike the
@@ -349,7 +368,10 @@ pub fn render_letters(app: &App, animate_all: bool) {
     } else {
         value
     };
-    let joins = crate::consts::script_joins(&app.borrow().lang);
+    let joins = {
+        let st = app.borrow();
+        joins_for(&st, &st.lang)
+    };
     let html = if joins {
         render_letters_joined(&value)
     } else {
@@ -2415,7 +2437,7 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
         );
         dom::el("feedback").set_class_name(feedback_class);
         wire_syllable_replay(app, sylls);
-    } else if crate::consts::script_joins(&cur_lang) && !typed.is_empty() {
+    } else if joins_for(&app.borrow(), &cur_lang) && !typed.is_empty() {
         // Cursive study language, and the player actually typed: per-akshara
         // colour feedback instead of a plain reveal. Positioned markers can't work
         // on a cascading script, but colouring the letters can (they stay one
@@ -4489,5 +4511,68 @@ mod warm_up_tests {
             assert_eq!(voice_target(lang, word, ""), (word.to_string(), None));
             assert_eq!(warm_target(lang, word), Some((word.to_string(), None)));
         }
+    }
+}
+
+#[cfg(test)]
+mod mine_lang_tests {
+    use super::{joins_for, mine_lang, mine_lang_for, MINE};
+    use crate::model::AppState;
+
+    #[test]
+    fn arabic_tags_route_to_ar() {
+        for tag in ["ar", "ar-SA", "ar_EG", "ar-AE"] {
+            assert_eq!(mine_lang_for(tag), Some("ar"), "{tag}");
+        }
+    }
+
+    #[test]
+    fn every_picker_language_in_the_registry_routes_to_itself() {
+        // The "Speak in" picker is built from words::LANGUAGES. Every entry the
+        // registry also carries must route (ru, ar, sw and hi used to be dropped);
+        // the browser-voice-only picks (ro, id, ca) must not.
+        for (code, info) in crate::words::LANGUAGES.iter() {
+            let in_registry = crate::consts::BUILTIN_LANGS.iter().any(|(c, _, _, _)| c == code);
+            let got = mine_lang_for(info.code);
+            if in_registry {
+                assert_eq!(got, Some(*code), "picker tag {} should route to {code}", info.code);
+            } else {
+                assert_eq!(got, None, "picker tag {} must keep the English keyboard", info.code);
+            }
+        }
+    }
+
+    #[test]
+    fn mandarin_tag_and_unknowns() {
+        assert_eq!(mine_lang_for("cmn-CN"), Some("zh"));
+        assert_eq!(mine_lang_for("zh"), Some("zh"));
+        assert_eq!(mine_lang_for("en-US"), Some("en"));
+        assert_eq!(mine_lang_for("fil-PH"), Some("fil"));
+        assert_eq!(mine_lang_for(""), None);
+        assert_eq!(mine_lang_for("xx-YY"), None);
+    }
+
+    fn state_with_speak(tag: &str) -> AppState {
+        let mut s = AppState::default();
+        s.lang = MINE.to_string();
+        s.cur_lang = MINE.to_string();
+        s.custom.speak_lang = tag.to_string();
+        s
+    }
+
+    #[test]
+    fn my_words_state_routes_arabic_and_keeps_the_shaper() {
+        let s = state_with_speak("ar-SA");
+        assert_eq!(mine_lang(&s), Some("ar"));
+        // The My Words pseudo-language has no script; the list's does. Arabic and
+        // Hindi must stay one shaped run, Latin and CJK may be split.
+        assert!(joins_for(&s, MINE));
+        assert!(joins_for(&state_with_speak("hi-IN"), MINE));
+        assert!(!joins_for(&state_with_speak("es-ES"), MINE));
+        assert!(!joins_for(&state_with_speak("ko-KR"), MINE));
+        assert!(!joins_for(&state_with_speak("ro-RO"), MINE));
+        // A built-in language is unaffected by the speak tag.
+        assert!(joins_for(&s, "ar"));
+        assert!(!joins_for(&s, "es"));
     }
 }

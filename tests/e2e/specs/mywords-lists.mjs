@@ -446,4 +446,53 @@ export async function run(browser, base, suite) {
       assertEq(served.join(','), 'charlie,alpha,bravo', 'starred first, then the list order');
     } finally { await ctx.close(); }
   });
+
+  // Arabic in My Words. mine_lang had no "ar" case (nor ru, sw, hi), so an Arabic
+  // list got the English keyboard, no backend voice, and its letters were split
+  // into per-letter spans because script_joins("__mine") is always false.
+  await suite.test('mywords_arabic_list_gets_arabic_keyboard_and_joined_letters', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await bootWith(page, base, { words: ['\u0643\u062A\u0627\u0628', '\u0642\u0644\u0645', '\u0628\u0627\u0628'], speakLang: 'ar-SA', wordLang: {} });
+      await openScreen(page);
+      const cards = await page.$$('#listsBody [data-l-open]');
+      await actOnLists(page, () => cards[1].click());
+      await page.click('[data-l-play]');
+      await minePlaying(page);
+      const word = await page.evaluate(() => window.__spelltest.currentWord());
+      assert(/[\u0600-\u06FF]/.test(word || ''), `an Arabic word is served (got ${JSON.stringify(word)})`);
+      // The Arabic layout, not the English one.
+      const keys = await page.$$eval('#gameKeyboard .kb-key[data-k]', (ks) => ks.map((k) => k.getAttribute('data-k')));
+      assert(keys.some((k) => /[\u0600-\u06FF]/.test(k)), `Arabic keys are on the keyboard (got ${JSON.stringify(keys.slice(0, 12))})`);
+      assert(!keys.includes('q'), 'and not the English layout');
+      // Type the first letters of the word: one joined run, not one span per letter.
+      for (const ch of [...word].slice(0, 2)) {
+        const key = await page.$(`#gameKeyboard .kb-key[data-k="${ch}"]`);
+        assert(key, `no key for ${ch}`);
+        await key.click();
+      }
+      const joined = await page.evaluate(() => {
+        const l = document.getElementById('letters');
+        return { joined: l.querySelectorAll('.joined').length, split: l.querySelectorAll('.letter, .ltr:not(.joined)').length,
+                 text: (l.querySelector('.joined') || {}).textContent || '' };
+      });
+      assertEq(joined.joined, 1, 'one joined run');
+      assertEq(joined.split, 0, 'no per-letter spans');
+      assertEq(joined.text.length, 2, 'both typed letters are in the run');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('mywords_browser_voice_only_language_keeps_the_english_keyboard', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await bootWith(page, base, { words: ['carte', 'mare'], speakLang: 'ro-RO', wordLang: {} });
+      await openScreen(page);
+      const cards = await page.$$('#listsBody [data-l-open]');
+      await actOnLists(page, () => cards[1].click());
+      await page.click('[data-l-play]');
+      await minePlaying(page);
+      const keys = await page.$$eval('#gameKeyboard .kb-key[data-k]', (ks) => ks.map((k) => k.getAttribute('data-k')));
+      assert(keys.includes('q'), 'a browser-voice-only pick stays on the English layout');
+    } finally { await ctx.close(); }
+  });
 }
