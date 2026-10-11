@@ -183,7 +183,7 @@ export async function run(browser, base, suite) {
       await bootMisses(page, base, SEVEN);
       await openMisses(page);
       assertEq((await rowWords(page, '#pickBody')).join(','), STORED.join(','), 'default sort is the order shown today');
-      assertEq(await page.$$eval('#pickBody [data-pq-sort]', (b) => b.length), 5, 'five sort choices');
+      assertEq(await page.$$eval('#pickBody [data-pq-sort]', (b) => b.length), 5, 'five sort choices on Misses');
       assertEq(await page.$eval('#pickBody [data-pq-sort="listed"]', (b) => b.getAttribute('aria-pressed')), 'true');
       assert(await page.$('#pickBody [data-pq-search][aria-label]'), 'the search box has an accessible label');
       assert(await page.$('#pickBody [data-pq-toughest]'));
@@ -308,8 +308,8 @@ export async function run(browser, base, suite) {
       const b = await badgeMap(page, '#pickBody');
       assertEq(`${b.eagle}${b.crane}${b.bread}${b.glove}${b.apple}`, '12345');
       assertEq(`${b.finch}${b.delta}`, '', 'the sixth and seventh are not picked');
-      // Pressing it again changes nothing.
-      await toughest(page, '#pickBody');
+      // All five are lined up, so there is nothing left to add: disabled.
+      assertEq(await page.$eval('#pickBody [data-pq-toughest]', (b) => b.disabled), true, 'nothing left to add');
       assertEq((await picksOf(page)).length, 5);
       await page.click('#pickBody [data-pq-start]');
       await domSettled(page);
@@ -342,8 +342,9 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  // Fewer than five missed words: it adds what exists. Never-missed words in
-  // My Words are not padded in.
+  // Fewer than five missed words: it pads with never-missed words in list
+  // order. My Words offers four sorts (no "Never practiced": wordstats is
+  // capped, so it cannot say it honestly); Misses keeps all five.
   await suite.test('pick_help_my_words_sort_search_and_toughest', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AC });
     try {
@@ -355,14 +356,16 @@ export async function run(browser, base, suite) {
       assertEq((await rowWords(page, '#listsBody')).slice(0, 2).join(','), 'dog,owl', 'misses read from the Misses store');
       await sortTo(page, '#listsBody', 'due');
       assertEq((await rowWords(page, '#listsBody')).slice(0, 2).join(','), 'dog,owl', 'due, then scheduled');
-      await sortTo(page, '#listsBody', 'never');
-      assertEq((await rowWords(page, '#listsBody')).slice(-2).join(','), 'dog,owl', 'words with a miss entry are practiced');
+      assertEq(await page.$$eval('#listsBody [data-pq-sort]', (b) => b.map((x) => x.getAttribute('data-pq-sort')).join(',')),
+        'listed,missed,due,newest', 'four sort choices on My Words');
+      assert((await page.$('#listsBody [data-pq-sort="never"]')) === null, 'no Never practiced on My Words');
       await sortTo(page, '#listsBody', 'listed');
       await search(page, '#listsBody', 'O');
       assertEq((await rowWords(page, '#listsBody')).join(','), 'dog,fox,owl', 'substring over the spelling');
       await search(page, '#listsBody', '');
       await toughest(page, '#listsBody');
-      assertEq((await picksOf(page)).join(','), 'dog,owl', 'only the two missed words; never-missed words are not padded in');
+      assertEq((await picksOf(page)).join(','), 'dog,owl,cat,fox,bee', 'two missed words, then never-missed in list order');
+      assertEq(await page.$eval('#listsBody [data-pq-toughest]', (b) => b.disabled), true, 'nothing left to add: disabled');
       // Editing a row still works from the sorted view (stored index, not display index).
       await sortTo(page, '#listsBody', 'missed');
       const stored = await page.$$eval('#listsBody .lists-entry', (rows) =>

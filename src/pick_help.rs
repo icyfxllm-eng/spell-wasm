@@ -25,17 +25,21 @@
 //! * **Newest** -- most recently added/missed first. Misses: the entry's `ts`
 //!   (last miss). My Words: `ListEntry.added_at`. A word with no stamp (a
 //!   legacy entry, 0) sorts after every stamped one. Ties keep default order.
-//! * **Never practiced** -- words with no practice history first, then the
-//!   rest, each group in default order. See [`miss_never_practiced`] and
-//!   [`rows_for_mine`] for the field each surface supplies.
+//! * **Never practiced** -- Misses only: words with no practice history first,
+//!   then the rest, each group in default order. See [`miss_never_practiced`].
+//!   My Words does not offer it: its only practice record is `wordstats`
+//!   (solo rounds, 500-entry cap), where an evicted word would wrongly read as
+//!   never practiced.
 //!
-//! **Toughest 5** -- the five most-missed words in the CURRENT scope (surface +
-//! list + language; a lineup never spans two languages, D9), by the Missed-most
-//! comparator above (most misses, then most recently missed, then
-//! alphabetical). Only words with at least one recorded miss qualify, so it
-//! never pads the lineup with words that were never missed. Fewer than five
-//! such words: it adds what exists. Already-picked words keep their position;
-//! new ones append in most-missed-first order.
+//! **Toughest 5** -- always aims for five words in the CURRENT scope (surface
+//! + list + language; a lineup never spans two languages, D9). First the
+//! missed words by the Missed-most comparator above (most misses, then most
+//! recently missed, then alphabetical), at most five; if that is fewer than
+//! five, it pads with never-missed words in the surface's default order (As
+//! listed), skipping words already picked. If the scope holds fewer words than
+//! that, it adds what exists. Already-picked words keep their position; new
+//! ones append in that order. Caps are the existing add rules (Standard has
+//! none). The button is disabled only when no word at all can be added.
 //!
 //! **Search** -- case-insensitive and diacritic-insensitive substring match
 //! over the word's displayed spelling, through `norm::fold_lenient` (the repo's
@@ -107,13 +111,14 @@ impl Sort {
     }
 }
 
-/// The sorts a surface can honestly offer. Both surfaces have a real field for
-/// every one (see the module doc), so today this is the full list for both; it
-/// is a function so a surface whose data goes missing drops the option instead
-/// of faking it (the spec's rule), in one place.
+/// The sorts a surface can honestly offer; a surface whose data cannot back a
+/// sort drops the option instead of faking it (the spec's rule), in one place.
+/// My Words has no reliable practice record (see the module doc), so it does
+/// not offer Never practiced.
 pub fn sorts_for(surface: &str) -> Vec<Sort> {
     match surface {
-        crate::pick_queue::SURFACE_MISSES | crate::pick_queue::SURFACE_MINE => Sort::ALL.to_vec(),
+        crate::pick_queue::SURFACE_MISSES => Sort::ALL.to_vec(),
+        crate::pick_queue::SURFACE_MINE => Sort::ALL.iter().copied().filter(|s| *s != Sort::NeverPracticed).collect(),
         _ => vec![Sort::AsListed],
     }
 }
@@ -175,9 +180,8 @@ pub fn rows_for_misses(misses: &[&MissEntry]) -> Vec<Row> {
 /// * misses / last miss / due: the miss entry for the word under the My Words
 ///   study language (`consts::MINE`), where My Words play records its misses;
 /// * newest: `ListEntry.added_at`;
-/// * never practiced: no miss entry AND no solo round recorded for it in
-///   `wordstats` (`attempts[i] == 0`; `attempts` is parallel to `entries`).
-pub fn rows_for_mine(entries: &[ListEntry], misses: &[MissEntry], attempts: &[u32]) -> Vec<Row> {
+/// * never practiced: not offered on this surface, so `never` is always false.
+pub fn rows_for_mine(entries: &[ListEntry], misses: &[MissEntry]) -> Vec<Row> {
     let by_key: HashMap<String, &MissEntry> =
         misses.iter().map(|m| (crate::word_id::word_id0(&m.lang, &m.word), m)).collect();
     entries
@@ -194,7 +198,7 @@ pub fn rows_for_mine(entries: &[ListEntry], misses: &[MissEntry], attempts: &[u3
                 last_miss: miss.map(|m| m.ts).unwrap_or(0.0),
                 due: miss.map(|m| m.due),
                 recency: e.added_at,
-                never: miss.is_none() && attempts.get(pos).copied().unwrap_or(0) == 0,
+                never: false,
             }
         })
         .collect()
@@ -270,13 +274,29 @@ pub fn view(rows: &[Row], sort: Sort, query: &str, picks: &[Pick], now: f64) -> 
     View { visible, hidden_picks, filtered_out: hidden.len() }
 }
 
-/// The words Toughest 5 would line up: the `n` most-missed in `rows` (the
-/// caller passes ONLY the current scope's rows), never-missed words excluded.
-pub fn toughest(rows: &[Row], n: usize) -> Vec<usize> {
+/// The words Toughest 5 targets, as indices into `rows` (the caller passes ONLY
+/// the current scope's rows): the missed words, most-missed first, at most `n`;
+/// then, if short of `n`, never-missed words in default order (`pos`) that are
+/// not already in `picked`. Already-picked missed words are included (they
+/// count toward the `n` and keep their lineup slot when appended).
+pub fn toughest(rows: &[Row], n: usize, picked: &[Pick]) -> Vec<usize> {
     let mut idx: Vec<usize> = (0..rows.len()).filter(|&i| rows[i].misses > 0).collect();
     idx.sort_by(|&a, &b| toughest_cmp(&rows[a], &rows[b]));
     idx.truncate(n);
+    if idx.len() < n {
+        let mut pad: Vec<usize> = (0..rows.len())
+            .filter(|&i| rows[i].misses == 0 && !picked.iter().any(|p| p.key == rows[i].key))
+            .collect();
+        pad.sort_by_key(|&i| rows[i].pos);
+        idx.extend(pad.into_iter().take(n - idx.len()));
+    }
     idx
+}
+
+/// The subset of [`toughest`] that is not already lined up: what a press would
+/// actually add. Empty means the button has nothing to do.
+pub fn toughest_new(rows: &[Row], n: usize, picked: &[Pick]) -> Vec<usize> {
+    toughest(rows, n, picked).into_iter().filter(|&i| !picked.iter().any(|p| p.key == rows[i].key)).collect()
 }
 
 // ---------- per-visit UI state ----------
@@ -315,8 +335,8 @@ pub fn reset(surface: &str, list: &str) {
 }
 
 /// The picks Toughest 5 appends for `scope_rows`, as lineup picks.
-pub fn toughest_picks(scope_rows: &[Row], n: usize) -> Vec<Pick> {
-    toughest(scope_rows, n)
+pub fn toughest_picks(scope_rows: &[Row], n: usize, picked: &[Pick]) -> Vec<Pick> {
+    toughest(scope_rows, n, picked)
         .into_iter()
         .map(|i| Pick { key: scope_rows[i].key.clone(), word: scope_rows[i].word.clone(), lang: scope_rows[i].lang.clone() })
         .collect()
@@ -468,13 +488,11 @@ mod tests {
         // Same text under a real language must NOT be read as the My Words miss.
         let mut other = miss("dog", 9, fresh());
         other.lang = "en".into();
-        let rows = rows_for_mine(&entries, &[m, other], &[0, 0, 3]);
+        let rows = rows_for_mine(&entries, &[m, other]);
         assert_eq!((rows[0].misses, rows[0].last_miss), (4, 777.0), "case-insensitive identity, MINE only");
         assert_eq!(rows[1].misses, 0);
         assert_eq!(rows[0].recency, 10.0);
-        assert!(!rows[0].never, "it has a miss entry");
-        assert!(rows[1].never, "no miss entry and no recorded round");
-        assert!(!rows[2].never, "recorded rounds, no misses");
+        assert!(rows.iter().all(|r| !r.never), "My Words has no never-practiced derivation");
         assert!(rows[2].due.is_none());
     }
 
@@ -551,16 +569,60 @@ mod tests {
             row("w7", 6, 2, 99.0),   // sixth: cut
             row("never", 7, 0, 0.0),
         ];
-        let t = toughest(&rows, TOUGHEST_N);
+        let t = toughest(&rows, TOUGHEST_N, &[]);
         assert_eq!(words(&rows, &t), ["w2", "w3", "w4", "alpha", "beta"]);
     }
 
     #[test]
-    fn toughest_with_fewer_than_five_adds_what_exists_and_skips_never_missed() {
-        let rows = vec![row("a", 0, 0, 0.0), row("b", 1, 2, 1.0), row("c", 2, 1, 1.0)];
-        assert_eq!(words(&rows, &toughest(&rows, TOUGHEST_N)), ["b", "c"]);
-        assert!(toughest(&[], TOUGHEST_N).is_empty());
-        assert!(toughest(&[row("z", 0, 0, 0.0)], TOUGHEST_N).is_empty());
+    fn toughest_with_fewer_than_five_missed_pads_with_never_missed_in_default_order() {
+        // Default order is `pos`, not the slice order: z (pos 0) leads the pad.
+        let rows = vec![
+            row("m", 4, 2, 1.0),
+            row("n", 3, 1, 1.0),
+            row("z", 0, 0, 0.0),
+            row("y", 1, 0, 0.0),
+            row("x", 2, 0, 0.0),
+            row("w", 5, 0, 0.0),
+        ];
+        let t = toughest(&rows, TOUGHEST_N, &[]);
+        assert_eq!(words(&rows, &t), ["m", "n", "z", "y", "x"], "missed first, then never-missed by position; w is cut");
+        // No missed word at all: the first five by position.
+        let none: Vec<Row> = (0..7).map(|i| row(&format!("w{i}"), i, 0, 0.0)).collect();
+        assert_eq!(words(&none, &toughest(&none, TOUGHEST_N, &[])), ["w0", "w1", "w2", "w3", "w4"]);
+    }
+
+    #[test]
+    fn toughest_with_a_small_scope_adds_what_exists() {
+        let rows = vec![row("a", 0, 0, 0.0), row("b", 1, 2, 1.0), row("c", 2, 0, 0.0)];
+        assert_eq!(words(&rows, &toughest(&rows, TOUGHEST_N, &[])), ["b", "a", "c"]);
+        assert!(toughest(&[], TOUGHEST_N, &[]).is_empty());
+        assert_eq!(toughest(&[row("z", 0, 0, 0.0)], TOUGHEST_N, &[]), vec![0], "a single never-missed word is added");
+    }
+
+    #[test]
+    fn toughest_padding_skips_words_already_picked() {
+        let rows = vec![row("a", 0, 0, 0.0), row("b", 1, 0, 0.0), row("c", 2, 3, 1.0), row("d", 3, 0, 0.0), row("e", 4, 0, 0.0)];
+        let picked = vec![pk(&rows[0])];
+        let t = toughest(&rows, TOUGHEST_N, &picked);
+        assert_eq!(words(&rows, &t), ["c", "b", "d", "e"], "a is picked, so it is not padded in; scope has only four others");
+        assert_eq!(words(&rows, &toughest_new(&rows, TOUGHEST_N, &picked)), ["c", "b", "d", "e"]);
+        // Everything lined up already: nothing to add (the button is disabled).
+        let all: Vec<Pick> = rows.iter().map(pk).collect();
+        assert!(toughest_new(&rows, TOUGHEST_N, &all).is_empty());
+        assert!(!toughest_new(&rows, TOUGHEST_N, &[]).is_empty());
+    }
+
+    #[test]
+    fn toughest_pads_through_the_lineup_keeping_picked_slots() {
+        let rows = vec![row("a", 0, 0, 0.0), row("b", 1, 4, 1.0), row("c", 2, 0, 0.0), row("d", 3, 0, 0.0), row("e", 4, 0, 0.0), row("f", 5, 0, 0.0)];
+        let mut l = Lineups::default();
+        let id = scope_id(SURFACE_MINE, "l1", "en");
+        l.toggle(&id, SURFACE_MINE, "l1", "en", pk(&rows[2]), None); // c, never missed, picked first
+        let picks = toughest_picks(&rows, TOUGHEST_N, l.picks(&id));
+        let (added, cut) = l.add_many(&id, SURFACE_MINE, "l1", "en", picks, None);
+        assert_eq!((added, cut), (5, false));
+        let order: Vec<&str> = l.picks(&id).iter().map(|p| p.word.as_str()).collect();
+        assert_eq!(order, ["c", "b", "a", "d", "e", "f"], "c keeps slot 1; b missed; a, d, e, f pad in position order (c skipped)");
     }
 
     #[test]
@@ -572,12 +634,12 @@ mod tests {
         // there are exactly five words, so all are in).
         l.toggle(&id, SURFACE_MISSES, "", "en", pk(&rows[2]), None);
         l.toggle(&id, SURFACE_MISSES, "", "en", pk(&rows[0]), None);
-        let (added, cut) = l.add_many(&id, SURFACE_MISSES, "", "en", toughest_picks(&rows, TOUGHEST_N), None);
+        let (added, cut) = l.add_many(&id, SURFACE_MISSES, "", "en", toughest_picks(&rows, TOUGHEST_N, &[]), None);
         assert_eq!((added, cut), (3, false));
         let order: Vec<&str> = l.picks(&id).iter().map(|p| p.word.as_str()).collect();
         assert_eq!(order, ["c", "a", "b", "d", "e"], "c and a keep slots 1,2; b(9), d(7), e(2) append");
         // Pressing it again changes nothing.
-        let (added, _) = l.add_many(&id, SURFACE_MISSES, "", "en", toughest_picks(&rows, TOUGHEST_N), None);
+        let (added, _) = l.add_many(&id, SURFACE_MISSES, "", "en", toughest_picks(&rows, TOUGHEST_N, &[]), None);
         assert_eq!(added, 0);
         assert_eq!(l.picks(&id).len(), 5);
     }
@@ -587,12 +649,12 @@ mod tests {
         let rows: Vec<Row> = (0..5).map(|i| row(&format!("w{i}"), i, 10 - i as u32, 1.0)).collect();
         let mut l = Lineups::default();
         let id = scope_id(SURFACE_MINE, "l1", "en");
-        let (added, cut) = l.add_many(&id, SURFACE_MINE, "l1", "en", toughest_picks(&rows, 5), Some(3));
+        let (added, cut) = l.add_many(&id, SURFACE_MINE, "l1", "en", toughest_picks(&rows, 5, &[]), Some(3));
         assert_eq!((added, cut), (3, true));
         assert_eq!(l.picks(&id).len(), 3);
         let mut l2 = Lineups::default();
         let cap = crate::experience::pick_caps(crate::experience::Experience::Standard).max_picks;
-        assert_eq!(l2.add_many(&id, SURFACE_MINE, "l1", "en", toughest_picks(&rows, 5), cap), (5, false));
+        assert_eq!(l2.add_many(&id, SURFACE_MINE, "l1", "en", toughest_picks(&rows, 5, &[]), cap), (5, false));
     }
 
     #[test]
@@ -604,7 +666,7 @@ mod tests {
         de.key = "de::hund".into();
         let all = vec![row("cat", 0, 2, 1.0), de.clone(), row("dog", 2, 1, 1.0)];
         let en_only: Vec<Row> = all.iter().filter(|r| r.lang == "en").cloned().collect();
-        let picks = toughest_picks(&en_only, TOUGHEST_N);
+        let picks = toughest_picks(&en_only, TOUGHEST_N, &[]);
         assert_eq!(picks.iter().map(|p| p.word.as_str()).collect::<Vec<_>>(), ["cat", "dog"]);
         assert!(picks.iter().all(|p| p.lang == "en"));
     }
@@ -633,9 +695,13 @@ mod tests {
     }
 
     #[test]
-    fn both_surfaces_offer_the_same_sorts_and_unknown_surfaces_only_the_default() {
+    fn my_words_drops_never_practiced_and_unknown_surfaces_only_the_default() {
         assert_eq!(sorts_for(SURFACE_MISSES), Sort::ALL.to_vec());
-        assert_eq!(sorts_for(SURFACE_MINE), Sort::ALL.to_vec());
+        assert_eq!(
+            sorts_for(SURFACE_MINE),
+            vec![Sort::AsListed, Sort::MissedMost, Sort::DueNow, Sort::Newest],
+            "wordstats is capped, so My Words cannot say never practiced"
+        );
         assert_eq!(sorts_for("elsewhere"), vec![Sort::AsListed]);
     }
 }

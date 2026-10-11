@@ -124,15 +124,6 @@ pub fn record(lang: &str, word: &str, correct: bool) {
     store(&b);
 }
 
-/// CC-PICK-QUEUE Phase C: how many solo rounds this device has recorded for
-/// each of `words` in `lang`. Read-only, one parse of the blob for the whole
-/// batch. 0 means "no recorded practice" -- which includes a word the 500-entry
-/// cap has since evicted, so callers say "no recorded practice", not "never".
-pub fn attempts_of(lang: &str, words: &[&str]) -> Vec<u32> {
-    let b = load();
-    words.iter().map(|w| b.words.get(&norm_key(lang, w)).map(|s| s.a).unwrap_or(0)).collect()
-}
-
 /// Weighted pick from `pool` (the active tier/mode list, unchanged). Returns
 /// None only for an empty pool, so callers can fall back to the deck.
 pub fn pick(lang: &str, pool: &[String]) -> Option<String> {
