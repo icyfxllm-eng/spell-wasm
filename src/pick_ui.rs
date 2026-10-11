@@ -214,7 +214,7 @@ pub fn help_for(surface: &str, list: &str, lang: &str, kid: bool, rows: &[Row]) 
         ));
     }
     h.push_str("</div>");
-    let can_toughest = !help::toughest(&scope_rows(rows, lang), help::TOUGHEST_N).is_empty();
+    let can_toughest = !help::toughest_new(&scope_rows(rows, lang), help::TOUGHEST_N, &picks).is_empty();
     let n = help::TOUGHEST_N.to_string();
     h.push_str(&format!(
         "<div class=\"lists-row pq-find\">\
@@ -270,13 +270,10 @@ fn rows_of(app: &App, surface: &str, list: &str, lang: &str) -> Vec<Row> {
     }
 }
 
-/// My Words rows: miss data from the Misses store, practice history from the
-/// solo word stats (read once for the whole list).
+/// My Words rows: miss data from the Misses store. No practice history is
+/// read (the "never practiced" sort is not offered here).
 pub fn mine_rows(entries: &[crate::word_lists::ListEntry], misses: &[crate::model::MissEntry]) -> Vec<Row> {
-    let words: Vec<&str> = entries.iter().map(|e| e.text.as_str()).collect();
-    // wordstats keys My Words rounds under the study language, MINE.
-    let attempts = crate::wordstats::attempts_of(crate::consts::MINE, &words);
-    help::rows_for_mine(entries, misses, &attempts)
+    help::rows_for_mine(entries, misses)
 }
 
 /// Put the caret back in the search box after the surface re-rendered because
@@ -407,7 +404,8 @@ pub fn handle_click(app: &App, el: &web_sys::Element, close: &dyn Fn()) -> bool 
     if has("data-pq-sort") {
         // Spell Jr has no sort menu (I7); a stray tap changes nothing.
         if help::active(app.borrow().kid) {
-            if let Some(sort) = Sort::from_id(&attr("data-pq-sort")) {
+            let surface = attr("data-pq-surface");
+            if let Some(sort) = Sort::from_id(&attr("data-pq-sort")).filter(|s| help::sorts_for(&surface).contains(s)) {
                 help::set_sort(&attr("data-pq-surface"), &attr("data-pq-list"), sort);
             }
         }
@@ -422,7 +420,8 @@ pub fn handle_click(app: &App, el: &web_sys::Element, close: &dyn Fn()) -> bool 
         // The CURRENT scope only: this list, this language (D9).
         let scope: Vec<Row> = rows_of(app, &surface, &list, &lang).into_iter().filter(|r| r.lang == lang).collect();
         let id = pq::scope_id(&surface, &list, &lang);
-        pq::add_many(&id, &surface, &list, &lang, help::toughest_picks(&scope, help::TOUGHEST_N), kid);
+        let have = pq::read(|l| l.picks(&id).to_vec());
+        pq::add_many(&id, &surface, &list, &lang, help::toughest_picks(&scope, help::TOUGHEST_N, &have), kid);
         return true;
     }
     if has("data-pq-start") {
