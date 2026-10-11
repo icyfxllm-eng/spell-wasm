@@ -1619,7 +1619,17 @@ pub fn next_word(app: &App) {
             // Deck-select over the due misses (keyed by the same lang::word
             // identity misses.rs already uses) so review turns don't repeat
             // the same due word back-to-back either.
-            let due_keys: Vec<String> = due.iter().map(|&i| misses::miss_key(&s.misses[i].word, &s.misses[i].lang)).collect();
+            let mut due_keys: Vec<String> = due.iter().map(|&i| misses::miss_key(&s.misses[i].word, &s.misses[i].lang)).collect();
+            // F4: a re-queued miss waits for its own slot rather than
+            // reappearing from the deck at random. Flag off: nothing pending,
+            // the retain keeps everything. If it would empty the pool, it goes
+            // to the end of the queue (served now).
+            if due_keys.iter().any(|k| crate::pick_queue::requeue_pending(k)) {
+                let rest: Vec<String> = due_keys.iter().filter(|k| !crate::pick_queue::requeue_pending(k)).cloned().collect();
+                if !rest.is_empty() {
+                    due_keys = rest;
+                }
+            }
             let pick_key = s.decks.entry("__review".to_string()).or_default().next(&due_keys);
             let pick = due
                 .iter()
@@ -2746,13 +2756,19 @@ fn record_miss_routed(app: &App, word: &str, lang: &str, tier: &str) {
     let queue = ZH_VERDICT.with(|v| {
         v.borrow().as_ref().map_or(Queue::General, crate::tone_drill::route)
     });
-    let mut s = app.borrow_mut();
-    if queue == Queue::ToneDrill {
-        crate::tone_drill::add(&mut s, word, lang, tier);
-    } else {
-        misses::add_miss(&mut s, word, lang, tier);
-        crate::tone_drill::remove(&mut s, word, lang);
+    {
+        let mut s = app.borrow_mut();
+        if queue == Queue::ToneDrill {
+            crate::tone_drill::add(&mut s, word, lang, tier);
+        } else {
+            misses::add_miss(&mut s, word, lang, tier);
+            crate::tone_drill::remove(&mut s, word, lang);
+        }
     }
+    // CC-PICK-QUEUE Phase D (F4): order only, AFTER the miss is recorded as
+    // ever, and on the one function every recorded miss goes through. Flag
+    // off / not a lineup or star serve: a no-op.
+    crate::pick_queue::note_miss(word);
 }
 
 /// Record the FIRST-submission miss exactly once: accuracy, spaced-rep/Misses,

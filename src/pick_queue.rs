@@ -18,6 +18,14 @@
 //! word graduates or is removed simply stops existing for the lineup
 //! ([`Lineups::prune`], O-C / O-D).
 //!
+//! Phase D (F4, behind its own flag `pick_queue_d`): a lined-up or starred word
+//! spelled wrong re-enters the SAME session 3-5 draws later (`requeue_offset`,
+//! deterministic from the draw index and a stable hash of the word). The
+//! re-queue is SESSION MEMORY only: the lineup itself persists, but the session
+//! (what was served, where it is up to) has never been persisted, so a
+//! force-quit starts a fresh session over the surviving lineup, as it always did.
+//! At most `REQUEUE_MAX_PER_WORD` re-entries per word per session.
+//!
 //! The whole module sits behind `flags::pick_queue_a()`, default OFF, and the
 //! flag is permanently false in the site build (O-F).
 
@@ -241,10 +249,126 @@ pub fn decide_with_stars(
     just_these: bool,
     live: impl Fn(&Pick) -> bool,
 ) -> Serve {
+    decide_full(picks, stars, &Requeue::default(), served, just_these, live)
+}
+
+// ---------- Phase D: F4, missed picks come back ----------
+
+/// A re-queued miss comes back no sooner than this many draws after the draw
+/// that missed it (D8: never fewer than three).
+pub const REQUEUE_MIN: usize = 3;
+/// ... and no later than this many.
+pub const REQUEUE_MAX: usize = 5;
+/// A word that keeps being missed re-enters at most this many times per
+/// session, then is an ordinary word again. Generous on purpose: the session's
+/// own end rules (the player answers, or ends it) already terminate the loop;
+/// this only stops a lineup of one from becoming a treadmill with no way out
+/// but the exit control.
+pub const REQUEUE_MAX_PER_WORD: u32 = 5;
+
+/// FNV-1a over the word's identity key: stable across runs, platforms and
+/// languages (no `DefaultHasher`, whose output is not guaranteed).
+fn stable_hash(s: &str) -> u64 {
+    let mut h: u64 = 0xcbf29ce484222325;
+    for b in s.as_bytes() {
+        h ^= *b as u64;
+        h = h.wrapping_mul(0x100000001b3);
+    }
+    h
+}
+
+/// D8: the re-queue offset, deterministic, always within
+/// `REQUEUE_MIN..=REQUEUE_MAX`. `draw` is the session position (0-based draw
+/// index) of the word that was just missed; `key` its identity. Same inputs,
+/// same offset: no clock, no RNG. The two terms keep one word from always
+/// landing at the same distance and different words from moving in lockstep.
+pub fn requeue_offset(draw: usize, key: &str) -> usize {
+    let span = REQUEUE_MAX - REQUEUE_MIN + 1;
+    REQUEUE_MIN + ((stable_hash(key) % span as u64) as usize + draw % span) % span
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct Queued {
+    pub pick: Pick,
+    /// The draw index at (or after) which it is served again.
+    pub due_at: usize,
+}
+
+/// The in-session re-queue: SESSION MEMORY ONLY (see the module notes). One
+/// source of truth for Misses, My Words, lineup picks and stars (I8).
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct Requeue {
+    /// Draws the session has made so far (the next draw's index).
+    pub draws: usize,
+    pub pending: Vec<Queued>,
+    /// How many times each word has been re-queued this session.
+    pub counts: Vec<(String, u32)>,
+}
+
+impl Requeue {
+    /// The word served at draw `draws - 1` was spelled wrong. Returns the draw
+    /// index it will come back at, or `None` when it is already waiting or has
+    /// used up its re-queues.
+    pub fn note_miss(&mut self, pick: &Pick) -> Option<usize> {
+        if self.draws == 0 || self.pending.iter().any(|q| q.pick.key == pick.key) {
+            return None;
+        }
+        let used = self.counts.iter().position(|(k, _)| *k == pick.key);
+        if used.map(|i| self.counts[i].1).unwrap_or(0) >= REQUEUE_MAX_PER_WORD {
+            return None;
+        }
+        match used {
+            Some(i) => self.counts[i].1 += 1,
+            None => self.counts.push((pick.key.clone(), 1)),
+        }
+        let at = self.draws - 1;
+        let due_at = at + requeue_offset(at, &pick.key);
+        self.pending.push(Queued { pick: pick.clone(), due_at });
+        Some(due_at)
+    }
+
+    pub fn is_pending(&self, key: &str) -> bool {
+        self.pending.iter().any(|q| q.pick.key == key)
+    }
+
+    fn earliest(&self, live: &impl Fn(&Pick) -> bool, only_due: bool) -> Option<&Queued> {
+        self.pending
+            .iter()
+            .filter(|q| live(&q.pick) && (!only_due || q.due_at <= self.draws))
+            .min_by_key(|q| q.due_at)
+    }
+}
+
+/// The ONE ordering rule including re-queued misses (F4). Order of precedence:
+///
+/// 1. a re-queued miss whose slot has arrived (the I2 exception: it jumps the
+///    rest of the lineup, because it is a miss, not a new pick);
+/// 2. the lineup's picks, in tap order;
+/// 3. "Just these" with the picks done: any re-queued miss still waiting is
+///    served now (the lineup's end is "the end" of F4's shorter-than-offset
+///    rule), and only when none is left is the session `Exhausted` (A9);
+/// 4. the focus stars not already served;
+/// 5. the normal queue (`Open`).
+///
+/// With an empty `Requeue` this is exactly Phase B's rule.
+pub fn decide_full(
+    picks: &[Pick],
+    stars: &[Pick],
+    rq: &Requeue,
+    served: &[String],
+    just_these: bool,
+    live: impl Fn(&Pick) -> bool,
+) -> Serve {
+    if let Some(q) = rq.earliest(&live, true) {
+        return Serve::Pick(q.pick.clone());
+    }
     if let Some(p) = picks.iter().find(|p| !served.contains(&p.key) && live(p)) {
         return Serve::Pick(p.clone());
     }
     if just_these {
+        if let Some(q) = rq.earliest(&live, false) {
+            return Serve::Pick(q.pick.clone());
+        }
         return Serve::Exhausted;
     }
     if let Some(p) = stars.iter().find(|p| !served.contains(&p.key) && live(p)) {
@@ -276,9 +400,14 @@ struct Session {
     /// The word the lineup served last, so a correct answer can be told apart
     /// from an ordinary serve (D3).
     last_word: Option<String>,
+    /// Phase D: the whole pick that was served last (its key and language), so
+    /// a miss can be re-queued under the same identity it was served with.
+    last_pick: Option<Pick>,
     /// Phase B: the language whose Misses stars lead this session. Empty for a
     /// My Words session (its stars come from the lists, each in its own language).
     star_lang: String,
+    /// Phase D: this session's re-queued misses. Memory only (see the module notes).
+    rq: Requeue,
 }
 
 fn ensure_loaded(s: &mut Store) {
@@ -376,7 +505,9 @@ pub fn begin_session(scope: &str, kid: bool) {
             served: Vec::new(),
             served_words: Vec::new(),
             last_word: None,
+            last_pick: None,
             star_lang: read(|l| l.scopes.get(scope).map(|s| s.lang.clone()).unwrap_or_default()),
+            rq: Requeue::default(),
         })
     });
 }
@@ -412,7 +543,9 @@ pub fn begin_star_session(kid: bool, lang: &str) {
             served: Vec::new(),
             served_words: Vec::new(),
             last_word: None,
+            last_pick: None,
             star_lang: lang.to_string(),
+            rq: Requeue::default(),
         });
     });
 }
@@ -435,6 +568,7 @@ pub fn clear_last_served() {
     SESSION.with(|c| {
         if let Some(s) = c.borrow_mut().as_mut() {
             s.last_word = None;
+            s.last_pick = None;
         }
     });
 }
@@ -461,21 +595,37 @@ fn next_from(scope: &str, use_picks: bool, stars: &[Pick], live: impl Fn(&Pick) 
         write_if_changed(scope, &live);
     }
     let picks: Vec<Pick> = if use_picks && !scope.is_empty() { read(|l| l.picks(scope).to_vec()) } else { Vec::new() };
-    let (served, just) = SESSION.with(|c| {
+    let (served, just, rq) = SESSION.with(|c| {
         let b = c.borrow();
         let s = b.as_ref().expect("session");
-        (s.served.clone(), s.just_these)
+        (s.served.clone(), s.just_these, s.rq.clone())
     });
-    let r = decide_with_stars(&picks, stars, &served, just && use_picks, &live);
+    let r = decide_full(&picks, stars, &rq, &served, just && use_picks, &live);
     SESSION.with(|c| {
         if let Some(s) = c.borrow_mut().as_mut() {
             match &r {
                 Serve::Pick(p) => {
-                    s.served.push(p.key.clone());
-                    s.served_words.push(p.word.clone());
+                    if s.rq.is_pending(&p.key) {
+                        // A re-queued miss coming back: it is already in
+                        // `served`, and its slot is spent.
+                        s.rq.pending.retain(|q| q.pick.key != p.key);
+                    } else {
+                        s.served.push(p.key.clone());
+                        s.served_words.push(p.word.clone());
+                    }
                     s.last_word = Some(p.word.clone());
+                    s.last_pick = Some(p.clone());
+                    s.rq.draws += 1;
                 }
-                _ => s.last_word = None,
+                Serve::Open => {
+                    s.last_word = None;
+                    s.last_pick = None;
+                    s.rq.draws += 1;
+                }
+                Serve::Exhausted => {
+                    s.last_word = None;
+                    s.last_pick = None;
+                }
             }
         }
     });
@@ -544,10 +694,41 @@ pub fn next_for_mine(
         None => false,
     };
     let stars: Vec<Pick> = if crate::pick_stars::active(kid) && !in_order { starred() } else { Vec::new() };
-    if !use_picks && stars.is_empty() {
+    if !use_picks && stars.is_empty() && !has_pending_requeue() {
         return Serve::Open;
     }
     next_from(&sc, use_picks, &stars, |p| list_words.contains(&p.word))
+}
+
+/// Phase D (F4) is on: its own flag, and only while Phase A is.
+pub fn requeue_enabled() -> bool {
+    enabled() && crate::flags::pick_queue_d()
+}
+
+fn has_pending_requeue() -> bool {
+    requeue_enabled() && SESSION.with(|c| c.borrow().as_ref().map(|s| !s.rq.pending.is_empty()).unwrap_or(false))
+}
+
+/// F4: the word the session served last was just spelled wrong (the miss has
+/// been recorded exactly as ever, I1). If the lineup or a star served it, it
+/// re-enters this session 3-5 draws later. Anything else, or the flag off, is a
+/// no-op. Returns the draw index it will come back at.
+pub fn note_miss(word: &str) -> Option<usize> {
+    if !requeue_enabled() {
+        return None;
+    }
+    SESSION.with(|c| {
+        let mut b = c.borrow_mut();
+        let s = b.as_mut()?;
+        let p = s.last_pick.clone().filter(|p| p.word == word)?;
+        s.rq.note_miss(&p)
+    })
+}
+
+/// A re-queued miss is waiting for its slot: the ordinary queue must not hand it
+/// out early (that would be a random reappearance, not the 3-5 rule).
+pub fn requeue_pending(key: &str) -> bool {
+    requeue_enabled() && SESSION.with(|c| c.borrow().as_ref().map(|s| s.rq.is_pending(key)).unwrap_or(false))
 }
 
 /// I3: a word the lineup already served this session must not come round again
@@ -914,6 +1095,271 @@ mod tests {
         // A different list selected: the picks stay silent, the stars still lead.
         begin_session(&id, false);
         assert_eq!(next_for_mine(false, &pool, false, || vec!["l2".into()], starred), Serve::Pick(st("eel")));
+        crate::flags::set_test_override(None);
+    }
+
+    // ---------- Phase D: F4, missed picks come back ----------
+
+    /// Serve `n` draws from a Misses session; return the words (Open = "_").
+    #[cfg(not(feature = "web"))]
+    fn draw(n: usize) -> Vec<String> {
+        (0..n)
+            .map(|_| match next_for_misses(false, "en", |_| true) {
+                Serve::Pick(p) => p.word,
+                Serve::Open => "_".to_string(),
+                Serve::Exhausted => "END".to_string(),
+            })
+            .collect()
+    }
+
+    #[cfg(not(feature = "web"))]
+    fn session_with(words: &[&str], just: bool) {
+        crate::flags::set_test_override(Some("on"));
+        let mut l = Lineups::default();
+        let id = sid();
+        for w in words {
+            l.toggle(&id, SURFACE_MISSES, "", "en", pk(w), None);
+        }
+        l.set_just_these(&id, just);
+        set_for_test(l);
+        begin_session(&id, false);
+    }
+
+    /// D8: deterministic and always 3..=5, for every draw index and a spread of keys.
+    #[test]
+    fn the_requeue_offset_is_deterministic_and_within_three_to_five() {
+        let mut seen = std::collections::BTreeSet::new();
+        for d in 0..60 {
+            for k in ["en::cat", "en::dog", "de::Haus", "__mine::x", "zh::\u{4f60}\u{597d}", ""] {
+                let o = requeue_offset(d, k);
+                assert!((REQUEUE_MIN..=REQUEUE_MAX).contains(&o), "{d} {k} -> {o}");
+                assert_eq!(o, requeue_offset(d, k), "same inputs, same offset");
+                seen.insert(o);
+            }
+        }
+        assert_eq!(seen.len(), 3, "all of 3, 4 and 5 are reachable");
+        // Pinned values: this is the rule, not a sample (change it knowingly).
+        assert_eq!(requeue_offset(0, "en::cat"), requeue_offset(3, "en::cat"));
+    }
+
+    /// A4: a missed pick reappears 3-5 draws later, never sooner (never < 3).
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_missed_pick_reappears_three_to_five_words_later() {
+        for start in 0..3usize {
+            session_with(&["cat"], false);
+            // Some ordinary draws first so draw indexes vary.
+            let _ = (0..start).map(|_| ()).count();
+            assert_eq!(draw(1), vec!["cat"]); // draw 0
+            assert_eq!(note_miss("cat"), Some(requeue_offset(0, "en::cat")));
+            let seq = draw(8);
+            let at = seq.iter().position(|w| w == "cat").expect("it comes back");
+            let gap = at + 1; // draws after the missed one
+            assert!((3..=5).contains(&gap), "gap {gap} in {seq:?}");
+            assert!(seq[..at].iter().all(|w| w == "_"), "only ordinary words in between");
+            assert_eq!(seq.iter().filter(|w| *w == "cat").count(), 1, "once, not twice (I3)");
+        }
+        crate::flags::set_test_override(None);
+    }
+
+    /// F4 sits behind its own flag: with D off a miss is not re-queued.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn flag_off_means_no_requeue() {
+        session_with(&["cat"], false);
+        assert_eq!(draw(1), vec!["cat"]);
+        // The test override is global (one value for every flag), so exercise
+        // the gate through the same function the game calls.
+        crate::flags::set_test_override(Some("off"));
+        assert_eq!(note_miss("cat"), None);
+        crate::flags::set_test_override(Some("on"));
+        assert!(draw(8).iter().all(|w| w != "cat"));
+        crate::flags::set_test_override(None);
+    }
+
+    /// A word answered correctly (no note_miss) is never served again (I3).
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_correct_pick_does_not_repeat() {
+        session_with(&["cat", "dog"], false);
+        assert_eq!(draw(6), vec!["cat", "dog", "_", "_", "_", "_"]);
+        crate::flags::set_test_override(None);
+    }
+
+    /// A word the session did not serve as a pick (an ordinary draw) is not re-queued.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn only_a_served_pick_is_requeued() {
+        session_with(&["cat"], false);
+        assert_eq!(draw(2), vec!["cat", "_"]);
+        assert_eq!(note_miss("cat"), None, "the last serve was an ordinary word");
+        assert_eq!(note_miss("zzz"), None);
+        crate::flags::set_test_override(None);
+    }
+
+    /// I2: the lineup is served before anything unpicked, EXCEPT a re-queued
+    /// miss, which takes its slot ahead of picks still waiting.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn the_i2_exception_is_only_for_requeued_misses() {
+        session_with(&["a", "b", "c", "d", "e", "f", "g", "h"], false);
+        let mut out = draw(1);
+        assert_eq!(note_miss("a"), Some(requeue_offset(0, "en::a")));
+        out.extend(draw(8));
+        // Eight picks, one miss: "a" appears twice; nothing unpicked ("_") yet
+        // because 9 serves of 8 picks + 1 requeue = 9 > 8 -> one "_" at the end.
+        assert_eq!(out.iter().filter(|w| *w == "a").count(), 2);
+        let first_open = out.iter().position(|w| w == "_");
+        let last_pick = out.iter().rposition(|w| w != "_").unwrap();
+        if let Some(o) = first_open {
+            assert!(o > last_pick, "no unpicked word before the lineup is done: {out:?}");
+        }
+        // Every other pick appears exactly once.
+        for w in ["b", "c", "d", "e", "f", "g", "h"] {
+            assert_eq!(out.iter().filter(|x| *x == w).count(), 1, "{w}");
+        }
+        // The requeued "a" sits 3-5 after its miss, ahead of a pick that was waiting.
+        let second = out.iter().skip(1).position(|w| w == "a").unwrap() + 1;
+        assert!((3..=5).contains(&second), "{out:?}");
+        crate::flags::set_test_override(None);
+    }
+
+    /// A starred word spelled wrong is re-queued too.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_starred_word_is_requeued() {
+        crate::flags::set_test_override(Some("on"));
+        crate::pick_stars::set_for_test(crate::pick_stars::Stars { v: 1, stars: vec![st("owl")] });
+        set_for_test(Lineups::default());
+        begin_star_session(false, "en");
+        assert_eq!(draw(1), vec!["owl"]);
+        assert!(note_miss("owl").is_some());
+        let seq = draw(8);
+        let at = seq.iter().position(|w| w == "owl").expect("the star comes back");
+        assert!((2..=4).contains(&at), "{seq:?}");
+        assert_eq!(seq.iter().filter(|w| *w == "owl").count(), 1);
+        end_session();
+        crate::flags::set_test_override(None);
+    }
+
+    /// Missed again: it re-enters again, up to REQUEUE_MAX_PER_WORD, and then it
+    /// is an ordinary word (the bound is visible here).
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_word_missed_again_reenters_up_to_the_bound() {
+        session_with(&["cat"], false);
+        let mut served = 0;
+        assert_eq!(draw(1), vec!["cat"]);
+        served += 1;
+        loop {
+            if note_miss("cat").is_none() {
+                break;
+            }
+            // Draw one word at a time until it is back, so the miss can be
+            // noted on the draw that served it.
+            let mut gap = 0;
+            loop {
+                gap += 1;
+                assert!(gap <= REQUEUE_MAX, "back within five draws");
+                if draw(1) == vec!["cat"] {
+                    break;
+                }
+            }
+            assert!((REQUEUE_MIN..=REQUEUE_MAX).contains(&gap), "gap {gap}");
+            served += 1;
+            assert!(served < 50, "never loops forever");
+        }
+        assert_eq!(served as u32, 1 + REQUEUE_MAX_PER_WORD, "first serve + the bound");
+        // After the bound the word is ordinary: not re-queued, not served again.
+        assert!(draw(8).iter().all(|w| w == "_"));
+        crate::flags::set_test_override(None);
+    }
+
+    /// "Just these": a miss stays inside the session; the session ends only once
+    /// the lineup is exhausted including re-queues. Fewer picks left than the
+    /// offset: the word goes to the end. A9 still holds with no misses.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn just_these_ends_after_requeues_and_a9_holds_without_misses() {
+        // A9: three picks, no miss -> three serves, then the end.
+        session_with(&["a", "b", "c"], true);
+        assert_eq!(draw(4), vec!["a", "b", "c", "END"]);
+        // One miss on the first of two picks: the queue is shorter than the
+        // offset, so it goes to the end, and only then does the session end.
+        session_with(&["a", "b"], true);
+        assert_eq!(draw(1), vec!["a"]);
+        assert!(note_miss("a").is_some());
+        assert_eq!(draw(3), vec!["b", "a", "END"]);
+        // Missed twice more in a row: still inside the session, still ends.
+        session_with(&["a"], true);
+        assert_eq!(draw(1), vec!["a"]);
+        assert!(note_miss("a").is_some());
+        assert_eq!(draw(1), vec!["a"]);
+        assert!(note_miss("a").is_some());
+        assert_eq!(draw(1), vec!["a"]);
+        assert_eq!(draw(1), vec!["END"], "answered correctly this time");
+        crate::flags::set_test_override(None);
+    }
+
+    /// Longer queue than the offset in Just these: back at its slot, not the end.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn just_these_requeue_lands_at_its_slot_when_the_queue_is_long_enough() {
+        session_with(&["a", "b", "c", "d", "e", "f", "g", "h"], true);
+        let mut out = draw(1);
+        assert!(note_miss("a").is_some());
+        out.extend(draw(9));
+        assert_eq!(out.iter().filter(|w| *w == "a").count(), 2);
+        let second = out.iter().skip(1).position(|w| w == "a").unwrap() + 1;
+        assert!((3..=5).contains(&second), "{out:?}");
+        assert_eq!(out.last().unwrap(), "END");
+        crate::flags::set_test_override(None);
+    }
+
+    /// Zero picks, no stars: nothing changes, and nothing is ever re-queued (I4).
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn zero_picks_is_identity() {
+        crate::flags::set_test_override(Some("on"));
+        set_for_test(Lineups::default());
+        end_session();
+        assert_eq!(next_for_misses(false, "en", |_| true), Serve::Open);
+        assert_eq!(note_miss("cat"), None);
+        assert!(!requeue_pending("en::cat"));
+        // And the pure rule with an empty requeue is Phase B's rule.
+        let picks = [pk("a"), pk("b")];
+        let live = |_: &Pick| true;
+        assert_eq!(
+            decide_full(&picks, &[], &Requeue::default(), &[], false, live),
+            decide_with_stars(&picks, &[], &[], false, live)
+        );
+        assert_eq!(decide_full(&[], &[], &Requeue::default(), &[], false, live), Serve::Open);
+        crate::flags::set_test_override(None);
+    }
+
+    /// The pending word is held back from the ordinary queue until its slot.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_pending_requeue_is_reported_so_the_deck_can_hold_it_back() {
+        session_with(&["cat"], false);
+        assert_eq!(draw(1), vec!["cat"]);
+        assert!(!requeue_pending("en::cat"));
+        note_miss("cat");
+        assert!(requeue_pending("en::cat"));
+        let _ = draw(8);
+        assert!(!requeue_pending("en::cat"), "served: slot spent");
+        crate::flags::set_test_override(None);
+    }
+
+    /// A requeued word that is no longer live (graduated / removed) is dropped,
+    /// never served.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_requeued_word_that_vanished_is_not_served() {
+        session_with(&["cat"], true);
+        assert_eq!(draw(1), vec!["cat"]);
+        note_miss("cat");
+        assert_eq!(next_for_misses(false, "en", |_| false), Serve::Exhausted);
         crate::flags::set_test_override(None);
     }
 

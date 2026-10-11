@@ -295,4 +295,40 @@ mod pick_tests {
         assert!(!crate::pick_stars::read(|s| s.has(&key)), "its star went with it");
         crate::flags::set_test_override(None);
     }
+
+    /// CC-PICK-QUEUE Phase D / A12: the same answer sequence, including a
+    /// miss, grades identically with a lineup session (and F4 re-queueing the
+    /// miss) and without one.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn grading_is_identical_with_and_without_a_lineup_across_a_miss() {
+        let run = |with_lineup: bool| {
+            crate::flags::set_test_override(Some("on"));
+            let mut st = state_with("cat");
+            add_miss_at(&mut st, "dog", "en", "easy", T0);
+            if with_lineup {
+                let mut l = crate::pick_queue::Lineups::default();
+                let id = crate::pick_queue::scope_id(crate::pick_queue::SURFACE_MISSES, "", "en");
+                let pk = |w: &str| crate::pick_queue::Pick { key: miss_key(w, "en"), word: w.into(), lang: "en".into() };
+                l.toggle(&id, crate::pick_queue::SURFACE_MISSES, "", "en", pk("cat"), None);
+                l.toggle(&id, crate::pick_queue::SURFACE_MISSES, "", "en", pk("dog"), None);
+                crate::pick_queue::set_for_test(l);
+                crate::pick_queue::begin_session(&id, false);
+            }
+            // cat: wrong (the lineup would re-queue it), then right, dog right.
+            if with_lineup {
+                let _ = crate::pick_queue::next_for_misses(false, "en", |_| true);
+            }
+            add_miss_at(&mut st, "cat", "en", "easy", T0 + 1_000.0);
+            if with_lineup {
+                assert!(crate::pick_queue::note_miss("cat").is_some());
+            }
+            promote_miss_at(&mut st, "cat", "en", Grade::Good, T0 + 2_000.0);
+            promote_miss_at(&mut st, "dog", "en", Grade::Good, T0 + 3_000.0);
+            crate::pick_queue::end_session();
+            crate::flags::set_test_override(None);
+            serde_json::to_string(&st.misses).unwrap()
+        };
+        assert_eq!(run(false), run(true));
+    }
 }
