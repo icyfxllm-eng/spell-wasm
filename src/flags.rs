@@ -151,6 +151,18 @@ pub fn spelluzzle_par() -> bool {
     spelluzzle() && resolve(stored("spelluzzle_par").as_deref(), false)
 }
 
+/// CC-SPELLUZZLE v1.1 F19 -- Expeditions, and F21 -- My Words boards. **Default OFF**, each
+/// requires `spelluzzle` (D25). `localStorage['spell_flag_spelluzzle_expedition'] = 'on'` and
+/// `...spelluzzle_mywords`.
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_expedition() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_expedition").as_deref(), false)
+}
+#[cfg(not(feature = "web"))]
+pub fn spelluzzle_mywords() -> bool {
+    spelluzzle() && resolve(stored("spelluzzle_mywords").as_deref(), false)
+}
+
 /// F13: one flag per language, so a language can be pulled on its own. English is the
 /// only one built; the others stay off, and F12 keeps ko zh ja ar hi out whatever this says.
 #[cfg(not(feature = "web"))]

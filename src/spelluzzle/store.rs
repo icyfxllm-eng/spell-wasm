@@ -44,6 +44,12 @@ pub fn par_progress_key(profile: &str, lang: &str, tier: Tier) -> String {
 pub fn par_stars_key(profile: &str, lang: &str, tier: Tier) -> String {
     format!("spell_spz_parstars_v1:{profile}:{lang}:{}", tier.name())
 }
+pub fn run_key(profile: &str, lang: &str, tier: Tier) -> String {
+    format!("spell_spz_run_v1:{profile}:{lang}:{}", tier.name())
+}
+pub fn mywords_key(profile: &str, lang: &str, list_id: &str) -> String {
+    format!("spell_spz_mw_v1:{profile}:{lang}:{list_id}")
+}
 pub fn prefs_key(profile: &str) -> String {
     format!("spell_spz_prefs_v1:{profile}")
 }
@@ -52,7 +58,7 @@ pub fn streak_key(profile: &str) -> String {
 }
 
 /// Every key the mode writes, for the store-registry and the no-writes test (I8).
-pub const KEY_PREFIXES: [&str; 8] = [
+pub const KEY_PREFIXES: [&str; 10] = [
     "spell_spz_progress_v1",
     "spell_spz_history_v1",
     "spell_spz_stars_v1",
@@ -61,6 +67,8 @@ pub const KEY_PREFIXES: [&str; 8] = [
     "spell_spz_parprogress_v1",
     "spell_spz_parstars_v1",
     "spell_spz_prefs_v1",
+    "spell_spz_run_v1",
+    "spell_spz_mw_v1",
 ];
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
@@ -162,4 +170,36 @@ pub struct PencilSave {
 pub struct Prefs {
     #[serde(default)]
     pub board_type: String,
+}
+
+/// F19: the Expedition in progress for (profile, language, tier), and the best run total.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub struct RunStore {
+    #[serde(default)]
+    pub active: Option<RunSave>,
+    /// The best total stars across a whole run, out of 9 (D39).
+    #[serde(default)]
+    pub best: u8,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct RunSave {
+    pub seed: u64,
+    pub words: Vec<u16>,
+    /// The board on screen: 0, 1 or 2.
+    pub cur: u8,
+    pub snaps: Vec<Snapshot>,
+    /// Stars earned per solved board (0 for one not yet solved).
+    pub stars: Vec<u8>,
+    pub done: Vec<bool>,
+}
+
+/// F21: a My Words board in progress, kept whole so a list edited since cannot change it.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct MyWordsSave {
+    pub seed: u64,
+    pub words: Vec<String>,
+    /// Per word: true if it came from the player's list, false for a bank top-up.
+    pub from_list: Vec<bool>,
+    pub snapshot: Snapshot,
 }

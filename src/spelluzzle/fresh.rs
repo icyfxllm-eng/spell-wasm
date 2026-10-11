@@ -92,3 +92,34 @@ pub fn fresh_par(
     }
     best.map(|(_, b, r)| (b, r))
 }
+
+/// F19: an Expedition from the verified records. At most four words shared with the previous run
+/// (fewest possible if the records are thin); never a run whose hash is in the history.
+pub fn fresh_run(
+    lex: &Lexicon,
+    tier: Tier,
+    records: &[super::run::RunRecord],
+    history: &History,
+    previous: &[String],
+    mut pick: impl FnMut(usize) -> usize,
+) -> Option<(Vec<Board>, super::run::RunRecord)> {
+    if records.is_empty() {
+        return None;
+    }
+    let mut best: Option<(usize, Vec<Board>, super::run::RunRecord)> = None;
+    for _ in 0..200 {
+        let rec = &records[pick(records.len()) % records.len()];
+        let Some(boards) = super::run::boards_from_record(lex, tier, rec) else { continue };
+        if history.contains(super::run::run_hash(&boards)) {
+            continue;
+        }
+        let shared = boards.iter().flat_map(|b| b.words()).filter(|w| previous.contains(w)).count();
+        if shared <= 4 {
+            return Some((boards, rec.clone()));
+        }
+        if best.as_ref().map_or(true, |(s, _, _)| shared < *s) {
+            best = Some((shared, boards, rec.clone()));
+        }
+    }
+    best.map(|(_, b, r)| (b, r))
+}

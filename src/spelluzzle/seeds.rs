@@ -30,6 +30,9 @@ pub struct SeedFile {
     /// F15: verified Par boards per tier, each `[seed, par, w0..w6]` with the words as pool indexes.
     #[serde(default)]
     pub par: std::collections::BTreeMap<String, Vec<Vec<u32>>>,
+    /// F19: verified Expedition runs per tier, each `[seed, w0..w15]` with the words as pool indexes.
+    #[serde(default)]
+    pub runs: std::collections::BTreeMap<String, Vec<Vec<u32>>>,
 }
 
 pub fn file() -> Option<SeedFile> {
@@ -75,6 +78,29 @@ pub fn par_records(lex: &Lexicon, tier: Tier) -> Vec<super::par::ParRecord> {
                         w[k] = *x as u16;
                     }
                     super::par::ParRecord { seed: r[0] as u64, par: r[1] as u8, words: w }
+                })
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// The verified Expedition runs for `tier` (Medium, Hard, Expert), or none if the file is stale.
+pub fn run_records(lex: &Lexicon, tier: Tier) -> Vec<super::run::RunRecord> {
+    let Some(f) = file() else { return Vec::new() };
+    if f.lang != lex.lang || f.gen_version != GEN_VERSION || f.fingerprint != fingerprint_hex(lex) {
+        return Vec::new();
+    }
+    f.runs
+        .get(tier.name())
+        .map(|v| {
+            v.iter()
+                .filter(|r| r.len() == 1 + super::run::RUN_WORDS)
+                .map(|r| {
+                    let mut w = [0u16; super::run::RUN_WORDS];
+                    for (k, x) in r[1..].iter().enumerate() {
+                        w[k] = *x as u16;
+                    }
+                    super::run::RunRecord { seed: r[0] as u64, words: w }
                 })
                 .collect()
         })

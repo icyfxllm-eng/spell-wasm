@@ -135,6 +135,50 @@ fn build_seeds() {
         report.push(format!("par {}: kept {} of {tried} seeds ({rejected} rejected by the large list, {none} could not generate)", tier.name(), kept.len()));
         par_out.push((tier.name().to_string(), kept));
     }
+    // F19: Expedition runs. Generate against the bank, re-prove each under the large list.
+    let run_target: usize = std::env::var("SPZ_RUN_TARGET").ok().and_then(|v| v.parse().ok()).unwrap_or(600);
+    let mut run_out: Vec<(String, Vec<Vec<u32>>)> = Vec::new();
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        let gs = super::rungen::RunGen::new(&small, tier);
+        let gb = super::rungen::RunGen::new(&big, tier);
+        let mut kept: Vec<Vec<u32>> = Vec::new();
+        let (mut tried, mut none, mut rejected) = (0u32, 0u32, 0u32);
+        let mut next = 0u32;
+        while kept.len() < run_target && next < 200_000 {
+            let batch: Vec<u32> = (next..next + 120).collect();
+            next += 120;
+            let chunk = batch.len().div_ceil(threads);
+            let results: Vec<(u32, Option<Vec<u32>>, u8)> = std::thread::scope(|sc| {
+                let hs: Vec<_> = batch.chunks(chunk).map(|part| {
+                    let (gs, gb) = (&gs, &gb);
+                    sc.spawn(move || part.iter().map(|&s| match gs.generate(s as u64, &[]) {
+                        None => (s, None, 0u8),
+                        Some(idx) => {
+                            if gb.check(&gb.words(&idx)).is_empty() {
+                                let mut row = vec![s];
+                                row.extend(idx.iter().map(|&i| i as u32));
+                                (s, Some(row), 1)
+                            } else {
+                                (s, None, 2)
+                            }
+                        }
+                    }).collect::<Vec<_>>())
+                }).collect();
+                hs.into_iter().flat_map(|h| h.join().unwrap()).collect()
+            });
+            for (_, row, r) in results {
+                tried += 1;
+                match (r, row) {
+                    (1, Some(row)) if kept.len() < run_target => kept.push(row),
+                    (1, _) => {}
+                    (2, _) => rejected += 1,
+                    _ => none += 1,
+                }
+            }
+        }
+        report.push(format!("runs {}: kept {} of {tried} seeds ({rejected} rejected by the large list, {none} could not generate)", tier.name(), kept.len()));
+        run_out.push((tier.name().to_string(), kept));
+    }
     let mut out = String::from("{\n");
     out.push_str(&format!("  \"gen_version\": {GEN_VERSION},\n  \"lang\": \"en\",\n  \"fingerprint\": \"{}\",\n", seeds::fingerprint_hex(&small)));
     out.push_str(&format!("  \"validity_source\": \"Hunspell en_US (SCOWL) {}; build-time only, never shipped; sha256 {}\",\n  \"validity_words\": {},\n", path.rsplit('/').next().unwrap_or(""), sha, big.validity_len()));
@@ -148,6 +192,12 @@ fn build_seeds() {
     for (i, (k, rows)) in par_out.iter().enumerate() {
         let body = rows.iter().map(|r| format!("{:?}", r)).collect::<Vec<_>>().join(",");
         out.push_str(&format!("    \"{k}\": [{body}]{}\n", if i + 1 < m { "," } else { "" }));
+    }
+    out.push_str("  },\n  \"runs\": {\n");
+    let r = run_out.len();
+    for (i, (k, rows)) in run_out.iter().enumerate() {
+        let body = rows.iter().map(|r| format!("{:?}", r)).collect::<Vec<_>>().join(",");
+        out.push_str(&format!("    \"{k}\": [{body}]{}\n", if i + 1 < r { "," } else { "" }));
     }
     out.push_str("  }\n}\n");
     let dest = concat!(env!("CARGO_MANIFEST_DIR"), "/assets/spelluzzle/seeds-en.json");

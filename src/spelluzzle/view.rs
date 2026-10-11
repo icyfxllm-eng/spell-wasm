@@ -39,6 +39,16 @@ pub fn board_view(board: &Board, entries: &Entries) -> Vec<RuneState> {
             runes_of.entry(u).or_default().insert(r);
         }
     }
+    // F19: a unit carried in from a solved earlier board counts as already given to its rune, so
+    // typing a different unit over it contests it exactly as two entries disagreeing would.
+    if let Some(ri) = &board.run {
+        for (r, &u) in board.rune_unit.iter().enumerate() {
+            if ri.carried.contains(&u) {
+                units_of[r].insert(u);
+                runes_of.entry(u).or_default().insert(r as u8);
+            }
+        }
+    }
     (0..n)
         .map(|r| {
             let us = &units_of[r];

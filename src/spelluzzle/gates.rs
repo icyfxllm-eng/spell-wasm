@@ -104,11 +104,17 @@ pub fn check_board(board: &Board, lex: &Lexicon) -> Result<Metrics, GateFail> {
         if !s.answer.iter().all(|c| c.is_alphabetic()) {
             return fail("G1", format!("not a single token of units: {w}"));
         }
-        if !(shape.lo..=shape.hi).contains(&s.answer.len()) {
+        // F21: a My Words board holds the player's own words (3 to 9 cells) and bank top-ups, so the
+        // tier's band and length range do not apply; membership of the bank is checked by the caller.
+        if board.list.is_none() {
+            if !(shape.lo..=shape.hi).contains(&s.answer.len()) {
+                return fail("G1", format!("length {} of {w}", s.answer.len()));
+            }
+            if !lex.in_band(board.tier, &s.answer) {
+                return fail("G1", format!("not in the {} band: {w}", board.tier.name()));
+            }
+        } else if !(3..=9).contains(&s.answer.len()) {
             return fail("G1", format!("length {} of {w}", s.answer.len()));
-        }
-        if !lex.in_band(board.tier, &s.answer) {
-            return fail("G1", format!("not in the {} band: {w}", board.tier.name()));
         }
     }
     for i in 0..n {

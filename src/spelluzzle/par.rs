@@ -243,7 +243,7 @@ fn assemble(seed: u64, tier: Tier, lang: &str, words: &[&Vec<char>], par: Option
         .enumerate()
         .map(|(i, w)| Slot { kind: if i == NW - 1 { SlotKind::Secret } else { SlotKind::Silent }, answer: (*w).clone(), runes: w.iter().map(|&c| rune_of(c)).collect() })
         .collect();
-    Board { lang: lang.to_string(), tier, seed, gen_version: GEN_VERSION, slots, rune_unit: units, par }
+    Board { lang: lang.to_string(), tier, seed, gen_version: GEN_VERSION, slots, rune_unit: units, par, run: None, list: None }
 }
 
 fn pc(x: u64) -> u32 {

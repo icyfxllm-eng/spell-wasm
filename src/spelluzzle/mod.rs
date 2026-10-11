@@ -16,16 +16,20 @@ pub mod fresh;
 pub mod gates;
 pub mod gen;
 pub mod lex;
+pub mod mywords;
 pub mod offer;
 pub mod par;
 pub mod pencil;
 pub mod play;
 pub mod render;
+pub mod run;
 pub mod seeds;
 pub mod store;
 pub mod types;
 pub mod view;
 
+#[cfg(test)]
+mod rungen;
 #[cfg(test)]
 mod seedgen;
 #[cfg(test)]

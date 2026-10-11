@@ -722,6 +722,17 @@
   .sz-parbar:empty{display:none}
   .sz-parbar .sz-bar-listen{min-height:44px;min-width:160px;font-size:1rem}
   .sz-parres{margin:0 0 4px;text-align:center;font-weight:700;color:var(--amber,#f2c14e)}
+  /* CC-SPELLUZZLE v1.1 Phase G: Expedition tabs and the way on; My Words list picker and top-up badge. */
+  .sz-hdr{display:flex;gap:10px;justify-content:center;align-items:center;flex:none}
+  .sz-hdr:has(#szParLine[hidden]):has(#szRunTabs:empty){display:none}
+  .sz-tabs{display:flex;gap:6px;justify-content:center;flex:none}
+  .sz-tabs:empty{display:none}
+  .sz-tab{min-height:32px;min-width:40px;padding:0 8px}
+  #szNext[hidden]{display:none}
+  .sz-pick{width:100%;font-size:.85rem;opacity:.8;text-align:center}
+  #szLists:empty{display:none}
+  .sz-row{position:relative}
+  .sz-topup{position:absolute;top:2px;inset-inline-start:2px;width:16px;height:16px;line-height:16px;text-align:center;border-radius:8px;background:#ffffff26;font-size:.7rem}
   /* SPELLUZZLE:END */
 
   /* CC-IMPOSTOR F1 */
@@ -2960,17 +2971,19 @@
       <p id="szTagline"></p>
       <div class="sz-opt" id="szTypes"></div>
       <div class="sz-opt" id="szTiers"></div>
+      <div class="sz-opt" id="szLists"></div>
       <div class="bg-note" id="szNote" aria-live="polite"></div>
       <button class="btn btn-check" id="szStart" data-i18n="bg.start">Start</button>
     </div>
     <div class="sz-play" id="szPlay" hidden>
-      <div class="sz-par" id="szParLine" hidden></div>
+      <div class="sz-hdr"><div class="sz-par" id="szParLine" hidden></div><div class="sz-tabs" id="szRunTabs"></div></div>
       <div class="sz-board" id="szBoard"></div>
       <div class="sz-msg" id="szMsg" aria-live="polite"></div>
       <div class="sz-sub"><span class="sz-count" id="szCount" aria-live="polite"></span><button type="button" class="sz-btn sz-pclear" id="szPencilClear" data-i18n="spz.pencil.clear" hidden>Clear pencil marks</button></div>
       <div class="sz-result" id="szResult"></div>
       <div class="sz-runekey" id="szRunes"></div>
       <div class="sz-parbar" id="szParBar"></div>
+      <div class="sz-parbar"><button type="button" class="sz-btn" id="szNext" data-i18n="bg.continue" hidden>Continue</button></div>
       <div class="sz-kb" id="szKb" hidden>
         <div id="szKbKeys"></div>
       </div>

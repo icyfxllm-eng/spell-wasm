@@ -106,6 +106,23 @@ pub struct Board {
     /// F15: the par of a Par board (fewest Listens that finish it by one-short steps). None on a
     /// Classic board. A Par board has six silent slots and the secret, every word listenable.
     pub par: Option<u8>,
+    /// F19: set on a board that belongs to an Expedition run.
+    pub run: Option<RunInfo>,
+    /// F21: on a My Words board, per slot, whether the word came from the player's list (true) or
+    /// is a bank top-up (false). None on every other board.
+    pub list: Option<Vec<bool>>,
+}
+
+/// What a board of an Expedition knows about its run: which board it is, the run's units in one
+/// order (so a unit keeps one glyph across the three boards), and the units carried in from the
+/// boards solved before it. A carried unit shows decoded when the board loads.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RunInfo {
+    pub seed: u64,
+    /// 0 = board 1, 1 = board 2, 2 = the Vault.
+    pub board: u8,
+    pub units: Vec<char>,
+    pub carried: Vec<char>,
 }
 
 impl Board {
@@ -125,7 +142,7 @@ impl Board {
         let mut slots: Vec<Slot> = spoken.iter().map(|w| mk(SlotKind::Spoken, w)).collect();
         slots.extend(silent.iter().map(|w| mk(SlotKind::Silent, w)));
         slots.push(mk(SlotKind::Secret, secret));
-        Board { lang: lang.to_string(), tier, seed, gen_version: GEN_VERSION, slots, rune_unit: rune_order, par: None }
+        Board { lang: lang.to_string(), tier, seed, gen_version: GEN_VERSION, slots, rune_unit: rune_order, par: None, run: None, list: None }
     }
 
     /// A board with runes in sorted-unit order. For fixtures and tests only: a
@@ -160,7 +177,12 @@ impl Board {
         ws.sort();
         // A Par board of the same words is a different board, so it hashes differently; a
         // Classic board's hash is exactly what it was.
-        let kind = if self.par.is_some() { "|par" } else { "" };
+        let kind = match (&self.par, &self.run) {
+            (Some(_), _) => "|par".to_string(),
+            (_, Some(r)) => format!("|run{}", r.board),
+            _ if self.list.is_some() => "|mw".to_string(),
+            _ => String::new(),
+        };
         fnv(format!("{}|{}|{}{}", self.lang, self.tier.name(), ws.join(","), kind).as_bytes())
     }
 }

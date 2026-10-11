@@ -24,6 +24,12 @@ pub type Tr<'a> = &'a dyn Fn(&str, &[(&str, &str)]) -> String;
 /// Which glyph stands for each rune on this board: a seeded permutation, so a
 /// glyph never tells you anything about the letter (F1, F14).
 pub fn glyph_map(board: &Board) -> Vec<usize> {
+    // F19: in an Expedition a unit keeps its glyph on all three boards.
+    if let Some(ri) = &board.run {
+        let mut v: Vec<usize> = (0..GLYPHS).collect();
+        Rng::new(mix(ri.seed, 0x474c_5950)).shuffle(&mut v);
+        return board.rune_unit.iter().map(|u| v[ri.units.iter().position(|x| x == u).unwrap_or(0) % GLYPHS]).collect();
+    }
     let mut v: Vec<usize> = (0..GLYPHS).collect();
     Rng::new(mix(board.seed, 0x474c_5950)).shuffle(&mut v);
     v.truncate(board.n_runes());
@@ -134,6 +140,10 @@ pub fn board_html_with(p: &Play, view: &[RuneState], tr: Tr, opts: &Opts) -> Str
             class.push_str(" off");
         }
         h.push_str(&format!("<div class=\"{class}\" id=\"szRow{i}\" data-slot=\"{i}\" data-kind=\"{kind}\">"));
+        // F21: a bank top-up on a My Words board carries a small badge.
+        if p.board.list.as_ref().is_some_and(|l| l.get(i) == Some(&false)) {
+            h.push_str(&format!("<span class=\"sz-topup\" role=\"img\" aria-label=\"{}\">+</span>", esc(&tr("spz.mywords.topup", &[]))));
+        }
         let mut head = String::new();
         if s.kind == SlotKind::Secret {
             head.push_str(&format!("<span class=\"sz-label\">{}</span>", esc(&tr("spz.secret", &[]))));

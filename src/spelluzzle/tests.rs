@@ -1427,3 +1427,265 @@ fn audit_par() {
         println!("audit par {tier:?}: {checked} sampled records hold their par and one answer under the large list");
     }
 }
+
+// ---- v1.1 Phase G: Expeditions (F19) and My Words boards (F21) -------------
+
+use super::mywords;
+use super::run::{self, RunRecord};
+use super::rungen::RunGen;
+
+fn run_recs(tier: Tier) -> Vec<RunRecord> {
+    seeds::run_records(en(), tier)
+}
+
+#[test]
+fn a28_run_records_hold_the_gates() {
+    let lex = en();
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        let recs = run_recs(tier);
+        assert!(recs.len() >= 500, "{tier:?} has only {} verified runs: run scripts/spelluzzle-seeds.sh", recs.len());
+        let g = RunGen::new(lex, tier);
+        let step = (recs.len() / n_seeds(12)).max(1);
+        for rec in recs.iter().step_by(step) {
+            let idx: Vec<usize> = rec.words.iter().map(|&i| i as usize).collect();
+            let fails = g.check(&g.words(&idx));
+            assert!(fails.is_empty(), "{tier:?} seed {}: {fails:?}", rec.seed);
+        }
+    }
+}
+
+#[test]
+fn run_boards_carry_one_cipher_and_the_vault_needs_no_listen() {
+    use super::render::glyph_map;
+    let lex = en();
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        for rec in run_recs(tier).iter().take(n_seeds(8)) {
+            let boards = run::boards_from_record(lex, tier, rec).expect("pool has the indexes");
+            assert_eq!(boards.len(), 3);
+            let kinds = |b: &Board| (b.slots.iter().filter(|s| s.kind == SlotKind::Spoken).count(), b.slots.iter().filter(|s| s.kind == SlotKind::Silent).count());
+            assert_eq!([kinds(&boards[0]), kinds(&boards[1]), kinds(&boards[2])], [(4, 0), (3, 2), (0, 4)]);
+            // 16 distinct words, one rune per unit across the run (X1), at most 24 runes.
+            let all: Vec<String> = boards.iter().flat_map(|b| b.words()).collect();
+            assert_eq!(all.iter().collect::<std::collections::BTreeSet<_>>().len(), 16);
+            let units: std::collections::BTreeSet<char> = boards.iter().flat_map(|b| b.rune_unit.iter().copied()).collect();
+            assert!(units.len() <= 24, "{tier:?}: {} runes", units.len());
+            // Carried = the units of the boards before it; they show decoded at load.
+            let mut seen: Vec<char> = Vec::new();
+            for (k, b) in boards.iter().enumerate() {
+                let ri = b.run.as_ref().unwrap();
+                assert_eq!(ri.board as usize, k);
+                assert_eq!(ri.carried.iter().collect::<std::collections::BTreeSet<_>>(), seen.iter().collect::<std::collections::BTreeSet<_>>());
+                let view = board_view(b, &Entries::new());
+                for (r, &u) in b.rune_unit.iter().enumerate() {
+                    if seen.contains(&u) {
+                        assert_eq!(view[r], RuneState::Decoded(u), "{tier:?} board {k}: carried rune shows decoded at load");
+                    } else {
+                        assert_eq!(view[r], RuneState::Unknown);
+                    }
+                }
+                for u in b.rune_unit.iter().copied() {
+                    if !seen.contains(&u) {
+                        seen.push(u);
+                    }
+                }
+            }
+            // A unit keeps one glyph on every board.
+            let g: Vec<Vec<usize>> = boards.iter().map(glyph_map).collect();
+            for u in &units {
+                let glyphs: std::collections::BTreeSet<usize> = boards
+                    .iter()
+                    .zip(&g)
+                    .filter_map(|(b, gm)| b.rune_unit.iter().position(|x| x == u).map(|p| gm[p]))
+                    .collect();
+                assert_eq!(glyphs.len(), 1, "{tier:?}: unit {u} changed glyph between boards");
+            }
+            // The Vault: no word fully decoded at load, every silent word at least the tier's share.
+            let vault = &boards[2];
+            let view = board_view(vault, &Entries::new());
+            let (num, den) = tier.shape().silent_share.unwrap();
+            for s in &vault.slots {
+                let d = s.runes.iter().filter(|&&r| matches!(view[r as usize], RuneState::Decoded(_))).count() as u32;
+                assert!(d < s.runes.len() as u32, "{tier:?}: a Vault word is already fully decoded");
+                if s.kind == SlotKind::Silent {
+                    assert!(d * den >= num * s.runes.len() as u32, "{tier:?}: a Vault word is under its decoded share");
+                }
+            }
+            // Typing a different unit over a carried rune contests it (v1 F4).
+            let b1 = &boards[1];
+            let (r0, u0) = b1.rune_unit.iter().enumerate().find(|(_, u)| b1.run.as_ref().unwrap().carried.contains(u)).map(|(r, u)| (r, *u)).unwrap();
+            let slot = b1.slots.iter().position(|s| s.runes.contains(&(r0 as u8))).unwrap();
+            let mut wrong = b1.slots[slot].answer.clone();
+            let cell = b1.slots[slot].runes.iter().position(|&r| r as usize == r0).unwrap();
+            wrong[cell] = if u0 == 'q' { 'x' } else { 'q' };
+            let mut e = Entries::new();
+            e.insert(slot, wrong);
+            assert_eq!(board_view(b1, &e)[r0], RuneState::Contested, "{tier:?}: a wrong unit over a carried rune must clash");
+        }
+    }
+}
+
+#[test]
+fn run_boards_are_deterministic_and_the_run_hash_names_the_run() {
+    let lex = en();
+    let rec = &run_recs(Tier::Hard)[0];
+    let a = run::boards_from_record(lex, Tier::Hard, rec).unwrap();
+    let b = run::boards_from_record(lex, Tier::Hard, rec).unwrap();
+    assert_eq!(format!("{a:?}"), format!("{b:?}"));
+    assert_eq!(run::run_hash(&a), run::run_hash(&b));
+    let other = &run_recs(Tier::Hard)[1];
+    assert_ne!(run::run_hash(&a), run::run_hash(&run::boards_from_record(lex, Tier::Hard, other).unwrap()));
+    // Board hashes differ from a Classic board of the same words.
+    let mut classic = a[0].clone();
+    classic.run = None;
+    assert_ne!(classic.hash(), a[0].hash());
+}
+
+#[test]
+fn runs_stay_fresh_and_share_at_most_four_words() {
+    use super::fresh::fresh_run;
+    let lex = en();
+    let recs = run_recs(Tier::Medium);
+    let mut state = 4242u64;
+    let mut rng = move |n: usize| {
+        state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        ((state >> 33) as usize) % n
+    };
+    let mut history = History::default();
+    let mut prev: Vec<String> = Vec::new();
+    for i in 0..n_seeds(60) {
+        let (boards, _) = fresh_run(lex, Tier::Medium, &recs, &history, &prev, &mut rng).unwrap_or_else(|| panic!("run {i}"));
+        let h = run::run_hash(&boards);
+        assert!(!history.contains(h), "run {i} repeated");
+        let words: Vec<String> = boards.iter().flat_map(|b| b.words()).collect();
+        assert!(words.iter().filter(|w| prev.contains(w)).count() <= 4, "run {i} shares more than four words");
+        history.push(h);
+        prev = words;
+    }
+}
+
+#[test]
+fn expedition_offering_rules() {
+    use super::offer::expedition_offered;
+    for t in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        assert!(expedition_offered("en", false, t));
+        assert!(!expedition_offered("en", true, t), "Spell Jr has no Expedition (D48)");
+    }
+    for t in [Tier::Jr, Tier::Easy] {
+        assert!(!expedition_offered("en", false, t));
+    }
+    for lang in ["ko", "zh", "ja", "ar", "hi", "es"] {
+        assert!(!expedition_offered(lang, false, Tier::Hard), "{lang}");
+    }
+}
+
+/// Build-time audit with the large list (ignored): every sampled run holds X1 to X11 under it.
+///   SPZ_VALIDITY_FILE=/path/en_US.dic SPZ_N=100 cargo test --release spelluzzle::tests::audit_runs -- --ignored --nocapture
+#[test]
+#[ignore]
+fn audit_runs() {
+    let path = std::env::var("SPZ_VALIDITY_FILE").expect("SPZ_VALIDITY_FILE");
+    let dic = std::fs::read_to_string(path).unwrap();
+    let st: std::collections::BTreeSet<String> = dic.lines().skip(1).filter_map(|l| {
+        let w = l.split('/').next()?.trim();
+        (!w.is_empty() && w.chars().all(|c| c.is_ascii_lowercase())).then(|| w.to_string())
+    }).collect();
+    let mut words: Vec<String> = st.iter().cloned().collect();
+    for w in &st {
+        for suf in ["s", "es", "ed", "d", "ing", "er", "ers", "est", "ly", "y", "ies"] {
+            words.push(format!("{w}{suf}"));
+        }
+    }
+    let small = bank::load("en", Vec::new()).unwrap();
+    let big = bank::load("en", words).unwrap();
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        let recs = seeds::run_records(&small, tier);
+        let g = RunGen::new(&big, tier);
+        let step = (recs.len() / n_seeds(100)).max(1);
+        let mut n = 0;
+        for rec in recs.iter().step_by(step) {
+            let idx: Vec<usize> = rec.words.iter().map(|&i| i as usize).collect();
+            let fails = g.check(&g.words(&idx));
+            assert!(fails.is_empty(), "{tier:?} seed {}: {fails:?}", rec.seed);
+            n += 1;
+        }
+        println!("audit runs {tier:?}: {n} sampled runs hold X1-X11 under the large list");
+    }
+}
+
+// ---- My Words (F21) --------------------------------------------------------
+
+fn bank_words(n: usize, seed: u64) -> Vec<Vec<char>> {
+    // Words from every tier of the real bank, 3 to 9 cells, in a seeded order.
+    let lex = en();
+    let mut all: Vec<Vec<char>> = lex.all_valid().iter().filter(|w| (3..=9).contains(&w.len())).cloned().collect();
+    // Only words the bank itself serves (validity also holds homophone members and the like).
+    let bank_set: std::collections::HashSet<Vec<char>> = Tier::ALL.iter().flat_map(|t| lex.pool(*t).into_iter().map(|w| w.units.clone())).collect();
+    all.retain(|w| bank_set.contains(w));
+    all.sort();
+    crate::spelldoku::rng::Rng::new(seed).shuffle(&mut all);
+    all.truncate(n);
+    all
+}
+
+#[test]
+fn a39_my_words_boards_are_fair_and_badge_their_top_ups() {
+    let lex = en();
+    let per = n_seeds(25);
+    for size in [3usize, 5, 8, 12, 20] {
+        let (mut served, mut tried) = (0, 0);
+        for k in 0..per as u64 {
+            let list = bank_words(size, 7000 + size as u64 * 100 + k);
+            tried += 1;
+            let Some(mb) = mywords::generate(k, lex, &list, false) else { continue };
+            served += 1;
+            let b = &mb.board;
+            assert!(check_board(b, lex).is_ok(), "size {size}: a served board passes the checker");
+            let from: &Vec<bool> = b.list.as_ref().unwrap();
+            assert_eq!(from.len(), 6);
+            assert_eq!(from.iter().filter(|x| **x).count(), mb.list_words);
+            assert!(mb.list_words >= 3, "at least three list words");
+            // Every list-flagged word is in the list; every other word is a bank top-up and not in it.
+            for (i, s) in b.slots.iter().enumerate() {
+                assert_eq!(list.contains(&s.answer), from[i], "size {size}: the badge says {} but the word is {}", from[i], if list.contains(&s.answer) { "listed" } else { "not listed" });
+            }
+            assert_eq!(b.slots.iter().filter(|s| s.kind == SlotKind::Silent).count(), 0);
+        }
+        println!("A39 size {size}: {served}/{tried} fair boards");
+        assert!(served * 10 >= tried * 9 || size == 3, "size {size}: only {served}/{tried} lists got a fair board");
+    }
+}
+
+#[test]
+fn my_words_jr_boards_have_no_sound_alikes_and_unmatched_words_never_appear() {
+    let lex = en();
+    for k in 0..n_seeds(20) as u64 {
+        let list = bank_words(8, 91 + k);
+        if let Some(mb) = mywords::generate(k, lex, &list, true) {
+            for s in &mb.board.slots {
+                assert!(!lex.has_homophone(&s.answer), "Jr My Words word {} has a sound-alike", s.answer.iter().collect::<String>());
+            }
+        }
+    }
+    // A word that is not in the list never makes it a list word; a list under three words gives no board.
+    let two = bank_words(2, 5);
+    assert!(mywords::generate(1, lex, &two, false).is_none());
+    // The same seed and list give the same board; a list with a junk entry the caller did not filter
+    // out (not alphabetic, or out of range) never appears.
+    let mut list = bank_words(8, 77);
+    let clean = mywords::generate(3, lex, &list, false).map(|m| m.board.hash());
+    list.push(chars("zz"));
+    list.push(chars("abcdefghijklmnop"));
+    assert_eq!(mywords::generate(3, lex, &list, false).map(|m| m.board.hash()), clean);
+}
+
+#[test]
+fn a_saved_my_words_board_rebuilds_from_its_words_alone() {
+    let lex = en();
+    let list = bank_words(8, 5150);
+    let mb = mywords::generate(11, lex, &list, false).expect("a fair board");
+    let words = mb.board.words();
+    let from = mb.board.list.clone().unwrap();
+    let again = mywords::board_from_words(lex, 11, &words, &from).unwrap();
+    assert_eq!(again.hash(), mb.board.hash());
+    assert_eq!(again.rune_unit, mb.board.rune_unit, "same seed, same runes");
+}

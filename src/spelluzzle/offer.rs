@@ -33,6 +33,8 @@ pub fn tiers_for(lang: &str, kid: bool) -> Vec<Tier> {
 pub enum BoardType {
     Classic,
     Par,
+    Expedition,
+    MyWords,
 }
 
 impl BoardType {
@@ -40,10 +42,12 @@ impl BoardType {
         match self {
             BoardType::Classic => "classic",
             BoardType::Par => "par",
+            BoardType::Expedition => "expedition",
+            BoardType::MyWords => "mywords",
         }
     }
     pub fn from_name(s: &str) -> Option<BoardType> {
-        [BoardType::Classic, BoardType::Par].into_iter().find(|b| b.name() == s)
+        [BoardType::Classic, BoardType::Par, BoardType::Expedition, BoardType::MyWords].into_iter().find(|b| b.name() == s)
     }
 }
 
@@ -51,4 +55,9 @@ impl BoardType {
 /// (Whether verified boards exist for the tier is `seeds::par_records`, which the screen asks.)
 pub fn par_offered(lang: &str, kid: bool, tier: Tier) -> bool {
     !kid && language_offered(lang) && super::par::offered_tier(tier)
+}
+
+/// F19 / D48: Expeditions are Medium to Expert, never in Spell Jr.
+pub fn expedition_offered(lang: &str, kid: bool, tier: Tier) -> bool {
+    !kid && language_offered(lang) && super::run::offered_tier(tier)
 }
