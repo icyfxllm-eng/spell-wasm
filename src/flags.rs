@@ -422,6 +422,21 @@ pub fn pick_queue_c() -> bool {
     false
 }
 
+/// CC-PICK-QUEUE v1 Phase D -- F4: a lined-up or starred word spelled wrong
+/// comes back in the same session, 3-5 words later. Its OWN flag, **default
+/// OFF**, and it only takes effect while `pick_queue_a` is also on (the lineup
+/// is what it re-queues). Permanently false in the site build (O-F). Develop
+/// with `localStorage['spell_flag_pick_queue_d'] = 'on'`.
+#[cfg(not(feature = "web"))]
+pub fn pick_queue_d() -> bool {
+    resolve(stored("pick_queue_d").as_deref(), false)
+}
+
+#[cfg(feature = "web")]
+pub fn pick_queue_d() -> bool {
+    false
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:

@@ -118,6 +118,35 @@ async function answerCorrect(page) {
 
 const inReview = (page) => page.$eval('#missesBtn', (e) => e.classList.contains('on'));
 
+
+// ---- Phase D (F4): missed picks come back ----
+const FLAG_ABD = () => {
+  localStorage.setItem('spell_flag_pick_queue_a', 'on');
+  localStorage.setItem('spell_flag_pick_queue_b', 'off');
+  localStorage.setItem('spell_flag_pick_queue_d', 'on');
+};
+const FLAG_AD_OFF = () => {
+  localStorage.setItem('spell_flag_pick_queue_a', 'on');
+  localStorage.setItem('spell_flag_pick_queue_b', 'off');
+  localStorage.setItem('spell_flag_pick_queue_d', 'off');
+};
+
+/// Spell the current word wrong (the one attempt the base game gives).
+async function answerWrong(page) {
+  const w = await page.evaluate(() => window.__spelltest.currentWord());
+  await page.waitForFunction(() => !document.getElementById('gameKeyboard').classList.contains('locked'),
+    null, { timeout: 5000 }).catch(() => {});
+  // Right length, deliberately wrong: the first letter is swapped for one the word does not contain.
+  const bad = [...w.toLowerCase()];
+  bad[0] = ['q', 'z', 'x', 'j'].find((c) => !bad.includes(c));
+  await type(page, bad.join(''));
+  await page.click('#checkBtn');
+  await page.waitForFunction(() => document.getElementById('feedback').className.includes('bad'), null, { timeout: 5000 });
+  return w;
+}
+
+const missCount = async (page, word) => (await misses(page)).find((m) => m.word === word)?.misses;
+
 const FIVE = [['apple', -1], ['bread', -1], ['crane', -1], ['delta', -1], ['eagle', -1]];
 
 export async function run(browser, base, suite) {
@@ -630,6 +659,128 @@ export async function run(browser, base, suite) {
       const d = await listsData(page);
       assertEq(d.lists[0].entries[3].starred, true);
       assertEq(await stars(page), null, 'nothing else written');
+    } finally { await ctx.close(); }
+  });
+
+  // ================= Phase D: F4, missed picks come back =================
+
+  // A4 (Misses): a lined-up word spelled wrong returns 3-5 words later in the
+  // same session; the wrong answer is recorded exactly as ever (I1).
+  await suite.test('pick_requeue_misses_missed_pick_returns_three_to_five_later', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_ABD });
+    try {
+      await bootMisses(page, base, [...FIVE, ['finch', -1], ['glove', -1]]);
+      await openMisses(page);
+      await tapWord(page, '#pickBody', 'apple');
+      await tapWord(page, '#pickBody', 'bread');
+      await page.click('#pickBody [data-pq-start]');
+      await domSettled(page);
+      const seq = [];
+      let first = await serve(page);
+      assertEq(first, 'apple', 'the first pick leads');
+      seq.push(first);
+      await answerWrong(page);
+      assertEq(await missCount(page, 'apple'), 2, 'the miss is recorded as it always was (I1)');
+      for (let i = 1; i <= 7 && !(i > 1 && seq[i - 1] === 'apple'); i++) {
+        seq.push(await serve(page));
+        if (seq[i] !== 'apple') await answerCorrect(page);
+      }
+      assertEq(seq[1], 'bread', 'the rest of the lineup is not displaced');
+      const back = seq.indexOf('apple', 1);
+      assert(back >= 3 && back <= 5, `apple came back ${back} words later (${seq.join(',')})`);
+      assertEq(seq.filter((w) => w === 'bread').length, 1, 'a correct pick is not repeated (I3)');
+    } finally { await ctx.close(); }
+  });
+
+  // "Just these" with a miss: the session ends only after the re-queue is served.
+  await suite.test('pick_requeue_just_these_keeps_a_miss_inside_the_session', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_ABD });
+    try {
+      await bootMisses(page, base, FIVE);
+      await openMisses(page);
+      await tapWord(page, '#pickBody', 'apple');
+      await tapWord(page, '#pickBody', 'bread');
+      await page.click('#pickBody [data-pq-just]');
+      await page.click('#pickBody [data-pq-start]');
+      await domSettled(page);
+      const seq = [];
+      seq.push(await serve(page));
+      await answerWrong(page);
+      seq.push(await serve(page));
+      await answerCorrect(page);
+      seq.push(await serve(page));
+      await answerCorrect(page);
+      assertEq(seq.join(','), 'apple,bread,apple', 'the miss goes to the end of a short lineup');
+      assert(await inReview(page), 'still in the session until the re-queue is done');
+      await page.click('#orbWrap');
+      await page.waitForFunction(() => !document.getElementById('missesBtn').classList.contains('on'),
+        null, { timeout: 5000 });
+      assert(!(await inReview(page)), 'then Just these ends (A9 with a miss)');
+    } finally { await ctx.close(); }
+  });
+
+  // My Words: the same logic (D10). A4 on, and flag off is today's app.
+  async function myWordsMiss(page, serves = 7) {
+    await bootMine(page, base, ['cat', 'dog', 'fox', 'owl']);
+    await openMyWords(page);
+    await page.waitForSelector('#listsScreen.show');
+    await page.click('#listsBody [data-l-open]:not([data-l-open="__all"])');
+    await domSettled(page);
+    await tapWord(page, '#listsBody', 'cat');
+    await page.click('#listsBody [data-pq-start]');
+    await page.waitForFunction(() => window.__spelltest.currentLang() === '__mine', null, { timeout: 5000 });
+    await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+    assertEq(await page.evaluate(() => window.__spelltest.currentWord()), 'cat', 'the pick leads');
+    await answerWrong(page);
+    const seq = [];
+    for (let i = 1; i <= serves; i++) {
+      const w = await serve(page);
+      seq.push(w);
+      if (w === 'cat') break;
+      await answerCorrect(page);
+    }
+    return seq;
+  }
+
+  await suite.test('pick_requeue_my_words_missed_pick_returns_three_to_five_later', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_ABD });
+    try {
+      const seq = await myWordsMiss(page);
+      const at = seq.indexOf('cat') + 1;
+      assert(at >= 3 && at <= 5, `cat came back ${at} words later (${seq.join(',')})`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('pick_requeue_flag_off_is_todays_app', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG_AD_OFF });
+    try {
+      // Three other words in the list: the next three serves are exactly them.
+      const seq = await myWordsMiss(page, 3);
+      assert(!seq.includes('cat'), `Phase D off: a missed pick is not re-queued (${seq.join(',')})`);
+    } finally { await ctx.close(); }
+  });
+
+  // Spell Jr: a tap-to-line-up pick missed also returns (F4 is not Jr-excluded).
+  await suite.test('pick_requeue_spell_jr_missed_pick_returns', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID, init: FLAG_ABD });
+    try {
+      assert(await page.evaluate(() => document.body.classList.contains('kid')), 'a Spell Jr player');
+      await bootMisses(page, base, [...FIVE, ['finch', -1], ['glove', -1]]);
+      await openMisses(page);
+      await tapWord(page, '#pickBody', 'apple');
+      await page.click('#pickBody [data-pq-start]');
+      await domSettled(page);
+      const seq = [await serve(page)];
+      assertEq(seq[0], 'apple');
+      await answerWrong(page);
+      for (let i = 1; i <= 7; i++) {
+        const w = await serve(page);
+        seq.push(w);
+        if (w === 'apple') break;
+        await answerCorrect(page);
+      }
+      const back = seq.indexOf('apple', 1);
+      assert(back >= 3 && back <= 5, `apple came back ${back} words later (${seq.join(',')})`);
     } finally { await ctx.close(); }
   });
 }
