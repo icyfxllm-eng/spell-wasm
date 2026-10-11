@@ -54,6 +54,13 @@ export async function run(browser, base, suite) {
       const h0 = await head(page);
       assert(/^Board 1 of 2 · .*turn/i.test(h0.line) || /Board 1 of 2/.test(h0.line), `header ${h0.line}`);
       assert(/Player 1: 0 · Player 2: 0/.test(h0.score), `scores ${h0.score}`);
+      // Who opens is a coin flip per match (spelluzzle_screen.rs draws the starter with
+      // Math.random, by design: the other player opens leg 2, I22). This test used to
+      // assume Player 1 and failed about one run in two. Read the opener off the header
+      // and drive the match from there: `m` moves first, `o` second.
+      const m = parseInt((h0.line.match(/Player (\d)/) || [])[1], 10);
+      assert(m === 1 || m === 2, `no opener in the header: ${h0.line}`);
+      const o = 3 - m;
       const ws = await words(page);
       assert(ws.length === 7, `${ws.length} words`);
       const rows = await page.evaluate(() => ({ n: document.querySelectorAll('#szBoard .sz-row').length, unheard: document.querySelectorAll('#szBoard .sz-row.unheard').length }));
@@ -63,20 +70,20 @@ export async function run(browser, base, suite) {
       let labels = await page.evaluate(() => [...document.querySelectorAll('#szParBar [data-act]')].map((b) => b.dataset.act));
       assert(labels.includes('unheard') && !labels.includes('listen') && labels.includes('pass'), `secret actions ${labels}`);
       assert(/×3/.test(await page.evaluate(() => document.querySelector('#szParBar [data-act="unheard"]').textContent)), 'the secret word is not worth triple');
-      // Player 1: Listen and spell word 0, correct.
+      // The opener: Listen and spell word 0, correct.
       await select(page, 0);
       await act(page, 'listen');
       assert((await heard(page, ws[0])) === 1, 'Listen did not play the word');
       await typeWord(page, ws[0]);
       // Filling the last cell does not submit.
-      assert(/Player 1: 0 ·/.test((await head(page)).score), 'filling the last cell submitted');
+      assert(new RegExp(`Player ${m}: 0(?!\\d)`).test((await head(page)).score), 'filling the last cell submitted');
       await act(page, 'check');
       const h1 = await head(page);
       assert(/✓ \+\d+/.test(h1.note), `no verdict: ${h1.note}`);
-      const p1 = parseInt(h1.score.match(/Player 1: (\d+)/)[1], 10);
-      assert(p1 > 0, `score ${h1.score}`);
-      assert(/Player 2/.test(h1.line), `the turn did not pass: ${h1.line}`);
-      // Player 2: Listen and spell word 1, wrong: cleared, nothing decoded, verdict shown, slot heard.
+      const pm = parseInt(h1.score.match(new RegExp(`Player ${m}: (\\d+)`))[1], 10);
+      assert(pm > 0, `score ${h1.score}`);
+      assert(new RegExp(`Player ${o}`).test(h1.line), `the turn did not pass: ${h1.line}`);
+      // The other player: Listen and spell word 1, wrong: cleared, nothing decoded, verdict shown, slot heard.
       await select(page, 1);
       const decodedBefore = await page.evaluate(() => document.querySelectorAll('#szBoard .sz-cell.decoded').length);
       await act(page, 'listen');
@@ -92,9 +99,9 @@ export async function run(browser, base, suite) {
       await select(page, 1);
       await act(page, 'listen');
       await typeWord(page, ws[1]);
-      await act(page, 'check'); // player 1 claims
+      await act(page, 'check'); // the opener claims
       const marks = await page.evaluate(() => ({ a: document.querySelectorAll('.sz-own.a').length, b: document.querySelectorAll('.sz-own.b').length }));
-      assert(marks.a > 0, `no ownership marks: ${JSON.stringify(marks)}`);
+      assert(marks[m === 1 ? 'a' : 'b'] > 0, `no ownership marks for Player ${m}: ${JSON.stringify(marks)}`);
     } finally { await ctx.close(); }
   });
 
