@@ -286,3 +286,11 @@ Decisions I made that need your eye:
 - Nothing was applied. The 6 exports hold ko 92, ja 48, ar 171, hi 65, sw 15, ru 24 (hi was 67 in the original census; two left the bank in Phase A).
 
 Shared with F8: `purity_sheet.apply_cuts`. Fix made there: the manifest `pos` is now the row's index in the pre-sweep tier file, which is what `ledger_check.py --restore` re-inserts by. Before, an auditor cut recorded its post-sweep index and the round-trip would have broken on the first ingest. `--restore` still reports ko/easy and ru/easy, which fail on main already (the regrow commit 4303e52f).
+
+## Rulings, 2026-10-12 (Eric: "go with your recommendations")
+
+**C1, Filipino.** Neither run is followed wholesale. The 58 recompute-only proper nouns stay out (P2). The 17 rows only the evidence run quarantined as `wrong_language_english` left the bank (signed overrides in `tools/bank/purity_overrides.csv`: also anime aw direction edit laptop manga par pres print rating reference sim ta urban video virus). The 86 recompute-only `wrong_language_english`/`wrong_language_other` rows stay quarantined. All 103 are on `audit/purity-c1/fil/c1-review.csv` for the Filipino auditor; a `keep` restores a row as a signed exception (`tools/bank/purity_c1.py apply`). Departure from the recommendation as worded: the 86 were to come back as `pending`, but the ledger law ("no new row may ever enter as pending") forbids it, so they wait out of the bank instead. The 11 evidence-only proper-noun and 14 noise rows that the checker passes were not touched. A second Filipino source is still wanted.
+
+**C1, Arabic.** The recompute stands (P7). The 17 evidence-only rows stay in. The Arabic auditor settles the lexicalised words on the sheet.
+
+**C7 policy.** Months and weekdays stay in: 11 Arabic and 3 Swahili candidates recorded as `keep` from a fixed list (`purity_batch2.py calendar`). Countries, cities and given names are out under P2, but only a native reader's `cut` moves a row. The six review sheets are in `audit/purity-c7/` (ko 92, ja 48, ar 160, hi 65, sw 12, ru 24).

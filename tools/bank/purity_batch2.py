@@ -8,6 +8,7 @@ The Wiktionary part-of-speech filter (tools/bank/census_c7.py -> reports/bank-pu
 words (hi सूरज, ja たこ, ar الأرض) as well as names, so nothing here is mechanical: every row needs a person's
 `cut`, `keep` or `unsure`.
 
+calendar  the policy step: months and weekdays on a fixed per-language list are recorded as `keep`.
 export  writes <out>/<lang>/c7-review.csv: one row per C7 candidate still in the bank and not already ruled
         `keep`, with a blank `decision` column.  It changes nothing in the repo.
 apply   takes one language's returned review:
@@ -36,6 +37,35 @@ nfc = lambda s: unicodedata.normalize("NFC", s)
 CLASS = "proper_noun_pos"
 COLS = "lang,tier,word,current_class,decision,note".split(",")
 DECISIONS = ("cut", "keep", "unsure")
+
+
+# C7 policy (Eric, 2026-10-12): months and weekdays are ordinary words and stay in the banks.  A fixed list, so
+# the policy is a lookup and not a judgement; anything not on it still needs a person's decision.
+CALENDAR = {
+    "ko": "월요일 화요일 수요일 목요일 금요일 토요일 일요일 일월 이월 삼월 사월 오월 유월 칠월 팔월 구월 시월 십일월 십이월",
+    "ja": "げつようび かようび すいようび もくようび きんようび どようび にちようび いちがつ にがつ さんがつ しがつ ごがつ ろくがつ しちがつ はちがつ くがつ じゅうがつ じゅういちがつ じゅうにがつ",
+    "ar": "يناير فبراير مارس أبريل إبريل ابريل مايو يونيو يوليو أغسطس سبتمبر أكتوبر نوفمبر ديسمبر الاثنين الإثنين الثلاثاء الأربعاء الخميس الجمعة السبت الأحد",
+    "hi": "जनवरी फ़रवरी फरवरी मार्च अप्रैल मई जून जुलाई अगस्त सितंबर सितम्बर अक्टूबर नवंबर नवम्बर दिसंबर दिसम्बर सोमवार मंगलवार बुधवार गुरुवार बृहस्पतिवार शुक्रवार शनिवार रविवार इतवार",
+    "sw": "januari februari machi aprili mei juni julai agosti septemba oktoba novemba desemba jumatatu jumanne jumatano alhamisi ijumaa jumamosi jumapili",
+    "ru": "январь февраль март апрель май июнь июль август сентябрь октябрь ноябрь декабрь понедельник вторник среда четверг пятница суббота воскресенье",
+}
+
+
+def calendar(signer, date, dry):
+    """Record `keep` for every open C7 candidate that is a month or weekday on CALENDAR."""
+    for lang in sorted(CALENDAR):
+        cal = {nfc(w) for w in CALENDAR[lang].split()}
+        hit = sorted(w for w in candidates(lang) if w in cal)
+        if not hit:
+            continue
+        print(f"{lang}: {len(hit)} month/weekday rows stay in: {' '.join(hit)}")
+        if dry:
+            continue
+        p = kept_path(lang)
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        have = sorted(kept(lang) | set(hit))
+        open(p, "w", encoding="utf-8").write("# C7 rows ruled to stay in the bank (a word of the language, not a name)\n"
+                                              + "\n".join(have) + "\n")
 
 
 def kept_path(lang):
@@ -147,10 +177,14 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     e = sub.add_parser("export"); e.add_argument("--out", default="audit"); e.add_argument("langs", nargs="*")
+    c = sub.add_parser("calendar"); c.add_argument("--signed-by", default="Eric"); c.add_argument("--date", default="2026-10-12")
+    c.add_argument("--dry-run", action="store_true")
     a = sub.add_parser("apply"); a.add_argument("review"); a.add_argument("--signed-by", required=True)
     a.add_argument("--date", default="2026-10-11"); a.add_argument("--dry-run", action="store_true")
     x = ap.parse_args()
     if x.cmd == "export":
         export(x.out, x.langs or "ko ja ar hi sw ru".split())
+    elif x.cmd == "calendar":
+        calendar(x.signed_by, x.date, x.dry_run)
     else:
         apply(x.review, x.signed_by, x.date, x.dry_run)
