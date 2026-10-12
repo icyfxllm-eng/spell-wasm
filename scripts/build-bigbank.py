@@ -18,6 +18,7 @@ the emitted, filtered word lists ship. Re-run build-wordlists.py afterwards to
 regenerate word_data.rs and re-check every gate.
 
 Usage:  python3 scripts/build-bigbank.py [--target N]   (default 200 per tier)
+        python3 scripts/build-bigbank.py --to-floors [--tiers hard,expert] <lang ...>   (each tier up to its signed pool floor; never past it)
 """
 import os, sys, json, tarfile, unicodedata, urllib.request, importlib.util
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "bank"))
@@ -86,6 +87,40 @@ def strict_fold(s):
     return unicodedata.normalize("NFC", s).lower()
 
 
+def floor_targets(lang, only=None):
+    """Per-tier targets from the signed pool floors (config/bank_floors.json); a tier with no floor keeps its size.
+    `only` (a set of tier names) holds every other tier where it is."""
+    fl = json.load(open(os.path.join(ROOT, "config", "bank_floors.json")))["languages"].get(lang, {}).get("poolFloors", [])
+    return {t: (fl[i] if i < len(fl) and (only is None or t in only) else 0) for i, t in enumerate(TIERS)}
+
+
+def quarantined(lang):
+    """Words a quarantine moved out of this bank: never re-admitted here, only restored by a signed exception."""
+    p = os.path.join(ROOT, "assets", "words-quarantine", "manifest.csv")
+    out = set()
+    if os.path.exists(p):
+        import csv
+        for r in csv.DictReader(open(p, encoding="utf-8")):
+            if r["lang"] == lang:
+                out.add(strict_fold(r["word"]))
+    return out
+
+
+def variety_drop(lang):
+    """The non-declared member of every curated variety pair (scripts/bank-variety-check.mjs is the one list):
+    a pt-BR bank is never offered `equipa`.  Read from that file, so there is one source."""
+    import subprocess
+    js = ("const fs=require('fs');const s=fs.readFileSync('scripts/bank-variety-check.mjs','utf8');"
+          "const P=eval('('+s.match(/const PAIRS = (\\{[\\s\\S]*?\\n\\});/)[1]+')');"
+          "const C=eval('('+s.match(/const COLUMN = (\\{[^}]*\\});/)[1]+')');"
+          "const R=JSON.parse(fs.readFileSync('config/bank-variety.json','utf8')).varieties;"
+          f"const l='{lang}';const c=C[R[l]];console.log(JSON.stringify(((P[l]||[]).map(p=>p[1-c]))));")
+    r = subprocess.run(["node", "-e", js], cwd=ROOT, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SystemExit("variety_drop: could not read scripts/bank-variety-check.mjs: " + r.stderr[-300:])
+    return {strict_fold(w) for w in json.loads(r.stdout)}
+
+
 def build(lang, target):
     reach = reachable_chars(lang)
     rows = corpus_words(SOURCES[lang])
@@ -106,6 +141,7 @@ def build(lang, target):
                 if w and not w.startswith("#"):
                     seed[tier].append(w)
                     seen.add(strict_fold(w))
+    seen |= quarantined(lang) | variety_drop(lang)
 
     # Augment each tier with corpus words of the right length, in frequency order.
     banks = {t: list(seed[t]) for t in TIERS}
@@ -121,12 +157,21 @@ def build(lang, target):
             continue
         n = sum(1 for c in w if unicodedata.category(c) not in ("Mn", "Mc"))
         tier = next((t for t, (lo, hi) in TIER_LEN.items() if lo <= n <= hi), None)
-        if not tier or len(banks[tier]) >= target:
+        if not tier:
+            continue
+        cap = target[tier] if isinstance(target, dict) else target
+        if isinstance(target, dict):
+            # Floors mode: the purity gate rejects some candidates, so take a wide candidate window and cut to the
+            # floor AFTER admission (below), in frequency order.  Never a row past the floor.
+            cap = len(seed[tier]) + (cap - len(seed[tier])) * 6 + 60 if cap > len(seed[tier]) else cap
+        if len(banks[tier]) >= cap:
             continue
         banks[tier].append(w)
         seen.add(key)
 
     banks = admit_new(lang, banks)
+    if isinstance(target, dict):
+        banks = {t: (banks[t][:max(target[t], len(seed[t]))]) for t in TIERS}
     outdir = os.path.join(ROOT, "assets", "words", lang)
     os.makedirs(outdir, exist_ok=True)
     for tier in TIERS:
@@ -136,15 +181,17 @@ def build(lang, target):
 
 def main():
     target = 200
+    to_floors = "--to-floors" in sys.argv
+    only = set(sys.argv[sys.argv.index("--tiers") + 1].split(",")) if "--tiers" in sys.argv else None
     if "--target" in sys.argv:
         target = int(sys.argv[sys.argv.index("--target") + 1])
     # Optional positional language filter (e.g. `build-bigbank.py ru ar sw`) so a
     # new bank can be grown without re-growing — and churning — the existing ones.
-    picked = [a for a in sys.argv[1:] if a in SOURCES]
+    picked = [a for a in sys.argv[1:] if a in SOURCES]  # (--tiers takes a comma list, which is never a language code)
     langs = picked if picked else list(SOURCES)
-    print(f"  growing to {target}/tier from Leipzig (Wikipedia, CC BY):")
+    print(f"  growing to {'the signed pool floors' if to_floors else str(target) + '/tier'} from Leipzig (Wikipedia, CC BY):")
     for lang in langs:
-        counts, seed = build(lang, target)
+        counts, seed = build(lang, floor_targets(lang, only) if to_floors else target)
         c = counts
         print(f"    {lang:4} {c['easy']}/{c['medium']}/{c['hard']}/{c['expert']}  "
               f"(seed kept: {sum(seed.values())})")

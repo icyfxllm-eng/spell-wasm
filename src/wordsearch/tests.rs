@@ -190,9 +190,16 @@ fn wordgrid_property_10k() {
 ///
 /// The spelldoku golden did NOT move on the same change and was left alone.
 ///
+/// Re-pinned 2026-10-12, from 0x72be_92b1_84b9_a468, on Eric's instruction to
+/// "just add to the word banks": 6,811 rows grown to the signed pool floors
+/// (es fr de pt ar fil sw ru, pl Hard and Expert only) through
+/// tools/bank/purity_grow.py, each admitted by the purity gate. A bigger pool
+/// is a different pool, so these 500 seeds draw differently. Hold this pin back
+/// to the previous value if that instruction is reversed.
+///
 /// A moved digest is only ever acceptable with a reason like this one beside
 /// it: the whole point of the pin is that nobody re-pins it casually.
-pub const GOLDEN: u64 = 0x72be_92b1_84b9_a468;
+pub const GOLDEN: u64 = 0xd39c_e2f6_c200_6f36;
 
 #[test]
 fn wordgrid_determinism() {
