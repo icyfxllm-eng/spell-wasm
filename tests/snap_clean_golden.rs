@@ -83,8 +83,11 @@ fn row7_curly_apostrophe_folds_to_straight() {
 /// would do -- and that the accented é survives it.
 #[test]
 fn row8_spanish_inverted_punctuation() {
-    let c = clean(&[("\u{BF}Qu\u{E9}?", "es"), ("\u{A1}Hola!", "es")]);
-    assert_eq!(texts(&c), ["Qu\u{E9}", "Hola"]);
+    // A place name, not "Qué": cleanup lowercases a capitalised word whose lowercase is a bank row, and
+    // qué became one when the Spanish bank grew to its floor (2026-10-12). The test is about the inverted
+    // marks and the accent surviving, so its word must be one no bank row can ever equal.
+    let c = clean(&[("\u{BF}C\u{E1}diz?", "es"), ("\u{A1}Hola!", "es")]);
+    assert_eq!(texts(&c), ["C\u{E1}diz", "Hola"]);
 }
 
 #[test]
