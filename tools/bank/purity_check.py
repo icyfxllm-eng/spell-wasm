@@ -455,6 +455,17 @@ def overrides(lang):
                 out[r["word"]] = (r["class"], "signed override: " + r["signed_by"])
     return out
 
+def signed_exceptions(lang):
+    """Bank words whose committed ledger line is an `exception` with a signer (purity_sheet keep, purity_c1 restore)."""
+    p = os.path.join(ROOT, "assets", "words", "purity", f"{lang}.tsv")
+    out = set()
+    if os.path.exists(p):
+        for line in open(p, encoding="utf-8"):
+            f = line.rstrip("\n").split("\t")
+            if len(f) > 3 and f[0][:1] != "#" and f[1] == "exception" and f[3].strip():
+                out.add(f[0])
+    return out
+
 def main(argv):
     out = os.path.join(ROOT, "reports", "bank-purity-rows.csv")
     args = [a for a in argv if not a.startswith("--out")]
@@ -470,6 +481,9 @@ def main(argv):
         for w, (c, e) in overrides(lang).items():   # signed C1 rulings; only ever move a row into a quarantine class
             if w in res and res[w][0] not in QUARANTINE:
                 res[w] = (c, e)
+        for w in signed_exceptions(lang):   # a named person's keep: the row is a word of the language
+            if w in res and res[w][0] in QUARANTINE:
+                res[w] = ("pass", "signed exception")
         prof = load(f"{ROOT}/assets/words/profanity/{lang}.txt") or set()
         for t, w in rows:
             cls, ev = res[w]

@@ -783,7 +783,6 @@ nagbalik
 nakasaad
 payat
 sangguniang
-ta
 teka
 tinatanong
 tuntunin
@@ -800,7 +799,6 @@ hiniling
 hudyo
 idea
 kapakanan
-laptop
 mambabatas
 mapapanood
 muntik
@@ -821,7 +819,6 @@ tamad
 bading
 baliw
 demokrasya
-edit
 ganung
 ginang
 impiyerno
@@ -854,7 +851,6 @@ sunday
 tanghalan
 tatanggapin
 aga
-also
 angat
 apektado
 darna

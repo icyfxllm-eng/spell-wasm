@@ -120,3 +120,8 @@ monte
 editor
 genus
 films
+video
+anime
+manga
+virus
+rating

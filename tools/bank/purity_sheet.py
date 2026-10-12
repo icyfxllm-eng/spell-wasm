@@ -117,6 +117,74 @@ def apply_cuts(lang, cuts, klass, evidence, date):
         open(gf, "w", encoding="utf-8").write("\n".join(keep) + "\n")
     return cuts
 
+PRESWEEP = "3e54e8d6^"   # the commit before the Phase A sweep; restored rows get their gloss/definition rows back from here
+
+def restore_rows(lang, words, signer, reason, date, base=PRESWEEP):
+    """Put quarantined rows back into the bank at their pre-sweep position, each with a signed `exception` ledger
+    line.  A quarantined row never re-enters as `pending`: the only way back is a named person's keep.
+    Removes their manifest and quarantine-file lines and restores their gloss and definition-pool rows from `base`
+    when the current file has none.  Returns the words restored.  Does not rebuild: call rebuild_and_rehash()."""
+    want = {nfc(w) for w in words}
+    mp = f"{REPO}/assets/words-quarantine/manifest.csv"
+    with open(mp, encoding="utf-8") as f:
+        rd = csv.DictReader(f); head = rd.fieldnames; man = list(rd)
+    done = set()
+    for t in g.TIERS:
+        p = f"{REPO}/assets/words/{lang}/{t}.txt"
+        if not os.path.exists(p):
+            continue
+        cur = [x for x in open(p, encoding="utf-8").read().split("\n") if x.strip()]
+        qs = sorted((r for r in man if r["lang"] == lang and r["tier"] == t), key=lambda r: int(r["pos"]))
+        sel = {nfc(r["word"]) for r in qs} & want
+        if not sel:
+            continue
+        ent = [("c", w) for w in cur]
+        for r in qs:
+            ent.insert(int(r["pos"]), ("q", r["word"]))
+        new = [w for k, w in ent if k == "c" or nfc(w) in sel]
+        open(p, "w", encoding="utf-8").write("\n".join(new) + "\n")
+        qp = f"{REPO}/assets/words-quarantine/{lang}/{t}.txt"
+        if os.path.exists(qp):
+            ql = [x for x in open(qp, encoding="utf-8").read().split("\n") if x]
+            open(qp, "w", encoding="utf-8").write("\n".join(x for x in ql if nfc(x) not in sel) + "\n")
+        done |= sel
+    man = [r for r in man if not (r["lang"] == lang and nfc(r["word"]) in done)]
+    with open(mp, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=head, lineterminator="\n"); w.writeheader(); w.writerows(man)
+    # ledger: bank order, signed exception for each restored row
+    lp = f"{REPO}/assets/words/purity/{lang}.tsv"
+    old = open(lp, encoding="utf-8").read().split("\n")
+    top = [l for l in old if l.startswith("#")]
+    by = {nfc(l.split("\t")[0]): l for l in old if l and l[0] != "#"}
+    body = []
+    for t, w in g.bank(REPO, lang):
+        k = nfc(w)
+        body.append(by[k] if k in by and k not in done else f"{w}\texception\tpurity-restore\t{signer}\t{reason} ({date})")
+    open(lp, "w", encoding="utf-8").write("\n".join(top + body) + "\n")
+    # gloss and definition pool rows the sweep pruned
+    def show(path):
+        r = subprocess.run(["git", "show", f"{base}:{path}"], cwd=REPO, capture_output=True, text=True, encoding="utf-8")
+        return json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip() else None
+    gp = f"{REPO}/config/gloss/{lang}.json"
+    old_g = show(f"config/gloss/{lang}.json")
+    if old_g and os.path.exists(gp):
+        d = json.load(open(gp, encoding="utf-8"))
+        for k, v in old_g["rows"].items():
+            if nfc(k.rsplit("|", 1)[-1]) in done and k not in d["rows"]:
+                d["rows"][k] = v
+        open(gp, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False, indent=2))
+    dp = f"{REPO}/backend/def_pools/{lang}.json"
+    old_d = show(f"backend/def_pools/{lang}.json")
+    if old_d and os.path.exists(dp):
+        d = json.load(open(dp, encoding="utf-8"))
+        have = {nfc(e["word"]) for es in d["tiers"].values() for e in es}
+        for t, es in old_d["tiers"].items():
+            for e in es:
+                if nfc(e["word"]) in done and nfc(e["word"]) not in have:
+                    d["tiers"].setdefault(t, []).append(e)
+        open(dp, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False))
+    return done
+
 def rebuild_and_rehash():
     """Regenerate src/word_data.rs and refresh every ledger's #tier hashes."""
     subprocess.run([sys.executable, f"{REPO}/scripts/build-wordlists.py"], check=True, cwd=REPO, stdout=subprocess.DEVNULL)

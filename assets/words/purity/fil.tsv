@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xBC8AE493088A110D
-#tier	medium	0x1EB69B6666DB211A
-#tier	hard	0x4D34C162797ABEE2
-#tier	expert	0xEA7B7C94398DA657
+#tier	medium	0xE82C9CE3CB2A9DA9
+#tier	hard	0x01F25A146FE93779
+#tier	expert	0xDDD98C7D43D8D5E8
 abo	dictionary	kaikki-tagalog
 alak	dictionary	kaikki-tagalog
 alam	dictionary	kaikki-tagalog
@@ -352,7 +352,6 @@ halip	dictionary	kaikki-tagalog
 halaga	dictionary	kaikki-tagalog
 tsina	dictionary	kaikki-tagalog
 sinabi	dictionary	kaikki-tagalog
-video	dictionary	kaikki-tagalog
 beses	dictionary	kaikki-tagalog
 sentro	dictionary	kaikki-tagalog
 nanalo	dictionary	kaikki-tagalog
@@ -378,7 +377,6 @@ yugto	dictionary	kaikki-tagalog
 sumali	pending	kaikki-tagalog
 kapwa	dictionary	kaikki-tagalog
 binuo	dictionary	kaikki-tagalog
-anime	dictionary	kaikki-tagalog
 titik	dictionary	kaikki-tagalog
 sikat	dictionary	kaikki-tagalog
 tsino	dictionary	kaikki-tagalog
@@ -449,7 +447,6 @@ datos	dictionary	kaikki-tagalog
 kanser	dictionary	kaikki-tagalog
 pansin	dictionary	kaikki-tagalog
 yunit	dictionary	kaikki-tagalog
-manga	dictionary	kaikki-tagalog
 puntos	dictionary	kaikki-tagalog
 bukas	dictionary	kaikki-tagalog
 sibil	dictionary	kaikki-tagalog
@@ -621,7 +618,6 @@ malay	dictionary	kaikki-tagalog
 palaro	pending	kaikki-tagalog
 pantig	dictionary	kaikki-tagalog
 puwang	dictionary	kaikki-tagalog
-virus	dictionary	kaikki-tagalog
 madla	dictionary	kaikki-tagalog
 tribo	dictionary	kaikki-tagalog
 yaman	dictionary	kaikki-tagalog
@@ -757,7 +753,6 @@ alisin	dictionary	kaikki-tagalog
 gabay	dictionary	kaikki-tagalog
 linyar	pending	kaikki-tagalog
 nasawi	pending	kaikki-tagalog
-rating	dictionary	kaikki-tagalog
 tsart	dictionary	kaikki-tagalog
 umiral	pending	kaikki-tagalog
 anghel	dictionary	kaikki-tagalog
@@ -1615,7 +1610,6 @@ nagbalik	dictionary	kaikki-tagalog
 nakasaad	pending	kaikki-tagalog
 payat	dictionary	kaikki-tagalog
 sangguniang	pending	kaikki-tagalog
-ta	dictionary	kaikki-tagalog
 teka	dictionary	kaikki-tagalog
 tinatanong	dictionary	kaikki-tagalog
 tuntunin	pending	kaikki-tagalog
@@ -1632,7 +1626,6 @@ hiniling	pending	kaikki-tagalog
 hudyo	dictionary	kaikki-tagalog
 idea	dictionary	kaikki-tagalog
 kapakanan	dictionary	kaikki-tagalog
-laptop	dictionary	kaikki-tagalog
 mambabatas	dictionary	kaikki-tagalog
 mapapanood	pending	kaikki-tagalog
 muntik	dictionary	kaikki-tagalog
@@ -1653,7 +1646,6 @@ tamad	dictionary	kaikki-tagalog
 bading	dictionary	kaikki-tagalog
 baliw	dictionary	kaikki-tagalog
 demokrasya	dictionary	kaikki-tagalog
-edit	dictionary	kaikki-tagalog
 ganung	pending	kaikki-tagalog
 ginang	dictionary	kaikki-tagalog
 impiyerno	dictionary	kaikki-tagalog
@@ -1686,7 +1678,6 @@ sunday	dictionary	kaikki-tagalog
 tanghalan	pending	kaikki-tagalog
 tatanggapin	dictionary	kaikki-tagalog
 aga	dictionary	kaikki-tagalog
-also	dictionary	kaikki-tagalog
 angat	dictionary	kaikki-tagalog
 apektado	dictionary	kaikki-tagalog
 darna	pending	kaikki-tagalog
@@ -2676,7 +2667,6 @@ puwede	dictionary	kaikki-tagalog
 tatag	dictionary	kaikki-tagalog
 umuunlad	dictionary	kaikki-tagalog
 unahin	dictionary	kaikki-tagalog
-urban	dictionary	kaikki-tagalog
 abay	dictionary	kaikki-tagalog
 aldub	pending	kaikki-tagalog
 alternatibo	dictionary	kaikki-tagalog
@@ -2732,7 +2722,6 @@ palayo	pending	kaikki-tagalog
 pekeng	pending	kaikki-tagalog
 perang	pending	kaikki-tagalog
 petrolyo	dictionary	kaikki-tagalog
-print	dictionary	kaikki-tagalog
 sagad	dictionary	kaikki-tagalog
 sinama	dictionary	kaikki-tagalog
 sulatin	dictionary	kaikki-tagalog
@@ -2742,7 +2731,6 @@ tinuruan	pending	kaikki-tagalog
 trinidad	dictionary	kaikki-tagalog
 tumawid	pending	kaikki-tagalog
 akoy	pending	kaikki-tagalog
-direction	dictionary	kaikki-tagalog
 gobyernong	pending	kaikki-tagalog
 gumanda	dictionary	kaikki-tagalog
 halikan	dictionary	kaikki-tagalog
@@ -2831,7 +2819,6 @@ aaminin	dictionary	kaikki-tagalog
 akademikong	pending	kaikki-tagalog
 albay	dictionary	kaikki-tagalog
 amihan	dictionary	kaikki-tagalog
-aw	dictionary	kaikki-tagalog
 babalikan	dictionary	kaikki-tagalog
 balagtas	dictionary	kaikki-tagalog
 bibilhin	dictionary	kaikki-tagalog
@@ -2881,7 +2868,6 @@ pabayaan	dictionary	kaikki-tagalog
 panday	dictionary	kaikki-tagalog
 pandiwa	dictionary	kaikki-tagalog
 pangilinan	dictionary	kaikki-tagalog
-par	dictionary	kaikki-tagalog
 parke	dictionary	kaikki-tagalog
 patayan	pending	kaikki-tagalog
 petisyon	dictionary	kaikki-tagalog
@@ -2937,7 +2923,6 @@ perlas	dictionary	kaikki-tagalog
 pinakamahalaga	pending	kaikki-tagalog
 piniling	pending	kaikki-tagalog
 pogi	dictionary	kaikki-tagalog
-pres	pending	kaikki-tagalog
 propaganda	dictionary	kaikki-tagalog
 pu	dictionary	kaikki-tagalog
 sasagot	dictionary	kaikki-tagalog
@@ -3006,7 +2991,6 @@ politikal	dictionary	kaikki-tagalog
 proteksyon	dictionary	kaikki-tagalog
 pumalit	dictionary	kaikki-tagalog
 pumipigil	pending	kaikki-tagalog
-sim	dictionary	kaikki-tagalog
 sitwasyong	pending	kaikki-tagalog
 sumayaw	dictionary	kaikki-tagalog
 susubukan	dictionary	kaikki-tagalog
@@ -3072,7 +3056,6 @@ pinangarap	pending	kaikki-tagalog
 poste	dictionary	kaikki-tagalog
 poster	dictionary	kaikki-tagalog
 puke	dictionary	kaikki-tagalog
-reference	dictionary	kaikki-tagalog
 sabihan	dictionary	kaikki-tagalog
 sadya	dictionary	kaikki-tagalog
 saligan	dictionary	kaikki-tagalog

@@ -99,7 +99,6 @@ halip
 halaga
 tsina
 sinabi
-video
 beses
 sentro
 nanalo
@@ -125,7 +124,6 @@ yugto
 sumali
 kapwa
 binuo
-anime
 titik
 sikat
 tsino
@@ -196,7 +194,6 @@ datos
 kanser
 pansin
 yunit
-manga
 puntos
 bukas
 sibil
@@ -368,7 +365,6 @@ malay
 palaro
 pantig
 puwang
-virus
 madla
 tribo
 yaman
@@ -504,7 +500,6 @@ alisin
 gabay
 linyar
 nasawi
-rating
 tsart
 umiral
 anghel

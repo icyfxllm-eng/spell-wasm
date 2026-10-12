@@ -917,7 +917,6 @@ puwede
 tatag
 umuunlad
 unahin
-urban
 abay
 aldub
 alternatibo
@@ -973,7 +972,6 @@ palayo
 pekeng
 perang
 petrolyo
-print
 sagad
 sinama
 sulatin
@@ -983,7 +981,6 @@ tinuruan
 trinidad
 tumawid
 akoy
-direction
 gobyernong
 gumanda
 halikan
@@ -1072,7 +1069,6 @@ aaminin
 akademikong
 albay
 amihan
-aw
 babalikan
 balagtas
 bibilhin
@@ -1122,7 +1118,6 @@ pabayaan
 panday
 pandiwa
 pangilinan
-par
 parke
 patayan
 petisyon
@@ -1178,7 +1173,6 @@ perlas
 pinakamahalaga
 piniling
 pogi
-pres
 propaganda
 pu
 sasagot
@@ -1247,7 +1241,6 @@ politikal
 proteksyon
 pumalit
 pumipigil
-sim
 sitwasyong
 sumayaw
 susubukan
@@ -1313,7 +1306,6 @@ pinangarap
 poste
 poster
 puke
-reference
 sabihan
 sadya
 saligan
