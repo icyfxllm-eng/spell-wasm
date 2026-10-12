@@ -58,6 +58,79 @@ def export(out, langs):
             w = csv.writer(f, lineterminator="\n"); w.writerow(COLS); w.writerows(rows)
         print(f"{lang}: {sum(1 for r in rows if r[3] == 'pending')} pending, {sum(1 for r in rows if r[3] == 'correction')} corrections -> {d}/purity-sheet.csv")
 
+def apply_cuts(lang, cuts, klass, evidence, date):
+    """Move `cuts` (words of `lang` that are bank rows) out of the bank into assets/words-quarantine/, record them
+    in the manifest under `klass`, prune their gloss and definition-pool rows, and drop their ledger and
+    grandfathered lines.  Returns the set actually moved.  Does not rebuild: call rebuild_and_rehash() after.
+    Shared by F8's `cut` and by purity_batch2 (the C7 proper-noun batch)."""
+    cuts = {nfc(w) for w in cuts}
+    lines = {}
+    for t in g.TIERS:
+        p = f"{REPO}/assets/words/{lang}/{t}.txt"
+        if os.path.exists(p):
+            lines[t] = [x for x in open(p, encoding="utf-8").read().split("\n") if x.strip()]
+    in_bank = {nfc(w) for ws in lines.values() for w in ws}
+    cuts = {w for w in cuts if w in in_bank}
+    # The manifest `pos` is an index in the PRE-SWEEP tier file (ledger_check --restore re-inserts rows in
+    # ascending pos).  A row's pre-sweep index is its place once every row already in the manifest is put back.
+    mp = f"{REPO}/assets/words-quarantine/manifest.csv"
+    prior = {}
+    for r in csv.DictReader(open(mp, encoding="utf-8")):
+        if r["lang"] == lang:
+            prior.setdefault(r["tier"], []).append(int(r["pos"]))
+    manifest_rows = []
+    for t, ws in lines.items():
+        full = list(range(len(ws)))
+        for p0 in sorted(prior.get(t, [])):
+            full.insert(p0, None)
+        kept, moved = [], []
+        for i, w in enumerate(ws):
+            if nfc(w) in cuts:
+                moved.append(w); manifest_rows.append((lang, w, t, full.index(i), klass, evidence, date))
+            else:
+                kept.append(w)
+        if moved:
+            open(f"{REPO}/assets/words/{lang}/{t}.txt", "w", encoding="utf-8").write("\n".join(kept) + "\n")
+            qd = f"{REPO}/assets/words-quarantine/{lang}"; os.makedirs(qd, exist_ok=True)
+            qp = f"{qd}/{t}.txt"
+            prev = open(qp, encoding="utf-8").read().split("\n") if os.path.exists(qp) else []
+            open(qp, "w", encoding="utf-8").write("\n".join([x for x in prev if x] + moved) + "\n")
+    if manifest_rows:
+        with open(f"{REPO}/assets/words-quarantine/manifest.csv", "a", newline="", encoding="utf-8") as f:
+            csv.writer(f, lineterminator="\n").writerows(manifest_rows)
+    gone = {w.rsplit("|", 1)[-1] for w in cuts}
+    gp = f"{REPO}/config/gloss/{lang}.json"
+    if os.path.exists(gp) and gone:
+        d = json.load(open(gp, encoding="utf-8")); d["rows"] = {k: v for k, v in d["rows"].items() if nfc(k) not in gone}
+        open(gp, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False, indent=2))
+    dp = f"{REPO}/backend/def_pools/{lang}.json"
+    if os.path.exists(dp) and gone:
+        d = json.load(open(dp, encoding="utf-8"))
+        d["tiers"] = {t: [e for e in es if nfc(e["word"]) not in gone] for t, es in d["tiers"].items()}
+        open(dp, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False))
+    lp = f"{REPO}/assets/words/purity/{lang}.tsv"
+    out = [l for l in open(lp, encoding="utf-8").read().split("\n") if l and (l[0] == "#" or nfc(l.split("\t")[0]) not in cuts)]
+    open(lp, "w", encoding="utf-8").write("\n".join(out) + "\n")
+    gf = f"{REPO}/assets/words/purity/grandfathered/{lang}.txt"
+    if os.path.exists(gf):
+        keep = [l for l in open(gf, encoding="utf-8").read().split("\n") if l and (l[0] == "#" or nfc(l) not in cuts)]
+        open(gf, "w", encoding="utf-8").write("\n".join(keep) + "\n")
+    return cuts
+
+def rebuild_and_rehash():
+    """Regenerate src/word_data.rs and refresh every ledger's #tier hashes."""
+    subprocess.run([sys.executable, f"{REPO}/scripts/build-wordlists.py"], check=True, cwd=REPO, stdout=subprocess.DEVNULL)
+    th = g.tier_hashes(REPO)
+    for l in g.LANGS:
+        p = f"{REPO}/assets/words/purity/{l}.tsv"
+        L = open(p, encoding="utf-8").read().split("\n")
+        for i, x in enumerate(L):
+            if x.startswith("#tier\t"):
+                t = x.split("\t")[1]
+                if (l, t) in th:
+                    L[i] = f"#tier\t{t}\t{th[(l, t)]}"
+        open(p, "w", encoding="utf-8").write("\n".join(L))
+
 def ingest(path, auditor, date):
     rows = list(csv.DictReader(open(path, encoding="utf-8")))
     if not rows:
@@ -71,46 +144,9 @@ def ingest(path, auditor, date):
         sys.exit(f"{len(bad)} row(s) have no keep/cut/unsure verdict (first: {bad[:5]}); refusing a half-answered sheet")
     verdict = {nfc(r["word"]): r["verdict"].strip().lower() for r in rows}
     kind = {nfc(r["word"]): r["kind"] for r in rows}
-    tier_of = {}
-    lines = {}
-    for t in g.TIERS:
-        p = f"{REPO}/assets/words/{lang}/{t}.txt"
-        if os.path.exists(p):
-            lines[t] = [x for x in open(p, encoding="utf-8").read().split("\n") if x.strip()]
-    for t, ws in lines.items():
-        for w in ws:
-            tier_of[nfc(w)] = t
-    cuts = {w for w, v in verdict.items() if v == "cut" and w in tier_of}
-    # bank, quarantine, manifest
-    manifest_rows = []
-    for t, ws in lines.items():
-        kept, moved = [], []
-        for i, w in enumerate(ws):
-            if nfc(w) in cuts:
-                moved.append(w); manifest_rows.append((lang, w, t, i, "auditor_cut", f"{auditor} {date}", date))
-            else:
-                kept.append(w)
-        if moved:
-            open(f"{REPO}/assets/words/{lang}/{t}.txt", "w", encoding="utf-8").write("\n".join(kept) + "\n")
-            qd = f"{REPO}/assets/words-quarantine/{lang}"; os.makedirs(qd, exist_ok=True)
-            qp = f"{qd}/{t}.txt"
-            prev = open(qp, encoding="utf-8").read().split("\n") if os.path.exists(qp) else []
-            open(qp, "w", encoding="utf-8").write("\n".join([x for x in prev if x] + moved) + "\n")
-    if manifest_rows:
-        with open(f"{REPO}/assets/words-quarantine/manifest.csv", "a", newline="", encoding="utf-8") as f:
-            csv.writer(f, lineterminator="\n").writerows(manifest_rows)
-    # cascade: gloss + definition pool rows keyed by a cut word
-    gone = {w.rsplit("|", 1)[-1] for w in cuts}
-    gp = f"{REPO}/config/gloss/{lang}.json"
-    if os.path.exists(gp) and gone:
-        d = json.load(open(gp, encoding="utf-8")); d["rows"] = {k: v for k, v in d["rows"].items() if nfc(k) not in gone}
-        open(gp, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False, indent=2))
-    dp = f"{REPO}/backend/def_pools/{lang}.json"
-    if os.path.exists(dp) and gone:
-        d = json.load(open(dp, encoding="utf-8"))
-        d["tiers"] = {t: [e for e in es if nfc(e["word"]) not in gone] for t, es in d["tiers"].items()}
-        open(dp, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False))
-    # ledger
+    cuts = {w for w, v in verdict.items() if v == "cut"}
+    cuts = apply_cuts(lang, cuts, "auditor_cut", f"{auditor} {date}", date)
+    # keeps: a pending ledger line becomes a signed exception
     lp = f"{REPO}/assets/words/purity/{lang}.tsv"
     out = []
     for line in open(lp, encoding="utf-8").read().split("\n"):
@@ -118,16 +154,14 @@ def ingest(path, auditor, date):
             continue
         f = line.split("\t")
         w = nfc(f[0]) if line[0] != "#" else None
-        if w in cuts:
-            continue
         if w and verdict.get(w) == "keep" and kind.get(w) == "pending" and f[1] == "pending":
             line = f"{f[0]}\texception\t{f[2]}\t{auditor}\tauditor keep ({date})"
         out.append(line)
     open(lp, "w", encoding="utf-8").write("\n".join(out) + "\n")
-    # grandfathered shrinks
+    # grandfathered shrinks for the keeps (apply_cuts already shrank it for the cuts)
     gf = f"{REPO}/assets/words/purity/grandfathered/{lang}.txt"
     if os.path.exists(gf):
-        done = {w for w, v in verdict.items() if v in ("keep", "cut")}
+        done = {w for w, v in verdict.items() if v == "keep"}
         keep = [l for l in open(gf, encoding="utf-8").read().split("\n") if l and (l[0] == "#" or nfc(l) not in done)]
         open(gf, "w", encoding="utf-8").write("\n".join(keep) + "\n")
     # Jr list
@@ -139,18 +173,7 @@ def ingest(path, auditor, date):
         have = {nfc(l.strip()) for l in hand.split("\n")}
         add = [w for w in nfc_rows if w not in have]
         open(kp, "w", encoding="utf-8").write(hand.rstrip("\n") + "\n" + "".join(f"{w}\n" for w in add) + (MARK + gen if _ else ""))
-    # rebuild + hashes
-    subprocess.run([sys.executable, f"{REPO}/scripts/build-wordlists.py"], check=True, cwd=REPO, stdout=subprocess.DEVNULL)
-    th = g.tier_hashes(REPO)
-    for l in g.LANGS:
-        p = f"{REPO}/assets/words/purity/{l}.tsv"
-        L = open(p, encoding="utf-8").read().split("\n")
-        for i, x in enumerate(L):
-            if x.startswith("#tier\t"):
-                t = x.split("\t")[1]
-                if (l, t) in th:
-                    L[i] = f"#tier\t{t}\t{th[(l, t)]}"
-        open(p, "w", encoding="utf-8").write("\n".join(L))
+    rebuild_and_rehash()
     left = len(pending_words(lang))
     unsure = sum(1 for w, v in verdict.items() if v == "unsure" and kind[w] == "pending")
     print(f"{lang}: {len([w for w in verdict if verdict[w]=='keep' and kind[w]=='pending'])} kept, {len(cuts)} cut, {unsure} unsure; pending now {left}")

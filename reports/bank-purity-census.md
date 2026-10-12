@@ -276,3 +276,13 @@ Decisions I made that need your eye:
 1. **Profanity rows awaiting C6.** 54 bank rows are on the repo's profanity lists. The spec's gate fails on those until your C6 marks create a cleared list, but that would leave the gate red today. I put them in `assets/words/purity/awaiting-c6/<lang>.txt`, a ratchet (a *new* match fails; a listed row that left the bank or was cleared fails until its line is deleted). They are not cleared. P13 (held out of Jr pools) is unchanged and still waits for the Jr lists in Phase C.
 2. **The selftest's English/noun/fragment plants are rejected for lacking a verdict, not by re-running F1.** Offline, the gate cannot tell a forged `dictionary` verdict from a real one; that is held by the writers calling F1 and by review of ledger diffs. A bank edited by hand without the ledger fails.
 3. **Draft banks for languages outside the 14** pass through `purity_admit` with a notice; there is no F1 for them.
+
+## Phase D — F3 second batch tooling (`cc-bank-purity-d`)
+
+`tools/bank/purity_batch2.py` applies the C7 proper-noun rows, and only from a person's decisions:
+
+- `export [--out audit] [lang ...]` writes `<out>/<lang>/c7-review.csv` (C7 candidates still in the bank, not already ruled keep) with a blank `decision` column.
+- `apply <review.csv> --signed-by NAME [--dry-run]`: `cut` quarantines the row (manifest class `proper_noun_pos`, same cascade as F8's cut), `keep` records it in `assets/words/purity/c7-kept/<lang>.txt`, `unsure` changes nothing. A blank decision, or a row that is not a C7 candidate, is an error. A cut that takes a tier of a `launched` language below its `poolFloor` is a HALT; for languages not launched the floors are report-only and the before/after is printed.
+- Nothing was applied. The 6 exports hold ko 92, ja 48, ar 171, hi 65, sw 15, ru 24 (hi was 67 in the original census; two left the bank in Phase A).
+
+Shared with F8: `purity_sheet.apply_cuts`. Fix made there: the manifest `pos` is now the row's index in the pre-sweep tier file, which is what `ledger_check.py --restore` re-inserts by. Before, an auditor cut recorded its post-sweep index and the round-trip would have broken on the first ingest. `--restore` still reports ko/easy and ru/easy, which fail on main already (the regrow commit 4303e52f).
