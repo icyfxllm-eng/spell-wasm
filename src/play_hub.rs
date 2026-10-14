@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 21; // + boardgame (CC-BOARD-GAME), spelluzzle (CC-SPELLUZZLE), app only
+const N_LAUNCH: usize = 22; // + randospell (CC-RANDOSPELL, app only)
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 8;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -96,6 +96,8 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("spelluzzle", Some("szOpenBtn")),
     #[cfg(not(feature = "web"))]
     ("boardgame", Some("bgOpenBtn")),
+    #[cfg(not(feature = "web"))]
+    ("randospell", Some("rsOpenBtn")),
 ];
 
 /// The mode -> entry-point join. `pub(crate)` so the CC-HUB-NAV drawer routes

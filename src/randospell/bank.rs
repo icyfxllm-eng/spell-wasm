@@ -90,6 +90,11 @@ impl Bank {
         Bank { by_len, cov: Coverage { counts } }
     }
 
+    /// Every answer in the bank (the keyboard is built from these).
+    pub fn words(&self) -> impl Iterator<Item = &str> {
+        self.by_len.iter().flatten().map(|e| e.word.as_str())
+    }
+
     pub fn of_len(&self, len: usize) -> &[Entry] {
         if (2..=12).contains(&len) {
             &self.by_len[len - 2]

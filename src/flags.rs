@@ -195,6 +195,44 @@ pub fn board_streak() -> bool {
     resolve(stored("boardStreak").as_deref(), true)
 }
 
+/// CC-RANDOSPELL v1 F9 -- the dice-driven spelling mode. **Default OFF** (spec
+/// F9: every Randospell flag defaults off). Flip with
+/// `localStorage['spell_flag_randospell'] = 'on'`. Compiled out with the mode on
+/// the site build (O3). Per-language eligibility is `randospell::bank::eligible`
+/// and the registry's language list, not this flag (D1).
+#[cfg(not(feature = "web"))]
+pub fn randospell() -> bool {
+    resolve(stored("randospell").as_deref(), false)
+}
+
+/// CC-RANDOSPELL F9: Marathon (Phase B). Needs `randospell`.
+#[cfg(not(feature = "web"))]
+#[allow(dead_code)]
+pub fn randospell_marathon() -> bool {
+    randospell() && resolve(stored("randospell_marathon").as_deref(), false)
+}
+
+/// CC-RANDOSPELL F9: Daily (Phase C). Needs `randospell`.
+#[cfg(not(feature = "web"))]
+#[allow(dead_code)]
+pub fn randospell_daily() -> bool {
+    randospell() && resolve(stored("randospell_daily").as_deref(), false)
+}
+
+/// CC-RANDOSPELL F9: Head-to-Head (Phase C). Needs `randospell`.
+#[cfg(not(feature = "web"))]
+#[allow(dead_code)]
+pub fn randospell_h2h() -> bool {
+    randospell() && resolve(stored("randospell_h2h").as_deref(), false)
+}
+
+/// CC-RANDOSPELL F9: the Spell Jr variant (Phase D). Needs `randospell`.
+#[cfg(not(feature = "web"))]
+#[allow(dead_code)]
+pub fn randospell_jr() -> bool {
+    randospell() && resolve(stored("randospell_jr").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {
@@ -490,6 +528,8 @@ pub fn is_on(name: &str) -> bool {
         "spell_cross" => spell_cross(),
         #[cfg(not(feature = "web"))]
         "boardgame" => boardgame(),
+        #[cfg(not(feature = "web"))]
+        "randospell" => randospell(),
         #[cfg(not(feature = "web"))]
         "spelluzzle" => spelluzzle(),
         _ => false,

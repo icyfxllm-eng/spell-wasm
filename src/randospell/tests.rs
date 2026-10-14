@@ -143,7 +143,7 @@ fn a8_jackpot_streak_and_multiplier() {
     // then 7 pays 11, then 12 pays 36, then a miss resets.
     let mut s = session(1, full_fake());
     let rig = |s: &mut Session, face: u8, ok: bool| {
-        s.pending = Some(Roll { face, len: 5, word: "qqqqq".into() });
+        s.pending = Some(Roll { face, len: face as usize, word: "qqqqq".into(), tier: 0 });
         s.answer(ok).unwrap()
     };
     rig(&mut s, 3, true);

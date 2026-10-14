@@ -634,6 +634,68 @@
   .bg-pod{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:#ffffff10;font-size:.95rem}
   .bg-pod b{margin-inline-start:auto;font-variant-numeric:tabular-nums}
   /* BOARDGAME:END */
+
+  /* RANDOSPELL:BEGIN CC-RANDOSPELL v1 -- stripped from the site build (O3) */
+  .rs-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;display:none;flex-direction:column;gap:8px;overflow:hidden;
+    --rs-key-h:46px;--rs-gap:4px;
+    padding:calc(env(safe-area-inset-top,0px) + 4px) 12px max(6px,env(safe-area-inset-bottom,0px))}
+  .rs-screen.show{display:flex}
+  .rs-hud{display:flex;align-items:center;gap:8px;min-height:32px;flex:none}
+  .rs-hud h2{margin:0;font-size:1.05rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rs-setup-exit{margin-inline-start:auto}
+  .rs-screen.playing .rs-setup-exit{display:none}
+  .rs-setup[hidden],.rs-play[hidden],.rs-spell[hidden],.rs-card[hidden]{display:none}
+  .rs-setup{display:flex;flex-direction:column;gap:12px;flex:1 1 auto;min-height:0;overflow-y:auto}
+  .rs-opt{display:flex;flex-wrap:wrap;gap:8px}
+  .rs-btn{min-height:44px;padding:8px 14px;border:2px solid transparent;border-radius:10px;background:#ffffff14;color:inherit;font:inherit;cursor:pointer;touch-action:manipulation}
+  .rs-btn.on{border-color:var(--amber,#f2c14e)}
+  .rs-btn:disabled{opacity:.4}
+  .rs-info{font-size:.9rem;opacity:.85}
+  .rs-info ul{margin:4px 0 0;padding-inline-start:1.2em}
+  .rs-note{min-height:1.3em;font-size:.9rem}
+  .rs-play{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:0}
+  .rs-stats{display:flex;gap:12px;align-items:baseline;flex:none;flex-wrap:wrap}
+  .rs-score{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .rs-streak,.rs-rolls{font-size:.9rem;opacity:.85}
+  .rs-stage{flex:1 1 auto;min-height:0;display:grid;place-items:center}
+  .rs-die{min-width:120px;min-height:120px;display:grid;place-items:center;border-radius:24px;background:#fff;color:#1b1730;
+    font-size:3.4rem;font-weight:800;font-variant-numeric:tabular-nums;opacity:.0}
+  .rs-die.land{opacity:1;animation:rs-fade .25s ease-out both}
+  .rs-die.jackpot{background:var(--amber,#f2c14e);box-shadow:0 0 0 6px #f2c14e66}
+  .rs-die:empty{opacity:.15}
+  .rs-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
+  .rs-timer.run{animation:rs-timer 30s linear forwards}
+  .rs-feed{flex:none;min-height:1.4em;text-align:center;font-size:.95rem}
+  .rs-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;direction:ltr}
+  .rs-orb{flex:none;width:88px;height:88px;border-radius:50%;border:none;background:var(--amber,#f2c14e);color:#36210a;
+    font-size:1rem;font-weight:700;cursor:pointer;touch-action:manipulation;padding:4px}
+  .rs-orb.shake{animation:rs-shake .45s ease-in-out}
+  .rs-screen.spelling .rs-orb{width:56px;height:56px;font-size:.75rem}
+  .rs-exit{min-width:56px;height:48px;margin-inline-start:auto}
+  .rs-spell{display:flex;flex-direction:column;gap:6px;flex:none}
+  .rs-line{display:flex;gap:var(--rs-gap);align-items:stretch}
+  .rs-field{flex:1 1 auto;min-width:0;min-height:56px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;
+    background:#ffffff10;border-radius:10px;padding:0 8px;overflow:hidden;white-space:nowrap}
+  .rs-line .rs-btn{min-width:56px;font-size:1.3rem}
+  .rs-keys{display:flex;flex-direction:column;gap:var(--rs-gap)}
+  .rs-row{display:flex;gap:var(--rs-gap);justify-content:center}
+  .rs-key{flex:1 1 0;min-width:0;max-width:46px;height:var(--rs-key-h);padding:0;border:none;border-radius:9px;background:#ffffff14;color:inherit;
+    font:inherit;font-size:1.05rem;font-weight:600;cursor:pointer;touch-action:manipulation}
+  .rs-key.mod{background:#f2c14e30;color:var(--amber,#f2c14e);font-weight:700;font-size:1.5rem}
+  .rs-key:active{background:var(--amber,#f2c14e);color:#36210a}
+  .rs-card{position:absolute;inset:0;z-index:2;background:var(--bg,#0e1420);display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:14px;padding:24px;text-align:center;overflow-y:auto}
+  .rs-card h3{margin:0}
+  .rs-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+  .rs-hist{display:flex;flex-direction:column;gap:2px;width:100%;max-width:320px;font-size:.8rem}
+  .rs-bar{display:grid;grid-template-columns:2.2em 1fr 2.2em;align-items:center;gap:6px}
+  .rs-bar i{display:block;height:8px;border-radius:4px;background:var(--amber,#f2c14e);min-width:0}
+  .rs-bar b{font-variant-numeric:tabular-nums;text-align:end}
+  @keyframes rs-fade{from{opacity:0}to{opacity:1}}
+  @keyframes rs-timer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+  @keyframes rs-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+  @media (prefers-reduced-motion:reduce){.rs-orb.shake{animation:none}.rs-die.land{animation:rs-fade .25s ease-out both}}
+  /* RANDOSPELL:END */
   /* SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 -- stripped from the site build (O1). No red anywhere (I12, R5). */
   .sz-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;
     display:none;flex-direction:column;gap:8px;overflow:hidden;
@@ -2969,6 +3031,52 @@
     </div>
   </div>
   <!-- BOARDGAME:END -->
+
+  <!-- RANDOSPELL:BEGIN CC-RANDOSPELL v1 (app only, O3) -- stripped from the site build -->
+  <button id="rsOpenBtn" hidden aria-hidden="true"></button>
+  <div class="rs-screen" id="rsScreen" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+    <div class="rs-hud">
+      <h2 id="rsTitle" data-i18n="rs.name">Randospell</h2>
+      <button type="button" class="ghost mode-exit rs-setup-exit" id="rsSetupExit" data-i18n="aria.exit">Exit</button>
+    </div>
+    <div class="rs-setup" id="rsSetup">
+      <p data-i18n="rs.desc">Roll the dice, then spell a word that long.</p>
+      <div class="rs-opt" id="rsTiers"></div>
+      <div class="rs-info" id="rsInfo"></div>
+      <div class="rs-note" id="rsNote" aria-live="polite"></div>
+      <button class="btn btn-check" id="rsStart" data-i18n="rs.start">Start</button>
+    </div>
+    <div class="rs-play" id="rsPlay" hidden>
+      <div class="rs-stats">
+        <span class="rs-score" id="rsScore"></span>
+        <span class="rs-streak" id="rsStreak"></span>
+        <span class="rs-rolls" id="rsRolls"></span>
+      </div>
+      <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div></div>
+      <div class="rs-timer" id="rsTimer"></div>
+      <div class="rs-feed" id="rsFeed" aria-live="polite"></div>
+      <div class="rs-act" id="rsAct">
+        <button type="button" class="rs-orb" id="rsOrb" data-state="roll" data-i18n="rs.roll">Roll</button>
+        <button type="button" class="ghost mode-exit rs-exit" id="rsExit" data-i18n="aria.exit">Exit</button>
+      </div>
+      <div class="rs-spell" id="rsSpell" hidden>
+        <div class="rs-line">
+          <div class="rs-field" id="rsField" aria-live="polite"></div>
+          <button type="button" class="rs-btn" id="rsDel" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
+          <button type="button" class="rs-btn" id="rsGo" aria-label="Spell it" data-i18n-aria="bee.submit">✓</button>
+        </div>
+        <div class="rs-keys" id="rsKeys"></div>
+      </div>
+    </div>
+    <div class="rs-card" id="rsOver" hidden>
+      <h3 data-i18n="rs.over">Sprint complete</h3>
+      <ul class="rs-list" id="rsStats"></ul>
+      <div class="rs-hist" id="rsHist" role="img" aria-label="Dice" data-i18n-aria="rs.hist"></div>
+      <button class="btn btn-check" id="rsAgain" data-i18n="rs.again">Play again</button>
+      <button class="btn mode-leave" id="rsOverExit" data-i18n="import.close">Close</button>
+    </div>
+  </div>
+  <!-- RANDOSPELL:END -->
   <!-- SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 (app only, O1) -- stripped from the site build -->
   <button id="szOpenBtn" hidden aria-hidden="true"></button>
   <div class="sz-screen" id="szScreen" role="dialog" aria-modal="true" aria-labelledby="szTitle">

@@ -49,6 +49,9 @@ for pair in (("<!-- SPELL-PICTURE:BEGIN", "<!-- SPELL-PICTURE:END -->"),
              # CC-SPELLUZZLE O1: the same cut for Spelluzzle's markup and CSS.
              ("<!-- SPELLUZZLE:BEGIN", "<!-- SPELLUZZLE:END -->"),
              ("/* SPELLUZZLE:BEGIN", "/* SPELLUZZLE:END */"),
+             # CC-RANDOSPELL O3: the same cut for Randospell's markup and CSS.
+             ("<!-- RANDOSPELL:BEGIN", "<!-- RANDOSPELL:END -->"),
+             ("/* RANDOSPELL:BEGIN", "/* RANDOSPELL:END */"),
              # CC-PICK-QUEUE O-F: app only; the site build carries none of it.
              ("/* PICKQUEUE:BEGIN", "/* PICKQUEUE:END */")):
     while pair[0] in src:

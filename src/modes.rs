@@ -296,19 +296,19 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        // 21 modes + 6 core surfaces (Spelluzzle is the newest mode). my_words and misses are surfaces rather
+        // 22 modes + 6 core surfaces (Randospell is the newest mode). my_words and misses are surfaces rather
         // than modes, registered so the CC-HUB-NAV drawer can resolve their
         // rows through this registry and not a second list (I2); `versus` is
         // the newest, and it is here because v1.3.1 F2 deletes the quick-play
         // row that was the local Spell Off's only door (H1).
-        assert_eq!(all.len(), 27, "21 modes + 6 core surfaces registered");
+        assert_eq!(all.len(), 28, "22 modes + 6 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "standard", "climb", "daily", "versus"],
+            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "standard", "climb", "daily", "versus"],
         );
     }
 
@@ -352,6 +352,28 @@ mod tests {
         assert!(!got.contains(&"photo_list".to_string()));
     }
 
+    /// CC-RANDOSPELL A10 / I6: Randospell is ABSENT (not greyed) for a language
+    /// whose bank cannot carry it, and present for one that can, with every
+    /// flag and entitlement on. The registry list must also agree with the
+    /// engine's own coverage gate, so a language cannot be listed that the
+    /// bank would refuse.
+    #[test]
+    fn randospell_is_absent_for_ineligible_languages_and_present_for_eligible_ones() {
+        let all = all();
+        for lang in ["ko", "hi", "ja", "zh"] {
+            let c = HubCtx { lang: lang.to_string(), ..ctx() };
+            assert!(!ids(&visible(&all, &c)).contains(&"randospell".to_string()), "{lang}: Randospell must be hidden");
+        }
+        let c = HubCtx { lang: "en".to_string(), ..ctx() };
+        assert!(ids(&visible(&all, &c)).contains(&"randospell".to_string()), "en: Randospell must show");
+        let row = all.iter().find(|m| m.id == "randospell").expect("registered");
+        let listed = row.languages.clone().expect("a language list, not null");
+        for l in &listed {
+            assert!(crate::randospell::bank::eligible(l, crate::experience::Experience::Standard), "{l} is listed but its bank cannot carry the mode");
+            assert!(!crate::randospell::bank::INELIGIBLE.contains(&l.as_str()), "{l} is on the hard-off list");
+        }
+    }
+
     #[test]
     fn little_speller_in_spanish_sees_the_same_pruned_menu() {
         let all = all();
@@ -371,7 +393,7 @@ mod tests {
         // — the point is that a non-iOS mode still tiles on web, not that
         // any particular mode does.
         assert!(got.contains(&"def_match".to_string()), "an all-platform mode still tiles on web");
-        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame"] {
+        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }
@@ -411,6 +433,7 @@ mod tests {
     /// an entry here is the opposite, so it must name who decided and when.
     const DELIBERATELY_DARK: &[(&str, &str)] = &[
         ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
+        ("randospell", "CC-RANDOSPELL F9 (spec signed by Eric, 2026-10-14): every Randospell flag defaults off until the phases are reviewed"),
     ];
 
     /// A deliberately dark mode is dark by DEFAULT only: its flag has a real
@@ -590,7 +613,7 @@ mod tests {
         // drawer opens over. Recorded here rather than quietly dropped, since
         // this list is the form D-N6's signature takes in the tree.
         assert_eq!(of(Group::SpellIt),
-                   ["bee_sim", "boardgame", "climb", "daily", "online_spelloff", "practice", "versus"]);
+                   ["bee_sim", "boardgame", "climb", "daily", "online_spelloff", "practice", "randospell", "versus"]);
     }
 
     /// A3's precondition. A tile whose mode is unlisted would be reachable from
@@ -667,7 +690,7 @@ mod web_wall_tests {
         let ids: Vec<String> = all().iter().map(|m| m.id.clone()).collect();
         // CC-SPELLDOKU Done #11: SpellDoku never registers on the site.
         // CC-WORDGRID Phase A: nor does Spell Search.
-        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame"] {
+        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell"] {
             assert!(!ids.contains(&app_only.to_string()),
                     "{app_only} is still in the site registry — hiding is not removing");
         }

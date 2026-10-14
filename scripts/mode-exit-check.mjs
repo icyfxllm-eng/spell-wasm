@@ -35,6 +35,7 @@ const PANELS = {
   cnOver: ['src/chains_screen.rs', 'cnOverExit'],
   beeOver: ['src/bee_screen.rs', 'beeOverExit'],
   bgOver: ['src/boardgame_screen.rs', 'bgOverExit'],
+  rsOver: ['src/randospell_screen.rs', 'rsOverExit'],
   dmRecap: ['src/defmatch_screen.rs', 'dmRecapClose'],
 };
 

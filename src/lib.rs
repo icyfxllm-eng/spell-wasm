@@ -32,6 +32,8 @@ mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank ga
 #[cfg(not(feature = "web"))]
 mod randospell; // CC-RANDOSPELL v1 Phase A -- dice engine and Sprint (app only, O3)
 #[cfg(not(feature = "web"))]
+mod randospell_screen; // CC-RANDOSPELL Phase A -- the screen
+#[cfg(not(feature = "web"))]
 mod boardgame_ring; // CC-BOARD-GAME-POLISH Phase A -- ring shapes, piece sizes (presentation only)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
@@ -427,6 +429,10 @@ fn wire(app: &App) {
     #[cfg(not(feature = "web"))]
     if flags::bee_sim() {
         bee_screen::wire(app); // CC-BEE-SIM F1 (dark by default)
+    }
+    #[cfg(not(feature = "web"))]
+    if flags::randospell() {
+        randospell_screen::wire(app); // CC-RANDOSPELL Phase A (dark by default)
     }
     #[cfg(not(feature = "web"))]
     if flags::boardgame() {

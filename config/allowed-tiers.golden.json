@@ -292,6 +292,15 @@
         "expert"
       ]
     },
+    "randospell": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
     "versus": {
       "junior": [
         "easy",

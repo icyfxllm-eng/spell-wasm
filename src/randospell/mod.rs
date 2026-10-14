@@ -72,12 +72,17 @@ pub fn multiplied(base: u32) -> u32 {
     (base * 3).div_ceil(2)
 }
 
-/// One press of the orb: the face, the length after any D4 remap, the word.
+/// One press of the orb. `face` is what the dice made; `len` is the roll the
+/// player SEES after any D4 remap, the length of `word`, and the number that
+/// scores (A9: the die never shows a length with no words behind it). A jackpot
+/// is a displayed 2 or 12, so a remapped 12 is an ordinary 11.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Roll {
     pub face: u8,
     pub len: usize,
     pub word: String,
+    /// The tier file the word came from, 0..=3.
+    pub tier: usize,
 }
 
 /// What happened when the roll was answered.
@@ -106,7 +111,7 @@ pub struct Session {
     pub streak: u32,
     pub rolls: u32,
     pub correct: u32,
-    /// Faces rolled, index 0 is face 2 (D20).
+    /// Rolls as displayed, index 0 is a roll of 2 (D20).
     pub histogram: [u32; 11],
     pub longest: Option<String>,
     pub ended: Option<End>,
@@ -142,6 +147,13 @@ impl Session {
         }
     }
 
+    /// Test seam only: put the score where a test needs it (A7). Never called
+    /// by the game.
+    #[cfg(feature = "testseam")]
+    pub fn set_score_for_test(&mut self, n: u32) {
+        self.score = n;
+    }
+
     pub fn pending(&self) -> Option<&Roll> {
         self.pending.as_ref()
     }
@@ -160,14 +172,14 @@ impl Session {
             return None;
         }
         let face = roll_two_dice(&mut self.dice);
-        self.histogram[face as usize - 2] += 1;
         self.rolls += 1;
         let len = self.bank.cov.length_for(face);
         let word = len.and_then(|l| self.pick(l));
         match (len, word) {
-            (Some(len), Some(word)) => {
+            (Some(len), Some((tier, word))) => {
+                self.histogram[len - 2] += 1;
                 self.used.push(word.clone());
-                let r = Roll { face, len, word };
+                let r = Roll { face, len, word, tier };
                 self.pending = Some(r.clone());
                 Some(r)
             }
@@ -184,7 +196,7 @@ impl Session {
         let mut points = 0;
         let mut mult = false;
         if correct {
-            let mut p = base_points(r.face);
+            let mut p = base_points(r.len as u8);
             if self.streak >= STREAK_FOR_MULTIPLIER {
                 p = multiplied(p);
                 mult = true;
@@ -212,7 +224,7 @@ impl Session {
         self.answer(false)
     }
 
-    fn pick(&mut self, len: usize) -> Option<String> {
+    fn pick(&mut self, len: usize) -> Option<(usize, String)> {
         let mut cands: Vec<(usize, String)> = self
             .bank
             .of_len(len)
@@ -231,7 +243,7 @@ impl Session {
         let best = cands.iter().map(|(t, _)| t.abs_diff(self.tier)).min()?;
         cands.retain(|(t, _)| t.abs_diff(self.tier) == best);
         let i = self.words.below(cands.len());
-        Some(cands.swap_remove(i).1)
+        Some(cands.swap_remove(i))
     }
 }
 
