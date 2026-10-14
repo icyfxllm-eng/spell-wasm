@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Jogador 1: {a} · Jogador 2: {b}",
   "rs.h2hHow": "Revezem-se. Guarde para manter os pontos; um erro esvazia seu pote e dá ao rival um lançamento bônus grátis. Vence quem chegar primeiro a 100 após guardar.",
   "rs.ready": "Pronto",
-  "rs.share": "Compartilhar"
+  "rs.share": "Compartilhar",
+  "rs.letters": "{n} letras",
+  "rs.howJr": "Lance o dado, ouça e soletre a palavra. Cada palavra certa vale o número do dado. Errou? Você tem outra chance!",
+  "rs.jrRight": "Muito bem soletrado! +{n}",
+  "rs.jrRetry": "Quase! Ouça de novo e tente mais uma vez.",
+  "rs.jrWord": "A palavra era {word}. Vamos para a próxima!",
+  "rs.jrDone": "Muito bem!",
+  "rs.jrCount": "{n} palavras soletradas certo",
+  "rs.bestStreak": "Melhor sequência: {n}"
 }

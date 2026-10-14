@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Jugador 1: {a} · Jugador 2: {b}",
   "rs.h2hHow": "Por turnos. Guarda para conservar puntos; un fallo vacía tu bote y da a tu rival una tirada extra gratis. Gana quien llegue primero a 100 tras guardar.",
   "rs.ready": "Listo",
-  "rs.share": "Compartir"
+  "rs.share": "Compartir",
+  "rs.letters": "{n} letras",
+  "rs.howJr": "Tira el dado, escucha y deletrea la palabra. Cada palabra acertada suma el número del dado. ¿Fallas? ¡Tienes otro intento!",
+  "rs.jrRight": "¡Muy bien deletreado! +{n}",
+  "rs.jrRetry": "¡Casi! Escucha otra vez y prueba una vez más.",
+  "rs.jrWord": "La palabra era {word}. ¡A por la siguiente!",
+  "rs.jrDone": "¡Bien hecho!",
+  "rs.jrCount": "{n} palabras bien deletreadas",
+  "rs.bestStreak": "Mejor racha: {n}"
 }

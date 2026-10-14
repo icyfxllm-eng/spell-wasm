@@ -663,6 +663,9 @@
   .rs-die.land{opacity:1;animation:rs-fade .25s ease-out both}
   .rs-die.jackpot{background:var(--amber,#f2c14e);box-shadow:0 0 0 6px #f2c14e66}
   .rs-die:empty{opacity:.15}
+  .rs-stage{flex-direction:column;gap:8px}
+  .rs-letters{font-size:1rem;font-weight:600;min-height:1.3em;text-align:center}
+  .rs-letters:empty{display:none}
   .rs-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
   .rs-timer.run{animation:rs-timer 30s linear forwards}
   .rs-pot,.rs-ward,.rs-turn{font-size:.9rem;font-weight:600}
@@ -3064,7 +3067,7 @@
         <span class="rs-ward" id="rsWard" hidden></span>
         <span class="rs-rolls" id="rsRolls"></span>
       </div>
-      <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div></div>
+      <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div><div class="rs-letters" id="rsLetters"></div></div>
       <div class="rs-timer" id="rsTimer"></div>
       <div class="rs-feed" id="rsFeed" aria-live="polite"></div>
       <div class="rs-act" id="rsAct">

@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Người chơi 1: {a} · Người chơi 2: {b}",
   "rs.h2hHow": "Chơi lần lượt. Gửi để giữ điểm; trả lời sai làm trống quỹ và cho đối thủ một lượt tung thưởng miễn phí. Ai đạt 100 trước sau khi gửi sẽ thắng.",
   "rs.ready": "Sẵn sàng",
-  "rs.share": "Chia sẻ"
+  "rs.share": "Chia sẻ",
+  "rs.letters": "{n} chữ cái",
+  "rs.howJr": "Tung xúc xắc, lắng nghe rồi đánh vần từ. Mỗi từ đúng được số điểm trên xúc xắc. Sai ư? Bạn còn một lần thử nữa!",
+  "rs.jrRight": "Đánh vần tuyệt lắm! +{n}",
+  "rs.jrRetry": "Gần đúng rồi! Nghe lại và thử thêm một lần nữa nhé.",
+  "rs.jrWord": "Từ đó là {word}. Sang từ tiếp theo nào!",
+  "rs.jrDone": "Giỏi lắm!",
+  "rs.jrCount": "{n} từ đánh vần đúng",
+  "rs.bestStreak": "Chuỗi đúng dài nhất: {n}"
 }

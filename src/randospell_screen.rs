@@ -12,6 +12,9 @@
 //!   mode adds no telemetry.
 //! * F6: Daily is one attempt per (date, language, tier), spent at the START and
 //!   kept in the mode-local store; the result is shareable text.
+//! * F7: Spell Jr is Sprint only with one die, no pot, no Ward, no shown
+//!   multiplier, no timer, and a second try after a miss. Every Jr line is
+//!   encouraging; the streak is kept silently for the result card.
 //! * F8: Head-to-Head is pass-and-play with a hand-off card between turns.
 //! * F5 / D15: in Marathon a correct answer opens a Bank / Roll again card;
 //!   the game ends only on a Bank that reaches the goal.
@@ -102,6 +105,8 @@ thread_local! {
     static TIER: Cell<usize> = const { Cell::new(1) };
     /// The mode the setup card has selected. Marathon needs its own flag (F9).
     static KIND: Cell<Kind> = const { Cell::new(Kind::Sprint) };
+    /// The profile is Spell Jr (F7): Sprint only, one die, Easy + Medium.
+    static KID: Cell<bool> = const { Cell::new(false) };
     /// Bumped on every press, answer and close so a stale 30 s timer is a no-op.
     static TOKEN: Cell<u32> = const { Cell::new(0) };
 }
@@ -156,13 +161,14 @@ pub fn wire(app: &App) {
 }
 
 pub fn open(app: &App) {
-    let lang = {
+    let (lang, kid) = {
         let s = app.borrow();
-        if s.lang == crate::consts::MINE { crate::consts::EN.to_string() } else { s.lang.clone() }
+        (if s.lang == crate::consts::MINE { crate::consts::EN.to_string() } else { s.lang.clone() }, s.kid)
     };
+    KID.with(|k| k.set(kid));
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     UI.with(|u| *u.borrow_mut() = None);
-    if !KIND.with(Cell::get).enabled() {
+    if kid || !KIND.with(Cell::get).enabled() {
         KIND.with(|m| m.set(Kind::Sprint));
     }
     for id in ["rsField", "rsKeys"] {
@@ -224,9 +230,19 @@ fn tier_label(ix: usize) -> String {
     i18n::t(&format!("level.{}", crate::consts::TIER_ORDER[ix]))
 }
 
+/// Which audience's bank and rules this screen is serving.
+fn exp() -> Experience {
+    if KID.with(Cell::get) { Experience::Junior } else { Experience::Standard }
+}
+
 fn render_setup() {
     let lang = LANG.with(|l| l.borrow().clone());
-    let ok = bank::eligible(&lang, Experience::Standard);
+    let kid = KID.with(Cell::get);
+    let ok = if kid {
+        crate::flags::randospell_jr() && bank::jr_eligible(&lang)
+    } else {
+        bank::eligible(&lang, Experience::Standard)
+    };
     let allowed = crate::experience::allowed_tiers(Experience::Standard, MODE_ID);
     let sel = TIER.with(Cell::get);
     let btns: String = allowed
@@ -241,11 +257,12 @@ fn render_setup() {
             )
         })
         .collect();
-    dom::set_html("rsTiers", &btns);
+    // Spell Jr has no tier choice (Easy and Medium pool) and no mode picker.
+    dom::set_html("rsTiers", &if kid { String::new() } else { btns });
     // The picker exists only when there is a choice to make.
     let kind = KIND.with(Cell::get);
     let offered: Vec<Kind> = Kind::ALL.iter().copied().filter(|k| k.enabled()).collect();
-    let modes: String = if offered.len() > 1 {
+    let modes: String = if offered.len() > 1 && !kid {
         offered
             .iter()
             .map(|k| {
@@ -264,13 +281,19 @@ fn render_setup() {
     dom::set_html("rsModes", &modes);
     // D4: a remap is shown, never silent ("12 plays as 11").
     let info = if ok {
-        let cov = Bank::for_lang(&lang, Experience::Standard).cov;
-        let lines: Vec<String> = cov
-            .remaps()
+        let cov = Bank::for_lang(&lang, exp()).cov;
+        // Jr lists remaps in die faces (F7); everyone else in word lengths.
+        let pairs: Vec<(usize, usize)> = if kid {
+            cov.jr_remaps().into_iter().map(|(a, b)| (a as usize, b as usize)).collect()
+        } else {
+            cov.remaps().into_iter().map(|(f, l)| (f as usize, l)).collect()
+        };
+        let lines: Vec<String> = pairs
             .into_iter()
             .map(|(f, l)| format!("<li>{}</li>", dom::escape_html(&i18n::tp("rs.remap", &[("face", &f.to_string()), ("len", &l.to_string())]))))
             .collect();
         let how = format!("<p>{}</p>", dom::escape_html(&i18n::t(match kind {
+            Kind::Sprint if kid => "rs.howJr",
             Kind::Sprint => "rs.how",
             Kind::Marathon => "rs.howM",
             Kind::Daily => "rs.dailyHow",
@@ -317,14 +340,21 @@ fn start() {
     speech_out::stop();
     finish_record();
     let lang = LANG.with(|l| l.borrow().clone());
-    if !bank::eligible(&lang, Experience::Standard) {
+    let kid = KID.with(Cell::get);
+    let allowed = if kid {
+        crate::flags::randospell_jr() && bank::jr_eligible(&lang)
+    } else {
+        bank::eligible(&lang, Experience::Standard)
+    };
+    if !allowed {
         return;
     }
-    let tier = TIER.with(Cell::get);
+    // Jr has no tier choice: it pools Easy and Medium and prefers the easier.
+    let tier = if kid { 0 } else { TIER.with(Cell::get) };
     let kind = KIND.with(Cell::get);
-    let bank = Bank::for_lang(&lang, Experience::Standard);
+    let bank = Bank::for_lang(&lang, exp());
     let entries: Vec<String> = bank.words().map(str::to_string).collect();
-    let keys = input::layout(&lang, false, &entries);
+    let keys = input::layout(&lang, kid, &entries);
     let day = day();
     let date = today();
     let mut daily_key = None;
@@ -346,7 +376,7 @@ fn start() {
         let key = ledger_key(&lang);
         let avoid = led.seen.iter().filter(|s| s.k == key && led.in_window(s, day)).map(|s| s.w.clone()).collect();
         let seed = (js_sys::Date::now() as u64) ^ led.counter.wrapping_mul(0x9E37_79B9);
-        Session::new(seed, kind.mode(), tier, bank, avoid)
+        Session::new(seed, if kid { Mode::Jr } else { kind.mode() }, tier, bank, avoid)
     };
     UI.with(|u| {
         *u.borrow_mut() = Some(Ui { s, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, recorded: false, day })
@@ -431,7 +461,7 @@ fn render_hud() {
         dom::set_text("rsTurn", "");
     }
     dom::set_hidden("rsTurn", !h2h);
-    let m = mode != Mode::Sprint;
+    let m = mode != Mode::Sprint && mode != Mode::Jr;
     dom::set_hidden("rsPot", !m);
     dom::set_hidden("rsWard", !m);
     if m {
@@ -439,8 +469,8 @@ fn render_hud() {
         dom::set_text("rsWard", &if ward { i18n::t("rs.ward") } else if ward_used { i18n::t("rs.wardUsed") } else { String::new() });
     }
     let mult = streak >= crate::randospell::STREAK_FOR_MULTIPLIER;
-    let streak_txt = if streak == 0 {
-        String::new()
+    let streak_txt = if streak == 0 || mode == Mode::Jr {
+        String::new() // Jr keeps the streak silently (F7)
     } else if mult {
         format!("{} · ×1.5", i18n::tp("rs.streak", &[("n", &streak.to_string())]))
     } else {
@@ -490,7 +520,11 @@ fn orb() {
     dom::add_class("rsOrb", "shake");
     dom::after_ms(450, || dom::remove_class("rsOrb", "shake"));
     let token = bump();
-    set_die(&r.len.to_string(), crate::randospell::is_jackpot(r.len as u8));
+    let jr = with_ui(|u| u.s.mode == Mode::Jr).unwrap_or(false);
+    // Jr shows the die (length - 1) and says how many letters it spells.
+    let shown = if jr { r.len - 1 } else { r.len };
+    set_die(&shown.to_string(), !jr && crate::randospell::is_jackpot(r.len as u8));
+    dom::set_text("rsLetters", &if jr { i18n::tp("rs.letters", &[("n", &r.len.to_string())]) } else { String::new() });
     dom::set_text("rsFeed", "");
     with_ui(|u| {
         u.spelling = true;
@@ -501,7 +535,10 @@ fn orb() {
     render_hud();
     let lang = with_ui(|u| u.lang.clone()).unwrap_or_default();
     speak(&r.word, &lang);
-    // D19: restart the visible 30 s bar and arm the timeout.
+    // D19: restart the visible 30 s bar and arm the timeout. Jr has no timer.
+    if jr {
+        return;
+    }
     dom::remove_class("rsTimer", "run");
     dom::after_ms(30, || dom::add_class("rsTimer", "run"));
     dom::after_ms((TIMER_SECS * 1000) as i32, move || {
@@ -550,11 +587,12 @@ fn resolve(typed: Option<String>) {
     let Some((word, tier, lang)) = with_ui(|u| u.s.pending().map(|r| (r.word.clone(), r.tier, u.lang.clone()))).flatten() else {
         return;
     };
+    let kid = KID.with(Cell::get);
     bump();
     dom::remove_class("rsTimer", "run");
     let correct = typed.as_deref().is_some_and(|t| {
         let tier = crate::boardgame::Tier::ALL[tier.min(3)];
-        crate::boardgame_grade::grade(&lang, false, t, &word, tier)
+        crate::boardgame_grade::grade(&lang, kid, t, &word, tier)
     });
     let out = with_ui(|u| {
         u.spelling = false;
@@ -562,9 +600,32 @@ fn resolve(typed: Option<String>) {
         if typed.is_some() { u.s.answer(correct) } else { u.s.timeout() }
     })
     .flatten();
+    if out.as_ref().is_some_and(|o| o.retry) {
+        // F7: a first miss replays the word and the child tries once more.
+        haptics::incorrect(true);
+        with_ui(|u| {
+            u.spelling = true;
+            u.typed.clear();
+        });
+        dom::set_text("rsField", "");
+        dom::set_text("rsFeed", &i18n::t("rs.jrRetry"));
+        speak(&word, &lang);
+        render_hud();
+        return;
+    }
     dom::set_text("rsField", "");
     spell_panel(false);
-    if correct {
+    if kid {
+        // Spell Jr: every line is encouraging, and a miss never shows a loss.
+        if correct {
+            haptics::correct();
+            let pts = out.as_ref().map_or(0, |o| o.points);
+            dom::set_text("rsFeed", &i18n::tp("rs.jrRight", &[("n", &pts.to_string())]));
+        } else {
+            haptics::incorrect(true);
+            dom::set_text("rsFeed", &i18n::tp("rs.jrWord", &[("word", crate::boardgame_grade::citation(&word))]));
+        }
+    } else if correct {
         haptics::correct();
         let pts = out.as_ref().map_or(0, |o| o.points);
         dom::set_text("rsFeed", &i18n::tp("rs.plus", &[("n", &pts.to_string())]));
@@ -717,12 +778,16 @@ fn show_over() {
     .unwrap_or((0, 0, 0, None, [0; 11], false, Mode::Sprint, 0, 0, false));
     let goal = if mode == Mode::Marathon { MARATHON_GOAL } else { SPRINT_GOAL };
     let h2h = mode == Mode::HeadToHead;
+    let jr = mode == Mode::Jr;
+    let best_streak = with_ui(|u| u.s.best_streak).unwrap_or(0);
     let (winner, scores, kind) = with_ui(|u| (u.s.winner, [u.s.score_of(0), u.s.score_of(1)], u.kind)).unwrap_or((None, [0, 0], Kind::Sprint));
     let title = if h2h {
         match winner {
             Some(w) => i18n::tp("rs.winner", &[("n", &(w + 1).to_string())]),
             None => i18n::t("rs.draw"),
         }
+    } else if jr {
+        i18n::t("rs.jrDone")
     } else {
         i18n::t(if mode == Mode::Marathon { "rs.overM" } else { "rs.over" })
     };
@@ -740,6 +805,16 @@ fn show_over() {
     if let Some(w) = longest {
         stats.push(i18n::tp("rs.longest", &[("word", crate::boardgame_grade::citation(&w))]));
     }
+    if jr {
+        stats.clear();
+        stats.push(if goal_met {
+            i18n::tp("rs.result", &[("goal", &goal.to_string()), ("n", &rolls.to_string())])
+        } else {
+            i18n::tp("rs.score", &[("n", &score.to_string())])
+        });
+        stats.push(i18n::tp("rs.jrCount", &[("n", &correct.to_string())]));
+        stats.push(i18n::tp("rs.bestStreak", &[("n", &best_streak.to_string())]));
+    }
     if h2h {
         stats.clear();
         stats.push(i18n::tp("rs.h2hScore", &[("a", &scores[0].to_string()), ("b", &scores[1].to_string())]));
@@ -753,6 +828,7 @@ fn show_over() {
     let list: String = stats.iter().map(|s| format!("<li>{}</li>", dom::escape_html(s))).collect();
     dom::set_html("rsStats", &list);
     // D20: the histogram is on every result card.
+    let hist: Vec<u32> = if jr { hist[..6].to_vec() } else { hist.to_vec() };
     let max = hist.iter().copied().max().unwrap_or(0).max(1);
     let bars: String = hist
         .iter()
@@ -760,7 +836,7 @@ fn show_over() {
         .map(|(i, n)| {
             format!(
                 "<div class=\"rs-bar\" data-roll=\"{r}\" data-n=\"{n}\"><span>{r}</span><i style=\"width:{w}%\"></i><b>{n}</b></div>",
-                r = i + 2,
+                r = if jr { i + 1 } else { i + 2 },
                 w = n * 100 / max
             )
         })
@@ -790,6 +866,8 @@ pub fn seam_state() -> String {
                     "spelling": u.spelling,
                     "mode": format!("{:?}", u.s.mode),
                     "kind": format!("{:?}", u.kind),
+                    "jr": u.s.mode == Mode::Jr,
+                    "bestStreak": u.s.best_streak,
                     "dailyKey": u.daily_key,
                     "turn": u.s.turn,
                     "scores": [u.s.score_of(0), u.s.score_of(1)],

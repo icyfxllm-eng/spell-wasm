@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Player 1: {a} · Player 2: {b}",
   "rs.h2hHow": "Take turns. Bank to keep points; a miss empties your pot and gives your rival a free bonus roll. First to 100 after a Bank wins.",
   "rs.ready": "Ready",
-  "rs.share": "Share"
+  "rs.share": "Share",
+  "rs.letters": "{n} letters",
+  "rs.howJr": "Roll the die, listen, and spell the word. Each right word scores the number on the die. Miss one? You get another try!",
+  "rs.jrRight": "Great spelling! +{n}",
+  "rs.jrRetry": "So close! Listen again and have one more try.",
+  "rs.jrWord": "The word was {word}. On to the next one!",
+  "rs.jrDone": "Well done!",
+  "rs.jrCount": "{n} words spelled right",
+  "rs.bestStreak": "Best streak: {n}"
 }

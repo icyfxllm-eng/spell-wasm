@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Mchezaji 1: {a} · Mchezaji 2: {b}",
   "rs.h2hHow": "Cheza kwa zamu. Hifadhi ili kubaki na alama; kosa hufuta chungu chako na kumpa mpinzani tupo la bonasi bila malipo. Wa kwanza kufikia 100 baada ya kuhifadhi ndiye mshindi.",
   "rs.ready": "Tayari",
-  "rs.share": "Shiriki"
+  "rs.share": "Shiriki",
+  "rs.letters": "Herufi {n}",
+  "rs.howJr": "Tupa kete, sikiliza kisha tamka neno. Kila neno sahihi hupata namba iliyo kwenye kete. Ulikosea? Una nafasi nyingine!",
+  "rs.jrRight": "Umetamka vizuri! +{n}",
+  "rs.jrRetry": "Karibu! Sikiliza tena na ujaribu mara moja zaidi.",
+  "rs.jrWord": "Neno lilikuwa {word}. Tuendelee na linalofuata!",
+  "rs.jrDone": "Hongera!",
+  "rs.jrCount": "Maneno {n} sahihi",
+  "rs.bestStreak": "Mfululizo bora: {n}"
 }

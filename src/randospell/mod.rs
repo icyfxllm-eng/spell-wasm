@@ -42,7 +42,7 @@
 //!
 //! # Not here yet
 //!
-//! The Jr die (D).
+//! (Phase D, the Jr die, is below.)
 
 #![allow(dead_code)] // wired by the screen in the next Phase A step
 
@@ -68,6 +68,9 @@ pub enum Mode {
     Marathon,
     /// Pass-and-play, Marathon rules, first to 100 after a Bank (F8).
     HeadToHead,
+    /// Spell Jr (F7): Sprint with one die, faces 1-6 playing word lengths 2-7,
+    /// no pot, no Ward, no multiplier, and one more try after a miss.
+    Jr,
 }
 
 impl Mode {
@@ -78,7 +81,7 @@ impl Mode {
 
     pub fn goal(self) -> u32 {
         match self {
-            Mode::Sprint => SPRINT_GOAL,
+            Mode::Sprint | Mode::Jr => SPRINT_GOAL,
             Mode::Marathon | Mode::HeadToHead => MARATHON_GOAL,
         }
     }
@@ -139,6 +142,9 @@ pub struct Outcome {
     pub passed: bool,
     /// Head-to-Head: this was a free bonus roll.
     pub bonus_roll: bool,
+    /// Jr: a miss that lets the child try the same word once more. Nothing
+    /// was scored and the streak is untouched.
+    pub retry: bool,
 }
 
 /// What a Bank did.
@@ -193,6 +199,11 @@ pub struct Session {
     pub largest_lost: u32,
     /// Marathon: a correct answer is waiting for Bank or Roll again.
     pub deciding: bool,
+    /// The longest run of right answers, tracked for the result card. Jr shows
+    /// no multiplier but keeps this silently (F7).
+    pub best_streak: u32,
+    /// Jr: how many tries the pending word has had.
+    attempt: u8,
     /// Head-to-Head: 0 or 1, the player on the move.
     pub turn: usize,
     /// Head-to-Head: who banked past the goal.
@@ -230,6 +241,8 @@ impl Session {
             largest_banked: 0,
             largest_lost: 0,
             deciding: false,
+            best_streak: 0,
+            attempt: 0,
             turn: 0,
             winner: None,
             bonus: false,
@@ -270,9 +283,16 @@ impl Session {
             return None;
         }
         let bonus_roll = self.mode == Mode::HeadToHead && self.bonus;
-        let face = roll_two_dice(&mut self.dice);
+        let jr = self.mode == Mode::Jr;
+        // F7: Jr rolls ONE die (1..=6) for a word of face + 1 letters, kept
+        // inside 2..=7 by the remap; everyone else rolls two dice.
+        let face = if jr { self.dice.below(6) as u8 + 1 } else { roll_two_dice(&mut self.dice) };
         self.rolls += 1;
-        let len = self.bank.cov.length_for(face);
+        let len = if jr {
+            self.bank.cov.length_within(face as usize + 1, bank::JR_LO, bank::JR_HI)
+        } else {
+            self.bank.cov.length_for(face)
+        };
         let word = len.and_then(|l| self.pick(l));
         match (len, word) {
             (Some(len), Some((tier, word))) => {
@@ -311,6 +331,30 @@ impl Session {
     /// Sprint adds straight to the score; Marathon adds to the pot and then
     /// waits for `bank` or `roll_again`.
     pub fn answer(&mut self, correct: bool) -> Option<Outcome> {
+        if self.pending.is_none() {
+            return None;
+        }
+        // F7/D18: only Jr gets a second try, and only once per word. The
+        // roll stays pending, nothing is scored and the streak is untouched.
+        if self.mode == Mode::Jr && !correct && self.attempt == 0 {
+            self.attempt = 1;
+            return Some(Outcome {
+                correct: false,
+                points: 0,
+                multiplied: false,
+                streak: self.streak,
+                score: self.score,
+                finished: false,
+                pot: 0,
+                warded: false,
+                lost: 0,
+                deciding: false,
+                passed: false,
+                bonus_roll: false,
+                retry: true,
+            });
+        }
+        self.attempt = 0;
         let r = self.pending.take()?;
         let marathon = self.mode.pot_rules();
         let h2h = self.mode == Mode::HeadToHead;
@@ -319,13 +363,15 @@ impl Session {
         let mut mult = false;
         let (mut warded, mut lost) = (false, 0);
         if correct {
-            let mut p = base_points(r.len as u8);
-            if self.streak >= STREAK_FOR_MULTIPLIER {
+            // Jr scores the number on the die (length - 1); no jackpot, no multiplier.
+            let mut p = if self.mode == Mode::Jr { r.len as u32 - 1 } else { base_points(r.len as u8) };
+            if self.streak >= STREAK_FOR_MULTIPLIER && self.mode != Mode::Jr {
                 p = multiplied(p);
                 mult = true;
             }
             points = p;
             self.streak += 1;
+            self.best_streak = self.best_streak.max(self.streak);
             self.correct += 1;
             if bonus_roll {
                 // A bonus roll is banked at once and never put at risk.
@@ -378,6 +424,7 @@ impl Session {
             deciding: self.deciding,
             passed: false,
             bonus_roll,
+            retry: false,
         };
         // Head-to-Head: a real miss hands over the turn and grants the other
         // player a bonus roll (a flag: it does not stack).

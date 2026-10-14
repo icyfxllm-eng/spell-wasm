@@ -12,12 +12,18 @@ const FLAG_ALL = () => {
   localStorage.setItem('spell_flag_randospell_daily', 'on');
   localStorage.setItem('spell_flag_randospell_h2h', 'on');
 };
+const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
+const FLAG_JR = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_jr', 'on');
+};
 const FLAG_M = () => { localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_flag_randospell_marathon', 'on'); };
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.randospellState() || 'null'));
 
 export async function run(browser, base, suite) {
-  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null } = {}) => {
-    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init: kind ? FLAG_ALL : marathon ? FLAG_M : FLAG });
+  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null, jr = false, jrFlag = true } = {}) => {
+    const init = jr ? (jrFlag ? FLAG_JR : FLAG) : kind ? FLAG_ALL : marathon ? FLAG_M : FLAG;
+    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init, ...(jr ? { age: KID } : {}) });
     if (reduce) await o.page.emulateMedia({ reducedMotion: 'reduce' });
     await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
     await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
@@ -272,6 +278,91 @@ export async function run(browser, base, suite) {
       assert(r1.after.ended === 'Goal' && r1.after.score >= 100, `the bonus roll did not bank to the goal: ${JSON.stringify(r1.after)}`);
       assert(r1.after.winner === 1, `wrong winner: ${r1.after.winner}`);
       assert(await page.evaluate(() => !document.getElementById('rsOver').hidden), 'no end card');
+    } finally { await ctx.close(); }
+  });
+  // ---- Phase D: Spell Jr -----------------------------------------------
+  await suite.test('randospell_jr_is_off_without_its_flag', async () => {
+    const { ctx, page } = await open({ jr: true, jrFlag: false, start: false });
+    try {
+      assert(await page.evaluate(() => document.getElementById('rsStart').disabled), 'Jr can start with randospell_jr off');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_jr_is_off_for_swahili_and_filipino', async () => {
+    for (const lang of ['sw', 'fil']) {
+      const { ctx, page } = await open({ jr: true, lang, start: false });
+      try {
+        assert(await page.evaluate(() => document.getElementById('rsStart').disabled), `${lang}: Jr can start`);
+      } finally { await ctx.close(); }
+    }
+  });
+
+  await suite.test('randospell_jr_one_die_no_pot_no_ward_no_timer', async () => {
+    const { ctx, page } = await open({ jr: true });
+    try {
+      assert(await page.evaluate(() => document.getElementById('rsModes').children.length === 0 && document.getElementById('rsTiers').children.length === 0), 'Jr shows a mode or tier picker');
+      for (let i = 0; i < 4; i++) {
+        const s = await roll(page);
+        const st = await state(page);
+        assert(st.jr === true && st.mode === 'Jr', `not the Jr game: ${JSON.stringify(st)}`);
+        const die = Number(await page.evaluate(() => document.getElementById('rsDie').textContent.trim()));
+        assert(die >= 1 && die <= 6 && s.roll === die + 1 && [...s.word].length === die + 1, `die ${die}, length ${s.roll}, word ${s.word}`);
+        assert(await page.evaluate(() => document.getElementById('rsPot').hidden && document.getElementById('rsWard').hidden), 'pot or Ward shown in Jr');
+        assert(await page.evaluate(() => !document.getElementById('rsTimer').classList.contains('run')), 'a timer runs in Jr');
+        const before = await page.evaluate(() => window.__spelltest.randospellState());
+        await type(page, s.word);
+        await page.click('#rsGo');
+        await settled(page, before);
+        const after = await state(page);
+        assert(after.score >= die, `a right word did not score the die: ${JSON.stringify(after)}`);
+        assert(await page.evaluate(() => document.getElementById('rsDecide').hidden), 'Bank / Roll again shown in Jr');
+      }
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_jr_a_miss_replays_the_word_for_one_more_try', async () => {
+    const { ctx, page } = await open({ jr: true });
+    try {
+      const s = await roll(page);
+      let before = await page.evaluate(() => window.__spelltest.randospellState());
+      await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsGo');
+      await settled(page, before);
+      let st = await state(page);
+      assert(st.spelling && st.word === s.word && st.score === 0, `the first miss did not hold the word: ${JSON.stringify(st)}`);
+      assert((await page.evaluate(() => document.getElementById('rsFeed').textContent)).length > 3, 'no encouragement shown');
+      // The second try, right: scores the die in full.
+      before = await page.evaluate(() => window.__spelltest.randospellState());
+      await type(page, s.word);
+      await page.click('#rsGo');
+      await settled(page, before);
+      st = await state(page);
+      assert(st.score === s.roll - 1 && st.spelling === false, `retry did not score: ${JSON.stringify(st)}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_jr_two_misses_move_on_and_the_end_card_has_six_faces', async () => {
+    const { ctx, page } = await open({ jr: true });
+    try {
+      await roll(page);
+      for (let i = 0; i < 2; i++) {
+        const before = await page.evaluate(() => window.__spelltest.randospellState());
+        await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsGo');
+        await settled(page, before);
+      }
+      const st = await state(page);
+      assert(st.spelling === false && st.score === 0 && st.streak === 0, `two misses did not move on: ${JSON.stringify(st)}`);
+      await page.evaluate(() => window.__spelltest.randospellScore(48));
+      for (let i = 0; i < 30; i++) {
+        if ((await state(page)).ended) break;
+        const s = await roll(page);
+        const before = await page.evaluate(() => window.__spelltest.randospellState());
+        await type(page, s.word);
+        await page.click('#rsGo');
+        await settled(page, before);
+      }
+      assert((await state(page)).ended === 'Goal', 'Jr did not end at the goal');
+      assert(await page.evaluate(() => document.querySelectorAll('#rsHist .rs-bar').length === 6), 'the Jr end card is not a six-face histogram');
+      assert(await page.evaluate(() => document.getElementById('rsAgain') !== null && document.getElementById('rsOverExit') !== null), 'end card controls missing');
     } finally { await ctx.close(); }
   });
 }

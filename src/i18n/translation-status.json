@@ -178,7 +178,15 @@
     "rs.h2hScore",
     "rs.h2hHow",
     "rs.ready",
-    "rs.share"
+    "rs.share",
+    "rs.letters",
+    "rs.howJr",
+    "rs.jrRight",
+    "rs.jrRetry",
+    "rs.jrWord",
+    "rs.jrDone",
+    "rs.jrCount",
+    "rs.bestStreak"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -365,7 +373,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -542,7 +558,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "de": [
       "hub.group.spell_it",
@@ -719,7 +743,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -896,7 +928,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1073,7 +1113,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1250,7 +1298,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1427,7 +1483,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -1604,7 +1668,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -1781,7 +1853,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -1958,7 +2038,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2135,7 +2223,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -2312,7 +2408,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -2489,7 +2593,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -2666,7 +2778,15 @@
       "rs.h2hScore",
       "rs.h2hHow",
       "rs.ready",
-      "rs.share"
+      "rs.share",
+      "rs.letters",
+      "rs.howJr",
+      "rs.jrRight",
+      "rs.jrRetry",
+      "rs.jrWord",
+      "rs.jrDone",
+      "rs.jrCount",
+      "rs.bestStreak"
     ]
   }
 }

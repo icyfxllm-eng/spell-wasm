@@ -293,7 +293,10 @@
       ]
     },
     "randospell": {
-      "junior": [],
+      "junior": [
+        "easy",
+        "medium"
+      ],
       "standard": [
         "easy",
         "medium",

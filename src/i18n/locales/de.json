@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Spieler 1: {a} · Spieler 2: {b}",
   "rs.h2hHow": "Abwechselnd spielen. Sichere, um Punkte zu behalten; ein Fehler leert deinen Topf und schenkt deinem Gegner einen Bonuswurf. Wer nach dem Sichern zuerst 100 erreicht, gewinnt.",
   "rs.ready": "Bereit",
-  "rs.share": "Teilen"
+  "rs.share": "Teilen",
+  "rs.letters": "{n} Buchstaben",
+  "rs.howJr": "Würfle, höre zu und buchstabiere das Wort. Jedes richtige Wort bringt die Zahl auf dem Würfel. Daneben? Du hast noch einen Versuch!",
+  "rs.jrRight": "Super buchstabiert! +{n}",
+  "rs.jrRetry": "Fast! Hör noch einmal zu und versuch es noch einmal.",
+  "rs.jrWord": "Das Wort war {word}. Weiter zum nächsten!",
+  "rs.jrDone": "Gut gemacht!",
+  "rs.jrCount": "{n} Wörter richtig buchstabiert",
+  "rs.bestStreak": "Beste Serie: {n}"
 }

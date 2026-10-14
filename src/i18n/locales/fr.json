@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Joueur 1 : {a} · Joueur 2 : {b}",
   "rs.h2hHow": "À tour de rôle. Encaisse pour garder les points ; une erreur vide ta cagnotte et offre un lancer bonus à ton rival. Le premier à 100 après avoir encaissé gagne.",
   "rs.ready": "Prêt",
-  "rs.share": "Partager"
+  "rs.share": "Partager",
+  "rs.letters": "{n} lettres",
+  "rs.howJr": "Lance le dé, écoute et épelle le mot. Chaque bon mot rapporte le nombre du dé. Raté ? Tu as un autre essai !",
+  "rs.jrRight": "Bien épelé ! +{n}",
+  "rs.jrRetry": "Presque ! Écoute encore et essaie une dernière fois.",
+  "rs.jrWord": "Le mot était {word}. Passons au suivant !",
+  "rs.jrDone": "Bravo !",
+  "rs.jrCount": "{n} mots bien épelés",
+  "rs.bestStreak": "Meilleure série : {n}"
 }

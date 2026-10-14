@@ -466,14 +466,14 @@
       "descKey": "rs.desc",
       "icon": "\ud83c\udfaf",
       "status": "live",
-      "kidSafe": false,
+      "kidSafe": true,
       "platforms": ["ios"],
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": ["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ar", "sw", "fil"],
-      "$note": "CC-RANDOSPELL v1 Phase A: the orb rolls two dice and speaks a word of exactly that many letters. App only (O3): cfg, registry strip, RANDOSPELL markup sentinels and the rs. locale prefix. Languages are the census-signed set (Eric, 2026-10-14): ko, hi, ja and zh stay off until a bank grows (D1), and randospell::bank::eligible re-checks the coverage at run time. Spell Jr is Phase D, so juniorPolicy is hidden and kidSafe false until then. The group is PROVISIONAL (spell_it, like boardgame): choosing one edits the signed d_n6_membership_is_what_was_signed test. Icon is not the dice, which Board Game owns.",
+      "$note": "CC-RANDOSPELL v1 Phase A: the orb rolls two dice and speaks a word of exactly that many letters. App only (O3): cfg, registry strip, RANDOSPELL markup sentinels and the rs. locale prefix. Languages are the census-signed set (Eric, 2026-10-14): ko, hi, ja and zh stay off until a bank grows (D1), and randospell::bank::eligible re-checks the coverage at run time. Spell Jr is the Sprint-only Jr variant (Phase D, F7): ceiling:medium, a one-die game, on only where randospell_jr is on and randospell::bank::jr_eligible holds (play_hub filters the kid hub on both). The group is PROVISIONAL (spell_it, like boardgame): choosing one edits the signed d_n6_membership_is_what_was_signed test. Icon is not the dice, which Board Game owns.",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "standard",

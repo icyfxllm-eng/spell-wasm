@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Gracz 1: {a} · Gracz 2: {b}",
   "rs.h2hHow": "Grajcie na zmianę. Zapisz, by zachować punkty; błąd opróżnia pulę i daje rywalowi darmowy rzut bonusowy. Wygrywa pierwszy, kto po zapisaniu osiągnie 100.",
   "rs.ready": "Gotowe",
-  "rs.share": "Udostępnij"
+  "rs.share": "Udostępnij",
+  "rs.letters": "{n} liter",
+  "rs.howJr": "Rzuć kostką, posłuchaj i przeliteruj słowo. Każde dobre słowo daje liczbę z kostki. Pomyłka? Masz jeszcze jedną próbę!",
+  "rs.jrRight": "Świetnie przeliterowane! +{n}",
+  "rs.jrRetry": "Prawie! Posłuchaj jeszcze raz i spróbuj ponownie.",
+  "rs.jrWord": "To było słowo {word}. Idziemy dalej!",
+  "rs.jrDone": "Brawo!",
+  "rs.jrCount": "{n} dobrze przeliterowanych słów",
+  "rs.bestStreak": "Najlepsza seria: {n}"
 }

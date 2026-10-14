@@ -166,6 +166,9 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
     if ent.progress_reports {
         premium.push("progress_reports".to_string());
     }
+    // Phase D: Spell Jr sees Randospell only with randospell_jr on and a bank
+    // that carries the Jr die. Computed before `lang` moves into the context.
+    let jr_hides_randospell = kid && randospell_blocked_for_jr(&lang);
     modes::HubCtx {
         kid,
         // PLATFORM gate for the hub: is this iOS at all? (not "is the speech plugin
@@ -180,8 +183,21 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
             .iter()
             .map(|m| m.id.clone())
             .filter(|id| crate::flags::is_on(id))
+            .filter(|id| !(jr_hides_randospell && id == "randospell"))
             .collect(),
     }
+}
+
+/// CC-RANDOSPELL Phase D (F9): the Jr variant needs its own flag and a bank that
+/// can carry the Jr die in the player's language; absent, not greyed.
+#[cfg(not(feature = "web"))]
+fn randospell_blocked_for_jr(lang: &str) -> bool {
+    !crate::flags::randospell_jr() || !crate::randospell::bank::jr_eligible(lang)
+}
+
+#[cfg(feature = "web")]
+fn randospell_blocked_for_jr(_lang: &str) -> bool {
+    false
 }
 
 #[cfg(not(feature = "web"))]

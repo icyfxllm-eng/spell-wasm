@@ -11,6 +11,15 @@ pub const MIN_COVERED: usize = 6;
 pub const INELIGIBLE: [&str; 4] = ["ko", "hi", "ja", "zh"];
 /// The mode id the experience resolver knows this mode by (I5 of CC-ONBOARD-JR).
 pub const MODE_ID: &str = "randospell";
+/// F7: the Jr die plays word lengths 2..=7.
+pub const JR_LO: usize = 2;
+pub const JR_HI: usize = 7;
+/// Phase D ruling (Eric, 2026-10-14): Jr is on where at least this many of
+/// those six lengths are covered...
+pub const JR_MIN_COVERED: usize = 4;
+/// ...except these, which stay off for Jr until their banks grow. fil has four
+/// covered lengths and would pass the count; the ruling names it off.
+pub const JR_INELIGIBLE: [&str; 2] = ["sw", "fil"];
 /// Faces 2..=12.
 pub const FACES: std::ops::RangeInclusive<u8> = 2..=12;
 
@@ -41,6 +50,36 @@ impl Coverage {
 
     pub fn covered_lengths(&self) -> Vec<usize> {
         (2..=12).filter(|l| self.covered(*l)).collect()
+    }
+
+    /// Covered lengths inside `lo..=hi`.
+    pub fn covered_in(&self, lo: usize, hi: usize) -> Vec<usize> {
+        (lo..=hi).filter(|l| self.covered(*l)).collect()
+    }
+
+    /// D4 restricted to a range: the Jr die plays only lengths 2..=7 (F7), so a
+    /// remap never leaves it even when a longer length is closer.
+    pub fn length_within(&self, want: usize, lo: usize, hi: usize) -> Option<usize> {
+        if (lo..=hi).contains(&want) && self.covered(want) {
+            return Some(want);
+        }
+        self.covered_in(lo, hi).into_iter().min_by_key(|l| (l.abs_diff(want), std::cmp::Reverse(*l)))
+    }
+
+    /// F7/D4: the Jr die's remaps, as (die face, die face it plays as). A face
+    /// n asks for a word of n + 1 letters; a remap shows as another face.
+    pub fn jr_remaps(&self) -> Vec<(u8, u8)> {
+        (1u8..=6)
+            .filter_map(|n| {
+                let want = n as usize + 1;
+                self.length_within(want, JR_LO, JR_HI).filter(|l| *l != want).map(|l| (n, (l - 1) as u8))
+            })
+            .collect()
+    }
+
+    /// Phase D (Eric, 2026-10-14): Jr needs at least this many covered lengths.
+    pub fn jr_viable(&self) -> bool {
+        self.covered_in(JR_LO, JR_HI).len() >= JR_MIN_COVERED
     }
 
     /// D4: the length a face plays as: itself when covered, else the nearest
@@ -116,6 +155,10 @@ impl Bank {
                 if crate::profanity::is_blocked(w) || !crate::audio_verdict::servable(lang, w, "normal") {
                     continue;
                 }
+                // Spell Jr: the kid-safety list, as every Jr surface applies it.
+                if exp == crate::experience::Experience::Junior && !crate::kid_filter::kid_allowed(lang, w) {
+                    continue;
+                }
                 // German capitalises every noun, so case says nothing there.
                 if lang != "de" && w.chars().next().map_or(false, char::is_uppercase) {
                     continue;
@@ -131,4 +174,11 @@ impl Bank {
 /// remote flag: the hub additionally needs `flags::randospell()`.
 pub fn eligible(lang: &str, exp: crate::experience::Experience) -> bool {
     !INELIGIBLE.contains(&lang) && Bank::for_lang(lang, exp).cov.viable()
+}
+
+/// Phase D: is the Spell Jr variant offered for this language? The ineligible
+/// list, then the Jr coverage floor on the Easy + Medium bank.
+pub fn jr_eligible(lang: &str) -> bool {
+    use crate::experience::Experience::Junior;
+    !INELIGIBLE.contains(&lang) && !JR_INELIGIBLE.contains(&lang) && Bank::for_lang(lang, Junior).cov.jr_viable()
 }

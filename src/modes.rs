@@ -346,7 +346,7 @@ mod tests {
         // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame"],
+            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell"],
             "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
         assert!(!got.contains(&"photo_list".to_string()));
@@ -380,7 +380,7 @@ mod tests {
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
         // CC-HUB-CLEANUP D2/D5 (+ Word Picture and Quest Log
         // reconciliations): the pruned menu holds even on es.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "boardgame"]);
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "boardgame", "randospell"]);
     }
 
     #[test]

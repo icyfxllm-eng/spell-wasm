@@ -577,3 +577,104 @@ fn h2h_score_never_falls_for_either_player() {
         }
     }
 }
+
+// ---- Phase D: the Spell Jr variant ---------------------------------------
+
+use super::bank::{jr_eligible, JR_HI, JR_LO};
+
+fn jr_bank(lang: &str) -> Bank {
+    Bank::for_lang(lang, Junior)
+}
+
+fn jr(seed: u64, bank: Bank) -> Session {
+    Session::new(seed, Mode::Jr, 0, bank, BTreeSet::new())
+}
+
+#[test]
+fn a12_jr_die_plays_lengths_two_to_seven_only() {
+    for lang in ["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ar"] {
+        assert!(jr_eligible(lang), "{lang} should be Jr eligible on the Phase D census");
+        let mut s = jr(3, jr_bank(lang));
+        for _ in 0..120 {
+            let Some(r) = s.press() else { break };
+            assert!((1..=6).contains(&r.face), "{lang}: die face {}", r.face);
+            assert!((JR_LO..=JR_HI).contains(&r.len), "{lang}: length {} outside 2-7", r.len);
+            assert_eq!(length_of(&r.word), r.len);
+            s.answer(true);
+            if s.ended.is_some() {
+                break;
+            }
+        }
+    }
+}
+
+#[test]
+fn jr_sw_and_fil_stay_off_and_the_ineligible_stay_off() {
+    for l in ["sw", "fil", "ko", "hi", "ja", "zh"] {
+        assert!(!jr_eligible(l), "{l} must be off for Jr");
+    }
+}
+
+#[test]
+fn jr_remaps_are_listed_in_die_faces_and_never_leave_the_die() {
+    // en has no length-7 word at the Jr tiers (17), so face 6 plays as face 5.
+    let cov = jr_bank("en").cov;
+    assert!(!cov.covered(7));
+    assert_eq!(cov.jr_remaps(), vec![(6, 5)]);
+    // ru covers all six lengths, so nothing is remapped.
+    assert!(jr_bank("ru").cov.jr_remaps().is_empty());
+    // es has almost no two-letter words: face 1 plays as face 2 (length 3).
+    assert_eq!(jr_bank("es").cov.jr_remaps(), vec![(1, 2)]);
+    // A closer length outside 2-7 is never chosen (en 8 is covered, 7 is not).
+    assert_eq!(cov.length_within(7, JR_LO, JR_HI), Some(6));
+}
+
+#[test]
+fn jr_scores_the_die_with_no_multiplier_and_no_pot() {
+    let mut s = jr(1, full_fake());
+    for _ in 0..4 {
+        s.pending = Some(Roll { face: 6, len: 7, word: "qqqqqqq".into(), tier: 0 });
+        let o = s.answer(true).unwrap(); // a die showing 6
+        assert_eq!((o.points, o.multiplied, o.pot, o.deciding, o.warded), (6, false, 0, false, false));
+    }
+    assert_eq!(s.score, 24);
+    assert_eq!(s.streak, 4, "the streak is tracked silently");
+    assert_eq!(s.best_streak, 4);
+    assert!(!s.ward, "Jr has no Ward");
+}
+
+#[test]
+fn jr_a_miss_replays_the_word_and_allows_one_more_try() {
+    let mut s = jr(2, full_fake());
+    let r = s.press().unwrap();
+    s.streak = 3;
+    let first = s.answer(false).unwrap();
+    assert!(first.retry && !first.correct, "first miss is a retry");
+    assert_eq!((s.score, s.streak), (0, 3), "nothing changes on the first miss");
+    assert_eq!(s.pending().map(|p| p.word.clone()), Some(r.word.clone()), "same word, replayed");
+    let second = s.answer(false).unwrap();
+    assert!(!second.retry && second.points == 0);
+    assert_eq!(s.streak, 0, "the second miss moves on and resets the streak");
+    assert!(s.pending().is_none());
+    // A right answer on the retry scores in full.
+    let r = s.press().unwrap();
+    s.answer(false);
+    let o = s.answer(true).unwrap();
+    assert_eq!(o.points as usize, r.len - 1);
+}
+
+#[test]
+fn the_jr_pool_holds_only_easy_and_medium_words() {
+    let b = jr_bank("en");
+    for len in 2..=12 {
+        assert!(b.of_len(len).iter().all(|e| e.tier <= 1), "length {len}");
+    }
+}
+
+#[test]
+fn only_jr_gets_a_second_try() {
+    let mut s = session(4, full_fake());
+    s.press().unwrap();
+    let o = s.answer(false).unwrap();
+    assert!(!o.retry, "Sprint has one attempt per word (D18)");
+}

@@ -1041,5 +1041,13 @@
   "rs.h2hScore": "Manlalaro 1: {a} · Manlalaro 2: {b}",
   "rs.h2hHow": "Salitan. Itabi para mapanatili ang puntos; inuubos ng mali ang kaldero mo at binibigyan ng libreng bonus na gulong ang karibal. Unang umabot sa 100 pagkatapos itabi ang panalo.",
   "rs.ready": "Handa na",
-  "rs.share": "Ibahagi"
+  "rs.share": "Ibahagi",
+  "rs.letters": "{n} titik",
+  "rs.howJr": "Igulong ang dice, making, at baybayin ang salita. Bawat tamang salita ay may puntos na katumbas ng numero sa dice. Nagkamali? May isa ka pang subok!",
+  "rs.jrRight": "Ang galing ng baybay! +{n}",
+  "rs.jrRetry": "Malapit na! Making ulit at subukan pang isang beses.",
+  "rs.jrWord": "Ang salita ay {word}. Susunod na tayo!",
+  "rs.jrDone": "Magaling!",
+  "rs.jrCount": "{n} salitang tama ang baybay",
+  "rs.bestStreak": "Pinakamahabang sunod-sunod na tama: {n}"
 }
