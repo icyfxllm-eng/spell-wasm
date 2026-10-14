@@ -1026,5 +1026,20 @@
   "rs.overM": "Marathon geschafft",
   "rs.bestBank": "Größter gesicherter Topf: {n}",
   "rs.bestLost": "Größter verlorener Topf: {n}",
-  "rs.howM": "Richtige Antworten füllen den Topf. Sichere ihn, um die Punkte zu behalten, oder würfle weiter für mehr. Ein Fehler leert den Topf, aber gesicherte Punkte sind sicher, und ein Schild rettet einen Topf einmal."
+  "rs.howM": "Richtige Antworten füllen den Topf. Sichere ihn, um die Punkte zu behalten, oder würfle weiter für mehr. Ein Fehler leert den Topf, aber gesicherte Punkte sind sicher, und ein Schild rettet einen Topf einmal.",
+  "rs.mode.daily": "Täglich · gleiche Wörter für alle",
+  "rs.mode.h2h": "Duell · abwechselnd spielen",
+  "rs.dailyHow": "Würfel und Wörter von heute sind für alle gleich. Ein Versuch, Marathon-Regeln.",
+  "rs.dailyDone": "Heute: {n} Punkte in {r} Würfen.",
+  "rs.dailyGone": "Du hast den heutigen Versuch schon genutzt.",
+  "rs.dailyShare": "Randospell {date} · {lang} · {tier}\n{n} Punkte in {r} Würfen · {acc} % richtig · größter Topf {b}",
+  "rs.turnOf": "Spieler {n} ist dran",
+  "rs.bonusRoll": "Bonuswurf!",
+  "rs.handoff": "Gib das Handy an Spieler {n}. Tippe, wenn du bereit bist.",
+  "rs.winner": "Spieler {n} gewinnt!",
+  "rs.draw": "Unentschieden",
+  "rs.h2hScore": "Spieler 1: {a} · Spieler 2: {b}",
+  "rs.h2hHow": "Abwechselnd spielen. Sichere, um Punkte zu behalten; ein Fehler leert deinen Topf und schenkt deinem Gegner einen Bonuswurf. Wer nach dem Sichern zuerst 100 erreicht, gewinnt.",
+  "rs.ready": "Bereit",
+  "rs.share": "Teilen"
 }

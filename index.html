@@ -665,7 +665,9 @@
   .rs-die:empty{opacity:.15}
   .rs-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
   .rs-timer.run{animation:rs-timer 30s linear forwards}
-  .rs-pot,.rs-ward{font-size:.9rem;font-weight:600}
+  .rs-pot,.rs-ward,.rs-turn{font-size:.9rem;font-weight:600}
+  .rs-turn[hidden]{display:none}
+  .rs-hand-text{white-space:pre-line;font-size:1.1rem}
   .rs-pot[hidden],.rs-ward[hidden],.rs-decide[hidden]{display:none}
   .rs-decide{display:flex;gap:10px;justify-content:center;flex:none}
   .rs-decide .rs-btn{flex:1 1 0;max-width:200px}
@@ -3050,11 +3052,13 @@
       <div class="rs-opt" id="rsTiers"></div>
       <div class="rs-info" id="rsInfo"></div>
       <div class="rs-note" id="rsNote" aria-live="polite"></div>
+      <button class="btn" id="rsDailyShare" data-i18n="rs.share" hidden>Share</button>
       <button class="btn btn-check" id="rsStart" data-i18n="rs.start">Start</button>
     </div>
     <div class="rs-play" id="rsPlay" hidden>
       <div class="rs-stats">
         <span class="rs-score" id="rsScore"></span>
+        <span class="rs-turn" id="rsTurn" hidden></span>
         <span class="rs-streak" id="rsStreak"></span>
         <span class="rs-pot" id="rsPot" hidden></span>
         <span class="rs-ward" id="rsWard" hidden></span>
@@ -3080,11 +3084,17 @@
         <div class="rs-keys" id="rsKeys"></div>
       </div>
     </div>
+    <div class="rs-card" id="rsHand" hidden>
+      <p id="rsHandText" class="rs-hand-text"></p>
+      <button class="btn btn-check" id="rsHandGo" data-i18n="rs.ready">Ready</button>
+      <button class="btn mode-leave" id="rsHandExit" data-i18n="aria.exit">Exit</button>
+    </div>
     <div class="rs-card" id="rsOver" hidden>
       <h3 id="rsOverTitle" data-i18n="rs.over">Sprint complete</h3>
       <ul class="rs-list" id="rsStats"></ul>
       <div class="rs-hist" id="rsHist" role="img" aria-label="Dice" data-i18n-aria="rs.hist"></div>
       <button class="btn btn-check" id="rsAgain" data-i18n="rs.again">Play again</button>
+      <button class="btn" id="rsShare" data-i18n="rs.share" hidden>Share</button>
       <button class="btn mode-leave" id="rsOverExit" data-i18n="import.close">Close</button>
     </div>
   </div>

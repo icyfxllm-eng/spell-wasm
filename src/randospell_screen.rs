@@ -10,6 +10,9 @@
 //!   history (`wordsearch_ui::LEDGER_KEY`) under `randospell:{lang}`.
 //! * I9: nothing here writes Climb, Daily Challenge or shield state, and the
 //!   mode adds no telemetry.
+//! * F6: Daily is one attempt per (date, language, tier), spent at the START and
+//!   kept in the mode-local store; the result is shareable text.
+//! * F8: Head-to-Head is pass-and-play with a hand-off card between turns.
 //! * F5 / D15: in Marathon a correct answer opens a Bank / Roll again card;
 //!   the game ends only on a Bank that reaches the goal.
 //! * A16 / F1: the die fades in; the shake is CSS and `prefers-reduced-motion`
@@ -22,12 +25,66 @@ use wasm_bindgen::JsCast;
 use crate::boardgame_input::{self as input, Key};
 use crate::experience::Experience;
 use crate::randospell::bank::{self, Bank, MODE_ID};
+use crate::randospell::store::{Store, STORE_KEY};
 use crate::randospell::{Mode, Session, MARATHON_GOAL, SPRINT_GOAL, TIMER_SECS};
 use crate::wordsearch::ledger::Ledger;
 use crate::{dom, haptics, i18n, speech_out, storage, App};
 
+/// What the setup card can start. Each beyond Sprint has its own flag (F9).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Kind {
+    Sprint,
+    Marathon,
+    Daily,
+    H2h,
+}
+
+impl Kind {
+    const ALL: [Kind; 4] = [Kind::Sprint, Kind::Marathon, Kind::Daily, Kind::H2h];
+
+    fn id(self) -> &'static str {
+        match self {
+            Kind::Sprint => "sprint",
+            Kind::Marathon => "marathon",
+            Kind::Daily => "daily",
+            Kind::H2h => "h2h",
+        }
+    }
+
+    fn label_key(self) -> &'static str {
+        match self {
+            Kind::Sprint => "rs.mode.sprint",
+            Kind::Marathon => "rs.mode.marathon",
+            Kind::Daily => "rs.mode.daily",
+            Kind::H2h => "rs.mode.h2h",
+        }
+    }
+
+    fn enabled(self) -> bool {
+        match self {
+            Kind::Sprint => true,
+            Kind::Marathon => crate::flags::randospell_marathon(),
+            Kind::Daily => crate::flags::randospell_daily(),
+            Kind::H2h => crate::flags::randospell_h2h(),
+        }
+    }
+
+    fn mode(self) -> Mode {
+        match self {
+            Kind::Sprint => Mode::Sprint,
+            Kind::Marathon | Kind::Daily => Mode::Marathon,
+            Kind::H2h => Mode::HeadToHead,
+        }
+    }
+}
+
 struct Ui {
     s: Session,
+    kind: Kind,
+    /// Daily: the store key this attempt spent, and the date it was played for.
+    daily_key: Option<String>,
+    date: String,
+    stored: bool,
     lang: String,
     tier: usize,
     typed: String,
@@ -44,7 +101,7 @@ thread_local! {
     /// The tier index the setup card has selected (default Medium).
     static TIER: Cell<usize> = const { Cell::new(1) };
     /// The mode the setup card has selected. Marathon needs its own flag (F9).
-    static MODE: Cell<Mode> = const { Cell::new(Mode::Sprint) };
+    static KIND: Cell<Kind> = const { Cell::new(Kind::Sprint) };
     /// Bumped on every press, answer and close so a stale 30 s timer is a no-op.
     static TOKEN: Cell<u32> = const { Cell::new(0) };
 }
@@ -80,6 +137,8 @@ pub fn wire(app: &App) {
     dom::on_click("rsExit", close);
     // The end card covers the top bar, so the exit is re-offered on it.
     dom::on_click("rsOverExit", close);
+    // The hand-off card covers the top bar too (F8).
+    dom::on_click("rsHandExit", close);
     dom::on_click("rsSetupExit", close);
     dom::on_click("rsStart", start);
     dom::on_click("rsAgain", start);
@@ -87,6 +146,9 @@ pub fn wire(app: &App) {
     dom::on_click("rsDel", delete);
     dom::on_click("rsGo", submit);
     dom::on_click("rsBank", bank_it);
+    dom::on_click("rsHandGo", || dom::set_hidden("rsHand", true));
+    dom::on_click("rsDailyShare", share_daily);
+    dom::on_click("rsShare", share_daily);
     dom::on_click("rsRollAgain", roll_again);
     dom::on::<web_sys::MouseEvent, _>("rsModes", "click", mode_tap);
     dom::on::<web_sys::MouseEvent, _>("rsTiers", "click", tier_tap);
@@ -100,8 +162,8 @@ pub fn open(app: &App) {
     };
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     UI.with(|u| *u.borrow_mut() = None);
-    if !marathon_on() {
-        MODE.with(|m| m.set(Mode::Sprint));
+    if !KIND.with(Cell::get).enabled() {
+        KIND.with(|m| m.set(Kind::Sprint));
     }
     for id in ["rsField", "rsKeys"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
@@ -120,25 +182,42 @@ fn close() {
     bump();
     speech_out::stop();
     finish_record();
+    // F6: leaving a Daily early keeps the attempt spent and records how far it got.
+    let _ = with_ui(|u| {
+        if let (Some(k), false) = (u.daily_key.clone(), u.stored) {
+            u.stored = true;
+            let mut st = load_store();
+            st.finish_daily(&k, &u.s, false);
+            save_store(&st);
+        }
+    });
     UI.with(|u| *u.borrow_mut() = None);
     dom::remove_class("rsScreen", "show");
 }
 
-/// F9: Marathon is offered only with `randospell_marathon` on.
-fn marathon_on() -> bool {
-    crate::flags::randospell_marathon()
+fn load_store() -> Store {
+    storage::get_json(STORE_KEY).unwrap_or_default()
+}
+
+fn save_store(st: &Store) {
+    storage::set_json(STORE_KEY, st);
+}
+
+/// Local calendar date, YYYY-MM-DD: the day a Daily belongs to.
+fn today() -> String {
+    let d = js_sys::Date::new_0();
+    format!("{:04}-{:02}-{:02}", d.get_full_year(), d.get_month() + 1, d.get_date())
 }
 
 fn mode_tap(e: web_sys::MouseEvent) {
     let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-m]").ok().flatten()) else {
         return;
     };
-    let m = match el.get_attribute("data-m").as_deref() {
-        Some("marathon") if marathon_on() => Mode::Marathon,
-        _ => Mode::Sprint,
-    };
-    MODE.with(|c| c.set(m));
-    render_setup();
+    let id = el.get_attribute("data-m").unwrap_or_default();
+    if let Some(k) = Kind::ALL.iter().copied().find(|k| k.id() == id && k.enabled()) {
+        KIND.with(|c| c.set(k));
+        render_setup();
+    }
 }
 
 fn tier_label(ix: usize) -> String {
@@ -164,16 +243,18 @@ fn render_setup() {
         .collect();
     dom::set_html("rsTiers", &btns);
     // The picker exists only when there is a choice to make.
-    let mode = MODE.with(Cell::get);
-    let modes: String = if marathon_on() {
-        [(Mode::Sprint, "sprint", "rs.mode.sprint"), (Mode::Marathon, "marathon", "rs.mode.marathon")]
+    let kind = KIND.with(Cell::get);
+    let offered: Vec<Kind> = Kind::ALL.iter().copied().filter(|k| k.enabled()).collect();
+    let modes: String = if offered.len() > 1 {
+        offered
             .iter()
-            .map(|(m, id, key)| {
+            .map(|k| {
                 format!(
-                    "<button type=\"button\" class=\"rs-btn{}\" data-m=\"{id}\" aria-pressed=\"{}\">{}</button>",
-                    if *m == mode { " on" } else { "" },
-                    *m == mode,
-                    dom::escape_html(&i18n::t(key))
+                    "<button type=\"button\" class=\"rs-btn{}\" data-m=\"{}\" aria-pressed=\"{}\">{}</button>",
+                    if *k == kind { " on" } else { "" },
+                    k.id(),
+                    *k == kind,
+                    dom::escape_html(&i18n::t(k.label_key()))
                 )
             })
             .collect()
@@ -189,14 +270,36 @@ fn render_setup() {
             .into_iter()
             .map(|(f, l)| format!("<li>{}</li>", dom::escape_html(&i18n::tp("rs.remap", &[("face", &f.to_string()), ("len", &l.to_string())]))))
             .collect();
-        let how = format!("<p>{}</p>", dom::escape_html(&i18n::t(if mode == Mode::Marathon { "rs.howM" } else { "rs.how" })));
+        let how = format!("<p>{}</p>", dom::escape_html(&i18n::t(match kind {
+            Kind::Sprint => "rs.how",
+            Kind::Marathon => "rs.howM",
+            Kind::Daily => "rs.dailyHow",
+            Kind::H2h => "rs.h2hHow",
+        })));
         if lines.is_empty() { how } else { format!("{how}<ul>{}</ul>", lines.concat()) }
     } else {
         String::new()
     };
     dom::set_html("rsInfo", &info);
-    dom::set_text("rsNote", &if ok { String::new() } else { i18n::t("rs.soon") });
-    dom::set_disabled("rsStart", !ok);
+    // F6: a Daily already spent for this (date, language, tier) cannot start.
+    let mut note = if ok { String::new() } else { i18n::t("rs.soon") };
+    let mut can_start = ok;
+    let mut share_ready = false;
+    if ok && kind == Kind::Daily {
+        let key = crate::randospell::daily::key(&today(), &lang, sel);
+        if let Some(e) = load_store().daily_entry(&key) {
+            can_start = false;
+            if e.done {
+                note = i18n::tp("rs.dailyDone", &[("n", &e.score.to_string()), ("r", &e.rolls.to_string())]);
+                share_ready = crate::share::available();
+            } else {
+                note = i18n::t("rs.dailyGone");
+            }
+        }
+    }
+    dom::set_hidden("rsDailyShare", !share_ready);
+    dom::set_text("rsNote", &note);
+    dom::set_disabled("rsStart", !can_start);
 }
 
 fn tier_tap(e: web_sys::MouseEvent) {
@@ -218,19 +321,40 @@ fn start() {
         return;
     }
     let tier = TIER.with(Cell::get);
+    let kind = KIND.with(Cell::get);
     let bank = Bank::for_lang(&lang, Experience::Standard);
     let entries: Vec<String> = bank.words().map(str::to_string).collect();
     let keys = input::layout(&lang, false, &entries);
-    let led = load_ledger();
     let day = day();
-    let key = ledger_key(&lang);
-    let avoid = led.seen.iter().filter(|s| s.k == key && led.in_window(s, day)).map(|s| s.w.clone()).collect();
-    let seed = (js_sys::Date::now() as u64) ^ led.counter.wrapping_mul(0x9E37_79B9);
-    let s = Session::new(seed, MODE.with(Cell::get), tier, bank, avoid);
-    UI.with(|u| *u.borrow_mut() = Some(Ui { s, lang, tier, typed: String::new(), keys, spelling: false, recorded: false, day }));
+    let date = today();
+    let mut daily_key = None;
+    let s = if kind == Kind::Daily {
+        // F6: spend the day's one attempt before anything is shown, so a
+        // reload cannot replay words already heard.
+        let key = crate::randospell::daily::key(&date, &lang, tier);
+        let mut st = load_store();
+        if !st.try_start_daily(&key) {
+            render_setup();
+            return;
+        }
+        save_store(&st);
+        let Some(s) = Session::new_daily(&date, &lang, tier, bank) else { return };
+        daily_key = Some(key);
+        s
+    } else {
+        let led = load_ledger();
+        let key = ledger_key(&lang);
+        let avoid = led.seen.iter().filter(|s| s.k == key && led.in_window(s, day)).map(|s| s.w.clone()).collect();
+        let seed = (js_sys::Date::now() as u64) ^ led.counter.wrapping_mul(0x9E37_79B9);
+        Session::new(seed, kind.mode(), tier, bank, avoid)
+    };
+    UI.with(|u| {
+        *u.borrow_mut() = Some(Ui { s, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, recorded: false, day })
+    });
     dom::set_hidden("rsSetup", true);
     dom::set_hidden("rsPlay", false);
     dom::set_hidden("rsOver", true);
+    dom::set_hidden("rsHand", true);
     dom::add_class("rsScreen", "playing");
     render_keys();
     render_hud();
@@ -288,14 +412,26 @@ fn render_keys() {
 }
 
 fn render_hud() {
-    let Some((score, streak, rolls, mode, pot, ward, ward_used)) =
-        with_ui(|u| (u.s.score, u.s.streak, u.s.rolls, u.s.mode, u.s.pot, u.s.ward, u.s.ward_used))
-    else {
+    let Some((score, streak, rolls, mode, pot, ward, ward_used, turn, scores, bonus)) = with_ui(|u| {
+        (u.s.score, u.s.streak, u.s.rolls, u.s.mode, u.s.pot, u.s.ward, u.s.ward_used, u.s.turn, [u.s.score_of(0), u.s.score_of(1)], u.s.bonus)
+    }) else {
         return;
     };
-    let goal = if mode == Mode::Marathon { MARATHON_GOAL } else { SPRINT_GOAL };
-    dom::set_text("rsScore", &format!("{score} / {goal}"));
-    let m = mode == Mode::Marathon;
+    let goal = if mode == Mode::Sprint { SPRINT_GOAL } else { MARATHON_GOAL };
+    let h2h = mode == Mode::HeadToHead;
+    if h2h {
+        dom::set_text("rsScore", &i18n::tp("rs.h2hScore", &[("a", &scores[0].to_string()), ("b", &scores[1].to_string())]));
+        let mut t = i18n::tp("rs.turnOf", &[("n", &(turn + 1).to_string())]);
+        if bonus {
+            t = format!("{t} · {}", i18n::t("rs.bonusRoll"));
+        }
+        dom::set_text("rsTurn", &t);
+    } else {
+        dom::set_text("rsScore", &format!("{score} / {goal}"));
+        dom::set_text("rsTurn", "");
+    }
+    dom::set_hidden("rsTurn", !h2h);
+    let m = mode != Mode::Sprint;
     dom::set_hidden("rsPot", !m);
     dom::set_hidden("rsWard", !m);
     if m {
@@ -448,10 +584,24 @@ fn resolve(typed: Option<String>) {
         if o.deciding {
             decision(true);
         }
+        if o.passed && !o.finished {
+            let feed = dom::el("rsFeed").text_content().unwrap_or_default();
+            show_hand(&feed);
+        }
     }
     if out.is_some_and(|o| o.finished) {
         show_over();
     }
+}
+
+/// F8: the hand-off card between two people on one phone. The turn has
+/// already moved on, so the card names the player who plays next.
+fn show_hand(note: &str) {
+    let Some(n) = with_ui(|u| u.s.turn + 1) else { return };
+    let line = i18n::tp("rs.handoff", &[("n", &n.to_string())]);
+    let text = if note.is_empty() { line } else { format!("{note}\n{line}") };
+    dom::set_text("rsHandText", &text);
+    dom::set_hidden("rsHand", false);
 }
 
 /// F5: bank the pot. The only way a Marathon ends (D15).
@@ -464,6 +614,8 @@ fn bank_it() {
     render_hud();
     if b.finished {
         show_over();
+    } else if b.passed {
+        show_hand(&i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
     }
 }
 
@@ -487,8 +639,65 @@ fn finish_record() {
     });
 }
 
+/// Fold a finished game into the mode-local store (F9), once.
+fn store_result() {
+    let _ = with_ui(|u| {
+        if u.stored {
+            return;
+        }
+        u.stored = true;
+        let mut st = load_store();
+        if let Some(k) = &u.daily_key {
+            st.finish_daily(k, &u.s, true);
+        }
+        st.record_game(&u.s);
+        save_store(&st);
+    });
+}
+
+fn share_daily() {
+    let text = with_ui(|u| {
+        let acc = if u.s.rolls > 0 { u.s.correct * 100 / u.s.rolls } else { 0 };
+        i18n::tp(
+            "rs.dailyShare",
+            &[
+                ("date", &u.date),
+                ("lang", &u.lang.to_uppercase()),
+                ("tier", &i18n::t(&format!("level.{}", crate::consts::TIER_ORDER[u.tier.min(3)]))),
+                ("n", &u.s.score.to_string()),
+                ("r", &u.s.rolls.to_string()),
+                ("acc", &acc.to_string()),
+                ("b", &u.s.largest_banked.to_string()),
+            ],
+        )
+    })
+    .or_else(|| {
+        // From the setup card: today's stored result for the selected tier.
+        let lang = LANG.with(|l| l.borrow().clone());
+        let tier = TIER.with(Cell::get);
+        let e = load_store().daily_entry(&crate::randospell::daily::key(&today(), &lang, tier)).cloned()?;
+        let acc = if e.rolls > 0 { e.correct * 100 / e.rolls } else { 0 };
+        Some(i18n::tp(
+            "rs.dailyShare",
+            &[
+                ("date", &today()),
+                ("lang", &lang.to_uppercase()),
+                ("tier", &tier_label(tier)),
+                ("n", &e.score.to_string()),
+                ("r", &e.rolls.to_string()),
+                ("acc", &acc.to_string()),
+                ("b", &e.best_pot.to_string()),
+            ],
+        ))
+    });
+    if let Some(t) = text {
+        crate::share::share_text(&t);
+    }
+}
+
 fn show_over() {
     finish_record();
+    store_result();
     bump();
     speech_out::stop();
     let (score, rolls, correct, longest, hist, goal_met, mode, best_bank, best_lost, ward_used) = with_ui(|u| {
@@ -507,7 +716,17 @@ fn show_over() {
     })
     .unwrap_or((0, 0, 0, None, [0; 11], false, Mode::Sprint, 0, 0, false));
     let goal = if mode == Mode::Marathon { MARATHON_GOAL } else { SPRINT_GOAL };
-    dom::set_text("rsOverTitle", &i18n::t(if mode == Mode::Marathon { "rs.overM" } else { "rs.over" }));
+    let h2h = mode == Mode::HeadToHead;
+    let (winner, scores, kind) = with_ui(|u| (u.s.winner, [u.s.score_of(0), u.s.score_of(1)], u.kind)).unwrap_or((None, [0, 0], Kind::Sprint));
+    let title = if h2h {
+        match winner {
+            Some(w) => i18n::tp("rs.winner", &[("n", &(w + 1).to_string())]),
+            None => i18n::t("rs.draw"),
+        }
+    } else {
+        i18n::t(if mode == Mode::Marathon { "rs.overM" } else { "rs.over" })
+    };
+    dom::set_text("rsOverTitle", &title);
     let acc = if rolls > 0 { correct * 100 / rolls } else { 0 };
     let mut stats = vec![
         // The Sprint metric: "50 points in N rolls".
@@ -520,6 +739,11 @@ fn show_over() {
     ];
     if let Some(w) = longest {
         stats.push(i18n::tp("rs.longest", &[("word", crate::boardgame_grade::citation(&w))]));
+    }
+    if h2h {
+        stats.clear();
+        stats.push(i18n::tp("rs.h2hScore", &[("a", &scores[0].to_string()), ("b", &scores[1].to_string())]));
+        stats.push(i18n::tp("rs.rolls", &[("n", &rolls.to_string())]));
     }
     if mode == Mode::Marathon {
         stats.push(i18n::tp("rs.bestBank", &[("n", &best_bank.to_string())]));
@@ -544,6 +768,10 @@ fn show_over() {
     dom::set_html("rsHist", &bars);
     spell_panel(false);
     decision(false);
+    dom::set_hidden("rsHand", true);
+    // F6: a Daily has one attempt, so there is no "play again" on its card.
+    dom::set_hidden("rsAgain", kind == Kind::Daily);
+    dom::set_hidden("rsShare", !(kind == Kind::Daily && crate::share::available()));
     dom::set_hidden("rsOver", false);
 }
 
@@ -561,6 +789,12 @@ pub fn seam_state() -> String {
                 serde_json::json!({
                     "spelling": u.spelling,
                     "mode": format!("{:?}", u.s.mode),
+                    "kind": format!("{:?}", u.kind),
+                    "dailyKey": u.daily_key,
+                    "turn": u.s.turn,
+                    "scores": [u.s.score_of(0), u.s.score_of(1)],
+                    "bonus": u.s.bonus,
+                    "winner": u.s.winner,
                     "pot": u.s.pot,
                     "ward": u.s.ward,
                     "deciding": u.s.deciding,
@@ -599,7 +833,7 @@ mod tests {
     fn the_screen_calls_no_telemetry_and_touches_no_climb_state() {
         let src = include_str!("randospell_screen.rs");
         let code: String = src.split("#[cfg(test)]").next().unwrap().lines().filter(|l| !l.trim_start().starts_with("//")).collect::<Vec<_>>().join("\n");
-        for banned in ["telemetry::", "set_mode", "schema::Mode", "climb::", "shield", "daily::"] {
+        for banned in ["telemetry::", "set_mode", "schema::Mode", "climb::", "shield", "crate::daily::"] {
             assert!(!code.contains(banned), "randospell_screen.rs uses {banned}");
         }
     }

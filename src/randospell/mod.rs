@@ -29,13 +29,26 @@
 //! If a length runs out of words the pot is banked and the game ends: score
 //! never falls (I5), and nothing the player earned is thrown away.
 //!
+//! # Head-to-Head (Phase C)
+//!
+//! Two players on one phone share one dice stream and one word supply and
+//! take turns. A turn is a run of rolls that ends on a Bank or a miss; a miss
+//! hands the other player ONE bonus roll at the start of their next turn
+//! (a flag, so two misses in a row do not stack). A bonus roll is free: a
+//! right answer is banked at once, a wrong one costs nothing and grants
+//! nothing. The first Bank that reaches 100 wins (D15). The idle player's
+//! numbers live in `other`; `pass_turn` swaps them with the live fields so
+//! everything that reads `score`, `pot` or `ward` shows the player on the move.
+//!
 //! # Not here yet
 //!
-//! Daily and Head-to-Head (C), the Jr die (D).
+//! The Jr die (D).
 
 #![allow(dead_code)] // wired by the screen in the next Phase A step
 
 pub mod bank;
+pub mod daily;
+pub mod store;
 #[cfg(test)]
 mod tests;
 
@@ -53,13 +66,20 @@ pub const STREAK_FOR_MULTIPLIER: u32 = 3;
 pub enum Mode {
     Sprint,
     Marathon,
+    /// Pass-and-play, Marathon rules, first to 100 after a Bank (F8).
+    HeadToHead,
 }
 
 impl Mode {
+    /// Pot, Bank and Ward rules apply.
+    pub fn pot_rules(self) -> bool {
+        matches!(self, Mode::Marathon | Mode::HeadToHead)
+    }
+
     pub fn goal(self) -> u32 {
         match self {
             Mode::Sprint => SPRINT_GOAL,
-            Mode::Marathon => MARATHON_GOAL,
+            Mode::Marathon | Mode::HeadToHead => MARATHON_GOAL,
         }
     }
 }
@@ -115,6 +135,10 @@ pub struct Outcome {
     pub lost: u32,
     /// Marathon: the player now owes a Bank or Roll again.
     pub deciding: bool,
+    /// Head-to-Head: the turn went to the other player.
+    pub passed: bool,
+    /// Head-to-Head: this was a free bonus roll.
+    pub bonus_roll: bool,
 }
 
 /// What a Bank did.
@@ -123,6 +147,23 @@ pub struct Banked {
     pub banked: u32,
     pub score: u32,
     pub finished: bool,
+    pub passed: bool,
+}
+
+/// The idle player's numbers in Head-to-Head.
+#[derive(Clone, Debug, Default)]
+struct PlayerState {
+    score: u32,
+    pot: u32,
+    streak: u32,
+    rolls: u32,
+    correct: u32,
+    ward: bool,
+    ward_used: bool,
+    largest_banked: u32,
+    largest_lost: u32,
+    longest: Option<String>,
+    bonus: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -152,6 +193,15 @@ pub struct Session {
     pub largest_lost: u32,
     /// Marathon: a correct answer is waiting for Bank or Roll again.
     pub deciding: bool,
+    /// Head-to-Head: 0 or 1, the player on the move.
+    pub turn: usize,
+    /// Head-to-Head: who banked past the goal.
+    pub winner: Option<usize>,
+    /// Head-to-Head: the player on the move holds a bonus roll.
+    pub bonus: bool,
+    /// The pending roll is that bonus roll.
+    bonus_roll: bool,
+    other: PlayerState,
     tier: usize,
     dice: Rng,
     words: Rng,
@@ -175,11 +225,16 @@ impl Session {
             longest: None,
             ended: None,
             pot: 0,
-            ward: mode == Mode::Marathon,
+            ward: mode.pot_rules(),
             ward_used: false,
             largest_banked: 0,
             largest_lost: 0,
             deciding: false,
+            turn: 0,
+            winner: None,
+            bonus: false,
+            bonus_roll: false,
+            other: PlayerState { ward: mode == Mode::HeadToHead, ..PlayerState::default() },
             tier: tier.min(3),
             dice: Rng::new(seed ^ 0xD1CE_D1CE_5EED_0001),
             words: Rng::new(seed ^ 0x0057_0AD5_0000_0002),
@@ -214,6 +269,7 @@ impl Session {
         if self.pending.is_some() || self.ended.is_some() || self.deciding {
             return None;
         }
+        let bonus_roll = self.mode == Mode::HeadToHead && self.bonus;
         let face = roll_two_dice(&mut self.dice);
         self.rolls += 1;
         let len = self.bank.cov.length_for(face);
@@ -221,6 +277,10 @@ impl Session {
         match (len, word) {
             (Some(len), Some((tier, word))) => {
                 self.histogram[len - 2] += 1;
+                if bonus_roll {
+                    self.bonus = false;
+                    self.bonus_roll = true;
+                }
                 self.used.push(word.clone());
                 let r = Roll { face, len, word, tier };
                 self.pending = Some(r.clone());
@@ -235,6 +295,13 @@ impl Session {
                     self.pot = 0;
                 }
                 self.ended = Some(End::Exhausted);
+                if self.mode == Mode::HeadToHead {
+                    self.winner = match self.score.cmp(&self.other.score) {
+                        std::cmp::Ordering::Greater => Some(self.turn),
+                        std::cmp::Ordering::Less => Some(1 - self.turn),
+                        std::cmp::Ordering::Equal => None,
+                    };
+                }
                 None
             }
         }
@@ -245,7 +312,9 @@ impl Session {
     /// waits for `bank` or `roll_again`.
     pub fn answer(&mut self, correct: bool) -> Option<Outcome> {
         let r = self.pending.take()?;
-        let marathon = self.mode == Mode::Marathon;
+        let marathon = self.mode.pot_rules();
+        let h2h = self.mode == Mode::HeadToHead;
+        let bonus_roll = std::mem::take(&mut self.bonus_roll);
         let mut points = 0;
         let mut mult = false;
         let (mut warded, mut lost) = (false, 0);
@@ -258,7 +327,11 @@ impl Session {
             points = p;
             self.streak += 1;
             self.correct += 1;
-            if marathon {
+            if bonus_roll {
+                // A bonus roll is banked at once and never put at risk.
+                self.score += p;
+                self.largest_banked = self.largest_banked.max(p);
+            } else if marathon {
                 self.pot += p;
                 self.deciding = true;
             } else {
@@ -270,7 +343,7 @@ impl Session {
             }
         } else {
             self.streak = 0;
-            if marathon && self.pot > 0 {
+            if marathon && !bonus_roll && self.pot > 0 {
                 if self.ward {
                     // D13: the pot survives, the Ward is spent, the streak still resets.
                     self.ward = false;
@@ -283,12 +356,16 @@ impl Session {
                 }
             }
         }
-        // Sprint ends on the score. Marathon ends only on a Bank (D15).
-        let finished = !marathon && self.score >= self.mode.goal();
+        // Sprint ends on the score. Marathon ends only on a Bank (D15); a
+        // Head-to-Head bonus roll IS a Bank.
+        let finished = (!marathon || (bonus_roll && correct)) && self.score >= self.mode.goal();
         if finished {
             self.ended = Some(End::Goal);
+            if h2h {
+                self.winner = Some(self.turn);
+            }
         }
-        Some(Outcome {
+        let mut out = Outcome {
             correct,
             points,
             multiplied: mult,
@@ -299,12 +376,55 @@ impl Session {
             warded,
             lost,
             deciding: self.deciding,
-        })
+            passed: false,
+            bonus_roll,
+        };
+        // Head-to-Head: a real miss hands over the turn and grants the other
+        // player a bonus roll (a flag: it does not stack).
+        if h2h && !correct && !bonus_roll && !finished {
+            self.other.bonus = true;
+            self.pass_turn();
+            out.passed = true;
+        }
+        Some(out)
+    }
+
+    /// Swap the live player's numbers with the idle player's.
+    fn pass_turn(&mut self) {
+        let o = &mut self.other;
+        std::mem::swap(&mut self.score, &mut o.score);
+        std::mem::swap(&mut self.pot, &mut o.pot);
+        std::mem::swap(&mut self.streak, &mut o.streak);
+        std::mem::swap(&mut self.rolls, &mut o.rolls);
+        std::mem::swap(&mut self.correct, &mut o.correct);
+        std::mem::swap(&mut self.ward, &mut o.ward);
+        std::mem::swap(&mut self.ward_used, &mut o.ward_used);
+        std::mem::swap(&mut self.largest_banked, &mut o.largest_banked);
+        std::mem::swap(&mut self.largest_lost, &mut o.largest_lost);
+        std::mem::swap(&mut self.longest, &mut o.longest);
+        std::mem::swap(&mut self.bonus, &mut o.bonus);
+        self.turn = 1 - self.turn;
+        self.deciding = false;
+    }
+
+    /// Head-to-Head: a player's banked score, whoever is on the move.
+    pub fn score_of(&self, player: usize) -> u32 {
+        if player == self.turn { self.score } else { self.other.score }
+    }
+
+    /// Head-to-Head: does this player hold a bonus roll?
+    pub fn bonus_of(&self, player: usize) -> bool {
+        if player == self.turn { self.bonus } else { self.other.bonus }
+    }
+
+    /// Head-to-Head: a player's Ward, whoever is on the move.
+    pub fn ward_of(&self, player: usize) -> bool {
+        if player == self.turn { self.ward } else { self.other.ward }
     }
 
     /// F5: move the pot into the score. The only way a Marathon ends (D15).
     pub fn bank(&mut self) -> Option<Banked> {
-        if !self.deciding || self.mode != Mode::Marathon {
+        if !self.deciding || !self.mode.pot_rules() {
             return None;
         }
         let banked = self.pot;
@@ -313,10 +433,18 @@ impl Session {
         self.pot = 0;
         self.deciding = false;
         let finished = self.score >= self.mode.goal();
+        let score = self.score;
+        let mut passed = false;
         if finished {
             self.ended = Some(End::Goal);
+            if self.mode == Mode::HeadToHead {
+                self.winner = Some(self.turn);
+            }
+        } else if self.mode == Mode::HeadToHead {
+            self.pass_turn();
+            passed = true;
         }
-        Some(Banked { banked, score: self.score, finished })
+        Some(Banked { banked, score, finished, passed })
     }
 
     /// F5: keep the pot at risk and roll again.

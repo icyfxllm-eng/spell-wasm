@@ -1026,5 +1026,20 @@
   "rs.overM": "Marathon imekamilika",
   "rs.bestBank": "Chungu kikubwa zaidi kilichohifadhiwa: {n}",
   "rs.bestLost": "Chungu kikubwa zaidi kilichopotea: {n}",
-  "rs.howM": "Majibu sahihi hujaza chungu. Kihifadhi ili kubaki na alama, au tupa tena kupata zaidi. Kosa hufuta chungu, lakini alama zilizohifadhiwa ziko salama, na ngao moja huokoa chungu mara moja."
+  "rs.howM": "Majibu sahihi hujaza chungu. Kihifadhi ili kubaki na alama, au tupa tena kupata zaidi. Kosa hufuta chungu, lakini alama zilizohifadhiwa ziko salama, na ngao moja huokoa chungu mara moja.",
+  "rs.mode.daily": "Ya kila siku · maneno yaleyale kwa wote",
+  "rs.mode.h2h": "Ana kwa ana · pokezana",
+  "rs.dailyHow": "Kete na maneno ya leo ni yaleyale kwa kila mchezaji. Jaribio moja, sheria za Marathon.",
+  "rs.dailyDone": "Leo: alama {n} kwa mitupo {r}.",
+  "rs.dailyGone": "Umeshatumia jaribio la leo.",
+  "rs.dailyShare": "Randospell {date} · {lang} · {tier}\n{n} alama kwa mitupo {r} · {acc}% sahihi · chungu kikubwa zaidi {b}",
+  "rs.turnOf": "Zamu ya mchezaji {n}",
+  "rs.bonusRoll": "Tupo la bonasi!",
+  "rs.handoff": "Mkabidhi mchezaji {n} simu. Gusa akiwa tayari.",
+  "rs.winner": "Mchezaji {n} ameshinda!",
+  "rs.draw": "Sare",
+  "rs.h2hScore": "Mchezaji 1: {a} · Mchezaji 2: {b}",
+  "rs.h2hHow": "Cheza kwa zamu. Hifadhi ili kubaki na alama; kosa hufuta chungu chako na kumpa mpinzani tupo la bonasi bila malipo. Wa kwanza kufikia 100 baada ya kuhifadhi ndiye mshindi.",
+  "rs.ready": "Tayari",
+  "rs.share": "Shiriki"
 }

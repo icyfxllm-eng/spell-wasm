@@ -1026,5 +1026,20 @@
   "rs.overM": "Marathon complete",
   "rs.bestBank": "Largest pot banked: {n}",
   "rs.bestLost": "Largest pot lost: {n}",
-  "rs.howM": "Right answers fill the pot. Bank it to keep the points, or roll again for more. A miss empties the pot, but banked points are safe, and one Ward saves a pot once."
+  "rs.howM": "Right answers fill the pot. Bank it to keep the points, or roll again for more. A miss empties the pot, but banked points are safe, and one Ward saves a pot once.",
+  "rs.mode.daily": "Daily · same words for everyone",
+  "rs.mode.h2h": "Head-to-Head · pass and play",
+  "rs.dailyHow": "Today's dice and words are the same for every player. One attempt, Marathon rules.",
+  "rs.dailyDone": "Today: {n} points in {r} rolls.",
+  "rs.dailyGone": "You've used today's attempt.",
+  "rs.dailyShare": "Randospell {date} · {lang} · {tier}\n{n} points in {r} rolls · {acc}% right · best pot {b}",
+  "rs.turnOf": "Player {n}'s turn",
+  "rs.bonusRoll": "Bonus roll!",
+  "rs.handoff": "Pass the phone to Player {n}. Tap when ready.",
+  "rs.winner": "Player {n} wins!",
+  "rs.draw": "A draw",
+  "rs.h2hScore": "Player 1: {a} · Player 2: {b}",
+  "rs.h2hHow": "Take turns. Bank to keep points; a miss empties your pot and gives your rival a free bonus roll. First to 100 after a Bank wins.",
+  "rs.ready": "Ready",
+  "rs.share": "Share"
 }

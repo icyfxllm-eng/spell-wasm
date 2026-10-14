@@ -1026,5 +1026,20 @@
   "rs.overM": "Maratona concluída",
   "rs.bestBank": "Maior pote guardado: {n}",
   "rs.bestLost": "Maior pote perdido: {n}",
-  "rs.howM": "As respostas certas enchem o pote. Guarde-o para ficar com os pontos ou lance de novo por mais. Um erro esvazia o pote, mas os pontos guardados estão seguros, e um escudo salva um pote uma vez."
+  "rs.howM": "As respostas certas enchem o pote. Guarde-o para ficar com os pontos ou lance de novo por mais. Um erro esvazia o pote, mas os pontos guardados estão seguros, e um escudo salva um pote uma vez.",
+  "rs.mode.daily": "Diário · as mesmas palavras para todos",
+  "rs.mode.h2h": "Frente a frente · passa e joga",
+  "rs.dailyHow": "Os dados e as palavras de hoje são iguais para todos. Uma tentativa, regras da Maratona.",
+  "rs.dailyDone": "Hoje: {n} pontos em {r} lançamentos.",
+  "rs.dailyGone": "Você já usou a tentativa de hoje.",
+  "rs.dailyShare": "Randospell {date} · {lang} · {tier}\n{n} pontos em {r} lançamentos · {acc}% de acertos · maior pote {b}",
+  "rs.turnOf": "Vez do jogador {n}",
+  "rs.bonusRoll": "Lançamento bônus!",
+  "rs.handoff": "Passe o telefone ao jogador {n}. Toque quando estiver pronto.",
+  "rs.winner": "O jogador {n} venceu!",
+  "rs.draw": "Empate",
+  "rs.h2hScore": "Jogador 1: {a} · Jogador 2: {b}",
+  "rs.h2hHow": "Revezem-se. Guarde para manter os pontos; um erro esvazia seu pote e dá ao rival um lançamento bônus grátis. Vence quem chegar primeiro a 100 após guardar.",
+  "rs.ready": "Pronto",
+  "rs.share": "Compartilhar"
 }

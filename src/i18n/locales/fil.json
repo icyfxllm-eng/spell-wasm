@@ -1026,5 +1026,20 @@
   "rs.overM": "Tapos na ang Marathon",
   "rs.bestBank": "Pinakamalaking naitabing kaldero: {n}",
   "rs.bestLost": "Pinakamalaking nawalang kaldero: {n}",
-  "rs.howM": "Pinupuno ng tamang sagot ang kaldero. Itabi ito para mapanatili ang puntos, o gumulong ulit para sa higit pa. Inuubos ng mali ang kaldero, pero ligtas ang naitabing puntos, at isang Kalasag ang nagliligtas ng kaldero nang isang beses."
+  "rs.howM": "Pinupuno ng tamang sagot ang kaldero. Itabi ito para mapanatili ang puntos, o gumulong ulit para sa higit pa. Inuubos ng mali ang kaldero, pero ligtas ang naitabing puntos, at isang Kalasag ang nagliligtas ng kaldero nang isang beses.",
+  "rs.mode.daily": "Araw-araw · parehong salita para sa lahat",
+  "rs.mode.h2h": "Harapan · salitan",
+  "rs.dailyHow": "Pareho ang dice at salita ngayong araw para sa lahat ng manlalaro. Isang subok, tuntunin ng Marathon.",
+  "rs.dailyDone": "Ngayon: {n} puntos sa {r} na gulong.",
+  "rs.dailyGone": "Nagamit mo na ang subok ngayong araw.",
+  "rs.dailyShare": "Randospell {date} · {lang} · {tier}\n{n} puntos sa {r} na gulong · {acc}% tama · pinakamalaking kaldero {b}",
+  "rs.turnOf": "Turno ni Manlalaro {n}",
+  "rs.bonusRoll": "Bonus na gulong!",
+  "rs.handoff": "Ipasa ang telepono kay Manlalaro {n}. I-tap kapag handa na.",
+  "rs.winner": "Panalo si Manlalaro {n}!",
+  "rs.draw": "Tabla",
+  "rs.h2hScore": "Manlalaro 1: {a} · Manlalaro 2: {b}",
+  "rs.h2hHow": "Salitan. Itabi para mapanatili ang puntos; inuubos ng mali ang kaldero mo at binibigyan ng libreng bonus na gulong ang karibal. Unang umabot sa 100 pagkatapos itabi ang panalo.",
+  "rs.ready": "Handa na",
+  "rs.share": "Ibahagi"
 }

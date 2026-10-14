@@ -6,16 +6,23 @@
 import { openApp, assert } from '../harness.mjs';
 
 const FLAG = () => { localStorage.setItem('spell_flag_randospell', 'on'); };
+const FLAG_ALL = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'on');
+  localStorage.setItem('spell_flag_randospell_daily', 'on');
+  localStorage.setItem('spell_flag_randospell_h2h', 'on');
+};
 const FLAG_M = () => { localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_flag_randospell_marathon', 'on'); };
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.randospellState() || 'null'));
 
 export async function run(browser, base, suite) {
-  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false } = {}) => {
-    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init: marathon ? FLAG_M : FLAG });
+  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null } = {}) => {
+    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init: kind ? FLAG_ALL : marathon ? FLAG_M : FLAG });
     if (reduce) await o.page.emulateMedia({ reducedMotion: 'reduce' });
     await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
     await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
     if (marathon && start) await o.page.click('#rsModes [data-m="marathon"]');
+    if (kind && start) await o.page.click(`#rsModes [data-m="${kind}"]`);
     if (start) {
       await o.page.click('#rsStart');
       await o.page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
@@ -196,6 +203,75 @@ export async function run(browser, base, suite) {
       assert(await page.evaluate(() => document.querySelectorAll('#rsHist .rs-bar').length === 11), 'no histogram');
       await page.click('#rsOverExit');
       assert(!(await page.evaluate(() => document.getElementById('rsScreen').classList.contains('show'))), 'no way out of the end card');
+    } finally { await ctx.close(); }
+  });
+  // ---- Phase C: Daily and Head-to-Head -----------------------------------
+  const served3 = async (page) => {
+    const out = [];
+    for (let i = 0; i < 3; i++) {
+      const s = await roll(page);
+      out.push([s.roll, s.word]);
+      const before = await page.evaluate(() => window.__spelltest.randospellState());
+      await type(page, s.word);
+      await page.click('#rsGo');
+      await settled(page, before);
+      if ((await state(page)).deciding) await page.click('#rsRollAgain'); // keeps rolling on the same stream
+    }
+    return out;
+  };
+
+  await suite.test('randospell_daily_and_h2h_are_offered_only_with_their_flags', async () => {
+    const m = await open({ start: false, marathon: true });
+    try {
+      const ids = await m.page.evaluate(() => [...document.querySelectorAll('#rsModes [data-m]')].map((b) => b.dataset.m));
+      assert(ids.join() === 'sprint,marathon', `with only the Marathon flag: ${ids}`);
+    } finally { await m.ctx.close(); }
+    const a = await open({ start: false, kind: 'sprint' });
+    try {
+      const ids = await a.page.evaluate(() => [...document.querySelectorAll('#rsModes [data-m]')].map((b) => b.dataset.m));
+      assert(ids.join() === 'sprint,marathon,daily,h2h', `with every flag: ${ids}`);
+    } finally { await a.ctx.close(); }
+  });
+
+  await suite.test('randospell_daily_is_the_same_game_for_everyone_and_one_attempt', async () => {
+    const one = await open({ kind: 'daily' });
+    let a;
+    try {
+      const st = await state(one.page);
+      assert(st.kind === 'Daily' && st.dailyKey, `not a daily: ${JSON.stringify(st)}`);
+      a = await served3(one.page);
+      // Leave mid-game: the attempt stays spent.
+      await one.page.click('#rsExit');
+      await one.page.evaluate(() => document.getElementById('rsOpenBtn').click());
+      await one.page.click('#rsModes [data-m="daily"]');
+      assert(await one.page.evaluate(() => document.getElementById('rsStart').disabled), 'a second Daily attempt can start');
+      assert((await one.page.evaluate(() => document.getElementById('rsNote').textContent)).length > 3, 'no reason given');
+    } finally { await one.ctx.close(); }
+    const two = await open({ kind: 'daily' });
+    try {
+      const b = await served3(two.page);
+      assert(JSON.stringify(a) === JSON.stringify(b), `different games on one day: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`);
+    } finally { await two.ctx.close(); }
+  });
+
+  await suite.test('randospell_h2h_a_miss_hands_over_with_a_bonus_roll_and_a_bank_wins', async () => {
+    const { ctx, page } = await open({ kind: 'h2h' });
+    try {
+      let st = await state(page);
+      assert(st.kind === 'H2h' && st.turn === 0, `bad start: ${JSON.stringify(st)}`);
+      await answer(page, false); // player 1 misses
+      assert(await page.evaluate(() => !document.getElementById('rsHand').hidden), 'no hand-off card');
+      assert(await page.evaluate(() => document.getElementById('rsHandExit') !== null), 'the card has no exit');
+      st = await state(page);
+      assert(st.turn === 1 && st.bonus === true, `no bonus roll for the next player: ${JSON.stringify(st)}`);
+      await page.click('#rsHandGo');
+      // Player 2 is 98 up with a free bonus roll: any right answer is at least 3 points, banked
+      // at once, so the game ends on that Bank and player 2 (index 1) wins (D15).
+      await page.evaluate(() => window.__spelltest.randospellScore(98));
+      const r1 = await answer(page, true);
+      assert(r1.after.ended === 'Goal' && r1.after.score >= 100, `the bonus roll did not bank to the goal: ${JSON.stringify(r1.after)}`);
+      assert(r1.after.winner === 1, `wrong winner: ${r1.after.winner}`);
+      assert(await page.evaluate(() => !document.getElementById('rsOver').hidden), 'no end card');
     } finally { await ctx.close(); }
   });
 }

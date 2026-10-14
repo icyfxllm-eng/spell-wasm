@@ -398,3 +398,182 @@ fn marathon_score_never_decreases_under_random_play() {
         }
     }
 }
+
+// ---- Phase C -------------------------------------------------------------
+
+use super::daily;
+use super::store::Store;
+
+fn es_bank() -> Bank {
+    Bank::for_lang("es", Standard)
+}
+
+#[test]
+fn a2_daily_is_identical_for_everyone_whatever_they_answer() {
+    // (2026-10-14, es, Hard = tier 2): the dice and the words match on two
+    // "devices" even when the players answer completely differently.
+    let play = |pattern: u32| {
+        let mut s = Session::new_daily("2026-10-14", "es", 2, es_bank()).expect("es is eligible");
+        let mut seq = Vec::new();
+        for i in 0..40u32 {
+            let Some(r) = s.press() else { break };
+            seq.push((r.face, r.len, r.word));
+            s.answer((i * pattern) % 3 != 0);
+            if s.deciding {
+                if i % 2 == 0 { s.bank(); } else { s.roll_again(); }
+            }
+            if s.ended.is_some() {
+                break;
+            }
+        }
+        seq
+    };
+    let a = play(1);
+    let b = play(2);
+    let c = play(5);
+    let n = a.len().min(b.len()).min(c.len());
+    assert!(n >= 20, "too short to prove anything: {n}");
+    assert_eq!(a[..n], b[..n]);
+    assert_eq!(a[..n], c[..n]);
+    // A different day, language or tier is a different game.
+    let other = |d: &str, l: &str, t: usize| {
+        let mut s = Session::new_daily(d, l, t, Bank::for_lang(l, Standard)).unwrap();
+        (0..8).filter_map(|_| { let r = s.press(); s.answer(false); r.map(|r| r.word) }).collect::<Vec<_>>()
+    };
+    let base = other("2026-10-14", "es", 2);
+    assert_ne!(base, other("2026-10-15", "es", 2));
+    assert_ne!(base, other("2026-10-14", "es", 1));
+    assert_ne!(base, other("2026-10-14", "fr", 2));
+}
+
+#[test]
+fn i6_no_daily_seed_exists_for_an_ineligible_language() {
+    for l in INELIGIBLE {
+        let bank = Bank::for_lang(l, Standard);
+        assert!(daily::daily_seed("2026-10-14", l, 1, &bank).is_none(), "{l}");
+        assert!(Session::new_daily("2026-10-14", l, 1, bank).is_none(), "{l}");
+    }
+    assert!(daily::daily_seed("2026-10-14", "en", 1, &Bank::for_lang("en", Standard)).is_some());
+}
+
+#[test]
+fn f6_one_attempt_per_day_per_language_per_tier() {
+    let mut st = Store::default();
+    let k = daily::key("2026-10-14", "es", 2);
+    assert!(st.try_start_daily(&k));
+    assert!(!st.try_start_daily(&k), "a second attempt on the same key");
+    assert!(st.try_start_daily(&daily::key("2026-10-14", "es", 1)), "another tier is another attempt");
+    assert!(st.try_start_daily(&daily::key("2026-10-14", "fr", 2)), "another language too");
+    // An abandoned attempt is still spent, and a finished one is written once.
+    let mut s = Session::new_daily("2026-10-14", "es", 2, es_bank()).unwrap();
+    s.press();
+    s.answer(true);
+    st.finish_daily(&k, &s, true);
+    let first = st.daily_entry(&k).cloned().unwrap();
+    assert!(first.done && first.score == s.score);
+    s.score += 50;
+    st.finish_daily(&k, &s, true);
+    assert_eq!(st.daily_entry(&k), Some(&first), "a result is written once");
+}
+
+#[test]
+fn the_store_round_trips_and_keeps_bests() {
+    let mut st = Store::default();
+    let mut s = Session::new(1, Mode::Sprint, 1, full_fake(), BTreeSet::new());
+    s.score = 49;
+    s.press();
+    s.answer(true);
+    assert_eq!(s.ended, Some(End::Goal));
+    st.record_game(&s);
+    assert_eq!(st.best_sprint_rolls, Some(1));
+    assert_eq!(st.histogram.iter().sum::<u32>(), 1);
+    let json = serde_json::to_string(&st).unwrap();
+    let back: Store = serde_json::from_str(&json).unwrap();
+    assert_eq!(back, st);
+}
+
+fn h2h() -> Session {
+    Session::new(9, Mode::HeadToHead, 1, full_fake(), BTreeSet::new())
+}
+
+#[test]
+fn a13_a_miss_gives_the_other_player_exactly_one_bonus_roll() {
+    let mut s = h2h();
+    assert_eq!(s.turn, 0);
+    let o = rig(&mut s, 6, false);
+    assert!(o.passed, "a miss ends the turn");
+    assert_eq!(s.turn, 1);
+    assert!(s.bonus_of(1) && s.bonus, "the next player holds one bonus roll");
+    // Their first roll is the bonus roll, the second is an ordinary roll.
+    let r1 = s.press().expect("roll");
+    assert!(s.bonus_roll && !s.bonus, "the bonus is spent on the first press");
+    let o1 = s.answer(false).unwrap();
+    assert!(o1.bonus_roll && !o1.passed, "a missed bonus roll costs nothing and keeps the turn");
+    assert!(!s.bonus_of(0), "a missed bonus roll grants the other player nothing");
+    let _ = r1;
+    s.press().unwrap();
+    assert!(!s.bonus_roll, "the second roll is not a bonus roll");
+    let o2 = s.answer(false).unwrap();
+    assert!(o2.passed && s.turn == 0 && s.bonus, "an ordinary miss passes the turn and grants a bonus");
+}
+
+#[test]
+fn h2h_a_bonus_roll_is_banked_at_once_and_a_win_needs_a_bank() {
+    let mut s = h2h();
+    s.other.bonus = true; // player 1 is not on the move; give player 0 a bonus via a pass
+    let _ = rig(&mut s, 5, false); // player 0 misses -> player 1 on the move with a bonus
+    assert_eq!(s.turn, 1);
+    s.score = 90;
+    s.press().unwrap();
+    assert!(s.bonus_roll);
+    s.pending.as_mut().unwrap().len = 5;
+    let o = s.answer(true).unwrap();
+    assert_eq!((o.score, o.pot, o.deciding), (95, 0, false), "banked straight away, no pot");
+    // An ordinary roll worth 8 sits in the pot, and only the Bank wins (D15).
+    let o = rig(&mut s, 8, true);
+    assert_eq!((o.pot, o.finished, s.ended), (8, false, None));
+    let b = s.bank().unwrap();
+    assert!((b.score, b.finished, b.passed) == (103, true, false));
+    assert_eq!(s.winner, Some(1));
+    assert_eq!(s.score_of(1), 103);
+}
+
+#[test]
+fn h2h_a_bank_passes_the_turn_and_each_player_keeps_their_own_ward() {
+    let mut s = h2h();
+    let o = rig(&mut s, 6, true);
+    assert!(o.deciding);
+    let b = s.bank().unwrap();
+    assert!(b.passed && b.score == 6 && s.turn == 1, "{b:?}");
+    assert_eq!((s.score, s.score_of(0)), (0, 6));
+    // Player 1 spends THEIR Ward; player 0's is untouched.
+    s.pot = 10;
+    let o = rig(&mut s, 6, false);
+    assert!(o.warded);
+    assert!(s.ward_of(0), "player 0 still holds a Ward");
+    assert!(!s.ward_of(1));
+}
+
+#[test]
+fn h2h_score_never_falls_for_either_player() {
+    for seed in 0..12u64 {
+        let mut s = Session::new(seed, Mode::HeadToHead, 1, full_fake(), BTreeSet::new());
+        let mut last = [0u32; 2];
+        for i in 0..120u32 {
+            if s.press().is_none() {
+                break;
+            }
+            s.answer((i + seed as u32) % 4 != 0);
+            if s.deciding {
+                if i % 3 == 0 { s.bank(); } else { s.roll_again(); }
+            }
+            for p in 0..2 {
+                assert!(s.score_of(p) >= last[p], "player {p} lost banked score");
+                last[p] = s.score_of(p);
+            }
+            if s.ended.is_some() {
+                break;
+            }
+        }
+    }
+}
