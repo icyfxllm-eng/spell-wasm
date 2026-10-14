@@ -678,3 +678,35 @@ fn only_jr_gets_a_second_try() {
     let o = s.answer(false).unwrap();
     assert!(!o.retry, "Sprint has one attempt per word (D18)");
 }
+
+// ---- A1 per language, against the REMAPPED target --------------------------
+
+#[test]
+fn a1_every_eligible_language_matches_its_remapped_triangle() {
+    // Spec A1: "faces remapped by D4 are tested against their remapped target".
+    // For each language, 10,000 two-dice sums are mapped through the language's
+    // own coverage; the observed share of each PLAYED length must sit within
+    // 2 pp of the exact share the triangle gives it after remapping.
+    let ways = [1u32, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]; // sums 2..=12 out of 36
+    for lang in ["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ar", "sw", "fil"] {
+        let cov = Bank::for_lang(lang, Standard).cov;
+        let mut want = [0f64; 11];
+        for face in 2..=12u8 {
+            let l = cov.length_for(face).expect("a viable language covers something");
+            want[l - 2] += ways[face as usize - 2] as f64 / 36.0 * 100.0;
+        }
+        let mut rng = Rng::new(0xA1A1 ^ lang.len() as u64);
+        let mut seen = [0u32; 11];
+        for _ in 0..10_000 {
+            let face = roll_two_dice(&mut rng);
+            seen[cov.length_for(face).unwrap() - 2] += 1;
+        }
+        for i in 0..11 {
+            let got = seen[i] as f64 / 100.0;
+            assert!((got - want[i]).abs() <= 2.0, "{lang}: length {} got {got:.1}% want {:.1}%", i + 2, want[i]);
+            if want[i] == 0.0 {
+                assert_eq!(seen[i], 0, "{lang}: length {} is played but should not be", i + 2);
+            }
+        }
+    }
+}

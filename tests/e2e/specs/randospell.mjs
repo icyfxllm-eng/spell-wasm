@@ -365,4 +365,65 @@ export async function run(browser, base, suite) {
       assert(await page.evaluate(() => document.getElementById('rsAgain') !== null && document.getElementById('rsOverExit') !== null), 'end card controls missing');
     } finally { await ctx.close(); }
   });
+  // ---- Harness gaps closed before the cut --------------------------------
+  await suite.test('randospell_a15_a_full_run_changes_only_its_own_storage', async () => {
+    // A15 / I9: play Sprint, Marathon and a Daily; every other key (Climb, Daily
+    // Challenge, shields, streaks) must be byte-identical afterwards. The only keys
+    // allowed to change are the mode's own store and the shared no-repeat history (D9).
+    const { ctx, page } = await open({ kind: 'sprint', start: false });
+    const dump = () => page.evaluate(() => Object.fromEntries(Object.keys(localStorage).sort().map((k) => [k, localStorage.getItem(k)])));
+    // spell_tel_perf_v1 is the shared audio path's anonymous latency counter: api::play_word
+    // writes it for every mode that speaks a word, and Randospell's own code never touches it
+    // (the screen's telemetry test bans it). Anything else changing is a failure.
+    const allowed = new Set(['spell_randospell_v1', 'spell_wordgrid_seen_v1', 'spell_tel_perf_v1']);
+    try {
+      const before = await dump();
+      const play = async (mode, seed) => {
+        await page.click(`#rsModes [data-m="${mode}"]`);
+        await page.click('#rsStart');
+        await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+        if (seed) await page.evaluate((n) => window.__spelltest.randospellScore(n), seed);
+      };
+      // Sprint to the goal.
+      await play('sprint', 48);
+      for (let i = 0; i < 30; i++) {
+        if ((await state(page)).ended) break;
+        const s = await roll(page);
+        const b = await page.evaluate(() => window.__spelltest.randospellState());
+        await type(page, s.word); await page.click('#rsGo'); await settled(page, b);
+      }
+      assert((await state(page)).ended === 'Goal', 'the Sprint did not finish');
+      await page.click('#rsOverExit');
+      // Marathon to a Bank at the goal.
+      await page.evaluate(() => document.getElementById('rsOpenBtn').click());
+      await play('marathon', 99);
+      await answer(page, true);
+      await page.click('#rsBank');
+      assert((await state(page)).ended === 'Goal', 'the Marathon did not finish');
+      await page.click('#rsOverExit');
+      // A Daily, abandoned after one roll.
+      await page.evaluate(() => document.getElementById('rsOpenBtn').click());
+      await play('daily', 0);
+      await answer(page, true);
+      await page.click('#rsExit');
+      const after = await dump();
+      const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
+      const changed = [...keys].filter((k) => before[k] !== after[k] && !allowed.has(k));
+      assert(changed.length === 0, `Randospell touched other storage: ${changed.join(', ')}`);
+      assert(after['spell_randospell_v1'], 'the mode wrote no store of its own');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_a9_the_info_sheet_lists_a_remap_where_one_exists', async () => {
+    const infoLines = async (lang) => {
+      const { ctx, page } = await open({ lang, start: false });
+      try {
+        return await page.evaluate(() => [...document.querySelectorAll('#rsInfo li')].map((li) => li.textContent.trim()));
+      } finally { await ctx.close(); }
+    };
+    const es = await infoLines('es');
+    assert(es.length >= 1 && es.some((t) => /2/.test(t) && /3/.test(t)), `es lists no 2 -> 3 remap: ${JSON.stringify(es)}`);
+    const en = await infoLines('en');
+    assert(en.length === 0, `en has full coverage but lists remaps: ${JSON.stringify(en)}`);
+  });
 }
