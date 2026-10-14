@@ -1011,5 +1011,20 @@
   "rs.longest": "가장 긴 낱말: {word}",
   "rs.hist": "주사위 결과",
   "rs.how": "낱말마다 철자를 맞혀 그 수만큼 점수를 얻으세요. 연속 세 번 맞히면 보너스, 2나 12는 두 배입니다.",
-  "rs.remap": "{face}가 나오면 {len}(으)로 진행됩니다."
+  "rs.remap": "{face}가 나오면 {len}(으)로 진행됩니다.",
+  "rs.mode.sprint": "스프린트 · 먼저 50점",
+  "rs.mode.marathon": "마라톤 · 먼저 100점",
+  "rs.pot": "팟: {n}",
+  "rs.ward": "방어막 준비됨",
+  "rs.wardUsed": "방어막 사용함",
+  "rs.wardKept": "방어막 사용 안 함",
+  "rs.bank": "{n}점 저장",
+  "rs.rollAgain": "다시 굴리기",
+  "rs.warded": "방어막이 팟을 지켰어요.",
+  "rs.lost": "잃은 팟: {n}",
+  "rs.banked": "{n}점 저장됨",
+  "rs.overM": "마라톤 완료",
+  "rs.bestBank": "가장 큰 저장 팟: {n}",
+  "rs.bestLost": "가장 큰 손실 팟: {n}",
+  "rs.howM": "정답은 팟에 쌓여요. 저장해서 점수를 지키거나, 다시 굴려 더 쌓아 보세요. 틀리면 팟이 비지만 저장한 점수는 안전하고, 방어막은 팟을 한 번 지켜 줘요."
 }

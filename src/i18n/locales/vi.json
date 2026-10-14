@@ -1011,5 +1011,20 @@
   "rs.longest": "Từ dài nhất: {word}",
   "rs.hist": "Kết quả các lần tung",
   "rs.how": "Đánh vần mỗi từ để nhận số điểm của nó. Đúng ba lần liên tiếp được thưởng thêm, và số 2 hoặc 12 được gấp đôi.",
-  "rs.remap": "Lượt tung {face} được tính là {len}."
+  "rs.remap": "Lượt tung {face} được tính là {len}.",
+  "rs.mode.sprint": "Nước rút · đến 50 trước",
+  "rs.mode.marathon": "Marathon · đến 100 trước",
+  "rs.pot": "Quỹ: {n}",
+  "rs.ward": "Khiên sẵn sàng",
+  "rs.wardUsed": "Đã dùng khiên",
+  "rs.wardKept": "Không cần khiên",
+  "rs.bank": "Gửi {n}",
+  "rs.rollAgain": "Tung lại",
+  "rs.warded": "Khiên đã cứu quỹ của bạn.",
+  "rs.lost": "Mất quỹ: {n}",
+  "rs.banked": "Đã gửi {n}",
+  "rs.overM": "Hoàn thành Marathon",
+  "rs.bestBank": "Quỹ lớn nhất đã gửi: {n}",
+  "rs.bestLost": "Quỹ lớn nhất đã mất: {n}",
+  "rs.howM": "Trả lời đúng làm đầy quỹ. Hãy gửi để giữ điểm, hoặc tung lại để lấy thêm. Trả lời sai sẽ làm trống quỹ, nhưng điểm đã gửi vẫn an toàn, và một khiên cứu được quỹ một lần."
 }

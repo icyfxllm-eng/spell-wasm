@@ -1011,5 +1011,20 @@
   "rs.longest": "Neno refu zaidi: {word}",
   "rs.hist": "Jinsi kete zilivyoangukia",
   "rs.how": "Tamka kila neno ili kupata namba yake. Majibu matatu sahihi mfululizo hukupa bonasi, na 2 au 12 hulipa mara mbili.",
-  "rs.remap": "Tupo la {face} linachezwa kama {len}."
+  "rs.remap": "Tupo la {face} linachezwa kama {len}.",
+  "rs.mode.sprint": "Mbio fupi · wa kwanza kufikia 50",
+  "rs.mode.marathon": "Marathon · wa kwanza kufikia 100",
+  "rs.pot": "Chungu: {n}",
+  "rs.ward": "Ngao iko tayari",
+  "rs.wardUsed": "Ngao imetumika",
+  "rs.wardKept": "Ngao haikuhitajika",
+  "rs.bank": "Hifadhi {n}",
+  "rs.rollAgain": "Tupa tena",
+  "rs.warded": "Ngao iliokoa chungu chako.",
+  "rs.lost": "Chungu kimepotea: {n}",
+  "rs.banked": "Umehifadhi {n}",
+  "rs.overM": "Marathon imekamilika",
+  "rs.bestBank": "Chungu kikubwa zaidi kilichohifadhiwa: {n}",
+  "rs.bestLost": "Chungu kikubwa zaidi kilichopotea: {n}",
+  "rs.howM": "Majibu sahihi hujaza chungu. Kihifadhi ili kubaki na alama, au tupa tena kupata zaidi. Kosa hufuta chungu, lakini alama zilizohifadhiwa ziko salama, na ngao moja huokoa chungu mara moja."
 }

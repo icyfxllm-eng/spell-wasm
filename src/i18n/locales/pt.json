@@ -1011,5 +1011,20 @@
   "rs.longest": "Palavra mais longa: {word}",
   "rs.hist": "Como os dados caíram",
   "rs.how": "Soletre cada palavra para ganhar o seu número. Três acertos seguidos dão um bônus, e um 2 ou um 12 vale o dobro.",
-  "rs.remap": "Um lançamento de {face} vale como {len}."
+  "rs.remap": "Um lançamento de {face} vale como {len}.",
+  "rs.mode.sprint": "Sprint · primeiro a 50",
+  "rs.mode.marathon": "Maratona · primeiro a 100",
+  "rs.pot": "Pote: {n}",
+  "rs.ward": "Escudo pronto",
+  "rs.wardUsed": "Escudo usado",
+  "rs.wardKept": "Escudo sem uso",
+  "rs.bank": "Guardar {n}",
+  "rs.rollAgain": "Lançar de novo",
+  "rs.warded": "O escudo salvou o seu pote.",
+  "rs.lost": "Pote perdido: {n}",
+  "rs.banked": "{n} guardados",
+  "rs.overM": "Maratona concluída",
+  "rs.bestBank": "Maior pote guardado: {n}",
+  "rs.bestLost": "Maior pote perdido: {n}",
+  "rs.howM": "As respostas certas enchem o pote. Guarde-o para ficar com os pontos ou lance de novo por mais. Um erro esvazia o pote, mas os pontos guardados estão seguros, e um escudo salva um pote uma vez."
 }

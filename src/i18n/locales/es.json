@@ -1011,5 +1011,20 @@
   "rs.longest": "Palabra más larga: {word}",
   "rs.hist": "Cómo cayeron los dados",
   "rs.how": "Deletrea cada palabra para ganar su número. Tres aciertos seguidos dan un extra, y un 2 o un 12 paga el doble.",
-  "rs.remap": "Una tirada de {face} se juega como {len}."
+  "rs.remap": "Una tirada de {face} se juega como {len}.",
+  "rs.mode.sprint": "Sprint · primero a 50",
+  "rs.mode.marathon": "Maratón · primero a 100",
+  "rs.pot": "Bote: {n}",
+  "rs.ward": "Escudo listo",
+  "rs.wardUsed": "Escudo usado",
+  "rs.wardKept": "Escudo sin usar",
+  "rs.bank": "Guardar {n}",
+  "rs.rollAgain": "Tirar otra vez",
+  "rs.warded": "El escudo salvó tu bote.",
+  "rs.lost": "Bote perdido: {n}",
+  "rs.banked": "Guardaste {n}",
+  "rs.overM": "Maratón completado",
+  "rs.bestBank": "Mayor bote guardado: {n}",
+  "rs.bestLost": "Mayor bote perdido: {n}",
+  "rs.howM": "Las respuestas correctas llenan el bote. Guárdalo para quedarte los puntos o tira otra vez por más. Un fallo vacía el bote, pero los puntos guardados están a salvo, y un escudo salva un bote una vez."
 }

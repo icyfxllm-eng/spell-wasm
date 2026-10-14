@@ -665,6 +665,11 @@
   .rs-die:empty{opacity:.15}
   .rs-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
   .rs-timer.run{animation:rs-timer 30s linear forwards}
+  .rs-pot,.rs-ward{font-size:.9rem;font-weight:600}
+  .rs-pot[hidden],.rs-ward[hidden],.rs-decide[hidden]{display:none}
+  .rs-decide{display:flex;gap:10px;justify-content:center;flex:none}
+  .rs-decide .rs-btn{flex:1 1 0;max-width:200px}
+  .rs-bank{background:var(--amber,#f2c14e);color:#36210a;font-weight:700}
   .rs-feed{flex:none;min-height:1.4em;text-align:center;font-size:.95rem}
   .rs-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;direction:ltr}
   .rs-orb{flex:none;width:88px;height:88px;border-radius:50%;border:none;background:var(--amber,#f2c14e);color:#36210a;
@@ -3041,6 +3046,7 @@
     </div>
     <div class="rs-setup" id="rsSetup">
       <p data-i18n="rs.desc">Roll the dice, then spell a word that long.</p>
+      <div class="rs-opt" id="rsModes"></div>
       <div class="rs-opt" id="rsTiers"></div>
       <div class="rs-info" id="rsInfo"></div>
       <div class="rs-note" id="rsNote" aria-live="polite"></div>
@@ -3050,6 +3056,8 @@
       <div class="rs-stats">
         <span class="rs-score" id="rsScore"></span>
         <span class="rs-streak" id="rsStreak"></span>
+        <span class="rs-pot" id="rsPot" hidden></span>
+        <span class="rs-ward" id="rsWard" hidden></span>
         <span class="rs-rolls" id="rsRolls"></span>
       </div>
       <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div></div>
@@ -3058,6 +3066,10 @@
       <div class="rs-act" id="rsAct">
         <button type="button" class="rs-orb" id="rsOrb" data-state="roll" data-i18n="rs.roll">Roll</button>
         <button type="button" class="ghost mode-exit rs-exit" id="rsExit" data-i18n="aria.exit">Exit</button>
+      </div>
+      <div class="rs-decide" id="rsDecide" hidden>
+        <button type="button" class="rs-btn rs-bank" id="rsBank"></button>
+        <button type="button" class="rs-btn" id="rsRollAgain" data-i18n="rs.rollAgain">Roll again</button>
       </div>
       <div class="rs-spell" id="rsSpell" hidden>
         <div class="rs-line">
@@ -3069,7 +3081,7 @@
       </div>
     </div>
     <div class="rs-card" id="rsOver" hidden>
-      <h3 data-i18n="rs.over">Sprint complete</h3>
+      <h3 id="rsOverTitle" data-i18n="rs.over">Sprint complete</h3>
       <ul class="rs-list" id="rsStats"></ul>
       <div class="rs-hist" id="rsHist" role="img" aria-label="Dice" data-i18n-aria="rs.hist"></div>
       <button class="btn btn-check" id="rsAgain" data-i18n="rs.again">Play again</button>

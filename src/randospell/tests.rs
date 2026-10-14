@@ -277,3 +277,124 @@ fn a_junior_profile_never_pools_hard_or_expert_words() {
     }
     assert!(jr.cov.counts.iter().sum::<usize>() < std.cov.counts.iter().sum::<usize>());
 }
+
+fn marathon(seed: u64) -> Session {
+    Session::new(seed, Mode::Marathon, 1, full_fake(), BTreeSet::new())
+}
+
+/// Put a roll in front of the player without going through the dice.
+fn rig(s: &mut Session, len: usize, ok: bool) -> Outcome {
+    s.pending = Some(Roll { face: len as u8, len, word: "qqqqq".into(), tier: 0 });
+    s.answer(ok).unwrap()
+}
+
+#[test]
+fn a5_marathon_miss_empties_the_pot_but_never_the_score() {
+    let mut s = marathon(1);
+    s.ward = false; // no Ward in hand
+    s.score = 40;
+    s.pot = 23;
+    s.streak = 2;
+    let o = rig(&mut s, 6, false);
+    assert_eq!((s.score, s.pot, s.streak), (40, 0, 0));
+    assert_eq!((o.lost, o.warded), (23, false));
+    assert_eq!(s.largest_lost, 23);
+}
+
+#[test]
+fn a5_the_ward_absorbs_one_pot_loss_and_the_streak_still_resets() {
+    let mut s = marathon(2);
+    s.score = 40;
+    s.pot = 23;
+    s.streak = 2;
+    let o = rig(&mut s, 6, false);
+    assert_eq!((s.score, s.pot, s.streak), (40, 23, 0));
+    assert!(o.warded && !s.ward && s.ward_used);
+    assert_eq!(o.lost, 0);
+    // The second loss is not covered: one Ward per game.
+    let o = rig(&mut s, 6, false);
+    assert_eq!((s.pot, o.lost, o.warded), (0, 23, false));
+}
+
+#[test]
+fn the_ward_is_not_spent_when_nothing_is_at_risk() {
+    let mut s = marathon(3);
+    let o = rig(&mut s, 6, false);
+    assert!(!o.warded && s.ward && !s.ward_used, "an empty pot loses nothing, so the Ward stays");
+}
+
+#[test]
+fn a6_marathon_ends_only_on_a_bank_that_reaches_the_goal() {
+    let mut s = marathon(4);
+    s.score = 95;
+    s.pot = 3;
+    let o = rig(&mut s, 5, true); // pot 8, still waiting on the decision
+    assert_eq!((o.pot, o.finished, o.deciding), (8, false, true));
+    assert!(s.press().is_none(), "no roll until Bank or Roll again");
+    // Roll again: the game continues, the pot stays at risk even above the goal.
+    assert!(s.roll_again());
+    assert_eq!((s.score, s.pot, s.ended), (95, 8, None));
+    let o = rig(&mut s, 12, true); // +24: pot 32, score still 95
+    assert_eq!((o.pot, o.finished, s.ended), (32, false, None));
+    let b = s.bank().unwrap();
+    assert_eq!((b.banked, b.score, b.finished), (32, 127, true));
+    assert_eq!(s.ended, Some(End::Goal));
+    assert_eq!(s.largest_banked, 32);
+}
+
+#[test]
+fn a6_bank_103() {
+    let mut s = marathon(5);
+    s.score = 95;
+    s.pot = 3;
+    rig(&mut s, 5, true);
+    let b = s.bank().unwrap();
+    assert_eq!((b.score, b.finished), (103, true));
+}
+
+#[test]
+fn bank_and_roll_again_need_a_decision_and_sprint_has_neither() {
+    let mut m = marathon(6);
+    assert!(m.bank().is_none() && !m.roll_again());
+    let mut s = session(6, full_fake());
+    rig(&mut s, 5, true);
+    assert!(s.bank().is_none() && !s.roll_again());
+    assert_eq!((s.score, s.pot), (5, 0), "Sprint scores straight to the score");
+}
+
+#[test]
+fn marathon_correct_answers_add_to_the_pot_with_the_streak_multiplier() {
+    let mut s = marathon(7);
+    rig(&mut s, 3, true);
+    s.roll_again();
+    rig(&mut s, 4, true);
+    s.roll_again();
+    let o = rig(&mut s, 12, true);
+    assert_eq!((o.points, s.pot, s.score), (24, 3 + 4 + 24, 0));
+    s.roll_again();
+    let o = rig(&mut s, 7, true);
+    assert_eq!((o.points, o.multiplied), (11, true));
+    assert_eq!(s.score, 0, "nothing is banked until the player banks");
+}
+
+#[test]
+fn marathon_score_never_decreases_under_random_play() {
+    for seed in 0..20u64 {
+        let mut s = marathon(seed);
+        let mut last = 0;
+        for i in 0..80u32 {
+            if s.press().is_none() {
+                break;
+            }
+            s.answer((i + seed as u32) % 3 != 0);
+            if s.deciding {
+                if i % 2 == 0 { s.bank(); } else { s.roll_again(); }
+            }
+            assert!(s.score >= last, "score fell");
+            last = s.score;
+            if s.ended.is_some() {
+                break;
+            }
+        }
+    }
+}

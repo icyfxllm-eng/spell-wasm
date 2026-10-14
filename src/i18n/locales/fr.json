@@ -1011,5 +1011,20 @@
   "rs.longest": "Mot le plus long : {word}",
   "rs.hist": "Résultat des dés",
   "rs.how": "Épelle chaque mot pour gagner son nombre. Trois bonnes réponses de suite donnent un bonus, et un 2 ou un 12 vaut le double.",
-  "rs.remap": "Un lancer de {face} se joue comme {len}."
+  "rs.remap": "Un lancer de {face} se joue comme {len}.",
+  "rs.mode.sprint": "Sprint · premier à 50",
+  "rs.mode.marathon": "Marathon · premier à 100",
+  "rs.pot": "Cagnotte : {n}",
+  "rs.ward": "Bouclier prêt",
+  "rs.wardUsed": "Bouclier utilisé",
+  "rs.wardKept": "Bouclier non utilisé",
+  "rs.bank": "Encaisser {n}",
+  "rs.rollAgain": "Relancer",
+  "rs.warded": "Le bouclier a sauvé ta cagnotte.",
+  "rs.lost": "Cagnotte perdue : {n}",
+  "rs.banked": "{n} encaissés",
+  "rs.overM": "Marathon terminé",
+  "rs.bestBank": "Plus grosse cagnotte encaissée : {n}",
+  "rs.bestLost": "Plus grosse cagnotte perdue : {n}",
+  "rs.howM": "Les bonnes réponses remplissent la cagnotte. Encaisse-la pour garder les points, ou relance pour en gagner plus. Une erreur la vide, mais les points encaissés sont à l'abri, et un bouclier sauve une cagnotte une fois."
 }

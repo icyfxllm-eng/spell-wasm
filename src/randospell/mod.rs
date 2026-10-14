@@ -20,9 +20,18 @@
 //! stored length unit is derived (grapheme clusters, spaces excluded, D12);
 //! there is no stored field in the bank (census finding 1).
 //!
+//! # Marathon (Phase B)
+//!
+//! A correct answer adds to the POT, not the score, and the player must then
+//! Bank or Roll again (F5). A miss empties the pot unless the one Ward absorbs
+//! it (D13); the Ward is spent only by a loss of a non-empty pot. The game ends
+//! only on a Bank that reaches 100 (D15), never because the pot would cross it.
+//! If a length runs out of words the pot is banked and the game ends: score
+//! never falls (I5), and nothing the player earned is thrown away.
+//!
 //! # Not here yet
 //!
-//! Marathon pot/Bank/Ward (B), Daily and Head-to-Head (C), the Jr die (D).
+//! Daily and Head-to-Head (C), the Jr die (D).
 
 #![allow(dead_code)] // wired by the screen in the next Phase A step
 
@@ -34,6 +43,7 @@ use crate::spelldoku::rng::Rng;
 pub use bank::Bank;
 
 pub const SPRINT_GOAL: u32 = 50;
+pub const MARATHON_GOAL: u32 = 100;
 /// D19: a standard-mode spelling times out after this long (a miss).
 pub const TIMER_SECS: u32 = 30;
 /// D7: three correct in a row switch the multiplier on.
@@ -42,12 +52,14 @@ pub const STREAK_FOR_MULTIPLIER: u32 = 3;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
     Sprint,
+    Marathon,
 }
 
 impl Mode {
     pub fn goal(self) -> u32 {
         match self {
             Mode::Sprint => SPRINT_GOAL,
+            Mode::Marathon => MARATHON_GOAL,
         }
     }
 }
@@ -95,6 +107,22 @@ pub struct Outcome {
     pub streak: u32,
     pub score: u32,
     pub finished: bool,
+    /// Marathon: the pot after this answer.
+    pub pot: u32,
+    /// Marathon: the Ward absorbed a lost pot.
+    pub warded: bool,
+    /// Marathon: the pot a miss emptied (0 when warded or when nothing was at risk).
+    pub lost: u32,
+    /// Marathon: the player now owes a Bank or Roll again.
+    pub deciding: bool,
+}
+
+/// What a Bank did.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Banked {
+    pub banked: u32,
+    pub score: u32,
+    pub finished: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -115,6 +143,15 @@ pub struct Session {
     pub histogram: [u32; 11],
     pub longest: Option<String>,
     pub ended: Option<End>,
+    /// Marathon: points earned and not yet banked.
+    pub pot: u32,
+    /// Marathon: one Ward per game (D13), true while it is still held.
+    pub ward: bool,
+    pub ward_used: bool,
+    pub largest_banked: u32,
+    pub largest_lost: u32,
+    /// Marathon: a correct answer is waiting for Bank or Roll again.
+    pub deciding: bool,
     tier: usize,
     dice: Rng,
     words: Rng,
@@ -137,6 +174,12 @@ impl Session {
             histogram: [0; 11],
             longest: None,
             ended: None,
+            pot: 0,
+            ward: mode == Mode::Marathon,
+            ward_used: false,
+            largest_banked: 0,
+            largest_lost: 0,
+            deciding: false,
             tier: tier.min(3),
             dice: Rng::new(seed ^ 0xD1CE_D1CE_5EED_0001),
             words: Rng::new(seed ^ 0x0057_0AD5_0000_0002),
@@ -168,7 +211,7 @@ impl Session {
     /// right here; nothing the animation does can change it (I1, A3).
     /// Returns None while a roll is unanswered or after the game has ended.
     pub fn press(&mut self) -> Option<Roll> {
-        if self.pending.is_some() || self.ended.is_some() {
+        if self.pending.is_some() || self.ended.is_some() || self.deciding {
             return None;
         }
         let face = roll_two_dice(&mut self.dice);
@@ -184,17 +227,28 @@ impl Session {
                 Some(r)
             }
             _ => {
+                // Nothing left to draw: bank whatever the pot holds so no
+                // earned point is lost, then end (see the module docs).
+                if self.pot > 0 {
+                    self.largest_banked = self.largest_banked.max(self.pot);
+                    self.score += self.pot;
+                    self.pot = 0;
+                }
                 self.ended = Some(End::Exhausted);
                 None
             }
         }
     }
 
-    /// F4: score the pending roll. A miss is 0 and resets the streak (D5).
+    /// F4/F5: score the pending roll. A miss is 0 and resets the streak (D5).
+    /// Sprint adds straight to the score; Marathon adds to the pot and then
+    /// waits for `bank` or `roll_again`.
     pub fn answer(&mut self, correct: bool) -> Option<Outcome> {
         let r = self.pending.take()?;
+        let marathon = self.mode == Mode::Marathon;
         let mut points = 0;
         let mut mult = false;
+        let (mut warded, mut lost) = (false, 0);
         if correct {
             let mut p = base_points(r.len as u8);
             if self.streak >= STREAK_FOR_MULTIPLIER {
@@ -204,19 +258,74 @@ impl Session {
             points = p;
             self.streak += 1;
             self.correct += 1;
-            self.score += p; // I5: score only ever rises.
+            if marathon {
+                self.pot += p;
+                self.deciding = true;
+            } else {
+                self.score += p; // I5: score only ever rises.
+            }
             let longer = self.longest.as_ref().map_or(true, |w| r.len > bank::length_of(w));
             if longer {
                 self.longest = Some(r.word.clone());
             }
         } else {
             self.streak = 0;
+            if marathon && self.pot > 0 {
+                if self.ward {
+                    // D13: the pot survives, the Ward is spent, the streak still resets.
+                    self.ward = false;
+                    self.ward_used = true;
+                    warded = true;
+                } else {
+                    lost = self.pot;
+                    self.largest_lost = self.largest_lost.max(lost);
+                    self.pot = 0;
+                }
+            }
         }
+        // Sprint ends on the score. Marathon ends only on a Bank (D15).
+        let finished = !marathon && self.score >= self.mode.goal();
+        if finished {
+            self.ended = Some(End::Goal);
+        }
+        Some(Outcome {
+            correct,
+            points,
+            multiplied: mult,
+            streak: self.streak,
+            score: self.score,
+            finished,
+            pot: self.pot,
+            warded,
+            lost,
+            deciding: self.deciding,
+        })
+    }
+
+    /// F5: move the pot into the score. The only way a Marathon ends (D15).
+    pub fn bank(&mut self) -> Option<Banked> {
+        if !self.deciding || self.mode != Mode::Marathon {
+            return None;
+        }
+        let banked = self.pot;
+        self.score += banked;
+        self.largest_banked = self.largest_banked.max(banked);
+        self.pot = 0;
+        self.deciding = false;
         let finished = self.score >= self.mode.goal();
         if finished {
             self.ended = Some(End::Goal);
         }
-        Some(Outcome { correct, points, multiplied: mult, streak: self.streak, score: self.score, finished })
+        Some(Banked { banked, score: self.score, finished })
+    }
+
+    /// F5: keep the pot at risk and roll again.
+    pub fn roll_again(&mut self) -> bool {
+        if !self.deciding {
+            return false;
+        }
+        self.deciding = false;
+        true
     }
 
     /// D19: the 30 s soft timer ran out. A miss.

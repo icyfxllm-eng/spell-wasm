@@ -1011,5 +1011,20 @@
   "rs.longest": "Najdłuższe słowo: {word}",
   "rs.hist": "Jak padły kości",
   "rs.how": "Przeliteruj każde słowo, aby zdobyć jego liczbę punktów. Trzy poprawne z rzędu dają bonus, a 2 lub 12 liczy się podwójnie.",
-  "rs.remap": "Rzut {face} liczy się jako {len}."
+  "rs.remap": "Rzut {face} liczy się jako {len}.",
+  "rs.mode.sprint": "Sprint · pierwszy do 50",
+  "rs.mode.marathon": "Maraton · pierwszy do 100",
+  "rs.pot": "Pula: {n}",
+  "rs.ward": "Tarcza gotowa",
+  "rs.wardUsed": "Tarcza użyta",
+  "rs.wardKept": "Tarcza niepotrzebna",
+  "rs.bank": "Zapisz {n}",
+  "rs.rollAgain": "Rzuć jeszcze raz",
+  "rs.warded": "Tarcza uratowała twoją pulę.",
+  "rs.lost": "Utracona pula: {n}",
+  "rs.banked": "Zapisano {n}",
+  "rs.overM": "Maraton ukończony",
+  "rs.bestBank": "Największa zapisana pula: {n}",
+  "rs.bestLost": "Największa utracona pula: {n}",
+  "rs.howM": "Poprawne odpowiedzi zapełniają pulę. Zapisz ją, by zachować punkty, albo rzuć jeszcze raz po więcej. Błąd opróżnia pulę, ale zapisane punkty są bezpieczne, a jedna tarcza ratuje pulę raz."
 }

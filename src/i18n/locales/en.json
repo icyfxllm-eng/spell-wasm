@@ -1011,5 +1011,20 @@
   "rs.longest": "Longest word: {word}",
   "rs.hist": "How the dice fell",
   "rs.how": "Spell each word to earn its number. Three right in a row adds a bonus, and a 2 or a 12 pays double.",
-  "rs.remap": "A roll of {face} plays as {len}."
+  "rs.remap": "A roll of {face} plays as {len}.",
+  "rs.mode.sprint": "Sprint · first to 50",
+  "rs.mode.marathon": "Marathon · first to 100",
+  "rs.pot": "Pot: {n}",
+  "rs.ward": "Ward ready",
+  "rs.wardUsed": "Ward used",
+  "rs.wardKept": "Ward not needed",
+  "rs.bank": "Bank {n}",
+  "rs.rollAgain": "Roll again",
+  "rs.warded": "The Ward saved your pot.",
+  "rs.lost": "Pot lost: {n}",
+  "rs.banked": "Banked {n}",
+  "rs.overM": "Marathon complete",
+  "rs.bestBank": "Largest pot banked: {n}",
+  "rs.bestLost": "Largest pot lost: {n}",
+  "rs.howM": "Right answers fill the pot. Bank it to keep the points, or roll again for more. A miss empties the pot, but banked points are safe, and one Ward saves a pot once."
 }

@@ -1011,5 +1011,20 @@
   "rs.longest": "Längstes Wort: {word}",
   "rs.hist": "So fielen die Würfel",
   "rs.how": "Buchstabiere jedes Wort, um seine Zahl zu verdienen. Drei richtige in Folge geben einen Bonus, und eine 2 oder 12 zählt doppelt.",
-  "rs.remap": "Ein Wurf von {face} wird als {len} gespielt."
+  "rs.remap": "Ein Wurf von {face} wird als {len} gespielt.",
+  "rs.mode.sprint": "Sprint · wer zuerst 50 hat",
+  "rs.mode.marathon": "Marathon · wer zuerst 100 hat",
+  "rs.pot": "Topf: {n}",
+  "rs.ward": "Schild bereit",
+  "rs.wardUsed": "Schild benutzt",
+  "rs.wardKept": "Schild nicht gebraucht",
+  "rs.bank": "{n} sichern",
+  "rs.rollAgain": "Nochmal würfeln",
+  "rs.warded": "Das Schild hat deinen Topf gerettet.",
+  "rs.lost": "Topf verloren: {n}",
+  "rs.banked": "{n} gesichert",
+  "rs.overM": "Marathon geschafft",
+  "rs.bestBank": "Größter gesicherter Topf: {n}",
+  "rs.bestLost": "Größter verlorener Topf: {n}",
+  "rs.howM": "Richtige Antworten füllen den Topf. Sichere ihn, um die Punkte zu behalten, oder würfle weiter für mehr. Ein Fehler leert den Topf, aber gesicherte Punkte sind sicher, und ein Schild rettet einen Topf einmal."
 }

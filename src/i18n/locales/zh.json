@@ -1011,5 +1011,20 @@
   "rs.longest": "最长的词：{word}",
   "rs.hist": "骰子结果",
   "rs.how": "拼出每个词，赢得对应的分数。连续答对三次有加成，掷出 2 或 12 分数加倍。",
-  "rs.remap": "掷出 {face} 时按 {len} 来玩。"
+  "rs.remap": "掷出 {face} 时按 {len} 来玩。",
+  "rs.mode.sprint": "冲刺 · 先到50分",
+  "rs.mode.marathon": "马拉松 · 先到100分",
+  "rs.pot": "奖池：{n}",
+  "rs.ward": "护盾就绪",
+  "rs.wardUsed": "护盾已用",
+  "rs.wardKept": "未用护盾",
+  "rs.bank": "存入 {n}",
+  "rs.rollAgain": "再掷一次",
+  "rs.warded": "护盾保住了你的奖池。",
+  "rs.lost": "奖池丢失：{n}",
+  "rs.banked": "已存入 {n}",
+  "rs.overM": "马拉松完成",
+  "rs.bestBank": "存入的最大奖池：{n}",
+  "rs.bestLost": "丢失的最大奖池：{n}",
+  "rs.howM": "答对会让奖池变大。存入可保住分数，或再掷一次争取更多。答错会清空奖池，但已存入的分数是安全的，护盾能保住奖池一次。"
 }

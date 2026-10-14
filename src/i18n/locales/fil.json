@@ -1011,5 +1011,20 @@
   "rs.longest": "Pinakamahabang salita: {word}",
   "rs.hist": "Kung paano nahulog ang dice",
   "rs.how": "Baybayin ang bawat salita para makuha ang bilang nito. Tatlong tama nang sunod-sunod ay may bonus, at ang 2 o 12 ay doble.",
-  "rs.remap": "Ang gulong na {face} ay nilalaro bilang {len}."
+  "rs.remap": "Ang gulong na {face} ay nilalaro bilang {len}.",
+  "rs.mode.sprint": "Sprint · unang umabot sa 50",
+  "rs.mode.marathon": "Marathon · unang umabot sa 100",
+  "rs.pot": "Kaldero: {n}",
+  "rs.ward": "Handa ang Kalasag",
+  "rs.wardUsed": "Nagamit na ang Kalasag",
+  "rs.wardKept": "Hindi kinailangan ang Kalasag",
+  "rs.bank": "Itabi ang {n}",
+  "rs.rollAgain": "Gumulong ulit",
+  "rs.warded": "Iniligtas ng Kalasag ang kaldero mo.",
+  "rs.lost": "Nawalang kaldero: {n}",
+  "rs.banked": "Naitabi ang {n}",
+  "rs.overM": "Tapos na ang Marathon",
+  "rs.bestBank": "Pinakamalaking naitabing kaldero: {n}",
+  "rs.bestLost": "Pinakamalaking nawalang kaldero: {n}",
+  "rs.howM": "Pinupuno ng tamang sagot ang kaldero. Itabi ito para mapanatili ang puntos, o gumulong ulit para sa higit pa. Inuubos ng mali ang kaldero, pero ligtas ang naitabing puntos, at isang Kalasag ang nagliligtas ng kaldero nang isang beses."
 }

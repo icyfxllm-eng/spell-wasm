@@ -6,14 +6,16 @@
 import { openApp, assert } from '../harness.mjs';
 
 const FLAG = () => { localStorage.setItem('spell_flag_randospell', 'on'); };
+const FLAG_M = () => { localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_flag_randospell_marathon', 'on'); };
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.randospellState() || 'null'));
 
 export async function run(browser, base, suite) {
-  const open = async ({ lang = 'en', start = true, reduce = false } = {}) => {
-    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init: FLAG });
+  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false } = {}) => {
+    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init: marathon ? FLAG_M : FLAG });
     if (reduce) await o.page.emulateMedia({ reducedMotion: 'reduce' });
     await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
     await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+    if (marathon && start) await o.page.click('#rsModes [data-m="marathon"]');
     if (start) {
       await o.page.click('#rsStart');
       await o.page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
@@ -119,6 +121,81 @@ export async function run(browser, base, suite) {
     try {
       const dead = await page.evaluate(() => document.getElementById('rsStart').disabled);
       assert(dead, 'Start is live for ko');
+    } finally { await ctx.close(); }
+  });
+  // ---- Phase B: Marathon ------------------------------------------------
+  const answer = async (page, ok) => {
+    const s = await roll(page);
+    const before = await page.evaluate(() => window.__spelltest.randospellState());
+    if (ok) await type(page, s.word); else { await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsKeys [data-k="u:q"]'); }
+    await page.click('#rsGo');
+    await settled(page, before);
+    return { s, after: await state(page) };
+  };
+  const value = (n) => (n === 2 || n === 12 ? n * 2 : n);
+
+  await suite.test('randospell_marathon_is_offered_only_with_its_flag', async () => {
+    const off = await open({ start: false });
+    try {
+      assert((await off.page.evaluate(() => document.getElementById('rsModes').children.length)) === 0, 'a picker shows with the Marathon flag off');
+    } finally { await off.ctx.close(); }
+    const on = await open({ start: false, marathon: true });
+    try {
+      assert((await on.page.evaluate(() => document.getElementById('rsModes').children.length)) === 2, 'no Sprint/Marathon picker with the flag on');
+    } finally { await on.ctx.close(); }
+  });
+
+  await suite.test('randospell_marathon_right_answer_fills_the_pot_and_asks_bank_or_roll', async () => {
+    const { ctx, page } = await open({ marathon: true });
+    try {
+      const { s, after } = await answer(page, true);
+      assert(after.mode === 'Marathon' && after.pot === value(s.roll) && after.score === 0, `pot ${after.pot}, score ${after.score}`);
+      assert(after.deciding, 'the game is not waiting on Bank or Roll again');
+      assert(await page.evaluate(() => !document.getElementById('rsDecide').hidden), 'no Bank card');
+      assert(await page.evaluate(() => document.getElementById('rsOrb').disabled), 'the orb is live while a decision is owed');
+      await page.click('#rsBank');
+      const banked = await state(page);
+      assert(banked.score === value(s.roll) && banked.pot === 0 && !banked.deciding, `bank: ${JSON.stringify(banked)}`);
+      assert(banked.bestBank === value(s.roll), 'largest pot banked not recorded');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_marathon_the_ward_saves_one_pot_then_a_miss_empties_it', async () => {
+    const { ctx, page } = await open({ marathon: true });
+    try {
+      const a = await answer(page, true);
+      await page.click('#rsRollAgain'); // keeps the pot at risk and rolls
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+      const before = await page.evaluate(() => window.__spelltest.randospellState());
+      await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsGo');
+      await settled(page, before);
+      const saved = await state(page);
+      assert(saved.pot === value(a.s.roll) && saved.ward === false && saved.streak === 0, `ward did not save the pot: ${JSON.stringify(saved)}`);
+      assert((await page.evaluate(() => document.getElementById('rsFeed').textContent)).length > 3, 'no word shown after the miss');
+      const lost = await answer(page, false);
+      assert(lost.after.pot === 0 && lost.after.bestLost === value(a.s.roll) && lost.after.score === 0, `second miss: ${JSON.stringify(lost.after)}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_marathon_ends_only_on_a_bank_at_the_goal', async () => {
+    const { ctx, page } = await open({ marathon: true });
+    try {
+      await page.evaluate(() => window.__spelltest.randospellScore(99));
+      const a = await answer(page, true);
+      assert(a.after.ended === null && a.after.deciding, `ended before the bank: ${JSON.stringify(a.after)}`);
+      await page.click('#rsRollAgain');
+      assert((await state(page)).ended === null, 'rolling again ended the game');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+      // The roll is out and its word is owed: spell it, then bank the pot (D15).
+      await answer(page, true);
+      const st = await state(page);
+      if (st.deciding) await page.click('#rsBank');
+      const end = await state(page);
+      assert(end.ended === 'Goal' && end.score >= 100, `no end on the bank: ${JSON.stringify(end)}`);
+      assert(await page.evaluate(() => !document.getElementById('rsOver').hidden), 'no end card');
+      assert(await page.evaluate(() => document.querySelectorAll('#rsHist .rs-bar').length === 11), 'no histogram');
+      await page.click('#rsOverExit');
+      assert(!(await page.evaluate(() => document.getElementById('rsScreen').classList.contains('show'))), 'no way out of the end card');
     } finally { await ctx.close(); }
   });
 }

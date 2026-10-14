@@ -10,6 +10,8 @@
 //!   history (`wordsearch_ui::LEDGER_KEY`) under `randospell:{lang}`.
 //! * I9: nothing here writes Climb, Daily Challenge or shield state, and the
 //!   mode adds no telemetry.
+//! * F5 / D15: in Marathon a correct answer opens a Bank / Roll again card;
+//!   the game ends only on a Bank that reaches the goal.
 //! * A16 / F1: the die fades in; the shake is CSS and `prefers-reduced-motion`
 //!   removes it. The haptic fires either way.
 
@@ -20,7 +22,7 @@ use wasm_bindgen::JsCast;
 use crate::boardgame_input::{self as input, Key};
 use crate::experience::Experience;
 use crate::randospell::bank::{self, Bank, MODE_ID};
-use crate::randospell::{Mode, Session, SPRINT_GOAL, TIMER_SECS};
+use crate::randospell::{Mode, Session, MARATHON_GOAL, SPRINT_GOAL, TIMER_SECS};
 use crate::wordsearch::ledger::Ledger;
 use crate::{dom, haptics, i18n, speech_out, storage, App};
 
@@ -41,6 +43,8 @@ thread_local! {
     static LANG: RefCell<String> = const { RefCell::new(String::new()) };
     /// The tier index the setup card has selected (default Medium).
     static TIER: Cell<usize> = const { Cell::new(1) };
+    /// The mode the setup card has selected. Marathon needs its own flag (F9).
+    static MODE: Cell<Mode> = const { Cell::new(Mode::Sprint) };
     /// Bumped on every press, answer and close so a stale 30 s timer is a no-op.
     static TOKEN: Cell<u32> = const { Cell::new(0) };
 }
@@ -82,6 +86,9 @@ pub fn wire(app: &App) {
     dom::on_click("rsOrb", orb);
     dom::on_click("rsDel", delete);
     dom::on_click("rsGo", submit);
+    dom::on_click("rsBank", bank_it);
+    dom::on_click("rsRollAgain", roll_again);
+    dom::on::<web_sys::MouseEvent, _>("rsModes", "click", mode_tap);
     dom::on::<web_sys::MouseEvent, _>("rsTiers", "click", tier_tap);
     dom::on::<web_sys::MouseEvent, _>("rsKeys", "click", key_tap);
 }
@@ -93,6 +100,9 @@ pub fn open(app: &App) {
     };
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     UI.with(|u| *u.borrow_mut() = None);
+    if !marathon_on() {
+        MODE.with(|m| m.set(Mode::Sprint));
+    }
     for id in ["rsField", "rsKeys"] {
         if let Some(e) = dom::doc().get_element_by_id(id) {
             dom::set_lang_dir(&e, &lang);
@@ -112,6 +122,23 @@ fn close() {
     finish_record();
     UI.with(|u| *u.borrow_mut() = None);
     dom::remove_class("rsScreen", "show");
+}
+
+/// F9: Marathon is offered only with `randospell_marathon` on.
+fn marathon_on() -> bool {
+    crate::flags::randospell_marathon()
+}
+
+fn mode_tap(e: web_sys::MouseEvent) {
+    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-m]").ok().flatten()) else {
+        return;
+    };
+    let m = match el.get_attribute("data-m").as_deref() {
+        Some("marathon") if marathon_on() => Mode::Marathon,
+        _ => Mode::Sprint,
+    };
+    MODE.with(|c| c.set(m));
+    render_setup();
 }
 
 fn tier_label(ix: usize) -> String {
@@ -136,6 +163,24 @@ fn render_setup() {
         })
         .collect();
     dom::set_html("rsTiers", &btns);
+    // The picker exists only when there is a choice to make.
+    let mode = MODE.with(Cell::get);
+    let modes: String = if marathon_on() {
+        [(Mode::Sprint, "sprint", "rs.mode.sprint"), (Mode::Marathon, "marathon", "rs.mode.marathon")]
+            .iter()
+            .map(|(m, id, key)| {
+                format!(
+                    "<button type=\"button\" class=\"rs-btn{}\" data-m=\"{id}\" aria-pressed=\"{}\">{}</button>",
+                    if *m == mode { " on" } else { "" },
+                    *m == mode,
+                    dom::escape_html(&i18n::t(key))
+                )
+            })
+            .collect()
+    } else {
+        String::new()
+    };
+    dom::set_html("rsModes", &modes);
     // D4: a remap is shown, never silent ("12 plays as 11").
     let info = if ok {
         let cov = Bank::for_lang(&lang, Experience::Standard).cov;
@@ -144,7 +189,7 @@ fn render_setup() {
             .into_iter()
             .map(|(f, l)| format!("<li>{}</li>", dom::escape_html(&i18n::tp("rs.remap", &[("face", &f.to_string()), ("len", &l.to_string())]))))
             .collect();
-        let how = format!("<p>{}</p>", dom::escape_html(&i18n::t("rs.how")));
+        let how = format!("<p>{}</p>", dom::escape_html(&i18n::t(if mode == Mode::Marathon { "rs.howM" } else { "rs.how" })));
         if lines.is_empty() { how } else { format!("{how}<ul>{}</ul>", lines.concat()) }
     } else {
         String::new()
@@ -181,7 +226,7 @@ fn start() {
     let key = ledger_key(&lang);
     let avoid = led.seen.iter().filter(|s| s.k == key && led.in_window(s, day)).map(|s| s.w.clone()).collect();
     let seed = (js_sys::Date::now() as u64) ^ led.counter.wrapping_mul(0x9E37_79B9);
-    let s = Session::new(seed, Mode::Sprint, tier, bank, avoid);
+    let s = Session::new(seed, MODE.with(Cell::get), tier, bank, avoid);
     UI.with(|u| *u.borrow_mut() = Some(Ui { s, lang, tier, typed: String::new(), keys, spelling: false, recorded: false, day }));
     dom::set_hidden("rsSetup", true);
     dom::set_hidden("rsPlay", false);
@@ -192,6 +237,17 @@ fn start() {
     set_die("", false);
     dom::set_text("rsFeed", "");
     spell_panel(false);
+    decision(false);
+}
+
+/// F5: show or hide the Bank / Roll again card, and lock the orb while it shows.
+fn decision(on: bool) {
+    dom::set_hidden("rsDecide", !on);
+    dom::set_disabled("rsOrb", on);
+    if on {
+        let pot = with_ui(|u| u.s.pot).unwrap_or(0);
+        dom::set_text("rsBank", &i18n::tp("rs.bank", &[("n", &pot.to_string())]));
+    }
 }
 
 fn spell_panel(on: bool) {
@@ -232,8 +288,20 @@ fn render_keys() {
 }
 
 fn render_hud() {
-    let Some((score, streak, rolls)) = with_ui(|u| (u.s.score, u.s.streak, u.s.rolls)) else { return };
-    dom::set_text("rsScore", &format!("{score} / {SPRINT_GOAL}"));
+    let Some((score, streak, rolls, mode, pot, ward, ward_used)) =
+        with_ui(|u| (u.s.score, u.s.streak, u.s.rolls, u.s.mode, u.s.pot, u.s.ward, u.s.ward_used))
+    else {
+        return;
+    };
+    let goal = if mode == Mode::Marathon { MARATHON_GOAL } else { SPRINT_GOAL };
+    dom::set_text("rsScore", &format!("{score} / {goal}"));
+    let m = mode == Mode::Marathon;
+    dom::set_hidden("rsPot", !m);
+    dom::set_hidden("rsWard", !m);
+    if m {
+        dom::set_text("rsPot", &i18n::tp("rs.pot", &[("n", &pot.to_string())]));
+        dom::set_text("rsWard", &if ward { i18n::t("rs.ward") } else if ward_used { i18n::t("rs.wardUsed") } else { String::new() });
+    }
     let mult = streak >= crate::randospell::STREAK_FOR_MULTIPLIER;
     let streak_txt = if streak == 0 {
         String::new()
@@ -265,7 +333,10 @@ fn speak(word: &str, lang: &str) {
 }
 
 fn orb() {
-    let Some(spelling) = with_ui(|u| u.spelling) else { return };
+    let Some((spelling, deciding)) = with_ui(|u| (u.spelling, u.s.deciding)) else { return };
+    if deciding {
+        return; // Bank or Roll again first (F5)
+    }
     if spelling {
         if let Some((w, l)) = with_ui(|u| u.s.pending().map(|r| (r.word.clone(), u.lang.clone()))).flatten() {
             speak(&w, &l);
@@ -366,8 +437,41 @@ fn resolve(typed: Option<String>) {
         dom::set_text("rsFeed", &i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))]));
     }
     render_hud();
+    if let Some(o) = &out {
+        if !correct {
+            if o.warded {
+                dom::set_text("rsFeed", &format!("{} {}", i18n::t("rs.warded"), i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))])));
+            } else if o.lost > 0 {
+                dom::set_text("rsFeed", &format!("{} {}", i18n::tp("rs.lost", &[("n", &o.lost.to_string())]), i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))])));
+            }
+        }
+        if o.deciding {
+            decision(true);
+        }
+    }
     if out.is_some_and(|o| o.finished) {
         show_over();
+    }
+}
+
+/// F5: bank the pot. The only way a Marathon ends (D15).
+fn bank_it() {
+    let b = with_ui(|u| u.s.bank()).flatten();
+    let Some(b) = b else { return };
+    haptics::correct();
+    decision(false);
+    dom::set_text("rsFeed", &i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
+    render_hud();
+    if b.finished {
+        show_over();
+    }
+}
+
+/// F5: keep the pot at risk and roll again.
+fn roll_again() {
+    if with_ui(|u| u.s.roll_again()).unwrap_or(false) {
+        decision(false);
+        orb();
     }
 }
 
@@ -387,15 +491,28 @@ fn show_over() {
     finish_record();
     bump();
     speech_out::stop();
-    let (score, rolls, correct, longest, hist, goal_met) = with_ui(|u| {
-        (u.s.score, u.s.rolls, u.s.correct, u.s.longest.clone(), u.s.histogram, u.s.ended == Some(crate::randospell::End::Goal))
+    let (score, rolls, correct, longest, hist, goal_met, mode, best_bank, best_lost, ward_used) = with_ui(|u| {
+        (
+            u.s.score,
+            u.s.rolls,
+            u.s.correct,
+            u.s.longest.clone(),
+            u.s.histogram,
+            u.s.ended == Some(crate::randospell::End::Goal),
+            u.s.mode,
+            u.s.largest_banked,
+            u.s.largest_lost,
+            u.s.ward_used,
+        )
     })
-    .unwrap_or((0, 0, 0, None, [0; 11], false));
+    .unwrap_or((0, 0, 0, None, [0; 11], false, Mode::Sprint, 0, 0, false));
+    let goal = if mode == Mode::Marathon { MARATHON_GOAL } else { SPRINT_GOAL };
+    dom::set_text("rsOverTitle", &i18n::t(if mode == Mode::Marathon { "rs.overM" } else { "rs.over" }));
     let acc = if rolls > 0 { correct * 100 / rolls } else { 0 };
     let mut stats = vec![
         // The Sprint metric: "50 points in N rolls".
         if goal_met {
-            i18n::tp("rs.result", &[("goal", &SPRINT_GOAL.to_string()), ("n", &rolls.to_string())])
+            i18n::tp("rs.result", &[("goal", &goal.to_string()), ("n", &rolls.to_string())])
         } else {
             i18n::tp("rs.score", &[("n", &score.to_string())])
         },
@@ -403,6 +520,11 @@ fn show_over() {
     ];
     if let Some(w) = longest {
         stats.push(i18n::tp("rs.longest", &[("word", crate::boardgame_grade::citation(&w))]));
+    }
+    if mode == Mode::Marathon {
+        stats.push(i18n::tp("rs.bestBank", &[("n", &best_bank.to_string())]));
+        stats.push(i18n::tp("rs.bestLost", &[("n", &best_lost.to_string())]));
+        stats.push(i18n::t(if ward_used { "rs.wardUsed" } else { "rs.wardKept" }));
     }
     let list: String = stats.iter().map(|s| format!("<li>{}</li>", dom::escape_html(s))).collect();
     dom::set_html("rsStats", &list);
@@ -421,6 +543,7 @@ fn show_over() {
         .collect();
     dom::set_html("rsHist", &bars);
     spell_panel(false);
+    decision(false);
     dom::set_hidden("rsOver", false);
 }
 
@@ -437,6 +560,12 @@ pub fn seam_state() -> String {
                 let r = u.s.pending();
                 serde_json::json!({
                     "spelling": u.spelling,
+                    "mode": format!("{:?}", u.s.mode),
+                    "pot": u.s.pot,
+                    "ward": u.s.ward,
+                    "deciding": u.s.deciding,
+                    "bestBank": u.s.largest_banked,
+                    "bestLost": u.s.largest_lost,
                     "word": r.map(|r| r.word.clone()),
                     "roll": r.map(|r| r.len),
                     "face": r.map(|r| r.face),
