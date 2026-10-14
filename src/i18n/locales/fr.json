@@ -1005,7 +1005,7 @@
   "rs.desc": "Lance les dés, puis épelle un mot de cette longueur.",
   "rs.score": "Score : {n}",
   "rs.rolls": "{n} lancers",
-  "rs.plus": "+{n} points",
+  "rs.plus": "Gagné : +{n}",
   "rs.over": "Sprint terminé",
   "rs.result": "{goal} points en {n} lancers",
   "rs.longest": "Mot le plus long : {word}",
