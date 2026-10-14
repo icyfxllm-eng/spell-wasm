@@ -7,7 +7,9 @@ Runs `scripts/build-bigbank.py --to-floors` (candidates from the language's pinn
 poolFloor and never past it, the F1 purity admit gate in front of every write, quarantined words never re-admitted),
 then writes a `dictionary` ledger line for every row that was not on the ledger, in bank order, signed with the
 language's own dictionary source id, and refreshes the ledger tier hashes and src/word_data.rs.
-It adds nothing for a tier already at or above its floor.  It is not the Korean, Japanese or Hindi rebuild
+It adds nothing for a tier already at or above its floor.  Easy is excluded unless --tiers names it: a frequency list
+fills 2-4 letter Easy with function words (de la que, der und die), which CC-BANK-REBUILD R9 forbids; the content-word
+filter needs part-of-speech data this path does not have.  It is not the Korean, Japanese or Hindi rebuild
 (CC-BANK-REBUILD): those need dictionary headword sources.
 """
 import collections, os, subprocess, sys, unicodedata
@@ -45,7 +47,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit(__doc__)
     a = sys.argv[1:]
-    t = None
+    t = "medium,hard,expert"   # Easy is never grown here: frequency fills it with function words (CC-BANK-REBUILD R9)
     if a[0] == "--tiers":
         t, a = a[1], a[2:]
     main(a, t)
