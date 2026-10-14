@@ -132,7 +132,9 @@ function selftest() {
       // The fixtures must satisfy the label rule too, or the selftest is
       // testing a world the real check would reject.
       h += `<div id="${panel}"><div><button id="${id}" data-i18n="aria.close">Close</button></div></div>\n`;
-      rs[f] = `dom::on_click("${id}", close);`;
+      // Two panels may share a screen file (Randospell's end card and hand-off
+      // card), so the fixture appends rather than overwrites.
+      rs[f] = (rs[f] || '') + `dom::on_click("${id}", close);\n`;
     }
     return [h + extra, rs];
   };
