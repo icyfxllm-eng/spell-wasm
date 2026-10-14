@@ -9,7 +9,8 @@ pub const MIN_COVERED: usize = 6;
 /// D1 and the 2026-10-14 census ruling: off until a bank grows. Hard list, so
 /// a remote flag can never turn these on by accident.
 pub const INELIGIBLE: [&str; 4] = ["ko", "hi", "ja", "zh"];
-pub const TIERS: [&str; 4] = ["easy", "medium", "hard", "expert"];
+/// The mode id the experience resolver knows this mode by (I5 of CC-ONBOARD-JR).
+pub const MODE_ID: &str = "randospell";
 /// Faces 2..=12.
 pub const FACES: std::ops::RangeInclusive<u8> = 2..=12;
 
@@ -97,11 +98,14 @@ impl Bank {
         }
     }
 
-    /// The device bank for a language: the four tier files pooled, with the
-    /// profanity, audio and proper-noun gates the other modes apply (D11).
-    pub fn for_lang(lang: &str) -> Bank {
+    /// The device bank for a language: the tier files `exp` may be served
+    /// (experience::allowed_tiers, so a Jr profile never pools Hard or Expert),
+    /// with the profanity, audio and proper-noun gates the other modes apply
+    /// (D11). Tier indexes are positions on the full ladder.
+    pub fn for_lang(lang: &str, exp: crate::experience::Experience) -> Bank {
         let mut rows = Vec::new();
-        for (t, name) in TIERS.iter().enumerate() {
+        for name in crate::experience::allowed_tiers(exp, MODE_ID) {
+            let t = crate::consts::TIER_ORDER.iter().position(|x| *x == name).unwrap_or(0);
             for row in crate::words::tier_for(lang, name) {
                 let w = row.split('|').next().unwrap_or(row);
                 if crate::profanity::is_blocked(w) || !crate::audio_verdict::servable(lang, w, "normal") {
@@ -120,6 +124,6 @@ impl Bank {
 
 /// F9/D1/I6: is Randospell offered for this language at all? Pure of any
 /// remote flag: the hub additionally needs `flags::randospell()`.
-pub fn eligible(lang: &str) -> bool {
-    !INELIGIBLE.contains(&lang) && Bank::for_lang(lang).cov.viable()
+pub fn eligible(lang: &str, exp: crate::experience::Experience) -> bool {
+    !INELIGIBLE.contains(&lang) && Bank::for_lang(lang, exp).cov.viable()
 }

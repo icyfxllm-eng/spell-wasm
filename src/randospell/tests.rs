@@ -3,6 +3,7 @@
 
 use super::bank::{eligible, length_of, Bank, CELL_FLOOR, INELIGIBLE};
 use super::*;
+use crate::experience::Experience::{Junior, Standard};
 use std::collections::BTreeSet;
 
 fn full_fake() -> Bank {
@@ -91,10 +92,10 @@ fn a3_the_dice_do_not_depend_on_the_bank_or_on_reads() {
 #[test]
 fn a4_every_served_word_has_the_displayed_length() {
     for lang in ["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ar", "sw", "fil"] {
-        if !eligible(lang) {
+        if !eligible(lang, Standard) {
             continue;
         }
-        let bank = Bank::for_lang(lang);
+        let bank = Bank::for_lang(lang, Standard);
         let cov = bank.cov.clone();
         let mut served = 0;
         for seed in 0..100u64 {
@@ -180,17 +181,17 @@ fn a9_coverage_remap_is_explicit_and_nearest_longer_on_a_tie() {
 #[test]
 fn a10_ineligible_languages_are_off_and_the_rest_cover_enough() {
     for l in INELIGIBLE {
-        assert!(!eligible(l), "{l} must be off");
+        assert!(!eligible(l, Standard), "{l} must be off");
     }
     for l in ["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ar", "sw", "fil"] {
-        assert!(eligible(l), "{l} should be eligible on the census numbers");
+        assert!(eligible(l, Standard), "{l} should be eligible on the census numbers");
     }
 }
 
 #[test]
 fn a11_no_word_repeats_in_a_200_roll_session() {
     for lang in ["en", "es", "ru", "vi"] {
-        let bank = Bank::for_lang(lang);
+        let bank = Bank::for_lang(lang, Standard);
         for seed in 0..5u64 {
             let mut s = Session::new(seed, Mode::Sprint, 1, bank.clone(), BTreeSet::new());
             for _ in 0..200 {
@@ -263,4 +264,16 @@ fn the_engine_source_has_no_forbidden_tokens() {
             assert!(!src.contains(t), "{f} must not contain {t}");
         }
     }
+}
+
+#[test]
+fn a_junior_profile_never_pools_hard_or_expert_words() {
+    // CC-ONBOARD-JR I5: the pool is built from allowed_tiers, so no Jr roll
+    // can land on a Hard or Expert word whatever the face.
+    let jr = Bank::for_lang("en", Junior);
+    let std = Bank::for_lang("en", Standard);
+    for len in 2..=12 {
+        assert!(jr.of_len(len).iter().all(|e| e.tier <= 1), "length {len}");
+    }
+    assert!(jr.cov.counts.iter().sum::<usize>() < std.cov.counts.iter().sum::<usize>());
 }
