@@ -30,6 +30,8 @@ mod boardgame_input; // CC-BOARD-GAME D20 -- answer keys and presses
 #[cfg(not(feature = "web"))]
 mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank gate
 #[cfg(not(feature = "web"))]
+mod randospell; // CC-RANDOSPELL v1 Phase A -- dice engine and Sprint (app only, O3)
+#[cfg(not(feature = "web"))]
 mod boardgame_ring; // CC-BOARD-GAME-POLISH Phase A -- ring shapes, piece sizes (presentation only)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
