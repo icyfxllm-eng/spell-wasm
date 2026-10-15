@@ -21,7 +21,7 @@ const patterns = [];
 const add = (label, re) => patterns.push({ label, re });
 
 for (const sym of ["randospell", "RANDOSPELL", "rsOpenBtn", "rsScreen", "rs-screen", "rs-key", "rs-orb", "rs-die",
-                   "rsOrb", "rsKeys", "rsOver", "spell_flag_randospell", "spell_rs_"]) {
+                   "rsOrb", "rsKeys", "rsOver", "rsFxHost", "rsFxSvg", "rsFxCanvas", "rs-fx", "rs-stone", "rsNpcCfg", "rsCharms", "spell_flag_randospell", "spell_rs_"]) {
   add(`symbol ${sym}`, new RegExp(sym.replace(/[-]/g, "\\-"), "g"));
 }
 // The locale namespace: the keys themselves, as they sit in the wasm's tables.

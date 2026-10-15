@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} reached 100. Everyone else gets one final turn.",
   "rs.finalBanner": "Final Round",
   "rs.finalTurn": "Beat {n} to win.",
-  "rs.playerN": "Player {n}"
+  "rs.playerN": "Player {n}",
+  "rs.betsLine": "Choices taken: {t}, paid off: {w}",
+  "rs.stealsLine": "Steals tried: {t}, landed: {w}"
 }

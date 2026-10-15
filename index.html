@@ -671,6 +671,49 @@
   .rs-pot,.rs-ward,.rs-turn{font-size:.9rem;font-weight:600}
   .rs-final{text-align:center;font-weight:700;font-size:.9rem;padding:4px 10px;border-radius:999px;background:#7a4cd966;align-self:center}
   .rs-final[hidden]{display:none}
+  /* F18 Eclipse table: everything below applies only under .fx (randospell_fx). */
+  .rs-fx-host,.rs-lantern{display:none}
+  .rs-screen.fx .rs-fx-host{display:block;position:relative;flex:0 0 auto;height:min(46vw,200px);margin-inline:auto;aspect-ratio:1}
+  .rs-fx-svg-wrap,.rs-fx-svg{width:100%;height:100%}
+  .rs-fx-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .rs-screen.fx{background:#070b14}
+  .rs-screen.fx.final{background:#04060c}
+  .rs-screen.fx .rs-lantern{display:block;position:absolute;inset-inline-start:10px;inset-block-start:70px;width:10px;height:90px;
+    border:2px solid #f2c14e99;border-radius:6px;overflow:hidden;background:#ffffff10}
+  .rs-lantern-fill{position:absolute;inset-inline:0;inset-block-end:0;background:#f2c14e;transition:height .5s ease-out}
+  .rs-moon{fill:#1b2538;stroke:#c9d6f0;stroke-width:1.2}
+  .rs-moon.danger{stroke:#a478ff;stroke-width:2.4;stroke-dasharray:4 3}
+  .rs-tick{stroke:#8da2c8;stroke-width:1}
+  .rs-tick.on{stroke:#fff;stroke-width:3}
+  .rs-tnum{fill:#9fb2d6;font-size:7px;text-anchor:middle;dominant-baseline:central}
+  .rs-tnum.on{fill:#fff;font-weight:700;font-size:9px}
+  .rs-dial{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+  .rs-notch{fill:none;stroke:#e8793a;stroke-width:1}
+  .rs-notch.on{fill:#ff9d3c}
+  .rs-corona{fill:none;stroke:#ff9d3c;stroke-width:3;opacity:.55}
+  .rs-corona.red{stroke:#e5483a;stroke-width:5;opacity:.7}
+  .rs-corona.full{stroke:#ff3a2a;stroke-width:8;opacity:.85}
+  .rs-rim{fill:none;stroke:#f2c14e;stroke-width:2.5}
+  .rs-spark{fill:#fff3b0}
+  .rs-stone circle{fill:#bcd4ff;stroke:#eaf2ff;stroke-width:1}
+  .rs-stone text{fill:#12203a;font-size:7px;font-weight:700;text-anchor:middle;dominant-baseline:central}
+  .rs-potnum{fill:#eaf2ff;font-size:22px;font-weight:700;text-anchor:middle}
+  .rs-orbit{animation:rs-orbit 14s linear infinite}
+  .rs-screen.fx .rs-die{box-shadow:0 0 0 2px #c9d6f066}
+  .rs-screen.fx.desat .rs-fx-host{filter:grayscale(1);transition:filter .3s}
+  .rs-eclipse{display:none}
+  .rs-screen.fx .rs-eclipse{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:#f2c14e;position:relative;overflow:hidden}
+  .rs-screen.fx .rs-eclipse::after{content:"";position:absolute;inset:0;border-radius:50%;background:#070b14;transform:translateX(-120%);animation:rs-eclipse 1.6s ease-in-out forwards}
+  .rs-stone-hist{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:320px}
+  .rs-stone-hist .rs-hs{display:grid;place-items:center;border-radius:50%;background:#bcd4ff;color:#12203a;font-weight:700;font-size:.75rem;
+    border:2px solid #eaf2ff}
+  @keyframes rs-orbit{to{transform:rotate(360deg)}}
+  @keyframes rs-eclipse{to{transform:translateX(0)}}
+  @media (prefers-reduced-motion:reduce){
+    .rs-orbit{animation:none}
+    .rs-dial{transition:none}
+    .rs-screen.fx .rs-eclipse::after{animation:none;transform:translateX(0)}
+  }
   .rs-npc-cfg{display:flex;flex-direction:column;gap:8px}
   .rs-npc-cfg[hidden],.rs-table[hidden]{display:none}
   .rs-table{display:flex;gap:6px;flex:none;flex-wrap:wrap;justify-content:center}
@@ -3087,6 +3130,8 @@
         <span class="rs-ward" id="rsWard" hidden></span>
         <span class="rs-rolls" id="rsRolls"></span>
       </div>
+      <div class="rs-fx-host" id="rsFxHost"><div class="rs-fx-svg-wrap" id="rsFxSvg"></div></div>
+      <div class="rs-lantern" id="rsLantern" aria-hidden="true"><div class="rs-lantern-fill" id="rsLanternFill"></div></div>
       <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div><div class="rs-letters" id="rsLetters"></div><div class="rs-glow-note" id="rsGlow" aria-live="polite"></div></div>
       <div class="rs-heat" id="rsHeat" hidden aria-live="polite"></div>
       <div class="rs-charms" id="rsCharms" hidden></div>
@@ -3116,6 +3161,7 @@
       <button class="btn mode-leave" id="rsHandExit" data-i18n="aria.exit">Exit</button>
     </div>
     <div class="rs-card" id="rsOver" hidden>
+      <div class="rs-eclipse" aria-hidden="true"></div>
       <h3 id="rsOverTitle" data-i18n="rs.over">Sprint complete</h3>
       <ul class="rs-list" id="rsStats"></ul>
       <div class="rs-hist" id="rsHist" role="img" aria-label="Dice" data-i18n-aria="rs.hist"></div>

@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name}が100点に到達。ほかの全員に最後の1回のばんがあります。",
   "rs.finalBanner": "ファイナルラウンド",
   "rs.finalTurn": "{n}点をこえれば勝ち。",
-  "rs.playerN": "プレイヤー{n}"
+  "rs.playerN": "プレイヤー{n}",
+  "rs.betsLine": "えらんだ数：{t}、成功：{w}",
+  "rs.stealsLine": "奪う挑戦：{t}、成功：{w}"
 }

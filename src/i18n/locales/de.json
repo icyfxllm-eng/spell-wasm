@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} hat 100 erreicht. Alle anderen haben einen letzten Zug.",
   "rs.finalBanner": "Schlussrunde",
   "rs.finalTurn": "Übertriff {n}, um zu gewinnen.",
-  "rs.playerN": "Spieler {n}"
+  "rs.playerN": "Spieler {n}",
+  "rs.betsLine": "Gewählte Optionen: {t}, aufgegangen: {w}",
+  "rs.stealsLine": "Diebstähle versucht: {t}, gelungen: {w}"
 }

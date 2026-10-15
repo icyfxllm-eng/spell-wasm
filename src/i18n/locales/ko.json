@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name}이(가) 100점에 닿았어요. 나머지 모두에게 마지막 차례가 한 번씩 있어요.",
   "rs.finalBanner": "마지막 라운드",
   "rs.finalTurn": "{n}점을 넘으면 이겨요.",
-  "rs.playerN": "플레이어 {n}"
+  "rs.playerN": "플레이어 {n}",
+  "rs.betsLine": "선택한 횟수: {t}, 성공: {w}",
+  "rs.stealsLine": "빼앗기 시도: {t}, 성공: {w}"
 }

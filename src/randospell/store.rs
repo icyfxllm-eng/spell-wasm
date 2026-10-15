@@ -31,6 +31,17 @@ pub struct Store {
     pub daily: BTreeMap<String, DailyEntry>,
     /// Every roll ever displayed, index 0 is a roll of 2 (D20).
     pub histogram: [u32; 11],
+    /// F19: NPC table results by difficulty id: (human wins, human losses).
+    #[serde(default)]
+    pub npc: BTreeMap<String, (u32, u32)>,
+    /// F19: bets by kind (stretch, ear, call): (taken, won).
+    #[serde(default)]
+    pub bets: BTreeMap<String, (u32, u32)>,
+    /// F19: steals (attempted, landed) and the highest heat reached.
+    #[serde(default)]
+    pub steals: (u32, u32),
+    #[serde(default)]
+    pub max_heat: u8,
 }
 
 impl Store {
@@ -77,6 +88,28 @@ impl Store {
             }
             Mode::Marathon => self.best_marathon_pot = self.best_marathon_pot.max(s.largest_banked),
             _ => {}
+        }
+        // F19: the v1.1 counters, kept on the device only.
+        let b = &s.bets;
+        for (kind, taken, won) in [("stretch", b.stretch_taken, b.stretch_won), ("ear", b.ear_taken, b.ear_won), ("call", b.call_taken, b.call_won)] {
+            if taken > 0 {
+                let e = self.bets.entry(kind.to_string()).or_default();
+                e.0 += taken;
+                e.1 += won;
+            }
+        }
+        self.steals.0 += b.steals_tried;
+        self.steals.1 += b.steals_landed;
+        self.max_heat = self.max_heat.max(b.max_heat);
+    }
+
+    /// F19: an NPC table finished: did the human win, at which difficulty.
+    pub fn record_table(&mut self, difficulty_id: &str, human_won: bool) {
+        let e = self.npc.entry(difficulty_id.to_string()).or_default();
+        if human_won {
+            e.0 += 1;
+        } else {
+            e.1 += 1;
         }
     }
 }

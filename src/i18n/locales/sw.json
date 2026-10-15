@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} amefikia 100. Wengine wote wana zamu moja ya mwisho.",
   "rs.finalBanner": "Raundi ya mwisho",
   "rs.finalTurn": "Vuka {n} ili ushinde.",
-  "rs.playerN": "Mchezaji {n}"
+  "rs.playerN": "Mchezaji {n}",
+  "rs.betsLine": "Chaguo zilizochukuliwa: {t}, zilizofanikiwa: {w}",
+  "rs.stealsLine": "Wizi uliojaribiwa: {t}, uliofanikiwa: {w}"
 }

@@ -110,6 +110,12 @@ struct Ui {
     ear_sel: bool,
     /// F15: the seat the player chose to steal from, instead of spelling for points.
     steal_target: Option<usize>,
+    /// F18: the Eclipse visuals are on, the stones in orbit (points per word),
+    /// and the last roll shown on the dial.
+    fx: bool,
+    stones: Vec<u32>,
+    last_len: usize,
+    last_doubles: bool,
     recorded: bool,
     day: u32,
 }
@@ -212,6 +218,7 @@ pub fn open(app: &App) {
 }
 
 fn close() {
+    crate::randospell_fx::clear();
     bump();
     speech_out::stop();
     finish_record();
@@ -454,13 +461,20 @@ fn start() {
         Table::new(js_sys::Date::now() as u64 ^ 0x5EA7, &s, pers, NPC_D.with(Cell::get))
     });
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { s, tbl, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, steal_target: None, recorded: false, day })
+        *u.borrow_mut() = Some(Ui { s, tbl, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, steal_target: None, fx: crate::flags::randospell_fx(), stones: Vec::new(), last_len: 0, last_doubles: false, recorded: false, day })
     });
     dom::set_hidden("rsSetup", true);
     dom::set_hidden("rsPlay", false);
     dom::set_hidden("rsOver", true);
     dom::set_hidden("rsHand", true);
     dom::add_class("rsScreen", "playing");
+    crate::randospell_fx::clear();
+    if crate::flags::randospell_fx() {
+        dom::add_class("rsScreen", "fx");
+    } else {
+        dom::remove_class("rsScreen", "fx");
+    }
+    dom::remove_class("rsScreen", "final");
     render_keys();
     render_hud();
     set_die("", false, false);
@@ -782,6 +796,145 @@ fn render_hud() {
     };
     dom::set_text("rsStreak", &streak_txt);
     dom::set_text("rsRolls", &i18n::tp("rs.rolls", &[("n", &rolls.to_string())]));
+    render_fx();
+}
+
+// ------------------------------------------------------------ F18 visuals
+
+/// Keep the stones in orbit honest: their points must add up to the pot, so a
+/// pot that was stolen from, or a Ward-saved pot, is always drawn as it is.
+fn sync_stones(u: &mut Ui) {
+    let sum: u32 = u.stones.iter().sum();
+    if sum != u.s.pot {
+        u.stones = if u.s.pot > 0 { vec![u.s.pot] } else { Vec::new() };
+    }
+}
+
+/// F18: the persistent state, as SVG: the eleven-face dial that spun to a stop
+/// on the roll, the heat notches and corona, the doubles ring, and the stones
+/// orbiting a moon with the pot numeral on it. Every mark has a shape and the
+/// same fact is in words elsewhere on the screen, so colour is never the only
+/// channel (A34, I20).
+fn render_fx() {
+    let st = with_ui(|u| {
+        if !u.fx {
+            return None;
+        }
+        sync_stones(u);
+        let pot_mode = u.s.mode.pot_rules();
+        Some((
+            u.last_len,
+            u.last_doubles,
+            if u.s.rules.heat && pot_mode { u.s.heat } else { 0 },
+            u.stones.clone(),
+            u.s.pot,
+            pot_mode,
+            u.s.score,
+            u.s.mode.goal(),
+            u.tbl.as_ref().map_or(false, |t| t.final_active()) || u.s.final_leader.is_some(),
+        ))
+    })
+    .flatten();
+    let Some((len, doubles, heat, stones, pot, pot_mode, score, goal, final_on)) = st else {
+        dom::set_html("rsFxSvg", "");
+        return;
+    };
+    let c = 110.0f64;
+    let mut svg = String::from("<svg viewBox=\"0 0 220 220\" class=\"rs-fx-svg\" aria-hidden=\"true\">");
+    // Corona: ignites at 3, reddens at 5, fills the ring at 7.
+    let corona = match heat {
+        0..=2 => "",
+        3..=4 => "ember",
+        5..=6 => "red",
+        _ => "full",
+    };
+    if !corona.is_empty() {
+        svg.push_str(&format!("<circle class=\"rs-corona {corona}\" cx=\"{c}\" cy=\"{c}\" r=\"78\"/>"));
+    }
+    // The dial: eleven faces, 2..=12, turned so the roll sits at the top.
+    let idx = if (2..=12).contains(&len) { len - 2 } else { 0 };
+    let turn = -(idx as f64) * 360.0 / 11.0;
+    svg.push_str(&format!("<g class=\"rs-dial\" style=\"transform:rotate({turn:.1}deg);transform-origin:{c}px {c}px\">"));
+    for i in 0..11 {
+        let a = (i as f64) * std::f64::consts::TAU / 11.0 - std::f64::consts::FRAC_PI_2;
+        let (x1, y1) = (c + a.cos() * 90.0, c + a.sin() * 90.0);
+        let (x2, y2) = (c + a.cos() * 97.0, c + a.sin() * 97.0);
+        let (tx, ty) = (c + a.cos() * 104.0, c + a.sin() * 104.0);
+        let on = len != 0 && i == idx;
+        svg.push_str(&format!(
+            "<line class=\"rs-tick{}\" x1=\"{x1:.1}\" y1=\"{y1:.1}\" x2=\"{x2:.1}\" y2=\"{y2:.1}\"/><text class=\"rs-tnum{}\" x=\"{tx:.1}\" y=\"{ty:.1}\">{}</text>",
+            if on { " on" } else { "" },
+            if on { " on" } else { "" },
+            i + 2
+        ));
+    }
+    svg.push_str("</g>");
+    // Heat: seven notches on the rim, filled one per pip.
+    for i in 0..7u8 {
+        let a = (i as f64) * std::f64::consts::TAU / 7.0 - std::f64::consts::FRAC_PI_2;
+        let (x, y) = (c + a.cos() * 82.0, c + a.sin() * 82.0);
+        svg.push_str(&format!(
+            "<rect class=\"rs-notch{}\" x=\"{:.1}\" y=\"{:.1}\" width=\"5\" height=\"9\" transform=\"rotate({:.1} {x:.1} {y:.1})\"/>",
+            if i < heat { " on" } else { "" },
+            x - 2.5,
+            y - 4.5,
+            (a.to_degrees() + 90.0)
+        ));
+    }
+    // Doubles: a ring of sparkle dots on a gold rim.
+    if doubles {
+        svg.push_str(&format!("<circle class=\"rs-rim\" cx=\"{c}\" cy=\"{c}\" r=\"44\"/>"));
+        for i in 0..12 {
+            let a = (i as f64) * std::f64::consts::TAU / 12.0;
+            svg.push_str(&format!("<circle class=\"rs-spark\" cx=\"{:.1}\" cy=\"{:.1}\" r=\"2\"/>", c + a.cos() * 50.0, c + a.sin() * 50.0));
+        }
+    }
+    // The moon, and the stones orbiting it: one engraved stone per unbanked word.
+    svg.push_str(&format!("<circle class=\"rs-moon{}\" cx=\"{c}\" cy=\"{c}\" r=\"38\"/>", if final_on { " danger" } else { "" }));
+    let speed = 1.0 + (pot.min(40) as f64) / 40.0; // 1 + pot/40, capped at x2
+    let dur = 14.0 / speed;
+    svg.push_str(&format!("<g class=\"rs-orbit\" style=\"animation-duration:{dur:.2}s;transform-origin:{c}px {c}px\">"));
+    let n = stones.len().min(12);
+    let r = if pot_mode { 62.0 - (pot.min(40) as f64) / 40.0 * 8.0 } else { 62.0 };
+    for (i, pts) in stones.iter().take(n).enumerate() {
+        let a = (i as f64) * std::f64::consts::TAU / n.max(1) as f64;
+        svg.push_str(&format!(
+            "<g class=\"rs-stone\"><circle cx=\"{:.1}\" cy=\"{:.1}\" r=\"8\"/><text x=\"{:.1}\" y=\"{:.1}\">{}</text></g>",
+            c + a.cos() * r,
+            c + a.sin() * r,
+            c + a.cos() * r,
+            c + a.sin() * r,
+            pts
+        ));
+    }
+    svg.push_str("</g>");
+    if pot_mode {
+        svg.push_str(&format!("<text class=\"rs-potnum\" x=\"{c}\" y=\"{:.1}\">{pot}</text>", c + 6.0));
+    }
+    svg.push_str("</svg>");
+    dom::set_html("rsFxSvg", &svg);
+    // The banked lantern: a level that rises with the score.
+    let pct = if goal > 0 { (score * 100 / goal).min(100) } else { 0 };
+    if let Some(e) = dom::doc().get_element_by_id("rsLanternFill") {
+        let _ = e.set_attribute("style", &format!("height:{pct}%"));
+    }
+    if final_on {
+        dom::add_class("rsScreen", "final");
+    } else {
+        dom::remove_class("rsScreen", "final");
+    }
+}
+
+fn fx_burst(kind: crate::randospell_fx::Burst) {
+    if !with_ui(|u| u.fx).unwrap_or(false) || crate::randospell_fx::reduce_motion() {
+        return;
+    }
+    crate::randospell_fx::burst(kind, 90);
+    if kind == crate::randospell_fx::Burst::Shatter {
+        // A miss drains the colour for 300 ms.
+        dom::add_class("rsScreen", "desat");
+        dom::after_ms(300, || dom::remove_class("rsScreen", "desat"));
+    }
 }
 
 /// F19: the v1.1 mechanics that are switched on. All off is v1.
@@ -1001,7 +1154,12 @@ fn land_die(len: usize, doubles: bool) {
     // F1: the orb shakes as the number lands; reduce-motion removes it in CSS.
     dom::add_class("rsOrb", "shake");
     dom::after_ms(450, || dom::remove_class("rsOrb", "shake"));
-    let (jr, glow) = with_ui(|u| (u.s.mode == Mode::Jr, doubles && u.s.rules.doubles)).unwrap_or((false, false));
+    let (jr, glow) = with_ui(|u| {
+        u.last_len = len;
+        u.last_doubles = doubles && u.s.rules.doubles;
+        (u.s.mode == Mode::Jr, doubles && u.s.rules.doubles)
+    })
+    .unwrap_or((false, false));
     // Jr shows the die (length - 1) and says how many letters it spells.
     let shown = if jr { len - 1 } else { len };
     set_die(&shown.to_string(), !jr && crate::randospell::is_jackpot(len as u8), glow);
@@ -1149,6 +1307,21 @@ fn resolve(typed: Option<String>) {
         if typed.is_some() { u.s.answer(correct) } else { u.s.timeout() }
     })
     .flatten();
+    // F18: a right word becomes a stone; a lost pot cracks, a Ward-held one stays.
+    if let Some(o) = &out {
+        with_ui(|u| {
+            if u.s.mode.pot_rules() && !o.retry {
+                if correct && o.steal == 0 && o.points > 0 {
+                    u.stones.push(o.points);
+                } else if !correct && !o.warded {
+                    u.stones.clear();
+                }
+            }
+        });
+        if !correct && o.lost > 0 {
+            fx_burst(crate::randospell_fx::Burst::Shatter);
+        }
+    }
     if out.as_ref().is_some_and(|o| o.retry) {
         // F7: a first miss replays the word and the child tries once more.
         haptics::incorrect(true);
@@ -1251,6 +1424,8 @@ fn bank_it() {
     let b = with_ui(|u| u.s.bank()).flatten();
     let Some(b) = b else { return };
     haptics::correct();
+    fx_burst(crate::randospell_fx::Burst::Stream);
+    with_ui(|u| u.stones.clear());
     decision(false);
     dom::set_text("rsFeed", &i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
     render_hud();
@@ -1321,6 +1496,9 @@ fn store_result() {
             st.finish_daily(k, &u.s, true);
         }
         st.record_game(&u.s);
+        if let Some(t) = &u.tbl {
+            st.record_table(t.difficulty.id(), t.winner == Some(0));
+        }
         save_store(&st);
     });
 }
@@ -1451,6 +1629,16 @@ fn show_over() {
         stats.push(i18n::tp("rs.h2hScore", &[("a", &scores[0].to_string()), ("b", &scores[1].to_string())]));
         stats.push(i18n::tp("rs.rolls", &[("n", &rolls.to_string())]));
     }
+    // F18: the bets taken and won and the steals tried and landed, when there were any.
+    let bets = with_ui(|u| u.s.bets).unwrap_or_default();
+    let taken = bets.stretch_taken + bets.ear_taken + bets.call_taken;
+    if taken > 0 {
+        let won = bets.stretch_won + bets.ear_won + bets.call_won;
+        stats.push(i18n::tp("rs.betsLine", &[("t", &taken.to_string()), ("w", &won.to_string())]));
+    }
+    if bets.steals_tried > 0 {
+        stats.push(i18n::tp("rs.stealsLine", &[("t", &bets.steals_tried.to_string()), ("w", &bets.steals_landed.to_string())]));
+    }
     if mode == Mode::Marathon {
         stats.push(i18n::tp("rs.bestBank", &[("n", &best_bank.to_string())]));
         stats.push(i18n::tp("rs.bestLost", &[("n", &best_lost.to_string())]));
@@ -1472,7 +1660,24 @@ fn show_over() {
             )
         })
         .collect();
-    dom::set_html("rsHist", &bars);
+    let fx = with_ui(|u| u.fx).unwrap_or(false);
+    if fx {
+        // F18: eleven stones sized by how often each roll came: a fairness receipt.
+        let hs: String = hist
+            .iter()
+            .enumerate()
+            .map(|(i, n)| {
+                let d = 24.0 + (*n as f64 / max as f64).sqrt() * 34.0;
+                format!(
+                    "<div class=\"rs-hs rs-bar\" data-roll=\"{r}\" data-n=\"{n}\" style=\"width:{d:.0}px;height:{d:.0}px\" title=\"{n}\">{r}</div>",
+                    r = if jr { i + 1 } else { i + 2 }
+                )
+            })
+            .collect();
+        dom::set_html("rsHist", &format!("<div class=\"rs-stone-hist\">{hs}</div>"));
+    } else {
+        dom::set_html("rsHist", &bars);
+    }
     spell_panel(false);
     decision(false);
     dom::set_hidden("rsHand", true);
@@ -1497,6 +1702,13 @@ pub fn seam_state() -> String {
                     "spelling": u.spelling,
                     "mode": format!("{:?}", u.s.mode),
                     "kind": format!("{:?}", u.kind),
+                    "fx": serde_json::json!({
+                        "on": u.fx,
+                        "stones": u.stones,
+                        "peak": crate::randospell_fx::peak(),
+                        "live": crate::randospell_fx::live(),
+                        "canvas": crate::randospell_fx::canvas_present(),
+                    }),
                     "table": u.tbl.as_ref().map(|t| serde_json::json!({
                         "turn": t.turn,
                         "winner": t.winner,

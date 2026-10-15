@@ -221,6 +221,21 @@ pub enum End {
     Exhausted,
 }
 
+/// F19: what the player chose and what came of it, for the result card and the
+/// mode-local store. Counts only; nothing leaves the device.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct BetStats {
+    pub stretch_taken: u32,
+    pub stretch_won: u32,
+    pub ear_taken: u32,
+    pub ear_won: u32,
+    pub call_taken: u32,
+    pub call_won: u32,
+    pub steals_tried: u32,
+    pub steals_landed: u32,
+    pub max_heat: u8,
+}
+
 #[derive(Clone, Debug)]
 pub struct Session {
     pub mode: Mode,
@@ -253,6 +268,7 @@ pub struct Session {
     attempt: u8,
     /// v1.1: which mechanics are on (all off = v1), set by the screen from flags.
     pub rules: Rules,
+    pub bets: BetStats,
     /// F11: unbanked correct words in a row, 0..=7.
     pub heat: u8,
     /// F12: the guess for the NEXT press; locked on press (D-R15).
@@ -313,6 +329,7 @@ impl Session {
             attempts: 0,
             last_bank: None,
             rules: Rules::default(),
+            bets: BetStats::default(),
             heat: 0,
             call: None,
             rolled: None,
@@ -509,6 +526,15 @@ impl Session {
         r.tier = served.0;
         r.stretch = stretched;
         r.ear = ear;
+        if stretched {
+            self.bets.stretch_taken += 1;
+        }
+        if ear {
+            self.bets.ear_taken += 1;
+        }
+        if r.call.is_some() {
+            self.bets.call_taken += 1;
+        }
         self.pending = Some(r.clone());
         Some(r)
     }
@@ -593,6 +619,7 @@ impl Session {
             self.best_streak = self.best_streak.max(self.streak);
             self.correct += 1;
             self.deciding = true;
+            self.bets.steals_landed += 1;
             if self.longest.as_ref().map_or(true, |w| r.len > bank::length_of(w)) {
                 self.longest = Some(r.word.clone());
             }
@@ -643,6 +670,15 @@ impl Session {
             mult = factor != (1, 1);
             doubles_hit = r.doubles && self.rules.doubles;
             bonus_paid = call_bonus;
+            if r.stretch {
+                self.bets.stretch_won += 1;
+            }
+            if r.ear {
+                self.bets.ear_won += 1;
+            }
+            if call_bonus > 0 {
+                self.bets.call_won += 1;
+            }
             points = p;
             self.streak += 1;
             self.best_streak = self.best_streak.max(self.streak);
@@ -657,6 +693,7 @@ impl Session {
                 self.deciding = true;
                 if self.rules.heat {
                     self.heat = (self.heat + 1).min(payout::MAX_HEAT);
+                    self.bets.max_heat = self.bets.max_heat.max(self.heat);
                 }
             } else {
                 self.score += p; // I5: score only ever rises.
@@ -905,6 +942,10 @@ impl Session {
         r.word = word;
         r.tier = tier;
         r.steal = true;
+        self.bets.steals_tried += 1;
+        if r.call.is_some() {
+            self.bets.call_taken += 1;
+        }
         self.pending = Some(r.clone());
         Some(r)
     }

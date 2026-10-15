@@ -1089,5 +1089,7 @@
   "rs.finalRound": "Umabot si {name} sa 100. May huling turno ang lahat ng iba.",
   "rs.finalBanner": "Huling Ikot",
   "rs.finalTurn": "Lampasan ang {n} para manalo.",
-  "rs.playerN": "Manlalaro {n}"
+  "rs.playerN": "Manlalaro {n}",
+  "rs.betsLine": "Mga pinili: {t}, nagtagumpay: {w}",
+  "rs.stealsLine": "Mga pagnanakaw na sinubukan: {t}, nagtagumpay: {w}"
 }

@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} osiągnął 100. Wszyscy pozostali mają jeszcze jedną turę.",
   "rs.finalBanner": "Runda finałowa",
   "rs.finalTurn": "Pokonaj {n}, by wygrać.",
-  "rs.playerN": "Gracz {n}"
+  "rs.playerN": "Gracz {n}",
+  "rs.betsLine": "Wybory: {t}, udane: {w}",
+  "rs.stealsLine": "Kradzieże: próby {t}, udane {w}"
 }

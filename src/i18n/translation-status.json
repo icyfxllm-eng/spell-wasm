@@ -225,7 +225,9 @@
     "rs.finalRound",
     "rs.finalBanner",
     "rs.finalTurn",
-    "rs.playerN"
+    "rs.playerN",
+    "rs.betsLine",
+    "rs.stealsLine"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -459,7 +461,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -683,7 +687,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "de": [
       "hub.group.spell_it",
@@ -907,7 +913,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1131,7 +1139,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1355,7 +1365,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1579,7 +1591,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1803,7 +1817,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2027,7 +2043,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2251,7 +2269,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2475,7 +2495,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2699,7 +2721,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -2923,7 +2947,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3147,7 +3173,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3371,7 +3399,9 @@
       "rs.finalRound",
       "rs.finalBanner",
       "rs.finalTurn",
-      "rs.playerN"
+      "rs.playerN",
+      "rs.betsLine",
+      "rs.stealsLine"
     ]
   }
 }

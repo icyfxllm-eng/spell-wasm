@@ -283,6 +283,14 @@ pub fn randospell_lastcall() -> bool {
     randospell() && resolve(stored("randospell_lastcall").as_deref(), false)
 }
 
+/// CC-RANDOSPELL v1.1 F18 -- the Eclipse visuals. **Default OFF** and independent:
+/// with it off the mode plays with plain numerals and pips and every state is
+/// still readable (I20).
+#[cfg(not(feature = "web"))]
+pub fn randospell_fx() -> bool {
+    randospell() && resolve(stored("randospell_fx").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {
@@ -634,7 +642,7 @@ mod tests {
         assert!(!randospell_daily() && !randospell_h2h() && !randospell_jr());
         // v1.1 mechanics ship together (D-R7) and stay dark until their device pass.
         assert!(!randospell_npc(), "the NPC table stays dark until its device pass");
-        assert!(!randospell_steal() && !randospell_lastcall());
+        assert!(!randospell_steal() && !randospell_lastcall() && !randospell_fx());
         assert!(!randospell_heat() && !randospell_call() && !randospell_stretch() && !randospell_doubles() && !randospell_ear());
         set_test_override(Some("off"));
         assert!(!randospell() && !randospell_marathon(), "the mode flag is the kill switch");

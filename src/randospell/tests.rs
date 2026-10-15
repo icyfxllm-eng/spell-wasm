@@ -1612,3 +1612,82 @@ fn h2h_the_trailing_player_can_win_on_their_final_bank() {
     assert!(b.finished && !b.passed, "{b:?}");
     assert_eq!(s.winner, Some(1), "115 beats 102");
 }
+
+// ---- v1.1 Phase H: Daily integration and the counters -----------------------
+
+#[test]
+fn a29_daily_with_every_bet_on_is_one_game_for_everyone() {
+    // Same (date, lang, tier): the dice, the doubles flags and the ordinary word
+    // stream are identical whatever each player chooses; Steal and the Final
+    // Round have no path in a solo Marathon, which is what a Daily is (I18).
+    let play = |stretch: bool, ear: bool, call: Option<Call>| {
+        let mut s = Session::new_daily("2026-10-14", "es", 2, Bank::for_lang("es", Standard)).expect("es is eligible");
+        s.rules = Rules { heat: true, call: true, stretch: true, ear: true, doubles: true, steal: true, lastcall: true };
+        let mut seq = Vec::new();
+        for i in 0..30u32 {
+            s.set_call(call);
+            let Some(r) = s.press_roll() else { break };
+            seq.push((r.face, r.len, r.doubles));
+            assert!(!s.steal_offered(50), "a Daily offers a steal");
+            let Some(w) = s.reveal(stretch, ear) else { break };
+            s.answer(i % 4 != 3);
+            let _ = w;
+            if s.deciding {
+                // Never bank, so the game runs long enough to compare.
+                s.roll_again();
+            }
+            assert!(s.final_leader.is_none(), "a Daily has no Final Round");
+            if s.ended.is_some() {
+                break;
+            }
+        }
+        (seq, s.drawn.clone(), s.score + s.pot, s.bets)
+    };
+    let plain = play(false, false, None);
+    let bold = play(true, true, Some(Call::High));
+    let n = plain.0.len().min(bold.0.len());
+    assert!(n >= 15, "too short to prove anything: {n}");
+    assert_eq!(plain.0[..n], bold.0[..n], "dice and doubles flags");
+    assert_eq!(plain.1[..n.min(plain.1.len()).min(bold.1.len())], bold.1[..n.min(plain.1.len()).min(bold.1.len())], "the ordinary words");
+    assert_ne!(plain.2, bold.2, "the choices are the skill: the scores differ");
+    assert!(bold.3.stretch_taken + bold.3.ear_taken + bold.3.call_taken > 0);
+    assert_eq!(plain.3.stretch_taken + plain.3.ear_taken + plain.3.call_taken, 0);
+}
+
+#[test]
+fn the_bet_counters_count_what_was_taken_and_what_paid() {
+    let mut s = Session::new(61, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+    s.rules = all_rules();
+    s.set_call(Some(Call::Low));
+    let r = s.press_roll().unwrap();
+    s.reveal(true, true).unwrap();
+    assert_eq!((s.bets.stretch_taken, s.bets.ear_taken, s.bets.call_taken), (1, 1, 1));
+    s.answer(true).unwrap();
+    assert_eq!((s.bets.stretch_won, s.bets.ear_won), (1, 1));
+    assert_eq!(s.bets.call_won, u32::from(Call::Low.hits(r.len)));
+    assert_eq!(s.bets.max_heat, 1);
+}
+
+#[test]
+fn the_store_folds_in_bets_steals_heat_and_table_results() {
+    let mut st = Store::default();
+    let mut s = Session::new(62, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+    s.rules = all_rules();
+    s.press_roll().unwrap();
+    s.reveal(true, false).unwrap();
+    s.answer(true).unwrap();
+    s.bank();
+    st.record_game(&s);
+    assert_eq!(st.bets.get("stretch"), Some(&(1, 1)));
+    assert!(st.max_heat >= 1);
+    st.record_table("normal", true);
+    st.record_table("normal", false);
+    st.record_table("tough", false);
+    assert_eq!(st.npc.get("normal"), Some(&(1, 1)));
+    assert_eq!(st.npc.get("tough"), Some(&(0, 1)));
+    let back: Store = serde_json::from_str(&serde_json::to_string(&st).unwrap()).unwrap();
+    assert_eq!(back, st);
+    // An older saved store (no v1.1 fields) still loads.
+    let old = r#"{"best_sprint_rolls":null,"best_marathon_pot":0,"daily":{},"histogram":[0,0,0,0,0,0,0,0,0,0,0]}"#;
+    assert!(serde_json::from_str::<Store>(old).is_ok());
+}

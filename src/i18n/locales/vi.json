@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} đã đạt 100. Mọi người khác có một lượt cuối.",
   "rs.finalBanner": "Vòng cuối",
   "rs.finalTurn": "Vượt {n} để thắng.",
-  "rs.playerN": "Người chơi {n}"
+  "rs.playerN": "Người chơi {n}",
+  "rs.betsLine": "Lựa chọn đã dùng: {t}, thành công: {w}",
+  "rs.stealsLine": "Cướp đã thử: {t}, thành công: {w}"
 }

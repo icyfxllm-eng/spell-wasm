@@ -188,7 +188,7 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
             .iter()
             .map(|m| m.id.clone())
             .filter(|id| crate::flags::is_on(id))
-            .filter(|id| !(jr_hides_randospell && id == "randospell"))
+            .filter(|id| !hides_randospell(id, jr_hides_randospell))
             .collect(),
     }
 }
@@ -202,6 +202,19 @@ fn randospell_blocked_for_jr(lang: &str) -> bool {
 
 #[cfg(feature = "web")]
 fn randospell_blocked_for_jr(_lang: &str) -> bool {
+    false
+}
+
+/// Does this registry id get hidden because the player's bank cannot carry
+/// Randospell? The id literal lives only in the app build (the site build
+/// carries no Randospell string, O3).
+#[cfg(not(feature = "web"))]
+fn hides_randospell(id: &str, hide: bool) -> bool {
+    hide && id == "randospell"
+}
+
+#[cfg(feature = "web")]
+fn hides_randospell(_id: &str, _hide: bool) -> bool {
     false
 }
 

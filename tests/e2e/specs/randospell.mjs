@@ -54,6 +54,18 @@ const FLAG_G = () => {
   localStorage.setItem('spell_flag_randospell_steal', 'on');
   localStorage.setItem('spell_flag_randospell_lastcall', 'on');
 };
+// v1.1 Phase I: the Eclipse visuals over the Phase E mechanics (Marathon).
+const FLAG_FX = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'on');
+  for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
+};
+const FLAG_FX_OFF = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'on');
+  for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
+  localStorage.setItem('spell_flag_randospell_fx', 'off');
+};
 const FLAG_JR_TABLE = () => {
   localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_jr', 'on');
@@ -848,5 +860,132 @@ export async function run(browser, base, suite) {
         }
       } finally { await ctx.close(); }
     }
+  });
+  // ---- v1.1 Phase H and I: Daily with the bets, and the Eclipse visuals ---------
+  const openFx = async (init, { reduce = false, mode = 'marathon' } = {}) => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 375, height: 667 }, init });
+    if (reduce) await o.page.emulateMedia({ reducedMotion: 'reduce' });
+    await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
+    await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+    await o.page.click(`#rsModes [data-m="${mode}"]`);
+    await o.page.click('#rsStart');
+    await o.page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+    return o;
+  };
+
+  await suite.test('randospell_h_daily_carries_the_bets_and_never_steal_or_a_final_round', async () => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: () => {
+      localStorage.setItem('spell_flag_randospell', 'on');
+      localStorage.setItem('spell_flag_randospell_daily', 'on');
+      for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
+    } });
+    const { ctx, page } = o;
+    try {
+      await page.evaluate(() => document.getElementById('rsOpenBtn').click());
+      await page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+      await page.click('#rsModes [data-m="daily"]');
+      await page.click('#rsStart');
+      await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+      assert(await page.evaluate(() => document.querySelectorAll('#rsCall [data-c]').length === 3), 'a Daily has no Guess');
+      await page.click('#rsOrb');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).choosing, null, { timeout: 6000 });
+      const st = await state(page);
+      assert(st.kind === 'Daily' && st.stealOptions.length === 0, `Daily state: ${JSON.stringify({ k: st.kind, s: st.stealOptions })}`);
+      assert(await page.evaluate(() => document.getElementById('rsFinal').hidden), 'a Daily shows a Final Round');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_i_fx_draws_the_state_and_fx_off_still_shows_every_number', async () => {
+    const on = await openFx(FLAG_FX);
+    try {
+      assert(await on.page.evaluate(() => document.getElementById('rsScreen').classList.contains('fx')), 'fx class missing');
+      const st0 = await rollV11(on.page, {});
+      assert(await on.page.evaluate(() => document.querySelectorAll('#rsFxSvg .rs-tick').length === 11), 'the dial does not have eleven faces');
+      assert(await on.page.evaluate((n) => document.querySelector('#rsFxSvg .rs-tnum.on')?.textContent === String(n), st0.roll), 'the dial did not stop on the roll');
+      await finish(on.page, st0.word, true);
+      const st1 = await state(on.page);
+      assert(st1.fx.stones.length === 1 && st1.fx.stones[0] === st1.pot, `stones ${JSON.stringify(st1.fx.stones)} vs pot ${st1.pot}`);
+      assert(await on.page.evaluate(() => document.querySelectorAll('#rsFxSvg .rs-stone').length === 1), 'no stone in orbit');
+      assert(await on.page.evaluate(() => document.querySelectorAll('#rsFxSvg .rs-notch.on').length === 1), 'no heat notch lit');
+    } finally { await on.ctx.close(); }
+    // fx off: the same state is in plain numerals and pips (I20).
+    const off = await openFx(FLAG_FX_OFF);
+    try {
+      assert(await off.page.evaluate(() => !document.getElementById('rsScreen').classList.contains('fx')), 'fx class present with the flag off');
+      const st0 = await rollV11(off.page, {});
+      await finish(off.page, st0.word, true);
+      const txt = await off.page.evaluate(() => ({ pot: document.getElementById('rsPot').textContent, heat: document.getElementById('rsHeat').textContent }));
+      assert(/\d/.test(txt.pot) && txt.heat.includes('●'), `plain state missing: ${JSON.stringify(txt)}`);
+      assert(await off.page.evaluate(() => getComputedStyle(document.getElementById('rsFxHost')).display === 'none'), 'the fx host shows with fx off');
+    } finally { await off.ctx.close(); }
+  });
+
+  await suite.test('randospell_a33_particles_stay_under_200_and_the_canvas_is_gone_between_turns', async () => {
+    const { ctx, page } = await openFx(FLAG_FX);
+    try {
+      let peak = 0;
+      for (let i = 0; i < 12; i++) {
+        const st = await rollV11(page, {});
+        await finish(page, st.word, i % 3 !== 2); // some misses: shatter; the rest bank: stream
+        const a = await state(page);
+        peak = Math.max(peak, a.fx.peak, a.fx.live);
+        if (a.deciding) await page.click('#rsBank');
+        await page.waitForFunction(() => !JSON.parse(window.__spelltest.randospellState()).fx.canvas, null, { timeout: 4000 });
+        const b = await state(page);
+        assert(b.fx.live === 0 && b.fx.canvas === false, `a canvas survived the turn: ${JSON.stringify(b.fx)}`);
+        peak = Math.max(peak, b.fx.peak);
+      }
+      assert(peak <= 200, `peak particles ${peak}`);
+      assert(peak > 0, 'no burst ever ran');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_a16_reduce_motion_runs_no_bursts_and_no_orbit_animation', async () => {
+    const { ctx, page } = await openFx(FLAG_FX, { reduce: true });
+    try {
+      const st = await rollV11(page, {});
+      await finish(page, st.word, true);
+      const orbit = await page.evaluate(() => getComputedStyle(document.querySelector('#rsFxSvg .rs-orbit')).animationName);
+      assert(orbit === 'none', `the orbit animates under reduce motion: ${orbit}`);
+      await page.click('#rsBank');
+      const a = await state(page);
+      assert(a.fx.peak === 0 && a.fx.canvas === false, `a burst ran under reduce motion: ${JSON.stringify(a.fx)}`);
+      assert(a.score > 0, 'the bank did not register');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_a34_every_state_has_a_shape_and_the_numerals_have_contrast', async () => {
+    const { ctx, page } = await openFx(FLAG_FX);
+    try {
+      // Greyscale the whole page: shapes and words must still carry each state.
+      await page.addStyleTag({ content: 'html{filter:grayscale(1)}' });
+      for (let i = 0; i < 4; i++) {
+        const st = await rollV11(page, {});
+        await finish(page, st.word, true);
+        if ((await state(page)).deciding) await page.click('#rsRollAgain');
+      }
+      const shapes = await page.evaluate(() => ({
+        stones: document.querySelectorAll('#rsFxSvg .rs-stone').length,
+        notches: document.querySelectorAll('#rsFxSvg .rs-notch.on').length,
+        corona: !!document.querySelector('#rsFxSvg .rs-corona'),
+        numerals: document.getElementById('rsPot').textContent,
+      }));
+      assert(shapes.stones >= 1 && shapes.notches >= 3 && shapes.corona, `shape channel: ${JSON.stringify(shapes)}`);
+      assert(/\d/.test(shapes.numerals), 'the pot numeral is missing');
+      // Contrast of the key numerals against the screen background (>= 4.5:1).
+      const ratios = await page.evaluate(() => {
+        const lum = (c) => { const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number).map((v) => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return .2126 * r + .7152 * g + .0722 * b; };
+        const bg = getComputedStyle(document.getElementById('rsScreen')).backgroundColor;
+        const out = {};
+        for (const id of ['rsScore', 'rsPot', 'rsHeat', 'rsFeed']) {
+          const el = document.getElementById(id);
+          if (!el || el.hidden || !el.textContent.trim()) continue;
+          const a = lum(getComputedStyle(el).color), b = lum(bg);
+          out[id] = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+        }
+        return out;
+      });
+      for (const [id, r] of Object.entries(ratios)) assert(r >= 4.5, `${id} contrast ${r.toFixed(2)}`);
+    } finally { await ctx.close(); }
   });
 }

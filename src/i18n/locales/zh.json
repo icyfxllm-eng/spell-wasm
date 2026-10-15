@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} 到达 100 分。其他人各有最后一次机会。",
   "rs.finalBanner": "最后一轮",
   "rs.finalTurn": "超过 {n} 即可获胜。",
-  "rs.playerN": "玩家 {n}"
+  "rs.playerN": "玩家 {n}",
+  "rs.betsLine": "所选次数：{t}，成功：{w}",
+  "rs.stealsLine": "抢夺尝试：{t}，成功：{w}"
 }

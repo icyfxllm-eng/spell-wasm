@@ -1089,5 +1089,7 @@
   "rs.finalRound": "{name} a atteint 100. Tous les autres ont un dernier tour.",
   "rs.finalBanner": "Dernière manche",
   "rs.finalTurn": "Dépasse {n} pour gagner.",
-  "rs.playerN": "Joueur {n}"
+  "rs.playerN": "Joueur {n}",
+  "rs.betsLine": "Choix faits : {t}, gagnants : {w}",
+  "rs.stealsLine": "Vols tentés : {t}, réussis : {w}"
 }
