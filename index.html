@@ -678,7 +678,10 @@
   .rs-fx-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   .rs-screen.fx{background:#070b14}
   .rs-screen.fx.final{background:#04060c}
-  .rs-screen.fx .rs-lantern{display:block;position:absolute;inset-inline-start:10px;inset-block-start:70px;width:10px;height:90px;
+  /* The lantern sits inside the play column (not the screen), below the title and
+     score row, beside the dial: it must never overlap the heading or the numbers. */
+  .rs-play{position:relative}
+  .rs-screen.fx .rs-lantern{display:block;position:absolute;inset-inline-start:2px;inset-block-start:64px;width:10px;height:90px;
     border:2px solid #f2c14e99;border-radius:6px;overflow:hidden;background:#ffffff10}
   .rs-lantern-fill{position:absolute;inset-inline:0;inset-block-end:0;background:#f2c14e;transition:height .5s ease-out}
   .rs-moon{fill:#1b2538;stroke:#c9d6f0;stroke-width:1.2}

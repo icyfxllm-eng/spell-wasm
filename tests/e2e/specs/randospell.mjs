@@ -988,4 +988,28 @@ export async function run(browser, base, suite) {
       for (const [id, r] of Object.entries(ratios)) assert(r >= 4.5, `${id} contrast ${r.toFixed(2)}`);
     } finally { await ctx.close(); }
   });
+  await suite.test('randospell_i_the_lantern_never_overlaps_the_title_or_the_score', async () => {
+    for (const vp of [{ width: 375, height: 667 }, { width: 390, height: 844 }]) {
+      const o = await openApp(browser, base, { lang: 'en', viewport: vp, init: FLAG_FX });
+      const { ctx, page } = o;
+      try {
+        await page.evaluate(() => document.getElementById('rsOpenBtn').click());
+        await page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+        await page.click('#rsModes [data-m="marathon"]');
+        await page.click('#rsStart');
+        await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+        const hit = await page.evaluate(() => {
+          const L = document.getElementById('rsLantern').getBoundingClientRect();
+          const ids = ['rsTitle', 'rsScore', 'rsStreak', 'rsPot', 'rsRolls'];
+          return ids.filter((id) => {
+            const el = document.getElementById(id);
+            if (!el || el.hidden || !el.textContent.trim()) return false;
+            const r = el.getBoundingClientRect();
+            return r.width && r.left < L.right && r.right > L.left && r.top < L.bottom && r.bottom > L.top;
+          });
+        });
+        assert(hit.length === 0, `the lantern overlaps ${hit.join(', ')} at ${vp.width}x${vp.height}`);
+      } finally { await ctx.close(); }
+    }
+  });
 }
