@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Mga pinili: {t}, nagtagumpay: {w}",
   "rs.stealsLine": "Mga pagnanakaw na sinubukan: {t}, nagtagumpay: {w}",
   "qbd.name": "Mabilis na Round · Pagguhit",
-  "qbd.desc": "Iguhit ang bawat karakter laban sa oras. Bawat tamang karakter ay may isang puntos."
+  "qbd.desc": "Iguhit ang bawat karakter laban sa oras. Bawat tamang karakter ay may isang puntos.",
+  "qbd.hear": "Making",
+  "qbd.clear": "Burahin",
+  "qbd.redraw": "Hindi nabasa. Iguhit muli nang isang beses.",
+  "qbd.itWas": "Iyon ay {c}",
+  "qbd.score": "Puntos: {n}",
+  "qbd.over": "Tapos na ang oras!",
+  "qbd.words": "{n} salitang natapos",
+  "qbd.best": "Pinakamataas na guhit na puntos: {n}",
+  "qbd.drawn": "Bagong rekord, guhit",
+  "qbd.start": "Simulan",
+  "qbd.again": "Maglaro ulit"
 }

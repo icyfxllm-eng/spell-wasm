@@ -1093,5 +1093,16 @@
   "rs.betsLine": "선택한 횟수: {t}, 성공: {w}",
   "rs.stealsLine": "빼앗기 시도: {t}, 성공: {w}",
   "qbd.name": "빠른 라운드 · 손글씨",
-  "qbd.desc": "시간 안에 글자를 하나씩 그려 보세요. 맞은 글자마다 1점."
+  "qbd.desc": "시간 안에 글자를 하나씩 그려 보세요. 맞은 글자마다 1점.",
+  "qbd.hear": "듣기",
+  "qbd.clear": "지우기",
+  "qbd.redraw": "읽지 못했어요. 한 번 더 그려 주세요.",
+  "qbd.itWas": "정답은 {c}이었어요",
+  "qbd.score": "점수: {n}",
+  "qbd.over": "시간 종료!",
+  "qbd.words": "{n}개 단어 완료",
+  "qbd.best": "손글씨 최고 점수: {n}",
+  "qbd.drawn": "손글씨 새 기록",
+  "qbd.start": "시작",
+  "qbd.again": "다시 하기"
 }

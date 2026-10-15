@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Wybory: {t}, udane: {w}",
   "rs.stealsLine": "Kradzieże: próby {t}, udane {w}",
   "qbd.name": "Szybka Runda · Rysowanie",
-  "qbd.desc": "Rysuj każdy znak na czas. Każdy poprawny znak daje punkt."
+  "qbd.desc": "Rysuj każdy znak na czas. Każdy poprawny znak daje punkt.",
+  "qbd.hear": "Posłuchaj",
+  "qbd.clear": "Wyczyść",
+  "qbd.redraw": "Nie udało się odczytać. Narysuj jeszcze raz.",
+  "qbd.itWas": "To było {c}",
+  "qbd.score": "Wynik: {n}",
+  "qbd.over": "Koniec czasu!",
+  "qbd.words": "Ukończone słowa: {n}",
+  "qbd.best": "Najlepszy wynik rysowany: {n}",
+  "qbd.drawn": "Nowy rekord, rysowany",
+  "qbd.start": "Zaczynamy",
+  "qbd.again": "Zagraj ponownie"
 }

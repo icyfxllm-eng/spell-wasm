@@ -160,6 +160,12 @@ pub fn set_guide(on: bool) {
     redraw_all();
 }
 
+/// How many strokes are on the pad now (the drawn Quick Bee judges a cell once
+/// the expected count is in and the pen has rested).
+pub fn stroke_count() -> usize {
+    STATE.with(|s| s.borrow().strokes.len())
+}
+
 pub fn has_strokes() -> bool {
     STATE.with(|s| !s.borrow().strokes.is_empty())
 }

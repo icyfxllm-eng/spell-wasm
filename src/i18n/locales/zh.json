@@ -1093,5 +1093,16 @@
   "rs.betsLine": "所选次数：{t}，成功：{w}",
   "rs.stealsLine": "抢夺尝试：{t}，成功：{w}",
   "qbd.name": "快速一局 · 手写",
-  "qbd.desc": "在限定时间内逐字书写。每写对一个字得一分。"
+  "qbd.desc": "在限定时间内逐字书写。每写对一个字得一分。",
+  "qbd.hear": "听",
+  "qbd.clear": "擦除",
+  "qbd.redraw": "没能识别。请再写一次。",
+  "qbd.itWas": "正确答案是 {c}",
+  "qbd.score": "得分：{n}",
+  "qbd.over": "时间到！",
+  "qbd.words": "完成 {n} 个词",
+  "qbd.best": "手写最高分：{n}",
+  "qbd.drawn": "手写新纪录",
+  "qbd.start": "开始",
+  "qbd.again": "再玩一次"
 }

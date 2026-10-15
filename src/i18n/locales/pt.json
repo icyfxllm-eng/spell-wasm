@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Escolhas feitas: {t}, acertadas: {w}",
   "rs.stealsLine": "Roubos tentados: {t}, conseguidos: {w}",
   "qbd.name": "Rodada Rápida · Desenho",
-  "qbd.desc": "Desenhe cada caractere contra o relógio. Cada caractere certo vale um ponto."
+  "qbd.desc": "Desenhe cada caractere contra o relógio. Cada caractere certo vale um ponto.",
+  "qbd.hear": "Ouvir",
+  "qbd.clear": "Apagar",
+  "qbd.redraw": "Não deu para ler. Desenhe mais uma vez.",
+  "qbd.itWas": "Era {c}",
+  "qbd.score": "Pontos: {n}",
+  "qbd.over": "Acabou o tempo!",
+  "qbd.words": "{n} palavras concluídas",
+  "qbd.best": "Melhor pontuação desenhada: {n}",
+  "qbd.drawn": "Novo recorde, desenhado",
+  "qbd.start": "Começar",
+  "qbd.again": "Jogar de novo"
 }

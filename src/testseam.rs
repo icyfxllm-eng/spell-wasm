@@ -220,6 +220,13 @@ pub fn install(app: &App) {
         // CC-RANDOSPELL: where the game stands, and the word a player owes.
         let cb = Closure::<dyn Fn() -> String>::new(move || crate::randospell_screen::seam_state());
         set(&obj, "randospellState", cb.into_js_value());
+        // CC-QUICKBEE-DRAW: what the next drawn cell reads as, and where the run stands.
+        let cb = Closure::<dyn Fn(String)>::new(move |v: String| crate::quickbee_draw_screen::seam_force(&v));
+        set(&obj, "qbdForce", cb.into_js_value());
+        let cb = Closure::<dyn Fn(u32)>::new(move |ms: u32| crate::quickbee_draw_screen::seam_age(ms));
+        set(&obj, "qbdAge", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::quickbee_draw_screen::seam_state());
+        set(&obj, "qbdState", cb.into_js_value());
         let cb = Closure::<dyn Fn(u32)>::new(move |n: u32| crate::randospell_screen::seam_score(n));
         set(&obj, "randospellScore", cb.into_js_value());
         let cb = Closure::<dyn Fn(u32, u32)>::new(move |seat: u32, n: u32| crate::randospell_screen::seam_npc_pot(seat as usize, n));

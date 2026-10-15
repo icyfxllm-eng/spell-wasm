@@ -37,6 +37,7 @@ const PANELS = {
   bgOver: ['src/boardgame_screen.rs', 'bgOverExit'],
   rsOver: ['src/randospell_screen.rs', 'rsOverExit'],
   rsHand: ['src/randospell_screen.rs', 'rsHandExit'],
+  qbdOver: ['src/quickbee_draw_screen.rs', 'qbdOverExit'],
   dmRecap: ['src/defmatch_screen.rs', 'dmRecapClose'],
 };
 

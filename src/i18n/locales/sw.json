@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Chaguo zilizochukuliwa: {t}, zilizofanikiwa: {w}",
   "rs.stealsLine": "Wizi uliojaribiwa: {t}, uliofanikiwa: {w}",
   "qbd.name": "Raundi ya Haraka · Kuchora",
-  "qbd.desc": "Chora kila herufi dhidi ya saa. Kila herufi sahihi inapata alama moja."
+  "qbd.desc": "Chora kila herufi dhidi ya saa. Kila herufi sahihi inapata alama moja.",
+  "qbd.hear": "Sikiliza",
+  "qbd.clear": "Futa",
+  "qbd.redraw": "Haikusomeka. Chora tena mara moja.",
+  "qbd.itWas": "Ilikuwa {c}",
+  "qbd.score": "Alama: {n}",
+  "qbd.over": "Muda umeisha!",
+  "qbd.words": "Maneno {n} yamekamilika",
+  "qbd.best": "Alama bora ya kuchora: {n}",
+  "qbd.drawn": "Rekodi mpya, kuchora",
+  "qbd.start": "Anza",
+  "qbd.again": "Cheza tena"
 }

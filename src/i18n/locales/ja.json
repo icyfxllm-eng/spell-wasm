@@ -1093,5 +1093,16 @@
   "rs.betsLine": "えらんだ数：{t}、成功：{w}",
   "rs.stealsLine": "奪う挑戦：{t}、成功：{w}",
   "qbd.name": "クイックラウンド・手書き",
-  "qbd.desc": "時間内に一文字ずつ書こう。正しい文字ごとに1点。"
+  "qbd.desc": "時間内に一文字ずつ書こう。正しい文字ごとに1点。",
+  "qbd.hear": "きく",
+  "qbd.clear": "消す",
+  "qbd.redraw": "読み取れませんでした。もう一度書いてね。",
+  "qbd.itWas": "正解は{c}でした",
+  "qbd.score": "スコア：{n}",
+  "qbd.over": "時間切れ！",
+  "qbd.words": "{n}語できた",
+  "qbd.best": "手書きのベスト：{n}",
+  "qbd.drawn": "手書きの新記録",
+  "qbd.start": "スタート",
+  "qbd.again": "もう一度あそぶ"
 }

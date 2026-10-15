@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Gewählte Optionen: {t}, aufgegangen: {w}",
   "rs.stealsLine": "Diebstähle versucht: {t}, gelungen: {w}",
   "qbd.name": "Schnelle Runde · Zeichnen",
-  "qbd.desc": "Zeichne jedes Zeichen gegen die Uhr. Jedes richtige Zeichen bringt einen Punkt."
+  "qbd.desc": "Zeichne jedes Zeichen gegen die Uhr. Jedes richtige Zeichen bringt einen Punkt.",
+  "qbd.hear": "Anhören",
+  "qbd.clear": "Löschen",
+  "qbd.redraw": "Nicht lesbar. Zeichne es noch einmal.",
+  "qbd.itWas": "Es war {c}",
+  "qbd.score": "Punkte: {n}",
+  "qbd.over": "Die Zeit ist um!",
+  "qbd.words": "{n} Wörter geschafft",
+  "qbd.best": "Beste gezeichnete Punktzahl: {n}",
+  "qbd.drawn": "Neue Bestleistung, gezeichnet",
+  "qbd.start": "Los geht’s",
+  "qbd.again": "Nochmal spielen"
 }

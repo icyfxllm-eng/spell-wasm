@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Lựa chọn đã dùng: {t}, thành công: {w}",
   "rs.stealsLine": "Cướp đã thử: {t}, thành công: {w}",
   "qbd.name": "Vòng Nhanh · Vẽ",
-  "qbd.desc": "Vẽ từng chữ trong giới hạn thời gian. Mỗi chữ đúng được một điểm."
+  "qbd.desc": "Vẽ từng chữ trong giới hạn thời gian. Mỗi chữ đúng được một điểm.",
+  "qbd.hear": "Nghe",
+  "qbd.clear": "Xóa",
+  "qbd.redraw": "Không đọc được. Hãy vẽ lại một lần nữa.",
+  "qbd.itWas": "Đó là {c}",
+  "qbd.score": "Điểm: {n}",
+  "qbd.over": "Hết giờ!",
+  "qbd.words": "Hoàn thành {n} từ",
+  "qbd.best": "Điểm vẽ cao nhất: {n}",
+  "qbd.drawn": "Kỷ lục mới, vẽ",
+  "qbd.start": "Bắt đầu",
+  "qbd.again": "Chơi lại"
 }

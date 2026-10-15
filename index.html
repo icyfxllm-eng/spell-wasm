@@ -769,6 +769,37 @@
   @keyframes rs-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
   @media (prefers-reduced-motion:reduce){.rs-orb.shake{animation:none}.rs-die.land{animation:rs-fade .25s ease-out both}}
   /* RANDOSPELL:END */
+
+  /* QUICKBEEDRAW:BEGIN CC-QUICKBEE-DRAW v1 -- stripped from the site build */
+  .qbd-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;display:none;flex-direction:column;gap:8px;overflow:hidden;
+    padding:calc(env(safe-area-inset-top,0px) + 4px) 12px max(6px,env(safe-area-inset-bottom,0px))}
+  .qbd-screen.show{display:flex}
+  .qbd-hud{display:flex;align-items:center;gap:10px;min-height:32px;flex:none}
+  .qbd-hud h2{margin:0;font-size:1.05rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .qbd-setup[hidden],.qbd-play[hidden],.qbd-card[hidden]{display:none}
+  .qbd-setup{display:flex;flex-direction:column;gap:12px;flex:1 1 auto;min-height:0;overflow-y:auto}
+  .qbd-opt{display:flex;flex-wrap:wrap;gap:8px}
+  .qbd-btn{min-height:44px;padding:8px 14px;border:2px solid transparent;border-radius:10px;background:#ffffff14;color:inherit;font:inherit;cursor:pointer;touch-action:manipulation}
+  .qbd-btn.on{border-color:var(--amber,#f2c14e)}
+  .qbd-btn:disabled{opacity:.4}
+  .qbd-play{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:0}
+  .qbd-stats{display:flex;align-items:baseline;gap:14px;flex:none}
+  .qbd-score{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .qbd-time{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums;margin-inline-start:auto}
+  .qbd-barwrap{height:4px;border-radius:2px;background:#ffffff18;flex:none;overflow:hidden}
+  .qbd-bar{height:100%;background:var(--amber,#f2c14e);width:100%;transition:width .1s linear}
+  .qbd-cells{display:flex;gap:8px;justify-content:center;min-height:34px;flex:none}
+  .qbd-cell{width:30px;height:30px;border-radius:8px;border:2px solid #ffffff55;display:grid;place-items:center;font-weight:700}
+  .qbd-cell.cur{border-color:var(--amber,#f2c14e)}
+  .qbd-cell.done{background:#3f8f6a;border-color:#3f8f6a}
+  .qbd-feed{min-height:1.4em;text-align:center;font-size:1.1rem;flex:none}
+  .qbd-pad-host{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
+  .qbd-pad-host .ink-wrap{width:min(100%,60vh);max-height:none}
+  .qbd-act{display:flex;gap:10px;justify-content:center;flex:none;direction:ltr}
+  .qbd-card{position:absolute;inset:0;min-height:0;max-height:100%;z-index:2;background:var(--bg,#0e1420);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;overflow-y:auto}
+  .qbd-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+  /* QUICKBEEDRAW:END */
   /* SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 -- stripped from the site build (O1). No red anywhere (I12, R5). */
   .sz-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;
     display:none;flex-direction:column;gap:8px;overflow:hidden;
@@ -3177,6 +3208,40 @@
 
   <!-- QUICKBEEDRAW:BEGIN CC-QUICKBEE-DRAW v1 (app only) -- stripped from the site build -->
   <button id="qbdOpenBtn" hidden aria-hidden="true"></button>
+  <!-- QUICKBEEDRAW:BEGIN CC-QUICKBEE-DRAW v1 screen (app only) -- stripped from the site build -->
+  <div class="qbd-screen" id="qbdScreen" role="dialog" aria-modal="true" aria-labelledby="qbdTitle">
+    <div class="qbd-hud">
+      <h2 id="qbdTitle" data-i18n="qbd.name">Quick Bee · Draw</h2>
+      <button type="button" class="ghost mode-exit" id="qbdSetupExit" data-i18n="aria.exit" style="margin-inline-start:auto">Exit</button>
+    </div>
+    <div class="qbd-setup" id="qbdSetup">
+      <p data-i18n="qbd.desc">Draw each character against the clock. Every right character scores a point.</p>
+      <div class="qbd-opt" id="qbdTiers"></div>
+      <div id="qbdBest" aria-live="polite"></div>
+      <button class="btn btn-check" id="qbdStart" data-i18n="qbd.start">Start</button>
+    </div>
+    <div class="qbd-play" id="qbdPlay" hidden>
+      <div class="qbd-stats">
+        <span class="qbd-score" id="qbdScore"></span>
+        <span class="qbd-time" id="qbdTime" aria-live="off"></span>
+      </div>
+      <div class="qbd-barwrap"><div class="qbd-bar" id="qbdBar"></div></div>
+      <div class="qbd-cells" id="qbdCells"></div>
+      <div class="qbd-feed" id="qbdFeed" aria-live="polite"></div>
+      <div class="qbd-pad-host" id="qbdPadHost"></div>
+      <div class="qbd-act">
+        <button type="button" class="qbd-btn" id="qbdHear" data-i18n="qbd.hear">Hear it</button>
+        <button type="button" class="qbd-btn" id="qbdClear" data-i18n="qbd.clear">Clear</button>
+        <button type="button" class="ghost mode-exit" id="qbdExit" data-i18n="aria.exit">Exit</button>
+      </div>
+    </div>
+    <div class="qbd-card" id="qbdOver" hidden>
+      <h3 data-i18n="qbd.over">Time's up!</h3>
+      <ul class="qbd-list" id="qbdStats"></ul>
+      <button class="btn btn-check" id="qbdAgain" data-i18n="qbd.again">Play again</button>
+      <button class="btn mode-leave" id="qbdOverExit" data-i18n="import.close">Close</button>
+    </div>
+  </div>
   <!-- QUICKBEEDRAW:END -->
   <!-- SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 (app only, O1) -- stripped from the site build -->
   <button id="szOpenBtn" hidden aria-hidden="true"></button>

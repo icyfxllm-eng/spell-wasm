@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Choix faits : {t}, gagnants : {w}",
   "rs.stealsLine": "Vols tentés : {t}, réussis : {w}",
   "qbd.name": "Manche rapide · Dessin",
-  "qbd.desc": "Dessine chaque caractère contre la montre. Chaque caractère juste vaut un point."
+  "qbd.desc": "Dessine chaque caractère contre la montre. Chaque caractère juste vaut un point.",
+  "qbd.hear": "Écouter",
+  "qbd.clear": "Effacer",
+  "qbd.redraw": "Illisible. Dessine-le encore une fois.",
+  "qbd.itWas": "C'était {c}",
+  "qbd.score": "Score : {n}",
+  "qbd.over": "Temps écoulé !",
+  "qbd.words": "{n} mots terminés",
+  "qbd.best": "Meilleur score dessiné : {n}",
+  "qbd.drawn": "Nouveau record, dessiné",
+  "qbd.start": "Commencer",
+  "qbd.again": "Rejouer"
 }

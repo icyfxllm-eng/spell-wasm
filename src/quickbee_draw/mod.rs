@@ -22,12 +22,14 @@
 //! Everything language-specific lives in `LANGS`; no caller tests a language
 //! code (I6).
 
+pub mod run;
+
 use unicode_normalization::UnicodeNormalization;
 use unicode_segmentation::UnicodeSegmentation;
 
 /// The run loop does not exist yet. While this is false the entry is absent in
 /// every build, whatever the flags say. Phase B flips it with the loop.
-pub const PHASE_B_BUILT: bool = false;
+pub const PHASE_B_BUILT: bool = true;
 
 /// The three tiers' caps on a word's cell count (F2): Easy 1-2, Medium up to 3,
 /// Hard and Expert up to 4. A word over its tier's cap is never served (I3).
@@ -122,10 +124,16 @@ pub fn available(lang: &str, kid: bool, flag_on: bool) -> bool {
 /// a stroke table exists, writing-ready (CC-CJK-INK F4). Bank order, no
 /// duplicates, profanity and proper-noun rules as every other mode.
 pub fn serve_pool(lang: &str, tier: &str) -> Vec<String> {
+    pool_rows(lang, tier).into_iter().map(|(_, drawn)| drawn).collect()
+}
+
+/// The same pool as (bank row, drawn form): the row is what the voice is given
+/// (zh needs its pinyin to be read right), the drawn form is what is written.
+pub fn pool_rows(lang: &str, tier: &str) -> Vec<(String, String)> {
     let Some(c) = cfg(lang) else { return Vec::new() };
     let cap = tier_cap(tier);
     let mut seen = std::collections::BTreeSet::new();
-    let mut out = Vec::new();
+    let mut out: Vec<(String, String)> = Vec::new();
     for row in crate::words::tier_for(lang, tier) {
         let w = drawn_form(lang, row);
         if w.is_empty() || crate::profanity::is_blocked(&w) {
@@ -139,7 +147,7 @@ pub fn serve_pool(lang: &str, tier: &str) -> Vec<String> {
             continue;
         }
         if seen.insert(w.clone()) {
-            out.push(w);
+            out.push(((*row).to_string(), w));
         }
     }
     out
@@ -187,18 +195,15 @@ mod tests {
     }
 
     #[test]
-    fn nothing_is_available_until_the_loop_exists_and_never_for_jr_ko_or_other_languages() {
-        // Phase A ships dark: with every flag on, the entry is still absent.
-        for lang in ["zh", "ja", "ko", "vi", "en", "es"] {
-            assert!(!available(lang, false, true), "{lang}: available before Phase B");
+    fn the_entry_is_offered_only_for_a_measured_language_with_its_flag_and_never_to_jr() {
+        assert!(PHASE_B_BUILT, "Phase B built the run");
+        assert!(available("zh", false, true) && available("ja", false, true));
+        assert!(!available("zh", true, true), "Jr gets no pad (CC-CJK-INK D6)");
+        assert!(!available("zh", false, false), "flag off");
+        assert!(!available("ko", false, true), "Korean is held until measured");
+        for lang in ["vi", "en", "es", "fr", "de"] {
+            assert!(!available(lang, false, true), "{lang}: offered");
         }
-        // The rest of the rule, independent of the build gate.
-        let gate = |lang: &str, kid: bool, flag: bool| !kid && flag && cfg(lang).is_some_and(|c| c.measured);
-        assert!(gate("zh", false, true) && gate("ja", false, true));
-        assert!(!gate("zh", true, true), "Jr gets no pad (CC-CJK-INK D6)");
-        assert!(!gate("zh", false, false), "flag off");
-        assert!(!gate("ko", false, true), "Korean is held until measured");
-        assert!(!gate("vi", false, true) && !gate("en", false, true));
     }
 
     #[test]

@@ -1093,5 +1093,16 @@
   "rs.betsLine": "Choices taken: {t}, paid off: {w}",
   "rs.stealsLine": "Steals tried: {t}, landed: {w}",
   "qbd.name": "Quick Bee · Draw",
-  "qbd.desc": "Draw each character against the clock. Every right character scores a point."
+  "qbd.desc": "Draw each character against the clock. Every right character scores a point.",
+  "qbd.hear": "Hear it",
+  "qbd.clear": "Clear",
+  "qbd.redraw": "Couldn't read that. Draw it once more.",
+  "qbd.itWas": "It was {c}",
+  "qbd.score": "Score: {n}",
+  "qbd.over": "Time's up!",
+  "qbd.words": "{n} words finished",
+  "qbd.best": "Best drawn score: {n}",
+  "qbd.drawn": "New best, drawn",
+  "qbd.start": "Start",
+  "qbd.again": "Play again"
 }

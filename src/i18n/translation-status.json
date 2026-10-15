@@ -229,7 +229,18 @@
     "rs.betsLine",
     "rs.stealsLine",
     "qbd.name",
-    "qbd.desc"
+    "qbd.desc",
+    "qbd.hear",
+    "qbd.clear",
+    "qbd.redraw",
+    "qbd.itWas",
+    "qbd.score",
+    "qbd.over",
+    "qbd.words",
+    "qbd.best",
+    "qbd.drawn",
+    "qbd.start",
+    "qbd.again"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -467,7 +478,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -695,7 +717,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "de": [
       "hub.group.spell_it",
@@ -923,7 +956,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1151,7 +1195,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1379,7 +1434,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1607,7 +1673,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1835,7 +1912,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2063,7 +2151,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2291,7 +2390,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2519,7 +2629,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2747,7 +2868,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -2975,7 +3107,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3203,7 +3346,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3431,7 +3585,18 @@
       "rs.betsLine",
       "rs.stealsLine",
       "qbd.name",
-      "qbd.desc"
+      "qbd.desc",
+      "qbd.hear",
+      "qbd.clear",
+      "qbd.redraw",
+      "qbd.itWas",
+      "qbd.score",
+      "qbd.over",
+      "qbd.words",
+      "qbd.best",
+      "qbd.drawn",
+      "qbd.start",
+      "qbd.again"
     ]
   }
 }
