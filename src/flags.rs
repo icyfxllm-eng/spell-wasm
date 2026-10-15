@@ -263,6 +263,13 @@ pub fn randospell_ear() -> bool {
     randospell() && resolve(stored("randospell_ear").as_deref(), false)
 }
 
+/// CC-RANDOSPELL v1.1 F19 -- the NPC table (F10). **Default OFF**; needs `randospell`.
+/// With it on, Jr's Sprint also gets its one racing NPC.
+#[cfg(not(feature = "web"))]
+pub fn randospell_npc() -> bool {
+    randospell() && resolve(stored("randospell_npc").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {
@@ -613,6 +620,7 @@ mod tests {
         assert!(randospell() && randospell_marathon());
         assert!(!randospell_daily() && !randospell_h2h() && !randospell_jr());
         // v1.1 mechanics ship together (D-R7) and stay dark until their device pass.
+        assert!(!randospell_npc(), "the NPC table stays dark until its device pass");
         assert!(!randospell_heat() && !randospell_call() && !randospell_stretch() && !randospell_doubles() && !randospell_ear());
         set_test_override(Some("off"));
         assert!(!randospell() && !randospell_marathon(), "the mode flag is the kill switch");

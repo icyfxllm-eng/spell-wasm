@@ -29,6 +29,7 @@ use crate::boardgame_input::{self as input, Key};
 use crate::experience::Experience;
 use crate::randospell::bank::{self, Bank, MODE_ID};
 use crate::randospell::store::{Store, STORE_KEY};
+use crate::randospell::table::{Difficulty, Personality, Step, Table};
 use crate::randospell::{Call, Mode, Rules, Session, MARATHON_GOAL, SPRINT_GOAL, TIMER_SECS};
 use crate::wordsearch::ledger::Ledger;
 use crate::{dom, haptics, i18n, speech_out, storage, App};
@@ -40,10 +41,12 @@ enum Kind {
     Marathon,
     Daily,
     H2h,
+    /// v1.1 F10: the human against 1-3 computer players.
+    Table,
 }
 
 impl Kind {
-    const ALL: [Kind; 4] = [Kind::Sprint, Kind::Marathon, Kind::Daily, Kind::H2h];
+    const ALL: [Kind; 5] = [Kind::Sprint, Kind::Marathon, Kind::Daily, Kind::H2h, Kind::Table];
 
     fn id(self) -> &'static str {
         match self {
@@ -51,6 +54,7 @@ impl Kind {
             Kind::Marathon => "marathon",
             Kind::Daily => "daily",
             Kind::H2h => "h2h",
+            Kind::Table => "table",
         }
     }
 
@@ -60,6 +64,7 @@ impl Kind {
             Kind::Marathon => "rs.mode.marathon",
             Kind::Daily => "rs.mode.daily",
             Kind::H2h => "rs.mode.h2h",
+            Kind::Table => "rs.mode.table",
         }
     }
 
@@ -69,6 +74,7 @@ impl Kind {
             Kind::Marathon => crate::flags::randospell_marathon(),
             Kind::Daily => crate::flags::randospell_daily(),
             Kind::H2h => crate::flags::randospell_h2h(),
+            Kind::Table => crate::flags::randospell_npc(),
         }
     }
 
@@ -77,12 +83,15 @@ impl Kind {
             Kind::Sprint => Mode::Sprint,
             Kind::Marathon | Kind::Daily => Mode::Marathon,
             Kind::H2h => Mode::HeadToHead,
+            Kind::Table => Mode::Table,
         }
     }
 }
 
 struct Ui {
     s: Session,
+    /// F10: the computer seats, when this game has them.
+    tbl: Option<Table>,
     kind: Kind,
     /// Daily: the store key this attempt spent, and the date it was played for.
     daily_key: Option<String>,
@@ -112,6 +121,12 @@ thread_local! {
     static KIND: Cell<Kind> = const { Cell::new(Kind::Sprint) };
     /// The profile is Spell Jr (F7): Sprint only, one die, Easy + Medium.
     static KID: Cell<bool> = const { Cell::new(false) };
+    /// F10 setup: how many NPCs, which personalities, how hard.
+    static NPC_N: Cell<usize> = const { Cell::new(1) };
+    static NPC_P: RefCell<[Personality; 3]> = const { RefCell::new([Personality::Cautious; 3]) };
+    static NPC_D: Cell<Difficulty> = const { Cell::new(Difficulty::Normal) };
+    /// An NPC turn is being played back: the orb waits (D10).
+    static NPC_BUSY: Cell<bool> = const { Cell::new(false) };
     /// Bumped on every press, answer and close so a stale 30 s timer is a no-op.
     static TOKEN: Cell<u32> = const { Cell::new(0) };
 }
@@ -163,6 +178,9 @@ pub fn wire(app: &App) {
     dom::on_click("rsShare", share_daily);
     dom::on_click("rsRollAgain", roll_again);
     dom::on::<web_sys::MouseEvent, _>("rsModes", "click", mode_tap);
+    dom::on::<web_sys::MouseEvent, _>("rsNpcCfg", "click", npc_cfg_tap);
+    // A tap anywhere on the table finishes an NPC run at once (board game D10).
+    dom::on::<web_sys::MouseEvent, _>("rsTable", "click", |_| skip_npc());
     dom::on::<web_sys::MouseEvent, _>("rsTiers", "click", tier_tap);
     dom::on::<web_sys::MouseEvent, _>("rsKeys", "click", key_tap);
 }
@@ -315,6 +333,7 @@ fn render_setup() {
         String::new()
     };
     dom::set_html("rsModes", &modes);
+    render_npc_cfg(kind == Kind::Table && !kid);
     // D4: a remap is shown, never silent ("12 plays as 11").
     let info = if ok {
         let cov = Bank::for_lang_at(&lang, exp(), level).cov;
@@ -334,6 +353,7 @@ fn render_setup() {
             Kind::Marathon => "rs.howM",
             Kind::Daily => "rs.dailyHow",
             Kind::H2h => "rs.h2hHow",
+            Kind::Table => "rs.tableHow",
         })));
         if lines.is_empty() { how } else { format!("{how}<ul>{}</ul>", lines.concat()) }
     } else {
@@ -424,8 +444,15 @@ fn start() {
     };
     let mut s = s;
     s.rules = rules_from_flags();
+    // F10: the table. Jr gets exactly one racing NPC whenever the flag is on.
+    let want_table = if kid { crate::flags::randospell_npc() } else { kind == Kind::Table };
+    let tbl = want_table.then(|| {
+        let n = NPC_N.with(Cell::get).clamp(1, 3);
+        let pers: Vec<Personality> = NPC_P.with(|p| p.borrow()[..n].to_vec());
+        Table::new(js_sys::Date::now() as u64 ^ 0x5EA7, &s, pers, NPC_D.with(Cell::get))
+    });
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { s, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, recorded: false, day })
+        *u.borrow_mut() = Some(Ui { s, tbl, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, recorded: false, day })
     });
     dom::set_hidden("rsSetup", true);
     dom::set_hidden("rsPlay", false);
@@ -439,6 +466,206 @@ fn start() {
     spell_panel(false);
     decision(false);
     refresh_bets();
+    render_table();
+    // An NPC may be first to move (F10): play it before the human's roll.
+    let has_table = with_ui(|u| u.tbl.is_some()).unwrap_or(false);
+    if has_table {
+        table_run(false);
+    }
+}
+
+// --------------------------------------------------------------- F10 table
+
+fn npc_icon(seat: usize) -> &'static str {
+    ["\u{1f3a9}", "\u{1f41d}", "\u{1fa84}", "\u{1f4d6}"].get(seat.saturating_sub(1)).copied().unwrap_or("")
+}
+
+fn npc_name(seat: usize) -> String {
+    format!("{} {}", npc_icon(seat), i18n::t(&format!("rs.npc.n{}", seat.saturating_sub(1))))
+}
+
+fn render_npc_cfg(show: bool) {
+    if !show {
+        dom::set_html("rsNpcCfg", "");
+        dom::set_hidden("rsNpcCfg", true);
+        return;
+    }
+    let n = NPC_N.with(Cell::get).clamp(1, 3);
+    let diff = NPC_D.with(Cell::get);
+    let btn = |attr: &str, val: &str, on: bool, label: String| {
+        format!(
+            "<button type=\"button\" class=\"rs-btn{}\" {attr}=\"{val}\" aria-pressed=\"{on}\">{}</button>",
+            if on { " on" } else { "" },
+            dom::escape_html(&label)
+        )
+    };
+    let mut h = format!("<div class=\"rs-opt\"><span class=\"rs-bet-label\">{}</span>", dom::escape_html(&i18n::t("rs.npc.count")));
+    for c in 1..=3usize {
+        h.push_str(&btn("data-n", &c.to_string(), c == n, c.to_string()));
+    }
+    h.push_str("</div><div class=\"rs-opt\">");
+    for d in Difficulty::ALL {
+        h.push_str(&btn("data-d", d.id(), d == diff, i18n::t(&format!("rs.diff.{}", d.id()))));
+    }
+    h.push_str("</div>");
+    let pers = NPC_P.with(|p| *p.borrow());
+    for i in 0..n {
+        h.push_str(&format!("<div class=\"rs-opt\"><span class=\"rs-bet-label\">{}</span>", dom::escape_html(&npc_name(i + 1))));
+        for p in Personality::ALL {
+            h.push_str(&btn("data-p", &format!("{i}:{}", p.id()), pers[i] == p, i18n::t(&format!("rs.npc.{}", p.id()))));
+        }
+        h.push_str("</div>");
+    }
+    dom::set_html("rsNpcCfg", &h);
+    dom::set_hidden("rsNpcCfg", false);
+}
+
+fn npc_cfg_tap(e: web_sys::MouseEvent) {
+    let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+    if let Some(el) = t.closest("[data-n]").ok().flatten() {
+        if let Some(n) = el.get_attribute("data-n").and_then(|v| v.parse::<usize>().ok()) {
+            NPC_N.with(|c| c.set(n.clamp(1, 3)));
+        }
+    } else if let Some(el) = t.closest("[data-d]").ok().flatten() {
+        let d = match el.get_attribute("data-d").as_deref() {
+            Some("easy") => Difficulty::Easy,
+            Some("tough") => Difficulty::Tough,
+            _ => Difficulty::Normal,
+        };
+        NPC_D.with(|c| c.set(d));
+    } else if let Some(el) = t.closest("[data-p]").ok().flatten() {
+        let v = el.get_attribute("data-p").unwrap_or_default();
+        if let Some((i, id)) = v.split_once(':') {
+            if let (Ok(i), Some(p)) = (i.parse::<usize>(), Personality::ALL.iter().copied().find(|p| p.id() == id)) {
+                NPC_P.with(|a| {
+                    if i < 3 {
+                        a.borrow_mut()[i] = p;
+                    }
+                });
+            }
+        }
+    }
+    render_npc_cfg(true);
+}
+
+/// The seats at the table: banked score and what each has at risk.
+fn render_table() {
+    let rows = with_ui(|u| {
+        let t = u.tbl.as_ref()?;
+        let mut out = String::new();
+        for seat in 0..t.seats() {
+            let (name, score, pot, active) = if seat == 0 {
+                (i18n::t("rs.you"), u.s.score, u.s.pot, t.turn == 0)
+            } else {
+                let n = &t.npcs[seat - 1];
+                (npc_name(seat), n.score, n.pot, t.turn == seat)
+            };
+            out.push_str(&format!(
+                "<div class=\"rs-seat{}\" data-seat=\"{seat}\"><b>{}</b><span class=\"rs-seat-score\">{score}</span><span>{}</span></div>",
+                if active { " on" } else { "" },
+                dom::escape_html(&name),
+                dom::escape_html(&i18n::tp("rs.pot", &[("n", &pot.to_string())]))
+            ));
+        }
+        Some(out)
+    })
+    .flatten();
+    match rows {
+        Some(h) => {
+            dom::set_html("rsTable", &h);
+            dom::set_hidden("rsTable", false);
+        }
+        None => {
+            dom::set_html("rsTable", "");
+            dom::set_hidden("rsTable", true);
+        }
+    }
+}
+
+fn step_text(s: &Step) -> String {
+    let nm = |seat: usize| npc_name(seat);
+    match s {
+        Step::Rolled { seat, len, doubles, stretched } => {
+            let mut t = i18n::tp("rs.npcRolled", &[("name", &nm(*seat)), ("n", &len.to_string())]);
+            if *doubles {
+                t = format!("{t} · {}", i18n::t("rs.glow"));
+            }
+            if *stretched {
+                t = format!("{t} · {}", i18n::t("rs.stretch"));
+            }
+            t
+        }
+        Step::Hit { seat, points, .. } => i18n::tp("rs.npcHit", &[("name", &nm(*seat)), ("n", &points.to_string())]),
+        Step::Banked { seat, amount, .. } => i18n::tp("rs.npcBank", &[("name", &nm(*seat)), ("n", &amount.to_string())]),
+        Step::Bust { seat, lost } if *lost > 0 => i18n::tp("rs.npcBust", &[("name", &nm(*seat)), ("n", &lost.to_string())]),
+        Step::Bust { seat, .. } => i18n::tp("rs.npcMiss", &[("name", &nm(*seat))]),
+        Step::Warded { seat, pot } => i18n::tp("rs.npcWard", &[("name", &nm(*seat)), ("n", &pot.to_string())]),
+        Step::Raced { seat, points, .. } if *points > 0 => i18n::tp("rs.npcHit", &[("name", &nm(*seat)), ("n", &points.to_string())]),
+        Step::Raced { seat, .. } => i18n::tp("rs.npcMiss", &[("name", &nm(*seat))]),
+        Step::Won { seat } => i18n::tp("rs.nameWins", &[("name", &nm(*seat))]),
+    }
+}
+
+/// Ask the table to run its NPCs; `human_done` is true after the human's turn.
+fn table_run(human_done: bool) {
+    let steps = with_ui(|u| {
+        let t = u.tbl.as_mut()?;
+        if human_done {
+            t.human_turn_over(&u.s);
+        }
+        Some(t.run_npcs(&mut u.s))
+    })
+    .flatten();
+    let Some(steps) = steps else { return };
+    if steps.is_empty() {
+        table_settled();
+        return;
+    }
+    // D10: one NPC run in under 7 s, however many steps it has.
+    let each = (6500 / steps.len().max(1) as i32).clamp(120, 700);
+    NPC_BUSY.with(|b| b.set(true));
+    dom::set_disabled("rsOrb", true);
+    let token = bump();
+    play_step(steps, 0, each, token);
+}
+
+fn play_step(steps: Vec<Step>, i: usize, each: i32, token: u32) {
+    if TOKEN.with(Cell::get) != token || !NPC_BUSY.with(Cell::get) {
+        return; // skipped, or the screen was closed
+    }
+    if i >= steps.len() {
+        NPC_BUSY.with(|b| b.set(false));
+        table_settled();
+        return;
+    }
+    dom::set_text("rsFeed", &step_text(&steps[i]));
+    if matches!(steps[i], Step::Banked { .. } | Step::Bust { .. } | Step::Warded { .. } | Step::Won { .. }) {
+        render_table();
+    }
+    dom::after_ms(each, move || play_step(steps, i + 1, each, token));
+}
+
+/// A tap finishes the run now: the engine has already decided everything.
+fn skip_npc() {
+    if NPC_BUSY.with(Cell::get) {
+        NPC_BUSY.with(|b| b.set(false));
+        bump();
+        table_settled();
+    }
+}
+
+/// The NPCs are done: show the table, end the game or hand the turn back.
+fn table_settled() {
+    NPC_BUSY.with(|b| b.set(false));
+    render_table();
+    render_hud();
+    let over = with_ui(|u| u.tbl.as_ref().map_or(false, |t| t.winner.is_some()) || u.s.ended.is_some()).unwrap_or(false);
+    if over {
+        show_over();
+    } else {
+        dom::set_disabled("rsOrb", false);
+        refresh_bets();
+    }
 }
 
 /// F5: show or hide the Bank / Roll again card, and lock the orb while it shows.
@@ -497,7 +724,7 @@ fn render_hud() {
     }) else {
         return;
     };
-    let goal = if mode == Mode::Sprint { SPRINT_GOAL } else { MARATHON_GOAL };
+    let goal = mode.goal();
     let h2h = mode == Mode::HeadToHead;
     if h2h {
         dom::set_text("rsScore", &i18n::tp("rs.h2hScore", &[("a", &scores[0].to_string()), ("b", &scores[1].to_string())]));
@@ -746,6 +973,9 @@ fn begin_word(r: &crate::randospell::Roll) {
 }
 
 fn orb() {
+    if NPC_BUSY.with(Cell::get) {
+        return; // the table is playing (D10); a tap skips it instead
+    }
     let Some((spelling, deciding, choosing, two_step)) =
         with_ui(|u| (u.spelling, u.s.deciding, u.choosing, (u.s.rules.stretch || u.s.rules.ear) && u.s.mode != Mode::Jr))
     else {
@@ -893,12 +1123,23 @@ fn resolve(typed: Option<String>) {
         if o.deciding {
             decision(true);
         }
-        if o.passed && !o.finished {
+        let has_table = with_ui(|u| u.tbl.is_some()).unwrap_or(false);
+        let jr = with_ui(|u| u.s.mode == Mode::Jr).unwrap_or(false);
+        if !has_table && o.passed && !o.finished {
             let feed = dom::el("rsFeed").text_content().unwrap_or_default();
             show_hand(&feed);
         }
+        // F10: a miss or a Bank hands the turn on; Jr's racer answers every roll.
+        if has_table && !o.finished && (o.passed || jr) {
+            table_run(true);
+        }
     }
     if out.is_some_and(|o| o.finished) {
+        with_ui(|u| {
+            if let Some(t) = u.tbl.as_mut() {
+                t.settle(&u.s);
+            }
+        });
         show_over();
     }
 }
@@ -922,10 +1163,20 @@ fn bank_it() {
     dom::set_text("rsFeed", &i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
     render_hud();
     refresh_bets();
+    let has_table = with_ui(|u| u.tbl.is_some()).unwrap_or(false);
     if b.finished {
+        with_ui(|u| {
+            if let Some(t) = u.tbl.as_mut() {
+                t.settle(&u.s);
+            }
+        });
         show_over();
     } else if b.passed {
-        show_hand(&i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
+        if has_table {
+            table_run(true);
+        } else {
+            show_hand(&i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
+        }
     }
 }
 
@@ -1031,12 +1282,25 @@ fn show_over() {
         )
     })
     .unwrap_or((0, 0, 0, None, [0; 11], false, Mode::Sprint, 0, 0, false));
-    let goal = if mode == Mode::Marathon { MARATHON_GOAL } else { SPRINT_GOAL };
+    let goal = mode.goal();
     let h2h = mode == Mode::HeadToHead;
     let jr = mode == Mode::Jr;
     let best_streak = with_ui(|u| u.s.best_streak).unwrap_or(0);
     let (winner, scores, kind) = with_ui(|u| (u.s.winner, [u.s.score_of(0), u.s.score_of(1)], u.kind)).unwrap_or((None, [0, 0], Kind::Sprint));
-    let title = if h2h {
+    let table_result = with_ui(|u| {
+        u.tbl.as_ref().map(|t| {
+            let seats: Vec<(usize, u32)> = (0..t.seats()).map(|i| (i, t.score_of(&u.s, i))).collect();
+            (t.winner, seats)
+        })
+    })
+    .flatten();
+    let title = if let Some((w, _)) = &table_result {
+        match w {
+            Some(0) => i18n::t("rs.youWin"),
+            Some(s) => i18n::tp("rs.nameWins", &[("name", &npc_name(*s))]),
+            None => i18n::t("rs.draw"),
+        }
+    } else if h2h {
         match winner {
             Some(w) => i18n::tp("rs.winner", &[("n", &(w + 1).to_string())]),
             None => i18n::t("rs.draw"),
@@ -1069,6 +1333,15 @@ fn show_over() {
         });
         stats.push(i18n::tp("rs.jrCount", &[("n", &correct.to_string())]));
         stats.push(i18n::tp("rs.bestStreak", &[("n", &best_streak.to_string())]));
+    }
+    if let Some((_, seats)) = &table_result {
+        // F10: every seat's banked score, then the human's own line.
+        let mut lines: Vec<String> = seats
+            .iter()
+            .map(|(i, s)| format!("{}: {s}", if *i == 0 { i18n::t("rs.you") } else { npc_name(*i) }))
+            .collect();
+        lines.push(i18n::tp("rs.rolls", &[("n", &rolls.to_string())]));
+        stats = lines;
     }
     if h2h {
         stats.clear();
@@ -1121,6 +1394,15 @@ pub fn seam_state() -> String {
                     "spelling": u.spelling,
                     "mode": format!("{:?}", u.s.mode),
                     "kind": format!("{:?}", u.kind),
+                    "table": u.tbl.as_ref().map(|t| serde_json::json!({
+                        "turn": t.turn,
+                        "winner": t.winner,
+                        "scores": (0..t.seats()).map(|i| t.score_of(&u.s, i)).collect::<Vec<_>>(),
+                        "pots": std::iter::once(u.s.pot).chain(t.npcs.iter().map(|n| n.pot)).collect::<Vec<_>>(),
+                        "people": t.npcs.iter().map(|n| n.personality.id()).collect::<Vec<_>>(),
+                        "accMilli": t.npc_acc_milli(&u.s),
+                        "busy": NPC_BUSY.with(Cell::get),
+                    })),
                     "heat": u.s.heat,
                     "call": u.s.call().map(|c| format!("{c:?}")),
                     "choosing": u.choosing,

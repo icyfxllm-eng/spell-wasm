@@ -50,6 +50,7 @@ pub mod bank;
 pub mod daily;
 pub mod payout;
 pub mod store;
+pub mod table;
 #[cfg(test)]
 mod tests;
 
@@ -73,18 +74,27 @@ pub enum Mode {
     /// Spell Jr (F7): Sprint with one die, faces 1-6 playing word lengths 2-7,
     /// no pot, no Ward, no multiplier, and one more try after a miss.
     Jr,
+    /// v1.1 F10: the human at a table with 1-3 computer players, Marathon
+    /// rules, alternating turns. The NPCs live in `table::Table`; this mode
+    /// makes a miss or a Bank hand the turn on, without swapping seats.
+    Table,
 }
 
 impl Mode {
     /// Pot, Bank and Ward rules apply.
     pub fn pot_rules(self) -> bool {
-        matches!(self, Mode::Marathon | Mode::HeadToHead)
+        matches!(self, Mode::Marathon | Mode::HeadToHead | Mode::Table)
+    }
+
+    /// A miss or a Bank ends the player's turn.
+    pub fn passes_turns(self) -> bool {
+        matches!(self, Mode::HeadToHead | Mode::Table)
     }
 
     pub fn goal(self) -> u32 {
         match self {
             Mode::Sprint | Mode::Jr => SPRINT_GOAL,
-            Mode::Marathon | Mode::HeadToHead => MARATHON_GOAL,
+            Mode::Marathon | Mode::HeadToHead | Mode::Table => MARATHON_GOAL,
         }
     }
 }
@@ -223,6 +233,11 @@ pub struct Session {
     pub largest_lost: u32,
     /// Marathon: a correct answer is waiting for Bank or Roll again.
     pub deciding: bool,
+    /// Answered words (a Jr retry is not one): the denominator of the human's
+    /// running accuracy that NPCs track (D13).
+    pub attempts: u32,
+    /// The pot of the human's most recent Bank, for the Mirror personality.
+    pub last_bank: Option<u32>,
     /// The longest run of right answers, tracked for the result card. Jr shows
     /// no multiplier but keeps this silently (F7).
     pub best_streak: u32,
@@ -284,6 +299,8 @@ impl Session {
             largest_banked: 0,
             largest_lost: 0,
             deciding: false,
+            attempts: 0,
+            last_bank: None,
             rules: Rules::default(),
             heat: 0,
             call: None,
@@ -393,11 +410,46 @@ impl Session {
     /// F13: could this roll be Stretched? A harder word has to exist at the
     /// rolled length (census C6), the rule has to be on, and not in Jr or at Expert.
     pub fn stretch_offered(&self) -> bool {
-        let Some(r) = &self.rolled else { return false };
+        self.rolled.as_ref().is_some_and(|r| self.stretch_available_at(r.len))
+    }
+
+    /// F13 for a given length (the table's NPCs ask this without a roll in hand).
+    pub fn stretch_available_at(&self, len: usize) -> bool {
         self.rules.stretch
             && self.mode != Mode::Jr
             && self.tier < 3
-            && self.bank.of_len(r.len).iter().filter(|e| e.tier == self.tier + 1).count() >= bank::CELL_FLOOR
+            && self.bank.of_len(len).iter().filter(|e| e.tier == self.tier + 1).count() >= bank::CELL_FLOOR
+    }
+
+    /// F10: an NPC's roll. The same dice stream and coverage as a human roll, so
+    /// the table's dice are one fair sequence, but no word is drawn (I11: NPCs
+    /// never show or play one). Returns (displayed length, doubles).
+    pub fn npc_roll(&mut self) -> Option<(usize, bool)> {
+        if self.ended.is_some() {
+            return None;
+        }
+        let jr = self.mode == Mode::Jr;
+        let (face, doubles) = if jr {
+            let f = self.dice.below(6) as u8 + 1;
+            (f, f == 6)
+        } else {
+            let (a, b) = roll_two_dice_pair(&mut self.dice);
+            (a + b, a == b)
+        };
+        let len = if jr {
+            self.bank.cov.length_within(face as usize + 1, bank::JR_LO, bank::JR_HI)
+        } else {
+            self.bank.cov.length_for(face)
+        }?;
+        self.histogram[len - 2] += 1;
+        Some((len, doubles))
+    }
+
+    /// End the game from outside (the table, when an NPC wins).
+    pub fn force_end(&mut self, why: End) {
+        if self.ended.is_none() {
+            self.ended = Some(why);
+        }
     }
 
     /// F17: is Ear on the table, given the Stretch choice? D-R3's ceiling.
@@ -506,6 +558,7 @@ impl Session {
             });
         }
         self.attempt = 0;
+        self.attempts += 1;
         let r = self.pending.take()?;
         let marathon = self.mode.pot_rules();
         let h2h = self.mode == Mode::HeadToHead;
@@ -609,9 +662,11 @@ impl Session {
         };
         // Head-to-Head: a real miss hands over the turn and grants the other
         // player a bonus roll (a flag: it does not stack).
-        if h2h && !correct && !bonus_roll && !finished {
-            self.other.bonus = true;
-            self.pass_turn();
+        if self.mode.passes_turns() && !correct && !bonus_roll && !finished {
+            if h2h {
+                self.other.bonus = true;
+                self.pass_turn();
+            }
             out.passed = true;
         }
         Some(out)
@@ -657,6 +712,7 @@ impl Session {
             return None;
         }
         let banked = self.pot;
+        self.last_bank = Some(banked);
         self.heat = 0; // I13: a Bank takes the heat to 0
         self.score += banked;
         self.largest_banked = self.largest_banked.max(banked);
@@ -672,6 +728,8 @@ impl Session {
             }
         } else if self.mode == Mode::HeadToHead {
             self.pass_turn();
+            passed = true;
+        } else if self.mode == Mode::Table {
             passed = true;
         }
         Some(Banked { banked, score, finished, passed })

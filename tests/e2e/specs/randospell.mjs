@@ -35,6 +35,21 @@ const FLAG_V11 = () => {
   localStorage.setItem('spell_flag_randospell_jr', 'off');
   for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
 };
+// v1.1 Phase F: the NPC table (heat on so NPCs and the human share one payout).
+const FLAG_TABLE = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'off');
+  localStorage.setItem('spell_flag_randospell_daily', 'off');
+  localStorage.setItem('spell_flag_randospell_h2h', 'off');
+  localStorage.setItem('spell_flag_randospell_jr', 'off');
+  localStorage.setItem('spell_flag_randospell_npc', 'on');
+  localStorage.setItem('spell_flag_randospell_heat', 'on');
+};
+const FLAG_JR_TABLE = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_jr', 'on');
+  localStorage.setItem('spell_flag_randospell_npc', 'on');
+};
 const FLAG_M = () => {
   localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
@@ -611,6 +626,106 @@ export async function run(browser, base, suite) {
         }
       }
       assert(seen, 'no doubles in 100 rolls');
+    } finally { await ctx.close(); }
+  });
+  // ---- v1.1 Phase F: the NPC table ------------------------------------------
+  const openTable = async () => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: FLAG_TABLE });
+    await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
+    await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+    await o.page.click('#rsModes [data-m="table"]');
+    return o;
+  };
+  const settledTable = (page) => page.waitForFunction(() => {
+    const s = JSON.parse(window.__spelltest.randospellState() || 'null');
+    return s && s.table && !s.table.busy && s.table.turn === 0;
+  }, null, { timeout: 15000 });
+
+  await suite.test('randospell_table_is_offered_only_with_its_flag', async () => {
+    const off = await open({ start: false });
+    try {
+      assert((await off.page.evaluate(() => document.querySelector('#rsModes [data-m="table"]'))) === null, 'the table is offered with randospell_npc off');
+    } finally { await off.ctx.close(); }
+    const on = await openTable();
+    try {
+      assert(await on.page.evaluate(() => !document.getElementById('rsNpcCfg').hidden), 'no NPC setup');
+    } finally { await on.ctx.close(); }
+  });
+
+  await suite.test('randospell_table_the_setup_picks_count_personalities_and_difficulty', async () => {
+    const { ctx, page } = await openTable();
+    try {
+      await page.click('#rsNpcCfg [data-n="3"]');
+      await page.click('#rsNpcCfg [data-p="1:daring"]');
+      await page.click('#rsNpcCfg [data-p="2:mirror"]');
+      await page.click('#rsNpcCfg [data-d="tough"]');
+      await page.click('#rsStart');
+      await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+      await settledTable(page);
+      const st = await state(page);
+      assert(st.table.people.join() === 'cautious,daring,mirror', `personalities: ${st.table.people}`);
+      assert(await page.evaluate(() => document.querySelectorAll('#rsTable .rs-seat').length === 4), 'the table does not show four seats');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_table_a_miss_hands_the_turn_to_the_computer_and_back', async () => {
+    const { ctx, page } = await openTable();
+    try {
+      await page.click('#rsStart');
+      await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+      await settledTable(page);
+      const st = await roll(page);
+      const before = await page.evaluate(() => window.__spelltest.randospellState());
+      await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsGo');
+      await settled(page, before);
+      const mid = await state(page);
+      assert(mid.table.turn !== 0 || mid.table.busy, `a miss did not hand the turn on: ${JSON.stringify(mid.table)}`);
+      // A tap on the table finishes the run at once; the turn comes back to the human.
+      await page.click('#rsTable', { force: true }).catch(() => {});
+      await settledTable(page);
+      const after = await state(page);
+      assert(after.table.turn === 0 && after.table.winner === null, `turn did not return: ${JSON.stringify(after.table)}`);
+      assert(!(await page.evaluate(() => document.getElementById('rsOrb').disabled)), 'the orb stays locked after the NPCs');
+      void st;
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_table_a_human_bank_past_100_wins_the_table', async () => {
+    const { ctx, page } = await openTable();
+    try {
+      await page.click('#rsStart');
+      await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+      await settledTable(page);
+      await page.evaluate(() => window.__spelltest.randospellScore(99));
+      await answer(page, true);
+      await page.click('#rsBank');
+      const end = await state(page);
+      assert(end.ended === 'Goal' && end.table.winner === 0, `the human did not win: ${JSON.stringify(end.table)}`);
+      assert(await page.evaluate(() => !document.getElementById('rsOver').hidden), 'no end card');
+      assert(await page.evaluate(() => document.getElementById('rsOverExit') !== null), 'no way out');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_jr_table_is_one_cautious_racer_with_no_pot', async () => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: FLAG_JR_TABLE, age: KID });
+    const { ctx, page } = o;
+    try {
+      await page.evaluate(() => document.getElementById('rsOpenBtn').click());
+      await page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+      await page.click('#rsStart');
+      await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+      await settledTable(page);
+      let st = await state(page);
+      assert(st.table.people.join() === 'cautious', `Jr personalities: ${st.table.people}`);
+      const s = await roll(page);
+      const before = await page.evaluate(() => window.__spelltest.randospellState());
+      await type(page, s.word);
+      await page.click('#rsGo');
+      await settled(page, before);
+      await settledTable(page);
+      st = await state(page);
+      assert(st.table.pots[1] === 0, 'a racer has a pot');
+      assert(await page.evaluate(() => document.getElementById('rsPot').hidden), 'Jr shows a pot');
     } finally { await ctx.close(); }
   });
 }

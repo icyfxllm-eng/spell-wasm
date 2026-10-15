@@ -669,6 +669,13 @@
   .rs-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
   .rs-timer.run{animation:rs-timer 30s linear forwards}
   .rs-pot,.rs-ward,.rs-turn{font-size:.9rem;font-weight:600}
+  .rs-npc-cfg{display:flex;flex-direction:column;gap:8px}
+  .rs-npc-cfg[hidden],.rs-table[hidden]{display:none}
+  .rs-table{display:flex;gap:6px;flex:none;flex-wrap:wrap;justify-content:center}
+  .rs-seat{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:70px;padding:4px 8px;border-radius:10px;
+    background:#ffffff10;border:2px solid transparent;font-size:.8rem}
+  .rs-seat.on{border-color:var(--amber,#f2c14e);background:#ffffff1c}
+  .rs-seat-score{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums}
   .rs-heat,.rs-glow-note{font-size:.9rem;font-weight:600;text-align:center;min-height:1.2em}
   .rs-glow-note:empty{display:none}
   .rs-heat[hidden],.rs-charms[hidden],.rs-call[hidden]{display:none}
@@ -3059,6 +3066,7 @@
     <div class="rs-setup" id="rsSetup">
       <p data-i18n="rs.desc">Roll the dice, then spell a word that long.</p>
       <div class="rs-opt" id="rsModes"></div>
+      <div class="rs-npc-cfg" id="rsNpcCfg" hidden></div>
       <div class="rs-opt" id="rsTiers"></div>
       <div class="rs-info" id="rsInfo"></div>
       <div class="rs-note" id="rsNote" aria-live="polite"></div>
@@ -3066,6 +3074,7 @@
       <button class="btn btn-check" id="rsStart" data-i18n="rs.start">Start</button>
     </div>
     <div class="rs-play" id="rsPlay" hidden>
+      <div class="rs-table" id="rsTable" hidden></div>
       <div class="rs-stats">
         <span class="rs-score" id="rsScore"></span>
         <span class="rs-turn" id="rsTurn" hidden></span>

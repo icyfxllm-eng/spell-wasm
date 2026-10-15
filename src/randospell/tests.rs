@@ -1051,3 +1051,275 @@ fn stretching_does_not_change_the_dice_or_the_ordinary_words() {
     let mut seen = std::collections::BTreeSet::new();
     assert!(u2.iter().all(|w| seen.insert(w.clone())), "no repeats among Stretched words");
 }
+
+// ---- v1.1 Phase F: the NPC table ------------------------------------------
+
+use super::table::{Difficulty, Personality, Step, Table, CAUTIOUS_BANK, DARING_BANK};
+
+fn table_human(seed: u64) -> Session {
+    let mut human = Session::new(seed, Mode::Table, 1, full_fake(), BTreeSet::new());
+    human.rules = Rules { heat: true, doubles: true, ..Rules::default() };
+    human
+}
+
+/// A scripted human (banks at 12) against `pers`, to the end. Returns the table,
+/// the human, every NPC Bank amount seen and the full NPC step log.
+fn play_table(seed: u64, pers: Vec<Personality>, diff: Difficulty, acc_milli: u64) -> (Table, Session, Vec<(usize, u32)>, Vec<Step>) {
+    let mut h = table_human(seed);
+    let mut t = Table::new(seed, &h, pers, diff);
+    let mut bot = Rng::new(seed ^ 0xB07);
+    let mut banks = Vec::new();
+    let mut log = Vec::new();
+    fn take(steps: Vec<Step>, banks: &mut Vec<(usize, u32)>, log: &mut Vec<Step>) {
+        for s in steps {
+            if let Step::Banked { seat, amount, .. } = s {
+                banks.push((seat, amount));
+            }
+            log.push(s);
+        }
+    }
+    let s = t.run_npcs(&mut h);
+    take(s, &mut banks, &mut log);
+    for _ in 0..3000 {
+        if t.winner.is_some() || h.ended.is_some() {
+            break;
+        }
+        if t.turn != 0 {
+            let s = t.run_npcs(&mut h);
+            take(s, &mut banks, &mut log);
+            continue;
+        }
+        if h.press().is_none() {
+            break;
+        }
+        let ok = (bot.next_u64() % 1000) < acc_milli;
+        let o = h.answer(ok).unwrap();
+        if o.finished {
+            t.settle(&h);
+            break;
+        }
+        if o.deciding {
+            if h.pot >= CAUTIOUS_BANK {
+                let b = h.bank().unwrap();
+                if b.finished {
+                    t.settle(&h);
+                    break;
+                }
+                t.human_turn_over(&h);
+                let s = t.run_npcs(&mut h);
+                take(s, &mut banks, &mut log);
+            } else {
+                h.roll_again();
+            }
+        } else if o.passed {
+            t.human_turn_over(&h);
+            let s = t.run_npcs(&mut h);
+            take(s, &mut banks, &mut log);
+        }
+    }
+    t.settle(&h);
+    (t, h, banks, log)
+}
+
+#[test]
+fn npc_accuracy_follows_the_human_minus_the_calibrated_delta_with_the_board_game_bounds() {
+    let mut h = table_human(1);
+    let mut t = Table::new(1, &h, vec![Personality::Cautious], Difficulty::Normal);
+    // No words yet: the prior alone, 0.700, minus the Normal delta 0.100.
+    assert_eq!(t.human_acc_milli(&h), 700);
+    assert_eq!(t.npc_acc_milli(&h), 600);
+    h.correct = 5;
+    h.attempts = 10; // (1.4 + 5) / 12
+    assert_eq!(t.human_acc_milli(&h), 533);
+    assert_eq!(t.npc_acc_milli(&h), 433, "Normal trails by 0.10");
+    t.difficulty = Difficulty::Easy;
+    assert_eq!(t.npc_acc_milli(&h), 383, "Easy trails by 0.15");
+    t.difficulty = Difficulty::Tough;
+    assert_eq!(t.npc_acc_milli(&h), 533, "Tough does not trail");
+    h.correct = 0;
+    h.attempts = 40; // 1.4 / 42 = 0.033, so the floor holds
+    assert_eq!(t.npc_acc_milli(&h), 300);
+    h.correct = 40; // a perfect human: the ceiling holds
+    assert_eq!(t.npc_acc_milli(&h), 950);
+}
+
+#[test]
+fn a26_the_personalities_bank_where_they_say() {
+    let mean_bank = |p: Personality| {
+        let (mut sum, mut n) = (0u32, 0u32);
+        for seed in 0..150u64 {
+            let (_, _, banks, _) = play_table(seed + 1000, vec![p, p, p], Difficulty::Normal, 800);
+            for (_, a) in banks {
+                sum += a;
+                n += 1;
+            }
+        }
+        sum as f64 / n as f64
+    };
+    let cautious = mean_bank(Personality::Cautious);
+    let daring = mean_bank(Personality::Daring);
+    assert!((12.0..=20.0).contains(&cautious), "Cautious mean bank {cautious:.1}");
+    assert!(daring > cautious + 8.0, "Daring {daring:.1} should bank far larger than Cautious {cautious:.1}");
+    assert!(daring >= DARING_BANK as f64 - 1.0, "Daring never banks under its threshold: {daring:.1}");
+}
+
+#[test]
+fn a26_daring_busts_more_than_cautious() {
+    let bust_rate = |p: Personality| {
+        let (mut busts, mut banks) = (0u32, 0u32);
+        for seed in 0..150u64 {
+            let (t, _, _, _) = play_table(seed + 2000, vec![p, p, p], Difficulty::Normal, 800);
+            for n in &t.npcs {
+                busts += n.busts;
+                banks += n.banks;
+            }
+        }
+        busts as f64 / (busts + banks) as f64
+    };
+    let (c, d) = (bust_rate(Personality::Cautious), bust_rate(Personality::Daring));
+    assert!(d > c, "Daring bust rate {d:.2} should exceed Cautious {c:.2}");
+}
+
+#[test]
+fn mirror_banks_at_the_humans_last_bank_and_plays_cautious_before_it() {
+    let mut h = table_human(3);
+    let t = Table::new(3, &h, vec![Personality::Mirror], Difficulty::Normal);
+    assert_eq!(t.threshold_of(&h, 0), CAUTIOUS_BANK, "Cautious until the human has banked (D-R16)");
+    h.last_bank = Some(21);
+    assert_eq!(t.threshold_of(&h, 0), 21);
+    h.last_bank = Some(9);
+    assert_eq!(t.threshold_of(&h, 0), 9);
+}
+
+#[test]
+fn a27_the_calibrated_deltas_put_a_70_percent_human_inside_the_d18_ranges() {
+    // D18 for a three-NPC table (Easy 50-60, Normal 35-45, Tough 21-33) with the
+    // spec's +-5 pp of slack, for a scripted human at 70%.
+    let want = [(Difficulty::Easy, 45.0, 65.0), (Difficulty::Normal, 30.0, 50.0), (Difficulty::Tough, 16.0, 38.0)];
+    let rate = |d: Difficulty, acc: u64| {
+        let wins = (0..400u64).filter(|s| play_table(s * 31 + 7, vec![Personality::Cautious; 3], d, acc).0.winner == Some(0)).count();
+        wins as f64 / 4.0
+    };
+    for (d, lo, hi) in want {
+        let r = rate(d, 700);
+        assert!((lo..=hi).contains(&r), "{d:?} human 70%: {r:.1}% outside {lo}-{hi}");
+    }
+    // The other accuracies are not held to D18 (see the table module docs), but
+    // a better speller must never do worse, and an easier setting never harder.
+    for d in Difficulty::ALL {
+        let (a, b) = (rate(d, 500), rate(d, 1000));
+        assert!(b > a, "{d:?}: a perfect human ({b:.1}%) should beat a 50% one ({a:.1}%)");
+    }
+    assert!(rate(Difficulty::Easy, 700) > rate(Difficulty::Tough, 700));
+}
+
+#[test]
+fn i19_a_replay_with_the_same_seed_and_inputs_is_the_same_game() {
+    let pers = || vec![Personality::Cautious, Personality::Daring, Personality::Mirror];
+    let a = play_table(77, pers(), Difficulty::Normal, 750);
+    let b = play_table(77, pers(), Difficulty::Normal, 750);
+    assert_eq!(a.3, b.3, "the NPC step logs");
+    assert_eq!((a.0.winner, a.1.score), (b.0.winner, b.1.score));
+    let c = play_table(78, pers(), Difficulty::Normal, 750);
+    assert_ne!(a.3, c.3, "a different seed is a different game");
+}
+
+#[test]
+fn npcs_draw_no_words_and_the_table_never_repeats_one() {
+    let (_, h, _, _) = play_table(5, vec![Personality::Cautious; 3], Difficulty::Normal, 800);
+    // Only the human's served words exist; none repeats (I3).
+    let mut seen = BTreeSet::new();
+    assert!(h.served().iter().all(|w| seen.insert(w.clone())));
+    assert_eq!(h.served().len() as u32, h.attempts, "one served word per answered roll: NPCs drew none");
+}
+
+#[test]
+fn an_npc_that_reaches_the_goal_wins_and_ends_the_game() {
+    let mut h = table_human(8);
+    let mut t = Table::new(8, &h, vec![Personality::Cautious], Difficulty::Easy);
+    t.npcs[0].score = 95;
+    let mut won = false;
+    for _ in 0..200 {
+        t.turn = 1;
+        let steps = t.run_npcs(&mut h);
+        if steps.iter().any(|s| matches!(s, Step::Won { seat: 1 })) {
+            won = true;
+            break;
+        }
+    }
+    assert!(won, "an NPC at 95 never won in 200 turns");
+    assert_eq!(t.winner, Some(1));
+    assert!(h.ended.is_some());
+    assert!(t.npcs[0].score >= 100);
+}
+
+#[test]
+fn a30_the_jr_table_is_one_cautious_racer_with_no_pot() {
+    let mut h = Session::new(9, Mode::Jr, 0, jr_bank("en"), BTreeSet::new());
+    let mut t = Table::new(9, &h, vec![Personality::Daring, Personality::Mirror], Difficulty::Easy);
+    assert_eq!(t.npcs.len(), 1, "Jr has exactly one NPC");
+    assert_eq!(t.npcs[0].personality, Personality::Cautious);
+    assert!(t.is_jr() && t.goal() == 50);
+    t.turn = 1;
+    let steps = t.run_npcs(&mut h);
+    assert!(steps.iter().all(|s| !matches!(s, Step::Hit { .. } | Step::Banked { .. } | Step::Bust { .. })), "a racer has no pot");
+    assert!(steps.iter().any(|s| matches!(s, Step::Raced { .. })));
+    assert_eq!(t.npcs[0].pot, 0);
+}
+
+/// Calibration tool, kept so the numbers in the table module docs can be
+/// reproduced: `cargo test --lib zz_calibrate -- --ignored --nocapture`.
+#[test]
+#[ignore]
+fn zz_calibrate_deltas() {
+    for (prior, delta) in [(1500i64, 150i64), (700, 150), (700, 100), (700, 0)] {
+        let mut row = format!("prior {prior} delta {delta:+5}:");
+        for acc in [1000u64, 700, 500] {
+            let wins = (0..400u64)
+                .filter(|s| {
+                    let mut h = table_human(s * 31 + 7);
+                    let mut t = Table::new(s * 31 + 7, &h, vec![Personality::Cautious; 3], Difficulty::Normal);
+                    t.delta_override = Some(delta);
+                    t.prior_milli = prior;
+                    let mut bot = Rng::new((s * 31 + 7) ^ 0xB07);
+                    t.run_npcs(&mut h);
+                    for _ in 0..3000 {
+                        if t.winner.is_some() || h.ended.is_some() {
+                            break;
+                        }
+                        if t.turn != 0 {
+                            t.run_npcs(&mut h);
+                            continue;
+                        }
+                        if h.press().is_none() {
+                            break;
+                        }
+                        let o = h.answer((bot.next_u64() % 1000) < acc).unwrap();
+                        if o.finished {
+                            break;
+                        }
+                        if o.deciding {
+                            if h.pot >= CAUTIOUS_BANK {
+                                let b = h.bank().unwrap();
+                                if b.finished {
+                                    break;
+                                }
+                                t.human_turn_over(&h);
+                                t.run_npcs(&mut h);
+                            } else {
+                                h.roll_again();
+                            }
+                        } else if o.passed {
+                            t.human_turn_over(&h);
+                            t.run_npcs(&mut h);
+                        }
+                    }
+                    t.settle(&h);
+                    t.winner == Some(0)
+                })
+                .count();
+            row.push_str(&format!("  {acc}: {:5.1}%", wins as f64 / 4.0));
+        }
+        println!("CAL {row}");
+    }
+}
