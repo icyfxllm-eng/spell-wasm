@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Mga kalaban na computer",
   "rs.diff.easy": "Madali",
   "rs.diff.normal": "Katamtaman",
-  "rs.diff.tough": "Mahirap"
+  "rs.diff.tough": "Mahirap",
+  "rs.steal": "Magnakaw kay {name} ({n})",
+  "rs.stealHit": "Nakanakaw ka ng {n}!",
+  "rs.stealFail": "Nabigo ang pagnanakaw.",
+  "rs.npcStole": "Ninanakaw ni {name} ang {n} kay {target}",
+  "rs.npcStealFail": "Nabigo ang pagnanakaw ni {name}",
+  "rs.finalRound": "Umabot si {name} sa 100. May huling turno ang lahat ng iba.",
+  "rs.finalBanner": "Huling Ikot",
+  "rs.finalTurn": "Lampasan ang {n} para manalo.",
+  "rs.playerN": "Manlalaro {n}"
 }

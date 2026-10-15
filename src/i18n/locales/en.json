@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Computer players",
   "rs.diff.easy": "Easy",
   "rs.diff.normal": "Normal",
-  "rs.diff.tough": "Tough"
+  "rs.diff.tough": "Tough",
+  "rs.steal": "Steal from {name} ({n})",
+  "rs.stealHit": "You stole {n}!",
+  "rs.stealFail": "The steal failed.",
+  "rs.npcStole": "{name} steals {n} from {target}",
+  "rs.npcStealFail": "{name}'s steal fails",
+  "rs.finalRound": "{name} reached 100. Everyone else gets one final turn.",
+  "rs.finalBanner": "Final Round",
+  "rs.finalTurn": "Beat {n} to win.",
+  "rs.playerN": "Player {n}"
 }

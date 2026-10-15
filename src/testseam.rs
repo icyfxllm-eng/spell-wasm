@@ -222,6 +222,8 @@ pub fn install(app: &App) {
         set(&obj, "randospellState", cb.into_js_value());
         let cb = Closure::<dyn Fn(u32)>::new(move |n: u32| crate::randospell_screen::seam_score(n));
         set(&obj, "randospellScore", cb.into_js_value());
+        let cb = Closure::<dyn Fn(u32, u32)>::new(move |seat: u32, n: u32| crate::randospell_screen::seam_npc_pot(seat as usize, n));
+        set(&obj, "randospellNpcPot", cb.into_js_value());
         // CC-BOARD-GAME-POLISH Feature 6: walk a seat's piece n tiles (the real walk), returns its duration in ms.
         let cb = Closure::<dyn Fn(u32, u32) -> i32>::new(move |seat: u32, n: u32| crate::boardgame_screen::seam_hop(seat as u8, n));
         set(&obj, "boardgameHop", cb.into_js_value());

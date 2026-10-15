@@ -136,6 +136,8 @@ pub struct Roll {
     /// F13/F17: the choices made for this word, locked once it is drawn.
     pub stretch: bool,
     pub ear: bool,
+    /// F15: this word is a Steal word (Hard + Expert, length 7), not a points word.
+    pub steal: bool,
     /// F12: the guess placed before the press.
     pub call: Option<Call>,
 }
@@ -178,6 +180,8 @@ pub struct Outcome {
     /// Jr: a miss that lets the child try the same word once more. Nothing
     /// was scored and the streak is untouched.
     pub retry: bool,
+    /// F15: 0 none, 1 a Steal landed (no points; the caller moves the pot), 2 it failed.
+    pub steal: u8,
 }
 
 /// What a Bank did.
@@ -187,6 +191,9 @@ pub struct Banked {
     pub score: u32,
     pub finished: bool,
     pub passed: bool,
+    /// F16: this Bank reached the goal and opened the Final Round instead of
+    /// ending the game. The caller (the table) runs the final turns.
+    pub final_round: bool,
 }
 
 /// The idle player's numbers in Head-to-Head.
@@ -204,6 +211,7 @@ struct PlayerState {
     longest: Option<String>,
     bonus: bool,
     heat: u8,
+    attempts: u32,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -254,6 +262,9 @@ pub struct Session {
     /// Audio requests made for the pending word (I15).
     plays: u8,
     pub events: Vec<Ev>,
+    /// F16 (Head-to-Head): the player who banked to the goal; the other has
+    /// exactly one final turn.
+    pub final_leader: Option<usize>,
     /// Head-to-Head: 0 or 1, the player on the move.
     pub turn: usize,
     /// Head-to-Head: who banked past the goal.
@@ -309,6 +320,7 @@ impl Session {
             events: Vec::new(),
             best_streak: 0,
             attempt: 0,
+            final_leader: None,
             turn: 0,
             winner: None,
             bonus: false,
@@ -336,6 +348,12 @@ impl Session {
 
     pub fn pending(&self) -> Option<&Roll> {
         self.pending.as_ref()
+    }
+
+    /// The die has landed but the word is not drawn yet (Stretch, Ear and
+    /// Steal are chosen here).
+    pub fn rolled(&self) -> Option<&Roll> {
+        self.rolled.as_ref()
     }
 
     /// Every word served this session, in order: what the screen layer writes
@@ -548,6 +566,7 @@ impl Session {
                 ear: false,
                 heat: self.heat,
                 call_bonus: 0,
+                steal: 0,
                 pot: 0,
                 warded: false,
                 lost: 0,
@@ -567,6 +586,38 @@ impl Session {
         let mut mult = false;
         let (mut warded, mut lost) = (false, 0);
         let (mut doubles_hit, mut bonus_paid) = (false, 0);
+        if r.steal && correct {
+            // F15: a landed steal pays no points; the table moves the pot. Heat
+            // is unchanged, the streak and the longest word count as a right word.
+            self.streak += 1;
+            self.best_streak = self.best_streak.max(self.streak);
+            self.correct += 1;
+            self.deciding = true;
+            if self.longest.as_ref().map_or(true, |w| r.len > bank::length_of(w)) {
+                self.longest = Some(r.word.clone());
+            }
+            return Some(Outcome {
+                correct: true,
+                points: 0,
+                multiplied: false,
+                streak: self.streak,
+                score: self.score,
+                finished: false,
+                doubles: false,
+                stretch: false,
+                ear: false,
+                heat: self.heat,
+                call_bonus: 0,
+                steal: 1,
+                pot: self.pot,
+                warded: false,
+                lost: 0,
+                deciding: true,
+                passed: false,
+                bonus_roll: false,
+                retry: false,
+            });
+        }
         if correct {
             // D-R3: one pure payout. Jr scores the die (length - 1) with no jackpot.
             // With heat on, a pot mode uses the heat ladder in place of v1's streak
@@ -633,11 +684,20 @@ impl Session {
         }
         // Sprint ends on the score. Marathon ends only on a Bank (D15); a
         // Head-to-Head bonus roll IS a Bank.
-        let finished = (!marathon || (bonus_roll && correct)) && self.score >= self.mode.goal();
-        if finished {
+        let mut finished = (!marathon || (bonus_roll && correct)) && self.score >= self.mode.goal();
+        if finished && h2h && self.rules.lastcall && self.final_leader.is_none() {
+            // F16: reaching the goal on a bonus roll opens the Final Round too.
+            finished = false;
+            self.final_leader = Some(self.turn);
+            self.pass_turn();
+        } else if finished {
             self.ended = Some(End::Goal);
             if h2h {
-                self.winner = Some(self.turn);
+                if self.final_leader.is_some() {
+                    self.conclude_h2h();
+                } else {
+                    self.winner = Some(self.turn);
+                }
             }
         }
         let mut out = Outcome {
@@ -652,6 +712,7 @@ impl Session {
             ear: r.ear,
             heat: self.heat,
             call_bonus: bonus_paid,
+            steal: if r.steal && !correct { 2 } else { 0 },
             pot: self.pot,
             warded,
             lost,
@@ -663,11 +724,17 @@ impl Session {
         // Head-to-Head: a real miss hands over the turn and grants the other
         // player a bonus roll (a flag: it does not stack).
         if self.mode.passes_turns() && !correct && !bonus_roll && !finished {
-            if h2h {
-                self.other.bonus = true;
-                self.pass_turn();
+            if h2h && self.final_leader.is_some() && self.ended.is_none() {
+                // F16: the final turn is over; no bonus roll is worth granting now.
+                self.conclude_h2h();
+                out.finished = true;
+            } else {
+                if h2h {
+                    self.other.bonus = true;
+                    self.pass_turn();
+                }
+                out.passed = true;
             }
-            out.passed = true;
         }
         Some(out)
     }
@@ -687,6 +754,7 @@ impl Session {
         std::mem::swap(&mut self.longest, &mut o.longest);
         std::mem::swap(&mut self.bonus, &mut o.bonus);
         std::mem::swap(&mut self.heat, &mut o.heat);
+        std::mem::swap(&mut self.attempts, &mut o.attempts);
         self.turn = 1 - self.turn;
         self.deciding = false;
     }
@@ -718,10 +786,31 @@ impl Session {
         self.largest_banked = self.largest_banked.max(banked);
         self.pot = 0;
         self.deciding = false;
-        let finished = self.score >= self.mode.goal();
+        let reaches = self.score >= self.mode.goal();
         let score = self.score;
-        let mut passed = false;
-        if finished {
+        let lastcall = self.rules.lastcall && matches!(self.mode, Mode::Table | Mode::HeadToHead);
+        let (mut finished, mut passed, mut final_round) = (reaches, false, false);
+        if reaches && lastcall && self.mode == Mode::Table {
+            // F16: the table opens the Final Round; the session does not end.
+            finished = false;
+            passed = true;
+            final_round = true;
+        } else if lastcall && self.mode == Mode::HeadToHead {
+            if self.final_leader.is_some() {
+                // The other player's final turn is over: settle it.
+                finished = true;
+                self.conclude_h2h();
+            } else if reaches {
+                finished = false;
+                final_round = true;
+                self.final_leader = Some(self.turn);
+                self.pass_turn();
+                passed = true;
+            } else {
+                self.pass_turn();
+                passed = true;
+            }
+        } else if finished {
             self.ended = Some(End::Goal);
             if self.mode == Mode::HeadToHead {
                 self.winner = Some(self.turn);
@@ -732,7 +821,7 @@ impl Session {
         } else if self.mode == Mode::Table {
             passed = true;
         }
-        Some(Banked { banked, score, finished, passed })
+        Some(Banked { banked, score, finished, passed, final_round })
     }
 
     /// F5: keep the pot at risk and roll again.
@@ -742,6 +831,108 @@ impl Session {
         }
         self.deciding = false;
         true
+    }
+
+    /// F16 / D-R18: settle a Head-to-Head Final Round. Highest banked score
+    /// wins; a tie goes to the longest word, then the fewest misses, then the
+    /// leader who opened the round.
+    fn conclude_h2h(&mut self) {
+        let me = self.turn;
+        let you = 1 - me;
+        let (ms, ys) = (self.score, self.other.score);
+        let len = |w: &Option<String>| w.as_deref().map_or(0, bank::length_of);
+        let (ml, yl) = (len(&self.longest), len(&self.other.longest));
+        let misses = |attempts: u32, correct: u32| attempts.saturating_sub(correct);
+        let (mm, ym) = (misses(self.attempts, self.correct), misses(self.other.attempts, self.other.correct));
+        let leader = self.final_leader.unwrap_or(you);
+        self.winner = Some(if ms != ys {
+            if ms > ys { me } else { you }
+        } else if ml != yl {
+            if ml > yl { me } else { you }
+        } else if mm != ym {
+            if mm < ym { me } else { you }
+        } else {
+            leader
+        });
+        self.ended = Some(End::Goal);
+        self.deciding = false;
+    }
+
+    /// F15: could the player on the move Steal on this roll? Only in the NPC
+    /// table and Head-to-Head (I18), only on a 7, only with a pot to take and a
+    /// Hard-or-Expert word of that length to serve (no padding).
+    pub fn steal_offered(&self, opponent_best_pot: u32) -> bool {
+        let Some(r) = &self.rolled else { return false };
+        self.rules.steal
+            && matches!(self.mode, Mode::Table | Mode::HeadToHead)
+            && r.len == 7
+            && opponent_best_pot >= 1
+            && self.steal_pool_ok()
+    }
+
+    /// Is there a Steal word to serve at length 7 (>= the coverage floor in the
+    /// Hard and Expert tiers the player owns)?
+    pub fn steal_pool_ok(&self) -> bool {
+        self.bank.of_len(7).iter().filter(|e| e.tier >= 2).count() >= bank::CELL_FLOOR
+    }
+
+    /// F15: draw the Steal word instead of a points word. The ordinary word
+    /// stream still advances (D-R9 / Daily purity), as for Stretch.
+    pub fn reveal_steal(&mut self) -> Option<Roll> {
+        let mut r = self.rolled.take()?;
+        let ok = self.rules.steal && matches!(self.mode, Mode::Table | Mode::HeadToHead) && r.len == 7 && self.steal_pool_ok();
+        if !ok {
+            self.rolled = Some(r);
+            return None;
+        }
+        let _ = self.pick(7, None); // the normal stream advances either way
+        let mut cands: Vec<(usize, String)> = self
+            .bank
+            .of_len(7)
+            .iter()
+            .filter(|e| e.tier >= 2 && !self.used.contains(&e.word) && !self.stretch_used.contains(&e.word))
+            .map(|e| (e.tier, e.word.clone()))
+            .collect();
+        if cands.is_empty() {
+            self.exhaust();
+            return None;
+        }
+        let i = self.words_s.below(cands.len());
+        let (tier, word) = cands.swap_remove(i);
+        self.stretch_used.push(word.clone());
+        self.events.push(Ev::WordDrawn { tier });
+        self.used.push(word.clone());
+        r.word = word;
+        r.tier = tier;
+        r.steal = true;
+        self.pending = Some(r.clone());
+        Some(r)
+    }
+
+    /// F15: the pot a successful steal adds. Heat is untouched.
+    pub fn receive_steal(&mut self, n: u32) {
+        self.pot += n;
+    }
+
+    /// F15: an opponent took `n` of this player's pot.
+    pub fn take_pot(&mut self, n: u32) -> u32 {
+        let t = n.min(self.pot);
+        self.pot -= t;
+        t
+    }
+
+    /// Head-to-Head: the idle player's unbanked pot.
+    pub fn h2h_opponent_pot(&self) -> u32 {
+        self.other.pot
+    }
+
+    /// Head-to-Head F15, success: floor(half) of the opponent's pot moves to the
+    /// stealer; the opponent keeps the ceiling half. Returns the amount moved.
+    pub fn resolve_steal_h2h(&mut self) -> u32 {
+        let n = self.other.pot / 2;
+        self.other.pot -= n;
+        self.pot += n;
+        n
     }
 
     /// D19: the 30 s soft timer ran out. A miss.

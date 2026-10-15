@@ -744,7 +744,7 @@ fn d10_a_preview_bank_that_cannot_carry_the_die_is_absent_not_padded() {
 use super::payout::{self, Call, PayIn, Rules};
 
 fn all_rules() -> Rules {
-    Rules { heat: true, call: true, stretch: true, ear: true, doubles: true }
+    Rules { heat: true, call: true, stretch: true, ear: true, doubles: true, ..Rules::default() }
 }
 
 /// Four tiers at every length 3..=12, 25 words each, so every harder tier is populated.
@@ -1322,4 +1322,293 @@ fn zz_calibrate_deltas() {
         }
         println!("CAL {row}");
     }
+}
+
+// ---- v1.1 Phase G: Steal and the Final Round --------------------------------
+
+fn steal_rules() -> Rules {
+    Rules { heat: true, steal: true, lastcall: true, ..Rules::default() }
+}
+
+fn table_session(mode: Mode, seed: u64) -> Session {
+    let mut s = Session::new(seed, mode, 1, tiered_bank(), BTreeSet::new());
+    s.rules = steal_rules();
+    s
+}
+
+fn on_seven(s: &mut Session) {
+    s.rolled = Some(Roll { face: 7, len: 7, ..Roll::default() });
+}
+
+#[test]
+fn i18_steal_has_no_code_path_in_sprint_solo_marathon_daily_or_jr() {
+    for mode in [Mode::Sprint, Mode::Marathon, Mode::Jr] {
+        let mut s = table_session(mode, 1);
+        on_seven(&mut s);
+        assert!(!s.steal_offered(50), "{mode:?} offers a steal");
+        assert!(s.reveal_steal().is_none(), "{mode:?} serves a steal word");
+    }
+    // The two modes that have it.
+    for mode in [Mode::Table, Mode::HeadToHead] {
+        let mut s = table_session(mode, 1);
+        on_seven(&mut s);
+        assert!(s.steal_offered(10), "{mode:?} should offer one on a 7 with a pot to take");
+    }
+    // Not on any other roll, not without a pot to take, not with the rule off.
+    let mut s = table_session(Mode::Table, 2);
+    s.rolled = Some(Roll { face: 8, len: 8, ..Roll::default() });
+    assert!(!s.steal_offered(50));
+    on_seven(&mut s);
+    assert!(!s.steal_offered(0));
+    s.rules.steal = false;
+    assert!(!s.steal_offered(50));
+}
+
+#[test]
+fn steal_serves_a_hard_or_expert_word_of_length_seven() {
+    let mut s = table_session(Mode::Table, 3);
+    on_seven(&mut s);
+    let r = s.reveal_steal().expect("a steal word");
+    assert!(r.steal && r.len == 7 && r.tier >= 2, "tier {} len {}", r.tier, r.len);
+    assert_eq!(super::bank::length_of(&r.word), 7);
+}
+
+#[test]
+fn steal_is_absent_where_no_hard_or_expert_word_of_seven_exists() {
+    // Only 8 + 8 Hard and Expert words at length 7: under the floor of 20.
+    let mut rows = Vec::new();
+    for len in 3..=12usize {
+        for t in 0..4usize {
+            let n = if len == 7 && t >= 2 { 8 } else { 25 };
+            for i in 0..n {
+                rows.push((t, format!("{}{}{:02}", "x".repeat(len - 3), ["a", "b", "c", "d"][t], i)));
+            }
+        }
+    }
+    let mut s = Session::new(4, Mode::Table, 1, Bank::from_rows(rows), BTreeSet::new());
+    s.rules = steal_rules();
+    on_seven(&mut s);
+    assert!(!s.steal_offered(50));
+}
+
+#[test]
+fn a25_a_landed_steal_pays_no_points_keeps_heat_and_moves_floor_half() {
+    let mut s = table_session(Mode::HeadToHead, 5);
+    s.heat = 3;
+    s.other.pot = 25;
+    on_seven(&mut s);
+    s.reveal_steal().unwrap();
+    let o = s.answer(true).unwrap();
+    assert_eq!((o.steal, o.points, o.deciding, s.heat), (1, 0, true, 3), "{o:?}");
+    let moved = s.resolve_steal_h2h();
+    // F15, D-R13 and I16 all say floor(target / 2) moves: 25 -> 12 to the thief,
+    // 13 stays. (The spec's A25 prints the halves the other way round.)
+    assert_eq!((moved, s.pot, s.h2h_opponent_pot()), (12, 12, 13));
+    // The pot at the table is conserved on success (I16).
+    assert_eq!(s.pot + s.h2h_opponent_pot(), 25);
+}
+
+#[test]
+fn a25_a_failed_steal_empties_the_stealers_pot_unless_the_ward_holds_it() {
+    let mut s = table_session(Mode::HeadToHead, 6);
+    s.other.pot = 25;
+    s.pot = 9;
+    s.heat = 4;
+    s.ward = false;
+    on_seven(&mut s);
+    s.reveal_steal().unwrap();
+    let o = s.answer(false).unwrap();
+    assert_eq!((o.steal, o.lost), (2, 9), "{o:?}");
+    // The miss passed the turn, so the target is now the player on the move.
+    assert_eq!(s.pot, 25, "the target is untouched");
+    // With the Ward, the pot survives and heat still resets.
+    let mut w = table_session(Mode::HeadToHead, 7);
+    w.other.pot = 25;
+    w.pot = 9;
+    w.heat = 4;
+    on_seven(&mut w);
+    w.reveal_steal().unwrap();
+    let o = w.answer(false).unwrap();
+    assert!(o.warded && o.steal == 2);
+    // The thief is now the idle player: pot kept by the Ward, heat reset.
+    assert_eq!((w.other.pot, w.other.heat), (9, 0));
+}
+
+#[test]
+fn an_npc_steals_only_with_a_thin_pot_against_a_rich_one_and_takes_the_largest() {
+    // The human holds a pot of 25 (Ward-saved); the NPC holds 0.
+    let mut found = false;
+    for seed in 0..300u64 {
+        let mut h = table_session(Mode::Table, seed);
+        h.pot = 25;
+        let mut t = Table::new(seed, &h, vec![Personality::Cautious, Personality::Cautious], Difficulty::Tough);
+        t.npcs[1].pot = 18; // a smaller pot: the human's 25 is the largest
+        t.turn = 1;
+        let before = (h.pot, t.npcs[0].pot, t.npcs[1].pot);
+        let steps = t.run_npcs(&mut h);
+        if let Some(Step::Stole { seat, target, amount }) = steps.iter().find(|s| matches!(s, Step::Stole { .. })).cloned() {
+            assert_eq!(target, 0, "an NPC takes the largest pot (the human's)");
+            assert_eq!(amount, 12, "floor(25 / 2)");
+            assert_eq!(seat, 1);
+            assert_eq!(h.pot, before.0 - 12);
+            found = true;
+            break;
+        }
+    }
+    assert!(found, "no NPC steal in 300 seeds");
+    // A pot of 10 or more never steals, and a target under 10 is not worth it.
+    for seed in 0..60u64 {
+        let mut h = table_session(Mode::Table, seed);
+        h.pot = 9;
+        let mut t = Table::new(seed, &h, vec![Personality::Cautious], Difficulty::Easy);
+        t.turn = 1;
+        let steps = t.run_npcs(&mut h);
+        assert!(!steps.iter().any(|s| matches!(s, Step::Stole { .. } | Step::StealFailed { .. })), "stole a pot under 10");
+    }
+    for seed in 0..60u64 {
+        let mut h = table_session(Mode::Table, seed);
+        h.pot = 25;
+        let mut t = Table::new(seed, &h, vec![Personality::Cautious], Difficulty::Easy);
+        t.npcs[0].pot = 10;
+        t.turn = 1;
+        let steps = t.run_npcs(&mut h);
+        assert!(!steps.iter().any(|s| matches!(s, Step::Stole { .. } | Step::StealFailed { .. })), "stole with a pot of 10");
+    }
+}
+
+#[test]
+fn a28_the_final_round_gives_every_other_player_exactly_one_turn() {
+    let mut h = table_session(Mode::Table, 21);
+    let mut t = Table::new(21, &h, vec![Personality::Cautious, Personality::Cautious], Difficulty::Normal);
+    // NPC 1 is about to bank past the goal.
+    t.npcs[0].score = 96;
+    t.npcs[0].pot = 12;
+    let mut opened = false;
+    for _ in 0..200 {
+        t.turn = 1;
+        t.npcs[0].pot = 12;
+        let steps = t.run_npcs(&mut h);
+        if steps.iter().any(|s| matches!(s, Step::FinalRound { leader: 1 })) {
+            opened = true;
+            break;
+        }
+        t.npcs[0].score = 96;
+    }
+    assert!(opened, "the Final Round never opened");
+    assert!(t.final_active() && t.winner.is_none() && h.ended.is_none(), "reaching 100 must not end the game");
+    // Seat 2 played its one turn inside that same run; the human is next, then it settles.
+    assert!(!t.final_pending().contains(&1), "the leader owes no final turn");
+    assert_eq!(t.turn, 0, "the human has the next turn");
+    assert!(t.final_pending().contains(&0));
+    // The human takes their one turn (a miss), the round concludes.
+    t.human_turn_over(&h);
+    let steps = t.run_npcs(&mut h);
+    assert!(steps.iter().any(|s| matches!(s, Step::Won { .. })), "no result after every final turn");
+    assert!(t.winner.is_some() && h.ended.is_some());
+    assert!(t.final_pending().is_empty());
+    // Nobody had a second turn: the leader's banked score only went up (I10).
+    assert!(t.npcs[0].score >= 100);
+}
+
+#[test]
+fn a28_ties_go_to_the_longest_word_then_fewest_misses_then_the_leader() {
+    let mk = || {
+        let h = table_session(Mode::Table, 30);
+        let t = Table::new(30, &h, vec![Personality::Cautious, Personality::Cautious], Difficulty::Normal);
+        (h, t)
+    };
+    // All three at 104; NPC 2 has the longest roll.
+    let (mut h, mut t) = mk();
+    h.score = 104;
+    h.longest = Some("abcde".into());
+    t.npcs[0].score = 104;
+    t.npcs[0].longest_len = 6;
+    t.npcs[1].score = 104;
+    t.npcs[1].longest_len = 9;
+    t.final_leader = Some(1);
+    t.final_pending.clear();
+    let mut steps = Vec::new();
+    t.conclude(&mut h, &mut steps);
+    assert_eq!(t.winner, Some(2), "the longest word wins a tie");
+    // Same words, fewer misses wins.
+    let (mut h, mut t) = mk();
+    h.score = 104;
+    h.longest = Some("abcdef".into());
+    h.attempts = 10;
+    h.correct = 5; // 5 misses
+    t.npcs[0].score = 104;
+    t.npcs[0].longest_len = 6;
+    t.npcs[0].misses = 2;
+    t.npcs[1].score = 90;
+    t.final_leader = Some(1);
+    let mut steps = Vec::new();
+    t.conclude(&mut h, &mut steps);
+    assert_eq!(t.winner, Some(1), "fewer misses wins");
+    // Everything tied: the leader keeps it (D-R18).
+    let (mut h, mut t) = mk();
+    h.score = 104;
+    h.longest = Some("abcdef".into());
+    h.attempts = 4;
+    h.correct = 4;
+    t.npcs[0].score = 104;
+    t.npcs[0].longest_len = 6;
+    t.npcs[0].misses = 0;
+    t.npcs[1].score = 50;
+    t.final_leader = Some(1);
+    let mut steps = Vec::new();
+    t.conclude(&mut h, &mut steps);
+    assert_eq!(t.winner, Some(1), "a full tie goes to the leader");
+}
+
+#[test]
+fn the_final_round_off_keeps_the_v1_rule_that_a_goal_bank_wins_at_once() {
+    let mut h = table_session(Mode::Table, 40);
+    h.rules.lastcall = false;
+    let mut t = Table::new(40, &h, vec![Personality::Cautious], Difficulty::Normal);
+    t.npcs[0].score = 98;
+    for _ in 0..200 {
+        t.turn = 1;
+        t.npcs[0].pot = 12;
+        t.run_npcs(&mut h);
+        if t.winner.is_some() {
+            break;
+        }
+        t.npcs[0].score = 98;
+    }
+    assert_eq!(t.winner, Some(1));
+    assert!(!t.final_active());
+}
+
+#[test]
+fn h2h_a_goal_bank_opens_one_final_turn_and_the_higher_score_wins() {
+    let mut s = table_session(Mode::HeadToHead, 50);
+    s.score = 90;
+    s.pot = 12;
+    s.deciding = true;
+    s.other.score = 60;
+    let b = s.bank().unwrap();
+    assert!(b.final_round && b.passed && !b.finished, "{b:?}");
+    assert!(s.ended.is_none() && s.final_leader == Some(0));
+    assert_eq!(s.turn, 1, "the other player has the final turn");
+    // They miss: the round concludes with the leader ahead.
+    s.pending = Some(Roll { face: 6, len: 6, word: "qqqqqq".into(), ..Roll::default() });
+    let o = s.answer(false).unwrap();
+    assert!(o.finished, "{o:?}");
+    assert_eq!(s.winner, Some(0));
+    assert!(s.ended.is_some());
+}
+
+#[test]
+fn h2h_the_trailing_player_can_win_on_their_final_bank() {
+    let mut s = table_session(Mode::HeadToHead, 51);
+    s.score = 90;
+    s.pot = 12;
+    s.deciding = true;
+    s.other.score = 95;
+    s.bank().unwrap(); // leader reaches 102; the other (95) has the final turn
+    s.pot = 20;
+    s.deciding = true;
+    let b = s.bank().unwrap();
+    assert!(b.finished && !b.passed, "{b:?}");
+    assert_eq!(s.winner, Some(1), "115 beats 102");
 }

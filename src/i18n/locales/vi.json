@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Người chơi máy",
   "rs.diff.easy": "Dễ",
   "rs.diff.normal": "Bình thường",
-  "rs.diff.tough": "Khó"
+  "rs.diff.tough": "Khó",
+  "rs.steal": "Cướp của {name} ({n})",
+  "rs.stealHit": "Bạn đã cướp {n}!",
+  "rs.stealFail": "Cướp không thành.",
+  "rs.npcStole": "{name} cướp {n} của {target}",
+  "rs.npcStealFail": "{name} cướp không thành",
+  "rs.finalRound": "{name} đã đạt 100. Mọi người khác có một lượt cuối.",
+  "rs.finalBanner": "Vòng cuối",
+  "rs.finalTurn": "Vượt {n} để thắng.",
+  "rs.playerN": "Người chơi {n}"
 }

@@ -1080,5 +1080,14 @@
   "rs.npc.count": "컴퓨터 플레이어",
   "rs.diff.easy": "쉬움",
   "rs.diff.normal": "보통",
-  "rs.diff.tough": "어려움"
+  "rs.diff.tough": "어려움",
+  "rs.steal": "{name}에게서 빼앗기 ({n})",
+  "rs.stealHit": "{n}점을 빼앗았어요!",
+  "rs.stealFail": "빼앗기에 실패했어요.",
+  "rs.npcStole": "{name}이(가) {target}에게서 {n}점을 빼앗았어요",
+  "rs.npcStealFail": "{name}의 빼앗기가 실패했어요",
+  "rs.finalRound": "{name}이(가) 100점에 닿았어요. 나머지 모두에게 마지막 차례가 한 번씩 있어요.",
+  "rs.finalBanner": "마지막 라운드",
+  "rs.finalTurn": "{n}점을 넘으면 이겨요.",
+  "rs.playerN": "플레이어 {n}"
 }

@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Jogadores do computador",
   "rs.diff.easy": "Fácil",
   "rs.diff.normal": "Médio",
-  "rs.diff.tough": "Difícil"
+  "rs.diff.tough": "Difícil",
+  "rs.steal": "Roubar de {name} ({n})",
+  "rs.stealHit": "Você roubou {n}!",
+  "rs.stealFail": "O roubo falhou.",
+  "rs.npcStole": "{name} rouba {n} de {target}",
+  "rs.npcStealFail": "O roubo de {name} falha",
+  "rs.finalRound": "{name} chegou a 100. Todos os outros têm uma última vez.",
+  "rs.finalBanner": "Rodada final",
+  "rs.finalTurn": "Supere {n} para vencer.",
+  "rs.playerN": "Jogador {n}"
 }

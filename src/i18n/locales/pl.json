@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Gracze komputerowi",
   "rs.diff.easy": "Łatwy",
   "rs.diff.normal": "Normalny",
-  "rs.diff.tough": "Trudny"
+  "rs.diff.tough": "Trudny",
+  "rs.steal": "Ukradnij graczowi {name} ({n})",
+  "rs.stealHit": "Ukradłeś {n}!",
+  "rs.stealFail": "Kradzież się nie udała.",
+  "rs.npcStole": "{name} kradnie {n} graczowi {target}",
+  "rs.npcStealFail": "Kradzież gracza {name} się nie udaje",
+  "rs.finalRound": "{name} osiągnął 100. Wszyscy pozostali mają jeszcze jedną turę.",
+  "rs.finalBanner": "Runda finałowa",
+  "rs.finalTurn": "Pokonaj {n}, by wygrać.",
+  "rs.playerN": "Gracz {n}"
 }

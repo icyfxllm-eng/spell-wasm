@@ -108,6 +108,8 @@ struct Ui {
     choosing: bool,
     stretch_sel: bool,
     ear_sel: bool,
+    /// F15: the seat the player chose to steal from, instead of spelling for points.
+    steal_target: Option<usize>,
     recorded: bool,
     day: u32,
 }
@@ -452,7 +454,7 @@ fn start() {
         Table::new(js_sys::Date::now() as u64 ^ 0x5EA7, &s, pers, NPC_D.with(Cell::get))
     });
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { s, tbl, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, recorded: false, day })
+        *u.borrow_mut() = Some(Ui { s, tbl, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, steal_target: None, recorded: false, day })
     });
     dom::set_hidden("rsSetup", true);
     dom::set_hidden("rsPlay", false);
@@ -560,9 +562,12 @@ fn render_table() {
                 let n = &t.npcs[seat - 1];
                 (npc_name(seat), n.score, n.pot, t.turn == seat)
             };
+            // F16: the leader of the Final Round is marked, in a class and in text.
+            let lead = t.final_leader == Some(seat);
             out.push_str(&format!(
-                "<div class=\"rs-seat{}\" data-seat=\"{seat}\"><b>{}</b><span class=\"rs-seat-score\">{score}</span><span>{}</span></div>",
+                "<div class=\"rs-seat{}{}\" data-seat=\"{seat}\"><b>{}</b><span class=\"rs-seat-score\">{score}</span><span>{}</span></div>",
                 if active { " on" } else { "" },
+                if lead { " lead" } else { "" },
                 dom::escape_html(&name),
                 dom::escape_html(&i18n::tp("rs.pot", &[("n", &pot.to_string())]))
             ));
@@ -602,6 +607,15 @@ fn step_text(s: &Step) -> String {
         Step::Warded { seat, pot } => i18n::tp("rs.npcWard", &[("name", &nm(*seat)), ("n", &pot.to_string())]),
         Step::Raced { seat, points, .. } if *points > 0 => i18n::tp("rs.npcHit", &[("name", &nm(*seat)), ("n", &points.to_string())]),
         Step::Raced { seat, .. } => i18n::tp("rs.npcMiss", &[("name", &nm(*seat))]),
+        Step::Stole { seat, target, amount } => {
+            let tn = if *target == 0 { i18n::t("rs.you") } else { nm(*target) };
+            i18n::tp("rs.npcStole", &[("name", &nm(*seat)), ("target", &tn), ("n", &amount.to_string())])
+        }
+        Step::StealFailed { seat, .. } => i18n::tp("rs.npcStealFail", &[("name", &nm(*seat))]),
+        Step::FinalRound { leader } => {
+            let who = if *leader == 0 { i18n::t("rs.you") } else { nm(*leader) };
+            i18n::tp("rs.finalRound", &[("name", &who)])
+        }
         Step::Won { seat } => i18n::tp("rs.nameWins", &[("name", &nm(*seat))]),
     }
 }
@@ -738,6 +752,10 @@ fn render_hud() {
         dom::set_text("rsTurn", "");
     }
     dom::set_hidden("rsTurn", !h2h);
+    // F16: the Final Round is stated in words, not only by a locked lantern.
+    let final_on = with_ui(|u| u.tbl.as_ref().map_or(false, |t| t.final_active()) || u.s.final_leader.is_some()).unwrap_or(false);
+    dom::set_text("rsFinal", &if final_on { i18n::t("rs.finalBanner") } else { String::new() });
+    dom::set_hidden("rsFinal", !final_on);
     let m = mode != Mode::Sprint && mode != Mode::Jr;
     dom::set_hidden("rsPot", !m);
     dom::set_hidden("rsWard", !m);
@@ -774,6 +792,8 @@ fn rules_from_flags() -> Rules {
         stretch: crate::flags::randospell_stretch(),
         ear: crate::flags::randospell_ear(),
         doubles: crate::flags::randospell_doubles(),
+        steal: crate::flags::randospell_steal(),
+        lastcall: crate::flags::randospell_lastcall(),
     }
 }
 
@@ -851,9 +871,33 @@ fn call_tap(e: web_sys::MouseEvent) {
 
 /// F13/F17: the Stretch and Ear charms, shown after the die lands and before
 /// the word is drawn, with the Listen button that draws it.
+/// F15: who the player could steal from on this roll, as (seat, pot). Empty
+/// unless the roll is a 7 in a mode that has Steal (I18) and a pot is there to take.
+fn steal_options(u: &Ui) -> Vec<(usize, u32)> {
+    let opp: Vec<(usize, u32)> = match (&u.tbl, u.s.mode) {
+        (Some(t), Mode::Table) => t.steal_targets(),
+        (None, Mode::HeadToHead) => {
+            let p = u.s.h2h_opponent_pot();
+            if p >= 1 { vec![(1, p)] } else { Vec::new() }
+        }
+        _ => Vec::new(),
+    };
+    let best = opp.iter().map(|(_, p)| *p).max().unwrap_or(0);
+    if u.s.steal_offered(best) { opp } else { Vec::new() }
+}
+
 fn render_charms() {
-    let Some((on, stretch_ok, ear_ok, stretch_sel, ear_sel)) = with_ui(|u| {
-        (u.choosing, u.s.stretch_offered(), u.s.ear_offered(u.stretch_sel), u.stretch_sel, u.ear_sel && u.s.ear_offered(u.stretch_sel))
+    let Some((on, stretch_ok, ear_ok, stretch_sel, ear_sel, steals, stealing)) = with_ui(|u| {
+        let stealing = u.steal_target.is_some();
+        (
+            u.choosing,
+            u.s.stretch_offered() && !stealing,
+            u.s.ear_offered(u.stretch_sel) && !stealing,
+            u.stretch_sel,
+            u.ear_sel && u.s.ear_offered(u.stretch_sel),
+            steal_options(u),
+            u.steal_target,
+        )
     }) else {
         return;
     };
@@ -870,6 +914,12 @@ fn render_charms() {
     }
     if ear_ok {
         html.push_str(&charm("ear", "rs.ear", ear_sel));
+    }
+    // F15: a roll of 7 may be a Steal instead of a points word.
+    for (seat, pot) in steals {
+        let name = if seat == 0 { i18n::t("rs.you") } else { npc_name(seat) };
+        let label = i18n::tp("rs.steal", &[("name", &name), ("n", &pot.to_string())]);
+        html.push_str(&charm(&format!("steal:{seat}"), "", stealing == Some(seat)).replace("></button>", &format!(">{}</button>", dom::escape_html(&label))));
     }
     html.push_str(&format!("<button type=\"button\" class=\"rs-btn rs-listen\" data-b=\"listen\">{}</button>", dom::escape_html(&i18n::t("rs.listen"))));
     dom::set_html("rsCharms", &html);
@@ -902,6 +952,23 @@ fn charm_tap(e: web_sys::MouseEvent) {
             render_charms();
         }
         Some("listen") => listen(),
+        Some(v) if v.starts_with("steal:") => {
+            let seat = v["steal:".len()..].parse::<usize>().ok();
+            with_ui(|u| {
+                if u.choosing {
+                    let offered = steal_options(u).iter().any(|(s, _)| Some(*s) == seat);
+                    if offered {
+                        // A second tap on the same target clears it.
+                        u.steal_target = if u.steal_target == seat { None } else { seat };
+                        if u.steal_target.is_some() {
+                            u.stretch_sel = false;
+                            u.ear_sel = false;
+                        }
+                    }
+                }
+            });
+            render_charms();
+        }
         _ => {}
     }
 }
@@ -913,7 +980,11 @@ fn listen() {
             return None;
         }
         u.choosing = false;
-        Some(u.s.reveal(u.stretch_sel, u.ear_sel))
+        if u.steal_target.is_some() {
+            Some(u.s.reveal_steal())
+        } else {
+            Some(u.s.reveal(u.stretch_sel, u.ear_sel))
+        }
     })
     .flatten();
     dom::set_hidden("rsCharms", true);
@@ -977,7 +1048,7 @@ fn orb() {
         return; // the table is playing (D10); a tap skips it instead
     }
     let Some((spelling, deciding, choosing, two_step)) =
-        with_ui(|u| (u.spelling, u.s.deciding, u.choosing, (u.s.rules.stretch || u.s.rules.ear) && u.s.mode != Mode::Jr))
+        with_ui(|u| (u.spelling, u.s.deciding, u.choosing, (u.s.rules.stretch || u.s.rules.ear || (u.s.rules.steal && matches!(u.s.mode, Mode::Table | Mode::HeadToHead))) && u.s.mode != Mode::Jr))
     else {
         return;
     };
@@ -1009,6 +1080,7 @@ fn orb() {
             u.choosing = true;
             u.stretch_sel = false;
             u.ear_sel = false;
+            u.steal_target = None;
         });
         refresh_bets();
         render_charms();
@@ -1090,6 +1162,20 @@ fn resolve(typed: Option<String>) {
         render_hud();
         return;
     }
+    // F15: a landed steal moves floor(half) of the target's pot to the player.
+    let stolen = if out.as_ref().is_some_and(|o| o.steal == 1) {
+        with_ui(|u| {
+            let seat = u.steal_target;
+            match (seat, u.tbl.as_mut(), u.s.mode) {
+                (Some(seat), Some(t), Mode::Table) => t.resolve_human_steal(&mut u.s, seat),
+                (_, None, Mode::HeadToHead) => u.s.resolve_steal_h2h(),
+                _ => 0,
+            }
+        })
+    } else {
+        None
+    };
+    with_ui(|u| u.steal_target = None);
     dom::set_text("rsField", "");
     spell_panel(false);
     if kid {
@@ -1110,10 +1196,16 @@ fn resolve(typed: Option<String>) {
         haptics::incorrect(false);
         dom::set_text("rsFeed", &i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))]));
     }
+    if let Some(n) = stolen {
+        dom::set_text("rsFeed", &i18n::tp("rs.stealHit", &[("n", &n.to_string())]));
+    }
     render_hud();
     refresh_bets();
+    render_table();
     if let Some(o) = &out {
-        if !correct {
+        if o.steal == 2 {
+            dom::set_text("rsFeed", &format!("{} {}", i18n::t("rs.stealFail"), i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))])));
+        } else if !correct {
             if o.warded {
                 dom::set_text("rsFeed", &format!("{} {}", i18n::t("rs.warded"), i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))])));
             } else if o.lost > 0 {
@@ -1173,7 +1265,18 @@ fn bank_it() {
         show_over();
     } else if b.passed {
         if has_table {
+            // F16: a Bank to the goal opens the Final Round for everyone else.
+            if b.final_round {
+                let opened = with_ui(|u| u.tbl.as_mut().and_then(|t| t.human_banked_goal(&u.s))).flatten();
+                if let Some(step) = opened {
+                    dom::set_text("rsFeed", &step_text(&step));
+                }
+            }
             table_run(true);
+        } else if b.final_round {
+            // Head-to-Head: the other player has exactly one final turn.
+            let me = with_ui(|u| u.s.score_of(1 - u.s.turn)).unwrap_or(0);
+            show_hand(&format!("{} {}", i18n::tp("rs.finalRound", &[("name", &i18n::tp("rs.playerN", &[("n", &with_ui(|u| 2 - u.s.turn).unwrap_or(1).to_string())]))]), i18n::tp("rs.finalTurn", &[("n", &me.to_string())])));
         } else {
             show_hand(&i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
         }
@@ -1402,7 +1505,11 @@ pub fn seam_state() -> String {
                         "people": t.npcs.iter().map(|n| n.personality.id()).collect::<Vec<_>>(),
                         "accMilli": t.npc_acc_milli(&u.s),
                         "busy": NPC_BUSY.with(Cell::get),
+                        "finalActive": t.final_active(),
+                        "finalLeader": t.final_leader,
+                        "finalPending": t.final_pending(),
                     })),
+                    "stealOptions": steal_options(u).iter().map(|(s, p)| vec![*s as u32, *p]).collect::<Vec<_>>(),
                     "heat": u.s.heat,
                     "call": u.s.call().map(|c| format!("{c:?}")),
                     "choosing": u.choosing,
@@ -1427,6 +1534,7 @@ pub fn seam_state() -> String {
                     "bestLost": u.s.largest_lost,
                     "word": r.map(|r| r.word.clone()),
                     "roll": r.map(|r| r.len),
+                    "rolled": u.s.rolled().map(|r| r.len),
                     "face": r.map(|r| r.face),
                     "score": u.s.score,
                     "rolls": u.s.rolls,
@@ -1441,6 +1549,18 @@ pub fn seam_state() -> String {
             })
             .unwrap_or_default()
     })
+}
+
+/// Test builds only: put a pot in front of an NPC so a Steal can be tried (F15).
+#[cfg(feature = "testseam")]
+pub fn seam_npc_pot(seat: usize, n: u32) {
+    with_ui(|u| {
+        if let Some(t) = u.tbl.as_mut() {
+            if seat >= 1 && seat <= t.npcs.len() {
+                t.npcs[seat - 1].pot = n;
+            }
+        }
+    });
 }
 
 /// Test builds only: set the score, so a Sprint can be driven to its end

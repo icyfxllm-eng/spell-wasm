@@ -1080,5 +1080,14 @@
   "rs.npc.count": "कंप्यूटर खिलाड़ी",
   "rs.diff.easy": "आसान",
   "rs.diff.normal": "सामान्य",
-  "rs.diff.tough": "कठिन"
+  "rs.diff.tough": "कठिन",
+  "rs.steal": "{name} से चुराएँ ({n})",
+  "rs.stealHit": "आपने {n} चुराए!",
+  "rs.stealFail": "चोरी विफल रही।",
+  "rs.npcStole": "{name} ने {target} से {n} चुराए",
+  "rs.npcStealFail": "{name} की चोरी विफल",
+  "rs.finalRound": "{name} 100 पर पहुँचा। बाकी सबको एक आख़िरी बारी मिलेगी।",
+  "rs.finalBanner": "अंतिम दौर",
+  "rs.finalTurn": "जीतने के लिए {n} से आगे निकलें।",
+  "rs.playerN": "खिलाड़ी {n}"
 }

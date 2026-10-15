@@ -1080,5 +1080,14 @@
   "rs.npc.count": "لاعبو الحاسوب",
   "rs.diff.easy": "سهل",
   "rs.diff.normal": "عادي",
-  "rs.diff.tough": "صعب"
+  "rs.diff.tough": "صعب",
+  "rs.steal": "اسرق من {name} ({n})",
+  "rs.stealHit": "لقد سرقت {n}!",
+  "rs.stealFail": "فشلت السرقة.",
+  "rs.npcStole": "{name} يسرق {n} من {target}",
+  "rs.npcStealFail": "فشلت سرقة {name}",
+  "rs.finalRound": "وصل {name} إلى 100. لكل الآخرين دور أخير واحد.",
+  "rs.finalBanner": "الجولة الأخيرة",
+  "rs.finalTurn": "تجاوز {n} لتفوز.",
+  "rs.playerN": "اللاعب {n}"
 }

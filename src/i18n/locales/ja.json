@@ -1080,5 +1080,14 @@
   "rs.npc.count": "コンピューターの相手",
   "rs.diff.easy": "かんたん",
   "rs.diff.normal": "ふつう",
-  "rs.diff.tough": "むずかしい"
+  "rs.diff.tough": "むずかしい",
+  "rs.steal": "{name}から奪う（{n}）",
+  "rs.stealHit": "{n}点を奪った！",
+  "rs.stealFail": "奪うのに失敗した。",
+  "rs.npcStole": "{name}が{target}から{n}点を奪った",
+  "rs.npcStealFail": "{name}の奪取は失敗",
+  "rs.finalRound": "{name}が100点に到達。ほかの全員に最後の1回のばんがあります。",
+  "rs.finalBanner": "ファイナルラウンド",
+  "rs.finalTurn": "{n}点をこえれば勝ち。",
+  "rs.playerN": "プレイヤー{n}"
 }

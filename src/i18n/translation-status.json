@@ -216,7 +216,16 @@
     "rs.npc.count",
     "rs.diff.easy",
     "rs.diff.normal",
-    "rs.diff.tough"
+    "rs.diff.tough",
+    "rs.steal",
+    "rs.stealHit",
+    "rs.stealFail",
+    "rs.npcStole",
+    "rs.npcStealFail",
+    "rs.finalRound",
+    "rs.finalBanner",
+    "rs.finalTurn",
+    "rs.playerN"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -441,7 +450,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -656,7 +674,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "de": [
       "hub.group.spell_it",
@@ -871,7 +898,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1086,7 +1122,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1301,7 +1346,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1516,7 +1570,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1731,7 +1794,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -1946,7 +2018,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2161,7 +2242,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2376,7 +2466,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2591,7 +2690,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -2806,7 +2914,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3021,7 +3138,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3236,7 +3362,16 @@
       "rs.npc.count",
       "rs.diff.easy",
       "rs.diff.normal",
-      "rs.diff.tough"
+      "rs.diff.tough",
+      "rs.steal",
+      "rs.stealHit",
+      "rs.stealFail",
+      "rs.npcStole",
+      "rs.npcStealFail",
+      "rs.finalRound",
+      "rs.finalBanner",
+      "rs.finalTurn",
+      "rs.playerN"
     ]
   }
 }

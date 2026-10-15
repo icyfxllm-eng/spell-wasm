@@ -52,6 +52,10 @@ pub struct Rules {
     pub stretch: bool,
     pub ear: bool,
     pub doubles: bool,
+    /// F15: Steal, in the NPC table and Head-to-Head only (I18).
+    pub steal: bool,
+    /// F16: the Final Round once someone banks to the goal, NPC table and Head-to-Head.
+    pub lastcall: bool,
 }
 
 /// F11: the heat ladder as an exact factor (numerator, denominator).

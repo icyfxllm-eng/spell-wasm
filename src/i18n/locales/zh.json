@@ -1080,5 +1080,14 @@
   "rs.npc.count": "电脑玩家",
   "rs.diff.easy": "简单",
   "rs.diff.normal": "普通",
-  "rs.diff.tough": "困难"
+  "rs.diff.tough": "困难",
+  "rs.steal": "从 {name} 手中抢（{n}）",
+  "rs.stealHit": "你抢到了 {n}！",
+  "rs.stealFail": "抢夺失败。",
+  "rs.npcStole": "{name} 从 {target} 抢走 {n}",
+  "rs.npcStealFail": "{name} 的抢夺失败",
+  "rs.finalRound": "{name} 到达 100 分。其他人各有最后一次机会。",
+  "rs.finalBanner": "最后一轮",
+  "rs.finalTurn": "超过 {n} 即可获胜。",
+  "rs.playerN": "玩家 {n}"
 }

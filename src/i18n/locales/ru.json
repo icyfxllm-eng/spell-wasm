@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Игроки-компьютеры",
   "rs.diff.easy": "Лёгкий",
   "rs.diff.normal": "Обычный",
-  "rs.diff.tough": "Сложный"
+  "rs.diff.tough": "Сложный",
+  "rs.steal": "Украсть у {name} ({n})",
+  "rs.stealHit": "Ты украл {n}!",
+  "rs.stealFail": "Кража не удалась.",
+  "rs.npcStole": "{name} крадёт {n} у {target}",
+  "rs.npcStealFail": "Кража {name} не удалась",
+  "rs.finalRound": "{name} набрал 100. У всех остальных по одному последнему ходу.",
+  "rs.finalBanner": "Финальный круг",
+  "rs.finalTurn": "Набери больше {n}, чтобы победить.",
+  "rs.playerN": "Игрок {n}"
 }

@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Wachezaji wa kompyuta",
   "rs.diff.easy": "Rahisi",
   "rs.diff.normal": "Kawaida",
-  "rs.diff.tough": "Ngumu"
+  "rs.diff.tough": "Ngumu",
+  "rs.steal": "Iba kutoka kwa {name} ({n})",
+  "rs.stealHit": "Umeiba {n}!",
+  "rs.stealFail": "Wizi umeshindwa.",
+  "rs.npcStole": "{name} anaiba {n} kutoka kwa {target}",
+  "rs.npcStealFail": "Wizi wa {name} umeshindwa",
+  "rs.finalRound": "{name} amefikia 100. Wengine wote wana zamu moja ya mwisho.",
+  "rs.finalBanner": "Raundi ya mwisho",
+  "rs.finalTurn": "Vuka {n} ili ushinde.",
+  "rs.playerN": "Mchezaji {n}"
 }

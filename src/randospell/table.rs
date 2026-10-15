@@ -117,6 +117,13 @@ pub struct Npc {
     pub banks: u32,
     pub largest_banked: u32,
     pub largest_lost: u32,
+    /// Right answers, misses, and the longest right roll (an NPC draws no word,
+    /// so its "word" is the length it rolled): the Final Round tie-breaks.
+    pub hits: u32,
+    pub misses: u32,
+    pub longest_len: usize,
+    pub steals_tried: u32,
+    pub steals_landed: u32,
 }
 
 impl Npc {
@@ -134,6 +141,11 @@ impl Npc {
             banks: 0,
             largest_banked: 0,
             largest_lost: 0,
+            hits: 0,
+            misses: 0,
+            longest_len: 0,
+            steals_tried: 0,
+            steals_landed: 0,
         }
     }
 }
@@ -149,6 +161,12 @@ pub enum Step {
     Bust { seat: usize, lost: u32 },
     /// The Ward absorbed the loss.
     Warded { seat: usize, pot: u32 },
+    /// F15: a Steal landed: `amount` moved from `target`'s pot to `seat`'s.
+    Stole { seat: usize, target: usize, amount: u32 },
+    /// F15: a Steal failed; `lost` is the stealer's pot that went (0 if the Ward held it).
+    StealFailed { seat: usize, target: usize, lost: u32 },
+    /// F16: `leader` banked to the goal; everyone else has one final turn.
+    FinalRound { leader: usize },
     /// Jr's racer scored points straight to its score, or missed.
     Raced { seat: usize, points: u32, score: u32 },
     Won { seat: usize },
@@ -166,6 +184,9 @@ pub struct Table {
     /// 0 is the human, 1.. the NPCs in seat order.
     pub turn: usize,
     pub winner: Option<usize>,
+    /// F16: the seat that banked to the goal, and who still owes a final turn.
+    pub final_leader: Option<usize>,
+    pub(crate) final_pending: Vec<usize>,
     rng: Rng,
     jr: bool,
     started: bool,
@@ -194,6 +215,8 @@ impl Table {
             delta_override: None,
             turn,
             winner: None,
+            final_leader: None,
+            final_pending: Vec::new(),
             rng,
             jr,
             started: false,
@@ -239,6 +262,36 @@ impl Table {
         }
     }
 
+    /// F16: is the Final Round under way?
+    pub fn final_active(&self) -> bool {
+        self.final_leader.is_some()
+    }
+
+    /// Who still owes a final turn (for the screen's banner).
+    pub fn final_pending(&self) -> &[usize] {
+        &self.final_pending
+    }
+
+    /// F16: the human banked to the goal and the session reported
+    /// `Banked::final_round`. Opens the round (everyone else gets one turn), or,
+    /// when it is already open, just ends the human's final turn.
+    pub fn human_banked_goal(&mut self, h: &Session) -> Option<Step> {
+        if self.final_leader.is_some() || self.jr {
+            return None;
+        }
+        let n = self.seats();
+        self.final_leader = Some(0);
+        self.final_pending = (1..n).collect();
+        let _ = h;
+        Some(Step::FinalRound { leader: 0 })
+    }
+
+    fn open_final(&mut self, leader: usize) {
+        let n = self.seats();
+        self.final_leader = Some(leader);
+        self.final_pending = (1..n).map(|k| (leader + k) % n).collect();
+    }
+
     /// Run the table until it is the human's turn again, or the game is over.
     /// Call it once at the start (an NPC may be first) and after every human
     /// turn that passed. Each call returns the steps to play back.
@@ -246,17 +299,31 @@ impl Table {
         let mut steps = Vec::new();
         self.started = true;
         let n = self.seats();
-        // Guard: a table has at most 4 seats and a turn is bounded, so this
-        // cannot spin; the cap is a belt-and-braces stop, not a rule.
-        for _ in 0..(n * 4) {
+        // A table has at most 4 seats and every turn is bounded, so this cannot
+        // spin; the cap is a belt-and-braces stop, not a rule.
+        for _ in 0..(n * 6) {
             if self.winner.is_some() || h.ended.is_some() {
                 break;
+            }
+            if self.final_active() && self.final_pending.is_empty() {
+                self.conclude(h, &mut steps);
+                break;
+            }
+            if self.final_active() && !self.final_pending.contains(&self.turn) {
+                // The leader (or a seat that has had its turn) is not on the clock.
+                self.turn = (self.turn + 1) % n;
+                continue;
             }
             if self.turn == 0 {
                 break;
             }
-            self.npc_turn(h, self.turn, &mut steps);
+            let seat = self.turn;
+            self.npc_turn(h, seat, &mut steps);
+            self.final_pending.retain(|s| *s != seat);
             self.turn = (self.turn + 1) % n;
+        }
+        if self.final_active() && self.final_pending.is_empty() && self.winner.is_none() && h.ended.is_none() {
+            self.conclude(h, &mut steps);
         }
         if self.winner.is_none() {
             if let Some(end) = h.ended {
@@ -270,9 +337,44 @@ impl Table {
         steps
     }
 
+    /// F16 / D-R18: settle the Final Round. Highest banked score; a tie goes to
+    /// the longest word (an NPC's is the length it rolled), then the fewest
+    /// misses, then the leader who opened the round.
+    pub(crate) fn conclude(&mut self, h: &mut Session, steps: &mut Vec<Step>) {
+        let n = self.seats();
+        let leader = self.final_leader.unwrap_or(0);
+        let longest = |t: &Table, i: usize| -> usize {
+            if i == 0 { h.longest.as_deref().map_or(0, super::bank::length_of) } else { t.npcs[i - 1].longest_len }
+        };
+        let misses = |t: &Table, i: usize| -> u32 {
+            if i == 0 { h.attempts.saturating_sub(h.correct) } else { t.npcs[i - 1].misses }
+        };
+        let mut best = leader;
+        for i in 0..n {
+            if i == best {
+                continue;
+            }
+            let (si, sb) = (self.score_of(h, i), self.score_of(h, best));
+            let better = if si != sb {
+                si > sb
+            } else if longest(self, i) != longest(self, best) {
+                longest(self, i) > longest(self, best)
+            } else {
+                misses(self, i) < misses(self, best)
+            };
+            if better {
+                best = i;
+            }
+        }
+        self.winner = Some(best);
+        h.force_end(super::End::Goal);
+        steps.push(Step::Won { seat: best });
+    }
+
     /// The human's turn is over (a miss or a Bank): hand it to the next seat.
     pub fn human_turn_over(&mut self, h: &Session) {
         if self.winner.is_none() && h.ended.is_none() {
+            self.final_pending.retain(|s| *s != 0);
             self.turn = 1 % self.seats();
         }
     }
@@ -284,6 +386,37 @@ impl Table {
                 self.winner = Some(0);
             }
         }
+    }
+
+    /// The largest unbanked pot among the seats other than `me`: (seat, pot).
+    fn richest_other(&self, h: &Session, me: usize) -> Option<(usize, u32)> {
+        let mut best: Option<(usize, u32)> = None;
+        for seat in 0..self.seats() {
+            if seat == me {
+                continue;
+            }
+            let p = if seat == 0 { h.pot } else { self.npcs[seat - 1].pot };
+            if p >= 1 && best.map_or(true, |(_, bp)| p > bp) {
+                best = Some((seat, p));
+            }
+        }
+        best
+    }
+
+    /// F15 (human): the opponents with a pot to take, as (seat, pot).
+    pub fn steal_targets(&self) -> Vec<(usize, u32)> {
+        self.npcs.iter().enumerate().filter(|(_, n)| n.pot >= 1).map(|(i, n)| (i + 1, n.pot)).collect()
+    }
+
+    /// F15 (human): a landed steal moves floor(half) of `seat`'s pot to the human.
+    pub fn resolve_human_steal(&mut self, h: &mut Session, seat: usize) -> u32 {
+        if seat == 0 || seat > self.npcs.len() {
+            return 0;
+        }
+        let n = self.npcs[seat - 1].pot / 2;
+        self.npcs[seat - 1].pot -= n;
+        h.receive_steal(n);
+        n
     }
 
     fn npc_turn(&mut self, h: &mut Session, seat: usize, steps: &mut Vec<Step>) {
@@ -303,6 +436,56 @@ impl Table {
                 return;
             };
             self.npcs[i].rolls += 1;
+            let rules = h.rules;
+
+            // F15: a roll of 7 with a rich opponent and a thin pot of its own is a
+            // Steal, not a points word. Never in Jr (this branch is not reached).
+            if rules.steal && len == 7 && self.npcs[i].pot < 10 && h.steal_pool_ok() {
+                if let Some((target, tp)) = self.richest_other(h, seat).filter(|(_, p)| *p >= 10) {
+                    steps.push(Step::Rolled { seat, len, doubles, stretched: false });
+                    self.npcs[i].steals_tried += 1;
+                    let ok = self.chance(acc);
+                    if ok {
+                        let amount = tp / 2;
+                        if target == 0 {
+                            h.take_pot(amount);
+                        } else {
+                            self.npcs[target - 1].pot -= amount;
+                        }
+                        let npc = &mut self.npcs[i];
+                        npc.pot += amount;
+                        npc.streak += 1;
+                        npc.hits += 1;
+                        npc.steals_landed += 1;
+                        npc.longest_len = npc.longest_len.max(len);
+                        steps.push(Step::Stole { seat, target, amount });
+                        if self.npc_should_bank(h, i) {
+                            self.npc_bank(h, i, seat, steps);
+                            return;
+                        }
+                        continue;
+                    }
+                    let npc = &mut self.npcs[i];
+                    npc.streak = 0;
+                    npc.heat = 0;
+                    npc.misses += 1;
+                    let mut lost = 0;
+                    if npc.pot > 0 {
+                        if npc.ward {
+                            npc.ward = false;
+                            npc.ward_used = true;
+                        } else {
+                            lost = npc.pot;
+                            npc.pot = 0;
+                            npc.busts += 1;
+                            npc.largest_lost = npc.largest_lost.max(lost);
+                        }
+                    }
+                    steps.push(Step::StealFailed { seat, target, lost });
+                    return;
+                }
+            }
+
             // F13: NPCs Stretch at the board-game NPC rate, only where a harder
             // word exists and the accuracy penalty cannot hit the floor.
             let mut stretched = false;
@@ -316,7 +499,6 @@ impl Table {
             }
             steps.push(Step::Rolled { seat, len, doubles, stretched });
             let ok = self.chance(p);
-            let rules = h.rules;
             let npc = &mut self.npcs[i];
             if ok {
                 let factor = if rules.heat {
@@ -337,32 +519,18 @@ impl Table {
                 });
                 npc.pot += pts;
                 npc.streak += 1;
+                npc.hits += 1;
+                npc.longest_len = npc.longest_len.max(len);
                 npc.heat = (npc.heat + 1).min(payout::MAX_HEAT);
                 steps.push(Step::Hit { seat, points: pts, pot: npc.pot });
-                let mine = match npc.personality {
-                    Personality::Cautious => CAUTIOUS_BANK,
-                    Personality::Daring => DARING_BANK,
-                    Personality::Mirror => h.last_bank.unwrap_or(CAUTIOUS_BANK),
-                };
-                let reaches = npc.score + npc.pot >= MARATHON_GOAL;
-                if npc.pot >= mine || reaches {
-                    let amount = npc.pot;
-                    npc.score += amount;
-                    npc.pot = 0;
-                    npc.heat = 0;
-                    npc.banks += 1;
-                    npc.largest_banked = npc.largest_banked.max(amount);
-                    steps.push(Step::Banked { seat, amount, score: npc.score });
-                    if npc.score >= MARATHON_GOAL {
-                        self.winner = Some(seat);
-                        h.force_end(super::End::Goal);
-                        steps.push(Step::Won { seat });
-                    }
+                if self.npc_should_bank(h, i) {
+                    self.npc_bank(h, i, seat, steps);
                     return;
                 }
             } else {
                 npc.streak = 0;
                 npc.heat = 0;
+                npc.misses += 1;
                 if npc.pot > 0 {
                     if npc.ward {
                         npc.ward = false;
@@ -379,6 +547,49 @@ impl Table {
                     steps.push(Step::Bust { seat, lost: 0 });
                 }
                 return; // a miss ends the turn
+            }
+        }
+    }
+
+    /// Does NPC `i` bank now? Its personality's threshold, or the moment a Bank
+    /// would reach the goal. In the Final Round it ignores the threshold and
+    /// banks only once it can beat the best banked score (D-R18's one turn).
+    fn npc_should_bank(&self, h: &Session, i: usize) -> bool {
+        let npc = &self.npcs[i];
+        let total = npc.score + npc.pot;
+        if self.final_active() {
+            let seat = i + 1;
+            let best_other = (0..self.seats()).filter(|s| *s != seat).map(|s| self.score_of(h, s)).max().unwrap_or(0);
+            return total > best_other;
+        }
+        let mine = match npc.personality {
+            Personality::Cautious => CAUTIOUS_BANK,
+            Personality::Daring => DARING_BANK,
+            Personality::Mirror => h.last_bank.unwrap_or(CAUTIOUS_BANK),
+        };
+        npc.pot >= mine || total >= MARATHON_GOAL
+    }
+
+    fn npc_bank(&mut self, h: &mut Session, i: usize, seat: usize, steps: &mut Vec<Step>) {
+        let lastcall = h.rules.lastcall;
+        let npc = &mut self.npcs[i];
+        let amount = npc.pot;
+        npc.score += amount;
+        npc.pot = 0;
+        npc.heat = 0;
+        npc.banks += 1;
+        npc.largest_banked = npc.largest_banked.max(amount);
+        steps.push(Step::Banked { seat, amount, score: npc.score });
+        let reached = npc.score >= MARATHON_GOAL;
+        if reached && !self.final_active() {
+            if lastcall {
+                // F16: the others get one final turn each.
+                self.open_final(seat);
+                steps.push(Step::FinalRound { leader: seat });
+            } else {
+                self.winner = Some(seat);
+                h.force_end(super::End::Goal);
+                steps.push(Step::Won { seat });
             }
         }
     }

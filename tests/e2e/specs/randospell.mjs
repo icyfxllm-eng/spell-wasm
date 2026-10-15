@@ -45,6 +45,15 @@ const FLAG_TABLE = () => {
   localStorage.setItem('spell_flag_randospell_npc', 'on');
   localStorage.setItem('spell_flag_randospell_heat', 'on');
 };
+// v1.1 Phase G: the table with Steal and the Final Round on.
+const FLAG_G = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'on');
+  localStorage.setItem('spell_flag_randospell_npc', 'on');
+  localStorage.setItem('spell_flag_randospell_heat', 'on');
+  localStorage.setItem('spell_flag_randospell_steal', 'on');
+  localStorage.setItem('spell_flag_randospell_lastcall', 'on');
+};
 const FLAG_JR_TABLE = () => {
   localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_jr', 'on');
@@ -727,5 +736,117 @@ export async function run(browser, base, suite) {
       assert(st.table.pots[1] === 0, 'a racer has a pot');
       assert(await page.evaluate(() => document.getElementById('rsPot').hidden), 'Jr shows a pot');
     } finally { await ctx.close(); }
+  });
+  // ---- v1.1 Phase G: Steal and the Final Round ---------------------------------
+  const openG = async (mode) => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: FLAG_G });
+    await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
+    await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+    await o.page.click(`#rsModes [data-m="${mode}"]`);
+    if (mode === 'table') await o.page.click('#rsNpcCfg [data-n="2"]');
+    await o.page.click('#rsStart');
+    await o.page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+    if (mode === 'table') await settledTable(o.page);
+    return o;
+  };
+
+  // One step of a scripted human who always spells right and never banks, from
+  // whatever state the screen is in. Returns the state it acted on.
+  const step = async (page, { steal = false } = {}) => {
+    const st = await state(page);
+    if (st.table && st.table.busy) {
+      await page.waitForFunction(() => { const x = JSON.parse(window.__spelltest.randospellState() || 'null'); return !x || !x.table || !x.table.busy; }, null, { timeout: 15000 });
+      return st;
+    }
+    if (st.deciding) { await page.click('#rsRollAgain'); return st; }
+    if (st.choosing) {
+      if (steal && st.stealOptions.length) return st; // the caller handles the steal
+      await page.click('#rsCharms [data-b="listen"]');
+      return st;
+    }
+    if (st.spelling) {
+      const before = await page.evaluate(() => window.__spelltest.randospellState());
+      await type(page, st.word);
+      await page.click('#rsGo');
+      await settled(page, before);
+      return st;
+    }
+    await page.click('#rsOrb');
+    return st;
+  };
+
+  await suite.test('randospell_g_a_goal_bank_opens_the_final_round_instead_of_ending_the_game', async () => {
+    const { ctx, page } = await openG('table');
+    try {
+      await page.evaluate(() => window.__spelltest.randospellScore(99));
+      let st = await rollV11(page, {});
+      await finish(page, st.word, true);
+      await page.click('#rsBank');
+      // The NPCs each take one final turn, then it settles on its own.
+      await page.waitForSelector('#rsOver:not([hidden])', { timeout: 30000 });
+      const end = await state(page);
+      assert(end.table.finalLeader === 0, `the final round was not opened by the human: ${JSON.stringify(end.table)}`);
+      assert(end.table.finalPending.length === 0, 'someone still owes a final turn');
+      assert(end.table.winner !== null, 'no winner');
+      assert(await page.evaluate(() => document.getElementById('rsOverExit') !== null), 'no way out');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_g_the_final_round_banner_is_words_not_only_a_colour', async () => {
+    const { ctx, page } = await openG('table');
+    try {
+      await page.evaluate(() => window.__spelltest.randospellScore(99));
+      let st = await rollV11(page, {});
+      await finish(page, st.word, true);
+      await page.click('#rsBank');
+      const seen = await page.waitForFunction(() => {
+        const el = document.getElementById('rsFinal');
+        return el && !el.hidden && el.textContent.trim().length > 3;
+      }, null, { timeout: 15000 }).then(() => true).catch(() => false);
+      assert(seen, 'no Final Round banner');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_g_steal_moves_floor_half_and_leaves_the_rest', async () => {
+    const { ctx, page } = await openG('table');
+    try {
+      await page.evaluate(() => window.__spelltest.randospellNpcPot(1, 21));
+      let done = false;
+      for (let i = 0; i < 200 && !done; i++) {
+        const st = await step(page, { steal: true });
+        if (st.choosing && st.stealOptions.length) {
+          assert(st.rolled === 7, `a steal on a roll of ${st.rolled}`);
+          assert(st.stealOptions.some(([seat, pot]) => seat === 1 && pot === 21), `options ${JSON.stringify(st.stealOptions)}`);
+          const potBefore = st.pot;
+          await page.click('#rsCharms [data-b="steal:1"]');
+          await page.click('#rsCharms [data-b="listen"]');
+          await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+          const w = await state(page);
+          assert(w.roll === 7 && [...w.word].length === 7, `the steal word is not 7 letters: ${w.word}`);
+          assert(w.wordTier >= 2, `a steal word from tier ${w.wordTier}, wanted Hard or Expert`);
+          const after = await finish(page, w.word, true);
+          assert(after.pot === potBefore + 10, `pot ${after.pot}, wanted ${potBefore + 10}`);
+          assert(after.table.pots[1] === 11, `target kept ${after.table.pots[1]}, wanted 11`);
+          assert(after.deciding, 'no Bank / Roll again after a landed steal');
+          done = true;
+        }
+      }
+      assert(done, 'no roll of 7 in 200 steps');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_g_i18_steal_is_never_offered_in_solo_marathon_or_sprint', async () => {
+    for (const mode of ['marathon', 'sprint']) {
+      const { ctx, page } = await openG(mode);
+      try {
+        for (let i = 0; i < 90; i++) {
+          const st = await state(page);
+          if (st.ended) break;
+          assert(st.stealOptions.length === 0, `${mode} offered a steal`);
+          assert(await page.evaluate(() => document.querySelector('#rsCharms [data-b^="steal"]') === null), `${mode} shows a steal button`);
+          await step(page);
+        }
+      } finally { await ctx.close(); }
+    }
   });
 }

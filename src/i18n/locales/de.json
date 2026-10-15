@@ -1080,5 +1080,14 @@
   "rs.npc.count": "Computerspieler",
   "rs.diff.easy": "Leicht",
   "rs.diff.normal": "Mittel",
-  "rs.diff.tough": "Schwer"
+  "rs.diff.tough": "Schwer",
+  "rs.steal": "Von {name} stehlen ({n})",
+  "rs.stealHit": "Du hast {n} gestohlen!",
+  "rs.stealFail": "Der Diebstahl ist misslungen.",
+  "rs.npcStole": "{name} stiehlt {n} von {target}",
+  "rs.npcStealFail": "Der Diebstahl von {name} misslingt",
+  "rs.finalRound": "{name} hat 100 erreicht. Alle anderen haben einen letzten Zug.",
+  "rs.finalBanner": "Schlussrunde",
+  "rs.finalTurn": "Übertriff {n}, um zu gewinnen.",
+  "rs.playerN": "Spieler {n}"
 }
