@@ -710,3 +710,31 @@ fn a1_every_eligible_language_matches_its_remapped_triangle() {
         }
     }
 }
+
+// ---- D10: what the player owns --------------------------------------------
+
+use crate::entitlements::AccessLevel::{Full, None as NoAccess, Preview};
+
+#[test]
+fn d10_preview_pools_only_the_first_tier_and_full_pools_all() {
+    let full = Bank::for_lang_at("es", Standard, Full);
+    let prev = Bank::for_lang_at("es", Standard, Preview);
+    for len in 2..=12 {
+        assert!(prev.of_len(len).iter().all(|e| e.tier == 0), "length {len}: a Preview bank holds a paid tier");
+    }
+    assert!(prev.cov.counts.iter().sum::<usize>() < full.cov.counts.iter().sum::<usize>());
+    assert!(Bank::for_lang_at("es", Standard, NoAccess).cov.counts.iter().all(|n| *n == 0));
+    assert_eq!(Bank::for_lang("es", Standard).cov, full.cov, "for_lang is the Full bank");
+}
+
+#[test]
+fn d10_a_preview_bank_that_cannot_carry_the_die_is_absent_not_padded() {
+    // es Easy alone covers five lengths; the floor is six, so a Preview Spanish
+    // player does not get the mode (and nothing is padded to make it appear).
+    assert!(!super::bank::eligible_at("es", Standard, Preview));
+    assert!(super::bank::eligible_at("es", Standard, Full));
+    // English is Full in the free tier, so it is simply free.
+    assert!(super::bank::eligible_at("en", Standard, Full));
+    // Jr is free (D10): a Jr bank does not depend on the level.
+    assert_eq!(Bank::for_lang_at("en", Junior, Preview).cov, Bank::for_lang_at("en", Junior, Full).cov);
+}

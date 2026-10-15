@@ -1,5 +1,6 @@
 //! The length-indexed word supply and its coverage (D3, D4, D12).
 
+use crate::entitlements::AccessLevel;
 use crate::wordsearch::lexicon::graphemes;
 
 /// D4: a length with fewer words than this is not a die face.
@@ -147,9 +148,20 @@ impl Bank {
     /// with the profanity, audio and proper-noun gates the other modes apply
     /// (D11). Tier indexes are positions on the full ladder.
     pub fn for_lang(lang: &str, exp: crate::experience::Experience) -> Bank {
+        Bank::for_lang_at(lang, exp, AccessLevel::Full)
+    }
+
+    /// As `for_lang`, for what `level` owns in `lang` (CC-RANDOSPELL D10):
+    /// Full pools every allowed tier, Preview only the tiers the entitlement
+    /// core's `preview_allows` grants (the first), and None nothing. Spell Jr is
+    /// free (D10) and follows its own tier policy, not this level.
+    pub fn for_lang_at(lang: &str, exp: crate::experience::Experience, level: AccessLevel) -> Bank {
         let mut rows = Vec::new();
         for name in crate::experience::allowed_tiers(exp, MODE_ID) {
             let t = crate::consts::TIER_ORDER.iter().position(|x| *x == name).unwrap_or(0);
+            if !tier_owned(lang, exp, level, t) {
+                continue;
+            }
             for row in crate::words::tier_for(lang, name) {
                 let w = row.split('|').next().unwrap_or(row);
                 if crate::profanity::is_blocked(w) || !crate::audio_verdict::servable(lang, w, "normal") {
@@ -170,10 +182,31 @@ impl Bank {
     }
 }
 
+/// D10: does `level` own tier `t` (0-based) of `lang`? English is Full in the
+/// free tier, so it is all free; every other language is Preview, which owns
+/// the first tier only, until SpellGame Complete makes it Full.
+pub fn tier_owned(lang: &str, exp: crate::experience::Experience, level: AccessLevel, t: usize) -> bool {
+    if exp == crate::experience::Experience::Junior {
+        return true;
+    }
+    match level {
+        AccessLevel::Full => true,
+        AccessLevel::Preview => crate::entitlements::preview_allows(lang, crate::entitlements::GameMode::Standard, t as u32 + 1),
+        AccessLevel::None => false,
+    }
+}
+
 /// F9/D1/I6: is Randospell offered for this language at all? Pure of any
 /// remote flag: the hub additionally needs `flags::randospell()`.
 pub fn eligible(lang: &str, exp: crate::experience::Experience) -> bool {
     !INELIGIBLE.contains(&lang) && Bank::for_lang(lang, exp).cov.viable()
+}
+
+/// D10: is it offered for what this player owns? Preview pools only the first
+/// tier, and where that bank cannot carry the die the mode is ABSENT for that
+/// player, never locked or padded.
+pub fn eligible_at(lang: &str, exp: crate::experience::Experience, level: AccessLevel) -> bool {
+    !INELIGIBLE.contains(&lang) && Bank::for_lang_at(lang, exp, level).cov.viable()
 }
 
 /// Phase D: is the Spell Jr variant offered for this language? The ineligible

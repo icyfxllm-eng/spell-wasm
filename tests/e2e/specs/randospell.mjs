@@ -5,7 +5,15 @@
 // (__spelltest.randospellState), the way boardgame.mjs does.
 import { openApp, assert } from '../harness.mjs';
 
-const FLAG = () => { localStorage.setItem('spell_flag_randospell', 'on'); };
+// The shipped defaults are randospell + marathon ON, daily/h2h/jr OFF; every test states
+// the flags it means so a default change cannot silently change what it proves.
+const FLAG = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'off');
+  localStorage.setItem('spell_flag_randospell_daily', 'off');
+  localStorage.setItem('spell_flag_randospell_h2h', 'off');
+  localStorage.setItem('spell_flag_randospell_jr', 'off');
+};
 const FLAG_ALL = () => {
   localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
@@ -15,9 +23,15 @@ const FLAG_ALL = () => {
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const FLAG_JR = () => {
   localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'off');
   localStorage.setItem('spell_flag_randospell_jr', 'on');
 };
-const FLAG_M = () => { localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_flag_randospell_marathon', 'on'); };
+const FLAG_M = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'on');
+  localStorage.setItem('spell_flag_randospell_daily', 'off');
+  localStorage.setItem('spell_flag_randospell_h2h', 'off');
+};
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.randospellState() || 'null'));
 
 export async function run(browser, base, suite) {
@@ -415,15 +429,35 @@ export async function run(browser, base, suite) {
   });
 
   await suite.test('randospell_a9_the_info_sheet_lists_a_remap_where_one_exists', async () => {
-    const infoLines = async (lang) => {
-      const { ctx, page } = await open({ lang, start: false });
+    // es needs Full for a viable bank (D10), so the dev entitlement door is on here.
+    const DEV = () => { localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_dev_entitlements', 'on'); };
+    const infoLines = async (lang, init) => {
+      const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init });
       try {
-        return await page.evaluate(() => [...document.querySelectorAll('#rsInfo li')].map((li) => li.textContent.trim()));
-      } finally { await ctx.close(); }
+        await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
+        await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+        return await o.page.evaluate(() => [...document.querySelectorAll('#rsInfo li')].map((li) => li.textContent.trim()));
+      } finally { await o.ctx.close(); }
     };
-    const es = await infoLines('es');
+    const es = await infoLines('es', DEV);
     assert(es.length >= 1 && es.some((t) => /2/.test(t) && /3/.test(t)), `es lists no 2 -> 3 remap: ${JSON.stringify(es)}`);
-    const en = await infoLines('en');
+    const en = await infoLines('en', FLAG);
     assert(en.length === 0, `en has full coverage but lists remaps: ${JSON.stringify(en)}`);
+  });
+
+  await suite.test('randospell_d10_preview_owns_the_first_tier_and_an_unviable_bank_is_absent', async () => {
+    // Free tier: es is Preview (first tier only). Its Easy bank cannot carry the
+    // die, so the mode is absent for that player: Start is dead and says why.
+    const es = await open({ lang: 'es', start: false });
+    try {
+      assert(await es.page.evaluate(() => document.getElementById('rsStart').disabled), 'es at Preview can start');
+    } finally { await es.ctx.close(); }
+    // ru's Easy bank does carry it: Start is live and only Easy is offered.
+    const ru = await open({ lang: 'ru', start: false });
+    try {
+      assert(!(await ru.page.evaluate(() => document.getElementById('rsStart').disabled)), 'ru at Preview cannot start');
+      const tiers = await ru.page.evaluate(() => [...document.querySelectorAll('#rsTiers [data-t]')].map((b) => b.dataset.t));
+      assert(tiers.join() === '0', `Preview offers tiers ${tiers}`);
+    } finally { await ru.ctx.close(); }
   });
 }

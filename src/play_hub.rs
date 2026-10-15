@@ -168,7 +168,12 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
     }
     // Phase D: Spell Jr sees Randospell only with randospell_jr on and a bank
     // that carries the Jr die. Computed before `lang` moves into the context.
-    let jr_hides_randospell = kid && randospell_blocked_for_jr(&lang);
+    // D10: the same for a standard profile and what it owns in this language.
+    let jr_hides_randospell = if kid {
+        randospell_blocked_for_jr(&lang)
+    } else {
+        randospell_blocked_for_level(&lang, ent.lang_level(&lang))
+    };
     modes::HubCtx {
         kid,
         // PLATFORM gate for the hub: is this iOS at all? (not "is the speech plugin
@@ -197,6 +202,20 @@ fn randospell_blocked_for_jr(lang: &str) -> bool {
 
 #[cfg(feature = "web")]
 fn randospell_blocked_for_jr(_lang: &str) -> bool {
+    false
+}
+
+/// CC-RANDOSPELL D10: Preview owns only the first tier, so where that bank
+/// cannot carry the die the tile is absent for that player.
+#[cfg(not(feature = "web"))]
+fn randospell_blocked_for_level(lang: &str, level: entitlements::AccessLevel) -> bool {
+    // Only pay for the bank build when the mode is on at all.
+    crate::flags::randospell()
+        && !crate::randospell::bank::eligible_at(lang, crate::experience::Experience::Standard, level)
+}
+
+#[cfg(feature = "web")]
+fn randospell_blocked_for_level(_lang: &str, _level: entitlements::AccessLevel) -> bool {
     false
 }
 

@@ -235,15 +235,37 @@ fn exp() -> Experience {
     if KID.with(Cell::get) { Experience::Junior } else { Experience::Standard }
 }
 
+/// What the player owns in `lang` (D10): the app's one entitlement resolution.
+fn level_of(lang: &str) -> crate::entitlements::AccessLevel {
+    crate::play_hub::live_entitlements().lang_level(lang)
+}
+
+/// The tiers this player may pool and pick: Full owns every allowed tier,
+/// Preview the first, and Jr follows its own policy (free, D10).
+fn owned_tiers(lang: &str) -> Vec<usize> {
+    let level = level_of(lang);
+    crate::experience::allowed_tiers(exp(), MODE_ID)
+        .iter()
+        .filter_map(|name| crate::consts::TIER_ORDER.iter().position(|t| t == name))
+        .filter(|ix| bank::tier_owned(lang, exp(), level, *ix))
+        .collect()
+}
+
 fn render_setup() {
     let lang = LANG.with(|l| l.borrow().clone());
     let kid = KID.with(Cell::get);
+    let level = level_of(&lang);
     let ok = if kid {
         crate::flags::randospell_jr() && bank::jr_eligible(&lang)
     } else {
-        bank::eligible(&lang, Experience::Standard)
+        bank::eligible_at(&lang, Experience::Standard, level)
     };
-    let allowed = crate::experience::allowed_tiers(Experience::Standard, MODE_ID);
+    let owned = owned_tiers(&lang);
+    // A tier the player does not own cannot stay selected.
+    if !kid && !owned.is_empty() && !owned.contains(&TIER.with(Cell::get)) {
+        TIER.with(|t| t.set(owned[0]));
+    }
+    let allowed: Vec<&str> = owned.iter().map(|ix| crate::consts::TIER_ORDER[*ix]).collect();
     let sel = TIER.with(Cell::get);
     let btns: String = allowed
         .iter()
@@ -261,7 +283,14 @@ fn render_setup() {
     dom::set_html("rsTiers", &if kid { String::new() } else { btns });
     // The picker exists only when there is a choice to make.
     let kind = KIND.with(Cell::get);
-    let offered: Vec<Kind> = Kind::ALL.iter().copied().filter(|k| k.enabled()).collect();
+    // D10: Daily is one shared game for everyone, so it needs the full bank:
+    // a Preview player (first tier only) would see different words. Absent, not locked.
+    let offered: Vec<Kind> =
+        Kind::ALL.iter().copied().filter(|k| k.enabled() && (*k != Kind::Daily || level == crate::entitlements::AccessLevel::Full)).collect();
+    if !offered.contains(&kind) {
+        KIND.with(|m| m.set(Kind::Sprint));
+    }
+    let kind = KIND.with(Cell::get);
     let modes: String = if offered.len() > 1 && !kid {
         offered
             .iter()
@@ -281,7 +310,7 @@ fn render_setup() {
     dom::set_html("rsModes", &modes);
     // D4: a remap is shown, never silent ("12 plays as 11").
     let info = if ok {
-        let cov = Bank::for_lang(&lang, exp()).cov;
+        let cov = Bank::for_lang_at(&lang, exp(), level).cov;
         // Jr lists remaps in die faces (F7); everyone else in word lengths.
         let pairs: Vec<(usize, usize)> = if kid {
             cov.jr_remaps().into_iter().map(|(a, b)| (a as usize, b as usize)).collect()
@@ -341,18 +370,26 @@ fn start() {
     finish_record();
     let lang = LANG.with(|l| l.borrow().clone());
     let kid = KID.with(Cell::get);
+    let level = level_of(&lang);
     let allowed = if kid {
         crate::flags::randospell_jr() && bank::jr_eligible(&lang)
     } else {
-        bank::eligible(&lang, Experience::Standard)
+        bank::eligible_at(&lang, Experience::Standard, level)
     };
     if !allowed {
         return;
     }
-    // Jr has no tier choice: it pools Easy and Medium and prefers the easier.
-    let tier = if kid { 0 } else { TIER.with(Cell::get) };
     let kind = KIND.with(Cell::get);
-    let bank = Bank::for_lang(&lang, exp());
+    if kind == Kind::Daily && level != crate::entitlements::AccessLevel::Full {
+        return; // D10: Daily needs the full bank
+    }
+    // Jr has no tier choice: it pools Easy and Medium and prefers the easier.
+    let mut tier = if kid { 0 } else { TIER.with(Cell::get) };
+    let owned = owned_tiers(&lang);
+    if !kid && !owned.contains(&tier) {
+        tier = owned.first().copied().unwrap_or(0);
+    }
+    let bank = Bank::for_lang_at(&lang, exp(), level);
     let entries: Vec<String> = bank.words().map(str::to_string).collect();
     let keys = input::layout(&lang, kid, &entries);
     let day = day();

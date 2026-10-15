@@ -195,21 +195,23 @@ pub fn board_streak() -> bool {
     resolve(stored("boardStreak").as_deref(), true)
 }
 
-/// CC-RANDOSPELL v1 F9 -- the dice-driven spelling mode. **Default OFF** (spec
-/// F9: every Randospell flag defaults off). Flip with
-/// `localStorage['spell_flag_randospell'] = 'on'`. Compiled out with the mode on
+/// CC-RANDOSPELL v1 F9 -- the dice-driven spelling mode. **Default ON** for the
+/// first TestFlight cut (Eric, 2026-10-14: "good to go for shipping"), with
+/// `randospell_marathon`. Daily, Head-to-Head and Jr stay default OFF until
+/// their device pass. Kill it with
+/// `localStorage['spell_flag_randospell'] = 'off'`. Compiled out with the mode on
 /// the site build (O3). Per-language eligibility is `randospell::bank::eligible`
 /// and the registry's language list, not this flag (D1).
 #[cfg(not(feature = "web"))]
 pub fn randospell() -> bool {
-    resolve(stored("randospell").as_deref(), false)
+    resolve(stored("randospell").as_deref(), true)
 }
 
 /// CC-RANDOSPELL F9: Marathon (Phase B). Needs `randospell`.
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_marathon() -> bool {
-    randospell() && resolve(stored("randospell_marathon").as_deref(), false)
+    randospell() && resolve(stored("randospell_marathon").as_deref(), true)
 }
 
 /// CC-RANDOSPELL F9: Daily (Phase C). Needs `randospell`.
@@ -572,6 +574,19 @@ mod tests {
         assert!(resolve(None, true));
         assert!(!resolve(None, false));
         assert!(resolve(Some("garbage"), true));
+    }
+
+    /// CC-RANDOSPELL: the first cut ships Sprint and Marathon; Daily, Head-to-Head
+    /// and Jr stay dark until their device pass, and every sub-flag needs the mode.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn randospell_defaults_are_sprint_and_marathon_only() {
+        set_test_override(None);
+        assert!(randospell() && randospell_marathon());
+        assert!(!randospell_daily() && !randospell_h2h() && !randospell_jr());
+        set_test_override(Some("off"));
+        assert!(!randospell() && !randospell_marathon(), "the mode flag is the kill switch");
+        set_test_override(None);
     }
 
     #[test]
