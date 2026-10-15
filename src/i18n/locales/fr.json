@@ -1104,5 +1104,8 @@
   "qbd.best": "Meilleur score dessiné : {n}",
   "qbd.drawn": "Nouveau record, dessiné",
   "qbd.start": "Commencer",
-  "qbd.again": "Rejouer"
+  "qbd.again": "Rejouer",
+  "qbd.rank": "Place {n} sur ton classement dessiné",
+  "qbd.boardTitle": "Dessin · meilleures parties sur cet appareil",
+  "qbd.boardEmpty": "Aucune partie dessinée pour l'instant."
 }

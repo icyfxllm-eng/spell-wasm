@@ -1104,5 +1104,8 @@
   "qbd.best": "手写最高分：{n}",
   "qbd.drawn": "手写新纪录",
   "qbd.start": "开始",
-  "qbd.again": "再玩一次"
+  "qbd.again": "再玩一次",
+  "qbd.rank": "手写榜第 {n} 名",
+  "qbd.boardTitle": "手写 · 本设备最佳成绩",
+  "qbd.boardEmpty": "还没有手写成绩。"
 }

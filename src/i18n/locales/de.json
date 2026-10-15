@@ -1104,5 +1104,8 @@
   "qbd.best": "Beste gezeichnete Punktzahl: {n}",
   "qbd.drawn": "Neue Bestleistung, gezeichnet",
   "qbd.start": "Los geht’s",
-  "qbd.again": "Nochmal spielen"
+  "qbd.again": "Nochmal spielen",
+  "qbd.rank": "Platz {n} in deiner Zeichen-Bestenliste",
+  "qbd.boardTitle": "Gezeichnet · beste Läufe auf diesem Gerät",
+  "qbd.boardEmpty": "Noch keine gezeichneten Läufe."
 }

@@ -1104,5 +1104,8 @@
   "qbd.best": "Pinakamataas na guhit na puntos: {n}",
   "qbd.drawn": "Bagong rekord, guhit",
   "qbd.start": "Simulan",
-  "qbd.again": "Maglaro ulit"
+  "qbd.again": "Maglaro ulit",
+  "qbd.rank": "Ika-{n} sa iyong guhit na listahan",
+  "qbd.boardTitle": "Guhit · pinakamahusay na laro sa device na ito",
+  "qbd.boardEmpty": "Wala pang laro ng pagguhit."
 }

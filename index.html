@@ -798,6 +798,13 @@
   .qbd-act{display:flex;gap:10px;justify-content:center;flex:none;direction:ltr}
   .qbd-card{position:absolute;inset:0;min-height:0;max-height:100%;z-index:2;background:var(--bg,#0e1420);display:flex;flex-direction:column;
     align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;overflow-y:auto}
+  .qbd-board{width:100%;max-width:340px;text-align:start}
+  .qbd-board-h{margin:0 0 4px;font-size:.9rem;opacity:.8}
+  .qbd-board-empty{margin:0;font-size:.85rem;opacity:.7}
+  .qbd-board-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+  .qbd-board-list li{display:grid;grid-template-columns:3em 1fr auto;gap:8px;align-items:baseline;font-size:.9rem;padding:2px 6px;border-radius:6px;background:#ffffff0c}
+  .qbd-board-list li b{font-variant-numeric:tabular-nums}
+  .qbd-board-list li i{font-style:normal;opacity:.7}
   .qbd-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
   /* QUICKBEEDRAW:END */
   /* SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 -- stripped from the site build (O1). No red anywhere (I12, R5). */
@@ -3218,6 +3225,7 @@
       <p data-i18n="qbd.desc">Draw each character against the clock. Every right character scores a point.</p>
       <div class="qbd-opt" id="qbdTiers"></div>
       <div id="qbdBest" aria-live="polite"></div>
+      <div class="qbd-board" id="qbdBoard"></div>
       <button class="btn btn-check" id="qbdStart" data-i18n="qbd.start">Start</button>
     </div>
     <div class="qbd-play" id="qbdPlay" hidden>
@@ -3238,6 +3246,7 @@
     <div class="qbd-card" id="qbdOver" hidden>
       <h3 data-i18n="qbd.over">Time's up!</h3>
       <ul class="qbd-list" id="qbdStats"></ul>
+      <div class="qbd-board" id="qbdOverBoard"></div>
       <button class="btn btn-check" id="qbdAgain" data-i18n="qbd.again">Play again</button>
       <button class="btn mode-leave" id="qbdOverExit" data-i18n="import.close">Close</button>
     </div>

@@ -240,7 +240,10 @@
     "qbd.best",
     "qbd.drawn",
     "qbd.start",
-    "qbd.again"
+    "qbd.again",
+    "qbd.rank",
+    "qbd.boardTitle",
+    "qbd.boardEmpty"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -489,7 +492,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -728,7 +734,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "de": [
       "hub.group.spell_it",
@@ -967,7 +976,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1206,7 +1218,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1445,7 +1460,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1684,7 +1702,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1923,7 +1944,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2162,7 +2186,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2401,7 +2428,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2640,7 +2670,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2879,7 +2912,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3118,7 +3154,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3357,7 +3396,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3596,7 +3638,10 @@
       "qbd.best",
       "qbd.drawn",
       "qbd.start",
-      "qbd.again"
+      "qbd.again",
+      "qbd.rank",
+      "qbd.boardTitle",
+      "qbd.boardEmpty"
     ]
   }
 }

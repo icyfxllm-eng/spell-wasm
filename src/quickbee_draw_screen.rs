@@ -28,18 +28,11 @@ use crate::spelldoku::rng::Rng;
 use crate::wordsearch::ledger::Ledger;
 use crate::{dom, haptics, i18n, speech_out, storage, App};
 
-const STORE_KEY: &str = "spell_quickbee_draw_v1";
+use crate::quickbee_draw::board::{Entry, Store, STORE_KEY};
 const POLL_MS: i32 = 50;
 const TICK_MS: i32 = 100;
 /// More words than a minute can reach, so the pool never runs dry mid-run.
 const WORDS_PER_RUN: usize = 60;
-
-#[derive(Default, serde::Serialize, serde::Deserialize, Clone)]
-struct Store {
-    best: std::collections::BTreeMap<String, u32>,
-    runs: std::collections::BTreeMap<String, u32>,
-    recent: std::collections::BTreeMap<String, Vec<u32>>,
-}
 
 struct Ui {
     run: Run,
@@ -170,7 +163,33 @@ fn render_setup() {
     dom::set_html("qbdTiers", &btns);
     let best = load_store().best.get(&lang).copied().unwrap_or(0);
     dom::set_text("qbdBest", &if best > 0 { i18n::tp("qbd.best", &[("n", &best.to_string())]) } else { String::new() });
+    dom::set_html("qbdBoard", &board_html(&load_store(), &lang));
     dom::set_disabled("qbdStart", owned.is_empty() || crate::quickbee_draw::pool_by_cells(&lang, tier_name(sel)).iter().sum::<usize>() == 0);
+}
+
+/// F3: this device's best drawn runs for one language, labelled "drawn", and
+/// nothing from any other language or from typed Quick Bee (I1, A6).
+fn board_html(st: &Store, lang: &str) -> String {
+    let rows = st.board(lang);
+    let head = format!("<h4 class=\"qbd-board-h\">{}</h4>", dom::escape_html(&i18n::t("qbd.boardTitle")));
+    if rows.is_empty() {
+        return format!("{head}<p class=\"qbd-board-empty\">{}</p>", dom::escape_html(&i18n::t("qbd.boardEmpty")));
+    }
+    let li: String = rows
+        .iter()
+        .enumerate()
+        .map(|(i, e)| {
+            format!(
+                "<li data-rank=\"{}\" data-score=\"{}\"><b>{}</b><span>{}</span><i>{}</i></li>",
+                i + 1,
+                e.score,
+                e.score,
+                dom::escape_html(&i18n::tp("qbd.words", &[("n", &e.words.to_string())])),
+                dom::escape_html(&i18n::t(&format!("level.{}", e.tier)))
+            )
+        })
+        .collect();
+    format!("{head}<ol class=\"qbd-board-list\">{li}</ol>")
 }
 
 fn tier_tap(e: web_sys::MouseEvent) {
@@ -409,16 +428,10 @@ fn end() {
     with_ui(|u| u.recorded = true);
     let lang = LANG.with(|l| l.borrow().clone());
     let mut st = load_store();
-    let best = st.best.entry(lang.clone()).or_default();
-    let new_best = score > *best;
-    *best = (*best).max(score);
-    *st.runs.entry(lang.clone()).or_default() += 1;
-    let recent = st.recent.entry(lang.clone()).or_default();
-    recent.push(score);
-    if recent.len() > 10 {
-        recent.remove(0);
-    }
-    let best_now = *st.best.get(&lang).unwrap_or(&0);
+    let tier = with_ui(|u| u.run.tier.clone()).unwrap_or_default();
+    let day = (js_sys::Date::now() / 86_400_000.0) as u32;
+    let rec = st.record(&lang, Entry { score, words, tier, day });
+    let (new_best, best_now) = (rec.new_best, rec.best);
     storage::set_json(STORE_KEY, &st);
     record_history();
     unmount_pad();
@@ -429,10 +442,15 @@ fn end() {
         i18n::tp("qbd.words", &[("n", &words.to_string())]),
         i18n::tp("qbd.best", &[("n", &best_now.to_string())]),
     ];
+    // F3: where this run sits on the DRAWN board for this language, and the board.
+    if let Some(r) = rec.rank {
+        lines.push(i18n::tp("qbd.rank", &[("n", &r.to_string())]));
+    }
     if new_best && score > 0 {
         lines.push(i18n::t("qbd.drawn"));
     }
     let _ = ended;
+    dom::set_html("qbdOverBoard", &board_html(&st, &lang));
     dom::set_html("qbdStats", &lines.iter().map(|l| format!("<li>{}</li>", dom::escape_html(l))).collect::<String>());
     dom::set_hidden("qbdPlay", true);
     dom::set_hidden("qbdOver", false);

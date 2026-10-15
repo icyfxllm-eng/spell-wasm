@@ -1104,5 +1104,8 @@
   "qbd.best": "손글씨 최고 점수: {n}",
   "qbd.drawn": "손글씨 새 기록",
   "qbd.start": "시작",
-  "qbd.again": "다시 하기"
+  "qbd.again": "다시 하기",
+  "qbd.rank": "손글씨 기록 {n}위",
+  "qbd.boardTitle": "손글씨 · 이 기기의 최고 기록",
+  "qbd.boardEmpty": "아직 손글씨 기록이 없어요."
 }

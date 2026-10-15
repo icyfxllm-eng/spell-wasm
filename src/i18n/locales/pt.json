@@ -1104,5 +1104,8 @@
   "qbd.best": "Melhor pontuação desenhada: {n}",
   "qbd.drawn": "Novo recorde, desenhado",
   "qbd.start": "Começar",
-  "qbd.again": "Jogar de novo"
+  "qbd.again": "Jogar de novo",
+  "qbd.rank": "Posição {n} no seu placar de desenho",
+  "qbd.boardTitle": "Desenho · melhores partidas neste dispositivo",
+  "qbd.boardEmpty": "Ainda não há partidas desenhadas."
 }

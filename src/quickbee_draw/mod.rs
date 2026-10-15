@@ -22,6 +22,7 @@
 //! Everything language-specific lives in `LANGS`; no caller tests a language
 //! code (I6).
 
+pub mod board;
 pub mod run;
 
 use unicode_normalization::UnicodeNormalization;

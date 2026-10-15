@@ -1104,5 +1104,8 @@
   "qbd.best": "Alama bora ya kuchora: {n}",
   "qbd.drawn": "Rekodi mpya, kuchora",
   "qbd.start": "Anza",
-  "qbd.again": "Cheza tena"
+  "qbd.again": "Cheza tena",
+  "qbd.rank": "Nafasi ya {n} kwenye ubao wako wa kuchora",
+  "qbd.boardTitle": "Kuchora · raundi bora kwenye kifaa hiki",
+  "qbd.boardEmpty": "Bado hakuna raundi za kuchora."
 }

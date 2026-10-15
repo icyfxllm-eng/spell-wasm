@@ -1104,5 +1104,8 @@
   "qbd.best": "Najlepszy wynik rysowany: {n}",
   "qbd.drawn": "Nowy rekord, rysowany",
   "qbd.start": "Zaczynamy",
-  "qbd.again": "Zagraj ponownie"
+  "qbd.again": "Zagraj ponownie",
+  "qbd.rank": "Miejsce {n} w twoim rankingu rysowania",
+  "qbd.boardTitle": "Rysowanie · najlepsze wyniki na tym urządzeniu",
+  "qbd.boardEmpty": "Brak jeszcze rozegranych rund."
 }

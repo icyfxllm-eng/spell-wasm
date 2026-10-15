@@ -1104,5 +1104,8 @@
   "qbd.best": "Best drawn score: {n}",
   "qbd.drawn": "New best, drawn",
   "qbd.start": "Start",
-  "qbd.again": "Play again"
+  "qbd.again": "Play again",
+  "qbd.rank": "Place {n} on your drawn board",
+  "qbd.boardTitle": "Drawn · best runs on this device",
+  "qbd.boardEmpty": "No drawn runs yet."
 }

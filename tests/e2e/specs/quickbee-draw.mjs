@@ -14,6 +14,16 @@ const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 // Playwright serialises an init script, so it cannot close over variables: one literal
 // function per set of flags.
 const FLAGS = {
+  // zh on, with a drawn score already on the board for Chinese only (A6: the Japanese
+  // query must not see it).
+  zhBoard: () => {
+    localStorage.setItem('spell_flag_quickbee_draw_zh', 'on');
+    localStorage.setItem('spell_flag_quickbee_draw_ja', 'on');
+    localStorage.setItem('spell_quickbee_draw_v1', JSON.stringify({
+      best: { zh: 41 }, runs: { zh: 1 }, recent: { zh: [41] },
+      top: { zh: [{ score: 41, words: 20, tier: 'easy', day: 20000 }] },
+    }));
+  },
   zh: () => { localStorage.setItem('spell_flag_quickbee_draw_zh', 'on'); },
   ja: () => { localStorage.setItem('spell_flag_quickbee_draw_ja', 'on'); },
   all: () => { for (const l of ['zh', 'ja', 'ko']) localStorage.setItem(`spell_flag_quickbee_draw_${l}`, 'on'); },
@@ -158,5 +168,55 @@ export async function run(browser, base, suite) {
       for (const w of s.served) { assert(!seen.has(w), `${w} repeated`); seen.add(w); }
       assert(s.served.length >= 20, `only ${s.served.length} served`);
     } finally { await ctx.close(); }
+  });
+  await suite.test('quickbee_draw_c_the_board_is_per_language_and_labelled_drawn', async () => {
+    const zh = await openApp(browser, base, { lang: 'zh', viewport: { width: 390, height: 844 }, init: FLAGS.zhBoard });
+    try {
+      await asNative(zh.page);
+      await zh.page.evaluate(() => document.getElementById('qbdOpenBtn').click());
+      await zh.page.waitForSelector('#qbdScreen.show', { timeout: 8000 });
+      const rows = await zh.page.$$eval('#qbdBoard li', (l) => l.map((x) => x.dataset.score));
+      assert(rows.join() === '41', `the zh board shows ${rows}`);
+      assert(await zh.page.evaluate(() => document.querySelector('#qbdBoard .qbd-board-h').textContent.length > 3), 'the board has no label');
+    } finally { await zh.ctx.close(); }
+    const ja = await openApp(browser, base, { lang: 'ja', viewport: { width: 390, height: 844 }, init: FLAGS.zhBoard });
+    try {
+      await asNative(ja.page);
+      await ja.page.evaluate(() => document.getElementById('qbdOpenBtn').click());
+      await ja.page.waitForSelector('#qbdScreen.show', { timeout: 8000 });
+      const rows = await ja.page.$$eval('#qbdBoard li', (l) => l.length);
+      assert(rows === 0, `the ja board shows another language's rows: ${rows}`);
+      assert(await ja.page.evaluate(() => document.querySelector('#qbdBoard .qbd-board-empty') !== null), 'no empty state');
+    } finally { await ja.ctx.close(); }
+  });
+
+  await suite.test('quickbee_draw_c_a_finished_run_is_placed_on_the_board_with_its_rank', async () => {
+    const { ctx, page } = await open('zh');
+    try {
+      await begin(page);
+      await draw(page, 'right');
+      await draw(page, 'right');
+      await page.evaluate(() => window.__spelltest.qbdAge(61000));
+      await page.waitForSelector('#qbdOver:not([hidden])', { timeout: 5000 });
+      const stats = await page.$$eval('#qbdStats li', (l) => l.map((x) => x.textContent));
+      assert(stats.length >= 3, `end card lines: ${stats}`);
+      const board = await page.$$eval('#qbdOverBoard li', (l) => l.map((x) => ({ r: x.dataset.rank, s: x.dataset.score })));
+      assert(board.length === 1 && board[0].r === '1' && Number(board[0].s) >= 2, `board ${JSON.stringify(board)}`);
+      // The score is stored for Chinese under the device's own key, nowhere else.
+      const keys = await page.evaluate(() => Object.keys(localStorage).filter((k) => /quickbee/i.test(k) && !k.startsWith('spell_flag_')));
+      assert(keys.join() === 'spell_quickbee_draw_v1', `unexpected keys: ${keys}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('quickbee_draw_c_spell_jr_has_no_entry_no_pad_and_no_board', async () => {
+    const jr = await openApp(browser, base, { lang: 'zh', age: KID, init: FLAGS.zhBoard });
+    try {
+      await asNative(jr.page);
+      assert(!(await modes(jr.page)).includes('quickbee_draw'), 'Jr is offered the draw variant');
+      // A direct call is refused too: the screen does not open and no board renders.
+      await jr.page.evaluate(() => document.getElementById('qbdOpenBtn').click());
+      assert(await jr.page.evaluate(() => !document.getElementById('qbdScreen').classList.contains('show')), 'the screen opened for Jr');
+      assert(await jr.page.evaluate(() => document.getElementById('qbdBoard').children.length === 0), 'a leaderboard rendered for Jr');
+    } finally { await jr.ctx.close(); }
   });
 }

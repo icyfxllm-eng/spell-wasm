@@ -1104,5 +1104,8 @@
   "qbd.best": "Điểm vẽ cao nhất: {n}",
   "qbd.drawn": "Kỷ lục mới, vẽ",
   "qbd.start": "Bắt đầu",
-  "qbd.again": "Chơi lại"
+  "qbd.again": "Chơi lại",
+  "qbd.rank": "Hạng {n} trên bảng vẽ của bạn",
+  "qbd.boardTitle": "Vẽ · các lượt chơi tốt nhất trên thiết bị này",
+  "qbd.boardEmpty": "Chưa có lượt vẽ nào."
 }
