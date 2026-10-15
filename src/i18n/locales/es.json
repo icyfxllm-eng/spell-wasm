@@ -1049,5 +1049,14 @@
   "rs.jrWord": "La palabra era {word}. ¡A por la siguiente!",
   "rs.jrDone": "¡Bien hecho!",
   "rs.jrCount": "{n} palabras bien deletreadas",
-  "rs.bestStreak": "Mejor racha: {n}"
+  "rs.bestStreak": "Mejor racha: {n}",
+  "rs.call": "Adivina la tirada",
+  "rs.call.low": "Baja 2–6",
+  "rs.call.seven": "Siete",
+  "rs.call.high": "Alta 8–12",
+  "rs.stretch": "Reto ×1,5 (palabra más difícil)",
+  "rs.ear": "Sin repetir ×1,5",
+  "rs.listen": "Escuchar",
+  "rs.heat": "Calor {n}",
+  "rs.glow": "¡Dobles ×2!"
 }

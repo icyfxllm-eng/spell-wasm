@@ -1049,5 +1049,14 @@
   "rs.jrWord": "Le mot était {word}. Passons au suivant !",
   "rs.jrDone": "Bravo !",
   "rs.jrCount": "{n} mots bien épelés",
-  "rs.bestStreak": "Meilleure série : {n}"
+  "rs.bestStreak": "Meilleure série : {n}",
+  "rs.call": "Devine le lancer",
+  "rs.call.low": "Bas 2–6",
+  "rs.call.seven": "Sept",
+  "rs.call.high": "Haut 8–12",
+  "rs.stretch": "Défi ×1,5 (mot plus dur)",
+  "rs.ear": "Sans réécoute ×1,5",
+  "rs.listen": "Écouter",
+  "rs.heat": "Chaleur {n}",
+  "rs.glow": "Double ×2 !"
 }

@@ -48,12 +48,14 @@
 
 pub mod bank;
 pub mod daily;
+pub mod payout;
 pub mod store;
 #[cfg(test)]
 mod tests;
 
 use crate::spelldoku::rng::Rng;
 pub use bank::Bank;
+pub use payout::{Call, Rules};
 
 pub const SPRINT_GOAL: u32 = 50;
 pub const MARATHON_GOAL: u32 = 100;
@@ -111,13 +113,28 @@ pub fn multiplied(base: u32) -> u32 {
 /// player SEES after any D4 remap, the length of `word`, and the number that
 /// scores (A9: the die never shows a length with no words behind it). A jackpot
 /// is a displayed 2 or 12, so a remapped 12 is an ordinary 11.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Roll {
     pub face: u8,
     pub len: usize,
     pub word: String,
     /// The tier file the word came from, 0..=3.
     pub tier: usize,
+    /// F14: the two underlying dice matched (Jr: a roll of 6). Derived from the
+    /// same draw as the sum (I12); the dice themselves are never shown.
+    pub doubles: bool,
+    /// F13/F17: the choices made for this word, locked once it is drawn.
+    pub stretch: bool,
+    pub ear: bool,
+    /// F12: the guess placed before the press.
+    pub call: Option<Call>,
+}
+
+/// What happened, in order, for the Stretch ordering law (I14, A22).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Ev {
+    StretchChosen(bool),
+    WordDrawn { tier: usize },
 }
 
 /// What happened when the roll was answered.
@@ -130,6 +147,12 @@ pub struct Outcome {
     pub streak: u32,
     pub score: u32,
     pub finished: bool,
+    /// v1.1: what shaped the payout, and the heat after this answer.
+    pub doubles: bool,
+    pub stretch: bool,
+    pub ear: bool,
+    pub heat: u8,
+    pub call_bonus: u32,
     /// Marathon: the pot after this answer.
     pub pot: u32,
     /// Marathon: the Ward absorbed a lost pot.
@@ -170,6 +193,7 @@ struct PlayerState {
     largest_lost: u32,
     longest: Option<String>,
     bonus: bool,
+    heat: u8,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -204,6 +228,17 @@ pub struct Session {
     pub best_streak: u32,
     /// Jr: how many tries the pending word has had.
     attempt: u8,
+    /// v1.1: which mechanics are on (all off = v1), set by the screen from flags.
+    pub rules: Rules,
+    /// F11: unbanked correct words in a row, 0..=7.
+    pub heat: u8,
+    /// F12: the guess for the NEXT press; locked on press (D-R15).
+    call: Option<Call>,
+    /// Rolled but the word is not drawn yet (Stretch and Ear are chosen here).
+    rolled: Option<Roll>,
+    /// Audio requests made for the pending word (I15).
+    plays: u8,
+    pub events: Vec<Ev>,
     /// Head-to-Head: 0 or 1, the player on the move.
     pub turn: usize,
     /// Head-to-Head: who banked past the goal.
@@ -217,7 +252,15 @@ pub struct Session {
     dice: Rng,
     words: Rng,
     bank: Bank,
+    /// Words actually served, in order (the no-repeat law, I3, and the history).
     used: Vec<String>,
+    /// Words the NORMAL stream has drawn, served or not: a Stretch swaps the
+    /// served word but the normal stream still advances and the word it drew
+    /// still counts, so a Daily's ordinary words do not depend on who Stretched.
+    drawn: Vec<String>,
+    /// Stretch words, drawn from their own stream.
+    stretch_used: Vec<String>,
+    words_s: Rng,
     avoid: std::collections::BTreeSet<String>,
     pending: Option<Roll>,
 }
@@ -241,6 +284,12 @@ impl Session {
             largest_banked: 0,
             largest_lost: 0,
             deciding: false,
+            rules: Rules::default(),
+            heat: 0,
+            call: None,
+            rolled: None,
+            plays: 0,
+            events: Vec::new(),
             best_streak: 0,
             attempt: 0,
             turn: 0,
@@ -253,6 +302,9 @@ impl Session {
             words: Rng::new(seed ^ 0x0057_0AD5_0000_0002),
             bank,
             used: Vec::new(),
+            drawn: Vec::new(),
+            stretch_used: Vec::new(),
+            words_s: Rng::new(seed ^ 0x57BE_7C4D_0000_0003),
             avoid,
             pending: None,
         }
@@ -275,55 +327,149 @@ impl Session {
         &self.used
     }
 
-    /// F1: the player pressed the orb. The face comes from the dice stream
-    /// right here; nothing the animation does can change it (I1, A3).
-    /// Returns None while a roll is unanswered or after the game has ended.
+    /// F12 / D-R15: the guess for the next roll. It must be placed before the
+    /// orb is pressed and locks on the press. `None` clears it. Not in Jr, and
+    /// only when the Call rule is on.
+    pub fn set_call(&mut self, call: Option<Call>) -> bool {
+        if !self.rules.call || self.mode == Mode::Jr || self.pending.is_some() || self.rolled.is_some() || self.ended.is_some() {
+            return false;
+        }
+        self.call = call;
+        true
+    }
+
+    pub fn call(&self) -> Option<Call> {
+        self.call
+    }
+
+    /// F1: the player pressed the orb. Dice and word at once, with no Stretch or
+    /// Ear choice (v1 behaviour). Use `press_roll` then `reveal` to offer them.
     pub fn press(&mut self) -> Option<Roll> {
-        if self.pending.is_some() || self.ended.is_some() || self.deciding {
+        self.press_roll()?;
+        self.reveal(false, false)
+    }
+
+    /// F1, first half: the dice. The face comes from the dice stream right here;
+    /// nothing the animation does can change it (I1, A3). Returns the roll with
+    /// no word yet, so the screen can offer Stretch and Ear before anything is
+    /// fetched (D-R9). None while a roll is unanswered or after the game ended.
+    pub fn press_roll(&mut self) -> Option<Roll> {
+        if self.pending.is_some() || self.rolled.is_some() || self.ended.is_some() || self.deciding {
             return None;
         }
         let bonus_roll = self.mode == Mode::HeadToHead && self.bonus;
         let jr = self.mode == Mode::Jr;
         // F7: Jr rolls ONE die (1..=6) for a word of face + 1 letters, kept
-        // inside 2..=7 by the remap; everyone else rolls two dice.
-        let face = if jr { self.dice.below(6) as u8 + 1 } else { roll_two_dice(&mut self.dice) };
+        // inside 2..=7 by the remap; everyone else rolls two dice. F14: doubles
+        // come from the same draw as the sum (I12); Jr's lucky face is a 6.
+        let (face, doubles) = if jr {
+            let f = self.dice.below(6) as u8 + 1;
+            (f, f == 6)
+        } else {
+            let (a, b) = roll_two_dice_pair(&mut self.dice);
+            (a + b, a == b)
+        };
         self.rolls += 1;
         let len = if jr {
             self.bank.cov.length_within(face as usize + 1, bank::JR_LO, bank::JR_HI)
         } else {
             self.bank.cov.length_for(face)
         };
-        let word = len.and_then(|l| self.pick(l));
-        match (len, word) {
-            (Some(len), Some((tier, word))) => {
-                self.histogram[len - 2] += 1;
-                if bonus_roll {
-                    self.bonus = false;
-                    self.bonus_roll = true;
-                }
-                self.used.push(word.clone());
-                let r = Roll { face, len, word, tier };
-                self.pending = Some(r.clone());
-                Some(r)
+        let Some(len) = len else {
+            self.exhaust();
+            return None;
+        };
+        self.histogram[len - 2] += 1;
+        if bonus_roll {
+            self.bonus = false;
+            self.bonus_roll = true;
+        }
+        let r = Roll { face, len, doubles, call: self.call.take(), ..Roll::default() };
+        self.rolled = Some(r.clone());
+        self.plays = 0;
+        Some(r)
+    }
+
+    /// F13: could this roll be Stretched? A harder word has to exist at the
+    /// rolled length (census C6), the rule has to be on, and not in Jr or at Expert.
+    pub fn stretch_offered(&self) -> bool {
+        let Some(r) = &self.rolled else { return false };
+        self.rules.stretch
+            && self.mode != Mode::Jr
+            && self.tier < 3
+            && self.bank.of_len(r.len).iter().filter(|e| e.tier == self.tier + 1).count() >= bank::CELL_FLOOR
+    }
+
+    /// F17: is Ear on the table, given the Stretch choice? D-R3's ceiling.
+    pub fn ear_offered(&self, stretch: bool) -> bool {
+        let Some(r) = &self.rolled else { return false };
+        self.rules.ear && self.mode != Mode::Jr && payout::ear_offered(r.len, r.doubles && self.rules.doubles, stretch)
+    }
+
+    /// F1, second half: draw the word. `stretch` and `ear` are the player's
+    /// choices; one that is not on offer is ignored. The choice is logged BEFORE
+    /// the draw (I14), and the draw uses tier + 1 when Stretch is set.
+    pub fn reveal(&mut self, stretch: bool, ear: bool) -> Option<Roll> {
+        let mut r = self.rolled.take()?;
+        self.rolled = Some(r.clone());
+        let stretch = stretch && self.stretch_offered();
+        let ear = ear && self.ear_offered(stretch);
+        self.rolled = None;
+        self.events.push(Ev::StretchChosen(stretch));
+        // The normal stream ALWAYS advances, so the ordinary words of a game are
+        // the same whoever Stretched; Stretch then swaps the served word for one
+        // a tier up, drawn from its own stream.
+        let normal = self.pick(r.len, None);
+        let Some((ntier, nword)) = normal else {
+            self.exhaust();
+            return None;
+        };
+        let mut served = (ntier, nword);
+        let mut stretched = false;
+        if stretch {
+            if let Some(sw) = self.pick(r.len, Some(self.tier + 1)) {
+                served = sw;
+                stretched = true;
             }
-            _ => {
-                // Nothing left to draw: bank whatever the pot holds so no
-                // earned point is lost, then end (see the module docs).
-                if self.pot > 0 {
-                    self.largest_banked = self.largest_banked.max(self.pot);
-                    self.score += self.pot;
-                    self.pot = 0;
-                }
-                self.ended = Some(End::Exhausted);
-                if self.mode == Mode::HeadToHead {
-                    self.winner = match self.score.cmp(&self.other.score) {
-                        std::cmp::Ordering::Greater => Some(self.turn),
-                        std::cmp::Ordering::Less => Some(1 - self.turn),
-                        std::cmp::Ordering::Equal => None,
-                    };
-                }
-                None
-            }
+        }
+        // The choice is logged before the draw it governs (I14).
+        self.events.push(Ev::WordDrawn { tier: served.0 });
+        self.used.push(served.1.clone());
+        r.word = served.1;
+        r.tier = served.0;
+        r.stretch = stretched;
+        r.ear = ear;
+        self.pending = Some(r.clone());
+        Some(r)
+    }
+
+    /// I15: may the word be played again? The first request is always allowed;
+    /// a word chosen with Ear gets no second one.
+    pub fn request_audio(&mut self) -> bool {
+        let ear = self.pending.as_ref().is_some_and(|r| r.ear);
+        if self.plays >= 1 && ear {
+            return false;
+        }
+        self.plays = self.plays.saturating_add(1);
+        true
+    }
+
+    fn exhaust(&mut self) {
+        // Nothing left to draw: bank whatever the pot holds so no earned point
+        // is lost, then end (see the module docs).
+        if self.pot > 0 {
+            self.largest_banked = self.largest_banked.max(self.pot);
+            self.score += self.pot;
+            self.pot = 0;
+        }
+        self.heat = 0;
+        self.ended = Some(End::Exhausted);
+        if self.mode == Mode::HeadToHead {
+            self.winner = match self.score.cmp(&self.other.score) {
+                std::cmp::Ordering::Greater => Some(self.turn),
+                std::cmp::Ordering::Less => Some(1 - self.turn),
+                std::cmp::Ordering::Equal => None,
+            };
         }
     }
 
@@ -345,6 +491,11 @@ impl Session {
                 streak: self.streak,
                 score: self.score,
                 finished: false,
+                doubles: false,
+                stretch: false,
+                ear: false,
+                heat: self.heat,
+                call_bonus: 0,
                 pot: 0,
                 warded: false,
                 lost: 0,
@@ -362,13 +513,32 @@ impl Session {
         let mut points = 0;
         let mut mult = false;
         let (mut warded, mut lost) = (false, 0);
+        let (mut doubles_hit, mut bonus_paid) = (false, 0);
         if correct {
-            // Jr scores the number on the die (length - 1); no jackpot, no multiplier.
-            let mut p = if self.mode == Mode::Jr { r.len as u32 - 1 } else { base_points(r.len as u8) };
-            if self.streak >= STREAK_FOR_MULTIPLIER && self.mode != Mode::Jr {
-                p = multiplied(p);
-                mult = true;
-            }
+            // D-R3: one pure payout. Jr scores the die (length - 1) with no jackpot.
+            // With heat on, a pot mode uses the heat ladder in place of v1's streak
+            // multiplier (D-R2); Sprint and Jr keep the streak.
+            let jr = self.mode == Mode::Jr;
+            let factor = if self.rules.heat && marathon {
+                payout::heat_factor(self.heat)
+            } else if self.streak >= STREAK_FOR_MULTIPLIER && !jr {
+                (3, 2)
+            } else {
+                (1, 1)
+            };
+            let call_bonus = r.call.filter(|c| c.hits(r.len)).map_or(0, |c| c.bonus());
+            let p = payout::payout(payout::PayIn {
+                roll: r.len,
+                jr,
+                doubles: r.doubles && self.rules.doubles,
+                stretch: r.stretch,
+                ear: r.ear,
+                factor,
+                call_bonus,
+            });
+            mult = factor != (1, 1);
+            doubles_hit = r.doubles && self.rules.doubles;
+            bonus_paid = call_bonus;
             points = p;
             self.streak += 1;
             self.best_streak = self.best_streak.max(self.streak);
@@ -377,9 +547,13 @@ impl Session {
                 // A bonus roll is banked at once and never put at risk.
                 self.score += p;
                 self.largest_banked = self.largest_banked.max(p);
+                self.heat = 0; // banked, so there is nothing unbanked to heat
             } else if marathon {
                 self.pot += p;
                 self.deciding = true;
+                if self.rules.heat {
+                    self.heat = (self.heat + 1).min(payout::MAX_HEAT);
+                }
             } else {
                 self.score += p; // I5: score only ever rises.
             }
@@ -389,6 +563,8 @@ impl Session {
             }
         } else {
             self.streak = 0;
+            // I13: any miss, a Ward-absorbed one included, takes the heat to 0 (D-R14).
+            self.heat = 0;
             if marathon && !bonus_roll && self.pot > 0 {
                 if self.ward {
                     // D13: the pot survives, the Ward is spent, the streak still resets.
@@ -418,6 +594,11 @@ impl Session {
             streak: self.streak,
             score: self.score,
             finished,
+            doubles: doubles_hit,
+            stretch: r.stretch,
+            ear: r.ear,
+            heat: self.heat,
+            call_bonus: bonus_paid,
             pot: self.pot,
             warded,
             lost,
@@ -450,6 +631,7 @@ impl Session {
         std::mem::swap(&mut self.largest_lost, &mut o.largest_lost);
         std::mem::swap(&mut self.longest, &mut o.longest);
         std::mem::swap(&mut self.bonus, &mut o.bonus);
+        std::mem::swap(&mut self.heat, &mut o.heat);
         self.turn = 1 - self.turn;
         self.deciding = false;
     }
@@ -475,6 +657,7 @@ impl Session {
             return None;
         }
         let banked = self.pot;
+        self.heat = 0; // I13: a Bank takes the heat to 0
         self.score += banked;
         self.largest_banked = self.largest_banked.max(banked);
         self.pot = 0;
@@ -508,12 +691,15 @@ impl Session {
         self.answer(false)
     }
 
-    fn pick(&mut self, len: usize) -> Option<(usize, String)> {
+    fn pick(&mut self, len: usize, only_tier: Option<usize>) -> Option<(usize, String)> {
         let mut cands: Vec<(usize, String)> = self
             .bank
             .of_len(len)
             .iter()
-            .filter(|e| !self.used.contains(&e.word))
+            .filter(|e| {
+                !self.used.contains(&e.word)
+                    && only_tier.map_or(!self.drawn.contains(&e.word), |t| e.tier == t && !self.stretch_used.contains(&e.word))
+            })
             .map(|e| (e.tier, e.word.clone()))
             .collect();
         if cands.is_empty() {
@@ -526,14 +712,27 @@ impl Session {
         }
         let best = cands.iter().map(|(t, _)| t.abs_diff(self.tier)).min()?;
         cands.retain(|(t, _)| t.abs_diff(self.tier) == best);
-        let i = self.words.below(cands.len());
-        Some(cands.swap_remove(i))
+        let i = if only_tier.is_some() { self.words_s.below(cands.len()) } else { self.words.below(cands.len()) };
+        let picked = cands.swap_remove(i);
+        if only_tier.is_some() {
+            self.stretch_used.push(picked.1.clone());
+        } else {
+            self.drawn.push(picked.1.clone());
+        }
+        Some(picked)
     }
 }
 
 /// F1: two dice, 2..=12. Two draws from the stream, in a fixed order.
 pub fn roll_two_dice(rng: &mut Rng) -> u8 {
+    let (a, b) = roll_two_dice_pair(rng);
+    a + b
+}
+
+/// The two dice themselves, in draw order. Only the engine sees them: the
+/// screen shows the sum and, for a pair, a glow (F14, v1 ban on visible dice).
+pub fn roll_two_dice_pair(rng: &mut Rng) -> (u8, u8) {
     let a = rng.below(6) as u8 + 1;
     let b = rng.below(6) as u8 + 1;
-    a + b
+    (a, b)
 }

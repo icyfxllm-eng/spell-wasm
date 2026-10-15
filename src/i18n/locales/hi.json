@@ -1049,5 +1049,14 @@
   "rs.jrWord": "शब्द था {word}। चलिए अगला!",
   "rs.jrDone": "शाबाश!",
   "rs.jrCount": "{n} शब्द सही",
-  "rs.bestStreak": "सबसे लंबी लगातार सही: {n}"
+  "rs.bestStreak": "सबसे लंबी लगातार सही: {n}",
+  "rs.call": "फेंक का अंदाज़ा लगाएँ",
+  "rs.call.low": "कम 2–6",
+  "rs.call.seven": "सात",
+  "rs.call.high": "ज़्यादा 8–12",
+  "rs.stretch": "चुनौती ×1.5 (कठिन शब्द)",
+  "rs.ear": "दोहराए बिना ×1.5",
+  "rs.listen": "सुनें",
+  "rs.heat": "गर्मी {n}",
+  "rs.glow": "जोड़ी ×2!"
 }

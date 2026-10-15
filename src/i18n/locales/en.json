@@ -1049,5 +1049,14 @@
   "rs.jrWord": "The word was {word}. On to the next one!",
   "rs.jrDone": "Well done!",
   "rs.jrCount": "{n} words spelled right",
-  "rs.bestStreak": "Best streak: {n}"
+  "rs.bestStreak": "Best streak: {n}",
+  "rs.call": "Guess the roll",
+  "rs.call.low": "Low 2–6",
+  "rs.call.seven": "Seven",
+  "rs.call.high": "High 8–12",
+  "rs.stretch": "Stretch ×1.5 (harder word)",
+  "rs.ear": "No replay ×1.5",
+  "rs.listen": "Listen",
+  "rs.heat": "Heat {n}",
+  "rs.glow": "Doubles ×2!"
 }

@@ -669,6 +669,13 @@
   .rs-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
   .rs-timer.run{animation:rs-timer 30s linear forwards}
   .rs-pot,.rs-ward,.rs-turn{font-size:.9rem;font-weight:600}
+  .rs-heat,.rs-glow-note{font-size:.9rem;font-weight:600;text-align:center;min-height:1.2em}
+  .rs-glow-note:empty{display:none}
+  .rs-heat[hidden],.rs-charms[hidden],.rs-call[hidden]{display:none}
+  .rs-charms,.rs-call{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;flex:none}
+  .rs-bet-label{font-size:.85rem;opacity:.8}
+  .rs-listen{background:var(--amber,#f2c14e);color:#36210a;font-weight:700}
+  .rs-die.glow{background:#f2c14e;box-shadow:0 0 0 6px #f2c14e88,0 0 24px #f2c14eaa}
   .rs-turn[hidden]{display:none}
   .rs-hand-text{white-space:pre-line;font-size:1.1rem}
   .rs-pot[hidden],.rs-ward[hidden],.rs-decide[hidden]{display:none}
@@ -3067,7 +3074,10 @@
         <span class="rs-ward" id="rsWard" hidden></span>
         <span class="rs-rolls" id="rsRolls"></span>
       </div>
-      <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div><div class="rs-letters" id="rsLetters"></div></div>
+      <div class="rs-stage"><div class="rs-die" id="rsDie" aria-live="polite"></div><div class="rs-letters" id="rsLetters"></div><div class="rs-glow-note" id="rsGlow" aria-live="polite"></div></div>
+      <div class="rs-heat" id="rsHeat" hidden aria-live="polite"></div>
+      <div class="rs-charms" id="rsCharms" hidden></div>
+      <div class="rs-call" id="rsCall" hidden></div>
       <div class="rs-timer" id="rsTimer"></div>
       <div class="rs-feed" id="rsFeed" aria-live="polite"></div>
       <div class="rs-act" id="rsAct">

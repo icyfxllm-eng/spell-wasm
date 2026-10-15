@@ -1049,5 +1049,14 @@
   "rs.jrWord": "Neno lilikuwa {word}. Tuendelee na linalofuata!",
   "rs.jrDone": "Hongera!",
   "rs.jrCount": "Maneno {n} sahihi",
-  "rs.bestStreak": "Mfululizo bora: {n}"
+  "rs.bestStreak": "Mfululizo bora: {n}",
+  "rs.call": "Kisia tupo",
+  "rs.call.low": "Chini 2–6",
+  "rs.call.seven": "Saba",
+  "rs.call.high": "Juu 8–12",
+  "rs.stretch": "Changamoto ×1.5 (neno gumu zaidi)",
+  "rs.ear": "Bila kurudia ×1.5",
+  "rs.listen": "Sikiliza",
+  "rs.heat": "Joto {n}",
+  "rs.glow": "Mara mbili ×2!"
 }

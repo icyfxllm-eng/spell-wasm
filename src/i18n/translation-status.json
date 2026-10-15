@@ -186,7 +186,16 @@
     "rs.jrWord",
     "rs.jrDone",
     "rs.jrCount",
-    "rs.bestStreak"
+    "rs.bestStreak",
+    "rs.call",
+    "rs.call.low",
+    "rs.call.seven",
+    "rs.call.high",
+    "rs.stretch",
+    "rs.ear",
+    "rs.listen",
+    "rs.heat",
+    "rs.glow"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -381,7 +390,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -566,7 +584,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "de": [
       "hub.group.spell_it",
@@ -751,7 +778,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -936,7 +972,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1121,7 +1166,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1306,7 +1360,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1491,7 +1554,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -1676,7 +1748,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -1861,7 +1942,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2046,7 +2136,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2231,7 +2330,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -2416,7 +2524,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -2601,7 +2718,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -2786,7 +2912,16 @@
       "rs.jrWord",
       "rs.jrDone",
       "rs.jrCount",
-      "rs.bestStreak"
+      "rs.bestStreak",
+      "rs.call",
+      "rs.call.low",
+      "rs.call.seven",
+      "rs.call.high",
+      "rs.stretch",
+      "rs.ear",
+      "rs.listen",
+      "rs.heat",
+      "rs.glow"
     ]
   }
 }

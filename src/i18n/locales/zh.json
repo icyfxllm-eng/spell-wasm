@@ -1049,5 +1049,14 @@
   "rs.jrWord": "这个词是 {word}。我们继续下一个！",
   "rs.jrDone": "太棒了！",
   "rs.jrCount": "答对了 {n} 个词",
-  "rs.bestStreak": "最长连续答对：{n}"
+  "rs.bestStreak": "最长连续答对：{n}",
+  "rs.call": "猜点数",
+  "rs.call.low": "小 2–6",
+  "rs.call.seven": "七",
+  "rs.call.high": "大 8–12",
+  "rs.stretch": "挑战 ×1.5（更难的词）",
+  "rs.ear": "不重听 ×1.5",
+  "rs.listen": "听",
+  "rs.heat": "热度 {n}",
+  "rs.glow": "对子 ×2！"
 }

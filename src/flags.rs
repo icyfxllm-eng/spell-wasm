@@ -235,6 +235,34 @@ pub fn randospell_jr() -> bool {
     randospell() && resolve(stored("randospell_jr").as_deref(), false)
 }
 
+/// CC-RANDOSPELL v1.1 F19 -- the "over the top" mechanics. Each is **default OFF**
+/// and needs `randospell`; v1.1 ships them together (D-R7), the individual flags
+/// are for staging. With one off, that mechanic is exactly v1.
+#[cfg(not(feature = "web"))]
+pub fn randospell_heat() -> bool {
+    randospell() && resolve(stored("randospell_heat").as_deref(), false)
+}
+
+#[cfg(not(feature = "web"))]
+pub fn randospell_call() -> bool {
+    randospell() && resolve(stored("randospell_call").as_deref(), false)
+}
+
+#[cfg(not(feature = "web"))]
+pub fn randospell_stretch() -> bool {
+    randospell() && resolve(stored("randospell_stretch").as_deref(), false)
+}
+
+#[cfg(not(feature = "web"))]
+pub fn randospell_doubles() -> bool {
+    randospell() && resolve(stored("randospell_doubles").as_deref(), false)
+}
+
+#[cfg(not(feature = "web"))]
+pub fn randospell_ear() -> bool {
+    randospell() && resolve(stored("randospell_ear").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {
@@ -584,6 +612,8 @@ mod tests {
         set_test_override(None);
         assert!(randospell() && randospell_marathon());
         assert!(!randospell_daily() && !randospell_h2h() && !randospell_jr());
+        // v1.1 mechanics ship together (D-R7) and stay dark until their device pass.
+        assert!(!randospell_heat() && !randospell_call() && !randospell_stretch() && !randospell_doubles() && !randospell_ear());
         set_test_override(Some("off"));
         assert!(!randospell() && !randospell_marathon(), "the mode flag is the kill switch");
         set_test_override(None);

@@ -29,7 +29,7 @@ use crate::boardgame_input::{self as input, Key};
 use crate::experience::Experience;
 use crate::randospell::bank::{self, Bank, MODE_ID};
 use crate::randospell::store::{Store, STORE_KEY};
-use crate::randospell::{Mode, Session, MARATHON_GOAL, SPRINT_GOAL, TIMER_SECS};
+use crate::randospell::{Call, Mode, Rules, Session, MARATHON_GOAL, SPRINT_GOAL, TIMER_SECS};
 use crate::wordsearch::ledger::Ledger;
 use crate::{dom, haptics, i18n, speech_out, storage, App};
 
@@ -94,6 +94,11 @@ struct Ui {
     keys: Vec<Vec<Key>>,
     /// A roll is out and its word is owed.
     spelling: bool,
+    /// v1.1: the die has landed and the player may still Stretch or Ear; the
+    /// word is not drawn until they listen (D-R9).
+    choosing: bool,
+    stretch_sel: bool,
+    ear_sel: bool,
     recorded: bool,
     day: u32,
 }
@@ -151,6 +156,8 @@ pub fn wire(app: &App) {
     dom::on_click("rsDel", delete);
     dom::on_click("rsGo", submit);
     dom::on_click("rsBank", bank_it);
+    dom::on::<web_sys::MouseEvent, _>("rsCall", "click", call_tap);
+    dom::on::<web_sys::MouseEvent, _>("rsCharms", "click", charm_tap);
     dom::on_click("rsHandGo", || dom::set_hidden("rsHand", true));
     dom::on_click("rsDailyShare", share_daily);
     dom::on_click("rsShare", share_daily);
@@ -415,8 +422,10 @@ fn start() {
         let seed = (js_sys::Date::now() as u64) ^ led.counter.wrapping_mul(0x9E37_79B9);
         Session::new(seed, if kid { Mode::Jr } else { kind.mode() }, tier, bank, avoid)
     };
+    let mut s = s;
+    s.rules = rules_from_flags();
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { s, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, recorded: false, day })
+        *u.borrow_mut() = Some(Ui { s, kind, daily_key, date, stored: false, lang, tier, typed: String::new(), keys, spelling: false, choosing: false, stretch_sel: false, ear_sel: false, recorded: false, day })
     });
     dom::set_hidden("rsSetup", true);
     dom::set_hidden("rsPlay", false);
@@ -425,10 +434,11 @@ fn start() {
     dom::add_class("rsScreen", "playing");
     render_keys();
     render_hud();
-    set_die("", false);
+    set_die("", false, false);
     dom::set_text("rsFeed", "");
     spell_panel(false);
     decision(false);
+    refresh_bets();
 }
 
 /// F5: show or hide the Bank / Roll again card, and lock the orb while it shows.
@@ -447,6 +457,9 @@ fn spell_panel(on: bool) {
         dom::add_class("rsScreen", "spelling");
     } else {
         dom::remove_class("rsScreen", "spelling");
+    }
+    if !on {
+        dom::set_disabled("rsOrb", false);
     }
     dom::set_text("rsOrb", &i18n::t(if on { "rs.replay" } else { "rs.roll" }));
     if let Some(e) = dom::doc().get_element_by_id("rsOrb") {
@@ -505,6 +518,15 @@ fn render_hud() {
         dom::set_text("rsPot", &i18n::tp("rs.pot", &[("n", &pot.to_string())]));
         dom::set_text("rsWard", &if ward { i18n::t("rs.ward") } else if ward_used { i18n::t("rs.wardUsed") } else { String::new() });
     }
+    // F11: the heat pips and the multiplier they pay on the NEXT word, as
+    // numerals and filled pips (I20: readable without the visuals).
+    let (heat, heat_on) = with_ui(|u| (u.s.heat, u.s.rules.heat)).unwrap_or((0, false));
+    if heat_on && m {
+        let (n, d) = crate::randospell::payout::heat_factor(heat);
+        let mult_txt = if d == 1 { format!("×{n}") } else { format!("×{}.{}", n / d, (n * 10 / d) % 10) };
+        let pips: String = (0..7).map(|i| if i < heat { '\u{25CF}' } else { '\u{25CB}' }).collect();
+        dom::set_text("rsHeat", &format!("{} {} · {} {}", i18n::tp("rs.heat", &[("n", &heat.to_string())]), pips, mult_txt, ""));
+    }
     let mult = streak >= crate::randospell::STREAK_FOR_MULTIPLIER;
     let streak_txt = if streak == 0 || mode == Mode::Jr {
         String::new() // Jr keeps the streak silently (F7)
@@ -517,13 +539,29 @@ fn render_hud() {
     dom::set_text("rsRolls", &i18n::tp("rs.rolls", &[("n", &rolls.to_string())]));
 }
 
-fn set_die(text: &str, jackpot: bool) {
-    dom::set_text("rsDie", text);
-    if jackpot {
-        dom::add_class("rsDie", "jackpot");
-    } else {
-        dom::remove_class("rsDie", "jackpot");
+/// F19: the v1.1 mechanics that are switched on. All off is v1.
+fn rules_from_flags() -> Rules {
+    Rules {
+        heat: crate::flags::randospell_heat(),
+        call: crate::flags::randospell_call(),
+        stretch: crate::flags::randospell_stretch(),
+        ear: crate::flags::randospell_ear(),
+        doubles: crate::flags::randospell_doubles(),
     }
+}
+
+fn set_die(text: &str, jackpot: bool, glow: bool) {
+    dom::set_text("rsDie", text);
+    for (cls, on) in [("jackpot", jackpot), ("glow", glow)] {
+        if on {
+            dom::add_class("rsDie", cls);
+        } else {
+            dom::remove_class("rsDie", cls);
+        }
+    }
+    // F14: the glow is the only sign of doubles, and it is spoken too, so the
+    // state is not colour alone.
+    dom::set_text("rsGlow", &if glow { i18n::t("rs.glow") } else { String::new() });
     // Restart the fade/shake by toggling a class the CSS animates.
     dom::remove_class("rsDie", "land");
     dom::after_ms(16, || dom::add_class("rsDie", "land"));
@@ -535,43 +573,165 @@ fn speak(word: &str, lang: &str) {
     crate::api::play_word(&w, "normal", 1.0, lang, move || speech_out::speak(&fallback, 1.0, &code));
 }
 
-fn orb() {
-    let Some((spelling, deciding)) = with_ui(|u| (u.spelling, u.s.deciding)) else { return };
-    if deciding {
-        return; // Bank or Roll again first (F5)
-    }
-    if spelling {
-        if let Some((w, l)) = with_ui(|u| u.s.pending().map(|r| (r.word.clone(), u.lang.clone()))).flatten() {
-            speak(&w, &l);
-        }
-        return;
-    }
-    let rolled = with_ui(|u| u.s.press()).flatten();
-    let Some(r) = rolled else {
-        // No unused word at that length: the session ends rather than repeat (I3).
-        show_over();
+/// F12: the three-segment guess under the orb, shown only where it can be set.
+fn refresh_bets() {
+    let st = with_ui(|u| {
+        let ready = !u.spelling && !u.choosing && !u.s.deciding && u.s.ended.is_none();
+        (u.s.rules.call && u.s.mode != Mode::Jr && ready, u.s.call(), u.s.rules.heat && u.s.mode != Mode::Sprint && u.s.mode != Mode::Jr)
+    });
+    let Some((show_call, cur, show_heat)) = st else { return };
+    let seg = |c: Call, id: &str, key: &str| {
+        format!(
+            "<button type=\"button\" class=\"rs-btn{}\" data-c=\"{id}\" aria-pressed=\"{}\">{}</button>",
+            if cur == Some(c) { " on" } else { "" },
+            cur == Some(c),
+            dom::escape_html(&i18n::t(key))
+        )
+    };
+    let html = if show_call {
+        format!(
+            "<span class=\"rs-bet-label\">{}</span>{}{}{}",
+            dom::escape_html(&i18n::t("rs.call")),
+            seg(Call::Low, "low", "rs.call.low"),
+            seg(Call::Seven, "seven", "rs.call.seven"),
+            seg(Call::High, "high", "rs.call.high")
+        )
+    } else {
+        String::new()
+    };
+    dom::set_html("rsCall", &html);
+    dom::set_hidden("rsCall", !show_call);
+    dom::set_hidden("rsHeat", !show_heat);
+}
+
+fn call_tap(e: web_sys::MouseEvent) {
+    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-c]").ok().flatten()) else {
         return;
     };
+    let pick = match el.get_attribute("data-c").as_deref() {
+        Some("low") => Call::Low,
+        Some("seven") => Call::Seven,
+        Some("high") => Call::High,
+        _ => return,
+    };
+    // One tap selects, a second tap on the same segment clears it (F12).
+    with_ui(|u| {
+        let next = if u.s.call() == Some(pick) { None } else { Some(pick) };
+        u.s.set_call(next);
+    });
+    refresh_bets();
+}
+
+/// F13/F17: the Stretch and Ear charms, shown after the die lands and before
+/// the word is drawn, with the Listen button that draws it.
+fn render_charms() {
+    let Some((on, stretch_ok, ear_ok, stretch_sel, ear_sel)) = with_ui(|u| {
+        (u.choosing, u.s.stretch_offered(), u.s.ear_offered(u.stretch_sel), u.stretch_sel, u.ear_sel && u.s.ear_offered(u.stretch_sel))
+    }) else {
+        return;
+    };
+    let charm = |id: &str, key: &str, sel: bool| {
+        format!(
+            "<button type=\"button\" class=\"rs-btn{}\" data-b=\"{id}\" aria-pressed=\"{sel}\">{}</button>",
+            if sel { " on" } else { "" },
+            dom::escape_html(&i18n::t(key))
+        )
+    };
+    let mut html = String::new();
+    if stretch_ok {
+        html.push_str(&charm("stretch", "rs.stretch", stretch_sel));
+    }
+    if ear_ok {
+        html.push_str(&charm("ear", "rs.ear", ear_sel));
+    }
+    html.push_str(&format!("<button type=\"button\" class=\"rs-btn rs-listen\" data-b=\"listen\">{}</button>", dom::escape_html(&i18n::t("rs.listen"))));
+    dom::set_html("rsCharms", &html);
+    dom::set_hidden("rsCharms", !on);
+}
+
+fn charm_tap(e: web_sys::MouseEvent) {
+    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-b]").ok().flatten()) else {
+        return;
+    };
+    match el.get_attribute("data-b").as_deref() {
+        Some("stretch") => {
+            with_ui(|u| {
+                if u.choosing && u.s.stretch_offered() {
+                    u.stretch_sel = !u.stretch_sel;
+                    // Ear may stop being on offer once a big Stretch is chosen.
+                    if !u.s.ear_offered(u.stretch_sel) {
+                        u.ear_sel = false;
+                    }
+                }
+            });
+            render_charms();
+        }
+        Some("ear") => {
+            with_ui(|u| {
+                if u.choosing && u.s.ear_offered(u.stretch_sel) {
+                    u.ear_sel = !u.ear_sel;
+                }
+            });
+            render_charms();
+        }
+        Some("listen") => listen(),
+        _ => {}
+    }
+}
+
+/// The choices are made: draw the word (D-R9) and begin the spelling.
+fn listen() {
+    let drawn = with_ui(|u| {
+        if !u.choosing {
+            return None;
+        }
+        u.choosing = false;
+        Some(u.s.reveal(u.stretch_sel, u.ear_sel))
+    })
+    .flatten();
+    dom::set_hidden("rsCharms", true);
+    match drawn {
+        Some(Some(r)) => begin_word(&r),
+        Some(None) => show_over(), // nothing left to draw (I3)
+        None => {}
+    }
+}
+
+/// The die has landed: shake, number, glow, haptic.
+fn land_die(len: usize, doubles: bool) {
     haptics::key_tap();
     // F1: the orb shakes as the number lands; reduce-motion removes it in CSS.
     dom::add_class("rsOrb", "shake");
     dom::after_ms(450, || dom::remove_class("rsOrb", "shake"));
-    let token = bump();
-    let jr = with_ui(|u| u.s.mode == Mode::Jr).unwrap_or(false);
+    let (jr, glow) = with_ui(|u| (u.s.mode == Mode::Jr, doubles && u.s.rules.doubles)).unwrap_or((false, false));
     // Jr shows the die (length - 1) and says how many letters it spells.
-    let shown = if jr { r.len - 1 } else { r.len };
-    set_die(&shown.to_string(), !jr && crate::randospell::is_jackpot(r.len as u8));
-    dom::set_text("rsLetters", &if jr { i18n::tp("rs.letters", &[("n", &r.len.to_string())]) } else { String::new() });
+    let shown = if jr { len - 1 } else { len };
+    set_die(&shown.to_string(), !jr && crate::randospell::is_jackpot(len as u8), glow);
+    dom::set_text("rsLetters", &if jr { i18n::tp("rs.letters", &[("n", &len.to_string())]) } else { String::new() });
     dom::set_text("rsFeed", "");
-    with_ui(|u| {
+}
+
+/// The word is drawn: hear it once (or again, unless Ear), and start the clock.
+fn begin_word(r: &crate::randospell::Roll) {
+    let token = bump();
+    let jr = with_ui(|u| {
         u.spelling = true;
         u.typed.clear();
-    });
+        u.s.mode == Mode::Jr
+    })
+    .unwrap_or(false);
     dom::set_text("rsField", "");
     spell_panel(true);
+    // F17: with Ear the word plays once and the replay control folds away.
+    if r.ear {
+        dom::set_disabled("rsOrb", true);
+    }
+    refresh_bets();
     render_hud();
     let lang = with_ui(|u| u.lang.clone()).unwrap_or_default();
-    speak(&r.word, &lang);
+    if with_ui(|u| u.s.request_audio()).unwrap_or(true) {
+        speak(&r.word, &lang);
+    }
     // D19: restart the visible 30 s bar and arm the timeout. Jr has no timer.
     if jr {
         return;
@@ -583,6 +743,56 @@ fn orb() {
             resolve(None);
         }
     });
+}
+
+fn orb() {
+    let Some((spelling, deciding, choosing, two_step)) =
+        with_ui(|u| (u.spelling, u.s.deciding, u.choosing, (u.s.rules.stretch || u.s.rules.ear) && u.s.mode != Mode::Jr))
+    else {
+        return;
+    };
+    if deciding {
+        return; // Bank or Roll again first (F5)
+    }
+    if choosing {
+        listen(); // the orb is also the "go" once the choices are made
+        return;
+    }
+    if spelling {
+        // Replay, unless Ear folded it away (I15).
+        if let Some((w, l)) = with_ui(|u| u.s.pending().map(|r| (r.word.clone(), u.lang.clone()))).flatten() {
+            if with_ui(|u| u.s.request_audio()).unwrap_or(true) {
+                speak(&w, &l);
+            }
+        }
+        return;
+    }
+    if two_step {
+        // v1.1: the dice first, the choices, then the word (D-R9).
+        let rolled = with_ui(|u| u.s.press_roll()).flatten();
+        let Some(r) = rolled else {
+            show_over();
+            return;
+        };
+        land_die(r.len, r.doubles);
+        with_ui(|u| {
+            u.choosing = true;
+            u.stretch_sel = false;
+            u.ear_sel = false;
+        });
+        refresh_bets();
+        render_charms();
+        render_hud();
+        return;
+    }
+    let rolled = with_ui(|u| u.s.press()).flatten();
+    let Some(r) = rolled else {
+        // No unused word at that length: the session ends rather than repeat (I3).
+        show_over();
+        return;
+    };
+    land_die(r.len, r.doubles);
+    begin_word(&r);
 }
 
 fn key_tap(e: web_sys::MouseEvent) {
@@ -671,6 +881,7 @@ fn resolve(typed: Option<String>) {
         dom::set_text("rsFeed", &i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))]));
     }
     render_hud();
+    refresh_bets();
     if let Some(o) = &out {
         if !correct {
             if o.warded {
@@ -710,6 +921,7 @@ fn bank_it() {
     decision(false);
     dom::set_text("rsFeed", &i18n::tp("rs.banked", &[("n", &b.banked.to_string())]));
     render_hud();
+    refresh_bets();
     if b.finished {
         show_over();
     } else if b.passed {
@@ -721,7 +933,13 @@ fn bank_it() {
 fn roll_again() {
     if with_ui(|u| u.s.roll_again()).unwrap_or(false) {
         decision(false);
-        orb();
+        refresh_bets();
+        // With the guess on offer the player gets a beat to place it; otherwise
+        // rolling again rolls (v1).
+        let wait = with_ui(|u| u.s.rules.call && u.s.mode != Mode::Jr).unwrap_or(false);
+        if !wait {
+            orb();
+        }
     }
 }
 
@@ -903,6 +1121,16 @@ pub fn seam_state() -> String {
                     "spelling": u.spelling,
                     "mode": format!("{:?}", u.s.mode),
                     "kind": format!("{:?}", u.kind),
+                    "heat": u.s.heat,
+                    "call": u.s.call().map(|c| format!("{c:?}")),
+                    "choosing": u.choosing,
+                    "stretchOffered": u.s.stretch_offered(),
+                    "earOffered": u.s.ear_offered(u.stretch_sel),
+                    "ear": r.map(|r| r.ear),
+                    "stretch": r.map(|r| r.stretch),
+                    "wordTier": r.map(|r| r.tier),
+                    "doubles": r.map(|r| r.doubles),
+                    "events": format!("{:?}", u.s.events),
                     "jr": u.s.mode == Mode::Jr,
                     "bestStreak": u.s.best_streak,
                     "dailyKey": u.daily_key,

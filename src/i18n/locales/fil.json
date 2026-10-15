@@ -1049,5 +1049,14 @@
   "rs.jrWord": "Ang salita ay {word}. Susunod na tayo!",
   "rs.jrDone": "Magaling!",
   "rs.jrCount": "{n} salitang tama ang baybay",
-  "rs.bestStreak": "Pinakamahabang sunod-sunod na tama: {n}"
+  "rs.bestStreak": "Pinakamahabang sunod-sunod na tama: {n}",
+  "rs.call": "Hulaan ang gulong",
+  "rs.call.low": "Mababa 2–6",
+  "rs.call.seven": "Pito",
+  "rs.call.high": "Mataas 8–12",
+  "rs.stretch": "Hamon ×1.5 (mas mahirap na salita)",
+  "rs.ear": "Walang ulit ×1.5",
+  "rs.listen": "Making",
+  "rs.heat": "Init {n}",
+  "rs.glow": "Dobleng ×2!"
 }

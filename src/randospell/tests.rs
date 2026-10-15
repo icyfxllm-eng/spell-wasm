@@ -143,7 +143,7 @@ fn a8_jackpot_streak_and_multiplier() {
     // then 7 pays 11, then 12 pays 36, then a miss resets.
     let mut s = session(1, full_fake());
     let rig = |s: &mut Session, face: u8, ok: bool| {
-        s.pending = Some(Roll { face, len: face as usize, word: "qqqqq".into(), tier: 0 });
+        s.pending = Some(Roll { face, len: face as usize, word: "qqqqq".into(), tier: 0, ..Roll::default() });
         s.answer(ok).unwrap()
     };
     rig(&mut s, 3, true);
@@ -284,7 +284,7 @@ fn marathon(seed: u64) -> Session {
 
 /// Put a roll in front of the player without going through the dice.
 fn rig(s: &mut Session, len: usize, ok: bool) -> Outcome {
-    s.pending = Some(Roll { face: len as u8, len, word: "qqqqq".into(), tier: 0 });
+    s.pending = Some(Roll { face: len as u8, len, word: "qqqqq".into(), tier: 0, ..Roll::default() });
     s.answer(ok).unwrap()
 }
 
@@ -633,7 +633,7 @@ fn jr_remaps_are_listed_in_die_faces_and_never_leave_the_die() {
 fn jr_scores_the_die_with_no_multiplier_and_no_pot() {
     let mut s = jr(1, full_fake());
     for _ in 0..4 {
-        s.pending = Some(Roll { face: 6, len: 7, word: "qqqqqqq".into(), tier: 0 });
+        s.pending = Some(Roll { face: 6, len: 7, word: "qqqqqqq".into(), tier: 0, ..Roll::default() });
         let o = s.answer(true).unwrap(); // a die showing 6
         assert_eq!((o.points, o.multiplied, o.pot, o.deciding, o.warded), (6, false, 0, false, false));
     }
@@ -737,4 +737,317 @@ fn d10_a_preview_bank_that_cannot_carry_the_die_is_absent_not_padded() {
     assert!(super::bank::eligible_at("en", Standard, Full));
     // Jr is free (D10): a Jr bank does not depend on the level.
     assert_eq!(Bank::for_lang_at("en", Junior, Preview).cov, Bank::for_lang_at("en", Junior, Full).cov);
+}
+
+// ---- v1.1 Phase E: heat, Call, Stretch, Ear, Doubles ----------------------
+
+use super::payout::{self, Call, PayIn, Rules};
+
+fn all_rules() -> Rules {
+    Rules { heat: true, call: true, stretch: true, ear: true, doubles: true }
+}
+
+/// Four tiers at every length 3..=12, 25 words each, so every harder tier is populated.
+fn tiered_bank() -> Bank {
+    let mut rows = Vec::new();
+    for len in 3..=12usize {
+        for t in 0..4usize {
+            for i in 0..25usize {
+                rows.push((t, format!("{}{}{:02}", "x".repeat(len - 3), ["a", "b", "c", "d"][t], i)));
+            }
+        }
+    }
+    Bank::from_rows(rows)
+}
+
+fn pay(roll: usize, doubles: bool, stretch: bool, ear: bool, factor: (u32, u32), call_bonus: u32) -> u32 {
+    payout::payout(PayIn { roll, jr: false, doubles, stretch, ear, factor, call_bonus })
+}
+
+#[test]
+fn a17_payout_follows_the_fixed_order_and_ceils_once() {
+    // roll 12 -> jackpot 24 -> doubles 48 -> Stretch 72 -> heat 5 (x2) 144 -> +3 Call = 147.
+    assert_eq!(pay(12, true, true, false, payout::heat_factor(5), 3), 147);
+    // Ear is not offered there: the pre-heat product (72) is above 60.
+    assert!(!payout::ear_offered(12, true, true));
+    assert_eq!(payout::pre_heat(12, false, true, true, false), 72);
+    // Ear is offered on a modest Stretch word.
+    assert!(payout::ear_offered(5, false, true));
+}
+
+#[test]
+fn a18_the_cap_is_150_per_word() {
+    // 12 x2 x2 x1.5 x1.5 x3 = 324, force-enabled Ear, capped.
+    assert_eq!(pay(12, true, true, true, payout::heat_factor(7), 0), 150);
+    // Cap applies to the total, Call bonus included.
+    assert_eq!(pay(12, true, true, true, payout::heat_factor(7), 6), 150);
+}
+
+#[test]
+fn i11_the_payout_is_pure_ceils_once_and_never_exceeds_the_cap() {
+    // Reference in floats: ceil(product) + bonus, capped. One ceil, never two.
+    for roll in 2..=12usize {
+        for &d in &[false, true] {
+            for &s in &[false, true] {
+                for &e in &[false, true] {
+                    for h in 0..=7u8 {
+                        for &cb in &[0u32, 3, 6] {
+                            let f = payout::heat_factor(h);
+                            let got = pay(roll, d, s, e, f, cb);
+                            let mut v = roll as f64 * if roll == 2 || roll == 12 { 2.0 } else { 1.0 };
+                            if d { v *= 2.0 }
+                            if s { v *= 1.5 }
+                            if e { v *= 1.5 }
+                            v *= f.0 as f64 / f.1 as f64;
+                            let want = ((v - 1e-9).ceil() as u32 + cb).min(150);
+                            assert_eq!(got, want, "roll {roll} d{d} s{s} e{e} h{h} cb{cb}");
+                            assert!(got <= 150);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn heat_session() -> Session {
+    let mut s = Session::new(1, Mode::Marathon, 1, full_fake(), BTreeSet::new());
+    s.rules = Rules { heat: true, ..Rules::default() };
+    s
+}
+
+fn put(s: &mut Session, len: usize, doubles: bool, call: Option<Call>) {
+    s.pending = Some(Roll { face: len as u8, len, word: "qqqqq".into(), tier: 0, doubles, call, ..Roll::default() });
+}
+
+#[test]
+fn a19_the_heat_ladder_multiplies_by_the_pips_before_the_word() {
+    let mut s = heat_session();
+    s.pot = 10;
+    s.heat = 4;
+    put(&mut s, 8, false, None);
+    let o = s.answer(true).unwrap();
+    assert_eq!((o.points, s.pot, s.heat), (12, 22, 5), "heat 4 is x1.5");
+    s.roll_again();
+    put(&mut s, 6, false, None);
+    let o = s.answer(true).unwrap();
+    assert_eq!((o.points, s.pot, s.heat), (12, 34, 6), "heat 5 is x2");
+    let b = s.bank().unwrap();
+    assert_eq!((b.banked, b.score, s.heat), (34, 34, 0), "a Bank takes the heat to 0");
+}
+
+#[test]
+fn a20_a_ward_absorbed_miss_still_resets_heat() {
+    let mut s = heat_session();
+    s.pot = 20;
+    s.heat = 3;
+    put(&mut s, 6, false, None);
+    let o = s.answer(false).unwrap();
+    assert!(o.warded);
+    assert_eq!((s.pot, s.ward, s.ward_used, s.heat), (20, false, true, 0));
+}
+
+#[test]
+fn i13_heat_is_the_run_of_unbanked_correct_words_capped_at_seven() {
+    let mut s = heat_session();
+    for n in 1..=10u8 {
+        put(&mut s, 5, false, None);
+        s.answer(true).unwrap();
+        assert_eq!(s.heat, n.min(7), "after {n} correct words");
+        s.roll_again();
+    }
+    put(&mut s, 5, false, None);
+    s.answer(false).unwrap();
+    assert_eq!(s.heat, 0, "a miss");
+}
+
+#[test]
+fn heat_off_restores_the_v1_streak_multiplier_in_marathon() {
+    let mut s = Session::new(2, Mode::Marathon, 1, full_fake(), BTreeSet::new()); // rules all off
+    for _ in 0..3 {
+        put(&mut s, 4, false, None);
+        s.answer(true).unwrap();
+        s.roll_again();
+    }
+    put(&mut s, 7, false, None);
+    let o = s.answer(true).unwrap();
+    assert_eq!((o.points, o.multiplied), (11, true), "v1: ceil(7 x 1.5)");
+    assert_eq!(s.heat, 0, "no heat is kept with the rule off");
+}
+
+#[test]
+fn a21_call_pays_only_with_a_right_guess_and_a_right_word() {
+    let mut s = heat_session();
+    s.rules.call = true;
+    put(&mut s, 9, false, Some(Call::High));
+    assert_eq!(s.answer(true).unwrap().points, 9 + 3);
+    s.roll_again();
+    put(&mut s, 9, false, Some(Call::Low));
+    assert_eq!(s.answer(true).unwrap().points, 9, "wrong guess costs nothing and pays nothing");
+    s.roll_again();
+    put(&mut s, 7, false, Some(Call::Seven));
+    // heat is 2 here, still x1
+    assert_eq!(s.answer(true).unwrap().points, 7 + 6);
+    // A right guess with a wrong spelling: nothing extra, and the pot goes as v1.
+    s.roll_again();
+    put(&mut s, 9, false, Some(Call::High));
+    let o = s.answer(false).unwrap();
+    assert_eq!(o.call_bonus, 0);
+}
+
+#[test]
+fn the_call_is_locked_on_the_press_and_cleared_by_a_second_tap() {
+    let mut s = heat_session();
+    s.rules.call = true;
+    assert!(s.set_call(Some(Call::High)));
+    assert_eq!(s.call(), Some(Call::High));
+    assert!(s.set_call(None));
+    assert_eq!(s.call(), None);
+    assert!(s.set_call(Some(Call::Low)));
+    let r = s.press_roll().expect("rolls");
+    assert_eq!(r.call, Some(Call::Low));
+    assert!(!s.set_call(Some(Call::High)), "no change after the press (D-R15)");
+    assert_eq!(s.call(), None, "the guess was consumed by the roll");
+}
+
+#[test]
+fn a22_stretch_is_logged_before_the_word_is_drawn_and_draws_a_tier_up() {
+    let mut s = Session::new(5, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+    s.rules = all_rules();
+    let r = s.press_roll().expect("rolls");
+    assert!(r.word.is_empty(), "no word exists before the choice (D-R9)");
+    assert!(s.stretch_offered());
+    let w = s.reveal(true, false).expect("draws");
+    assert!(w.stretch && w.tier == 2, "tier {}", w.tier);
+    assert_eq!(s.events, vec![Ev::StretchChosen(true), Ev::WordDrawn { tier: 2 }]);
+}
+
+#[test]
+fn stretch_is_absent_where_no_harder_word_exists_and_at_expert_and_in_jr() {
+    // full_fake has 15 words per tier per length: under the floor, so no Stretch.
+    let mut s = Session::new(6, Mode::Marathon, 1, full_fake(), BTreeSet::new());
+    s.rules = all_rules();
+    s.press_roll().unwrap();
+    assert!(!s.stretch_offered());
+    // Expert has no tier above it.
+    let mut e = Session::new(7, Mode::Marathon, 3, tiered_bank(), BTreeSet::new());
+    e.rules = all_rules();
+    e.press_roll().unwrap();
+    assert!(!e.stretch_offered());
+    // A Stretch request that is not on offer is ignored, not honoured.
+    let w = e.reveal(true, false).unwrap();
+    assert!(!w.stretch);
+    // Jr never offers it.
+    let mut j = Session::new(8, Mode::Jr, 0, tiered_bank(), BTreeSet::new());
+    j.rules = all_rules();
+    j.press_roll().unwrap();
+    assert!(!j.stretch_offered() && !j.ear_offered(false));
+}
+
+#[test]
+fn a23_ear_allows_exactly_one_playback() {
+    let mut s = Session::new(9, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+    s.rules = all_rules();
+    s.press_roll().unwrap();
+    let w = s.reveal(false, true).unwrap();
+    assert!(w.ear);
+    assert!(s.request_audio(), "the first play is always allowed");
+    assert!(!s.request_audio(), "no replay for an Ear word (I15)");
+    // Without Ear the replay stays available.
+    let mut n = Session::new(10, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+    n.rules = all_rules();
+    n.press_roll().unwrap();
+    n.reveal(false, false).unwrap();
+    assert!(n.request_audio() && n.request_audio());
+}
+
+#[test]
+fn ear_on_a_big_stretch_word_is_not_offered() {
+    let mut s = Session::new(11, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+    s.rules = all_rules();
+    s.rolled = Some(Roll { face: 12, len: 12, doubles: true, ..Roll::default() });
+    assert!(!s.ear_offered(true), "12 doubles Stretch: pre-heat 72 > 60");
+    assert!(s.ear_offered(false));
+}
+
+#[test]
+fn i12_doubles_come_from_the_same_draw_and_all_2s_and_12s_are_doubles() {
+    let mut rng = Rng::new(0xD0B1E5);
+    let (mut dbl, n) = (0u32, 10_000u32);
+    for _ in 0..n {
+        let (a, b) = roll_two_dice_pair(&mut rng);
+        if a == b {
+            dbl += 1;
+        }
+        if a + b == 2 || a + b == 12 {
+            assert_eq!(a, b, "a 2 or a 12 is always a double");
+        }
+    }
+    let p = dbl as f64 / n as f64 * 100.0;
+    assert!((p - 16.67).abs() <= 2.0, "doubles {p:.1}%");
+    // The pair and the sum are one draw: roll_two_dice sums the same pair.
+    let (mut r1, mut r2) = (Rng::new(5), Rng::new(5));
+    for _ in 0..50 {
+        let (a, b) = roll_two_dice_pair(&mut r1);
+        assert_eq!(roll_two_dice(&mut r2), a + b);
+    }
+}
+
+#[test]
+fn a24_doubles_pay_double_in_sprint_and_a_jr_six_does() {
+    let mut s = Session::new(12, Mode::Sprint, 1, full_fake(), BTreeSet::new());
+    s.rules = Rules { doubles: true, ..Rules::default() };
+    put(&mut s, 5, true, None);
+    assert_eq!(s.answer(true).unwrap().points, 10, "a doubles 5 scores 10 (D-R20)");
+    // Rule off: the glow flag is carried but pays nothing.
+    let mut off = Session::new(13, Mode::Sprint, 1, full_fake(), BTreeSet::new());
+    put(&mut off, 5, true, None);
+    assert_eq!(off.answer(true).unwrap().points, 5);
+    // Jr: face 6 is the lucky face; it pays the die (6) doubled.
+    let mut j = Session::new(14, Mode::Jr, 0, full_fake(), BTreeSet::new());
+    j.rules = Rules { doubles: true, ..Rules::default() };
+    j.pending = Some(Roll { face: 6, len: 7, word: "qqqqqqq".into(), doubles: true, ..Roll::default() });
+    assert_eq!(j.answer(true).unwrap().points, 12);
+}
+
+#[test]
+fn a_jr_press_marks_a_six_as_doubles() {
+    let mut seen_six = false;
+    for seed in 0..40u64 {
+        let mut j = Session::new(seed, Mode::Jr, 0, jr_bank("en"), BTreeSet::new());
+        let r = j.press_roll().unwrap();
+        assert_eq!(r.doubles, r.face == 6);
+        seen_six |= r.face == 6;
+    }
+    assert!(seen_six, "forty seeds produced no six");
+}
+
+#[test]
+fn stretching_does_not_change_the_dice_or_the_ordinary_words() {
+    // Daily fairness (A29): two players on one seed, one Stretching every word,
+    // one never. The dice and the normal word stream are identical; only the
+    // served word differs, and it is a tier up.
+    let run = |stretch: bool| {
+        let mut s = Session::new(77, Mode::Marathon, 1, tiered_bank(), BTreeSet::new());
+        s.rules = all_rules();
+        let mut faces = Vec::new();
+        for _ in 0..25 {
+            let Some(r) = s.press_roll() else { break };
+            faces.push(r.face);
+            let w = s.reveal(stretch, false).expect("draws");
+            if stretch {
+                assert_eq!(w.tier, 2, "a Stretched word comes from the tier above");
+            }
+            s.answer(false);
+            s.pending = None;
+        }
+        (faces, s.drawn.clone(), s.used.clone())
+    };
+    let (f1, d1, u1) = run(false);
+    let (f2, d2, u2) = run(true);
+    assert_eq!(f1, f2, "the dice");
+    assert_eq!(d1, d2, "the ordinary word stream");
+    assert_ne!(u1, u2, "what was served differs");
+    let mut seen = std::collections::BTreeSet::new();
+    assert!(u2.iter().all(|w| seen.insert(w.clone())), "no repeats among Stretched words");
 }

@@ -26,6 +26,15 @@ const FLAG_JR = () => {
   localStorage.setItem('spell_flag_randospell_marathon', 'off');
   localStorage.setItem('spell_flag_randospell_jr', 'on');
 };
+// v1.1 Phase E: every mechanic on, in Marathon (heat needs a pot).
+const FLAG_V11 = () => {
+  localStorage.setItem('spell_flag_randospell', 'on');
+  localStorage.setItem('spell_flag_randospell_marathon', 'on');
+  localStorage.setItem('spell_flag_randospell_daily', 'off');
+  localStorage.setItem('spell_flag_randospell_h2h', 'off');
+  localStorage.setItem('spell_flag_randospell_jr', 'off');
+  for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
+};
 const FLAG_M = () => {
   localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
@@ -35,8 +44,9 @@ const FLAG_M = () => {
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.randospellState() || 'null'));
 
 export async function run(browser, base, suite) {
-  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null, jr = false, jrFlag = true } = {}) => {
-    const init = jr ? (jrFlag ? FLAG_JR : FLAG) : kind ? FLAG_ALL : marathon ? FLAG_M : FLAG;
+  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null, jr = false, jrFlag = true, v11 = false } = {}) => {
+    if (v11) marathon = true;
+    const init = v11 ? FLAG_V11 : jr ? (jrFlag ? FLAG_JR : FLAG) : kind ? FLAG_ALL : marathon ? FLAG_M : FLAG;
     const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init, ...(jr ? { age: KID } : {}) });
     if (reduce) await o.page.emulateMedia({ reducedMotion: 'reduce' });
     await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
@@ -459,5 +469,148 @@ export async function run(browser, base, suite) {
       const tiers = await ru.page.evaluate(() => [...document.querySelectorAll('#rsTiers [data-t]')].map((b) => b.dataset.t));
       assert(tiers.join() === '0', `Preview offers tiers ${tiers}`);
     } finally { await ru.ctx.close(); }
+  });
+  // ---- v1.1 Phase E ---------------------------------------------------------
+  // With Stretch or Ear on, a roll has two steps: the die lands, the player
+  // chooses, and Listen draws the word. This drives both steps.
+  const rollV11 = async (page, { stretch = false, ear = false } = {}) => {
+    await page.click('#rsOrb');
+    await page.waitForFunction(() => { const s = JSON.parse(window.__spelltest.randospellState() || 'null'); return s && (s.choosing || s.spelling); }, null, { timeout: 6000 });
+    let st = await state(page);
+    if (st.choosing) {
+      if (stretch && st.stretchOffered) await page.click('#rsCharms [data-b="stretch"]');
+      if (ear) { const o = await state(page); if (o.earOffered) await page.click('#rsCharms [data-b="ear"]'); }
+      await page.click('#rsCharms [data-b="listen"]');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+      st = await state(page);
+    }
+    return st;
+  };
+  const finish = async (page, word, ok = true) => {
+    const before = await page.evaluate(() => window.__spelltest.randospellState());
+    if (ok) await type(page, word); else { await page.click('#rsKeys [data-k="u:q"]'); await page.click('#rsKeys [data-k="u:q"]'); }
+    await page.click('#rsGo');
+    await settled(page, before);
+    return state(page);
+  };
+
+  await suite.test('randospell_v11_the_choices_come_between_the_die_and_the_word', async () => {
+    const { ctx, page } = await open({ v11: true });
+    try {
+      await page.click('#rsOrb');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).choosing, null, { timeout: 6000 });
+      const st = await state(page);
+      assert(st.word === null && st.spelling === false, `a word exists before the choice: ${JSON.stringify(st)}`);
+      assert(await page.evaluate(() => document.getElementById('rsCharms').querySelector('[data-b="listen"]') !== null), 'no Listen');
+      await page.click('#rsCharms [data-b="listen"]');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+      const after = await state(page);
+      assert(after.word && [...after.word].length === after.roll, 'the drawn word does not match the roll');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_v11_the_guess_toggles_and_locks_on_the_press', async () => {
+    const { ctx, page } = await open({ v11: true });
+    try {
+      await page.click('#rsCall [data-c="high"]');
+      assert((await state(page)).call === 'High', 'High not selected');
+      await page.click('#rsCall [data-c="high"]');
+      assert((await state(page)).call === null, 'a second tap did not clear it');
+      await page.click('#rsCall [data-c="low"]');
+      assert((await state(page)).call === 'Low', 'Low not selected');
+      await page.click('#rsOrb');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).choosing, null, { timeout: 6000 });
+      assert(await page.evaluate(() => document.getElementById('rsCall').hidden), 'the guess can still be changed after the press');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_a22_stretch_is_chosen_before_the_word_and_draws_a_tier_up', async () => {
+    const { ctx, page } = await open({ v11: true });
+    try {
+      let got = null;
+      for (let i = 0; i < 80 && !got; i++) {
+        await page.click('#rsOrb');
+        await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).choosing, null, { timeout: 6000 });
+        const st = await state(page);
+        if (st.stretchOffered) {
+          await page.click('#rsCharms [data-b="stretch"]');
+          await page.click('#rsCharms [data-b="listen"]');
+          await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+          got = await state(page);
+        } else {
+          await page.click('#rsCharms [data-b="listen"]');
+          await page.waitForFunction(() => JSON.parse(window.__spelltest.randospellState()).spelling, null, { timeout: 6000 });
+          const cur = await state(page);
+          const a = await finish(page, cur.word, false);
+          if (a.deciding) await page.click('#rsRollAgain');
+        }
+      }
+      assert(got, 'a Stretch was never on offer in 80 rolls');
+      assert(got.stretch === true && got.wordTier === got.tier + 1, `Stretch did not draw a tier up: ${JSON.stringify({ base: got.tier, word: got.wordTier, s: got.stretch })}`);
+      assert(got.events.indexOf('StretchChosen(true)') >= 0 && got.events.lastIndexOf('StretchChosen(true)') < got.events.lastIndexOf('WordDrawn'), `choice was not logged before the draw: ${got.events}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_a23_ear_folds_the_replay_away', async () => {
+    const { ctx, page } = await open({ v11: true });
+    try {
+      const st = await rollV11(page, { ear: true });
+      assert(st.ear === true, `Ear was not set: ${JSON.stringify(st)}`);
+      assert(await page.evaluate(() => document.getElementById('rsOrb').disabled), 'the replay control is live after Ear');
+      // A normal word keeps its replay.
+      await finish(page, st.word, true);
+      const n = await state(page);
+      if (n.deciding) await page.click('#rsRollAgain');
+      const plain = await rollV11(page, {});
+      assert(plain.ear === false && !(await page.evaluate(() => document.getElementById('rsOrb').disabled)), 'a plain word lost its replay');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_v11_heat_climbs_with_each_unbanked_word_and_resets', async () => {
+    const { ctx, page } = await open({ v11: true });
+    try {
+      for (let n = 1; n <= 3; n++) {
+        const st = await rollV11(page, {});
+        const a = await finish(page, st.word, true);
+        assert(a.heat === n, `heat ${a.heat} after ${n} correct words`);
+        assert((await page.evaluate(() => document.getElementById('rsHeat').textContent)).includes('●'), 'no filled pip shown');
+        await page.click('#rsRollAgain');
+      }
+      const st = await rollV11(page, {});
+      const miss = await finish(page, st.word, false);
+      assert(miss.heat === 0, `a miss left heat ${miss.heat}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('randospell_a24_doubles_glow_and_pay_double_in_sprint', async () => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: () => {
+      localStorage.setItem('spell_flag_randospell', 'on');
+      localStorage.setItem('spell_flag_randospell_doubles', 'on');
+      localStorage.setItem('spell_flag_randospell_marathon', 'off');
+    } });
+    const { ctx, page } = o;
+    try {
+      await page.evaluate(() => document.getElementById('rsOpenBtn').click());
+      await page.waitForSelector('#rsScreen.show', { timeout: 8000 });
+      await page.click('#rsStart');
+      await page.waitForSelector('#rsPlay:not([hidden])', { timeout: 8000 });
+      let seen = false;
+      for (let i = 0; i < 100 && !seen; i++) {
+        const st = await roll(page);
+        await page.evaluate(() => window.__spelltest.randospellScore(0));
+        const before = await state(page);
+        if (st.doubles) {
+          assert(await page.evaluate(() => document.getElementById('rsDie').classList.contains('glow')), 'doubles without a glow');
+          const after = await finish(page, st.word, true);
+          const base = (st.roll === 2 || st.roll === 12) ? st.roll * 2 : st.roll;
+          assert(after.score - before.score === base * 2, `doubles paid ${after.score - before.score}, wanted ${base * 2}`);
+          seen = true;
+        } else {
+          assert(await page.evaluate(() => !document.getElementById('rsDie').classList.contains('glow')), 'a glow without doubles');
+          await finish(page, st.word, false);
+        }
+      }
+      assert(seen, 'no doubles in 100 rolls');
+    } finally { await ctx.close(); }
   });
 }

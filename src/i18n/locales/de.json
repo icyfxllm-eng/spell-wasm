@@ -1049,5 +1049,14 @@
   "rs.jrWord": "Das Wort war {word}. Weiter zum nächsten!",
   "rs.jrDone": "Gut gemacht!",
   "rs.jrCount": "{n} Wörter richtig buchstabiert",
-  "rs.bestStreak": "Beste Serie: {n}"
+  "rs.bestStreak": "Beste Serie: {n}",
+  "rs.call": "Rate den Wurf",
+  "rs.call.low": "Niedrig 2–6",
+  "rs.call.seven": "Sieben",
+  "rs.call.high": "Hoch 8–12",
+  "rs.stretch": "Herausforderung ×1,5 (schwereres Wort)",
+  "rs.ear": "Ohne Wiederholung ×1,5",
+  "rs.listen": "Anhören",
+  "rs.heat": "Hitze {n}",
+  "rs.glow": "Pasch ×2!"
 }

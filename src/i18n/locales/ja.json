@@ -1049,5 +1049,14 @@
   "rs.jrWord": "ことばは「{word}」だよ。つぎへいこう！",
   "rs.jrDone": "よくできました！",
   "rs.jrCount": "{n}こ正解",
-  "rs.bestStreak": "いちばん長い連続正解：{n}"
+  "rs.bestStreak": "いちばん長い連続正解：{n}",
+  "rs.call": "出る目を予想",
+  "rs.call.low": "低い 2〜6",
+  "rs.call.seven": "7",
+  "rs.call.high": "高い 8〜12",
+  "rs.stretch": "チャレンジ ×1.5（むずかしいことば）",
+  "rs.ear": "聞き直しなし ×1.5",
+  "rs.listen": "きく",
+  "rs.heat": "ヒート {n}",
+  "rs.glow": "ぞろ目 ×2！"
 }

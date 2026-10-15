@@ -1049,5 +1049,14 @@
   "rs.jrWord": "To było słowo {word}. Idziemy dalej!",
   "rs.jrDone": "Brawo!",
   "rs.jrCount": "{n} dobrze przeliterowanych słów",
-  "rs.bestStreak": "Najlepsza seria: {n}"
+  "rs.bestStreak": "Najlepsza seria: {n}",
+  "rs.call": "Zgadnij rzut",
+  "rs.call.low": "Niski 2–6",
+  "rs.call.seven": "Siedem",
+  "rs.call.high": "Wysoki 8–12",
+  "rs.stretch": "Wyzwanie ×1,5 (trudniejsze słowo)",
+  "rs.ear": "Bez powtórki ×1,5",
+  "rs.listen": "Posłuchaj",
+  "rs.heat": "Żar {n}",
+  "rs.glow": "Dublet ×2!"
 }

@@ -1049,5 +1049,14 @@
   "rs.jrWord": "Это было слово {word}. Идём дальше!",
   "rs.jrDone": "Молодец!",
   "rs.jrCount": "Верных слов: {n}",
-  "rs.bestStreak": "Лучшая серия: {n}"
+  "rs.bestStreak": "Лучшая серия: {n}",
+  "rs.call": "Угадай бросок",
+  "rs.call.low": "Мало 2–6",
+  "rs.call.seven": "Семь",
+  "rs.call.high": "Много 8–12",
+  "rs.stretch": "Вызов ×1,5 (слово сложнее)",
+  "rs.ear": "Без повтора ×1,5",
+  "rs.listen": "Слушать",
+  "rs.heat": "Жар {n}",
+  "rs.glow": "Дубль ×2!"
 }

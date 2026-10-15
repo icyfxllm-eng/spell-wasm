@@ -1049,5 +1049,14 @@
   "rs.jrWord": "A palavra era {word}. Vamos para a próxima!",
   "rs.jrDone": "Muito bem!",
   "rs.jrCount": "{n} palavras soletradas certo",
-  "rs.bestStreak": "Melhor sequência: {n}"
+  "rs.bestStreak": "Melhor sequência: {n}",
+  "rs.call": "Adivinhe o lançamento",
+  "rs.call.low": "Baixo 2–6",
+  "rs.call.seven": "Sete",
+  "rs.call.high": "Alto 8–12",
+  "rs.stretch": "Desafio ×1,5 (palavra mais difícil)",
+  "rs.ear": "Sem repetir ×1,5",
+  "rs.listen": "Ouvir",
+  "rs.heat": "Calor {n}",
+  "rs.glow": "Dobro ×2!"
 }

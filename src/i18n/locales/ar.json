@@ -1049,5 +1049,14 @@
   "rs.jrWord": "كانت الكلمة {word}. هيا إلى التالية!",
   "rs.jrDone": "أحسنت!",
   "rs.jrCount": "{n} كلمات صحيحة",
-  "rs.bestStreak": "أطول سلسلة: {n}"
+  "rs.bestStreak": "أطول سلسلة: {n}",
+  "rs.call": "خمّن الرمية",
+  "rs.call.low": "منخفض 2–6",
+  "rs.call.seven": "سبعة",
+  "rs.call.high": "مرتفع 8–12",
+  "rs.stretch": "تحدٍّ ×1.5 (كلمة أصعب)",
+  "rs.ear": "بلا إعادة ×1.5",
+  "rs.listen": "استمع",
+  "rs.heat": "الحرارة {n}",
+  "rs.glow": "مزدوج ×2!"
 }

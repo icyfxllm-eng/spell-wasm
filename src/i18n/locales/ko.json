@@ -1049,5 +1049,14 @@
   "rs.jrWord": "낱말은 {word}였어요. 다음으로 가요!",
   "rs.jrDone": "잘했어요!",
   "rs.jrCount": "{n}개 맞혔어요",
-  "rs.bestStreak": "최고 연속 정답: {n}"
+  "rs.bestStreak": "최고 연속 정답: {n}",
+  "rs.call": "숫자 맞히기",
+  "rs.call.low": "낮음 2–6",
+  "rs.call.seven": "일곱",
+  "rs.call.high": "높음 8–12",
+  "rs.stretch": "도전 ×1.5 (더 어려운 낱말)",
+  "rs.ear": "다시 듣기 없음 ×1.5",
+  "rs.listen": "듣기",
+  "rs.heat": "열기 {n}",
+  "rs.glow": "같은 눈 ×2!"
 }

@@ -1049,5 +1049,14 @@
   "rs.jrWord": "Từ đó là {word}. Sang từ tiếp theo nào!",
   "rs.jrDone": "Giỏi lắm!",
   "rs.jrCount": "{n} từ đánh vần đúng",
-  "rs.bestStreak": "Chuỗi đúng dài nhất: {n}"
+  "rs.bestStreak": "Chuỗi đúng dài nhất: {n}",
+  "rs.call": "Đoán lượt tung",
+  "rs.call.low": "Thấp 2–6",
+  "rs.call.seven": "Bảy",
+  "rs.call.high": "Cao 8–12",
+  "rs.stretch": "Thử thách ×1,5 (từ khó hơn)",
+  "rs.ear": "Không nghe lại ×1,5",
+  "rs.listen": "Nghe",
+  "rs.heat": "Nhiệt {n}",
+  "rs.glow": "Đôi ×2!"
 }
