@@ -32,6 +32,8 @@ mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank ga
 #[cfg(not(feature = "web"))]
 mod randospell; // CC-RANDOSPELL v1 Phase A -- dice engine and Sprint (app only, O3)
 #[cfg(not(feature = "web"))]
+mod quickbee_draw; // CC-QUICKBEE-DRAW Phase A -- config, gate and word pool (ships dark)
+#[cfg(not(feature = "web"))]
 mod randospell_fx; // CC-RANDOSPELL v1.1 F18 -- the particle layer
 #[cfg(not(feature = "web"))]
 mod randospell_screen; // CC-RANDOSPELL Phase A -- the screen

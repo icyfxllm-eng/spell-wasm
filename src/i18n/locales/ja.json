@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "{n}点をこえれば勝ち。",
   "rs.playerN": "プレイヤー{n}",
   "rs.betsLine": "えらんだ数：{t}、成功：{w}",
-  "rs.stealsLine": "奪う挑戦：{t}、成功：{w}"
+  "rs.stealsLine": "奪う挑戦：{t}、成功：{w}",
+  "qbd.name": "クイックラウンド・手書き",
+  "qbd.desc": "時間内に一文字ずつ書こう。正しい文字ごとに1点。"
 }

@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Supere {n} para vencer.",
   "rs.playerN": "Jogador {n}",
   "rs.betsLine": "Escolhas feitas: {t}, acertadas: {w}",
-  "rs.stealsLine": "Roubos tentados: {t}, conseguidos: {w}"
+  "rs.stealsLine": "Roubos tentados: {t}, conseguidos: {w}",
+  "qbd.name": "Rodada Rápida · Desenho",
+  "qbd.desc": "Desenhe cada caractere contra o relógio. Cada caractere certo vale um ponto."
 }

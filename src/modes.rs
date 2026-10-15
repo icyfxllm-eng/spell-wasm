@@ -296,19 +296,19 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        // 22 modes + 6 core surfaces (Randospell is the newest mode). my_words and misses are surfaces rather
+        // 23 modes + 6 core surfaces (the drawn Quick Bee is the newest mode). my_words and misses are surfaces rather
         // than modes, registered so the CC-HUB-NAV drawer can resolve their
         // rows through this registry and not a second list (I2); `versus` is
         // the newest, and it is here because v1.3.1 F2 deletes the quick-play
         // row that was the local Spell Off's only door (H1).
-        assert_eq!(all.len(), 28, "22 modes + 6 core surfaces registered");
+        assert_eq!(all.len(), 29, "23 modes + 6 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "standard", "climb", "daily", "versus"],
+            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "quickbee_draw", "standard", "climb", "daily", "versus"],
         );
     }
 
@@ -393,7 +393,7 @@ mod tests {
         // — the point is that a non-iOS mode still tiles on web, not that
         // any particular mode does.
         assert!(got.contains(&"def_match".to_string()), "an all-platform mode still tiles on web");
-        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell"] {
+        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "quickbee_draw"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }
@@ -433,6 +433,7 @@ mod tests {
     /// an entry here is the opposite, so it must name who decided and when.
     const DELIBERATELY_DARK: &[(&str, &str)] = &[
         ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
+        ("quickbee_draw", "CC-QUICKBEE-DRAW Phase A (Eric, 2026-10-15): ships dark; every language flag defaults off and the run loop is Phase B"),
     ];
 
     /// A deliberately dark mode is dark by DEFAULT only: its flag has a real
@@ -445,11 +446,13 @@ mod tests {
         };
         for (id, why) in DELIBERATELY_DARK {
             assert!(all.iter().any(|m| m.id == *id && m.status == Status::Live), "{id} must be a LIVE mode ({why})");
+            // A mode that lists languages is judged in one of them.
+            let lang = all.iter().find(|m| m.id == *id).and_then(|m| m.languages.as_ref()).and_then(|l| l.first().cloned()).unwrap_or_else(|| "en".to_string());
             crate::flags::set_test_override(None);
-            let off = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), ..ctx() }));
+            let off = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), lang: lang.clone(), ..ctx() }));
             assert!(!off.contains(&id.to_string()), "{id} tiles on device with its flag at the default ({why})");
             crate::flags::set_test_override(Some("on"));
-            let on = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), ..ctx() }));
+            let on = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), lang: lang.clone(), ..ctx() }));
             crate::flags::set_test_override(None);
             assert!(on.contains(&id.to_string()), "{id} does not tile on device with its flag on — got {on:?}");
         }
@@ -462,9 +465,12 @@ mod tests {
         let live: Vec<String> =
             all.iter().filter(|m| m.status == Status::Live).map(|m| m.id.clone()).collect();
         assert!(live.len() >= 6, "expected the shipped live set, got {live:?}");
-        let c = HubCtx { native: true, enabled: live.clone(), ..ctx() };
-        let got = ids(&visible(&all, &c));
         for id in &live {
+            // A mode that lists languages is judged in one of them (zh and ja
+            // for the drawn Quick Bee), not in English.
+            let lang = all.iter().find(|m| m.id == *id).and_then(|m| m.languages.as_ref()).and_then(|l| if l.iter().any(|x| x == "en") { None } else { l.first().cloned() }).unwrap_or_else(|| "en".to_string());
+            let c = HubCtx { native: true, enabled: live.clone(), lang, ..ctx() };
+            let got = ids(&visible(&all, &c));
             assert!(got.contains(id), "{id} is LIVE but does not tile on device — got {got:?}");
         }
     }
@@ -612,7 +618,7 @@ mod tests {
         // drawer opens over. Recorded here rather than quietly dropped, since
         // this list is the form D-N6's signature takes in the tree.
         assert_eq!(of(Group::SpellIt),
-                   ["bee_sim", "boardgame", "climb", "daily", "online_spelloff", "practice", "randospell", "versus"]);
+                   ["bee_sim", "boardgame", "climb", "daily", "online_spelloff", "practice", "quickbee_draw", "randospell", "versus"]);
     }
 
     /// A3's precondition. A tile whose mode is unlisted would be reachable from
@@ -689,7 +695,7 @@ mod web_wall_tests {
         let ids: Vec<String> = all().iter().map(|m| m.id.clone()).collect();
         // CC-SPELLDOKU Done #11: SpellDoku never registers on the site.
         // CC-WORDGRID Phase A: nor does Spell Search.
-        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell"] {
+        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "quickbee_draw"] {
             assert!(!ids.contains(&app_only.to_string()),
                     "{app_only} is still in the site registry — hiding is not removing");
         }

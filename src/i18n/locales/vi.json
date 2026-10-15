@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Vượt {n} để thắng.",
   "rs.playerN": "Người chơi {n}",
   "rs.betsLine": "Lựa chọn đã dùng: {t}, thành công: {w}",
-  "rs.stealsLine": "Cướp đã thử: {t}, thành công: {w}"
+  "rs.stealsLine": "Cướp đã thử: {t}, thành công: {w}",
+  "qbd.name": "Vòng Nhanh · Vẽ",
+  "qbd.desc": "Vẽ từng chữ trong giới hạn thời gian. Mỗi chữ đúng được một điểm."
 }

@@ -48,6 +48,7 @@ import * as boardgame from './specs/boardgame.mjs';
 import * as boardgameLayout from './specs/boardgame-layout.mjs';
 import * as spelluzzle from './specs/spelluzzle.mjs';
 import * as randospell from './specs/randospell.mjs';
+import * as quickbeeDraw from './specs/quickbee-draw.mjs';
 import * as spelluzzleV11 from './specs/spelluzzle-v11.mjs';
 import * as spelluzzlePar from './specs/spelluzzle-par.mjs';
 import * as spelluzzleG from './specs/spelluzzle-g.mjs';
@@ -93,6 +94,7 @@ const SPECS = [
   ['boardgame', boardgame, boardgameLayout, boardgamePolish, boardgameSprint, boardgameStretch, boardgameBoost],
   ['spelluzzle', spelluzzle, spelluzzleV11, spelluzzlePar, spelluzzleG, spelluzzleDuel],
   ['randospell', randospell],
+  ['quickbee-draw', quickbeeDraw],
   ['translate-screen', translateScreen],
   ['coming', coming],
   ['ghost', ghost],

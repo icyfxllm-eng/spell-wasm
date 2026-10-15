@@ -476,6 +476,22 @@
       "juniorPolicy": "ceiling:medium"
     },
     {
+      "id": "quickbee_draw",
+      "group": "spell_it",
+      "nameKey": "qbd.name",
+      "descKey": "qbd.desc",
+      "icon": "\u270d\ufe0f",
+      "status": "live",
+      "kidSafe": false,
+      "platforms": ["ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": ["zh", "ja"],
+      "$note": "CC-QUICKBEE-DRAW v1 Phase A: Quick Bee where you DRAW each character. App only. zh and ja first (Eric, 2026-10-15): Korean waits for its own measurement and stays out of ink_allowed (CC-CJK-INK D1, I5); Spell Jr gets no pad (CC-CJK-INK D6, I6), so juniorPolicy is hidden. One recogniser path, Apple Vision (CC-CJK-INK D2, I3). Ships dark: quickbee_draw::PHASE_B_BUILT keeps the entry absent until the run loop exists, and each language has its own default-off flag.",
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
+    },
+    {
       "id": "standard",
       "group": "unlisted",
       "nameKey": "top.spellIt",

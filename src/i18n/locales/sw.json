@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Vuka {n} ili ushinde.",
   "rs.playerN": "Mchezaji {n}",
   "rs.betsLine": "Chaguo zilizochukuliwa: {t}, zilizofanikiwa: {w}",
-  "rs.stealsLine": "Wizi uliojaribiwa: {t}, uliofanikiwa: {w}"
+  "rs.stealsLine": "Wizi uliojaribiwa: {t}, uliofanikiwa: {w}",
+  "qbd.name": "Raundi ya Haraka · Kuchora",
+  "qbd.desc": "Chora kila herufi dhidi ya saa. Kila herufi sahihi inapata alama moja."
 }

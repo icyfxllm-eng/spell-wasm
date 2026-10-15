@@ -304,6 +304,15 @@
         "expert"
       ]
     },
+    "quickbee_draw": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
     "versus": {
       "junior": [
         "easy",

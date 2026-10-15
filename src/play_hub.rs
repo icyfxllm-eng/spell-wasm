@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 22; // + randospell (CC-RANDOSPELL, app only)
+const N_LAUNCH: usize = 23; // + quickbee_draw (CC-QUICKBEE-DRAW, app only)
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 8;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -98,6 +98,8 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("boardgame", Some("bgOpenBtn")),
     #[cfg(not(feature = "web"))]
     ("randospell", Some("rsOpenBtn")),
+    #[cfg(not(feature = "web"))]
+    ("quickbee_draw", Some("qbdOpenBtn")),
 ];
 
 /// The mode -> entry-point join. `pub(crate)` so the CC-HUB-NAV drawer routes
@@ -169,6 +171,9 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
     // Phase D: Spell Jr sees Randospell only with randospell_jr on and a bank
     // that carries the Jr die. Computed before `lang` moves into the context.
     // D10: the same for a standard profile and what it owns in this language.
+    // CC-QUICKBEE-DRAW F4/I2: the draw entry is ABSENT (not greyed) unless this
+    // language's own flag is on, the run exists, and the profile may use the pad.
+    let qbd_hidden = qbd_entry_hidden(&lang, kid);
     let jr_hides_randospell = if kid {
         randospell_blocked_for_jr(&lang)
     } else {
@@ -189,6 +194,7 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
             .map(|m| m.id.clone())
             .filter(|id| crate::flags::is_on(id))
             .filter(|id| !hides_randospell(id, jr_hides_randospell))
+            .filter(|id| !hides_quickbee_draw(id, qbd_hidden))
             .collect(),
     }
 }
@@ -202,6 +208,28 @@ fn randospell_blocked_for_jr(lang: &str) -> bool {
 
 #[cfg(feature = "web")]
 fn randospell_blocked_for_jr(_lang: &str) -> bool {
+    false
+}
+
+#[cfg(not(feature = "web"))]
+fn qbd_entry_hidden(lang: &str, kid: bool) -> bool {
+    !crate::quickbee_draw::available(lang, kid, crate::flags::quickbee_draw_lang(lang))
+}
+
+#[cfg(feature = "web")]
+fn qbd_entry_hidden(_lang: &str, _kid: bool) -> bool {
+    false
+}
+
+/// The same rule for the drawn Quick Bee: its id literal lives only in the app
+/// build, and the entry is absent where `quickbee_draw::available` says no.
+#[cfg(not(feature = "web"))]
+fn hides_quickbee_draw(id: &str, hide: bool) -> bool {
+    hide && id == "quickbee_draw"
+}
+
+#[cfg(feature = "web")]
+fn hides_quickbee_draw(_id: &str, _hide: bool) -> bool {
     false
 }
 

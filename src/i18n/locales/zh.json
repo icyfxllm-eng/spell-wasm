@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "超过 {n} 即可获胜。",
   "rs.playerN": "玩家 {n}",
   "rs.betsLine": "所选次数：{t}，成功：{w}",
-  "rs.stealsLine": "抢夺尝试：{t}，成功：{w}"
+  "rs.stealsLine": "抢夺尝试：{t}，成功：{w}",
+  "qbd.name": "快速一局 · 手写",
+  "qbd.desc": "在限定时间内逐字书写。每写对一个字得一分。"
 }

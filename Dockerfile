@@ -19,8 +19,8 @@ RUN cargo build --release --target wasm32-unknown-unknown --features web \
 # sentinel regions scripts/build-web.sh cuts. perl, not python: the caddy
 # stage has neither, and this stage's base is guaranteed perl.
 COPY index.html /tmp/index.html
-RUN perl -0pe 's{<!-- (SPELL-PICTURE|BOARDGAME|RANDOSPELL):BEGIN.*?<!-- \1:END -->}{}gs; s{/\* (SPELL-PICTURE|BOARDGAME|RANDOSPELL):BEGIN.*?/\* \1:END \*/}{}gs' /tmp/index.html > /out/index.html \
-    && ! grep -q 'SPELL-PICTURE:\|BOARDGAME:\|RANDOSPELL:' /out/index.html
+RUN perl -0pe 's{<!-- (SPELL-PICTURE|BOARDGAME|RANDOSPELL|QUICKBEEDRAW):BEGIN.*?<!-- \1:END -->}{}gs; s{/\* (SPELL-PICTURE|BOARDGAME|RANDOSPELL|QUICKBEEDRAW):BEGIN.*?/\* \1:END \*/}{}gs' /tmp/index.html > /out/index.html \
+    && ! grep -q 'SPELL-PICTURE:\|BOARDGAME:\|RANDOSPELL:\|QUICKBEEDRAW:' /out/index.html
 
 # Stage 2: serve the static site with Caddy (automatic HTTPS included).
 FROM caddy:2-alpine

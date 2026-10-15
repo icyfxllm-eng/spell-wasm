@@ -16,7 +16,7 @@ use std::{env, fs, path::Path};
 /// Keys belonging to the mode. Everything under `wordpic.` / `finale.`, plus
 /// its hub-tile entries, which live under the `tools.` namespace.
 fn is_picture_key(k: &str) -> bool {
-    k.starts_with("wordpic.") || k.starts_with("finale.") || k.starts_with("tools.wordpic.") || is_boardgame_key(k) || is_spelluzzle_key(k) || is_randospell_key(k)
+    k.starts_with("wordpic.") || k.starts_with("finale.") || k.starts_with("tools.wordpic.") || is_boardgame_key(k) || is_spelluzzle_key(k) || is_randospell_key(k) || is_quickbee_draw_key(k)
 }
 
 /// CC-BOARD-GAME I13: every string of the app-only Board Game mode lives under
@@ -28,6 +28,11 @@ fn is_boardgame_key(k: &str) -> bool {
 /// CC-RANDOSPELL O3: every string of the app-only Randospell mode lives under `rs.`.
 fn is_randospell_key(k: &str) -> bool {
     k.starts_with("rs.")
+}
+
+/// CC-QUICKBEE-DRAW: every string of the app-only drawn Quick Bee lives under `qbd.`.
+fn is_quickbee_draw_key(k: &str) -> bool {
+    k.starts_with("qbd.")
 }
 
 /// CC-SPELLUZZLE O1: every string of the app-only Spelluzzle mode lives under `spz.`.

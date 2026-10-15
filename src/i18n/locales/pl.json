@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Pokonaj {n}, by wygrać.",
   "rs.playerN": "Gracz {n}",
   "rs.betsLine": "Wybory: {t}, udane: {w}",
-  "rs.stealsLine": "Kradzieże: próby {t}, udane {w}"
+  "rs.stealsLine": "Kradzieże: próby {t}, udane {w}",
+  "qbd.name": "Szybka Runda · Rysowanie",
+  "qbd.desc": "Rysuj każdy znak na czas. Każdy poprawny znak daje punkt."
 }

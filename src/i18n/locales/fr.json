@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Dépasse {n} pour gagner.",
   "rs.playerN": "Joueur {n}",
   "rs.betsLine": "Choix faits : {t}, gagnants : {w}",
-  "rs.stealsLine": "Vols tentés : {t}, réussis : {w}"
+  "rs.stealsLine": "Vols tentés : {t}, réussis : {w}",
+  "qbd.name": "Manche rapide · Dessin",
+  "qbd.desc": "Dessine chaque caractère contre la montre. Chaque caractère juste vaut un point."
 }

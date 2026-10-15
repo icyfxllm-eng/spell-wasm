@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "{n}점을 넘으면 이겨요.",
   "rs.playerN": "플레이어 {n}",
   "rs.betsLine": "선택한 횟수: {t}, 성공: {w}",
-  "rs.stealsLine": "빼앗기 시도: {t}, 성공: {w}"
+  "rs.stealsLine": "빼앗기 시도: {t}, 성공: {w}",
+  "qbd.name": "빠른 라운드 · 손글씨",
+  "qbd.desc": "시간 안에 글자를 하나씩 그려 보세요. 맞은 글자마다 1점."
 }

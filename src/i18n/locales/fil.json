@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Lampasan ang {n} para manalo.",
   "rs.playerN": "Manlalaro {n}",
   "rs.betsLine": "Mga pinili: {t}, nagtagumpay: {w}",
-  "rs.stealsLine": "Mga pagnanakaw na sinubukan: {t}, nagtagumpay: {w}"
+  "rs.stealsLine": "Mga pagnanakaw na sinubukan: {t}, nagtagumpay: {w}",
+  "qbd.name": "Mabilis na Round · Pagguhit",
+  "qbd.desc": "Iguhit ang bawat karakter laban sa oras. Bawat tamang karakter ay may isang puntos."
 }

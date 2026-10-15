@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Beat {n} to win.",
   "rs.playerN": "Player {n}",
   "rs.betsLine": "Choices taken: {t}, paid off: {w}",
-  "rs.stealsLine": "Steals tried: {t}, landed: {w}"
+  "rs.stealsLine": "Steals tried: {t}, landed: {w}",
+  "qbd.name": "Quick Bee · Draw",
+  "qbd.desc": "Draw each character against the clock. Every right character scores a point."
 }

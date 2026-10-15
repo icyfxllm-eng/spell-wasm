@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Übertriff {n}, um zu gewinnen.",
   "rs.playerN": "Spieler {n}",
   "rs.betsLine": "Gewählte Optionen: {t}, aufgegangen: {w}",
-  "rs.stealsLine": "Diebstähle versucht: {t}, gelungen: {w}"
+  "rs.stealsLine": "Diebstähle versucht: {t}, gelungen: {w}",
+  "qbd.name": "Schnelle Runde · Zeichnen",
+  "qbd.desc": "Zeichne jedes Zeichen gegen die Uhr. Jedes richtige Zeichen bringt einen Punkt."
 }

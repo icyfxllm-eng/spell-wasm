@@ -291,6 +291,21 @@ pub fn randospell_fx() -> bool {
     randospell() && resolve(stored("randospell_fx").as_deref(), false)
 }
 
+/// CC-QUICKBEE-DRAW F4 -- the drawn Quick Bee, one flag per language
+/// (`spell_flag_quickbee_draw_<lang>`), every one **default OFF**. Which
+/// languages exist, and which are measured enough to be offered at all, is the
+/// `quickbee_draw::LANGS` table, not this file.
+#[cfg(not(feature = "web"))]
+pub fn quickbee_draw_lang(lang: &str) -> bool {
+    crate::quickbee_draw::cfg(lang).is_some_and(|c| resolve(stored(c.flag_key).as_deref(), false))
+}
+
+/// The registry's mode flag: any language's draw flag is on.
+#[cfg(not(feature = "web"))]
+pub fn quickbee_draw() -> bool {
+    crate::quickbee_draw::LANGS.iter().any(|c| resolve(stored(c.flag_key).as_deref(), false))
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {
@@ -588,6 +603,8 @@ pub fn is_on(name: &str) -> bool {
         "boardgame" => boardgame(),
         #[cfg(not(feature = "web"))]
         "randospell" => randospell(),
+        #[cfg(not(feature = "web"))]
+        "quickbee_draw" => quickbee_draw(),
         #[cfg(not(feature = "web"))]
         "spelluzzle" => spelluzzle(),
         _ => false,

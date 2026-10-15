@@ -1091,5 +1091,7 @@
   "rs.finalTurn": "Supera {n} para ganar.",
   "rs.playerN": "Jugador {n}",
   "rs.betsLine": "Opciones elegidas: {t}, acertadas: {w}",
-  "rs.stealsLine": "Robos intentados: {t}, logrados: {w}"
+  "rs.stealsLine": "Robos intentados: {t}, logrados: {w}",
+  "qbd.name": "Ronda Rápida · Dibujo",
+  "qbd.desc": "Dibuja cada carácter contra el reloj. Cada carácter correcto suma un punto."
 }
