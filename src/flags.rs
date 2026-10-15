@@ -218,21 +218,21 @@ pub fn randospell_marathon() -> bool {
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_daily() -> bool {
-    randospell() && resolve(stored("randospell_daily").as_deref(), false)
+    randospell() && resolve(stored("randospell_daily").as_deref(), true)
 }
 
 /// CC-RANDOSPELL F9: Head-to-Head (Phase C). Needs `randospell`.
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_h2h() -> bool {
-    randospell() && resolve(stored("randospell_h2h").as_deref(), false)
+    randospell() && resolve(stored("randospell_h2h").as_deref(), true)
 }
 
 /// CC-RANDOSPELL F9: the Spell Jr variant (Phase D). Needs `randospell`.
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_jr() -> bool {
-    randospell() && resolve(stored("randospell_jr").as_deref(), false)
+    randospell() && resolve(stored("randospell_jr").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F19 -- the "over the top" mechanics. Each is **default OFF**
@@ -240,47 +240,47 @@ pub fn randospell_jr() -> bool {
 /// are for staging. With one off, that mechanic is exactly v1.
 #[cfg(not(feature = "web"))]
 pub fn randospell_heat() -> bool {
-    randospell() && resolve(stored("randospell_heat").as_deref(), false)
+    randospell() && resolve(stored("randospell_heat").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_call() -> bool {
-    randospell() && resolve(stored("randospell_call").as_deref(), false)
+    randospell() && resolve(stored("randospell_call").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_stretch() -> bool {
-    randospell() && resolve(stored("randospell_stretch").as_deref(), false)
+    randospell() && resolve(stored("randospell_stretch").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_doubles() -> bool {
-    randospell() && resolve(stored("randospell_doubles").as_deref(), false)
+    randospell() && resolve(stored("randospell_doubles").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_ear() -> bool {
-    randospell() && resolve(stored("randospell_ear").as_deref(), false)
+    randospell() && resolve(stored("randospell_ear").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F19 -- the NPC table (F10). **Default OFF**; needs `randospell`.
 /// With it on, Jr's Sprint also gets its one racing NPC.
 #[cfg(not(feature = "web"))]
 pub fn randospell_npc() -> bool {
-    randospell() && resolve(stored("randospell_npc").as_deref(), false)
+    randospell() && resolve(stored("randospell_npc").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F15 -- Steal, NPC table and Head-to-Head only. **Default OFF**.
 #[cfg(not(feature = "web"))]
 pub fn randospell_steal() -> bool {
-    randospell() && resolve(stored("randospell_steal").as_deref(), false)
+    randospell() && resolve(stored("randospell_steal").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F16 -- the Final Round (was "Last Call"), NPC table and
 /// Head-to-Head only. **Default OFF**.
 #[cfg(not(feature = "web"))]
 pub fn randospell_lastcall() -> bool {
-    randospell() && resolve(stored("randospell_lastcall").as_deref(), false)
+    randospell() && resolve(stored("randospell_lastcall").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F18 -- the Eclipse visuals. **Default OFF** and independent:
@@ -288,7 +288,7 @@ pub fn randospell_lastcall() -> bool {
 /// still readable (I20).
 #[cfg(not(feature = "web"))]
 pub fn randospell_fx() -> bool {
-    randospell() && resolve(stored("randospell_fx").as_deref(), false)
+    randospell() && resolve(stored("randospell_fx").as_deref(), true)
 }
 
 /// CC-QUICKBEE-DRAW F4 -- the drawn Quick Bee, one flag per language
@@ -297,13 +297,13 @@ pub fn randospell_fx() -> bool {
 /// `quickbee_draw::LANGS` table, not this file.
 #[cfg(not(feature = "web"))]
 pub fn quickbee_draw_lang(lang: &str) -> bool {
-    crate::quickbee_draw::cfg(lang).is_some_and(|c| resolve(stored(c.flag_key).as_deref(), false))
+    crate::quickbee_draw::cfg(lang).is_some_and(|c| resolve(stored(c.flag_key).as_deref(), c.measured))
 }
 
 /// The registry's mode flag: any language's draw flag is on.
 #[cfg(not(feature = "web"))]
 pub fn quickbee_draw() -> bool {
-    crate::quickbee_draw::LANGS.iter().any(|c| resolve(stored(c.flag_key).as_deref(), false))
+    crate::quickbee_draw::LANGS.iter().any(|c| resolve(stored(c.flag_key).as_deref(), c.measured))
 }
 
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
