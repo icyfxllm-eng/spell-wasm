@@ -5,30 +5,31 @@
 // (__spelltest.randospellState), the way boardgame.mjs does.
 import { openApp, assert } from '../harness.mjs';
 
-// The shipped defaults are randospell + marathon ON, daily/h2h/jr OFF; every test states
-// the flags it means so a default change cannot silently change what it proves.
+// Every init switches every Randospell flag off first and then turns on exactly the
+// ones it means, so a change of shipped defaults (a release build flips them all on)
+// cannot silently change what a test proves.
 const FLAG = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'off');
   localStorage.setItem('spell_flag_randospell_daily', 'off');
   localStorage.setItem('spell_flag_randospell_h2h', 'off');
   localStorage.setItem('spell_flag_randospell_jr', 'off');
 };
 const FLAG_ALL = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
   localStorage.setItem('spell_flag_randospell_daily', 'on');
   localStorage.setItem('spell_flag_randospell_h2h', 'on');
 };
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const FLAG_JR = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'off');
   localStorage.setItem('spell_flag_randospell_jr', 'on');
 };
 // v1.1 Phase E: every mechanic on, in Marathon (heat needs a pot).
 const FLAG_V11 = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
   localStorage.setItem('spell_flag_randospell_daily', 'off');
   localStorage.setItem('spell_flag_randospell_h2h', 'off');
@@ -37,7 +38,7 @@ const FLAG_V11 = () => {
 };
 // v1.1 Phase F: the NPC table (heat on so NPCs and the human share one payout).
 const FLAG_TABLE = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'off');
   localStorage.setItem('spell_flag_randospell_daily', 'off');
   localStorage.setItem('spell_flag_randospell_h2h', 'off');
@@ -47,7 +48,7 @@ const FLAG_TABLE = () => {
 };
 // v1.1 Phase G: the table with Steal and the Final Round on.
 const FLAG_G = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
   localStorage.setItem('spell_flag_randospell_npc', 'on');
   localStorage.setItem('spell_flag_randospell_heat', 'on');
@@ -56,23 +57,23 @@ const FLAG_G = () => {
 };
 // v1.1 Phase I: the Eclipse visuals over the Phase E mechanics (Marathon).
 const FLAG_FX = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
   for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
 };
 const FLAG_FX_OFF = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
   for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
   localStorage.setItem('spell_flag_randospell_fx', 'off');
 };
 const FLAG_JR_TABLE = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_jr', 'on');
   localStorage.setItem('spell_flag_randospell_npc', 'on');
 };
 const FLAG_M = () => {
-  localStorage.setItem('spell_flag_randospell', 'on');
+  for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
   localStorage.setItem('spell_flag_randospell_marathon', 'on');
   localStorage.setItem('spell_flag_randospell_daily', 'off');
   localStorage.setItem('spell_flag_randospell_h2h', 'off');
@@ -476,7 +477,7 @@ export async function run(browser, base, suite) {
 
   await suite.test('randospell_a9_the_info_sheet_lists_a_remap_where_one_exists', async () => {
     // es needs Full for a viable bank (D10), so the dev entitlement door is on here.
-    const DEV = () => { localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_dev_entitlements', 'on'); };
+    const DEV = () => { for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on'); localStorage.setItem('spell_dev_entitlements', 'on'); };
     const infoLines = async (lang, init) => {
       const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init });
       try {
@@ -620,7 +621,7 @@ export async function run(browser, base, suite) {
 
   await suite.test('randospell_a24_doubles_glow_and_pay_double_in_sprint', async () => {
     const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: () => {
-      localStorage.setItem('spell_flag_randospell', 'on');
+      for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
       localStorage.setItem('spell_flag_randospell_doubles', 'on');
       localStorage.setItem('spell_flag_randospell_marathon', 'off');
     } });
@@ -875,7 +876,7 @@ export async function run(browser, base, suite) {
 
   await suite.test('randospell_h_daily_carries_the_bets_and_never_steal_or_a_final_round', async () => {
     const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: () => {
-      localStorage.setItem('spell_flag_randospell', 'on');
+      for (const f of ['marathon', 'daily', 'h2h', 'jr', 'npc', 'heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall', 'fx']) localStorage.setItem(`spell_flag_randospell_${f}`, 'off'); localStorage.setItem('spell_flag_randospell', 'on');
       localStorage.setItem('spell_flag_randospell_daily', 'on');
       for (const f of ['heat', 'call', 'stretch', 'doubles', 'ear', 'steal', 'lastcall']) localStorage.setItem(`spell_flag_randospell_${f}`, 'on');
     } });
