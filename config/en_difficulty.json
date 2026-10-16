@@ -27,6 +27,11 @@
   "$doc": "Score quantiles over the keyed universe. Set by calibration, not by target size. null until Phase A calibration is signed.",
   "medium": null,
   "hard": null,
-  "expert": null
+  "expert": 0.702
+ },
+ "calibration_bar": {
+  "$doc": "A3 bar. Spec default was 0.90 / 0.05. Amended by Eric 2026-10-16 (option 3): the score is sound-based and cannot see lexical exceptions (supersede, harass). No new data source was approved; the wordfreq misspelling-ratio boost was NOT adopted.",
+  "expert_in_min": 0.8,
+  "not_expert_in_max": 0.08
  }
 }

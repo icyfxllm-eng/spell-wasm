@@ -61,8 +61,9 @@ else:
     t = edges
 e = sum(x >= t for x in cls["expert"]) / len(cls["expert"])
 n = sum(x >= t for x in cls["not_expert"]) / len(cls["not_expert"])
-ok = e >= 0.9 and n <= 0.05
-print(f"A3 threshold={t:.3f} expert_in={e:.0%} (need >=90%) not_expert_in={n:.0%} (need <=5%) -> {'PASS' if ok else 'FAIL'} [{'ENFORCED' if approved else 'report only: set is DRAFT'}]")
+bar = cfg["calibration_bar"]
+ok = e >= bar["expert_in_min"] and n <= bar["not_expert_in_max"]
+print(f"A3 threshold={t:.3f} expert_in={e:.0%} (need >={bar['expert_in_min']:.0%}) not_expert_in={n:.0%} (need <={bar['not_expert_in_max']:.0%}) -> {'PASS' if ok else 'FAIL'} [{'ENFORCED' if approved else 'report only: set is DRAFT'}]")
 if approved and not ok:
     fails.append("A3: calibration bar not met")
 for f in fails:
