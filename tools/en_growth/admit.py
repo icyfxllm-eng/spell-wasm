@@ -29,6 +29,22 @@ def good_sense(pos, s):
     return not (set(s["t"]) & HARD_BAD)
 
 
+SOFT_TAGS = {"historical", "us", "uk", "british", "australia", "regional", "slang", "informal", "colloquial",
+             "dated", "figuratively", "broadly", "literary", "poetic", "canada", "ireland", "scotland"}
+
+
+def pick_glosses(good):
+    """Up to 3 candidate senses for the AUDITOR (flags only).  Part of speech with the most good senses first
+    (counteract is a verb, not the one-line noun); within it, register/regional senses sink below plain ones."""
+    by = {}
+    for pos, s in good:
+        by.setdefault(pos, []).append(s)
+    order = sorted(by, key=lambda p: -len(by[p]))
+    pos = order[0]
+    ranked = sorted(by[pos], key=lambda s: 1 if set(s["t"]) & SOFT_TAGS else 0)
+    return {"pos": pos, "glosses": [s["g"] for s in ranked[:3]]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--hw", default=os.path.join(HOME, ".corpus-cache/en-wikt/headwords.json"))
@@ -67,7 +83,7 @@ def main():
         if not good:
             why["no current, standard, non-form-of sense"] += 1
             continue
-        keep.append(w); gloss[w] = good[0]
+        keep.append(w); gloss[w] = pick_glosses(good)
     funnel["has a current, standard, non-offensive, non-form-of sense"] = len(keep)
     # inflected forms of a lemma that is itself a headword (D8): every sense is a form-of sense of a headword
     def lemma_inflection(w):
@@ -89,7 +105,7 @@ def main():
         f.write("word\tgrowth_stage\tsource\n")
         for w in ok:
             f.write(f"{w}\tstaged\twiktionary+scowl\n")
-    json.dump({w: {"pos": gloss[w][0], "gloss": gloss[w][1]["g"]} for w in ok}, open(os.path.join(HOME, ".corpus-cache/en-wikt/staged_gloss.json"), "w"), ensure_ascii=False)
+    json.dump({w: gloss[w] for w in ok}, open(os.path.join(HOME, ".corpus-cache/en-wikt/staged_gloss.json"), "w"), ensure_ascii=False)
     with open(a.report, "w", encoding="utf-8") as f:
         f.write("# English staged-row admission report (generated)\n\n| Step | Rows |\n|---|---|\n")
         for k, v in funnel.items():

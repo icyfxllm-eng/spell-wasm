@@ -32,8 +32,9 @@ samp = random.sample(keep, min(a.sample, len(keep)))
 os.makedirs(os.path.join(ROOT, "reports"), exist_ok=True)
 with open(os.path.join(ROOT, "reports/en-staged-review-sample.csv"), "w", encoding="utf-8", newline="") as f:
     w = csv.writer(f)
-    w.writerow(["word", "pos", "candidate_definition (flag only, unaudited)", "verdict (keep/cut/unsure)", "note"])
+    w.writerow(["word", "pos", "candidate_1 (flag only, unaudited)", "candidate_2", "candidate_3", "word verdict (keep/cut/unsure)", "definition verdict (ok/wrong sense/wrong pos/none fits)", "note"])
     for x in sorted(samp):
         g = gl.get(x, {})
-        w.writerow([x, g.get("pos", ""), g.get("gloss", ""), "", ""])
+        gs = (g.get("glosses", []) + ["", "", ""])[:3]
+        w.writerow([x, g.get("pos", ""), gs[0], gs[1], gs[2], "", "", ""])
 print(f"{len(rows)} candidates -> {len(keep)} staged at score >= {t}; sample {len(samp)}")
