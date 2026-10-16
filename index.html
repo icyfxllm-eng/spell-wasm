@@ -256,6 +256,96 @@
   body.big-text .card h2{ font-size:24px; }
   body.big-text .modal h3{ font-size:33px; }
 
+  /* BIG TEXT REACHES THE GAME MODES (Eric, 2026-10-15). The rules above scale
+     the menu and the core spelling surface; every other mode screen had no
+     big-text rule at all, so a low-vision player got a big menu and tiny
+     games. Explicit px targets (~1.4-1.5x of each element's own size), same
+     convention as above. Reading text and the exit word grow; board art,
+     SVG glyphs and the orb stay put. */
+  body.big-text .mode-exit{ font-size:21px; }
+  /* Definition Match: cards are the thing being read. */
+  html body.big-text .dm-card{ font-size:20px; min-height:104px; }  /* html prefix: outranks body.kid .dm-card */
+  html body.big-text .dm-card.word .dm-def,
+  body.big-text .dm-prompt{ font-size:22px; }
+  body.big-text .dm-owner,
+  body.big-text .dm-card.word .dm-owner{ font-size:16px; }
+  body.big-text .dm-streak{ font-size:26px; }
+  body.big-text .dm-status{ font-size:19px; }
+  body.big-text .dm-stat b{ font-size:36px; }
+  body.big-text .dm-stat span,
+  body.big-text .dm-missrow{ font-size:18px; }
+  /* Practice / Spell Aloud / word picker. */
+  body.big-text .wp-slots,
+  body.big-text .pr-hint,
+  body.big-text .pr-coach,
+  body.big-text .wp-status,
+  body.big-text .wp-reveal-note,
+  body.big-text .wp-count{ font-size:20px; }
+  html body.big-text .pr-word{ font-size:44px; }
+  body.big-text .pr-slots{ font-size:34px; }
+  body.big-text .pr-built{ font-size:38px; }
+  body.big-text .pr-tile{ font-size:30px; }
+  body.big-text .wp-input,
+  body.big-text .pr-input{ font-size:28px; }
+  body.big-text .wp-tile .prog,
+  body.big-text .wp-tile .wp-cap{ font-size:16px; }
+  body.big-text .wp-gal-head,
+  body.big-text .wp-fam-head{ font-size:17px; }
+  /* Forge, Chains, Impostor, Bee (rem-based: scale the rem). */
+  body.big-text .fg-word{ font-size:2.5rem; }
+  body.big-text .fg-status,
+  body.big-text .fg-found-word,
+  body.big-text .fg-drawer h4{ font-size:1.25rem; }
+  body.big-text .cn-word{ font-size:2.2rem; }
+  body.big-text .cn-status,
+  body.big-text .cn-meta,
+  body.big-text .cn-link,
+  body.big-text .cn-why,
+  body.big-text .cn-hooklbl{ font-size:1.25rem; }
+  body.big-text .imp-why,
+  body.big-text .imp-prog{ font-size:1.35rem; }
+  body.big-text .bee-word{ font-size:2.3rem; }
+  body.big-text .bee-announce,
+  body.big-text .bee-spelling{ font-size:1.4rem; }
+  body.big-text .cn-stat span,
+  body.big-text .imp-stat span,
+  body.big-text .bee-stat span{ font-size:1.1rem; }
+  /* Board and puzzle HUD text. */
+  body.big-text .bg-hud h2,
+  body.big-text .sz-hud h2{ font-size:1.45rem; }
+  body.big-text .bg-note,
+  body.big-text .bg-feed,
+  body.big-text .bg-pod,
+  body.big-text .bg-st-land,
+  body.big-text .bg-res{ font-size:1.3rem; }
+  body.big-text .sz-card p,
+  body.big-text .sz-head,
+  body.big-text .sz-streak,
+  body.big-text .sz-new,
+  body.big-text .sz-listen,
+  body.big-text .sz-clear,
+  body.big-text .sz-k{ font-size:1.2rem; }
+  /* Spelldoku, word search, crossword, lists, translate. */
+  body.big-text .sd-top h2,
+  body.big-text .lists-top h2,
+  body.big-text .tr-top h2{ font-size:26px; }
+  body.big-text .sd-typed{ font-size:28px; }
+  body.big-text .sd-chip,
+  body.big-text .sd-say{ font-size:22px; }
+  body.big-text .sd-say b{ font-size:24px; }
+  body.big-text .sd-cell.word{ font-size:clamp(11px,3.2vw,16px); }
+  body.big-text .ws-slot .ws-word,
+  body.big-text .xw-len{ font-size:21px; }
+  body.big-text .ws-play,
+  body.big-text .ws-slow{ font-size:20px; min-width:44px; min-height:44px; }
+  body.big-text .lists-card .lc-name,
+  body.big-text .lists-chip,
+  body.big-text .lists-head,
+  body.big-text .lists-card .lc-meta{ font-size:1.25em; }
+  body.big-text .tr-note,
+  body.big-text .tr-sub,
+  body.big-text .tr-extras .rep-head{ font-size:1.15em; }
+
   .topbar{width:100%;max-width:600px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
   .brand .mark{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-0.5px;line-height:1}
   .brand .mark b{color:var(--amber)}
