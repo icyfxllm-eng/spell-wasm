@@ -15,7 +15,9 @@ cal_lines = open(cal_path, encoding="utf-8").read().splitlines()
 approved = any("STATUS: APPROVED" in l for l in cal_lines[:2])
 cal = [l.split(",") for l in cal_lines if l and not l.startswith("#") and l != "word,expected"]
 extra = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
-extra.write("\n".join(w for w, _ in cal) + "\n"); extra.close()
+staged_p = os.path.join(ROOT, "assets/words/en/staged.tsv")
+staged = [l.split("\t")[0] for l in open(staged_p, encoding="utf-8").read().splitlines()[2:] if l.strip()] if os.path.exists(staged_p) else []
+extra.write("\n".join([w for w, _ in cal] + staged) + "\n"); extra.close()
 
 # A1
 pron = json.load(open(os.path.join(ROOT, "assets/words/en/en_pron.json")))

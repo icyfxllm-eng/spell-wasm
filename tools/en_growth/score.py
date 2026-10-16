@@ -150,8 +150,21 @@ def main():
             skipped.append(w)
         else:
             raw[w] = best
+    # Irregularity percentile is taken against a FIXED reference (the training set), not against whatever words
+    # happen to be scored this run, so a word's score never depends on which other words are in the batch.
+    import bisect
+    ref = []
+    for w in train_words:
+        best_r = None
+        for phs in cmu[w]:
+            r, _ = raw_irregularity(model, w, list(phs))
+            if r is not None and (best_r is None or r < best_r):
+                best_r = r
+        if best_r is not None:
+            ref.append(best_r)
+    ref.sort()
     order = sorted(raw, key=lambda w: (raw[w], w))
-    pct = {w: i / max(1, len(order) - 1) for i, w in enumerate(order)}
+    pct = {w: bisect.bisect_left(ref, raw[w]) / len(ref) for w in order}
     W = CFG["weights"]; lo, hi = CFG["rarity_band"]["zipf_hard"], CFG["rarity_band"]["zipf_easy"]
     scores = {}
     for w in order:
