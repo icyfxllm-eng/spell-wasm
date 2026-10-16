@@ -1,0 +1,29 @@
+{
+ "$doc": "CC-EN-EXPERT-GROWTH F2. Weights change ONLY through calibration against the Eric-approved calibration/en_expert.csv, never to move tier sizes (I7).",
+ "weights": {
+  "irregularity": 0.6,
+  "rarity": 0.3,
+  "length": 0.1
+ },
+ "rarity_band": {
+  "zipf_hard": 2.5,
+  "zipf_easy": 6.0
+ },
+ "length_cap": 14,
+ "aligner": {
+  "train_zipf_min": 3.2,
+  "train_max_words": 30000,
+  "iterations": 5,
+  "max_grapheme": 3,
+  "max_null": 2,
+  "null_penalty_bits": 2.0,
+  "max_unit_weight": 0.25,
+  "entropy_weight": 1.5
+ },
+ "band_boundaries": {
+  "$doc": "Score quantiles over the keyed universe. Set by calibration, not by target size. null until Phase A calibration is signed.",
+  "medium": null,
+  "hard": null,
+  "expert": null
+ }
+}
