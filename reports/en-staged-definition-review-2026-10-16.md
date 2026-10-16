@@ -47,3 +47,11 @@ Result: 29 of 200 rows (14.5%) need attention. 171 match their word and part of 
 ## What changed in the tooling as a result
 
 `tools/en_growth/admit.py` now offers up to three candidate senses per word, from the part of speech with the most senses, with regional/register senses ranked lower. This fixes counteract (now a verb) and moves the learner sense into the top three for flume, bleacher, irritable, furrow, deciduous, elixir, melancholy. It does not fix jell, trolley, cairn or outrage; those need the human audit.
+
+## Word verdicts and tier grading (2026-10-16, later the same day)
+
+Eric reviewed the graded copy of the 200-row sample (`reports/en-staged-review-sample-graded.csv`; the grader of the est_tier, spelling_traps and flag columns is not recorded) and ruled: **keep all 200 words, and agree with the estimated tiers.** Keep rate 200/200, so D10's 95% bar is met for the sample.
+
+Estimated tiers on the sample: Easy 50, Medium 92, Hard 47, Expert 11. Only 5.5% of the staged Expert-band rows are Expert by this grading, so the F2 Expert band (score >= 0.702) is not a usable tier assignment for staged rows. F2 score separates the graded tiers weakly (AUC 0.71 for Expert vs the rest).
+
+Eleven rows carry a homophone or variant flag and need context sentences when served: aloud, elicit, hoarse, jell, licorice, lite, peek, shoo, thyme, whet, wretch. Before any staged row goes live, `assets/words/en/homophones.txt` must be regenerated to include staged words, or learners are marked wrong for valid homophones.
