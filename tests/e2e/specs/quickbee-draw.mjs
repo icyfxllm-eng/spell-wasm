@@ -29,7 +29,7 @@ const FLAGS = {
   all: () => { for (const l of ['zh', 'ja', 'ko']) localStorage.setItem(`spell_flag_quickbee_draw_${l}`, 'on'); },
 };
 const ON = (langs) => (langs.length === 1 ? FLAGS[langs[0]] : FLAGS.all);
-const STUB_ONLY = () => {};
+const STUB_ONLY = () => { for (const l of ['zh', 'ja', 'ko']) localStorage.setItem(`spell_flag_quickbee_draw_${l}`, 'off'); };
 const asNative = (page) => page.evaluate(() => {
   window.SpellNativeLang = window.SpellNativeLang || {};
   window.SpellNativeLang.nativePlatform = () => true;
