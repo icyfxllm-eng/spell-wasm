@@ -1,4 +1,4 @@
-# STATUS: DRAFT, NOT APPROVED. Proposed by Claude Code; Eric approves before any tuning (F6). First 15 expert and first 8 not_expert rows are the spec seeds.
+# STATUS: APPROVED by Eric 2026-10-16 (gauge and indict moved to hard_medium at his direction; classes are 48 expert / 52 hard_medium / 50 not_expert). First 15 expert and first 8 not_expert rows are the spec seeds.
 word,expected
 rhythm,expert
 accommodate,expert
@@ -28,9 +28,9 @@ rhinoceros,expert
 mischievous,expert
 surveillance,expert
 exhilarate,expert
-gauge,expert
+gauge,hard_medium
 hierarchy,expert
-indict,expert
+indict,hard_medium
 cemetery,expert
 reconnaissance,expert
 bourgeois,expert
