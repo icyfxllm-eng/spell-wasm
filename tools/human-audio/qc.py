@@ -76,17 +76,15 @@ def norm_text(s):
 
 
 def load_homophones(repo, lang):
-    """The bank's generated collision sets: whisper hearing 'there' for 'their'
-    is not a wrong word, it is the same sound."""
-    p = repo / "assets" / "words" / lang / "homophones.txt"
+    """The bank's sound-alike sets (CC-SENSE-CUE v1.1 F7, kind "true" only):
+    whisper hearing 'there' for 'their' is not a wrong word, it is the same sound."""
+    sys.path.insert(0, str(pathlib.Path(repo) / "tools"))
+    from soundalikes import sets_of_kind
     sets = {}
-    if p.exists():
-        for line in p.read_text().splitlines():
-            if not line.strip() or line.startswith("#"):
-                continue
-            words = [norm_text(w) for w in re.split(r"[\s,|]+", line) if w.strip()]
-            for w in words:
-                sets.setdefault(w, set()).update(words)
+    for members in sets_of_kind(lang, ("true",), root=repo):
+        words = [norm_text(w) for w in members]
+        for w in words:
+            sets.setdefault(w, set()).update(words)
     return sets
 
 

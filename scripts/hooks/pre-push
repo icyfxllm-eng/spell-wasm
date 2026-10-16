@@ -35,11 +35,11 @@ command -v node >/dev/null 2>&1 || {
 # Every static check that any gate or workflow runs, minus the two that need
 # arguments or artifacts (e2e-summary-check wants a log, edu-no-purchase-check
 # wants a built dist).
-CHECKS="notices-ship-check ar-hi-ortho-check audio-clarity-check audio-router-check bank-variety-check def-pool-check letter-lexicon-check lexicon-load-check voice-spell-deps-check audio-session-owner-check mic-gate-check diag-dev-door-check audio-thread-check dom-id-check dom-id-live-check mode-exit-check i18n-translated-check hardcoded-label-check snap-clean-one-impl-check snap-geometry-check snap-highlight-check snap-fixture-provenance-check snap-fixture-colour-check e2e-sleep-ratchet human-audio-check modes-check picture-artifact-parity pinyin-display-check pinyin-inventory-check ru-identity-check ru-stress-ingest-check scroll-check settings-truth-check spell-jr-name-check tier-list-check tier-partition-check tracking-check wordpic-export-parity zh-audio-path-check zh-bank-sandhi-check zh-grading-path-check css-logical-check entitlement-map-check"
+CHECKS="notices-ship-check ar-hi-ortho-check audio-clarity-check audio-router-check bank-variety-check def-pool-check letter-lexicon-check lexicon-load-check voice-spell-deps-check audio-session-owner-check mic-gate-check diag-dev-door-check audio-thread-check dom-id-check dom-id-live-check mode-exit-check i18n-translated-check hardcoded-label-check snap-clean-one-impl-check snap-geometry-check snap-highlight-check snap-fixture-provenance-check snap-fixture-colour-check e2e-sleep-ratchet human-audio-check modes-check picture-artifact-parity pinyin-display-check pinyin-inventory-check ru-identity-check ru-stress-ingest-check scroll-check settings-truth-check spell-jr-name-check tier-list-check tier-partition-check tracking-check wordpic-export-parity zh-audio-path-check zh-bank-sandhi-check zh-grading-path-check css-logical-check entitlement-map-check soundalike-api-check"
 
 # Checks that also expose a --selftest. A neutered check is worse than no check,
 # because it reports OK, so the selftests ride along here too.
-SELFTESTS="notices-ship-check audio-router-check def-pool-check letter-lexicon-check voice-spell-deps-check human-audio-check pinyin-display-check css-logical-check modes-check ru-stress-ingest-check settings-truth-check ru-identity-check spell-jr-name-check tier-list-check wordpic-export-parity dom-id-live-check mode-exit-check i18n-translated-check hardcoded-label-check snap-clean-one-impl-check e2e-sleep-ratchet lexicon-load-check mic-gate-check diag-dev-door-check audio-thread-check snap-highlight-check snap-fixture-provenance-check snap-fixture-colour-check"
+SELFTESTS="notices-ship-check audio-router-check def-pool-check letter-lexicon-check voice-spell-deps-check human-audio-check pinyin-display-check css-logical-check modes-check ru-stress-ingest-check settings-truth-check ru-identity-check spell-jr-name-check tier-list-check wordpic-export-parity dom-id-live-check mode-exit-check i18n-translated-check hardcoded-label-check snap-clean-one-impl-check e2e-sleep-ratchet lexicon-load-check mic-gate-check diag-dev-door-check audio-thread-check snap-highlight-check snap-fixture-provenance-check snap-fixture-colour-check soundalike-api-check"
 
 failed=""
 for c in $CHECKS; do
@@ -62,6 +62,8 @@ done
 # It costs 0.9s and needs no build, so it keeps this hook's one-second promise.
 if command -v python3 >/dev/null 2>&1; then
   python3 tools/build_collisions.py --check >/dev/null 2>&1 || failed="$failed collision-check"
+  # CC-SENSE-CUE v1.1 F8: the shared sound-alike report must match the tables.
+  python3 tools/soundalikes_report.py --check >/dev/null 2>&1 || failed="$failed soundalike-report"
 else
   echo "pre-push: python3 not found — the collision tables went UNCHECKED" >&2
 fi
@@ -75,6 +77,8 @@ if [ -n "$failed" ]; then
     echo "--- $c ---" >&2
     if [ "$c" = "collision-check" ]; then
       python3 tools/build_collisions.py --check 2>&1 | head -12 >&2
+    elif [ "$c" = "soundalike-report" ]; then
+      python3 tools/soundalikes_report.py --check 2>&1 | head -12 >&2
     else
       node "scripts/$c.mjs" 2>&1 | head -12 >&2
     fi

@@ -100,6 +100,7 @@ mod ghost;
 mod haptics;
 mod hangul;
 mod homophones;
+mod soundalikes;
 mod i18n;
 mod importer;
 mod jamo;

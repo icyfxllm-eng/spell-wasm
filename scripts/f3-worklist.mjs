@@ -13,6 +13,7 @@
 // `signed_at` columns left EMPTY, so a completed worklist is already the file
 // it needs to become -- minus the two columns only a person can fill.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { setsOfKind } from './lib/soundalikes.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).flatMap((a, i, all) => (a.startsWith('--') ? [[a.slice(2), all[i + 1]?.startsWith('--') === false ? all[i + 1] : true]] : [])),
@@ -73,26 +74,13 @@ function guessWhy(word, heard) {
 /// cmudict is used ONLY to recognise that two spellings sound identical. It
 /// is never a source of IPA: F3 rows come from a native-speaker auditor and
 /// from nobody else, this script has never written one, and it still does not.
-const CMUDICT = 'tools/wordpipe/sources/cmudict.dict';
-let homophones = null;   // null = unavailable, so the test is skipped, not failed
-if (existsSync(CMUDICT)) {
-  homophones = new Map();
-  for (const line of readFileSync(CMUDICT, 'utf8').split('\n')) {
-    if (!line || line.startsWith(';;;')) continue;
-    const sp = line.indexOf(' ');
-    if (sp < 1) continue;
-    const w = line.slice(0, sp).replace(/\(\d+\)$/, '').toLowerCase();
-    const phones = line.slice(sp + 1).trim().replace(/\d/g, '');
-    if (!homophones.has(w)) homophones.set(w, new Set());
-    homophones.get(w).add(phones);
-  }
-}
+// CC-SENSE-CUE v1.1 F7: "sounds the same" comes from the one sound-alike
+// table, not a private cmudict scan. kind "true" only, as for every audio check.
+const soundSets = setsOfKind(lang, ['true']);
+const homophones = soundSets.length ? soundSets : null;   // null = no table, so the test is skipped, not failed
 const soundsTheSame = (a, b) => {
   if (!homophones) return false;
-  const A = homophones.get(a); const B = homophones.get(b);
-  if (!A || !B) return false;
-  for (const x of A) if (B.has(x)) return true;
-  return false;
+  return homophones.some((set) => set.includes(a) && set.includes(b));
 };
 
 function auditable(word, heard, guess) {
@@ -152,7 +140,7 @@ console.log(
   `f3-worklist: ${rows.length} failing clip(s) for ${lang}; ${ask.length} are worth an auditor's time ` +
   `(${fails} Fail, ${ask.length - fails} Weak) -> ${out}\n` +
   `  ${skip.length} set aside as unfixable by any IPA -> ${skipOut}\n` +
-  (homophones ? '' : `  (cmudict absent at ${CMUDICT}, so the homophone test was SKIPPED and some\n   unfixable rows may still be in the worklist)\n`) +
+  (homophones ? '' : `  (no sound-alike sets for this language, so the homophone test was SKIPPED and some\n   unfixable rows may still be in the worklist)\n`) +
   '  The ipa, auditor and signed_at columns are empty on purpose. An unsigned\n' +
   '  row is a guess about how a language sounds, and guesses are what broke the\n' +
   '  audio in the first place.',

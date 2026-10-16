@@ -7,10 +7,10 @@
 //! (decision addendum, 2026-07).
 //!
 //! This is deliberately DATA-DRIVEN: the equivalence groups live in
-//! `assets/words/<lang>/homophones.txt` (one group per line), never as
+//! the generated sound-alike tables (read only through `crate::soundalikes`), never as
 //! per-pair conditionals in the scoring code. Grading stays untouched — it just
 //! consults [`accepts`] as an additional acceptance path when the strict/lenient
-//! fold rejects. A language with no homophone file simply has an empty table and
+//! fold rejects. A language whose table has no sets simply accepts nothing extra, and
 //! this layer is a no-op.
 
 use std::collections::HashMap;
@@ -18,30 +18,18 @@ use std::sync::OnceLock;
 
 use crate::norm::fold_strict;
 
-/// Per-language homophone data. Add a language by dropping in its file and a
-/// matching arm here (mirrors the word-list `include_str!` pattern).
-fn source(lang: &str) -> &'static str {
-    match lang {
-        c if c == crate::consts::ES => include_str!("../assets/words/es/homophones.txt"),
-        // CC-SENSE-CUE F1/D6: these tables are COMPUTED by
-        // tools/build_collisions.py, never hand-listed. The Spanish file was 16
-        // hand-written groups, three of which named words that are not in the
-        // bank at all -- accepting spellings for prompts that never occur.
-        c if c == crate::consts::EN => include_str!("../assets/words/en/homophones.txt"),
-        // Russian is the STRESS-INDEPENDENT key only (final devoicing and
-        // assimilation). Vowel reduction is conditioned on stress, and applying
-        // it blind merges grammatical inflections -- академии/академия -- which
-        // is not the survivable direction of error. The full ru table waits on
-        // src/ru_stress_data.rs going live, which waits on a human audit.
-        c if c == crate::consts::RU => include_str!("../assets/words/ru/homophones.txt"),
-        _ => "",
-    }
+/// The sets this layer accepts: CC-SENSE-CUE v1.1 F7 says grading reads
+/// `kind: "true"` sets only, through the one API in `crate::soundalikes`. The
+/// tables are COMPUTED by tools/build_collisions.py, never hand-listed
+/// (CC-SENSE-CUE F1/D6). Russian is still the STRESS-INDEPENDENT key only
+/// (devoicing and assimilation); vowel reduction waits on src/ru_stress_data.rs
+/// going live, which waits on a human audit.
+fn sets(lang: &str) -> Vec<&'static crate::soundalikes::SoundalikeSet> {
+    crate::soundalikes::sets_of_kind(lang, &["true"])
 }
 
-/// Map of `fold_strict(member) -> group id` for one language, built once.
+/// Map of `fold_strict(member) -> index into sets(lang)` for one language, built once.
 fn table(lang: &str) -> &'static HashMap<String, usize> {
-    // A tiny cache keyed by language. Only a handful of languages ever carry a
-    // homophone file, so a linear Vec is plenty and keeps this lock-free-simple.
     static CACHE: OnceLock<std::sync::Mutex<HashMap<String, &'static HashMap<String, usize>>>> =
         OnceLock::new();
     let cache = CACHE.get_or_init(|| std::sync::Mutex::new(HashMap::new()));
@@ -49,13 +37,9 @@ fn table(lang: &str) -> &'static HashMap<String, usize> {
         return t;
     }
     let mut map: HashMap<String, usize> = HashMap::new();
-    for (gid, line) in source(lang).lines().enumerate() {
-        let line = line.trim();
-        if line.is_empty() || line.starts_with('#') {
-            continue;
-        }
-        for member in line.split_whitespace() {
-            map.insert(fold_strict(member), gid);
+    for (gid, set) in sets(lang).iter().enumerate() {
+        for m in &set.members {
+            map.insert(fold_strict(&m.member_id), gid);
         }
     }
     // Leak the per-language map so we can hand out a 'static reference; there is
@@ -71,10 +55,9 @@ fn table(lang: &str) -> &'static HashMap<String, usize> {
 pub fn group_members(lang: &str, word: &str) -> Vec<String> {
     let key = fold_strict(word);
     let Some(&gid) = table(lang).get(&key) else { return Vec::new() };
-    source(lang)
-        .lines()
-        .nth(gid)
-        .map(|line| line.split_whitespace().filter(|m| fold_strict(m) != key).map(str::to_string).collect())
+    sets(lang)
+        .get(gid)
+        .map(|set| set.members.iter().map(|m| m.member_id.clone()).filter(|m| fold_strict(m) != key).collect())
         .unwrap_or_default()
 }
 
@@ -136,10 +119,8 @@ mod phase_b_tests {
     #[test]
     fn every_generated_set_is_symmetric_and_complete() {
         for lang in [EN, RU, crate::consts::ES] {
-            for line in source(lang).lines() {
-                let line = line.trim();
-                if line.is_empty() || line.starts_with('#') { continue; }
-                let ms: Vec<&str> = line.split_whitespace().collect();
+            for set in sets(lang) {
+                let ms: Vec<&str> = set.members.iter().map(|m| m.member_id.as_str()).collect();
                 for a in &ms {
                     for b in &ms {
                         assert!(accepts(lang, a, b), "{lang}: {a} must accept {b}");
@@ -178,7 +159,7 @@ mod tests {
 
     #[test]
     fn no_table_is_noop() {
-        // Languages without a homophone file never accept a substitution.
+        // Languages whose table has no sets never accept a substitution.
         assert!(!accepts("en", "casa", "caza"));
         assert!(!accepts("fr", "botar", "votar"));
     }

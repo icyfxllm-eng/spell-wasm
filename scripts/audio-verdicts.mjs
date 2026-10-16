@@ -22,6 +22,7 @@ import { existsSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { KEY, normalize, whisperLang } from './lib/audio-norm.mjs';
+import { setsOfKind } from './lib/soundalikes.mjs';
 
 const OUT = 'config/audio-verdicts.json';
 // The transcripts live BESIDE the verdicts, not in them. config/ is compiled
@@ -54,12 +55,8 @@ function whisper(wav, lang) {
 /// "four", and "some" because they heard "sum" -- clear clips of common words,
 /// silenced by a test that did not know they were homophones.
 function collisionSets(lang) {
-  const p = `assets/words/${lang}/homophones.txt`;
-  if (!existsSync(p)) return [];
-  return readFileSync(p, 'utf8')
-    .split('\n')
-    .filter((l) => l.trim() && !l.startsWith('#'))
-    .map((l) => l.trim().split(/\s+/));
+  // CC-SENSE-CUE v1.1 F7: through the one API; audio exemptions read kind "true" only.
+  return setsOfKind(lang, ['true']);
 }
 
 function verdictFor(word, key, heard, sets, lang) {

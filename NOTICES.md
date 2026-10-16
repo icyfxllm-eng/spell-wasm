@@ -29,7 +29,7 @@ build inputs and are not redistributed.
   in `tools/wordpipe/sources/cmudict.LICENSE`, which that licence requires to
   travel with any redistribution of the source. https://github.com/cmusphinx/cmudict
   Build input: only the derived collision tables
-  (`assets/words/<lang>/homophones.txt`) ship.
+  (`assets/words/<lang>/soundalikes.json`) ship.
 - **web2 (Webster's Second International, 1934)** — the 234,936-word list
   shipped with BSD as `/usr/share/dict/web2`, vendored here as
   `tools/wordpipe/sources/web2` so the collision table can be built on any

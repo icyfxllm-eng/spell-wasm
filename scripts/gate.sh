@@ -158,6 +158,13 @@ python3 tools/bank/purity_gate.py --selftest || { echo "GATE FAIL: purity-gate s
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
 python3 tools/build_collisions.py --check || { echo "GATE FAIL: collision tables"; exit 1; }
 
+echo "== gate: sound-alike report, proof test and voices (CC-SENSE-CUE v1.1 F8, I3, I6)"
+python3 tools/soundalikes_report.py --check || { echo "GATE FAIL: sound-alike report"; exit 1; }
+
+echo "== gate: sound-alike tables read only through soundalikes() (CC-SENSE-CUE v1.1 I1)"
+node scripts/soundalike-api-check.mjs --selftest || { echo "GATE FAIL: soundalike-api-check selftest"; exit 1; }
+node scripts/soundalike-api-check.mjs || { echo "GATE FAIL: soundalike-api-check"; exit 1; }
+
 echo "== gate: ru stress ingest is the only write path (CC-RUSSIAN-STRESS Phase 3)"
 node scripts/ru-stress-ingest-check.mjs || { echo "GATE FAIL: ru stress ingest/audit claim"; exit 1; }
 node scripts/ru-stress-ingest-check.mjs --selftest || { echo "GATE FAIL: ru stress ingest selftest"; exit 1; }
