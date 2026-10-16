@@ -18,7 +18,10 @@
   "max_null": 2,
   "null_penalty_bits": 2.0,
   "max_unit_weight": 0.25,
-  "entropy_weight": 1.5
+  "entropy_weight": 1.5,
+  "unit_cost_cap": 99.0,
+  "hidden_vowel_weight": 0.0,
+  "reduced_vowel_weight": 0.0
  },
  "band_boundaries": {
   "$doc": "Score quantiles over the keyed universe. Set by calibration, not by target size. null until Phase A calibration is signed.",

@@ -60,3 +60,21 @@ def zipf_fn():
     if v != WORDFREQ_VERSION:
         sys.exit(f"wordfreq {v} != pinned {WORDFREQ_VERSION}")
     return lambda w: wordfreq.zipf_frequency(w, "en")
+
+
+def load_cmu_stress(path=CMU):
+    """Like load_cmu, but reduced vowels keep a '0' marker (AH0, IH0, ER0) for the ALIGNER only.
+    The F1 key never carries stress."""
+    d = {}
+    for line in open(path, encoding="utf-8", errors="ignore"):
+        if not line.strip() or line.startswith(";;;"):
+            continue
+        p = line.split()
+        w = p[0].lower()
+        if w.endswith(")"):
+            w = w[: w.rindex("(")]
+        if not w.isalpha():
+            continue
+        ph = tuple((x if x[:-1] in ("AH", "IH", "ER") and x[-1] == "0" else re.sub(r"\d", "", x)) for x in p[1:])
+        d.setdefault(w, set()).add(ph)
+    return {w: sorted(v) for w, v in d.items()}

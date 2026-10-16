@@ -107,10 +107,17 @@ def raw_irregularity(model, w, phs):
     a = align(w, phs, model.cost, AL["max_grapheme"], AL["max_null"])
     if not a:
         return None, None
-    costs = [model.cost(ph, g) for ph, g in a]
+    cap = AL["unit_cost_cap"]
+    costs = [min(cap, model.cost(ph, g)) for ph, g in a]
     ents = [model.entropy(ph) for ph, g in a if ph != NULL]
     ent = sum(ents) / len(ents) if ents else 0.0
-    return sum(costs) / len(costs) + AL["max_unit_weight"] * max(costs) + AL["entropy_weight"] * ent, a
+    VOWELS = set("aeiouy")
+    # vowel letters swallowed by a consonant/NULL unit: the vowel slot the speller must guess
+    hidden = sum(1 for ph, g in a if (ph == NULL or ph[0] not in "AEIOU") and any(ch in VOWELS for ch in g))
+    # reduced-vowel ambiguity: H(G | AH0/IH0/ER0), summed (schwa is where English spelling is least predictable)
+    red = sum(model.entropy(ph) for ph, g in a if ph in ("AH0", "IH0", "ER0"))
+    return (sum(costs) / len(costs) + AL["max_unit_weight"] * max(costs) + AL["entropy_weight"] * ent
+            + AL["hidden_vowel_weight"] * hidden + AL["reduced_vowel_weight"] * red), a
 
 
 def main():
@@ -120,7 +127,7 @@ def main():
     ap.add_argument("--out", default=os.path.join(ROOT, "assets/words/en/en_difficulty.json"))
     a_ = ap.parse_args()
     zipf = zipf_fn()
-    cmu = load_cmu()
+    cmu = load_cmu_stress()
     train_words = sorted((w for w in cmu if len(w) >= 3 and zipf(w) >= AL["train_zipf_min"]),
                          key=lambda w: (-zipf(w), w))[: AL["train_max_words"]]
     model = train([(w, cmu[w][0]) for w in train_words])
@@ -137,7 +144,7 @@ def main():
         best = None
         for phs in cmu[w]:
             r, _ = raw_irregularity(model, w, list(phs))
-            if r is not None and (best is None or r > best):
+            if r is not None and (best is None or r < best):
                 best = r
         if best is None:
             skipped.append(w)
