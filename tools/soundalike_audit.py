@@ -107,16 +107,20 @@ def decoy_pairs(lang, count, rng):
     return out
 
 
-def build(lang, out_dir, seed=None):
+def build(lang, out_dir, seed=None, flagged_only=False):
     t = soundalikes(lang)
-    cands = [s for s in t["sets"] if s["kind"] == "true" or s.get("loopbackFlag")]
+    if flagged_only:
+        # Only the sets the F5 loopback flagged: the ones worth a careful listen.
+        cands = [s for s in t["sets"] if s.get("loopbackFlag")]
+    else:
+        cands = [s for s in t["sets"] if s["kind"] == "true" or s.get("loopbackFlag")]
     already = load_verdicts(lang)["sets"]
     cands = [s for s in cands if s["setId"] not in already]
     if not cands:
         raise SystemExit(f"{lang}: no unjudged candidate sets")
-    sheet_id = f"{lang}-soundalike-{time.strftime('%Y%m%d')}"
+    sheet_id = f"{lang}-soundalike-{'flagged-' if flagged_only else ''}{time.strftime('%Y%m%d')}"
     rng = random.Random(seed if seed is not None else sheet_id)
-    n_decoy = 8 if len(cands) >= 32 else 4
+    n_decoy = 8 if len(cands) >= 32 else (2 if len(cands) < 6 else 4)
     decoys = decoy_pairs(lang, n_decoy, rng)
     items = [{"set": s["setId"], "members": " / ".join(m["memberId"] for m in s["members"]), "decoy": False}
              for s in cands]
@@ -140,11 +144,50 @@ def build(lang, out_dir, seed=None):
         f"Same sound? -- {lang}, voice {t.get('voice')}\n\n"
         "Each row lists spellings. Do ALL of them sound exactly the same when spoken in this voice's accent?\n"
         "Write yes, no or unsure in the verdict column. Do not edit any other column.\n", encoding="utf-8")
+    write_listen_page(folder, lang, rows, t.get("voice"))
     key = {"sheet_id": sheet_id, "stamp": st, "lang": lang, "voice": t.get("voice"), "rows": rows}
     (keys / f"{sheet_id}-DECOY-KEY.json").write_text(json.dumps(key, ensure_ascii=False, indent=1) + "\n")
     print(f"{sheet_id}: {len(cands)} sets + {len(decoys)} decoys -> {folder / 'sheet.csv'}")
     print(f"  key (never send it): {keys / (sheet_id + '-DECOY-KEY.json')}")
     return folder / "sheet.csv", keys / f"{sheet_id}-DECOY-KEY.json"
+
+
+LISTEN = """<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Same sound? __LANG__</title>
+<style>
+:root{--bg:#fff;--fg:#1b1d22;--mut:#646b78;--line:#e3e6ec;--acc:#2f5bd3}
+@media (prefers-color-scheme:dark){:root{--bg:#15171b;--fg:#e8eaee;--mut:#9aa1ad;--line:#2b2f37;--acc:#7da2ff}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 -apple-system,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px}p{color:var(--mut)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.n{width:3em;color:var(--mut)}button{font:inherit;padding:6px 12px;border:1px solid var(--line);border-radius:8px;background:none;color:var(--acc);cursor:pointer}
+</style></head><body><main><h1>Same sound? (__LANG__, __VOICE__)</h1>
+<p>Each row plays the game's own clips. Do all the spellings on a row sound the same? Write yes, no or unsure in the sheet's verdict column, by row number.</p>
+__ROWS__</main><script>let a=new Audio();function p(s){a.pause();a=new Audio(s);a.play();}</script></body></html>"""
+
+
+def write_listen_page(folder, lang, rows, voice):
+    """A local page that plays each member with the game's clip (fetched through the
+    same /api/speak the app uses, via the loopback's cache). Clips are named by row
+    and position, so nothing marks a check row."""
+    import html
+    import shutil
+    import soundalike_loopback as lb
+    clips = folder / "clips"
+    clips.mkdir(exist_ok=True)
+    out = []
+    for r in rows:
+        btns = []
+        for i, w in enumerate(m.strip() for m in r["members"].split("/")):
+            lb.audio(w, lang)                       # makes sure the mp3 is cached
+            src = lb.CACHE / lang / (__import__("urllib.parse").parse.quote(w, safe="") + ".mp3")
+            name = f"r{r['row']:04d}-{i}.mp3"
+            if src.exists():
+                shutil.copyfile(src, clips / name)
+            btns.append(f'<button onclick="p(\'clips/{name}\')">{html.escape(w)}</button>')
+        out.append(f'<div class="row"><span class="n">{r["row"]}</span>{"".join(btns)}</div>')
+    page = LISTEN.replace("__LANG__", lang).replace("__VOICE__", html.escape(voice or "")).replace("__ROWS__", "\n".join(out))
+    (folder / "listen.html").write_text(page, encoding="utf-8")
 
 
 def read_sheet(path):
@@ -270,6 +313,7 @@ def main():
     b = sub.add_parser("build")
     b.add_argument("--lang", required=True)
     b.add_argument("--out", default=str(AUDIT_HOME))
+    b.add_argument("--flagged-only", action="store_true", help="only sets the voice loopback flagged")
     i = sub.add_parser("ingest")
     i.add_argument("--sheet", required=True)
     i.add_argument("--key", required=True)
@@ -278,7 +322,7 @@ def main():
     sub.add_parser("selftest")
     a = ap.parse_args()
     if a.cmd == "build":
-        build(a.lang, a.out)
+        build(a.lang, a.out, flagged_only=a.flagged_only)
         return 0
     if a.cmd == "ingest":
         return ingest(a.sheet, a.key, a.auditor, a.write)
