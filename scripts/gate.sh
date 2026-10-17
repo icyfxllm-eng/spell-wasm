@@ -158,6 +158,9 @@ python3 tools/bank/purity_gate.py --selftest || { echo "GATE FAIL: purity-gate s
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
 python3 tools/build_collisions.py --check || { echo "GATE FAIL: collision tables"; exit 1; }
 
+echo "== gate: English re-tier bank current (CC-EN-EXPERT-GROWTH F4)"
+python3 tools/en_growth/build_retier.py --check || { echo "GATE FAIL: English re-tier bank"; exit 1; }
+
 echo "== gate: sound-alike report, proof test and voices (CC-SENSE-CUE v1.1 F8, I3, I6)"
 python3 tools/soundalikes_report.py --check || { echo "GATE FAIL: sound-alike report"; exit 1; }
 

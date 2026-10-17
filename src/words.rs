@@ -6,6 +6,7 @@
 //! fetched from the backend's `/api/speak`.
 
 use crate::word_data::*;
+use crate::word_data_en_retier::*;
 
 pub struct LangInfo {
     pub name: &'static str,
@@ -46,6 +47,18 @@ pub const LANGUAGES: [(&str, LangInfo); 18] = [
 ];
 
 pub fn en_tier(tier: &str) -> &'static [&'static str] {
+    // CC-EN-EXPERT-GROWTH F4: the re-tiered bank, only behind en.retier, and
+    // never for a Spell Jr / Kid Mode profile -- I5 says their word sets stay
+    // byte-identical, so they keep today's tiers even with the flag on.
+    if crate::flags::en_retier() && !junior_profile() {
+        return match tier {
+            "easy" => EN_RETIER_EASY,
+            "medium" => EN_RETIER_MEDIUM,
+            "hard" => EN_RETIER_HARD,
+            "expert" => EN_RETIER_EXPERT,
+            _ => EN_RETIER_MEDIUM,
+        };
+    }
     match tier {
         "easy" => EN_EASY,
         "medium" => EN_MEDIUM,
@@ -53,6 +66,33 @@ pub fn en_tier(tier: &str) -> &'static [&'static str] {
         "expert" => EN_EXPERT,
         _ => EN_MEDIUM,
     }
+}
+
+/// Whether the active profile is Spell Jr / Kid Mode: the Kid Mode preference,
+/// or an age-gate verdict of "kid" (unknown age plays Jr). Read from storage
+/// because the word bank has no AppState in reach; it is the same source
+/// `settings::load_prefs` reads.
+#[cfg(not(test))]
+fn junior_profile() -> bool {
+    let kid = crate::storage::get_json::<crate::model::Prefs>(crate::model::PREFS_KEY)
+        .map(|p| p.kid)
+        .unwrap_or(false);
+    kid || crate::agegate::is_kid_locked()
+}
+
+#[cfg(test)]
+thread_local! {
+    static JUNIOR_TEST: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+}
+
+#[cfg(test)]
+fn junior_profile() -> bool {
+    JUNIOR_TEST.with(|c| c.get())
+}
+
+#[cfg(test)]
+pub fn set_junior_for_test(v: bool) {
+    JUNIOR_TEST.with(|c| c.set(v));
 }
 
 pub fn es_tier(tier: &str) -> &'static [&'static str] {
@@ -6461,5 +6501,77 @@ mod tier_ladder_tests {
             }
         }
         assert!(checked >= 10, "expected the built-in banks, saw {checked}");
+    }
+}
+
+#[cfg(test)]
+mod en_retier_tests {
+    // Contents, not pointers: a `const` slice is not guaranteed one address.
+    use super::*;
+    use crate::consts::{BUILTIN_LANGS, TIER_ORDER};
+
+    fn with_flag<R>(on: bool, junior: bool, f: impl FnOnce() -> R) -> R {
+        crate::flags::set_test_override(Some(if on { "on" } else { "off" }));
+        set_junior_for_test(junior);
+        let r = f();
+        crate::flags::set_test_override(None);
+        set_junior_for_test(false);
+        r
+    }
+
+    /// A11 (I8): with en.retier OFF, English serves exactly today's bank.
+    #[test]
+    fn flag_off_serves_todays_english_bank() {
+        with_flag(false, false, || {
+            for (t, want) in TIER_ORDER.iter().zip([EN_EASY, EN_MEDIUM, EN_HARD, EN_EXPERT]) {
+                assert_eq!(tier_for("en", t), want, "{t}: flag off must serve today's tier");
+            }
+        });
+    }
+
+    /// The flag ON serves the re-tiered bank to a standard profile.
+    #[test]
+    fn flag_on_serves_the_retier_bank() {
+        with_flag(true, false, || {
+            assert_eq!(tier_for("en", "expert"), EN_RETIER_EXPERT);
+            assert_eq!(tier_for("en", "medium"), EN_RETIER_MEDIUM);
+            assert_ne!(tier_for("en", "expert"), EN_EXPERT, "the re-tier must differ from today's Expert");
+        });
+    }
+
+    /// A9 (I5): Spell Jr / Kid Mode keep today's tiers even with the flag on.
+    #[test]
+    fn junior_profiles_keep_todays_tiers() {
+        with_flag(true, true, || {
+            for (t, want) in TIER_ORDER.iter().zip([EN_EASY, EN_MEDIUM, EN_HARD, EN_EXPERT]) {
+                assert_eq!(tier_for("en", t), want, "{t}: a junior profile must not see the re-tier");
+            }
+        });
+    }
+
+    /// A10 (I6): no other language's bank moves with the flag.
+    #[test]
+    fn other_languages_are_unaffected() {
+        for (lang, _, _, _) in BUILTIN_LANGS.iter().filter(|(l, _, _, _)| *l != "en") {
+            for t in TIER_ORDER {
+                let off = with_flag(false, false, || tier_for(lang, t));
+                let on = with_flag(true, false, || tier_for(lang, t));
+                assert_eq!(off, on, "{lang} {t}: moved with en.retier");
+            }
+        }
+    }
+
+    /// Tier partition in the re-tier bank: every word in exactly one tier, and
+    /// none of the rows cut by the re-grade.
+    #[test]
+    fn retier_bank_is_a_partition() {
+        let mut seen = std::collections::HashSet::new();
+        for tier in [EN_RETIER_EASY, EN_RETIER_MEDIUM, EN_RETIER_HARD, EN_RETIER_EXPERT] {
+            for w in tier {
+                assert!(seen.insert(*w), "{w} is in two re-tier tiers");
+            }
+        }
+        assert!(!seen.contains("abandoned") || EN_RETIER_EXPERT.iter().all(|w| *w != "abandoned"),
+                "a demoted current Expert row must not stay in Expert");
     }
 }

@@ -26,7 +26,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, sep } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const EXEMPT = new Set(['src/word_data.rs', 'src/experience.rs']);
+// word_data_en_retier.rs is word_data.rs's generated sibling (the re-tiered
+// English bank, CC-EN-EXPERT-GROWTH F4): "easy" and "hard" there are words.
+const EXEMPT = new Set(['src/word_data.rs', 'src/word_data_en_retier.rs', 'src/experience.rs']);
 const TIER = /"(easy|medium|hard|expert)"/g;
 
 export const ALLOW = [

@@ -1,5 +1,5 @@
 {
- "$doc": "CC-BANK-COMPLETE F1 — floors are DATA (signed D-FLOOR verbatim, Eric 2026-08-03). Changing a floor is a reviewable diff, never a code edit. tiers: rank floors ascending T1..T4; sw is STRUCTURALLY 3-tier (a T4 slot for sw anywhere is a build failure). poolFloors: F6 minimum audited rows per tier (thin trio vi/fil/sw reduced; vi keeps a T4). compositePin: F2 — hash of the pinned composite artifact once CC-WORDLIST-SOURCES' recipe lands; null = pre-pin era, coverage runs report-only. launched: false until the language's expansion wave completes (F4 red-build applies only then; en stays frozen-reference per D5 and is NEVER red).",
+ "$doc": "CC-BANK-COMPLETE F1 — floors are DATA (signed D-FLOOR verbatim, Eric 2026-08-03). Changing a floor is a reviewable diff, never a code edit. tiers: rank floors ascending T1..T4; sw is STRUCTURALLY 3-tier (a T4 slot for sw anywhere is a build failure). poolFloors: F6 minimum audited rows per tier (thin trio vi/fil/sw reduced; vi keeps a T4). compositePin: F2 — hash of the pinned composite artifact once CC-WORDLIST-SOURCES' recipe lands; null = pre-pin era, coverage runs report-only. launched: false until the language's expansion wave completes (F4 red-build applies only then; en was frozen-reference per D5 until Eric unfroze it for CC-EN-EXPERT-GROWTH (2026-10-17; Medium floor raised to 1,500 so the re-tiered bank fits its cap) and is still NEVER red while launched is false).",
  "languages": {
   "en": {
    "tiers": [
@@ -10,12 +10,12 @@
    ],
    "poolFloors": [
     500,
-    1000,
+    1500,
     2000,
     3000
    ],
    "launched": false,
-   "frozen": true,
+   "frozen": false,
    "compositePin": null
   },
   "es": {

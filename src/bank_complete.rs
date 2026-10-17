@@ -292,7 +292,11 @@ mod bank_complete_ci {
         assert_eq!(t4_floor("sw"), Some(10_000), "sw T4 IS its T3 cap");
         assert_eq!(t4_floor("fil"), Some(8_000));
         assert!(f["languages"]["hi"]["designAheadOnly"].as_bool().unwrap_or(false), "hi: D5");
-        assert!(f["languages"]["en"]["frozen"].as_bool().unwrap_or(false), "en: D5 frozen reference");
+        // D5 kept English as the frozen reference until Eric unfroze it for
+        // CC-EN-EXPERT-GROWTH on 2026-10-17 (reports/en-retier-plan.md). It stays
+        // unlaunched, so its floors are still report-only, never red.
+        assert!(!f["languages"]["en"]["frozen"].as_bool().unwrap_or(true), "en: unfrozen 2026-10-17 (EN-EXPERT-GROWTH)");
+        assert!(!f["languages"]["en"]["launched"].as_bool().unwrap_or(true), "en: unlaunched, so never red");
     }
 
     /// F5 fixture (a): RED-FLIP. A synthetic supra-floor word with no

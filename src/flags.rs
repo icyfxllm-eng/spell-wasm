@@ -50,6 +50,14 @@ pub fn set_test_override(v: Option<&str>) {
     TEST_OVERRIDE.with(|c| *c.borrow_mut() = v.map(|s| s.to_string()));
 }
 
+/// CC-EN-EXPERT-GROWTH F4/F8 — serve the re-tiered English bank
+/// (`word_data_en_retier.rs`) instead of the current one. **Default OFF**: with
+/// it off English plays exactly as before (I8). Spell Jr and Kid Mode never see
+/// the re-tier whatever this says (I5; `words::en_tier`).
+pub fn en_retier() -> bool {
+    resolve(stored("en_retier").as_deref(), false)
+}
+
 /// F6 "Spell Racing in The Climb" (formerly Ghost racing) — race your best local run. Cross-platform.
 pub fn ghost_racing() -> bool {
     resolve(stored("ghost_racing").as_deref(), true)

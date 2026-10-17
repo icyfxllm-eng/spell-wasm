@@ -158,6 +158,7 @@ mod yearbook_pdf;
 mod yearbook_ui;
 mod widgets;
 mod word_data;
+mod word_data_en_retier; // CC-EN-EXPERT-GROWTH F4: the re-tiered English bank, behind en.retier
 mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 #[cfg(test)]
 mod wordgrid_census; // CC-WORDGRID §3: measurement only
