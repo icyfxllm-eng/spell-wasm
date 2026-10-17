@@ -48,20 +48,21 @@ def proof(lang, key, bank_rows, table):
             continue
         for kk in (k if isinstance(k, list) else [k]):
             groups[kk if isinstance(kk, str) else tuple(kk)].add(unicodedata.normalize("NFC", w))
-    set_of = {}
+    sets_of = defaultdict(set)          # a word may sit in several sets (English)
     for s in table["sets"]:
         if s["kind"] != "true":
             continue
         for m in s["members"]:
-            set_of[m["memberId"]] = s["setId"]
+            sets_of[m["memberId"]].add(s["setId"])
     split = []
     multi = 0
     for k, rows in groups.items():
         if len(rows) < 2:
             continue
         multi += 1
-        ids = {set_of.get(r) for r in rows}
-        if len(ids) != 1 or None in ids:
+        # All rows sharing this key must share at least one true set.
+        common = set.intersection(*(sets_of.get(r, set()) for r in rows))
+        if not common:
             split.append(sorted(rows))
     return {"ran": True, "equalKeyGroups": multi, "passes": not split,
             "splitGroups": sorted(split)[:50], "splitCount": len(split),

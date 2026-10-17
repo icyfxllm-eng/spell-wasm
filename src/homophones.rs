@@ -28,9 +28,12 @@ fn sets(lang: &str) -> Vec<&'static crate::soundalikes::SoundalikeSet> {
     crate::soundalikes::sets_of_kind(lang, &["true"])
 }
 
-/// Map of `fold_strict(member) -> index into sets(lang)` for one language, built once.
-fn table(lang: &str) -> &'static HashMap<String, usize> {
-    static CACHE: OnceLock<std::sync::Mutex<HashMap<String, &'static HashMap<String, usize>>>> =
+/// Map of `fold_strict(member) -> indices into sets(lang)` for one language, built
+/// once. A word can sit in SEVERAL sets: English sets are unmerged groups of words
+/// sharing one pronunciation, and a word with two pronunciations joins two groups
+/// (2026-10-17; merging them used to chain air/or/hour into one "sound").
+fn table(lang: &str) -> &'static HashMap<String, Vec<usize>> {
+    static CACHE: OnceLock<std::sync::Mutex<HashMap<String, &'static HashMap<String, Vec<usize>>>>> =
         OnceLock::new();
     let cache = CACHE.get_or_init(|| std::sync::Mutex::new(HashMap::new()));
     // Keyed on the table actually in use, not the language: with en.retier on,
@@ -39,29 +42,40 @@ fn table(lang: &str) -> &'static HashMap<String, usize> {
     if let Some(t) = cache.lock().unwrap().get(&key) {
         return t;
     }
-    let mut map: HashMap<String, usize> = HashMap::new();
+    let mut map: HashMap<String, Vec<usize>> = HashMap::new();
     for (gid, set) in sets(lang).iter().enumerate() {
         for m in &set.members {
-            map.insert(fold_strict(&m.member_id), gid);
+            let ids = map.entry(fold_strict(&m.member_id)).or_default();
+            if !ids.contains(&gid) {
+                ids.push(gid);
+            }
         }
     }
     // Leak the per-language map so we can hand out a 'static reference; there is
     // one small map per language for the process lifetime.
-    let leaked: &'static HashMap<String, usize> = Box::leak(Box::new(map));
+    let leaked: &'static HashMap<String, Vec<usize>> = Box::leak(Box::new(map));
     cache.lock().unwrap().insert(key, leaked);
     leaked
 }
 
 /// The other spellings that sound like `word` (CC-WORDGRID F-C3 needs them to
-/// tell whether a crossing can distinguish the two). Empty when the word is in
-/// no collision group.
+/// tell whether a crossing can distinguish the two): every member of every set
+/// the word is in, once each, in set order. Empty when the word is in no set.
 pub fn group_members(lang: &str, word: &str) -> Vec<String> {
     let key = fold_strict(word);
-    let Some(&gid) = table(lang).get(&key) else { return Vec::new() };
-    sets(lang)
-        .get(gid)
-        .map(|set| set.members.iter().map(|m| m.member_id.clone()).filter(|m| fold_strict(m) != key).collect())
-        .unwrap_or_default()
+    let Some(gids) = table(lang).get(&key) else { return Vec::new() };
+    let all = sets(lang);
+    let mut out: Vec<String> = Vec::new();
+    for &gid in gids {
+        if let Some(set) = all.get(gid) {
+            for m in &set.members {
+                if fold_strict(&m.member_id) != key && !out.contains(&m.member_id) {
+                    out.push(m.member_id.clone());
+                }
+            }
+        }
+    }
+    out
 }
 
 /// True if `typed` is an accepted homophone of the prompt `word` in `lang`
@@ -73,7 +87,9 @@ pub fn accepts(lang: &str, word: &str, typed: &str) -> bool {
         return false;
     }
     match (t.get(&fold_strict(word)), t.get(&fold_strict(typed))) {
-        (Some(a), Some(b)) => a == b,
+        // Accepted only when the two share a set: a shared pronunciation, not a
+        // chain of them.
+        (Some(a), Some(b)) => a.iter().any(|g| b.contains(g)),
         _ => false,
     }
 }
@@ -110,6 +126,17 @@ mod phase_b_tests {
     /// The Russian table is the STRESS-INDEPENDENT key only. привезти/привести
     /// collide by devoicing alone; inflection pairs like академии/академия must
     /// NOT, because merging them needs stress data that is still dark.
+    /// Un-chaining (2026-10-17): a word with two pronunciations sits in two sets
+    /// and matches both, but two words that share no pronunciation do not match
+    /// through it. err is EH R (air) and ER (or); air and or are not alike.
+    #[test]
+    fn english_sets_do_not_chain() {
+        assert!(accepts(EN, "err", "air") && accepts(EN, "err", "or"), "err matches both of its pronunciations");
+        assert!(!accepts(EN, "air", "or"), "air and or share no pronunciation");
+        assert!(!accepts(EN, "air", "hour"), "air and hour share no pronunciation");
+        assert!(accepts(EN, "hour", "our"), "a real pair stays");
+    }
+
     #[test]
     fn russian_is_devoicing_only_until_stress_data_is_audited() {
         assert!(accepts(RU, "привезти", "привести"), "з devoices to с before т");

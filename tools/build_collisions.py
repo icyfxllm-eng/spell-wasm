@@ -25,7 +25,7 @@ Regenerate on every bank change.
 
 Run:  python3 tools/build_collisions.py [lang ...]
 """
-import json, pathlib, re, sys, unicodedata
+import itertools, json, pathlib, re, sys, unicodedata
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from soundalikes import LANGS, layer1_voices, member_words, set_id, soundalikes, table_path
 from collections import defaultdict
@@ -325,10 +325,10 @@ def active_rules(lang):
 def accent_sets(lang, words, key, true_sets):
     """Sets of BANK rows that collide only once a merger rule is on (F4). A rule
     group that sits wholly inside one true set adds nothing and is skipped."""
-    in_true = {}
+    in_true = defaultdict(set)
     for i, g in enumerate(true_sets):
         for m in g:
-            in_true[m] = i
+            in_true[m].add(i)
     found = {}
     for name in active_rules(lang):
         rule = MERGER_RULES[(lang, name)]
@@ -342,8 +342,8 @@ def accent_sets(lang, words, key, true_sets):
         for g in groups.values():
             if len(g) < 2:
                 continue
-            owners = {in_true.get(m, ("solo", m)) for m in g}
-            if len(owners) < 2:
+            # New only if some pair in it shares no true set (a word may be in several).
+            if all(in_true[a] & in_true[b] for a, b in itertools.combinations(sorted(g), 2)):
                 continue
             members = tuple(sorted(g))
             found.setdefault(members, set()).add(name)
@@ -443,7 +443,25 @@ def build(lang, variant=None):
     if k is None:
         return
 
-    # merge overlapping groups (a seed pair may share a member with a computed set)
+    if lang == "en":
+        # NO MERGING for English (Eric, 2026-10-17; reports/en-chain-split-preview.md).
+        # English keys are multi-valued (a word has every CMUdict pronunciation), so
+        # merging overlapping groups chained unrelated words through any word with two
+        # pronunciations: err (EH R and ER) made air and or "the same sound". Each
+        # shared-pronunciation group stays its own set; a word may sit in several,
+        # and src/homophones.rs accepts a pair only when they share a set.
+        uniq = sorted({tuple(sorted(set(x))) for x in sets})
+        sets = [list(x) for x in uniq if not any(set(x) < set(o) for o in uniq)]
+        path = table_path(lang, variant=variant)
+        generated_before = path.exists()
+        prior_groups = [member_words(x) for x in soundalikes(lang, variant=variant)["sets"]] if generated_before else []
+        write_table(lang, sets, words, variant, accent_sets(lang, words, k, sets))
+        covered = len({m for g in sets for m in g})
+        print(f"  {lang}{'+' + variant if variant else ''}: {len(sets)} sets, {covered} rows "
+              f"({covered / len(words) * 100:.1f}% of bank)   ({len(prior_groups)} previously generated)")
+        return
+    # merge overlapping groups (a seed pair may share a member with a computed set).
+    # Safe for es/ru: their keys are single-valued, so only seeds can overlap.
     merged, changed = [list(x) for x in sets], True
     while changed:
         changed = False

@@ -42,3 +42,11 @@ Only in the re-tier table:
 ## Something the fix does not touch
 
 Some unmerged groups still come from CMUdict's casual or weak forms: *been/bun* (B AH N), *an/un*, *or/err/ur* (ER), *when/win*. Those are real in fast speech but doubtful for a single clearly spoken word. The loopback flagged several of them for the auditor; the same-sound sheet is the place to settle them.
+
+## Applied (2026-10-17, Eric)
+
+- English sets are no longer merged: 277 sets in today's table (from 263), 297 in the re-tier table. Duplicate and subset groups are dropped. 14 words sit in more than one set.
+- `src/homophones.rs` accepts a pair only when the two share a set; `group_members` returns every member of every set the word is in.
+- The voice loopback was rerun for the new sets (both English tables stay `verified`; 55 and 58 flagged), and the English auditor sheet was rebuilt (`en-soundalike-20261017`).
+- Spelluzzle's verified seeds were re-pinned (`scripts/spelluzzle-seeds.sh`, same dictionary hash). Spell Cross needed no change.
+- Full gate: GATE PASS (e2e 422/422 app, 17/17 site).

@@ -146,23 +146,11 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "air",
      "wordId": "air"
-    },
-    {
-     "memberId": "ar",
-     "wordId": null
-    },
-    {
-     "memberId": "are",
-     "wordId": "are"
-    },
-    {
-     "memberId": "er",
-     "wordId": null
     },
     {
      "memberId": "ere",
@@ -179,38 +167,10 @@
     {
      "memberId": "heir",
      "wordId": "heir"
-    },
-    {
-     "memberId": "hour",
-     "wordId": "hour"
-    },
-    {
-     "memberId": "oar",
-     "wordId": null
-    },
-    {
-     "memberId": "or",
-     "wordId": "or"
-    },
-    {
-     "memberId": "ore",
-     "wordId": null
-    },
-    {
-     "memberId": "our",
-     "wordId": "our"
-    },
-    {
-     "memberId": "r",
-     "wordId": null
-    },
-    {
-     "memberId": "ur",
-     "wordId": null
     }
    ],
    "mergerRules": [],
-   "setId": "en:1a12ed2013cf"
+   "setId": "en:7386404f5b90"
   },
   {
    "confirmed": false,
@@ -232,7 +192,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "an",
@@ -241,6 +201,19 @@
     {
      "memberId": "ann",
      "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:ecf86e2b2804"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": "voice-may-distinguish",
+   "members": [
+    {
+     "memberId": "an",
+     "wordId": "an"
     },
     {
      "memberId": "un",
@@ -248,7 +221,32 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:4215497d03f2"
+   "setId": "en:c243a8ffccae"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": "voice-may-distinguish",
+   "members": [
+    {
+     "memberId": "ar",
+     "wordId": null
+    },
+    {
+     "memberId": "are",
+     "wordId": "are"
+    },
+    {
+     "memberId": "our",
+     "wordId": "our"
+    },
+    {
+     "memberId": "r",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:3f3e348b4921"
   },
   {
    "confirmed": false,
@@ -283,6 +281,35 @@
    ],
    "mergerRules": [],
    "setId": "en:8eea0de8aaed"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": "voice-may-distinguish",
+   "members": [
+    {
+     "memberId": "are",
+     "wordId": "are"
+    },
+    {
+     "memberId": "er",
+     "wordId": null
+    },
+    {
+     "memberId": "err",
+     "wordId": null
+    },
+    {
+     "memberId": "or",
+     "wordId": "or"
+    },
+    {
+     "memberId": "ur",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:d10d7c56d874"
   },
   {
    "confirmed": false,
@@ -490,7 +517,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "beau",
@@ -501,16 +528,12 @@
      "wordId": null
     },
     {
-     "memberId": "bough",
-     "wordId": null
-    },
-    {
      "memberId": "bow",
      "wordId": "bow"
     }
    ],
    "mergerRules": [],
-   "setId": "en:07cd0cc9d872"
+   "setId": "en:5bb9aa71e20e"
   },
   {
    "confirmed": false,
@@ -524,6 +547,19 @@
     {
      "memberId": "bin",
      "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:c05982a42c82"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "been",
+     "wordId": "been"
     },
     {
      "memberId": "bun",
@@ -531,7 +567,7 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:b5794bab2c96"
+   "setId": "en:fdbefaa2530e"
   },
   {
    "confirmed": false,
@@ -659,6 +695,23 @@
   {
    "confirmed": false,
    "kind": "true",
+   "loopbackFlag": "voice-may-distinguish",
+   "members": [
+    {
+     "memberId": "bough",
+     "wordId": null
+    },
+    {
+     "memberId": "bow",
+     "wordId": "bow"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:099cfd0eba89"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
    "loopbackFlag": null,
    "members": [
     {
@@ -748,14 +801,10 @@
     {
      "memberId": "color",
      "wordId": "color"
-    },
-    {
-     "memberId": "colour",
-     "wordId": null
     }
    ],
    "mergerRules": [],
-   "setId": "en:55d37c70bc88"
+   "setId": "en:6b6969ef59ff"
   },
   {
    "confirmed": false,
@@ -1078,6 +1127,23 @@
    ],
    "mergerRules": [],
    "setId": "en:bfb74e52c1a7"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "color",
+     "wordId": "color"
+    },
+    {
+     "memberId": "colour",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:d20ab8bba2a5"
   },
   {
    "confirmed": false,
@@ -1668,20 +1734,12 @@
      "wordId": "for"
     },
     {
-     "memberId": "fore",
-     "wordId": null
-    },
-    {
-     "memberId": "four",
-     "wordId": "four"
-    },
-    {
      "memberId": "fur",
      "wordId": null
     }
    ],
    "mergerRules": [],
-   "setId": "en:c4b5ec9190de"
+   "setId": "en:d451b7d4c220"
   },
   {
    "confirmed": false,
@@ -1737,6 +1795,27 @@
    ],
    "mergerRules": [],
    "setId": "en:9ddf2718af7e"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "for",
+     "wordId": "for"
+    },
+    {
+     "memberId": "fore",
+     "wordId": null
+    },
+    {
+     "memberId": "four",
+     "wordId": "four"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:f76de178309c"
   },
   {
    "confirmed": false,
@@ -2238,6 +2317,23 @@
    ],
    "mergerRules": [],
    "setId": "en:a5b80c17844c"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": "voice-may-distinguish",
+   "members": [
+    {
+     "memberId": "hour",
+     "wordId": "hour"
+    },
+    {
+     "memberId": "our",
+     "wordId": "our"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:128a00f01d3f"
   },
   {
    "confirmed": false,
@@ -3089,6 +3185,27 @@
    "loopbackFlag": null,
    "members": [
     {
+     "memberId": "oar",
+     "wordId": null
+    },
+    {
+     "memberId": "or",
+     "wordId": "or"
+    },
+    {
+     "memberId": "ore",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:de3bd4dc2783"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
      "memberId": "odor",
      "wordId": null
     },
@@ -3110,16 +3227,12 @@
      "wordId": "one"
     },
     {
-     "memberId": "wan",
-     "wordId": null
-    },
-    {
      "memberId": "won",
      "wordId": "won"
     }
    ],
    "mergerRules": [],
-   "setId": "en:e6ff17cf11d8"
+   "setId": "en:6217334a1822"
   },
   {
    "confirmed": false,
@@ -3404,6 +3517,19 @@
     {
      "memberId": "red",
      "wordId": "red"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:f12eacc1038b"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "read",
+     "wordId": "read"
     },
     {
      "memberId": "reed",
@@ -3411,7 +3537,7 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:89796e18a354"
+   "setId": "en:8b5a27932a4d"
   },
   {
    "confirmed": false,
@@ -3636,15 +3762,11 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "root",
      "wordId": "root"
-    },
-    {
-     "memberId": "rout",
-     "wordId": null
     },
     {
      "memberId": "route",
@@ -3652,7 +3774,7 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:0a9ba2af4fc8"
+   "setId": "en:776865320484"
   },
   {
    "confirmed": false,
@@ -3708,6 +3830,23 @@
   {
    "confirmed": false,
    "kind": "true",
+   "loopbackFlag": "voice-may-distinguish",
+   "members": [
+    {
+     "memberId": "rout",
+     "wordId": null
+    },
+    {
+     "memberId": "route",
+     "wordId": "route"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:70ca5624b49b"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
    "loopbackFlag": null,
    "members": [
     {
@@ -3755,14 +3894,10 @@
     {
      "memberId": "st",
      "wordId": null
-    },
-    {
-     "memberId": "street",
-     "wordId": "street"
     }
    ],
    "mergerRules": [],
-   "setId": "en:6ea2e1d46252"
+   "setId": "en:c07ff15ee022"
   },
   {
    "confirmed": false,
@@ -4034,6 +4169,23 @@
    ],
    "mergerRules": [],
    "setId": "en:09ef025210fe"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "st",
+     "wordId": null
+    },
+    {
+     "memberId": "street",
+     "wordId": "street"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:6b517355660b"
   },
   {
    "confirmed": false,
@@ -4528,6 +4680,23 @@
    "loopbackFlag": null,
    "members": [
     {
+     "memberId": "wan",
+     "wordId": null
+    },
+    {
+     "memberId": "won",
+     "wordId": "won"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:b9ea8519efbf"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
      "memberId": "war",
      "wordId": "war"
     },
@@ -4665,18 +4834,10 @@
     {
      "memberId": "when",
      "wordId": "when"
-    },
-    {
-     "memberId": "win",
-     "wordId": "win"
-    },
-    {
-     "memberId": "wynn",
-     "wordId": null
     }
    ],
    "mergerRules": [],
-   "setId": "en:1e549e2a3705"
+   "setId": "en:80b1a034ab4c"
   },
   {
    "confirmed": false,
@@ -4694,6 +4855,27 @@
    ],
    "mergerRules": [],
    "setId": "en:c49d7f493ccd"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "when",
+     "wordId": "when"
+    },
+    {
+     "memberId": "win",
+     "wordId": "win"
+    },
+    {
+     "memberId": "wynn",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "en:b2b859d4257c"
   },
   {
    "confirmed": false,

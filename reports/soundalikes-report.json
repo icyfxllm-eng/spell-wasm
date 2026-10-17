@@ -39,7 +39,7 @@
    "confirmedSets": 0,
    "generator": "build_collisions.key_en@1",
    "impossibleFilterRemoves": 307,
-   "loopbackFlags": 53,
+   "loopbackFlags": 55,
    "proof": {
     "equalKeyGroups": 54,
     "noneByConstructionEligible": false,
@@ -50,7 +50,7 @@
    },
    "sets": {
     "accent": 3,
-    "true": 263
+    "true": 277
    },
    "status": "verified",
    "voice": "en-US-Neural2-E",
@@ -62,7 +62,7 @@
    "confirmedSets": 0,
    "generator": "build_collisions.key_en@1+retier",
    "impossibleFilterRemoves": 335,
-   "loopbackFlags": 56,
+   "loopbackFlags": 58,
    "proof": {
     "equalKeyGroups": 61,
     "noneByConstructionEligible": false,
@@ -74,7 +74,7 @@
    "servedOnlyWhen": "en.retier is on (not Spell Jr / Kid Mode)",
    "sets": {
     "accent": 4,
-    "true": 282
+    "true": 297
    },
    "status": "verified",
    "voice": "en-US-Neural2-E",
