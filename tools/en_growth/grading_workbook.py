@@ -78,7 +78,7 @@ def build_workbook(rows, seed, xlsx_path, key_path, title="English grading"):
     for r in ordered:
         car = r.get("carried") or {}
         ws.append([r["row_id"], r["word"], r.get("definition", ""),
-                   car.get("keep_cut", ""), car.get("est_tier", ""), car.get("traps", ""), car.get("notes", "")])
+                   car.get("keep_cut", ""), car.get("est_tier", ""), car.get("traps", ""), car.get("notes", "") or r.get("flag_note", "")])
     ws.freeze_panes = f"A{FIRST_DATA_ROW}"
     widths = {"A": 8, "B": 20, "C": 70, "D": 11, "E": 11, "F": 30, "G": 30}
     for col, w in widths.items():
@@ -177,6 +177,40 @@ def collect_top_ungraded(threshold, below=None):
     return rows
 
 
+def collect_current_tier(tier):
+    """Every row currently in an English bank tier, for re-grading (re-tier step 1).
+    The notes column carries one FLAG, never a grade: a plural or -ed/-ing form whose
+    base word is also in the bank (D8 lemmas only)."""
+    from common import zipf_fn, bank_rows, TIERS
+    zipf = zipf_fn()
+    b = bank_rows()
+    bank = {w for t in TIERS for w in b[t]}
+    sc = json.load(open(ROOT / "assets" / "words" / "en" / "en_difficulty.json"))["scores"]
+    dp = json.load(open(ROOT / "backend" / "def_pools" / "en.json"))
+    defs = {r["word"]: r["definition"] for t in dp["tiers"].values() for r in t}
+    from admit import good_sense, pick_glosses
+    home = pathlib.Path(os.path.expanduser("~/repos/spell-wasm"))
+    hw = json.load(open(home / ".corpus-cache" / "en-wikt" / "headwords.json", encoding="utf-8"))
+
+    def fallback(w):
+        """Words with no definition-pool row get the Wiktionary gloss instead."""
+        good = [(e["pos"], s) for e in hw.get(w, []) for s in e["s"] if good_sense(e["pos"], s)]
+        if not good:  # inflections: Wiktionary marks them form-of, so show that line
+            good = [(e["pos"], s) for e in hw.get(w, []) for s in e["s"]]
+        return (pick_glosses(good)["glosses"] or [""])[0] if good else ""
+    rows = []
+    for w in b[tier]:
+        base = None
+        for suf, rep in (("ies", "y"), ("es", ""), ("s", ""), ("ed", ""), ("ed", "e"), ("ing", ""), ("ing", "e"), ("ly", "")):
+            if w.endswith(suf) and len(w) - len(suf) >= 3 and (w[: -len(suf)] + rep) in bank:
+                base = w[: -len(suf)] + rep
+                break
+        rows.append({"word": w, "definition": defs.get(w) or fallback(w), "group": f"current-{tier}", "score": sc.get(w),
+                     "zipf": round(zipf(w), 2), "current_tier": tier,
+                     "flag_note": f"INFL? base word {base} is in the bank" if base else ""})
+    return rows
+
+
 def _low_band_candidates(hw, zipf):
     """The Zipf 2.0-2.5 Expert-candidate band (D4 amendment): same filters as admission."""
     from admit import good_sense
@@ -208,8 +242,13 @@ def main():
     ap.add_argument("--top-ungraded", type=float, metavar="SCORE",
                     help="grade every ungraded staged/low-band candidate scoring at least SCORE")
     ap.add_argument("--below", type=float, metavar="SCORE", help="with --top-ungraded: only scores under SCORE")
+    ap.add_argument("--current-tier", choices=["easy", "medium", "hard", "expert"],
+                    help="re-grade every row currently in this English bank tier")
     a = ap.parse_args()
-    if a.top_ungraded is not None:
+    if a.current_tier:
+        name = f"en-current-{a.current_tier}-regrade-{a.seed}.xlsx"
+        rows = collect_current_tier(a.current_tier)
+    elif a.top_ungraded is not None:
         band = f"{a.top_ungraded}-{a.below}" if a.below is not None else f"top-{a.top_ungraded}"
         name = f"en-expert-grading-{band}-{a.seed}.xlsx"
         rows = collect_top_ungraded(a.top_ungraded, a.below)

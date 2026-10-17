@@ -1,4 +1,4 @@
-# English re-tier plan (for review; no tiers changed)
+# English re-tier plan (signed 2026-10-17; no tiers changed yet)
 
 Written 2026-10-17 on `origin/main`. Parent: CC-EN-EXPERT-GROWTH F4 (re-tier), F7 (promotion), F8 (flags).
 
@@ -58,6 +58,12 @@ Other tiers grow: Hard to about 1,300 plus whatever the 797 sheet demotes, Mediu
 5. **Daily re-deal.** English Daily seeds include a hash of each tier pool, so changing the tiers re-deals English Daily and resets its no-repeat history. That's expected, just know it happens.
 6. **Server side.** `backend/def_pools/en.json` must be rebuilt for the new tiers and deployed by the definition-pools-only path (rsync, no restart).
 7. **Sound-alike table.** It is regenerated over the new bank before the flag flips (H5). Several new words are flagged homophones (feint, knave, sleigh, sachet, bettor, ciao...).
+
+## Eric's decisions (2026-10-17)
+- **Step 1:** grade the current 797 Expert rows on one more sheet.
+- **Freeze:** unfreeze English (`frozen: false` for en in `config/bank_floors.json`).
+- **Caps:** raise the English pool floors so the caps fit (proposed Easy 800, Medium 1,600, Hard 2,000, Expert 3,000; exact values set when the tier files are built).
+- **Jr / Kid:** freeze today's Jr and Kid word sets, so new rows can never reach them.
 
 ## Order once you sign off
 1. You decide items 1 to 3; I build the 797 sheet.
