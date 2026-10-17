@@ -3,15 +3,27 @@
  "en": {
   "voice": "en-US-Neural2-E",
   "rules": {
-   "cot-caught": {"what": "AO merges into AA (cot = caught), the low-back merger common across North America", "status": "active"},
-   "pin-pen": {"what": "EH becomes IH before N or M (pin = pen), Southern US", "status": "active"},
-   "mary-marry-merry": {"what": "AE and EY become EH before R (Mary = marry = merry)", "status": "active"}
+   "cot-caught": {
+    "what": "AO merges into AA (cot = caught), the low-back merger common across North America",
+    "status": "active"
+   },
+   "pin-pen": {
+    "what": "EH becomes IH before N or M (pin = pen), Southern US",
+    "status": "active"
+   },
+   "mary-marry-merry": {
+    "what": "AE and EY become EH before R (Mary = marry = merry)",
+    "status": "active"
+   }
   }
  },
  "es": {
   "voice": "es-ES-Neural2-G",
   "rules": {
-   "seseo": {"what": "z and soft c (ce, ci) merge with s; the es-ES (Castilian) voice keeps them apart (S3, Eric 2026-10-16)", "status": "pending: moving seseo pairs to accent takes them out of accept-all grading; Eric confirms first (SENSE-CUE v1.1 S3 note)"}
+   "seseo": {
+    "what": "z and soft c (ce, ci) merge with s; the es-ES (Castilian) voice keeps them apart (S3, Eric 2026-10-16)",
+    "status": "declined: kept in the base key, so seseo pairs stay accept-all (Eric, 2026-10-17). Impossible still excludes them, because they are true sets."
+   }
   }
  },
  "ru": {

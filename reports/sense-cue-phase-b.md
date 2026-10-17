@@ -66,3 +66,9 @@ Flagged sets by language:
 ## Gate
 
 Full gate: GATE PASS (e2e 422/422 app, 17/17 site) on the third run. The two earlier runs each failed one timing-sensitive e2e test unrelated to these tables (a Board Game tap-mid-animation position check, a SpellDoku 4-second wait, and the known flaky human-audio test). Run on its own, the Board Game area passed 2 of 3 times with this change and 2 of 2 on baseline. Grading's sets are unchanged (en 263, es 11, ru 34 true sets).
+
+## Eric's decisions (2026-10-17)
+
+- **Seseo:** keep accepting. Seseo stays in the Spanish base key, so casa/caza, cauce/cause, cocer/coser and concejo/consejo remain `kind: true` (accept-all). Recorded as declined in `config/soundalike-merger-rules.json`. Impossible still excludes them.
+- **ch bug:** fixed in `key_es`. Spanish drops from 11 to 7 sets; marca/marcha, marcas/marchas, roca/rocha and chota/cota are no longer accepted for each other. The Spanish auditor sheet was rebuilt (`es-soundalike-20261017`).
+- Full gate after both changes: GATE PASS on the second run (the first failed only the known flaky human-audio test).

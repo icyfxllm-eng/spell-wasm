@@ -5,7 +5,7 @@ CC-SENSE-CUE v1.1 F8. Regenerate with `python3 tools/soundalikes_report.py`.
 | Lang | Status | Voice matches | Generator | Bank rows | true sets | accent sets | Confirmed | Loopback flags | Bonus-eligible words | Impossible removes | Proof test |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | en | verified | yes | build_collisions.key_en@1 | 3,158 | 263 | 3 | 0 | 53 | 301 | 307 | pass |
-| es | verified | yes | build_collisions.key_es@1 | 6,267 | 11 | 0 | 0 | 3 | 17 | 17 | pass |
+| es | verified | yes | build_collisions.key_es@1 | 6,267 | 7 | 0 | 0 | 1 | 9 | 9 | pass |
 | fr | missing | yes | - | 6,279 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | de | missing | yes | - | 6,268 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | pt | missing | yes | - | 6,272 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |

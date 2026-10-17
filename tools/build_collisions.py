@@ -239,6 +239,10 @@ def key_en():
 # ---------------------------------------------------------------- es
 def key_es(w):
     s = w.lower()
+    # ch is /tS/, never "c + silent h": protect it before the silent-h step, or
+    # marca/marcha and roca/rocha collapse into false sound-alikes (fixed
+    # 2026-10-17, Eric; reports/sense-cue-phase-b.md).
+    s = s.replace("ch", "\u02a7")
     s = s.replace("ll", "y")                    # yeismo
     s = s.replace("ce", "se").replace("ci", "si")
     s = s.replace("z", "s")                     # seseo

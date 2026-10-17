@@ -82,13 +82,13 @@
   },
   "es": {
    "bankRows": 6267,
-   "bonusEligibleBankWords": 17,
+   "bonusEligibleBankWords": 9,
    "confirmedSets": 0,
    "generator": "build_collisions.key_es@1",
-   "impossibleFilterRemoves": 17,
-   "loopbackFlags": 3,
+   "impossibleFilterRemoves": 9,
+   "loopbackFlags": 1,
    "proof": {
-    "equalKeyGroups": 8,
+    "equalKeyGroups": 4,
     "noneByConstructionEligible": false,
     "passes": true,
     "ran": true,
@@ -96,7 +96,7 @@
     "splitGroups": []
    },
    "sets": {
-    "true": 11
+    "true": 7
    },
    "status": "verified",
    "voice": "es-ES-Neural2-G",

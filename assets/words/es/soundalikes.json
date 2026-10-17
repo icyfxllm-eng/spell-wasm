@@ -75,23 +75,6 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
-   "members": [
-    {
-     "memberId": "chota",
-     "wordId": "chota"
-    },
-    {
-     "memberId": "cota",
-     "wordId": "cota"
-    }
-   ],
-   "mergerRules": [],
-   "setId": "es:a9ded08029de"
-  },
-  {
-   "confirmed": false,
-   "kind": "true",
    "loopbackFlag": null,
    "members": [
     {
@@ -139,57 +122,6 @@
    ],
    "mergerRules": [],
    "setId": "es:655db904f786"
-  },
-  {
-   "confirmed": false,
-   "kind": "true",
-   "loopbackFlag": null,
-   "members": [
-    {
-     "memberId": "marca",
-     "wordId": "marca"
-    },
-    {
-     "memberId": "marcha",
-     "wordId": "marcha"
-    }
-   ],
-   "mergerRules": [],
-   "setId": "es:d413c604a724"
-  },
-  {
-   "confirmed": false,
-   "kind": "true",
-   "loopbackFlag": null,
-   "members": [
-    {
-     "memberId": "marcas",
-     "wordId": "marcas"
-    },
-    {
-     "memberId": "marchas",
-     "wordId": "marchas"
-    }
-   ],
-   "mergerRules": [],
-   "setId": "es:d564a34f862c"
-  },
-  {
-   "confirmed": false,
-   "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
-   "members": [
-    {
-     "memberId": "roca",
-     "wordId": "roca"
-    },
-    {
-     "memberId": "rocha",
-     "wordId": "rocha"
-    }
-   ],
-   "mergerRules": [],
-   "setId": "es:fa5f3e0c9144"
   }
  ],
  "status": "verified",

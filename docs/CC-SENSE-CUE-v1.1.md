@@ -125,7 +125,7 @@ CI emits one report per build, per language: status, set counts by `kind`, `conf
 - **H6** Gig B timing. Recommendation: add the column now for en/es/ru; other languages' candidate sets go on a later sheet once their generators run.
 - **H7** Licence. Ship only derived `kind`/`setId` data, never pronunciation strings; legal check before first release.
 - **H8** Phase C language order. Recommendation: pt, pl, de, ja, ko, vi, fil, sw, ar.
-- **S3 note** Moving seseo pairs to `accent` takes them out of Spanish accept-all grading (SENSE-CUE reads `true` only). Today casa/caza are accepted either way. Eric to confirm in Phase B that this grading change is wanted, or rule that SENSE-CUE grading keeps reading `accent` for Spanish.
+- **S3 note, resolved 2026-10-17:** Eric chose to keep seseo pairs accept-all. Seseo stays in the Spanish base key (so those sets are `kind: true`), and the rule is recorded as declined in `config/soundalike-merger-rules.json`. Impossible still excludes them. In the same review he approved fixing the *ch* bug in `key_es` (marca/marcha and three more false sets).
 
 **Correction carried from the pasted spec:** ja and zh are not `none-by-construction` by assumption. Japanese kana has real pairs (こおり/こうり), and Chinese tone sandhi can make two citation spellings sound alike. Both go through the proof test (I3).
 
