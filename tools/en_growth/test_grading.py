@@ -80,6 +80,7 @@ with tempfile.TemporaryDirectory() as d:
         ws.cell(row=r, column=5, value="Hard")
         if rid == 1:
             ws.cell(row=r, column=4).value = None   # cell(value=None) would leave the old value
+            ws.cell(row=r, column=5).value = None   # a tier alone would mean keep, so clear both
         if rid == 2:
             ws.cell(row=r, column=5, value="Impossible")
         if rid == 3:
@@ -118,6 +119,24 @@ with tempfile.TemporaryDirectory() as d:
         check(needle in out, f"5: report lacks {needle!r}")
     led = [json.loads(l) for l in (d / "full.jsonl").read_text().splitlines()]
     check(len(led) == 20 and all(e["grader"] == "eric" for e in led), "5: ledger rows must be tagged grader=eric")
+    # shorthand: a tier alone means keep; k / c / u and e / m / h / ex expand
+    def short(ws, r, rid):
+        codes = [("", "ex"), ("k", "h"), ("c", ""), ("u", ""), ("", "e"), ("K", "M")]
+        kc, t = codes[(rid - 1) % len(codes)]
+        if kc:
+            ws.cell(row=r, column=4, value=kc)
+        if t:
+            ws.cell(row=r, column=5, value=t)
+    build_workbook(fixture_rows(), 7, d / "short.xlsx", d / "short.key.json")
+    fill(d / "short.xlsx", short)
+    code, out = run_ingest(["--workbook", str(d / "short.xlsx"), "--key", str(d / "short.key.json"), "--write",
+                            "--ledger", str(d / "short.jsonl")])
+    led = {e["row_id"]: e for e in (json.loads(l) for l in (d / "short.jsonl").read_text().splitlines())} if code == 0 else {}
+    check(code == 0, f"shorthand: should pass:\n{out}")
+    if led:
+        check(led[1]["keep_cut"] == "keep" and led[1]["est_tier"] == "Expert", f"shorthand: ex alone should be keep/Expert, got {led[1]}")
+        check(led[2]["est_tier"] == "Hard" and led[3]["keep_cut"] == "cut" and led[4]["keep_cut"] == "unsure", "shorthand: k/h, c, u not expanded")
+        check(led[6]["keep_cut"] == "keep" and led[6]["est_tier"] == "Medium", "shorthand: capitals K/M not accepted")
     # re-ingesting the same workbook replaces, never duplicates
     run_ingest(["--workbook", str(d / "full.xlsx"), "--key", str(d / "full.key.json"), "--write", "--ledger", str(d / "full.jsonl")])
     check(len((d / "full.jsonl").read_text().splitlines()) == 20, "5: re-ingest duplicated ledger rows")

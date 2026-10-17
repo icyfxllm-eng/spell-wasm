@@ -5,7 +5,8 @@
         [--grader eric] [--partial] [--write] [--ledger PATH] [--report PATH]
 
 Validation (any failure exits non-zero, lists every offending row_id, writes nothing):
-  * every row has keep_cut (skipped instead with --partial, so grading can span sittings)
+  * every row has keep_cut or est_tier (skipped instead with --partial, so grading can span sittings)
+  * shorthand accepted: k / c / u for keep_cut; e / m / h / ex for est_tier; a tier alone means keep
   * keep_cut is keep / cut / unsure; every keep row has est_tier in Easy / Medium / Hard / Expert
   * no row_id is missing, duplicated or unknown to the key; the word matches the key
 
@@ -28,7 +29,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import ROOT as _ROOT  # noqa: E402
 ROOT = pathlib.Path(_ROOT)
-from grading_workbook import FIRST_DATA_ROW, HEADER_ROW, KEEP_CUT, TIERS, VISIBLE  # noqa: E402
+from grading_workbook import FIRST_DATA_ROW, HEADER_ROW, KEEP_CUT, KEEP_CUT_SHORT, TIERS, TIER_SHORT, VISIBLE  # noqa: E402
 
 LEDGER = ROOT / "calibration" / "en_graded.jsonl"
 # Score bands used only to describe the score in the report. These are the
@@ -79,13 +80,16 @@ def validate(rows, key, partial):
         if r["word"] != k["word"]:
             problems.append(f"row_id {rid}: word edited ({r['word']!r}, key says {k['word']!r})")
             continue
-        kc = r["keep_cut"].lower()
-        tier = r["est_tier"].strip().title() if r["est_tier"] else ""
+        raw_kc, raw_tier = r["keep_cut"].strip().lower(), r["est_tier"].strip().lower()
+        kc = KEEP_CUT_SHORT.get(raw_kc, raw_kc)
+        tier = TIER_SHORT.get(raw_tier, r["est_tier"].strip())
+        if kc == "" and tier in TIERS:
+            kc = "keep"   # a tier alone means keep
         if kc == "":
             if partial:
                 blanks += 1
                 continue
-            problems.append(f"row_id {rid} ({k['word']}): keep_cut is blank")
+            problems.append(f"row_id {rid} ({k['word']}): not graded (keep_cut and est_tier are both blank)")
             continue
         if kc not in KEEP_CUT:
             problems.append(f"row_id {rid} ({k['word']}): keep_cut {r['keep_cut']!r} is not one of {KEEP_CUT}")

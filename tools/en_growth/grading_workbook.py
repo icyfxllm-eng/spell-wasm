@@ -33,6 +33,11 @@ ROOT = pathlib.Path(_ROOT)
 
 KEEP_CUT = ["keep", "cut", "unsure"]
 TIERS = ["Easy", "Medium", "Hard", "Expert"]
+# Shorthand Eric asked for (2026-10-16): k / c / u, and e / m / h / ex. A tier alone
+# means keep. grading_ingest.py expands these; blank in both columns = not graded yet.
+KEEP_CUT_SHORT = {"k": "keep", "keep": "keep", "c": "cut", "cut": "cut", "u": "unsure", "unsure": "unsure", "?": "unsure"}
+TIER_SHORT = {"e": "Easy", "easy": "Easy", "m": "Medium", "medium": "Medium", "h": "Hard", "hard": "Hard",
+              "ex": "Expert", "x": "Expert", "expert": "Expert"}
 VISIBLE = ["row_id", "word", "definition", "keep_cut", "est_tier", "traps", "notes"]
 HEADER_ROW = 2          # row 1 holds the progress cell
 FIRST_DATA_ROW = 3
@@ -63,8 +68,10 @@ def build_workbook(rows, seed, xlsx_path, key_path, title="English grading"):
     ws.title = "grade"
     ws["A1"] = "Progress"
     ws["A1"].font = Font(bold=True)
-    ws["B1"] = f'=COUNTA(D{FIRST_DATA_ROW}:D{last})&" / {n}"'
-    ws["C1"] = f"{title}. Fill keep_cut for every row; est_tier for every keep. Rows with an empty keep_cut are shaded."
+    ws["B1"] = (f'=SUMPRODUCT(--((LEN(D{FIRST_DATA_ROW}:D{last})+LEN(E{FIRST_DATA_ROW}:E{last}))>0))'
+                f'&" / {n}"')
+    ws["C1"] = (f"{title}. Shortcuts: est_tier e / m / h / ex (a tier alone means keep); "
+                "keep_cut c to cut, u if unsure. Ungraded rows are shaded.")
     for c, name in enumerate(VISIBLE, 1):
         cell = ws.cell(row=HEADER_ROW, column=c, value=name)
         cell.font = Font(bold=True)
@@ -79,15 +86,16 @@ def build_workbook(rows, seed, xlsx_path, key_path, title="English grading"):
     for row in ws.iter_rows(min_row=FIRST_DATA_ROW, max_row=last, min_col=3, max_col=3):
         for cell in row:
             cell.alignment = Alignment(wrap_text=True, vertical="top")
-    dv1 = DataValidation(type="list", formula1='"' + ",".join(KEEP_CUT) + '"', allow_blank=True)
-    dv2 = DataValidation(type="list", formula1='"' + ",".join(TIERS) + '"', allow_blank=True)
+    # Dropdowns offer the full values, but typing a shortcut is allowed (no error box).
+    dv1 = DataValidation(type="list", formula1='"' + ",".join(KEEP_CUT) + '"', allow_blank=True, showErrorMessage=False)
+    dv2 = DataValidation(type="list", formula1='"' + ",".join(TIERS) + '"', allow_blank=True, showErrorMessage=False)
     ws.add_data_validation(dv1)
     ws.add_data_validation(dv2)
     dv1.add(f"D{FIRST_DATA_ROW}:D{last}")
     dv2.add(f"E{FIRST_DATA_ROW}:E{last}")
     ws.conditional_formatting.add(
         f"A{FIRST_DATA_ROW}:G{last}",
-        FormulaRule(formula=[f'LEN($D{FIRST_DATA_ROW})=0'], fill=PatternFill("solid", fgColor="FFF2CC")))
+        FormulaRule(formula=[f'LEN($D{FIRST_DATA_ROW})+LEN($E{FIRST_DATA_ROW})=0'], fill=PatternFill("solid", fgColor="FFF2CC")))
     # Fixed document metadata, so the same seed gives the same content.
     import datetime
     wb.properties.created = wb.properties.modified = datetime.datetime(2026, 1, 1)
