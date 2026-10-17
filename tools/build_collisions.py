@@ -350,24 +350,18 @@ def accent_sets(lang, words, key, true_sets):
     return sorted((list(m), sorted(r)) for m, r in found.items())
 
 
-def build(lang, variant=None):
-    # Before anything reads an input. key_en() returns None when cmudict is
-    # absent, and the old path then printed a note and RETURNED -- a silent
-    # skip rather than a silent shrink, but silent either way, and the caller
-    # exited 0. Every missing English input refuses here, in one place.
-    if lang == "en":
-        gone = missing_en_inputs()
-        if gone:
-            raise SystemExit("build_collisions: refusing to build the English table "
-                             "from missing inputs:\n  " + "\n  ".join(gone))
+def raw_groups(lang, variant=None):
+    """The pre-merge groups: every set of words sharing ONE exact key (a
+    pronunciation, for English), plus the curated seed groups. Returns
+    (key_fn, bank_words, groups) or (None, None, None) when there is no key."""
     k = key_en() if lang == "en" else KEYS.get(lang)
     if k is None:
         print(f"  {lang}: no key function (or cmudict missing)")
-        return
+        return None, None, None
     words = bank(lang, variant)
     if not words:
         print(f"  {lang}: empty bank")
-        return
+        return None, None, None
     groups = defaultdict(list)
     for w in words:
         key = k(w)
@@ -432,7 +426,23 @@ def build(lang, variant=None):
             if line and not line.startswith("#"):
                 groups[f"seed:{line}"] = line.split()
 
-    sets = sorted([sorted(set(v)) for v in groups.values() if len(set(v)) > 1])
+    return k, words, sorted([sorted(set(v)) for v in groups.values() if len(set(v)) > 1])
+
+
+def build(lang, variant=None):
+    # Before anything reads an input. key_en() returns None when cmudict is
+    # absent, and the old path then printed a note and RETURNED -- a silent
+    # skip rather than a silent shrink, but silent either way, and the caller
+    # exited 0. Every missing English input refuses here, in one place.
+    if lang == "en":
+        gone = missing_en_inputs()
+        if gone:
+            raise SystemExit("build_collisions: refusing to build the English table "
+                             "from missing inputs:\n  " + "\n  ".join(gone))
+    k, words, sets = raw_groups(lang, variant)
+    if k is None:
+        return
+
     # merge overlapping groups (a seed pair may share a member with a computed set)
     merged, changed = [list(x) for x in sets], True
     while changed:
