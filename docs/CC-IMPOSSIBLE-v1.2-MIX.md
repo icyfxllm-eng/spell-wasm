@@ -1,7 +1,7 @@
-# CC-IMPOSSIBLE v1.1 amendment: Impossible Mix (all languages in one bank)
+# CC-IMPOSSIBLE v1.2 amendment: Impossible Mix (all languages in one bank)
 
-**Status:** REVIEW-GATED draft, written 2026-10-16 from Eric's choice "2" (mixed bank, per-language pools underneath).
-**Amends:** CC-IMPOSSIBLE v1 (unsigned parts only). Nothing in v1's per-language pools, rules or invariants is removed.
+**Status:** REVIEW-GATED draft, written 2026-10-16 from Eric's choice "2" (mixed bank, per-language pools underneath). Renamed from v1.1 on 2026-10-17: v1.1 is the sound-alike filter pointer (`docs/CC-IMPOSSIBLE-v1.1-SOUNDALIKE.md`), which this file builds on.
+**Amends:** CC-IMPOSSIBLE v1 and v1.1. Section 10 (2026-10-17) replaces v1's top-slice pool with 100% of Expert; nothing else in v1's rules or invariants is removed.
 **Sequencing:** after CC-IMPOSSIBLE v1 Phase B (the Normal-surface tier) and before its Phases C and D. Not before build 56.
 **Flags:** every new flag defaults OFF.
 
@@ -175,3 +175,43 @@ A missed Mix word enters Misses tagged `impossible` and its language, and is re-
 - A language chooser, or any control that lets the player narrow the mix (rejected by Eric: it dilutes the difficulty).
 - Padding the mix with Expert words that are not in a v1 per-language pool.
 - A separate Mix leaderboard or non-cosmetic rewards.
+
+---
+
+## 10. Amendment 2026-10-17: the pool is 100% of Expert (Eric)
+
+Signed in chat: Mix takes **all** of each language's Expert tier, not a top slice.
+
+### P1. Pool
+A language's Impossible pool is every row of its live Expert tier that passes, in order:
+1. PURITY (v1 section 2, unchanged).
+2. The v1.1 sound-alike filter: drop every member of every `kind: true` or `kind: accent` set, read through `soundalikes(lang, voice)` (v1.1 A1, A2).
+3. The proper-noun assertion (v1 F2 step 6).
+
+No ranking and no slice. v1 F2 steps 2 and 3, D1 and I6 (the 5-20% slice and its bounds) **do not apply to Mix**. Since no per-language difficulty score is needed any more, the census C2 gap (no score for ru, ar, hi, sw, zh) no longer blocks a language.
+
+### P2. English
+English contributes only from the **re-tiered** Expert tier (`EN_RETIER_EXPERT`, 279 rows, graded by Eric), and only while `en.retier` is on. With the flag off, English is not in the Mix: today's 797-row Expert tier is mostly common long words and must not be served as Impossible (v1 I5).
+
+### P3. Per-language floor
+A language enters the Mix only if its filtered pool holds **at least 150 rows** (v1 D3's number, kept). With 100% of Expert every language that has a table clears it easily, so the floor only guards against a thin or broken bank.
+
+### P4. Availability, unchanged from v1 and v1.1
+A language must also: have a sound-alike table that is not `missing` (v1.1 A3); have its `impossible.<lang>` flag on; be entitled for the profile (v1 F11); and pass its own release gates (v1 F3). Mix still needs at least 2 qualifying languages (section 4, X4).
+
+### P5. What qualifies today
+Approximate filtered pool sizes, measured 2026-10-17:
+
+| Language | Expert rows | After the sound-alike filter | Status |
+|---|---|---|---|
+| English (re-tier) | 279 | about 271 | table `missing`; `en.retier` off |
+| Spanish | 3,000 | about 2,994 | table `missing` |
+| Russian | 3,000 | about 2,997 | table `missing`; its key only models devoicing and assimilation, so it finds fewer sound-alikes than exist |
+| all others | | | no sound-alike table data yet |
+
+**Nothing qualifies yet.** Every table is still `missing`, because the SENSE-CUE v1.1 F5 loopback (Phase B) has not run, and v1.1 A3 keeps Impossible locked on a `missing` table. Mix unlocks once at least two of English, Spanish and Russian reach `verified` (and, for English, `en.retier` is on).
+
+### P6. Tests (replace v1 A1, A4 and A2 for Mix)
+- **X9** `mix_pool_is_all_expert`: every filtered Expert row of a qualifying language is in its pool; nothing outside its Expert tier is.
+- **X10** `mix_english_needs_retier`: with `en.retier` off, English contributes nothing; with it on, English's pool is drawn from `EN_RETIER_EXPERT` only.
+- **X11** `mix_floor`: a fixture language with 149 filtered rows is left out; 150 is in.
