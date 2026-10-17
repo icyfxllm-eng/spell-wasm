@@ -77,6 +77,33 @@ fn source(lang: &str) -> Option<&'static str> {
     })
 }
 
+/// English's second table: the current bank plus the re-tier rows
+/// (CC-EN-EXPERT-GROWTH). Served only while `words::retier_active()`, so with
+/// en.retier off every reader -- grading, Spelluzzle, Spell Cross, Search --
+/// sees exactly the table it saw before.
+fn retier_source(lang: &str) -> Option<&'static str> {
+    match lang {
+        "en" => Some(include_str!("../assets/words/en/soundalikes-retier.json")),
+        _ => None,
+    }
+}
+
+/// Which table `lang` reads right now: (cache key, source).
+fn active(lang: &str) -> (String, Option<&'static str>) {
+    if let Some(src) = retier_source(lang) {
+        if crate::words::retier_active() {
+            return (format!("{lang}#retier"), Some(src));
+        }
+    }
+    (lang.to_string(), source(lang))
+}
+
+/// The cache key of the table `lang` reads right now. `crate::homophones`
+/// keys its own derived cache on this, so a flag flip cannot serve a stale map.
+pub fn active_key(lang: &str) -> String {
+    active(lang).0
+}
+
 fn missing(lang: &str) -> Table {
     Table { lang: lang.to_string(), status: "missing".into(), voice: None, generator: None, sets: Vec::new() }
 }
@@ -85,17 +112,18 @@ fn missing(lang: &str) -> Table {
 pub fn soundalikes(lang: &str) -> &'static Table {
     static CACHE: OnceLock<std::sync::Mutex<HashMap<String, &'static Table>>> = OnceLock::new();
     let cache = CACHE.get_or_init(|| std::sync::Mutex::new(HashMap::new()));
-    if let Some(t) = cache.lock().unwrap().get(lang) {
+    let (key, src) = active(lang);
+    if let Some(t) = cache.lock().unwrap().get(&key) {
         return t;
     }
-    let table = match source(lang) {
+    let table = match src {
         // The gate regenerates and checks these files on every push, so a parse
         // failure is a build bug; fall back to "missing" rather than panic in play.
         Some(json) => serde_json::from_str(json).unwrap_or_else(|_| missing(lang)),
         None => missing(lang),
     };
     let leaked: &'static Table = Box::leak(Box::new(table));
-    cache.lock().unwrap().insert(lang.to_string(), leaked);
+    cache.lock().unwrap().insert(key, leaked);
     leaked
 }
 
@@ -167,6 +195,34 @@ mod tests {
     #[test]
     fn voice_mismatch_reads_missing() {
         assert_eq!(status_for_voice("en", "en-US-Not-A-Voice"), "missing");
+    }
+
+    /// en.retier picks English's table: off -> today's table (so Spelluzzle and
+    /// grading are unchanged); on -> the re-tier table; a Spell Jr / Kid Mode
+    /// profile keeps today's table even with the flag on.
+    #[test]
+    fn english_table_follows_en_retier() {
+        let count = |on: bool, junior: bool| {
+            crate::flags::set_test_override(Some(if on { "on" } else { "off" }));
+            crate::words::set_junior_for_test(junior);
+            let n = soundalikes("en").sets.len();
+            let key = active_key("en");
+            crate::flags::set_test_override(None);
+            crate::words::set_junior_for_test(false);
+            (n, key)
+        };
+        let (off, off_key) = count(false, false);
+        let (on, on_key) = count(true, false);
+        let (jr, jr_key) = count(true, true);
+        assert_eq!(off_key, "en");
+        assert_eq!(on_key, "en#retier");
+        assert_eq!(jr_key, "en");
+        assert!(on > off, "the re-tier table covers more rows ({on} vs {off})");
+        assert_eq!(jr, off, "a junior profile keeps today's table");
+        // other languages never switch
+        crate::flags::set_test_override(Some("on"));
+        assert_eq!(active_key("es"), "es");
+        crate::flags::set_test_override(None);
     }
 
     #[test]

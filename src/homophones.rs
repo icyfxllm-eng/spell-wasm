@@ -33,7 +33,10 @@ fn table(lang: &str) -> &'static HashMap<String, usize> {
     static CACHE: OnceLock<std::sync::Mutex<HashMap<String, &'static HashMap<String, usize>>>> =
         OnceLock::new();
     let cache = CACHE.get_or_init(|| std::sync::Mutex::new(HashMap::new()));
-    if let Some(t) = cache.lock().unwrap().get(lang) {
+    // Keyed on the table actually in use, not the language: with en.retier on,
+    // English reads a different table (crate::soundalikes::active_key).
+    let key = crate::soundalikes::active_key(lang);
+    if let Some(t) = cache.lock().unwrap().get(&key) {
         return t;
     }
     let mut map: HashMap<String, usize> = HashMap::new();
@@ -45,7 +48,7 @@ fn table(lang: &str) -> &'static HashMap<String, usize> {
     // Leak the per-language map so we can hand out a 'static reference; there is
     // one small map per language for the process lifetime.
     let leaked: &'static HashMap<String, usize> = Box::leak(Box::new(map));
-    cache.lock().unwrap().insert(lang.to_string(), leaked);
+    cache.lock().unwrap().insert(key, leaked);
     leaked
 }
 

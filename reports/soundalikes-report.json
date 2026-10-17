@@ -55,6 +55,29 @@
    "voice": "en-US-Neural2-E",
    "voiceMatchesLayer1": true
   },
+  "en+retier": {
+   "bankRows": 4368,
+   "bonusEligibleBankWords": 328,
+   "confirmedSets": 0,
+   "generator": "build_collisions.key_en@1+retier",
+   "impossibleFilterRemoves": 330,
+   "loopbackFlags": 0,
+   "proof": {
+    "equalKeyGroups": 61,
+    "noneByConstructionEligible": false,
+    "passes": true,
+    "ran": true,
+    "splitCount": 0,
+    "splitGroups": []
+   },
+   "servedOnlyWhen": "en.retier is on (not Spell Jr / Kid Mode)",
+   "sets": {
+    "true": 282
+   },
+   "status": "missing",
+   "voice": "en-US-Neural2-E",
+   "voiceMatchesLayer1": true
+  },
   "es": {
    "bankRows": 6267,
    "bonusEligibleBankWords": 17,

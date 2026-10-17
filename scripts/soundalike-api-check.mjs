@@ -22,7 +22,7 @@ const ALLOW = new Set([
   'scripts/soundalike-api-check.mjs',   // names the patterns it forbids
 ]);
 const CODE = /\.(rs|py|mjs|js|cjs|sh|swift|kt|ts)$/;
-const PATTERN = /soundalikes\.json|homophones\.txt/;
+const PATTERN = /soundalikes(-retier)?\.json|homophones\.txt/;
 
 export function scan(files, read) {
   const bad = [];

@@ -50,7 +50,7 @@ pub fn en_tier(tier: &str) -> &'static [&'static str] {
     // CC-EN-EXPERT-GROWTH F4: the re-tiered bank, only behind en.retier, and
     // never for a Spell Jr / Kid Mode profile -- I5 says their word sets stay
     // byte-identical, so they keep today's tiers even with the flag on.
-    if crate::flags::en_retier() && !junior_profile() {
+    if retier_active() {
         return match tier {
             "easy" => EN_RETIER_EASY,
             "medium" => EN_RETIER_MEDIUM,
@@ -66,6 +66,14 @@ pub fn en_tier(tier: &str) -> &'static [&'static str] {
         "expert" => EN_EXPERT,
         _ => EN_MEDIUM,
     }
+}
+
+/// CC-EN-EXPERT-GROWTH F4: the re-tiered English bank is live for this profile --
+/// the en.retier flag is on and the profile is not Spell Jr / Kid Mode. The ONE
+/// switch: the bank (`en_tier`) and the sound-alike table
+/// (`soundalikes::soundalikes`) both read it, so they can never disagree.
+pub(crate) fn retier_active() -> bool {
+    crate::flags::en_retier() && !junior_profile()
 }
 
 /// Whether the active profile is Spell Jr / Kid Mode: the Kid Mode preference,

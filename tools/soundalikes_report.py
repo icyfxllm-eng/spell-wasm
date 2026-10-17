@@ -78,9 +78,10 @@ def build_report():
     gens, bank = generators()
     voices = layer1_voices()
     rows = {}
-    for lang in LANGS:
-        t = soundalikes(lang)
-        bank_rows = bank(lang)
+    import build_collisions as bc
+    for lang, variant in [(l, None) for l in LANGS] + list(bc.VARIANTS):
+        t = soundalikes(lang, variant=variant)
+        bank_rows = bank(lang, variant) if variant else bank(lang)
         banked = set(unicodedata.normalize("NFC", w) for w in bank_rows)
         is_prof = profanity(lang)
         kinds = defaultdict(int)
@@ -102,10 +103,11 @@ def build_report():
                         bonus_words.add(w)
         pr = proof(lang, gens[lang], bank_rows, t) if lang in gens else {
             "ran": False, "reason": "no spoken-key generator for this language yet; cannot be proved safe"}
-        rows[lang] = {
+        rows[f"{lang}+{variant}" if variant else lang] = {
             "status": t["status"],
             "voice": t.get("voice"),
             "voiceMatchesLayer1": t.get("voice") == voices.get(lang),
+            **({"servedOnlyWhen": "en.retier is on (not Spell Jr / Kid Mode)"} if variant else {}),
             "generator": t.get("generator"),
             "bankRows": len(bank_rows),
             "sets": dict(sorted(kinds.items())),

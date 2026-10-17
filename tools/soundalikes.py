@@ -27,8 +27,11 @@ STATUSES = ("verified", "none-by-construction", "missing")
 KINDS = ("true", "accent")
 
 
-def table_path(lang, root=ROOT):
-    return pathlib.Path(root) / "assets" / "words" / lang / "soundalikes.json"
+def table_path(lang, root=ROOT, variant=None):
+    """variant "retier": English's second table, built over the current bank plus the
+    re-tier rows (CC-EN-EXPERT-GROWTH), read only while en.retier is on."""
+    name = f"soundalikes-{variant}.json" if variant else "soundalikes.json"
+    return pathlib.Path(root) / "assets" / "words" / lang / name
 
 
 def nfc(s):
@@ -56,8 +59,8 @@ def layer1_voices(root=ROOT):
     return out
 
 
-def soundalikes(lang, voice=None, root=ROOT):
-    p = table_path(lang, root)
+def soundalikes(lang, voice=None, root=ROOT, variant=None):
+    p = table_path(lang, root, variant)
     if not p.exists():
         return {"lang": lang, "status": "missing", "voice": None, "generator": None, "sets": []}
     t = json.loads(p.read_text(encoding="utf-8"))
@@ -70,8 +73,8 @@ def member_words(s):
     return [m["memberId"] for m in s["members"]]
 
 
-def sets_of_kind(lang, kinds=("true",), voice=None, root=ROOT):
+def sets_of_kind(lang, kinds=("true",), voice=None, root=ROOT, variant=None):
     """Member-word lists of every set whose kind is in `kinds`.
     SENSE-CUE grading, the bonus and audio exemptions read ("true",);
     CC-IMPOSSIBLE reads ("true", "accent")."""
-    return [member_words(s) for s in soundalikes(lang, voice, root)["sets"] if s["kind"] in kinds]
+    return [member_words(s) for s in soundalikes(lang, voice, root, variant)["sets"] if s["kind"] in kinds]
