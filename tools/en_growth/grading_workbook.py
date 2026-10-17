@@ -147,7 +147,7 @@ def collect_rows(seed, n_staged=300):
     return rows
 
 
-def collect_top_ungraded(threshold):
+def collect_top_ungraded(threshold, below=None):
     """Every staged or low-band candidate scoring >= threshold that nobody has graded
     yet (not in calibration/en_graded.jsonl or the earlier graded staged sheet)."""
     from common import zipf_fn
@@ -164,10 +164,10 @@ def collect_top_ungraded(threshold):
     low_scores = _score_words(low)
     rows = []
     for w in staged:
-        if sc.get(w, 0) >= threshold and w not in graded:
+        if sc.get(w, 0) >= threshold and (below is None or sc[w] < below) and w not in graded:
             rows.append({"word": w, "group": "staged", "score": sc[w]})
     for w in low:
-        if low_scores.get(w, 0) >= threshold and w not in graded:
+        if low_scores.get(w, 0) >= threshold and (below is None or low_scores[w] < below) and w not in graded:
             rows.append({"word": w, "group": "low-band", "score": low_scores[w]})
     for r in rows:
         good = [(e["pos"], s) for e in hw.get(r["word"], []) for s in e["s"] if good_sense(e["pos"], s)]
@@ -207,10 +207,12 @@ def main():
     ap.add_argument("--out-dir", default=str(OUT_HOME))
     ap.add_argument("--top-ungraded", type=float, metavar="SCORE",
                     help="grade every ungraded staged/low-band candidate scoring at least SCORE")
+    ap.add_argument("--below", type=float, metavar="SCORE", help="with --top-ungraded: only scores under SCORE")
     a = ap.parse_args()
     if a.top_ungraded is not None:
-        name = f"en-expert-grading-top-{a.top_ungraded}-{a.seed}.xlsx"
-        rows = collect_top_ungraded(a.top_ungraded)
+        band = f"{a.top_ungraded}-{a.below}" if a.below is not None else f"top-{a.top_ungraded}"
+        name = f"en-expert-grading-{band}-{a.seed}.xlsx"
+        rows = collect_top_ungraded(a.top_ungraded, a.below)
     else:
         name = f"en-expert-grading-{a.seed}.xlsx"
         rows = collect_rows(a.seed)
