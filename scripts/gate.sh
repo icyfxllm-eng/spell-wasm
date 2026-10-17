@@ -326,7 +326,7 @@ node scripts/e2e-summary-check.mjs --selftest || { echo "GATE FAIL: e2e-summary 
 grep -E "E2E:" "$LOG"
 
 echo "== gate: web wall scan"
-npm run build:web 2>&1 | tail -n 1 | grep "web-picture-wall-scan: OK"
+npm run build:web 2>&1 | tail -n 1 | grep "web-picture-wall-scan: OK" || { echo "GATE FAIL: web wall scan"; exit 1; }
 
 echo "== gate: restore app dist"
 npm run build 2>&1 | grep bundled
