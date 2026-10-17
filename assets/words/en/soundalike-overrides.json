@@ -1,0 +1,150 @@
+{
+ "lang": "en",
+ "sets": {
+  "en:0049881e18fa": {
+   "auditor": "eric",
+   "drop": [
+    "c",
+    "si",
+    "sie"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop c (letter), si, sie (not English)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:099cfd0eba89": {
+   "auditor": "eric",
+   "drop": [],
+   "ingested": "2026-10-17",
+   "reason": "override target_only=bough: TTS says a lone 'bow' as 'boh'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": [
+    "bough"
+   ]
+  },
+  "en:186d3db4250c": {
+   "auditor": "eric",
+   "drop": [
+    "dais"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop dais (DAY-iss)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:3ead235fb7c5": {
+   "auditor": "eric",
+   "drop": [
+    "di"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop di (not a word)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:3f3e348b4921": {
+   "auditor": "eric",
+   "drop": [
+    "ar",
+    "r"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop ar, r (letters); are/our is accent-dependent like row 16",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:493d4f573bca": {
+   "auditor": "eric",
+   "drop": [
+    "sol"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop sol (said 'soh' or 'sahl')",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:6995ea76dab1": {
+   "auditor": "eric",
+   "drop": [
+    "salle"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop salle (French)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:76689604a85e": {
+   "auditor": "eric",
+   "drop": [],
+   "ingested": "2026-10-17",
+   "reason": "override target_only=led: TTS says a lone 'lead' as 'leed'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": [
+    "led"
+   ]
+  },
+  "en:7ee0b3856d65": {
+   "auditor": "eric",
+   "drop": [
+    "bae"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop bae (slang, said 'bay')",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:8b519edeb846": {
+   "auditor": "eric",
+   "drop": [
+    "tae"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop tae (Scots, not English)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:946d29b4d1b7": {
+   "auditor": "eric",
+   "drop": [
+    "lai",
+    "ly"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop lai (said 'lay') and ly (suffix)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:a48b84b7ba2f": {
+   "auditor": "eric",
+   "drop": [
+    "t",
+    "te"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop t (letter) and te (variant of ti)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:d451b7d4c220": {
+   "auditor": "eric",
+   "drop": [
+    "for"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "override drop for (said 'fore' on its own)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": []
+  },
+  "en:f12eacc1038b": {
+   "auditor": "eric",
+   "drop": [],
+   "ingested": "2026-10-17",
+   "reason": "override target_only=red: TTS says a lone 'read' as 'reed'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "targetOnly": [
+    "red"
+   ]
+  }
+ }
+}

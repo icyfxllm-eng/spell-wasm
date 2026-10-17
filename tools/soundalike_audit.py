@@ -268,6 +268,76 @@ def ingest(sheet, key_path, auditor, write, root=ROOT):
     return 0
 
 
+OVERRIDE_ACTIONS = ("drop_member", "target_only")
+
+
+def overrides_path(lang, root=ROOT):
+    return pathlib.Path(root) / "assets" / "words" / lang / "soundalike-overrides.json"
+
+
+def ingest_overrides(path, key_path, auditor, write, root=ROOT):
+    """Member-level fixes returned with a sheet. Same trust model as the sheet: the
+    header must carry the sheet's id and stamp, every row must name a real row/set of
+    that sheet, and every member must be in that set. Any problem writes nothing.
+      drop_member  remove one member from that set only (e.g. 'for' from fir/fur)
+      target_only  accept the set only when THIS member is the prompt (the voice says
+                   a lone 'read' as 'reed', so red<-read is fair but read<-red is not)"""
+    key = json.loads(pathlib.Path(key_path).read_text())
+    lines = pathlib.Path(path).read_text(encoding="utf-8-sig").splitlines()
+    problems = []
+    head = lines[0].split() if lines else []
+    if len(head) != 7 or head[:4] != ["#", "overrides", "for", "sheet"] or head[5] != "stamp":
+        return print("REJECTED: missing '# overrides for sheet <id> stamp <hash>' header") or 1
+    if head[4] != key["sheet_id"] or head[6] != key["stamp"]:
+        problems.append("STAMP: the overrides name a different sheet or stamp than the key")
+    by_row = {str(r["row"]): r for r in key["rows"]}
+    out = {}
+    for r in csv.DictReader(lines[1:]):
+        k = by_row.get((r.get("row") or "").strip())
+        if k is None or k["set"] != r.get("set"):
+            problems.append(f"AGREEMENT: row {r.get('row')} / set {r.get('set')} is not on the sheet")
+            continue
+        if k["decoy"]:
+            problems.append(f"AGREEMENT: row {k['row']} is not a set that can be overridden")
+            continue
+        act, mem = (r.get("action") or "").strip(), (r.get("member") or "").strip()
+        members = [m.strip() for m in k["members"].split("/")]
+        if act not in OVERRIDE_ACTIONS:
+            problems.append(f"COMPLETE: row {k['row']} action {act!r} is not one of {OVERRIDE_ACTIONS}")
+            continue
+        if mem not in members:
+            problems.append(f"AGREEMENT: row {k['row']} member {mem!r} is not in {members}")
+            continue
+        o = out.setdefault(k["set"], {"drop": [], "targetOnly": [], "reasons": []})
+        o["drop" if act == "drop_member" else "targetOnly"].append(mem)
+        if r.get("reason") and r["reason"] not in o["reasons"]:
+            o["reasons"].append(r["reason"])
+    for sid, o in out.items():
+        members = [m.strip() for m in next(r["members"] for r in key["rows"] if r["set"] == sid).split("/")]
+        if len(set(members) - set(o["drop"])) < 2:
+            problems.append(f"COMPLETE: {sid}: dropping {o['drop']} leaves fewer than two members")
+    if problems:
+        print(f"REJECTED overrides for {key['sheet_id']}: nothing written")
+        for p in problems:
+            print("  " + p)
+        return 1
+    print(f"OK overrides for {key['sheet_id']}: {len(out)} sets "
+          f"({sum(len(o['drop']) for o in out.values())} drops, {sum(len(o['targetOnly']) for o in out.values())} target-only)")
+    if not write:
+        print("dry run: pass --write to record them")
+        return 0
+    lang = key["lang"]
+    store = json.loads(overrides_path(lang, root).read_text()) if overrides_path(lang, root).exists() else {"lang": lang, "sets": {}}
+    when = time.strftime("%Y-%m-%d")
+    for sid, o in out.items():
+        store["sets"][sid] = {"drop": sorted(set(o["drop"])), "targetOnly": sorted(set(o["targetOnly"])),
+                              "reason": " | ".join(o["reasons"]), "sheet": key["sheet_id"], "auditor": auditor, "ingested": when}
+    store["sets"] = dict(sorted(store["sets"].items()))
+    overrides_path(lang, root).write_text(json.dumps(store, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+    print(f"wrote {overrides_path(lang, root)}; now run tools/build_collisions.py {lang}")
+    return 0
+
+
 def selftest():
     """Each gate must reject what it exists to reject, and a clean sheet must pass."""
     with tempfile.TemporaryDirectory() as d:
@@ -319,6 +389,11 @@ def main():
     i.add_argument("--key", required=True)
     i.add_argument("--auditor", required=True)
     i.add_argument("--write", action="store_true")
+    o = sub.add_parser("ingest-overrides")
+    o.add_argument("--file", required=True)
+    o.add_argument("--key", required=True)
+    o.add_argument("--auditor", required=True)
+    o.add_argument("--write", action="store_true")
     sub.add_parser("selftest")
     a = ap.parse_args()
     if a.cmd == "build":
@@ -326,6 +401,8 @@ def main():
         return 0
     if a.cmd == "ingest":
         return ingest(a.sheet, a.key, a.auditor, a.write)
+    if a.cmd == "ingest-overrides":
+        return ingest_overrides(a.file, a.key, a.auditor, a.write)
     return selftest()
 
 

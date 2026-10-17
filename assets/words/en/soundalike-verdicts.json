@@ -1,0 +1,445 @@
+{
+ "lang": "en",
+ "sets": {
+  "en:0049881e18fa": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "c / sea / see / si / sie",
+   "note": "override drop c (letter), si, sie (not English)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:039214a6720a": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "asked / ast",
+   "note": "'ast' is not a standard word; only 'asked' is real",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:0875bed415bc": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "years / yours",
+   "note": "Eric: not the same",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:099cfd0eba89": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "bough / bow",
+   "note": "override target_only=bough: TTS says a lone 'bow' as 'boh'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:0a5c51d02e1f": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "use / youse",
+   "note": "'youse' is slang",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:128a00f01d3f": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "hour / our",
+   "note": "accent: many US speakers say 'our' as 'ar'; loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:186d3db4250c": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "dais / days / daze",
+   "note": "override drop dais (DAY-iss)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:194a19e61eb1": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "affect / effect",
+   "note": "accent: unstressed first vowel; voice usually separates them; loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:202d7cb77811": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "mean / mein",
+   "note": "mein is said 'mane'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:3af22988ed33": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "device / devise",
+   "note": "s vs z",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:3cb047041bf3": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "acts / ax / axe",
+   "note": "acts has a t; ax/axe is one word spelled two ways (accept-both policy)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:3e5323ef81b3": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "koto / kowtow",
+   "note": "Eric: not the same",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:3ead235fb7c5": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "di / die / dye",
+   "note": "override drop di (not a word)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:3f3e348b4921": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "ar / are / our / r",
+   "note": "override drop ar, r (letters); are/our is accent-dependent like row 16",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:450a8bef608f": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "corp / corporation",
+   "note": "Eric: not the same (abbreviation vs full word)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:493d4f573bca": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "sol / sole / soul",
+   "note": "override drop sol (said 'soh' or 'sahl')",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:547875fc6691": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "licence / license",
+   "note": "UK/US spelling of one word, not two words; goes to the accept-both spelling policy",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:5ed2bd6266a8": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "la / law",
+   "note": "accent: cot-caught merger (la/law); loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:6443e6118a1a": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "reading / redding",
+   "note": "REE-ding vs RED-ding",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:6995ea76dab1": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "sail / sale / salle",
+   "note": "override drop salle (French)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:69e34c5d991d": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "testes / tests",
+   "note": "testes is TES-teez (2 syllables)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:700ecbd0b706": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "we / wee",
+   "note": "clean",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:70ca5624b49b": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "rout / route",
+   "note": "accent: route said 'root' or 'rowt'; loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:756063fbdf4d": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "ware / wear / where",
+   "note": "accent: wine-whine merger (where); loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:76689604a85e": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "lead / led",
+   "note": "override target_only=led: TTS says a lone 'lead' as 'leed'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:7ee0b3856d65": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "bae / buy / by / bye",
+   "note": "override drop bae (slang, said 'bay')",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:8724906e4dd1": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "right / rite / wright / write",
+   "note": "clean",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:8b519edeb846": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "tae / tai / tie / tye",
+   "note": "override drop tae (Scots, not English)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:8ee5c34aa3fa": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "code / coed",
+   "note": "co-ED is 2 syllables",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:8fce8672758f": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "dae / day / de / dey",
+   "note": "dae/de are not words; dey is obscure; only 'day' remains",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:946d29b4d1b7": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "lai / lie / ly / lye",
+   "note": "override drop lai (said 'lay') and ly (suffix)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:94db6f7b240d": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "me / mi",
+   "note": "clean (mi is the music note, said 'mee')",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:9a3afc72bd12": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "mor / more",
+   "note": "'mor' is not a common word; only 'more' remains.",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:9e31179a630e": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "fee / fi / fie",
+   "note": "fie is said 'fy'; fi is not a word; only 'fee' remains",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:9ea4a1f5c391": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "yore / your",
+   "note": "accent: your said 'yoor' or 'yore'; loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:9fe31682eeef": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "get / git",
+   "note": "e vs i",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:a0e162a662b9": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "refer / rougher",
+   "note": "ri-FUR vs RUF-er",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:a48b84b7ba2f": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "t / te / tea / tee / ti",
+   "note": "override drop t (letter) and te (variant of ti)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:aea355b809bf": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "cars / cause / coz",
+   "note": "the r in 'cars' is heard on a US voice; coz is slang",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:b0d700f4d84e": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "plait / plate",
+   "note": "accent: plait said 'plat' (UK) or 'plate' (US); loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:c07ff15ee022": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "saint / st",
+   "note": "'st' is an abbreviation",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:c243a8ffccae": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "an / un",
+   "note": "'un' is not a word; only 'an' is real",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:d10d7c56d874": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "are / er / err / or / ur",
+   "note": "are/or/err are three different vowels; er/ur are not words",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:d18186641f61": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "lat / lot",
+   "note": "lat has short a; lot has 'ah'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:d2017e0bb697": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "fort / forte",
+   "note": "forte (music) is 'for-tay', forte (strength) is 'fort'; voice decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:d451b7d4c220": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "fir / for / fur",
+   "note": "override drop for (said 'fore' on its own)",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:dfe084801747": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "road / rode / rowed",
+   "note": "clean",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:ec67327d6f06": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "hours / ours",
+   "note": "accent: same as row 16 (ours said 'ars'); loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:eee4aefdcb01": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "role / roll",
+   "note": "clean",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:f12eacc1038b": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "read / red",
+   "note": "override target_only=red: TTS says a lone 'read' as 'reed'",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:f3e000c29ab4": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "can / kan",
+   "note": "'kan' is not a word",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:f52cf15fa992": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "gist / just",
+   "note": "Eric: not the same",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  },
+  "en:f88a92fd32dc": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "ensure / insure",
+   "note": "accent: en-/in- often merged in US speech; loopback listen decides",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  },
+  "en:f94776f7382b": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "manner / manor",
+   "note": "clean",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "yes"
+  },
+  "en:fa54f2e84334": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "loop / loup / lupe",
+   "note": "loup is French; Lupe is a name; only 'loop' remains",
+   "sheet": "en-soundalike-flagged-20261017",
+   "verdict": "no"
+  }
+ }
+}

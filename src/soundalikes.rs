@@ -42,6 +42,11 @@ pub struct SoundalikeSet {
     #[serde(default)]
     pub confirmed: bool,
     pub members: Vec<Member>,
+    /// F6 override: the set is fair only when one of THESE members is the prompt
+    /// (the voice says a lone "read" as "reed", so "read" typed for "red" is fair,
+    /// "red" typed for "read" is not). Empty = symmetric.
+    #[serde(rename = "targetOnly", default)]
+    pub target_only: Vec<String>,
 }
 
 #[allow(dead_code)]

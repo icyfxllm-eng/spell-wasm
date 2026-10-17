@@ -88,8 +88,15 @@ pub fn accepts(lang: &str, word: &str, typed: &str) -> bool {
     }
     match (t.get(&fold_strict(word)), t.get(&fold_strict(typed))) {
         // Accepted only when the two share a set: a shared pronunciation, not a
-        // chain of them.
-        (Some(a), Some(b)) => a.iter().any(|g| b.contains(g)),
+        // chain of them. A target-only set (F6 override) is fair in one direction:
+        // only when the prompt is one of its target members.
+        (Some(a), Some(b)) => {
+            let all = sets(lang);
+            let prompt = fold_strict(word);
+            a.iter().filter(|g| b.contains(g)).any(|&g| {
+                all.get(g).is_some_and(|s| s.target_only.is_empty() || s.target_only.iter().any(|t| fold_strict(t) == prompt))
+            })
+        }
         _ => false,
     }
 }
@@ -126,12 +133,28 @@ mod phase_b_tests {
     /// The Russian table is the STRESS-INDEPENDENT key only. привезти/привести
     /// collide by devoicing alone; inflection pairs like академии/академия must
     /// NOT, because merging them needs stress data that is still dark.
+    /// F6 overrides from Eric's same-sound sheet (2026-10-17): target-only sets
+    /// accept in one direction, dropped members are gone, and an auditor "no"
+    /// stops acceptance -- except for curated variety pairs (license/licence).
+    #[test]
+    fn auditor_overrides_shape_acceptance() {
+        assert!(accepts(EN, "red", "read"), "read (past tense) typed for red is fair");
+        assert!(!accepts(EN, "read", "red"), "the voice says a lone 'read' as 'reed'");
+        assert!(accepts(EN, "bough", "bow") && !accepts(EN, "bow", "bough"));
+        assert!(accepts(EN, "fir", "fur") && !accepts(EN, "fir", "for"), "for was dropped from fir/fur");
+        assert!(!accepts(EN, "asked", "ast"), "ast is not a word");
+        assert!(!accepts(EN, "device", "devise"), "s vs z");
+        assert!(accepts(EN, "license", "licence"), "variety pair stays accepted");
+    }
+
     /// Un-chaining (2026-10-17): a word with two pronunciations sits in two sets
     /// and matches both, but two words that share no pronunciation do not match
     /// through it. err is EH R (air) and ER (or); air and or are not alike.
     #[test]
     fn english_sets_do_not_chain() {
-        assert!(accepts(EN, "err", "air") && accepts(EN, "err", "or"), "err matches both of its pronunciations");
+        // err/or was later separated by Eric's sheet ("no" on are/er/err/or/ur), so
+        // only err/air is still a shared-pronunciation pair here.
+        assert!(accepts(EN, "err", "air"), "err still matches air");
         assert!(!accepts(EN, "air", "or"), "air and or share no pronunciation");
         assert!(!accepts(EN, "air", "hour"), "air and hour share no pronunciation");
         assert!(accepts(EN, "hour", "our"), "a real pair stays");
@@ -152,6 +175,10 @@ mod phase_b_tests {
             for set in sets(lang) {
                 let ms: Vec<&str> = set.members.iter().map(|m| m.member_id.as_str()).collect();
                 for a in &ms {
+                    // A target-only set (F6) is complete from its targets only.
+                    if !set.target_only.is_empty() && !set.target_only.iter().any(|t| t == a) {
+                        continue;
+                    }
                     for b in &ms {
                         assert!(accepts(lang, a, b), "{lang}: {a} must accept {b}");
                     }

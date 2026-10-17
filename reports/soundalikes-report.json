@@ -35,11 +35,11 @@
   },
   "en": {
    "bankRows": 3158,
-   "bonusEligibleBankWords": 301,
-   "confirmedSets": 0,
+   "bonusEligibleBankWords": 278,
+   "confirmedSets": 19,
    "generator": "build_collisions.key_en@1",
    "impossibleFilterRemoves": 307,
-   "loopbackFlags": 55,
+   "loopbackFlags": 36,
    "proof": {
     "equalKeyGroups": 54,
     "noneByConstructionEligible": false,
@@ -49,8 +49,8 @@
     "splitGroups": []
    },
    "sets": {
-    "accent": 3,
-    "true": 277
+    "accent": 27,
+    "true": 253
    },
    "status": "verified",
    "voice": "en-US-Neural2-E",
@@ -58,11 +58,11 @@
   },
   "en+retier": {
    "bankRows": 4368,
-   "bonusEligibleBankWords": 328,
-   "confirmedSets": 0,
+   "bonusEligibleBankWords": 305,
+   "confirmedSets": 19,
    "generator": "build_collisions.key_en@1+retier",
    "impossibleFilterRemoves": 335,
-   "loopbackFlags": 58,
+   "loopbackFlags": 39,
    "proof": {
     "equalKeyGroups": 61,
     "noneByConstructionEligible": false,
@@ -73,8 +73,8 @@
    },
    "servedOnlyWhen": "en.retier is on (not Spell Jr / Kid Mode)",
    "sets": {
-    "accent": 4,
-    "true": 297
+    "accent": 28,
+    "true": 273
    },
    "status": "verified",
    "voice": "en-US-Neural2-E",
@@ -216,11 +216,11 @@
   },
   "ru": {
    "bankRows": 6833,
-   "bonusEligibleBankWords": 69,
-   "confirmedSets": 0,
+   "bonusEligibleBankWords": 60,
+   "confirmedSets": 3,
    "generator": "build_collisions.key_ru@1",
-   "impossibleFilterRemoves": 69,
-   "loopbackFlags": 7,
+   "impossibleFilterRemoves": 68,
+   "loopbackFlags": 4,
    "proof": {
     "equalKeyGroups": 34,
     "noneByConstructionEligible": false,
@@ -230,7 +230,8 @@
     "splitGroups": []
    },
    "sets": {
-    "true": 34
+    "accent": 4,
+    "true": 30
    },
    "status": "verified",
    "voice": "ru-RU-Wavenet-A",

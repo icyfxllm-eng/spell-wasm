@@ -23,7 +23,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -39,7 +39,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:3cb047041bf3"
   },
   {
@@ -242,7 +245,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -254,7 +257,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:c243a8ffccae"
   },
   {
@@ -263,21 +269,17 @@
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
-     "memberId": "ar",
-     "wordId": null
-    },
-    {
      "memberId": "are",
      "wordId": "are"
     },
     {
      "memberId": "our",
      "wordId": "our"
-    },
-    {
-     "memberId": "r",
-     "wordId": null
     }
+   ],
+   "membersDropped": [
+    "ar",
+    "r"
    ],
    "mergerRules": [],
    "setId": "en:3f3e348b4921"
@@ -318,7 +320,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -342,12 +344,15 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:d10d7c56d874"
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -359,7 +364,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:039214a6720a"
   },
   {
@@ -401,14 +409,10 @@
    "setId": "en:cd57eb4fe1b7"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "bae",
-     "wordId": null
-    },
     {
      "memberId": "buy",
      "wordId": "buy"
@@ -421,6 +425,9 @@
      "memberId": "bye",
      "wordId": null
     }
+   ],
+   "membersDropped": [
+    "bae"
    ],
    "mergerRules": [],
    "setId": "en:7ee0b3856d65"
@@ -744,9 +751,9 @@
    "setId": "en:f96a96d00fc2"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "bough",
@@ -758,7 +765,10 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:099cfd0eba89"
+   "setId": "en:099cfd0eba89",
+   "targetOnly": [
+    "bough"
+   ]
   },
   {
    "confirmed": false,
@@ -795,14 +805,10 @@
    "setId": "en:512fbb8d07f1"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "c",
-     "wordId": null
-    },
     {
      "memberId": "sea",
      "wordId": "sea"
@@ -810,15 +816,12 @@
     {
      "memberId": "see",
      "wordId": "see"
-    },
-    {
-     "memberId": "si",
-     "wordId": null
-    },
-    {
-     "memberId": "sie",
-     "wordId": null
     }
+   ],
+   "membersDropped": [
+    "c",
+    "si",
+    "sie"
    ],
    "mergerRules": [],
    "setId": "en:0049881e18fa"
@@ -876,7 +879,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -888,7 +891,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:f3e000c29ab4"
   },
   {
@@ -944,7 +950,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -960,7 +966,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:aea355b809bf"
   },
   {
@@ -1202,7 +1211,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -1214,7 +1223,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:8ee5c34aa3fa"
   },
   {
@@ -1350,7 +1362,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -1362,7 +1374,10 @@
      "wordId": "corporation"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:450a8bef608f"
   },
   {
@@ -1401,7 +1416,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -1421,18 +1436,17 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:8fce8672758f"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "dais",
-     "wordId": null
-    },
     {
      "memberId": "days",
      "wordId": "days"
@@ -1441,6 +1455,9 @@
      "memberId": "daze",
      "wordId": null
     }
+   ],
+   "membersDropped": [
+    "dais"
    ],
    "mergerRules": [],
    "setId": "en:186d3db4250c"
@@ -1481,7 +1498,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -1493,7 +1510,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:3af22988ed33"
   },
   {
@@ -1518,14 +1538,10 @@
    "setId": "en:6fbb8b7f3a17"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "di",
-     "wordId": null
-    },
     {
      "memberId": "die",
      "wordId": "die"
@@ -1534,6 +1550,9 @@
      "memberId": "dye",
      "wordId": null
     }
+   ],
+   "membersDropped": [
+    "di"
    ],
    "mergerRules": [],
    "setId": "en:3ead235fb7c5"
@@ -1790,7 +1809,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -1806,7 +1825,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:9e31179a630e"
   },
   {
@@ -1844,22 +1866,21 @@
    "setId": "en:952c83f0366d"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "fir",
      "wordId": null
     },
     {
-     "memberId": "for",
-     "wordId": "for"
-    },
-    {
      "memberId": "fur",
      "wordId": null
     }
+   ],
+   "membersDropped": [
+    "for"
    ],
    "mergerRules": [],
    "setId": "en:d451b7d4c220"
@@ -2078,7 +2099,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -2090,12 +2111,15 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:9fe31682eeef"
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -2107,7 +2131,10 @@
      "wordId": "just"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:f52cf15fa992"
   },
   {
@@ -2753,7 +2780,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -2765,7 +2792,10 @@
      "wordId": "kowtow"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:3e5323ef81b3"
   },
   {
@@ -2820,26 +2850,22 @@
    "setId": "en:432bfb35a114"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "lai",
-     "wordId": null
-    },
     {
      "memberId": "lie",
      "wordId": "lie"
     },
     {
-     "memberId": "ly",
-     "wordId": null
-    },
-    {
      "memberId": "lye",
      "wordId": null
     }
+   ],
+   "membersDropped": [
+    "lai",
+    "ly"
    ],
    "mergerRules": [],
    "setId": "en:946d29b4d1b7"
@@ -2863,7 +2889,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -2875,7 +2901,10 @@
      "wordId": "lot"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:d18186641f61"
   },
   {
@@ -2921,9 +2950,9 @@
    "setId": "en:f2e5f4d88c42"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "lead",
@@ -2935,7 +2964,10 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:76689604a85e"
+   "setId": "en:76689604a85e",
+   "targetOnly": [
+    "led"
+   ]
   },
   {
    "confirmed": false,
@@ -2952,6 +2984,7 @@
     }
    ],
    "mergerRules": [],
+   "reviewFlag": "auditor-no-kept-by-variety-seed",
    "setId": "en:547875fc6691"
   },
   {
@@ -3058,7 +3091,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -3074,7 +3107,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:fa54f2e84334"
   },
   {
@@ -3180,9 +3216,9 @@
    "setId": "en:d7f55349064b"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "manner",
@@ -3248,9 +3284,9 @@
    "setId": "en:7ac18f62b8d3"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "me",
@@ -3266,7 +3302,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -3278,7 +3314,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:202d7cb77811"
   },
   {
@@ -3372,7 +3411,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -3384,7 +3423,10 @@
      "wordId": "more"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:9a3afc72bd12"
   },
   {
@@ -3799,9 +3841,9 @@
    "setId": "en:c7fc3da0ac6c"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "read",
@@ -3813,7 +3855,10 @@
     }
    ],
    "mergerRules": [],
-   "setId": "en:f12eacc1038b"
+   "setId": "en:f12eacc1038b",
+   "targetOnly": [
+    "red"
+   ]
   },
   {
    "confirmed": false,
@@ -3834,7 +3879,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -3846,7 +3891,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:6443e6118a1a"
   },
   {
@@ -3902,7 +3950,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -3914,7 +3962,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:a0e162a662b9"
   },
   {
@@ -3939,9 +3990,9 @@
    "setId": "en:28d9494106cf"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "right",
@@ -3998,9 +4049,9 @@
    "setId": "en:1a78a685f78d"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "road",
@@ -4036,9 +4087,9 @@
    "setId": "en:03d6633725e6"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "role",
@@ -4155,9 +4206,9 @@
    "setId": "en:8b819a51143c"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "sail",
@@ -4166,18 +4217,17 @@
     {
      "memberId": "sale",
      "wordId": "sale"
-    },
-    {
-     "memberId": "salle",
-     "wordId": null
     }
+   ],
+   "membersDropped": [
+    "salle"
    ],
    "mergerRules": [],
    "setId": "en:6995ea76dab1"
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -4189,7 +4239,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:c07ff15ee022"
   },
   {
@@ -4426,14 +4479,10 @@
    "setId": "en:c23bbc6b3a37"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "sol",
-     "wordId": null
-    },
     {
      "memberId": "sole",
      "wordId": "sole"
@@ -4442,6 +4491,9 @@
      "memberId": "soul",
      "wordId": "soul"
     }
+   ],
+   "membersDropped": [
+    "sol"
    ],
    "mergerRules": [],
    "setId": "en:493d4f573bca"
@@ -4566,18 +4618,10 @@
    "setId": "en:f9d8cd498107"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "t",
-     "wordId": null
-    },
-    {
-     "memberId": "te",
-     "wordId": null
-    },
     {
      "memberId": "tea",
      "wordId": "tea"
@@ -4591,18 +4635,18 @@
      "wordId": null
     }
    ],
+   "membersDropped": [
+    "t",
+    "te"
+   ],
    "mergerRules": [],
    "setId": "en:a48b84b7ba2f"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
-    {
-     "memberId": "tae",
-     "wordId": null
-    },
     {
      "memberId": "tai",
      "wordId": null
@@ -4615,6 +4659,9 @@
      "memberId": "tye",
      "wordId": null
     }
+   ],
+   "membersDropped": [
+    "tae"
    ],
    "mergerRules": [],
    "setId": "en:8b519edeb846"
@@ -4672,7 +4719,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -4684,7 +4731,10 @@
      "wordId": "tests"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:69e34c5d991d"
   },
   {
@@ -4884,7 +4934,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -4896,7 +4946,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:0a5c51d02e1f"
   },
   {
@@ -5116,9 +5169,9 @@
    "setId": "en:dbe4006aa801"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "we",
@@ -5325,7 +5378,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -5337,7 +5390,10 @@
      "wordId": null
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "en:0875bed415bc"
   },
   {

@@ -54,16 +54,27 @@ def proof(lang, key, bank_rows, table):
             continue
         for m in s["members"]:
             sets_of[m["memberId"]].add(s["setId"])
+    # Pairs an AUDITOR separated on a locked sheet (F6): a "no" verdict (kind accent,
+    # rule auditor-distinguishes) or a dropped member. The key cannot know those, so
+    # they are allowed splits, not failures.
+    separated = set()
+    for s in table["sets"]:
+        ms = [m["memberId"] for m in s["members"]]
+        if s["kind"] == "accent" and "auditor-distinguishes" in s.get("mergerRules", []):
+            separated |= {frozenset((a, b)) for a in ms for b in ms if a != b}
+        for d in s.get("membersDropped", []):
+            separated |= {frozenset((d, m)) for m in ms + s.get("membersDropped", []) if m != d}
     split = []
     multi = 0
     for k, rows in groups.items():
         if len(rows) < 2:
             continue
         multi += 1
-        # All rows sharing this key must share at least one true set.
-        common = set.intersection(*(sets_of.get(r, set()) for r in rows))
-        if not common:
-            split.append(sorted(rows))
+        rows_l = sorted(rows)
+        bad = [(a, b) for i, a in enumerate(rows_l) for b in rows_l[i + 1:]
+               if not (sets_of.get(a, set()) & sets_of.get(b, set())) and frozenset((a, b)) not in separated]
+        if bad:
+            split.append(rows_l)
     return {"ran": True, "equalKeyGroups": multi, "passes": not split,
             "splitGroups": sorted(split)[:50], "splitCount": len(split),
             "noneByConstructionEligible": multi == 0 and not split}

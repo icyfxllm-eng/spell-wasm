@@ -1,0 +1,13 @@
+{
+ "lang": "es",
+ "sets": {
+  "es:1907745bb41e": {
+   "auditor": "eric",
+   "ingested": "2026-10-17",
+   "members": "cauce / cause",
+   "note": "true only on a seseo voice; Eric keeps seseo pairs accepted",
+   "sheet": "es-soundalike-flagged-20261017",
+   "verdict": "unsure"
+  }
+ }
+}

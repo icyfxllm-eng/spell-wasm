@@ -72,3 +72,14 @@ Full gate: GATE PASS (e2e 422/422 app, 17/17 site) on the third run. The two ear
 - **Seseo:** keep accepting. Seseo stays in the Spanish base key, so casa/caza, cauce/cause, cocer/coser and concejo/consejo remain `kind: true` (accept-all). Recorded as declined in `config/soundalike-merger-rules.json`. Impossible still excludes them.
 - **ch bug:** fixed in `key_es`. Spanish drops from 11 to 7 sets; marca/marcha, marcas/marchas, roca/rocha and chota/cota are no longer accepted for each other. The Spanish auditor sheet was rebuilt (`es-soundalike-20261017`).
 - Full gate after both changes: GATE PASS on the second run (the first failed only the known flaky human-audio test).
+
+## Same-sound sheets ingested (2026-10-17)
+
+Flagged-only sheets (`*-soundalike-flagged-20261017`), all four checks passed:
+- **English:** 19 yes, 25 no, 11 unsure, plus 19 member overrides on 14 sets: 16 members dropped (letters, abbreviations, slang, foreign words, and *for* out of *fir / fur*) and 3 one-way sets (*bough* ← *bow*, *red* ← *read*, *led* ← *lead*: the voice says a lone *bow*, *read*, *lead* as "boh", "reed", "leed").
+- **Russian:** 3 yes, 4 no, plus *лет* dropped from *лед / лёд*.
+- **Spanish:** *cauce / cause* recorded unsure (seseo pairs stay accepted, as Eric ruled).
+- **licence / license:** the "no" (one word, two spellings) is recorded, but the pair stays accepted because it is a curated variety pair (`reviewFlag: auditor-no-kept-by-variety-seed`).
+- **Grading effect:** "no" sets move to accent and stop being accepted (for example *asked / ast*, *device / devise*, *years / yours*, *are / or / err*).
+- **Still open:** *экз* is an abbreviation in the Russian bank and should be quarantined under CC-BANK-PURITY; not done here.
+- Spelluzzle seeds and its golden board file were re-pinned. Full gate: GATE PASS on the second run (the first failed two random-board e2e checks; the Spelluzzle area passed on its own twice).

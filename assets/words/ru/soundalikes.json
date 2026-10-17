@@ -91,7 +91,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -103,7 +103,10 @@
      "wordId": "всём"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "ru:7ce8ed9fca50"
   },
   {
@@ -192,22 +195,21 @@
    "setId": "ru:8006ae7ec143"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "лед",
      "wordId": "лед"
     },
     {
-     "memberId": "лет",
-     "wordId": "лет"
-    },
-    {
      "memberId": "лёд",
      "wordId": "лёд"
     }
+   ],
+   "membersDropped": [
+    "лет"
    ],
    "mergerRules": [],
    "setId": "ru:318b45a4e057"
@@ -264,9 +266,9 @@
    "setId": "ru:b2548cf4d641"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "об",
@@ -316,7 +318,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -328,7 +330,10 @@
      "wordId": "перёд"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "ru:d6e78956915e"
   },
   {
@@ -486,7 +491,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -498,7 +503,10 @@
      "wordId": "узнаёт"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "ru:f94023f4e581"
   },
   {
@@ -520,7 +528,7 @@
   },
   {
    "confirmed": false,
-   "kind": "true",
+   "kind": "accent",
    "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
@@ -532,7 +540,10 @@
      "wordId": "чём"
     }
    ],
-   "mergerRules": [],
+   "mergerRules": [
+    "auditor-distinguishes"
+   ],
+   "reviewFlag": "auditor-said-no",
    "setId": "ru:73d694fcbc1a"
   },
   {
@@ -570,9 +581,9 @@
    "setId": "ru:72d797071f60"
   },
   {
-   "confirmed": false,
+   "confirmed": true,
    "kind": "true",
-   "loopbackFlag": "voice-may-distinguish",
+   "loopbackFlag": null,
    "members": [
     {
      "memberId": "экз",

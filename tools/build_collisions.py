@@ -73,6 +73,15 @@ def table_doc(lang, sets, words, variant=None, accent=()):
     # keyed by setId, are applied on every regeneration so they survive it (I2, I5).
     vpath = OUT / lang / "soundalike-verdicts.json"
     verdicts = json.loads(vpath.read_text(encoding="utf-8"))["sets"] if vpath.exists() else {}
+    # F6 member-level fixes (drop_member / target_only), written only by
+    # tools/soundalike_audit.py ingest-overrides, keyed by the generated set's id.
+    opath = OUT / lang / "soundalike-overrides.json"
+    overrides = json.loads(opath.read_text(encoding="utf-8"))["sets"] if opath.exists() else {}
+    # Curated variety pairs (license/licence): an auditor "no" means "one word, two
+    # spellings", which the accept-both spelling policy keeps accepted.
+    spath = OUT / lang / "homophones.seed.txt"
+    seeds = [set(l.split()) for l in spath.read_text(encoding="utf-8").splitlines()
+             if l.strip() and not l.startswith("#")] if spath.exists() else []
     # F5: loopback results (flag-only, S2), written by tools/soundalike_loopback.py.
     lpath = OUT / lang / "soundalike-loopback.json"
     loop = json.loads(lpath.read_text(encoding="utf-8")) if lpath.exists() else {}
@@ -82,15 +91,23 @@ def table_doc(lang, sets, words, variant=None, accent=()):
     out_sets = []
     for g in sets:
         members = sorted(set(unicodedata.normalize("NFC", m) for m in g))
-        sid = set_id(lang, members)
+        sid = set_id(lang, members)     # identity of the GENERATED group; overrides key on it
+        ov = overrides.get(sid, {})
+        kept = [m for m in members if m not in ov.get("drop", [])]
+        if len(kept) < 2:
+            continue
         entry = {
             "setId": sid,
             "kind": "true",
             "mergerRules": [],
             "confirmed": False,
             "loopbackFlag": None,
-            "members": [{"memberId": m, "wordId": m if m in banked else None} for m in members],
+            "members": [{"memberId": m, "wordId": m if m in banked else None} for m in kept],
         }
+        if ov.get("drop"):
+            entry["membersDropped"] = ov["drop"]
+        if ov.get("targetOnly"):
+            entry["targetOnly"] = ov["targetOnly"]
         lr = loop_sets.get(sid)
         if lr is None or lr.get("flag") == "no-audio":
             measured_all = False
@@ -100,6 +117,8 @@ def table_doc(lang, sets, words, variant=None, accent=()):
         if v == "yes":
             entry["confirmed"] = True
             entry["loopbackFlag"] = None
+        elif v == "no" and any(set(kept) <= sd for sd in seeds):
+            entry["reviewFlag"] = "auditor-no-kept-by-variety-seed"
         elif v == "no":
             # An auditor heard a difference: demote, record why, flag for Eric (F6).
             entry["kind"] = "accent"

@@ -1,0 +1,15 @@
+{
+ "lang": "ru",
+ "sets": {
+  "ru:318b45a4e057": {
+   "auditor": "eric",
+   "drop": [
+    "лет"
+   ],
+   "ingested": "2026-10-17",
+   "reason": "лет has a different vowel; лед is лёд written without ё",
+   "sheet": "ru-soundalike-flagged-20261017",
+   "targetOnly": []
+  }
+ }
+}
