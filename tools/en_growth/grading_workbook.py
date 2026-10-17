@@ -16,7 +16,8 @@ all low-band words plus a seeded sample of staged words scoring >= 0.62.
 Visible columns (identical to what grading_ingest.py reads):
     row_id, word, definition, keep_cut, est_tier, traps, notes
 keep_cut is keep / cut / unsure (Eric kept "unsure", 2026-10-16); est_tier is
-Easy / Medium / Hard / Expert, exactly as on the earlier auditor sheets. There is no
+Easy / Medium / Hard / Expert, exactly as on the earlier auditor sheets. Cells are
+plain text (no dropdowns: Apple Numbers makes them untypeable); shorthand is accepted. There is no
 pronunciation column (Eric's call: ARPAbet is hard to read and he knows the sounds).
 """
 import argparse
@@ -58,7 +59,6 @@ def build_workbook(rows, seed, xlsx_path, key_path, title="English grading"):
     from openpyxl import Workbook
     from openpyxl.formatting.rule import FormulaRule
     from openpyxl.styles import Alignment, Font, PatternFill
-    from openpyxl.worksheet.datavalidation import DataValidation
 
     ordered = order_rows(rows, seed)
     n = len(ordered)
@@ -86,13 +86,10 @@ def build_workbook(rows, seed, xlsx_path, key_path, title="English grading"):
     for row in ws.iter_rows(min_row=FIRST_DATA_ROW, max_row=last, min_col=3, max_col=3):
         for cell in row:
             cell.alignment = Alignment(wrap_text=True, vertical="top")
-    # Dropdowns offer the full values, but typing a shortcut is allowed (no error box).
-    dv1 = DataValidation(type="list", formula1='"' + ",".join(KEEP_CUT) + '"', allow_blank=True, showErrorMessage=False)
-    dv2 = DataValidation(type="list", formula1='"' + ",".join(TIERS) + '"', allow_blank=True, showErrorMessage=False)
-    ws.add_data_validation(dv1)
-    ws.add_data_validation(dv2)
-    dv1.add(f"D{FIRST_DATA_ROW}:D{last}")
-    dv2.add(f"E{FIRST_DATA_ROW}:E{last}")
+    # NO dropdowns. Eric grades in Apple Numbers, which turns an Excel list
+    # validation into a pop-up-menu cell that cannot be typed into at all
+    # (2026-10-16). Plain cells plus the shorthand are faster anyway; the ingest
+    # validates every value, so nothing invalid gets through.
     ws.conditional_formatting.add(
         f"A{FIRST_DATA_ROW}:G{last}",
         FormulaRule(formula=[f'LEN($D{FIRST_DATA_ROW})+LEN($E{FIRST_DATA_ROW})=0'], fill=PatternFill("solid", fgColor="FFF2CC")))
