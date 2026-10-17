@@ -7,7 +7,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "acknowledgement",
@@ -24,7 +24,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "acts",
@@ -117,7 +117,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "affect",
@@ -180,7 +180,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "air",
@@ -266,7 +266,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "an",
@@ -321,7 +321,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "asked",
@@ -376,7 +376,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "bae",
@@ -541,7 +541,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "beau",
@@ -744,7 +744,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "c",
@@ -773,7 +773,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "cache",
@@ -815,7 +815,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "can",
@@ -883,7 +883,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "cars",
@@ -1141,7 +1141,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "code",
@@ -1272,7 +1272,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "corp",
@@ -1323,7 +1323,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "dae",
@@ -1348,7 +1348,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "dais",
@@ -1403,7 +1403,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "device",
@@ -1441,7 +1441,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "di",
@@ -1568,7 +1568,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "ensure",
@@ -1712,7 +1712,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "fee",
@@ -1767,7 +1767,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "fir",
@@ -1868,7 +1868,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "fort",
@@ -1987,7 +1987,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "get",
@@ -2004,7 +2004,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "gist",
@@ -2454,7 +2454,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "hours",
@@ -2645,7 +2645,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "koto",
@@ -2662,7 +2662,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "la",
@@ -2713,7 +2713,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "lai",
@@ -2755,7 +2755,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "lat",
@@ -2814,7 +2814,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "lead",
@@ -2831,7 +2831,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "licence",
@@ -2882,7 +2882,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "liqueur",
@@ -2950,7 +2950,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "loop",
@@ -3073,7 +3073,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "manner",
@@ -3141,7 +3141,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "me",
@@ -3158,7 +3158,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "mean",
@@ -3264,7 +3264,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "mor",
@@ -3544,7 +3544,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "plait",
@@ -3675,7 +3675,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "read",
@@ -3696,7 +3696,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "reading",
@@ -3764,7 +3764,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "refer",
@@ -3802,7 +3802,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "right",
@@ -3861,7 +3861,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "road",
@@ -3899,7 +3899,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "role",
@@ -3916,7 +3916,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "root",
@@ -4005,7 +4005,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "sail",
@@ -4026,7 +4026,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "saint",
@@ -4280,7 +4280,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "sol",
@@ -4403,7 +4403,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "t",
@@ -4432,7 +4432,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "tae",
@@ -4508,7 +4508,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "testes",
@@ -4720,7 +4720,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "use",
@@ -4873,7 +4873,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "ware",
@@ -4936,7 +4936,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "we",
@@ -5131,7 +5131,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "years",
@@ -5148,7 +5148,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "yore",
@@ -5161,10 +5161,86 @@
    ],
    "mergerRules": [],
    "setId": "en:9ea4a1f5c391"
+  },
+  {
+   "confirmed": false,
+   "kind": "accent",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "center",
+     "wordId": "center"
+    },
+    {
+     "memberId": "sinner",
+     "wordId": "sinner"
+    }
+   ],
+   "mergerRules": [
+    "pin-pen"
+   ],
+   "setId": "en:b01f3cb242f7"
+  },
+  {
+   "confirmed": false,
+   "kind": "accent",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "en",
+     "wordId": "en"
+    },
+    {
+     "memberId": "in",
+     "wordId": "in"
+    }
+   ],
+   "mergerRules": [
+    "pin-pen"
+   ],
+   "setId": "en:f9f006ee4157"
+  },
+  {
+   "confirmed": false,
+   "kind": "accent",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "enter",
+     "wordId": "enter"
+    },
+    {
+     "memberId": "inner",
+     "wordId": "inner"
+    }
+   ],
+   "mergerRules": [
+    "pin-pen"
+   ],
+   "setId": "en:20c49d09557d"
+  },
+  {
+   "confirmed": false,
+   "kind": "accent",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "sense",
+     "wordId": "sense"
+    },
+    {
+     "memberId": "since",
+     "wordId": "since"
+    }
+   ],
+   "mergerRules": [
+    "pin-pen"
+   ],
+   "setId": "en:3bd2df0624df"
   }
  ],
- "status": "missing",
- "statusReason": "sets computed by the generator; F5 voice loopback not yet run, so not verified",
+ "status": "verified",
+ "statusReason": "generator ran and the F5 loopback measured every true set for this voice",
  "variant": "retier",
  "voice": "en-US-Neural2-E"
 }

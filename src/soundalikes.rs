@@ -167,16 +167,25 @@ mod tests {
         }
     }
 
-    /// Phase A migrates today's data only: en/es/ru keep their sets, nothing is
-    /// verified yet (the F5 loopback has not run), and every set is kind "true".
+    /// Phase B: en/es/ru are verified (generator + flag-only loopback), and the
+    /// loopback never changed a kind (I9). English's accent sets come only from a
+    /// named merger rule (I7), and grading never reads them.
     #[test]
-    fn phase_a_carries_existing_sets_unverified() {
+    fn phase_b_tables_are_verified_and_accent_sets_name_a_rule() {
         for lang in ["en", "es", "ru"] {
             let t = soundalikes(lang);
-            assert!(!t.sets.is_empty(), "{lang}: lost its sets in migration");
-            assert_eq!(t.status, "missing", "{lang}: cannot be verified before the loopback runs");
-            assert!(t.sets.iter().all(|s| s.kind == "true"), "{lang}: Phase A adds no kinds");
+            assert!(!t.sets.is_empty(), "{lang}: lost its sets");
+            assert_eq!(t.status, "verified", "{lang}: generator and loopback both ran");
+            for s in &t.sets {
+                assert!(s.kind == "true" || s.kind == "accent", "{lang}: bad kind {}", s.kind);
+                if s.kind == "accent" {
+                    assert!(!s.merger_rules.is_empty(), "{}: an accent set must name its rule", s.set_id);
+                }
+            }
         }
+        // pin-pen is an accent merge for the US voice: grading must not accept it.
+        assert!(!crate::homophones::accepts("en", "in", "en"), "accent sets are not accept-all");
+        assert!(crate::homophones::accepts("en", "pair", "pear"), "true sets still are");
     }
 
     /// S1: one set identity. Every setId is unique and namespaced by language.

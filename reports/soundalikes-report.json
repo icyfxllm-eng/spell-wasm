@@ -38,8 +38,8 @@
    "bonusEligibleBankWords": 301,
    "confirmedSets": 0,
    "generator": "build_collisions.key_en@1",
-   "impossibleFilterRemoves": 303,
-   "loopbackFlags": 0,
+   "impossibleFilterRemoves": 307,
+   "loopbackFlags": 53,
    "proof": {
     "equalKeyGroups": 54,
     "noneByConstructionEligible": false,
@@ -49,9 +49,10 @@
     "splitGroups": []
    },
    "sets": {
+    "accent": 3,
     "true": 263
    },
-   "status": "missing",
+   "status": "verified",
    "voice": "en-US-Neural2-E",
    "voiceMatchesLayer1": true
   },
@@ -60,8 +61,8 @@
    "bonusEligibleBankWords": 328,
    "confirmedSets": 0,
    "generator": "build_collisions.key_en@1+retier",
-   "impossibleFilterRemoves": 330,
-   "loopbackFlags": 0,
+   "impossibleFilterRemoves": 335,
+   "loopbackFlags": 56,
    "proof": {
     "equalKeyGroups": 61,
     "noneByConstructionEligible": false,
@@ -72,9 +73,10 @@
    },
    "servedOnlyWhen": "en.retier is on (not Spell Jr / Kid Mode)",
    "sets": {
+    "accent": 4,
     "true": 282
    },
-   "status": "missing",
+   "status": "verified",
    "voice": "en-US-Neural2-E",
    "voiceMatchesLayer1": true
   },
@@ -84,7 +86,7 @@
    "confirmedSets": 0,
    "generator": "build_collisions.key_es@1",
    "impossibleFilterRemoves": 17,
-   "loopbackFlags": 0,
+   "loopbackFlags": 3,
    "proof": {
     "equalKeyGroups": 8,
     "noneByConstructionEligible": false,
@@ -96,7 +98,7 @@
    "sets": {
     "true": 11
    },
-   "status": "missing",
+   "status": "verified",
    "voice": "es-ES-Neural2-G",
    "voiceMatchesLayer1": true
   },
@@ -218,7 +220,7 @@
    "confirmedSets": 0,
    "generator": "build_collisions.key_ru@1",
    "impossibleFilterRemoves": 69,
-   "loopbackFlags": 0,
+   "loopbackFlags": 7,
    "proof": {
     "equalKeyGroups": 34,
     "noneByConstructionEligible": false,
@@ -230,7 +232,7 @@
    "sets": {
     "true": 34
    },
-   "status": "missing",
+   "status": "verified",
    "voice": "ru-RU-Wavenet-A",
    "voiceMatchesLayer1": true
   },

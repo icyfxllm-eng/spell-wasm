@@ -58,7 +58,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "cauce",
@@ -75,7 +75,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "chota",
@@ -177,7 +177,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "roca",
@@ -192,7 +192,7 @@
    "setId": "es:fa5f3e0c9144"
   }
  ],
- "status": "missing",
- "statusReason": "sets computed by the generator; F5 voice loopback not yet run, so not verified",
+ "status": "verified",
+ "statusReason": "generator ran and the F5 loopback measured every true set for this voice",
  "voice": "es-ES-Neural2-G"
 }

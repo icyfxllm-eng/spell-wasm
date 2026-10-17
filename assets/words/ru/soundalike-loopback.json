@@ -1,0 +1,448 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.6495,
+  "controls": {
+   "different": [
+    [
+     "дом",
+     "окно"
+    ],
+    [
+     "стол",
+     "рыба"
+    ]
+   ],
+   "same": [
+    [
+     "пруд",
+     "прут"
+    ],
+    [
+     "код",
+     "кот"
+    ],
+    [
+     "луг",
+     "лук"
+    ]
+   ]
+  },
+  "differentCeiling": 0.7632,
+  "sameSoundFloor": 0.6211
+ },
+ "lang": "ru",
+ "measured": "2026-10-17",
+ "sets": {
+  "ru:042513e51cae": {
+   "flag": null,
+   "members": [
+    "еще",
+    "ещё"
+   ],
+   "worst": 0.535,
+   "worstPair": [
+    "еще",
+    "ещё"
+   ]
+  },
+  "ru:15f17b70ca12": {
+   "flag": null,
+   "members": [
+    "нее",
+    "неё"
+   ],
+   "worst": 0.4725,
+   "worstPair": [
+    "нее",
+    "неё"
+   ]
+  },
+  "ru:1ab926d06e6a": {
+   "flag": null,
+   "members": [
+    "дает",
+    "даёт"
+   ],
+   "worst": 0.5401,
+   "worstPair": [
+    "дает",
+    "даёт"
+   ]
+  },
+  "ru:1bf7d789753d": {
+   "flag": null,
+   "members": [
+    "объем",
+    "объём"
+   ],
+   "worst": 0.4889,
+   "worstPair": [
+    "объем",
+    "объём"
+   ]
+  },
+  "ru:1fe520921daf": {
+   "flag": null,
+   "members": [
+    "счет",
+    "счёт"
+   ],
+   "worst": 0.5466,
+   "worstPair": [
+    "счет",
+    "счёт"
+   ]
+  },
+  "ru:2211a8c8ee99": {
+   "flag": null,
+   "members": [
+    "вод",
+    "вот"
+   ],
+   "worst": 0.515,
+   "worstPair": [
+    "вод",
+    "вот"
+   ]
+  },
+  "ru:29b0ea9d3cde": {
+   "flag": null,
+   "members": [
+    "черный",
+    "чёрный"
+   ],
+   "worst": 0.5741,
+   "worstPair": [
+    "черный",
+    "чёрный"
+   ]
+  },
+  "ru:2bedba9826d9": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "об",
+    "оп"
+   ],
+   "worst": 0.8769,
+   "worstPair": [
+    "об",
+    "оп"
+   ]
+  },
+  "ru:2eb8ca3de023": {
+   "flag": null,
+   "members": [
+    "все",
+    "всё"
+   ],
+   "worst": 0.5601,
+   "worstPair": [
+    "все",
+    "всё"
+   ]
+  },
+  "ru:30c5dbf57a3d": {
+   "flag": null,
+   "members": [
+    "ведет",
+    "ведёт"
+   ],
+   "worst": 0.4976,
+   "worstPair": [
+    "ведет",
+    "ведёт"
+   ]
+  },
+  "ru:318b45a4e057": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "лед",
+    "лет",
+    "лёд"
+   ],
+   "worst": 0.7255,
+   "worstPair": [
+    "лет",
+    "лёд"
+   ]
+  },
+  "ru:3ef0a38b73c6": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "экз",
+    "экс"
+   ],
+   "worst": 1.1486,
+   "worstPair": [
+    "экз",
+    "экс"
+   ]
+  },
+  "ru:450f67cd7358": {
+   "flag": null,
+   "members": [
+    "населенных",
+    "населённых"
+   ],
+   "worst": 0.6079,
+   "worstPair": [
+    "населенных",
+    "населённых"
+   ]
+  },
+  "ru:63a6c169677e": {
+   "flag": null,
+   "members": [
+    "боев",
+    "боёв"
+   ],
+   "worst": 0.5244,
+   "worstPair": [
+    "боев",
+    "боёв"
+   ]
+  },
+  "ru:6688219b2d80": {
+   "flag": null,
+   "members": [
+    "идет",
+    "идёт"
+   ],
+   "worst": 0.4273,
+   "worstPair": [
+    "идет",
+    "идёт"
+   ]
+  },
+  "ru:72d797071f60": {
+   "flag": null,
+   "members": [
+    "четырех",
+    "четырёх"
+   ],
+   "worst": 0.563,
+   "worstPair": [
+    "четырех",
+    "четырёх"
+   ]
+  },
+  "ru:73d694fcbc1a": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "чем",
+    "чём"
+   ],
+   "worst": 0.658,
+   "worstPair": [
+    "чем",
+    "чём"
+   ]
+  },
+  "ru:77ca5e681bcb": {
+   "flag": null,
+   "members": [
+    "свое",
+    "своё"
+   ],
+   "worst": 0.5791,
+   "worstPair": [
+    "свое",
+    "своё"
+   ]
+  },
+  "ru:7c3f28bb032f": {
+   "flag": null,
+   "members": [
+    "своем",
+    "своём"
+   ],
+   "worst": 0.5226,
+   "worstPair": [
+    "своем",
+    "своём"
+   ]
+  },
+  "ru:7ce8ed9fca50": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "всем",
+    "всём"
+   ],
+   "worst": 0.6923,
+   "worstPair": [
+    "всем",
+    "всём"
+   ]
+  },
+  "ru:8006ae7ec143": {
+   "flag": null,
+   "members": [
+    "код",
+    "кот"
+   ],
+   "worst": 0.6211,
+   "worstPair": [
+    "код",
+    "кот"
+   ]
+  },
+  "ru:822eb1f6d25a": {
+   "flag": null,
+   "members": [
+    "род",
+    "рот"
+   ],
+   "worst": 0.6305,
+   "worstPair": [
+    "род",
+    "рот"
+   ]
+  },
+  "ru:85c656e2db7c": {
+   "flag": null,
+   "members": [
+    "трех",
+    "трёх"
+   ],
+   "worst": 0.5737,
+   "worstPair": [
+    "трех",
+    "трёх"
+   ]
+  },
+  "ru:87dab2c3decd": {
+   "flag": null,
+   "members": [
+    "самолет",
+    "самолёт"
+   ],
+   "worst": 0.5556,
+   "worstPair": [
+    "самолет",
+    "самолёт"
+   ]
+  },
+  "ru:8b8b35511d62": {
+   "flag": null,
+   "members": [
+    "ушел",
+    "ушёл"
+   ],
+   "worst": 0.4622,
+   "worstPair": [
+    "ушел",
+    "ушёл"
+   ]
+  },
+  "ru:9996286a5459": {
+   "flag": null,
+   "members": [
+    "остается",
+    "остаётся"
+   ],
+   "worst": 0.5456,
+   "worstPair": [
+    "остается",
+    "остаётся"
+   ]
+  },
+  "ru:af8e3fe41e1f": {
+   "flag": null,
+   "members": [
+    "провел",
+    "провёл"
+   ],
+   "worst": 0.5037,
+   "worstPair": [
+    "провел",
+    "провёл"
+   ]
+  },
+  "ru:b2548cf4d641": {
+   "flag": null,
+   "members": [
+    "нем",
+    "нём"
+   ],
+   "worst": 0.5106,
+   "worstPair": [
+    "нем",
+    "нём"
+   ]
+  },
+  "ru:bc46de9632b9": {
+   "flag": null,
+   "members": [
+    "ее",
+    "её"
+   ],
+   "worst": 0.4945,
+   "worstPair": [
+    "ее",
+    "её"
+   ]
+  },
+  "ru:d58c29e0d6dc": {
+   "flag": null,
+   "members": [
+    "привезти",
+    "привести"
+   ],
+   "worst": 0.6211,
+   "worstPair": [
+    "привезти",
+    "привести"
+   ]
+  },
+  "ru:d6e78956915e": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "перед",
+    "перёд"
+   ],
+   "worst": 0.7951,
+   "worstPair": [
+    "перед",
+    "перёд"
+   ]
+  },
+  "ru:f13e35e1d806": {
+   "flag": null,
+   "members": [
+    "вел",
+    "вёл"
+   ],
+   "worst": 0.5046,
+   "worstPair": [
+    "вел",
+    "вёл"
+   ]
+  },
+  "ru:f8ba3f937628": {
+   "flag": null,
+   "members": [
+    "путем",
+    "путём"
+   ],
+   "worst": 0.5306,
+   "worstPair": [
+    "путем",
+    "путём"
+   ]
+  },
+  "ru:f94023f4e581": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "узнает",
+    "узнаёт"
+   ],
+   "worst": 0.7299,
+   "worstPair": [
+    "узнает",
+    "узнаёт"
+   ]
+  }
+ },
+ "voice": "ru-RU-Wavenet-A"
+}

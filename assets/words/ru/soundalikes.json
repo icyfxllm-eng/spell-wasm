@@ -92,7 +92,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "всем",
@@ -194,7 +194,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "лед",
@@ -266,7 +266,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "об",
@@ -317,7 +317,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "перед",
@@ -487,7 +487,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "узнает",
@@ -521,7 +521,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "чем",
@@ -572,7 +572,7 @@
   {
    "confirmed": false,
    "kind": "true",
-   "loopbackFlag": null,
+   "loopbackFlag": "voice-may-distinguish",
    "members": [
     {
      "memberId": "экз",
@@ -587,7 +587,7 @@
    "setId": "ru:3ef0a38b73c6"
   }
  ],
- "status": "missing",
- "statusReason": "sets computed by the generator; F5 voice loopback not yet run, so not verified",
+ "status": "verified",
+ "statusReason": "generator ran and the F5 loopback measured every true set for this voice",
  "voice": "ru-RU-Wavenet-A"
 }

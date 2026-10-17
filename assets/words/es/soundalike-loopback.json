@@ -1,0 +1,171 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.6522,
+  "controls": {
+   "different": [
+    [
+     "casa",
+     "perro"
+    ],
+    [
+     "mesa",
+     "ventana"
+    ]
+   ],
+   "same": [
+    [
+     "basto",
+     "vasto"
+    ],
+    [
+     "hola",
+     "ola"
+    ],
+    [
+     "bello",
+     "vello"
+    ]
+   ]
+  },
+  "differentCeiling": 0.8908,
+  "sameSoundFloor": 0.5925
+ },
+ "lang": "es",
+ "measured": "2026-10-17",
+ "sets": {
+  "es:1907745bb41e": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "cauce",
+    "cause"
+   ],
+   "worst": 1.0969,
+   "worstPair": [
+    "cauce",
+    "cause"
+   ]
+  },
+  "es:338d88e0bf70": {
+   "flag": null,
+   "members": [
+    "bienes",
+    "vienes"
+   ],
+   "worst": 0.5498,
+   "worstPair": [
+    "bienes",
+    "vienes"
+   ]
+  },
+  "es:58e3e89d2249": {
+   "flag": null,
+   "members": [
+    "botar",
+    "votar"
+   ],
+   "worst": 0.4873,
+   "worstPair": [
+    "botar",
+    "votar"
+   ]
+  },
+  "es:655db904f786": {
+   "flag": null,
+   "members": [
+    "hora",
+    "ora"
+   ],
+   "worst": 0.5602,
+   "worstPair": [
+    "hora",
+    "ora"
+   ]
+  },
+  "es:6b28b225914b": {
+   "flag": null,
+   "members": [
+    "cocer",
+    "coser"
+   ],
+   "worst": 0.5947,
+   "worstPair": [
+    "cocer",
+    "coser"
+   ]
+  },
+  "es:9e4a427e317c": {
+   "flag": null,
+   "members": [
+    "concejo",
+    "consejo"
+   ],
+   "worst": 0.6455,
+   "worstPair": [
+    "concejo",
+    "consejo"
+   ]
+  },
+  "es:a9ded08029de": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "chota",
+    "cota"
+   ],
+   "worst": 0.7408,
+   "worstPair": [
+    "chota",
+    "cota"
+   ]
+  },
+  "es:b0e9d6a77113": {
+   "flag": null,
+   "members": [
+    "casa",
+    "caza"
+   ],
+   "worst": 0.6441,
+   "worstPair": [
+    "casa",
+    "caza"
+   ]
+  },
+  "es:d413c604a724": {
+   "flag": null,
+   "members": [
+    "marca",
+    "marcha"
+   ],
+   "worst": 0.6217,
+   "worstPair": [
+    "marca",
+    "marcha"
+   ]
+  },
+  "es:d564a34f862c": {
+   "flag": null,
+   "members": [
+    "marcas",
+    "marchas"
+   ],
+   "worst": 0.6378,
+   "worstPair": [
+    "marcas",
+    "marchas"
+   ]
+  },
+  "es:fa5f3e0c9144": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "roca",
+    "rocha"
+   ],
+   "worst": 0.6563,
+   "worstPair": [
+    "roca",
+    "rocha"
+   ]
+  }
+ },
+ "voice": "es-ES-Neural2-G"
+}

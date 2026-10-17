@@ -1,0 +1,3530 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.6329,
+  "controls": {
+   "different": [
+    [
+     "pair",
+     "dog"
+    ],
+    [
+     "right",
+     "ocean"
+    ]
+   ],
+   "same": [
+    [
+     "gray",
+     "grey"
+    ],
+    [
+     "center",
+     "centre"
+    ],
+    [
+     "color",
+     "colour"
+    ],
+    [
+     "disc",
+     "disk"
+    ]
+   ]
+  },
+  "differentCeiling": 1.0172,
+  "sameSoundFloor": 0.5369
+ },
+ "lang": "en",
+ "measured": "2026-10-17",
+ "sets": {
+  "en:0049881e18fa": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "c",
+    "sea",
+    "see",
+    "si",
+    "sie"
+   ],
+   "worst": 0.9034,
+   "worstPair": [
+    "c",
+    "sie"
+   ]
+  },
+  "en:02f82ea27b73": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "liqueur",
+    "liquor"
+   ],
+   "worst": 0.7486,
+   "worstPair": [
+    "liqueur",
+    "liquor"
+   ]
+  },
+  "en:0343bb5774be": {
+   "flag": null,
+   "members": [
+    "close",
+    "clothes"
+   ],
+   "worst": 0.5989,
+   "worstPair": [
+    "close",
+    "clothes"
+   ]
+  },
+  "en:039214a6720a": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "asked",
+    "ast"
+   ],
+   "worst": 0.7022,
+   "worstPair": [
+    "asked",
+    "ast"
+   ]
+  },
+  "en:03d6633725e6": {
+   "flag": null,
+   "members": [
+    "roc",
+    "rock"
+   ],
+   "worst": 0.5286,
+   "worstPair": [
+    "roc",
+    "rock"
+   ]
+  },
+  "en:03f4ab780ce0": {
+   "flag": null,
+   "members": [
+    "marc",
+    "mark"
+   ],
+   "worst": 0.4935,
+   "worstPair": [
+    "marc",
+    "mark"
+   ]
+  },
+  "en:05838badaf70": {
+   "flag": null,
+   "members": [
+    "walk",
+    "wok"
+   ],
+   "worst": 0.5654,
+   "worstPair": [
+    "walk",
+    "wok"
+   ]
+  },
+  "en:05ef88a23270": {
+   "flag": null,
+   "members": [
+    "dual",
+    "duel"
+   ],
+   "worst": 0.5149,
+   "worstPair": [
+    "dual",
+    "duel"
+   ]
+  },
+  "en:07cd0cc9d872": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "beau",
+    "bo",
+    "bough",
+    "bow"
+   ],
+   "worst": 0.7296,
+   "worstPair": [
+    "bough",
+    "bow"
+   ]
+  },
+  "en:0875bed415bc": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "years",
+    "yours"
+   ],
+   "worst": 0.8072,
+   "worstPair": [
+    "years",
+    "yours"
+   ]
+  },
+  "en:08f50bb5fc7a": {
+   "flag": null,
+   "members": [
+    "taught",
+    "taut"
+   ],
+   "worst": 0.5102,
+   "worstPair": [
+    "taught",
+    "taut"
+   ]
+  },
+  "en:093404cd3c03": {
+   "flag": null,
+   "members": [
+    "metal",
+    "mettle"
+   ],
+   "worst": 0.4573,
+   "worstPair": [
+    "metal",
+    "mettle"
+   ]
+  },
+  "en:09ef025210fe": {
+   "flag": null,
+   "members": [
+    "sot",
+    "sought"
+   ],
+   "worst": 0.601,
+   "worstPair": [
+    "sot",
+    "sought"
+   ]
+  },
+  "en:0a5c51d02e1f": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "use",
+    "youse"
+   ],
+   "worst": 0.8649,
+   "worstPair": [
+    "use",
+    "youse"
+   ]
+  },
+  "en:0a9ba2af4fc8": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "root",
+    "rout",
+    "route"
+   ],
+   "worst": 0.9025,
+   "worstPair": [
+    "root",
+    "rout"
+   ]
+  },
+  "en:0af838b4a195": {
+   "flag": null,
+   "members": [
+    "defence",
+    "defense"
+   ],
+   "worst": 0.5387,
+   "worstPair": [
+    "defence",
+    "defense"
+   ]
+  },
+  "en:0df6f532c4f2": {
+   "flag": null,
+   "members": [
+    "endeavor",
+    "endeavour"
+   ],
+   "worst": 0.531,
+   "worstPair": [
+    "endeavor",
+    "endeavour"
+   ]
+  },
+  "en:0f91a1db58c9": {
+   "flag": null,
+   "members": [
+    "tail",
+    "tale"
+   ],
+   "worst": 0.4596,
+   "worstPair": [
+    "tail",
+    "tale"
+   ]
+  },
+  "en:0f986bec444a": {
+   "flag": null,
+   "members": [
+    "chao",
+    "chow",
+    "ciao"
+   ],
+   "worst": 0.5117,
+   "worstPair": [
+    "chow",
+    "ciao"
+   ]
+  },
+  "en:0fe5f574b67e": {
+   "flag": null,
+   "members": [
+    "mail",
+    "male"
+   ],
+   "worst": 0.4746,
+   "worstPair": [
+    "mail",
+    "male"
+   ]
+  },
+  "en:11e411332550": {
+   "flag": null,
+   "members": [
+    "flew",
+    "flu",
+    "flue"
+   ],
+   "worst": 0.4541,
+   "worstPair": [
+    "flew",
+    "flu"
+   ]
+  },
+  "en:137f0ccfbfe5": {
+   "flag": null,
+   "members": [
+    "harbor",
+    "harbour"
+   ],
+   "worst": 0.4342,
+   "worstPair": [
+    "harbor",
+    "harbour"
+   ]
+  },
+  "en:1432e1785e4c": {
+   "flag": null,
+   "members": [
+    "addition",
+    "edition"
+   ],
+   "worst": 0.5141,
+   "worstPair": [
+    "addition",
+    "edition"
+   ]
+  },
+  "en:167801bb052d": {
+   "flag": null,
+   "members": [
+    "forth",
+    "fourth"
+   ],
+   "worst": 0.5226,
+   "worstPair": [
+    "forth",
+    "fourth"
+   ]
+  },
+  "en:186d3db4250c": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "dais",
+    "days",
+    "daze"
+   ],
+   "worst": 0.7671,
+   "worstPair": [
+    "dais",
+    "days"
+   ]
+  },
+  "en:194a19e61eb1": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "affect",
+    "effect"
+   ],
+   "worst": 0.7035,
+   "worstPair": [
+    "affect",
+    "effect"
+   ]
+  },
+  "en:1a12ed2013cf": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "air",
+    "ar",
+    "are",
+    "er",
+    "ere",
+    "err",
+    "eyre",
+    "heir",
+    "hour",
+    "oar",
+    "or",
+    "ore",
+    "our",
+    "r",
+    "ur"
+   ],
+   "worst": 1.2313,
+   "worstPair": [
+    "ar",
+    "er"
+   ]
+  },
+  "en:1a78a685f78d": {
+   "flag": null,
+   "members": [
+    "ring",
+    "wring"
+   ],
+   "worst": 0.4622,
+   "worstPair": [
+    "ring",
+    "wring"
+   ]
+  },
+  "en:1ce3e0fc1bec": {
+   "flag": null,
+   "members": [
+    "labor",
+    "labour"
+   ],
+   "worst": 0.5732,
+   "worstPair": [
+    "labor",
+    "labour"
+   ]
+  },
+  "en:1d541f87e5fd": {
+   "flag": null,
+   "members": [
+    "knot",
+    "not"
+   ],
+   "worst": 0.5883,
+   "worstPair": [
+    "knot",
+    "not"
+   ]
+  },
+  "en:1deef59bbfed": {
+   "flag": null,
+   "members": [
+    "clamor",
+    "clamour"
+   ],
+   "worst": 0.4369,
+   "worstPair": [
+    "clamor",
+    "clamour"
+   ]
+  },
+  "en:1e549e2a3705": {
+   "flag": null,
+   "members": [
+    "wen",
+    "when",
+    "win",
+    "wynn"
+   ],
+   "worst": 0.6242,
+   "worstPair": [
+    "when",
+    "wynn"
+   ]
+  },
+  "en:1ebf3f251cc6": {
+   "flag": null,
+   "members": [
+    "balm",
+    "bom",
+    "bomb"
+   ],
+   "worst": 0.5049,
+   "worstPair": [
+    "balm",
+    "bomb"
+   ]
+  },
+  "en:1f1738b1891d": {
+   "flag": null,
+   "members": [
+    "odor",
+    "odour"
+   ],
+   "worst": 0.5855,
+   "worstPair": [
+    "odor",
+    "odour"
+   ]
+  },
+  "en:1fc10d1a8513": {
+   "flag": null,
+   "members": [
+    "bloc",
+    "block"
+   ],
+   "worst": 0.4632,
+   "worstPair": [
+    "bloc",
+    "block"
+   ]
+  },
+  "en:202d7cb77811": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "mean",
+    "mein"
+   ],
+   "worst": 0.7706,
+   "worstPair": [
+    "mean",
+    "mein"
+   ]
+  },
+  "en:24967cf768b1": {
+   "flag": null,
+   "members": [
+    "harbors",
+    "harbours"
+   ],
+   "worst": 0.5437,
+   "worstPair": [
+    "harbors",
+    "harbours"
+   ]
+  },
+  "en:25061ebd9f17": {
+   "flag": null,
+   "members": [
+    "per",
+    "purr"
+   ],
+   "worst": 0.5966,
+   "worstPair": [
+    "per",
+    "purr"
+   ]
+  },
+  "en:2555d472bfff": {
+   "flag": null,
+   "members": [
+    "foreigner",
+    "forerunner"
+   ],
+   "worst": 0.6068,
+   "worstPair": [
+    "foreigner",
+    "forerunner"
+   ]
+  },
+  "en:25b28c194daf": {
+   "flag": null,
+   "members": [
+    "done",
+    "dun",
+    "dunne"
+   ],
+   "worst": 0.4987,
+   "worstPair": [
+    "dun",
+    "dunne"
+   ]
+  },
+  "en:25f9b06983ad": {
+   "flag": null,
+   "members": [
+    "while",
+    "wile"
+   ],
+   "worst": 0.6161,
+   "worstPair": [
+    "while",
+    "wile"
+   ]
+  },
+  "en:28d9494106cf": {
+   "flag": null,
+   "members": [
+    "rho",
+    "roe",
+    "row"
+   ],
+   "worst": 0.5277,
+   "worstPair": [
+    "rho",
+    "roe"
+   ]
+  },
+  "en:29422521530f": {
+   "flag": null,
+   "members": [
+    "steal",
+    "steel"
+   ],
+   "worst": 0.6163,
+   "worstPair": [
+    "steal",
+    "steel"
+   ]
+  },
+  "en:2afb5775a490": {
+   "flag": null,
+   "members": [
+    "pole",
+    "poll"
+   ],
+   "worst": 0.4892,
+   "worstPair": [
+    "pole",
+    "poll"
+   ]
+  },
+  "en:2e50ef044726": {
+   "flag": null,
+   "members": [
+    "faint",
+    "feint"
+   ],
+   "worst": 0.5053,
+   "worstPair": [
+    "faint",
+    "feint"
+   ]
+  },
+  "en:2f8b56d428e0": {
+   "flag": null,
+   "members": [
+    "capped",
+    "kept"
+   ],
+   "worst": 0.5883,
+   "worstPair": [
+    "capped",
+    "kept"
+   ]
+  },
+  "en:30fcffa6fec3": {
+   "flag": null,
+   "members": [
+    "heard",
+    "herd"
+   ],
+   "worst": 0.4906,
+   "worstPair": [
+    "heard",
+    "herd"
+   ]
+  },
+  "en:3295f57f2cfa": {
+   "flag": null,
+   "members": [
+    "knight",
+    "night"
+   ],
+   "worst": 0.5148,
+   "worstPair": [
+    "knight",
+    "night"
+   ]
+  },
+  "en:337aea6246ba": {
+   "flag": null,
+   "members": [
+    "plain",
+    "plane"
+   ],
+   "worst": 0.4594,
+   "worstPair": [
+    "plain",
+    "plane"
+   ]
+  },
+  "en:33d26cad619f": {
+   "flag": null,
+   "members": [
+    "the",
+    "thee"
+   ],
+   "worst": 0.5175,
+   "worstPair": [
+    "the",
+    "thee"
+   ]
+  },
+  "en:383fb8d36178": {
+   "flag": null,
+   "members": [
+    "honor",
+    "honour"
+   ],
+   "worst": 0.4519,
+   "worstPair": [
+    "honor",
+    "honour"
+   ]
+  },
+  "en:38cf70ef4f40": {
+   "flag": null,
+   "members": [
+    "miner",
+    "minor"
+   ],
+   "worst": 0.4983,
+   "worstPair": [
+    "miner",
+    "minor"
+   ]
+  },
+  "en:39a08efe3b74": {
+   "flag": null,
+   "members": [
+    "aim",
+    "ame"
+   ],
+   "worst": 0.4742,
+   "worstPair": [
+    "aim",
+    "ame"
+   ]
+  },
+  "en:3af22988ed33": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "device",
+    "devise"
+   ],
+   "worst": 0.6831,
+   "worstPair": [
+    "device",
+    "devise"
+   ]
+  },
+  "en:3cb047041bf3": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "acts",
+    "ax",
+    "axe"
+   ],
+   "worst": 0.7028,
+   "worstPair": [
+    "acts",
+    "axe"
+   ]
+  },
+  "en:3cc9e784fdb1": {
+   "flag": null,
+   "members": [
+    "sees",
+    "seize"
+   ],
+   "worst": 0.5797,
+   "worstPair": [
+    "sees",
+    "seize"
+   ]
+  },
+  "en:3d18347886be": {
+   "flag": null,
+   "members": [
+    "tho",
+    "though"
+   ],
+   "worst": 0.5908,
+   "worstPair": [
+    "tho",
+    "though"
+   ]
+  },
+  "en:3e5323ef81b3": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "koto",
+    "kowtow"
+   ],
+   "worst": 0.7773,
+   "worstPair": [
+    "koto",
+    "kowtow"
+   ]
+  },
+  "en:3ead235fb7c5": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "di",
+    "die",
+    "dye"
+   ],
+   "worst": 0.9041,
+   "worstPair": [
+    "di",
+    "die"
+   ]
+  },
+  "en:3ec9a1866e4a": {
+   "flag": null,
+   "members": [
+    "in",
+    "inn"
+   ],
+   "worst": 0.5365,
+   "worstPair": [
+    "in",
+    "inn"
+   ]
+  },
+  "en:4215497d03f2": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "an",
+    "ann",
+    "un"
+   ],
+   "worst": 0.7909,
+   "worstPair": [
+    "an",
+    "un"
+   ]
+  },
+  "en:432bfb35a114": {
+   "flag": null,
+   "members": [
+    "lac",
+    "lack"
+   ],
+   "worst": 0.5122,
+   "worstPair": [
+    "lac",
+    "lack"
+   ]
+  },
+  "en:4435e0cd80ae": {
+   "flag": null,
+   "members": [
+    "gray",
+    "grey"
+   ],
+   "worst": 0.4797,
+   "worstPair": [
+    "gray",
+    "grey"
+   ]
+  },
+  "en:450a8bef608f": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "corp",
+    "corporation"
+   ],
+   "worst": 1.1615,
+   "worstPair": [
+    "corp",
+    "corporation"
+   ]
+  },
+  "en:45ecedfdbd4f": {
+   "flag": null,
+   "members": [
+    "mass",
+    "masse"
+   ],
+   "worst": 0.5883,
+   "worstPair": [
+    "mass",
+    "masse"
+   ]
+  },
+  "en:4673bb1b9d3c": {
+   "flag": null,
+   "members": [
+    "why",
+    "y"
+   ],
+   "worst": 0.5044,
+   "worstPair": [
+    "why",
+    "y"
+   ]
+  },
+  "en:489a4bfdbc6c": {
+   "flag": null,
+   "members": [
+    "magnate",
+    "magnet"
+   ],
+   "worst": 0.6217,
+   "worstPair": [
+    "magnate",
+    "magnet"
+   ]
+  },
+  "en:48b8b4ea47c6": {
+   "flag": null,
+   "members": [
+    "him",
+    "hymn"
+   ],
+   "worst": 0.5258,
+   "worstPair": [
+    "him",
+    "hymn"
+   ]
+  },
+  "en:493d4f573bca": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "sol",
+    "sole",
+    "soul"
+   ],
+   "worst": 0.6866,
+   "worstPair": [
+    "sol",
+    "soul"
+   ]
+  },
+  "en:4978631a7dfb": {
+   "flag": null,
+   "members": [
+    "weak",
+    "week"
+   ],
+   "worst": 0.6221,
+   "worstPair": [
+    "weak",
+    "week"
+   ]
+  },
+  "en:4b8aaef3f451": {
+   "flag": null,
+   "members": [
+    "chorale",
+    "corral"
+   ],
+   "worst": 0.4194,
+   "worstPair": [
+    "chorale",
+    "corral"
+   ]
+  },
+  "en:4cee2361d17b": {
+   "flag": null,
+   "members": [
+    "son",
+    "sun"
+   ],
+   "worst": 0.4602,
+   "worstPair": [
+    "son",
+    "sun"
+   ]
+  },
+  "en:4d733e96ac4e": {
+   "flag": null,
+   "members": [
+    "ate",
+    "eight"
+   ],
+   "worst": 0.5809,
+   "worstPair": [
+    "ate",
+    "eight"
+   ]
+  },
+  "en:4e86bde18719": {
+   "flag": null,
+   "members": [
+    "step",
+    "steppe"
+   ],
+   "worst": 0.5529,
+   "worstPair": [
+    "step",
+    "steppe"
+   ]
+  },
+  "en:4e8ce1e5be4a": {
+   "flag": null,
+   "members": [
+    "wood",
+    "would"
+   ],
+   "worst": 0.5577,
+   "worstPair": [
+    "wood",
+    "would"
+   ]
+  },
+  "en:509a919a6d48": {
+   "flag": null,
+   "members": [
+    "rights",
+    "writes"
+   ],
+   "worst": 0.5716,
+   "worstPair": [
+    "rights",
+    "writes"
+   ]
+  },
+  "en:512fbb8d07f1": {
+   "flag": null,
+   "members": [
+    "but",
+    "butt"
+   ],
+   "worst": 0.6022,
+   "worstPair": [
+    "but",
+    "butt"
+   ]
+  },
+  "en:52749a92fdad": {
+   "flag": null,
+   "members": [
+    "peace",
+    "piece"
+   ],
+   "worst": 0.5785,
+   "worstPair": [
+    "peace",
+    "piece"
+   ]
+  },
+  "en:547875fc6691": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "licence",
+    "license"
+   ],
+   "worst": 0.6697,
+   "worstPair": [
+    "licence",
+    "license"
+   ]
+  },
+  "en:559d95714545": {
+   "flag": null,
+   "members": [
+    "savor",
+    "savour"
+   ],
+   "worst": 0.5758,
+   "worstPair": [
+    "savor",
+    "savour"
+   ]
+  },
+  "en:55d37c70bc88": {
+   "flag": null,
+   "members": [
+    "caller",
+    "color",
+    "colour"
+   ],
+   "worst": 0.6182,
+   "worstPair": [
+    "caller",
+    "color"
+   ]
+  },
+  "en:57f0f05e5264": {
+   "flag": null,
+   "members": [
+    "gaff",
+    "gaffe"
+   ],
+   "worst": 0.4896,
+   "worstPair": [
+    "gaff",
+    "gaffe"
+   ]
+  },
+  "en:580859178de4": {
+   "flag": null,
+   "members": [
+    "higher",
+    "hire"
+   ],
+   "worst": 0.531,
+   "worstPair": [
+    "higher",
+    "hire"
+   ]
+  },
+  "en:5b0e4a2aab34": {
+   "flag": null,
+   "members": [
+    "flea",
+    "flee"
+   ],
+   "worst": 0.5382,
+   "worstPair": [
+    "flea",
+    "flee"
+   ]
+  },
+  "en:5bb2710dc164": {
+   "flag": null,
+   "members": [
+    "mac",
+    "mack"
+   ],
+   "worst": 0.5536,
+   "worstPair": [
+    "mac",
+    "mack"
+   ]
+  },
+  "en:5d91078409d9": {
+   "flag": null,
+   "members": [
+    "mere",
+    "mir"
+   ],
+   "worst": 0.599,
+   "worstPair": [
+    "mere",
+    "mir"
+   ]
+  },
+  "en:5ea70a6544b1": {
+   "flag": null,
+   "members": [
+    "ra",
+    "rah",
+    "raw"
+   ],
+   "worst": 0.522,
+   "worstPair": [
+    "rah",
+    "raw"
+   ]
+  },
+  "en:5ed2bd6266a8": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "la",
+    "law"
+   ],
+   "worst": 0.657,
+   "worstPair": [
+    "la",
+    "law"
+   ]
+  },
+  "en:60829fa089ae": {
+   "flag": null,
+   "members": [
+    "knew",
+    "new",
+    "nu"
+   ],
+   "worst": 0.5105,
+   "worstPair": [
+    "knew",
+    "nu"
+   ]
+  },
+  "en:61747025b8eb": {
+   "flag": null,
+   "members": [
+    "morning",
+    "mourning"
+   ],
+   "worst": 0.5288,
+   "worstPair": [
+    "morning",
+    "mourning"
+   ]
+  },
+  "en:627db991bf82": {
+   "flag": null,
+   "members": [
+    "humor",
+    "humour"
+   ],
+   "worst": 0.532,
+   "worstPair": [
+    "humor",
+    "humour"
+   ]
+  },
+  "en:6443e6118a1a": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "reading",
+    "redding"
+   ],
+   "worst": 0.6684,
+   "worstPair": [
+    "reading",
+    "redding"
+   ]
+  },
+  "en:64b2e7cad723": {
+   "flag": null,
+   "members": [
+    "neighbor",
+    "neighbour"
+   ],
+   "worst": 0.4797,
+   "worstPair": [
+    "neighbor",
+    "neighbour"
+   ]
+  },
+  "en:659ef3d67797": {
+   "flag": null,
+   "members": [
+    "bel",
+    "bell",
+    "belle"
+   ],
+   "worst": 0.5295,
+   "worstPair": [
+    "bel",
+    "bell"
+   ]
+  },
+  "en:65c4d461ed15": {
+   "flag": null,
+   "members": [
+    "might",
+    "mite"
+   ],
+   "worst": 0.57,
+   "worstPair": [
+    "might",
+    "mite"
+   ]
+  },
+  "en:65d0cfec1bd6": {
+   "flag": null,
+   "members": [
+    "bare",
+    "bear"
+   ],
+   "worst": 0.4925,
+   "worstPair": [
+    "bare",
+    "bear"
+   ]
+  },
+  "en:665691998c3d": {
+   "flag": null,
+   "members": [
+    "rose",
+    "rows"
+   ],
+   "worst": 0.5762,
+   "worstPair": [
+    "rose",
+    "rows"
+   ]
+  },
+  "en:670a808ed187": {
+   "flag": null,
+   "members": [
+    "key",
+    "quay"
+   ],
+   "worst": 0.5163,
+   "worstPair": [
+    "key",
+    "quay"
+   ]
+  },
+  "en:68d468c93618": {
+   "flag": null,
+   "members": [
+    "bay",
+    "bey"
+   ],
+   "worst": 0.5178,
+   "worstPair": [
+    "bay",
+    "bey"
+   ]
+  },
+  "en:6915292d1217": {
+   "flag": null,
+   "members": [
+    "lass",
+    "last"
+   ],
+   "worst": 0.5835,
+   "worstPair": [
+    "lass",
+    "last"
+   ]
+  },
+  "en:6995ea76dab1": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "sail",
+    "sale",
+    "salle"
+   ],
+   "worst": 0.7195,
+   "worstPair": [
+    "sail",
+    "salle"
+   ]
+  },
+  "en:69e34c5d991d": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "testes",
+    "tests"
+   ],
+   "worst": 0.9454,
+   "worstPair": [
+    "testes",
+    "tests"
+   ]
+  },
+  "en:69f28726b84b": {
+   "flag": null,
+   "members": [
+    "roots",
+    "routes"
+   ],
+   "worst": 0.5831,
+   "worstPair": [
+    "roots",
+    "routes"
+   ]
+  },
+  "en:6a0c46081094": {
+   "flag": null,
+   "members": [
+    "seam",
+    "seem"
+   ],
+   "worst": 0.5814,
+   "worstPair": [
+    "seam",
+    "seem"
+   ]
+  },
+  "en:6a7d822c3b85": {
+   "flag": null,
+   "members": [
+    "based",
+    "baste"
+   ],
+   "worst": 0.553,
+   "worstPair": [
+    "based",
+    "baste"
+   ]
+  },
+  "en:6cf9d2cf1c65": {
+   "flag": null,
+   "members": [
+    "waive",
+    "wave"
+   ],
+   "worst": 0.5343,
+   "worstPair": [
+    "waive",
+    "wave"
+   ]
+  },
+  "en:6dbdd00cb6f2": {
+   "flag": null,
+   "members": [
+    "con",
+    "conn",
+    "khan",
+    "kon"
+   ],
+   "worst": 0.4945,
+   "worstPair": [
+    "con",
+    "kon"
+   ]
+  },
+  "en:6ea2e1d46252": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "saint",
+    "st",
+    "street"
+   ],
+   "worst": 0.8405,
+   "worstPair": [
+    "saint",
+    "st"
+   ]
+  },
+  "en:6fbb8b7f3a17": {
+   "flag": null,
+   "members": [
+    "dew",
+    "do",
+    "due"
+   ],
+   "worst": 0.5788,
+   "worstPair": [
+    "dew",
+    "do"
+   ]
+  },
+  "en:700ecbd0b706": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "we",
+    "wee"
+   ],
+   "worst": 0.633,
+   "worstPair": [
+    "we",
+    "wee"
+   ]
+  },
+  "en:71b82786f1fc": {
+   "flag": null,
+   "members": [
+    "sir",
+    "sur"
+   ],
+   "worst": 0.5256,
+   "worstPair": [
+    "sir",
+    "sur"
+   ]
+  },
+  "en:756063fbdf4d": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "ware",
+    "wear",
+    "where"
+   ],
+   "worst": 0.6401,
+   "worstPair": [
+    "ware",
+    "where"
+   ]
+  },
+  "en:76689604a85e": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "lead",
+    "led"
+   ],
+   "worst": 0.8033,
+   "worstPair": [
+    "lead",
+    "led"
+   ]
+  },
+  "en:7772cc522254": {
+   "flag": null,
+   "members": [
+    "traveled",
+    "travelled"
+   ],
+   "worst": 0.4965,
+   "worstPair": [
+    "traveled",
+    "travelled"
+   ]
+  },
+  "en:781e8b1f208f": {
+   "flag": null,
+   "members": [
+    "grill",
+    "grille"
+   ],
+   "worst": 0.517,
+   "worstPair": [
+    "grill",
+    "grille"
+   ]
+  },
+  "en:78b6d4818e8c": {
+   "flag": null,
+   "members": [
+    "to",
+    "too",
+    "tu",
+    "two"
+   ],
+   "worst": 0.5132,
+   "worstPair": [
+    "to",
+    "too"
+   ]
+  },
+  "en:79e785cc33da": {
+   "flag": null,
+   "members": [
+    "beat",
+    "beet"
+   ],
+   "worst": 0.5238,
+   "worstPair": [
+    "beat",
+    "beet"
+   ]
+  },
+  "en:7ac18f62b8d3": {
+   "flag": null,
+   "members": [
+    "mater",
+    "matter"
+   ],
+   "worst": 0.5723,
+   "worstPair": [
+    "mater",
+    "matter"
+   ]
+  },
+  "en:7b381fc654fe": {
+   "flag": null,
+   "members": [
+    "fervor",
+    "fervour"
+   ],
+   "worst": 0.5344,
+   "worstPair": [
+    "fervor",
+    "fervour"
+   ]
+  },
+  "en:7b5cc34dd477": {
+   "flag": null,
+   "members": [
+    "lay",
+    "lei",
+    "ley"
+   ],
+   "worst": 0.5798,
+   "worstPair": [
+    "lay",
+    "ley"
+   ]
+  },
+  "en:7bbb179769cf": {
+   "flag": null,
+   "members": [
+    "ad",
+    "add"
+   ],
+   "worst": 0.4551,
+   "worstPair": [
+    "ad",
+    "add"
+   ]
+  },
+  "en:7e8fe1a75136": {
+   "flag": null,
+   "members": [
+    "boarder",
+    "border"
+   ],
+   "worst": 0.5303,
+   "worstPair": [
+    "boarder",
+    "border"
+   ]
+  },
+  "en:7ee0b3856d65": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "bae",
+    "buy",
+    "by",
+    "bye"
+   ],
+   "worst": 0.9162,
+   "worstPair": [
+    "bae",
+    "by"
+   ]
+  },
+  "en:7fa35e96d21d": {
+   "flag": null,
+   "members": [
+    "dos",
+    "dose"
+   ],
+   "worst": 0.6327,
+   "worstPair": [
+    "dos",
+    "dose"
+   ]
+  },
+  "en:8155ae3e46ac": {
+   "flag": null,
+   "members": [
+    "holm",
+    "home"
+   ],
+   "worst": 0.4425,
+   "worstPair": [
+    "holm",
+    "home"
+   ]
+  },
+  "en:81da72dfed56": {
+   "flag": null,
+   "members": [
+    "holy",
+    "wholly"
+   ],
+   "worst": 0.5205,
+   "worstPair": [
+    "holy",
+    "wholly"
+   ]
+  },
+  "en:83e5024f9caa": {
+   "flag": null,
+   "members": [
+    "their",
+    "there"
+   ],
+   "worst": 0.5679,
+   "worstPair": [
+    "their",
+    "there"
+   ]
+  },
+  "en:83ebe314634a": {
+   "flag": null,
+   "members": [
+    "glamor",
+    "glamour"
+   ],
+   "worst": 0.5029,
+   "worstPair": [
+    "glamor",
+    "glamour"
+   ]
+  },
+  "en:8413eb7aeee0": {
+   "flag": null,
+   "members": [
+    "passed",
+    "past"
+   ],
+   "worst": 0.5474,
+   "worstPair": [
+    "passed",
+    "past"
+   ]
+  },
+  "en:8724906e4dd1": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "right",
+    "rite",
+    "wright",
+    "write"
+   ],
+   "worst": 0.6602,
+   "worstPair": [
+    "right",
+    "wright"
+   ]
+  },
+  "en:89425852559f": {
+   "flag": null,
+   "members": [
+    "ball",
+    "bawl"
+   ],
+   "worst": 0.5604,
+   "worstPair": [
+    "ball",
+    "bawl"
+   ]
+  },
+  "en:89796e18a354": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "read",
+    "red",
+    "reed"
+   ],
+   "worst": 0.905,
+   "worstPair": [
+    "read",
+    "red"
+   ]
+  },
+  "en:8aa3efb1583d": {
+   "flag": null,
+   "members": [
+    "fair",
+    "fare"
+   ],
+   "worst": 0.4964,
+   "worstPair": [
+    "fair",
+    "fare"
+   ]
+  },
+  "en:8b4936120c07": {
+   "flag": null,
+   "members": [
+    "which",
+    "witch"
+   ],
+   "worst": 0.5994,
+   "worstPair": [
+    "which",
+    "witch"
+   ]
+  },
+  "en:8b519edeb846": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "tae",
+    "tai",
+    "tie",
+    "tye"
+   ],
+   "worst": 1.0198,
+   "worstPair": [
+    "tae",
+    "tie"
+   ]
+  },
+  "en:8b819a51143c": {
+   "flag": null,
+   "members": [
+    "rumor",
+    "rumour"
+   ],
+   "worst": 0.5819,
+   "worstPair": [
+    "rumor",
+    "rumour"
+   ]
+  },
+  "en:8d0f469a607c": {
+   "flag": null,
+   "members": [
+    "shoe",
+    "shoo"
+   ],
+   "worst": 0.5118,
+   "worstPair": [
+    "shoe",
+    "shoo"
+   ]
+  },
+  "en:8d307b57d01b": {
+   "flag": null,
+   "members": [
+    "vary",
+    "very"
+   ],
+   "worst": 0.5516,
+   "worstPair": [
+    "vary",
+    "very"
+   ]
+  },
+  "en:8d5a227cedf3": {
+   "flag": null,
+   "members": [
+    "aerie",
+    "airy"
+   ],
+   "worst": 0.4945,
+   "worstPair": [
+    "aerie",
+    "airy"
+   ]
+  },
+  "en:8e6ed6324c02": {
+   "flag": null,
+   "members": [
+    "base",
+    "bass"
+   ],
+   "worst": 0.5422,
+   "worstPair": [
+    "base",
+    "bass"
+   ]
+  },
+  "en:8e7ceeb4b1ff": {
+   "flag": null,
+   "members": [
+    "hao",
+    "hau",
+    "how",
+    "howe"
+   ],
+   "worst": 0.5116,
+   "worstPair": [
+    "hau",
+    "how"
+   ]
+  },
+  "en:8ee5c34aa3fa": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "code",
+    "coed"
+   ],
+   "worst": 0.7619,
+   "worstPair": [
+    "code",
+    "coed"
+   ]
+  },
+  "en:8eea0de8aaed": {
+   "flag": null,
+   "members": [
+    "ardor",
+    "ardour"
+   ],
+   "worst": 0.5588,
+   "worstPair": [
+    "ardor",
+    "ardour"
+   ]
+  },
+  "en:8fce8672758f": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "dae",
+    "day",
+    "de",
+    "dey"
+   ],
+   "worst": 0.8033,
+   "worstPair": [
+    "day",
+    "de"
+   ]
+  },
+  "en:8fed8cbbbd6d": {
+   "flag": null,
+   "members": [
+    "colors",
+    "colours"
+   ],
+   "worst": 0.5055,
+   "worstPair": [
+    "colors",
+    "colours"
+   ]
+  },
+  "en:93600e3c7057": {
+   "flag": null,
+   "members": [
+    "theater",
+    "theatre"
+   ],
+   "worst": 0.5674,
+   "worstPair": [
+    "theater",
+    "theatre"
+   ]
+  },
+  "en:93a03d3ae728": {
+   "flag": null,
+   "members": [
+    "paean",
+    "peon"
+   ],
+   "worst": 0.5756,
+   "worstPair": [
+    "paean",
+    "peon"
+   ]
+  },
+  "en:941fa8fcec51": {
+   "flag": null,
+   "members": [
+    "hear",
+    "here"
+   ],
+   "worst": 0.5302,
+   "worstPair": [
+    "hear",
+    "here"
+   ]
+  },
+  "en:946d29b4d1b7": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "lai",
+    "lie",
+    "ly",
+    "lye"
+   ],
+   "worst": 0.9614,
+   "worstPair": [
+    "lai",
+    "ly"
+   ]
+  },
+  "en:94db6f7b240d": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "me",
+    "mi"
+   ],
+   "worst": 1.049,
+   "worstPair": [
+    "me",
+    "mi"
+   ]
+  },
+  "en:952c83f0366d": {
+   "flag": null,
+   "members": [
+    "few",
+    "phew"
+   ],
+   "worst": 0.4471,
+   "worstPair": [
+    "few",
+    "phew"
+   ]
+  },
+  "en:967a588f46ad": {
+   "flag": null,
+   "members": [
+    "meat",
+    "meet",
+    "mete"
+   ],
+   "worst": 0.5067,
+   "worstPair": [
+    "meat",
+    "mete"
+   ]
+  },
+  "en:96ad656020c0": {
+   "flag": null,
+   "members": [
+    "pic",
+    "pick"
+   ],
+   "worst": 0.4515,
+   "worstPair": [
+    "pic",
+    "pick"
+   ]
+  },
+  "en:97840f5393cc": {
+   "flag": null,
+   "members": [
+    "hall",
+    "haul"
+   ],
+   "worst": 0.4767,
+   "worstPair": [
+    "hall",
+    "haul"
+   ]
+  },
+  "en:97ea55a9b43d": {
+   "flag": null,
+   "members": [
+    "groan",
+    "grown"
+   ],
+   "worst": 0.5244,
+   "worstPair": [
+    "groan",
+    "grown"
+   ]
+  },
+  "en:99b6e8844b70": {
+   "flag": null,
+   "members": [
+    "know",
+    "no"
+   ],
+   "worst": 0.5718,
+   "worstPair": [
+    "know",
+    "no"
+   ]
+  },
+  "en:99c9fd83b196": {
+   "flag": null,
+   "members": [
+    "ai",
+    "ay",
+    "aye",
+    "eye",
+    "i"
+   ],
+   "worst": 0.6114,
+   "worstPair": [
+    "ay",
+    "i"
+   ]
+  },
+  "en:9a3afc72bd12": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "mor",
+    "more"
+   ],
+   "worst": 0.6475,
+   "worstPair": [
+    "mor",
+    "more"
+   ]
+  },
+  "en:9ab9584db01a": {
+   "flag": null,
+   "members": [
+    "say",
+    "se"
+   ],
+   "worst": 0.5895,
+   "worstPair": [
+    "say",
+    "se"
+   ]
+  },
+  "en:9b8cf8520757": {
+   "flag": null,
+   "members": [
+    "sign",
+    "sine"
+   ],
+   "worst": 0.5192,
+   "worstPair": [
+    "sign",
+    "sine"
+   ]
+  },
+  "en:9be68c6927e9": {
+   "flag": null,
+   "members": [
+    "coarse",
+    "course"
+   ],
+   "worst": 0.5723,
+   "worstPair": [
+    "coarse",
+    "course"
+   ]
+  },
+  "en:9d1a3907ee14": {
+   "flag": null,
+   "members": [
+    "warn",
+    "worn"
+   ],
+   "worst": 0.4641,
+   "worstPair": [
+    "warn",
+    "worn"
+   ]
+  },
+  "en:9d3d852c32d1": {
+   "flag": null,
+   "members": [
+    "neighborhood",
+    "neighbourhood"
+   ],
+   "worst": 0.5388,
+   "worstPair": [
+    "neighborhood",
+    "neighbourhood"
+   ]
+  },
+  "en:9d5d4d1111b0": {
+   "flag": null,
+   "members": [
+    "cymbal",
+    "symbol"
+   ],
+   "worst": 0.5445,
+   "worstPair": [
+    "cymbal",
+    "symbol"
+   ]
+  },
+  "en:9ddf2718af7e": {
+   "flag": null,
+   "members": [
+    "flour",
+    "flower"
+   ],
+   "worst": 0.5352,
+   "worstPair": [
+    "flour",
+    "flower"
+   ]
+  },
+  "en:9e31179a630e": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "fee",
+    "fi",
+    "fie"
+   ],
+   "worst": 0.9106,
+   "worstPair": [
+    "fee",
+    "fi"
+   ]
+  },
+  "en:9ea4a1f5c391": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "yore",
+    "your"
+   ],
+   "worst": 0.6562,
+   "worstPair": [
+    "yore",
+    "your"
+   ]
+  },
+  "en:9edf84495b66": {
+   "flag": null,
+   "members": [
+    "cast",
+    "caste"
+   ],
+   "worst": 0.5166,
+   "worstPair": [
+    "cast",
+    "caste"
+   ]
+  },
+  "en:9fb97df60cb8": {
+   "flag": null,
+   "members": [
+    "hole",
+    "whole"
+   ],
+   "worst": 0.491,
+   "worstPair": [
+    "hole",
+    "whole"
+   ]
+  },
+  "en:9fe31682eeef": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "get",
+    "git"
+   ],
+   "worst": 0.6497,
+   "worstPair": [
+    "get",
+    "git"
+   ]
+  },
+  "en:a0e162a662b9": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "refer",
+    "rougher"
+   ],
+   "worst": 0.7534,
+   "worstPair": [
+    "refer",
+    "rougher"
+   ]
+  },
+  "en:a3d1f2dff930": {
+   "flag": null,
+   "members": [
+    "made",
+    "maid"
+   ],
+   "worst": 0.6024,
+   "worstPair": [
+    "made",
+    "maid"
+   ]
+  },
+  "en:a48b84b7ba2f": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "t",
+    "te",
+    "tea",
+    "tee",
+    "ti"
+   ],
+   "worst": 0.6592,
+   "worstPair": [
+    "t",
+    "te"
+   ]
+  },
+  "en:a5b80c17844c": {
+   "flag": null,
+   "members": [
+    "honorable",
+    "honourable"
+   ],
+   "worst": 0.5028,
+   "worstPair": [
+    "honorable",
+    "honourable"
+   ]
+  },
+  "en:a5bcf0e49b71": {
+   "flag": null,
+   "members": [
+    "white",
+    "wight"
+   ],
+   "worst": 0.6072,
+   "worstPair": [
+    "white",
+    "wight"
+   ]
+  },
+  "en:a68e592e5e6b": {
+   "flag": null,
+   "members": [
+    "car",
+    "carr"
+   ],
+   "worst": 0.5819,
+   "worstPair": [
+    "car",
+    "carr"
+   ]
+  },
+  "en:a799f7e1508f": {
+   "flag": null,
+   "members": [
+    "feat",
+    "feet"
+   ],
+   "worst": 0.5634,
+   "worstPair": [
+    "feat",
+    "feet"
+   ]
+  },
+  "en:a7c72a2ebb65": {
+   "flag": null,
+   "members": [
+    "weather",
+    "whether"
+   ],
+   "worst": 0.6048,
+   "worstPair": [
+    "weather",
+    "whether"
+   ]
+  },
+  "en:a849f6f5caf3": {
+   "flag": null,
+   "members": [
+    "ewe",
+    "u",
+    "yew",
+    "you"
+   ],
+   "worst": 0.5953,
+   "worstPair": [
+    "yew",
+    "you"
+   ]
+  },
+  "en:a8f5b818e809": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "acknowledgement",
+    "acknowledgment"
+   ],
+   "worst": 0.6805,
+   "worstPair": [
+    "acknowledgement",
+    "acknowledgment"
+   ]
+  },
+  "en:aa6cc68e0e00": {
+   "flag": null,
+   "members": [
+    "hair",
+    "hare"
+   ],
+   "worst": 0.4891,
+   "worstPair": [
+    "hair",
+    "hare"
+   ]
+  },
+  "en:abbde711121a": {
+   "flag": null,
+   "members": [
+    "gage",
+    "gauge"
+   ],
+   "worst": 0.5387,
+   "worstPair": [
+    "gage",
+    "gauge"
+   ]
+  },
+  "en:ac346cd49d9b": {
+   "flag": null,
+   "members": [
+    "disc",
+    "disk"
+   ],
+   "worst": 0.5369,
+   "worstPair": [
+    "disc",
+    "disk"
+   ]
+  },
+  "en:ac6f403f2d15": {
+   "flag": null,
+   "members": [
+    "knave",
+    "nave"
+   ],
+   "worst": 0.5301,
+   "worstPair": [
+    "knave",
+    "nave"
+   ]
+  },
+  "en:acab7e4e3ccc": {
+   "flag": null,
+   "members": [
+    "pray",
+    "prey"
+   ],
+   "worst": 0.5246,
+   "worstPair": [
+    "pray",
+    "prey"
+   ]
+  },
+  "en:acfab52888c5": {
+   "flag": null,
+   "members": [
+    "tri",
+    "try"
+   ],
+   "worst": 0.5733,
+   "worstPair": [
+    "tri",
+    "try"
+   ]
+  },
+  "en:ad406953eab9": {
+   "flag": null,
+   "members": [
+    "en",
+    "n"
+   ],
+   "worst": 0.47,
+   "worstPair": [
+    "en",
+    "n"
+   ]
+  },
+  "en:ae8772f8f751": {
+   "flag": null,
+   "members": [
+    "none",
+    "nun"
+   ],
+   "worst": 0.547,
+   "worstPair": [
+    "none",
+    "nun"
+   ]
+  },
+  "en:aea355b809bf": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "cars",
+    "cause",
+    "coz"
+   ],
+   "worst": 0.7431,
+   "worstPair": [
+    "cars",
+    "coz"
+   ]
+  },
+  "en:aecc35ea27dc": {
+   "flag": null,
+   "members": [
+    "barrel",
+    "beryl"
+   ],
+   "worst": 0.4941,
+   "worstPair": [
+    "barrel",
+    "beryl"
+   ]
+  },
+  "en:aeec2767c150": {
+   "flag": null,
+   "members": [
+    "recognised",
+    "recognized"
+   ],
+   "worst": 0.5828,
+   "worstPair": [
+    "recognised",
+    "recognized"
+   ]
+  },
+  "en:af22ccbe961b": {
+   "flag": null,
+   "members": [
+    "billed",
+    "build"
+   ],
+   "worst": 0.5489,
+   "worstPair": [
+    "billed",
+    "build"
+   ]
+  },
+  "en:af282b2a8413": {
+   "flag": null,
+   "members": [
+    "coal",
+    "cole",
+    "kohl"
+   ],
+   "worst": 0.5655,
+   "worstPair": [
+    "coal",
+    "kohl"
+   ]
+  },
+  "en:af74e5f58dd6": {
+   "flag": null,
+   "members": [
+    "tall",
+    "tol"
+   ],
+   "worst": 0.4953,
+   "worstPair": [
+    "tall",
+    "tol"
+   ]
+  },
+  "en:b0486b5405fd": {
+   "flag": null,
+   "members": [
+    "principal",
+    "principle"
+   ],
+   "worst": 0.5112,
+   "worstPair": [
+    "principal",
+    "principle"
+   ]
+  },
+  "en:b0d700f4d84e": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "plait",
+    "plate"
+   ],
+   "worst": 0.6497,
+   "worstPair": [
+    "plait",
+    "plate"
+   ]
+  },
+  "en:b1347297eb67": {
+   "flag": null,
+   "members": [
+    "scene",
+    "seen"
+   ],
+   "worst": 0.4729,
+   "worstPair": [
+    "scene",
+    "seen"
+   ]
+  },
+  "en:b135be07de59": {
+   "flag": null,
+   "members": [
+    "knead",
+    "need"
+   ],
+   "worst": 0.5023,
+   "worstPair": [
+    "knead",
+    "need"
+   ]
+  },
+  "en:b31a20d2fb27": {
+   "flag": null,
+   "members": [
+    "rote",
+    "wrote"
+   ],
+   "worst": 0.5082,
+   "worstPair": [
+    "rote",
+    "wrote"
+   ]
+  },
+  "en:b378424bc7d3": {
+   "flag": null,
+   "members": [
+    "rain",
+    "reign",
+    "rein"
+   ],
+   "worst": 0.5077,
+   "worstPair": [
+    "rain",
+    "rein"
+   ]
+  },
+  "en:b3de64001249": {
+   "flag": null,
+   "members": [
+    "demeanor",
+    "demeanour"
+   ],
+   "worst": 0.5214,
+   "worstPair": [
+    "demeanor",
+    "demeanour"
+   ]
+  },
+  "en:b5794bab2c96": {
+   "flag": null,
+   "members": [
+    "been",
+    "bin",
+    "bun"
+   ],
+   "worst": 0.628,
+   "worstPair": [
+    "bin",
+    "bun"
+   ]
+  },
+  "en:b65a37316ab7": {
+   "flag": null,
+   "members": [
+    "brake",
+    "break"
+   ],
+   "worst": 0.5225,
+   "worstPair": [
+    "brake",
+    "break"
+   ]
+  },
+  "en:b8b766ed7052": {
+   "flag": null,
+   "members": [
+    "cent",
+    "scent",
+    "sent"
+   ],
+   "worst": 0.5839,
+   "worstPair": [
+    "cent",
+    "scent"
+   ]
+  },
+  "en:bb6bc593058b": {
+   "flag": null,
+   "members": [
+    "pair",
+    "pare",
+    "pear"
+   ],
+   "worst": 0.4809,
+   "worstPair": [
+    "pare",
+    "pear"
+   ]
+  },
+  "en:bd2148d3aa29": {
+   "flag": null,
+   "members": [
+    "peak",
+    "peek"
+   ],
+   "worst": 0.5559,
+   "worstPair": [
+    "peak",
+    "peek"
+   ]
+  },
+  "en:bdc634f47554": {
+   "flag": null,
+   "members": [
+    "carry",
+    "kerry"
+   ],
+   "worst": 0.5295,
+   "worstPair": [
+    "carry",
+    "kerry"
+   ]
+  },
+  "en:bef1796b41f7": {
+   "flag": null,
+   "members": [
+    "gait",
+    "gate"
+   ],
+   "worst": 0.5305,
+   "worstPair": [
+    "gait",
+    "gate"
+   ]
+  },
+  "en:bfb74e52c1a7": {
+   "flag": null,
+   "members": [
+    "colonel",
+    "kernel"
+   ],
+   "worst": 0.4959,
+   "worstPair": [
+    "colonel",
+    "kernel"
+   ]
+  },
+  "en:c1df67a54cd8": {
+   "flag": null,
+   "members": [
+    "traveling",
+    "travelling"
+   ],
+   "worst": 0.4834,
+   "worstPair": [
+    "traveling",
+    "travelling"
+   ]
+  },
+  "en:c20a5d66b5a2": {
+   "flag": null,
+   "members": [
+    "links",
+    "lynx"
+   ],
+   "worst": 0.6039,
+   "worstPair": [
+    "links",
+    "lynx"
+   ]
+  },
+  "en:c23bbc6b3a37": {
+   "flag": null,
+   "members": [
+    "slay",
+    "sleigh"
+   ],
+   "worst": 0.5178,
+   "worstPair": [
+    "slay",
+    "sleigh"
+   ]
+  },
+  "en:c3bc01ec1474": {
+   "flag": null,
+   "members": [
+    "wait",
+    "weight"
+   ],
+   "worst": 0.5567,
+   "worstPair": [
+    "wait",
+    "weight"
+   ]
+  },
+  "en:c49d7f493ccd": {
+   "flag": null,
+   "members": [
+    "wet",
+    "whet"
+   ],
+   "worst": 0.5828,
+   "worstPair": [
+    "wet",
+    "whet"
+   ]
+  },
+  "en:c4b5ec9190de": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "fir",
+    "for",
+    "fore",
+    "four",
+    "fur"
+   ],
+   "worst": 0.703,
+   "worstPair": [
+    "fir",
+    "for"
+   ]
+  },
+  "en:c503eab4b135": {
+   "flag": null,
+   "members": [
+    "center",
+    "centre"
+   ],
+   "worst": 0.5147,
+   "worstPair": [
+    "center",
+    "centre"
+   ]
+  },
+  "en:c68ea2a0a78a": {
+   "flag": null,
+   "members": [
+    "sing",
+    "singh"
+   ],
+   "worst": 0.4914,
+   "worstPair": [
+    "sing",
+    "singh"
+   ]
+  },
+  "en:c7536ec4712e": {
+   "flag": null,
+   "members": [
+    "cor",
+    "core",
+    "corps"
+   ],
+   "worst": 0.5611,
+   "worstPair": [
+    "cor",
+    "core"
+   ]
+  },
+  "en:c76e31c7f1ce": {
+   "flag": null,
+   "members": [
+    "some",
+    "sum"
+   ],
+   "worst": 0.5009,
+   "worstPair": [
+    "some",
+    "sum"
+   ]
+  },
+  "en:c7e36df0b39a": {
+   "flag": null,
+   "members": [
+    "gene",
+    "jean"
+   ],
+   "worst": 0.4591,
+   "worstPair": [
+    "gene",
+    "jean"
+   ]
+  },
+  "en:c7fc3da0ac6c": {
+   "flag": null,
+   "members": [
+    "raise",
+    "rays",
+    "raze"
+   ],
+   "worst": 0.5977,
+   "worstPair": [
+    "raise",
+    "raze"
+   ]
+  },
+  "en:cad1223fec0a": {
+   "flag": null,
+   "members": [
+    "ade",
+    "aid",
+    "aide"
+   ],
+   "worst": 0.5677,
+   "worstPair": [
+    "aid",
+    "aide"
+   ]
+  },
+  "en:cc45cb34d10e": {
+   "flag": null,
+   "members": [
+    "hart",
+    "heart"
+   ],
+   "worst": 0.5651,
+   "worstPair": [
+    "hart",
+    "heart"
+   ]
+  },
+  "en:ccdee0706d8f": {
+   "flag": null,
+   "members": [
+    "valor",
+    "valour"
+   ],
+   "worst": 0.5584,
+   "worstPair": [
+    "valor",
+    "valour"
+   ]
+  },
+  "en:cd57eb4fe1b7": {
+   "flag": null,
+   "members": [
+    "b",
+    "be",
+    "bee"
+   ],
+   "worst": 0.5548,
+   "worstPair": [
+    "be",
+    "bee"
+   ]
+  },
+  "en:cdc2ea9efc2d": {
+   "flag": null,
+   "members": [
+    "load",
+    "lode"
+   ],
+   "worst": 0.5763,
+   "worstPair": [
+    "load",
+    "lode"
+   ]
+  },
+  "en:cff68b644ade": {
+   "flag": null,
+   "members": [
+    "favorite",
+    "favourite"
+   ],
+   "worst": 0.5522,
+   "worstPair": [
+    "favorite",
+    "favourite"
+   ]
+  },
+  "en:d077018868af": {
+   "flag": null,
+   "members": [
+    "gneiss",
+    "nice"
+   ],
+   "worst": 0.6029,
+   "worstPair": [
+    "gneiss",
+    "nice"
+   ]
+  },
+  "en:d0d8792ffaeb": {
+   "flag": null,
+   "members": [
+    "favor",
+    "favour"
+   ],
+   "worst": 0.4541,
+   "worstPair": [
+    "favor",
+    "favour"
+   ]
+  },
+  "en:d18186641f61": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "lat",
+    "lot"
+   ],
+   "worst": 0.6343,
+   "worstPair": [
+    "lat",
+    "lot"
+   ]
+  },
+  "en:d182bf547523": {
+   "flag": null,
+   "members": [
+    "recognise",
+    "recognize"
+   ],
+   "worst": 0.5665,
+   "worstPair": [
+    "recognise",
+    "recognize"
+   ]
+  },
+  "en:d2017e0bb697": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "fort",
+    "forte"
+   ],
+   "worst": 0.8877,
+   "worstPair": [
+    "fort",
+    "forte"
+   ]
+  },
+  "en:d361d2717ef3": {
+   "flag": null,
+   "members": [
+    "real",
+    "reel"
+   ],
+   "worst": 0.5591,
+   "worstPair": [
+    "real",
+    "reel"
+   ]
+  },
+  "en:d3912c7bf74e": {
+   "flag": null,
+   "members": [
+    "vigor",
+    "vigour"
+   ],
+   "worst": 0.49,
+   "worstPair": [
+    "vigor",
+    "vigour"
+   ]
+  },
+  "en:d397a2853244": {
+   "flag": null,
+   "members": [
+    "allowed",
+    "aloud"
+   ],
+   "worst": 0.5351,
+   "worstPair": [
+    "allowed",
+    "aloud"
+   ]
+  },
+  "en:d39ab670fa5e": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "cache",
+    "cachet",
+    "cash"
+   ],
+   "worst": 1.1067,
+   "worstPair": [
+    "cache",
+    "cachet"
+   ]
+  },
+  "en:d7f55349064b": {
+   "flag": null,
+   "members": [
+    "main",
+    "mane"
+   ],
+   "worst": 0.398,
+   "worstPair": [
+    "main",
+    "mane"
+   ]
+  },
+  "en:d81c2dfd22ec": {
+   "flag": null,
+   "members": [
+    "loan",
+    "lone"
+   ],
+   "worst": 0.6099,
+   "worstPair": [
+    "loan",
+    "lone"
+   ]
+  },
+  "en:db3a2375987b": {
+   "flag": null,
+   "members": [
+    "cite",
+    "sight",
+    "site"
+   ],
+   "worst": 0.5983,
+   "worstPair": [
+    "cite",
+    "site"
+   ]
+  },
+  "en:db52a35feb85": {
+   "flag": null,
+   "members": [
+    "council",
+    "counsel"
+   ],
+   "worst": 0.5246,
+   "worstPair": [
+    "council",
+    "counsel"
+   ]
+  },
+  "en:dbe4006aa801": {
+   "flag": null,
+   "members": [
+    "way",
+    "weigh",
+    "whey",
+    "wy"
+   ],
+   "worst": 0.555,
+   "worstPair": [
+    "weigh",
+    "wy"
+   ]
+  },
+  "en:dd8e641e0195": {
+   "flag": null,
+   "members": [
+    "shone",
+    "shown"
+   ],
+   "worst": 0.5116,
+   "worstPair": [
+    "shone",
+    "shown"
+   ]
+  },
+  "en:df57de8b431e": {
+   "flag": null,
+   "members": [
+    "whine",
+    "wine"
+   ],
+   "worst": 0.4886,
+   "worstPair": [
+    "whine",
+    "wine"
+   ]
+  },
+  "en:dfb20ac10ba5": {
+   "flag": null,
+   "members": [
+    "cede",
+    "seed"
+   ],
+   "worst": 0.5667,
+   "worstPair": [
+    "cede",
+    "seed"
+   ]
+  },
+  "en:dfe084801747": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "road",
+    "rode",
+    "rowed"
+   ],
+   "worst": 0.6377,
+   "worstPair": [
+    "road",
+    "rode"
+   ]
+  },
+  "en:e197ff276b25": {
+   "flag": null,
+   "members": [
+    "cache",
+    "cash"
+   ],
+   "worst": 0.5376,
+   "worstPair": [
+    "cache",
+    "cash"
+   ]
+  },
+  "en:e2d27977be74": {
+   "flag": null,
+   "members": [
+    "tide",
+    "tied"
+   ],
+   "worst": 0.507,
+   "worstPair": [
+    "tide",
+    "tied"
+   ]
+  },
+  "en:e2d338dcb9c4": {
+   "flag": null,
+   "members": [
+    "she",
+    "shi",
+    "shih",
+    "xi"
+   ],
+   "worst": 0.5397,
+   "worstPair": [
+    "shi",
+    "xi"
+   ]
+  },
+  "en:e2e6a4a1535f": {
+   "flag": null,
+   "members": [
+    "cat",
+    "kat"
+   ],
+   "worst": 0.544,
+   "worstPair": [
+    "cat",
+    "kat"
+   ]
+  },
+  "en:e3182106ba2d": {
+   "flag": null,
+   "members": [
+    "sew",
+    "so",
+    "sow"
+   ],
+   "worst": 0.5743,
+   "worstPair": [
+    "sew",
+    "sow"
+   ]
+  },
+  "en:e3e5ebe6117d": {
+   "flag": null,
+   "members": [
+    "hoarse",
+    "horse"
+   ],
+   "worst": 0.5702,
+   "worstPair": [
+    "hoarse",
+    "horse"
+   ]
+  },
+  "en:e40383cf20d8": {
+   "flag": null,
+   "members": [
+    "vice",
+    "vise"
+   ],
+   "worst": 0.5773,
+   "worstPair": [
+    "vice",
+    "vise"
+   ]
+  },
+  "en:e4b084b80038": {
+   "flag": null,
+   "members": [
+    "hi",
+    "high"
+   ],
+   "worst": 0.5014,
+   "worstPair": [
+    "hi",
+    "high"
+   ]
+  },
+  "en:e5be90b2b8bb": {
+   "flag": null,
+   "members": [
+    "topography",
+    "typography"
+   ],
+   "worst": 0.5342,
+   "worstPair": [
+    "topography",
+    "typography"
+   ]
+  },
+  "en:e67497907508": {
+   "flag": null,
+   "members": [
+    "humerus",
+    "humorous"
+   ],
+   "worst": 0.5657,
+   "worstPair": [
+    "humerus",
+    "humorous"
+   ]
+  },
+  "en:e6ff17cf11d8": {
+   "flag": null,
+   "members": [
+    "one",
+    "wan",
+    "won"
+   ],
+   "worst": 0.5481,
+   "worstPair": [
+    "one",
+    "wan"
+   ]
+  },
+  "en:e97a42507f5d": {
+   "flag": null,
+   "members": [
+    "behavior",
+    "behaviour"
+   ],
+   "worst": 0.4967,
+   "worstPair": [
+    "behavior",
+    "behaviour"
+   ]
+  },
+  "en:e9cd79275757": {
+   "flag": null,
+   "members": [
+    "mae",
+    "may"
+   ],
+   "worst": 0.559,
+   "worstPair": [
+    "mae",
+    "may"
+   ]
+  },
+  "en:eadb6ed7c01c": {
+   "flag": null,
+   "members": [
+    "coo",
+    "coup"
+   ],
+   "worst": 0.4953,
+   "worstPair": [
+    "coo",
+    "coup"
+   ]
+  },
+  "en:ec67327d6f06": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "hours",
+    "ours"
+   ],
+   "worst": 0.8427,
+   "worstPair": [
+    "hours",
+    "ours"
+   ]
+  },
+  "en:ee05cc88a0b0": {
+   "flag": null,
+   "members": [
+    "faze",
+    "phase"
+   ],
+   "worst": 0.4575,
+   "worstPair": [
+    "faze",
+    "phase"
+   ]
+  },
+  "en:ee75ff4faae8": {
+   "flag": null,
+   "members": [
+    "grate",
+    "great"
+   ],
+   "worst": 0.6253,
+   "worstPair": [
+    "grate",
+    "great"
+   ]
+  },
+  "en:eebee8eebd9c": {
+   "flag": null,
+   "members": [
+    "war",
+    "wore"
+   ],
+   "worst": 0.4952,
+   "worstPair": [
+    "war",
+    "wore"
+   ]
+  },
+  "en:eee4aefdcb01": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "role",
+    "roll"
+   ],
+   "worst": 0.6494,
+   "worstPair": [
+    "role",
+    "roll"
+   ]
+  },
+  "en:f231052f96de": {
+   "flag": null,
+   "members": [
+    "berth",
+    "birth"
+   ],
+   "worst": 0.5317,
+   "worstPair": [
+    "berth",
+    "birth"
+   ]
+  },
+  "en:f2e5f4d88c42": {
+   "flag": null,
+   "members": [
+    "lea",
+    "lee",
+    "li"
+   ],
+   "worst": 0.5706,
+   "worstPair": [
+    "lea",
+    "li"
+   ]
+  },
+  "en:f39d559e01b6": {
+   "flag": null,
+   "members": [
+    "gel",
+    "jell"
+   ],
+   "worst": 0.6097,
+   "worstPair": [
+    "gel",
+    "jell"
+   ]
+  },
+  "en:f3e000c29ab4": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "can",
+    "kan"
+   ],
+   "worst": 0.6514,
+   "worstPair": [
+    "can",
+    "kan"
+   ]
+  },
+  "en:f462f875b83c": {
+   "flag": null,
+   "members": [
+    "pain",
+    "pane"
+   ],
+   "worst": 0.4648,
+   "worstPair": [
+    "pain",
+    "pane"
+   ]
+  },
+  "en:f495196681ae": {
+   "flag": null,
+   "members": [
+    "threw",
+    "through"
+   ],
+   "worst": 0.5066,
+   "worstPair": [
+    "threw",
+    "through"
+   ]
+  },
+  "en:f49da0b44c03": {
+   "flag": null,
+   "members": [
+    "grater",
+    "greater"
+   ],
+   "worst": 0.5742,
+   "worstPair": [
+    "grater",
+    "greater"
+   ]
+  },
+  "en:f52cf15fa992": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "gist",
+    "just"
+   ],
+   "worst": 0.7582,
+   "worstPair": [
+    "gist",
+    "just"
+   ]
+  },
+  "en:f533064156cd": {
+   "flag": null,
+   "members": [
+    "come",
+    "cum"
+   ],
+   "worst": 0.5634,
+   "worstPair": [
+    "come",
+    "cum"
+   ]
+  },
+  "en:f77b3869364e": {
+   "flag": null,
+   "members": [
+    "lo",
+    "low"
+   ],
+   "worst": 0.5008,
+   "worstPair": [
+    "lo",
+    "low"
+   ]
+  },
+  "en:f7e04ca612da": {
+   "flag": null,
+   "members": [
+    "light",
+    "lite"
+   ],
+   "worst": 0.4634,
+   "worstPair": [
+    "light",
+    "lite"
+   ]
+  },
+  "en:f86d0faa0149": {
+   "flag": null,
+   "members": [
+    "arc",
+    "ark"
+   ],
+   "worst": 0.5868,
+   "worstPair": [
+    "arc",
+    "ark"
+   ]
+  },
+  "en:f88a92fd32dc": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "ensure",
+    "insure"
+   ],
+   "worst": 0.6462,
+   "worstPair": [
+    "ensure",
+    "insure"
+   ]
+  },
+  "en:f94776f7382b": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "manner",
+    "manor"
+   ],
+   "worst": 0.6358,
+   "worstPair": [
+    "manner",
+    "manor"
+   ]
+  },
+  "en:f96a96d00fc2": {
+   "flag": null,
+   "members": [
+    "born",
+    "borne"
+   ],
+   "worst": 0.4993,
+   "worstPair": [
+    "born",
+    "borne"
+   ]
+  },
+  "en:f9d8cd498107": {
+   "flag": null,
+   "members": [
+    "straight",
+    "strait"
+   ],
+   "worst": 0.5778,
+   "worstPair": [
+    "straight",
+    "strait"
+   ]
+  },
+  "en:fa54f2e84334": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "loop",
+    "loup",
+    "lupe"
+   ],
+   "worst": 0.8402,
+   "worstPair": [
+    "loop",
+    "lupe"
+   ]
+  },
+  "en:fb7bcad00621": {
+   "flag": null,
+   "members": [
+    "halve",
+    "have"
+   ],
+   "worst": 0.5208,
+   "worstPair": [
+    "halve",
+    "have"
+   ]
+  },
+  "en:fc73b3041693": {
+   "flag": null,
+   "members": [
+    "cell",
+    "sell"
+   ],
+   "worst": 0.6155,
+   "worstPair": [
+    "cell",
+    "sell"
+   ]
+  }
+ },
+ "voice": "en-US-Neural2-E"
+}
