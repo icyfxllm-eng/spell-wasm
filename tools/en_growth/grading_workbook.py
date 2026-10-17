@@ -147,6 +147,48 @@ def collect_rows(seed, n_staged=300):
     return rows
 
 
+def collect_top_ungraded(threshold):
+    """Every staged or low-band candidate scoring >= threshold that nobody has graded
+    yet (not in calibration/en_graded.jsonl or the earlier graded staged sheet)."""
+    from common import zipf_fn
+    from admit import good_sense, pick_glosses
+    zipf = zipf_fn()
+    home = pathlib.Path(os.path.expanduser("~/repos/spell-wasm"))
+    ledger = ROOT / "calibration" / "en_graded.jsonl"
+    graded = {json.loads(l)["word"] for l in ledger.read_text(encoding="utf-8").splitlines() if l.strip()}
+    graded |= {r["word"] for r in csv.DictReader(open(ROOT / "reports" / "en-staged-review-sample-graded.csv", encoding="utf-8"))}
+    sc = json.load(open(ROOT / "assets" / "words" / "en" / "en_difficulty.json"))["scores"]
+    staged = [l.split("\t")[0] for l in (ROOT / "assets" / "words" / "en" / "staged.tsv").read_text(encoding="utf-8").splitlines()[2:] if l.strip()]
+    hw = json.load(open(home / ".corpus-cache" / "en-wikt" / "headwords.json", encoding="utf-8"))
+    low = _low_band_candidates(hw, zipf)
+    low_scores = _score_words(low)
+    rows = []
+    for w in staged:
+        if sc.get(w, 0) >= threshold and w not in graded:
+            rows.append({"word": w, "group": "staged", "score": sc[w]})
+    for w in low:
+        if low_scores.get(w, 0) >= threshold and w not in graded:
+            rows.append({"word": w, "group": "low-band", "score": low_scores[w]})
+    for r in rows:
+        good = [(e["pos"], s) for e in hw.get(r["word"], []) for s in e["s"] if good_sense(e["pos"], s)]
+        r["definition"] = (pick_glosses(good)["glosses"] or [""])[0] if good else ""
+        r["zipf"] = round(zipf(r["word"]), 2)
+        r["current_tier"] = "staged (untiered)" if r["group"] == "staged" else "not in bank"
+    return rows
+
+
+def _low_band_candidates(hw, zipf):
+    """The Zipf 2.0-2.5 Expert-candidate band (D4 amendment): same filters as admission."""
+    from admit import good_sense
+    from common import TIERS, bank_rows, load_cmu
+    cmu = load_cmu()
+    home = pathlib.Path(os.path.expanduser("~/repos/spell-wasm"))
+    scowl = {l.split("/")[0] for l in open(home / ".corpus-cache" / "dicts" / "en" / "en_US.dic", encoding="utf-8", errors="ignore").read().splitlines()[1:]}
+    bank = {w for t in TIERS for w in bank_rows()[t]}
+    return sorted(w for w in hw if w in scowl and len(w) >= 4 and 2.0 <= zipf(w) < 2.5 and w not in bank and w in cmu
+                  and any(good_sense(e["pos"], s) for e in hw[w] for s in e["s"]))
+
+
 def _score_words(words):
     import subprocess
     import tempfile
@@ -163,9 +205,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20261016)
     ap.add_argument("--out-dir", default=str(OUT_HOME))
+    ap.add_argument("--top-ungraded", type=float, metavar="SCORE",
+                    help="grade every ungraded staged/low-band candidate scoring at least SCORE")
     a = ap.parse_args()
-    name = f"en-expert-grading-{a.seed}.xlsx"
-    rows = collect_rows(a.seed)
+    if a.top_ungraded is not None:
+        name = f"en-expert-grading-top-{a.top_ungraded}-{a.seed}.xlsx"
+        rows = collect_top_ungraded(a.top_ungraded)
+    else:
+        name = f"en-expert-grading-{a.seed}.xlsx"
+        rows = collect_rows(a.seed)
     out = pathlib.Path(a.out_dir)
     ordered, key = build_workbook(rows, a.seed, out / name, out / "keys" / f"{name}.KEY.json")
     carried = sum(1 for r in ordered if r.get("carried"))
