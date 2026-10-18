@@ -201,7 +201,13 @@ fn wordgrid_property_10k() {
 ///
 /// A moved digest is only ever acceptable with a reason like this one beside
 /// it: the whole point of the pin is that nobody re-pins it casually.
-pub const GOLDEN: u64 = 0xc2ae_8b84_a4d9_1b74;
+///
+/// Re-pinned 2026-10-17, from 0xc2ae_8b84_a4d9_1b74, on Eric's instruction to
+/// quarantine the Russian Hard row экз through CC-BANK-PURITY (it is an
+/// abbreviation of экземпляр, found by his same-sound review). One row out of
+/// ru Hard is a different pool, so these 500 seeds draw differently. Hold this
+/// pin back to the previous value if that quarantine is reversed.
+pub const GOLDEN: u64 = 0x6db4_6e8f_4975_88c3;
 
 #[test]
 fn wordgrid_determinism() {

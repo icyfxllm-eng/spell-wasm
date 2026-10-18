@@ -2,7 +2,7 @@
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xF46F5AF0DB4EC754
 #tier	medium	0x3F91A00637CB678D
-#tier	hard	0xD3866EB024CC2B73
+#tier	hard	0xDADC99827DAE5945
 #tier	expert	0x4962FBBF21B4DF1C
 автобус	dictionary	ru_RU
 бежать	dictionary	ru_RU
@@ -2710,7 +2710,6 @@
 целых	dictionary	ru_RU
 челси	pending	ru_RU
 чувствуешь	dictionary	ru_RU
-экз	dictionary	ru_RU
 академия	dictionary	ru_RU
 бояться	dictionary	ru_RU
 британский	dictionary	ru_RU

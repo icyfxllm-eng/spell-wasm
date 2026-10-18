@@ -215,14 +215,14 @@
    "voiceMatchesLayer1": true
   },
   "ru": {
-   "bankRows": 6833,
-   "bonusEligibleBankWords": 60,
-   "confirmedSets": 3,
+   "bankRows": 6832,
+   "bonusEligibleBankWords": 58,
+   "confirmedSets": 2,
    "generator": "build_collisions.key_ru@1",
-   "impossibleFilterRemoves": 68,
+   "impossibleFilterRemoves": 66,
    "loopbackFlags": 4,
    "proof": {
-    "equalKeyGroups": 34,
+    "equalKeyGroups": 33,
     "noneByConstructionEligible": false,
     "passes": true,
     "ran": true,
@@ -231,7 +231,7 @@
    },
    "sets": {
     "accent": 4,
-    "true": 30
+    "true": 29
    },
    "status": "verified",
    "voice": "ru-RU-Wavenet-A",

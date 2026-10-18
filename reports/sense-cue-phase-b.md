@@ -83,3 +83,9 @@ Flagged-only sheets (`*-soundalike-flagged-20261017`), all four checks passed:
 - **Grading effect:** "no" sets move to accent and stop being accepted (for example *asked / ast*, *device / devise*, *years / yours*, *are / or / err*).
 - **Still open:** *экз* is an abbreviation in the Russian bank and should be quarantined under CC-BANK-PURITY; not done here.
 - Spelluzzle seeds and its golden board file were re-pinned. Full gate: GATE PASS on the second run (the first failed two random-board e2e checks; the Spelluzzle area passed on its own twice).
+
+## экз quarantined (2026-10-17)
+
+Through the CC-BANK-PURITY path: a signed override (`tools/bank/purity_overrides.csv`, class `abbreviation_or_noise`), the row moved from `assets/words/ru/hard.txt` to `assets/words-quarantine/ru/hard.txt` with a manifest line, `src/word_data.rs` rebuilt, and the Russian ledger and its Hard tier hash updated. `purity_admit` now rejects экз. The Russian sound-alike table drops the экз/экс set (33 sets). Two digest pins that hash the banks were re-pinned with the reason beside them: Spell Search's 500-seed grid golden (`src/wordsearch/tests.rs`) and its e2e copy.
+
+Gate: PURITY gate and selftest pass; the full cargo suite passes. Four full-gate runs each failed exactly one e2e test, a different known-flaky one each time (SpellDoku 4-second timeout, Board Game tap position, human-audio fallback); each passed in other runs or on its own.

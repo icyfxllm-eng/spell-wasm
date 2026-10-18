@@ -15,7 +15,7 @@ CC-SENSE-CUE v1.1 F8. Regenerate with `python3 tools/soundalikes_report.py`.
 | ja | missing | yes | - | 4,979 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | fil | missing | yes | - | 4,047 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | zh | missing | yes | - | 5,810 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| ru | verified | yes | build_collisions.key_ru@1 | 6,833 | 30 | 4 | 3 | 4 | 60 | 68 | pass |
+| ru | verified | yes | build_collisions.key_ru@1 | 6,832 | 29 | 4 | 2 | 4 | 58 | 66 | pass |
 | ar | missing | yes | - | 6,290 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | sw | missing | yes | - | 2,818 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | hi | missing | yes | - | 2,095 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
