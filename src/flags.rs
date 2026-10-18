@@ -58,6 +58,27 @@ pub fn en_retier() -> bool {
     resolve(stored("en_retier").as_deref(), false)
 }
 
+/// CC-IMPOSSIBLE v1 F12 -- the master Impossible flag. **Default OFF.** Nothing
+/// Impossible is offered unless this is on. v1 F12 calls these remote flags; this
+/// module is localStorage only, so turning one on for players needs a build (or a
+/// remote-flag channel, which does not exist yet).
+pub fn impossible() -> bool {
+    resolve(stored("impossible").as_deref(), false)
+}
+
+/// CC-IMPOSSIBLE v1 F12 -- one flag per language (`spell_flag_impossible_<lang>`),
+/// every one **default OFF**. The registry (`crate::impossible`) still applies
+/// the pool, table, release and entitlement gates on top of it.
+pub fn impossible_lang(lang: &str) -> bool {
+    resolve(stored(&format!("impossible_{lang}")).as_deref(), false)
+}
+
+/// CC-IMPOSSIBLE v1.2 M8 -- Impossible Mix. **Default OFF.** It needs the master
+/// flag and at least two qualifying languages as well (`impossible::mix_status`).
+pub fn impossible_mix() -> bool {
+    resolve(stored("impossible_mix").as_deref(), false)
+}
+
 /// F6 "Spell Racing in The Climb" (formerly Ghost racing) — race your best local run. Cross-platform.
 pub fn ghost_racing() -> bool {
     resolve(stored("ghost_racing").as_deref(), true)

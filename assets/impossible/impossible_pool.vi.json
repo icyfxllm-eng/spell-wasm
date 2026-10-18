@@ -1,0 +1,12 @@
+{
+ "lang": "vi",
+ "source": "expert",
+ "bankHash": "0x47629F2740B2B540",
+ "expertRows": 2500,
+ "table": "missing",
+ "removedPurity": 0,
+ "removedSoundalike": 0,
+ "status": "locked",
+ "reason": "table-missing",
+ "words": []
+}

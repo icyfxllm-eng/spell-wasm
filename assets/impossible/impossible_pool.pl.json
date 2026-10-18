@@ -1,0 +1,12 @@
+{
+ "lang": "pl",
+ "source": "expert",
+ "bankHash": "0x966232745ABA6CDE",
+ "expertRows": 2999,
+ "table": "missing",
+ "removedPurity": 0,
+ "removedSoundalike": 0,
+ "status": "locked",
+ "reason": "table-missing",
+ "words": []
+}

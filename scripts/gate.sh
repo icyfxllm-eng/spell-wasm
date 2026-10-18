@@ -164,6 +164,9 @@ python3 tools/en_growth/build_retier.py --check || { echo "GATE FAIL: English re
 echo "== gate: sound-alike report, proof test and voices (CC-SENSE-CUE v1.1 F8, I3, I6)"
 python3 tools/soundalikes_report.py --check || { echo "GATE FAIL: sound-alike report"; exit 1; }
 
+echo "== gate: Impossible pool artifacts current and matching the shared report (CC-IMPOSSIBLE v1 I9, v1.1 A2.5)"
+python3 tools/impossible/build_pools.py --check || { echo "GATE FAIL: Impossible pools"; exit 1; }
+
 echo "== gate: sound-alike tables read only through soundalikes() (CC-SENSE-CUE v1.1 I1)"
 node scripts/soundalike-api-check.mjs --selftest || { echo "GATE FAIL: soundalike-api-check selftest"; exit 1; }
 node scripts/soundalike-api-check.mjs || { echo "GATE FAIL: soundalike-api-check"; exit 1; }

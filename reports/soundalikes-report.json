@@ -7,6 +7,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -23,6 +24,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -39,6 +41,7 @@
    "confirmedSets": 19,
    "generator": "build_collisions.key_en@1",
    "impossibleFilterRemoves": 307,
+   "impossibleFilterRemovesExpert": null,
    "loopbackFlags": 36,
    "proof": {
     "equalKeyGroups": 54,
@@ -62,6 +65,7 @@
    "confirmedSets": 19,
    "generator": "build_collisions.key_en@1+retier",
    "impossibleFilterRemoves": 335,
+   "impossibleFilterRemovesExpert": 8,
    "loopbackFlags": 39,
    "proof": {
     "equalKeyGroups": 61,
@@ -86,6 +90,7 @@
    "confirmedSets": 0,
    "generator": "build_collisions.key_es@1",
    "impossibleFilterRemoves": 9,
+   "impossibleFilterRemovesExpert": 3,
    "loopbackFlags": 1,
    "proof": {
     "equalKeyGroups": 4,
@@ -108,6 +113,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -124,6 +130,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -140,6 +147,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -156,6 +164,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": null,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -172,6 +181,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -188,6 +198,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -204,6 +215,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -220,6 +232,7 @@
    "confirmedSets": 2,
    "generator": "build_collisions.key_ru@1",
    "impossibleFilterRemoves": 66,
+   "impossibleFilterRemovesExpert": 3,
    "loopbackFlags": 4,
    "proof": {
     "equalKeyGroups": 33,
@@ -243,6 +256,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -259,6 +273,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,
@@ -275,6 +290,7 @@
    "confirmedSets": 0,
    "generator": null,
    "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": null,
    "loopbackFlags": 0,
    "proof": {
     "ran": false,

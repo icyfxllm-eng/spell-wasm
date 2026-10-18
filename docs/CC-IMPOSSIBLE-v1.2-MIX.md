@@ -215,3 +215,6 @@ Approximate filtered pool sizes, measured 2026-10-17:
 - **X9** `mix_pool_is_all_expert`: every filtered Expert row of a qualifying language is in its pool; nothing outside its Expert tier is.
 - **X10** `mix_english_needs_retier`: with `en.retier` off, English contributes nothing; with it on, English's pool is drawn from `EN_RETIER_EXPERT` only.
 - **X11** `mix_floor`: a fixture language with 149 filtered rows is left out; 150 is in.
+
+### P7. Status, 2026-10-18: Phase M-A built (flags off)
+SENSE-CUE Phase B made the en, es and ru tables `verified`, so P5's "nothing qualifies" no longer holds. Built pools (`assets/impossible/impossible_pool.<lang>.json`, `tools/impossible/build_pools.py`): English (re-tier) 271, Spanish 2,995, Russian 2,997. Every other language is locked: zh and ja by D4, the rest by a `missing` table. Spanish and Russian need Full access (SpellGame Complete or a regional grant), so on the free tier Mix shows "Needs two Impossible languages" even with every flag on. The registry is `src/impossible.rs`; the picker entry, the notice's strings and play arrive with M-B. See `reports/impossible-phase-a.md`.

@@ -1,0 +1,12 @@
+{
+ "lang": "ar",
+ "source": "expert",
+ "bankHash": "0xE3AB2726CF3EBCAA",
+ "expertRows": 3000,
+ "table": "missing",
+ "removedPurity": 0,
+ "removedSoundalike": 0,
+ "status": "locked",
+ "reason": "table-missing",
+ "words": []
+}

@@ -66,6 +66,8 @@ if command -v python3 >/dev/null 2>&1; then
   python3 tools/soundalikes_report.py --check >/dev/null 2>&1 || failed="$failed soundalike-report"
   # CC-EN-EXPERT-GROWTH F4: the re-tiered English bank must match its sources.
   python3 tools/en_growth/build_retier.py --check >/dev/null 2>&1 || failed="$failed retier-check"
+  # CC-IMPOSSIBLE v1 I9: the Impossible pool artifacts must match the bank and tables.
+  python3 tools/impossible/build_pools.py --check >/dev/null 2>&1 || failed="$failed impossible-pools"
 else
   echo "pre-push: python3 not found — the collision tables went UNCHECKED" >&2
 fi
@@ -83,6 +85,8 @@ if [ -n "$failed" ]; then
       python3 tools/soundalikes_report.py --check 2>&1 | head -12 >&2
     elif [ "$c" = "retier-check" ]; then
       python3 tools/en_growth/build_retier.py --check 2>&1 | head -12 >&2
+    elif [ "$c" = "impossible-pools" ]; then
+      python3 tools/impossible/build_pools.py --check 2>&1 | head -12 >&2
     else
       node "scripts/$c.mjs" 2>&1 | head -12 >&2
     fi

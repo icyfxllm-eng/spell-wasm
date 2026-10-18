@@ -41,7 +41,7 @@ pub fn word_id(word: &str) -> u64 {
 }
 
 /// FNV-1a-64 over each word's 8-byte big-endian ID, in slice order.
-fn compute_list_hash(words: &[&str]) -> u64 {
+pub(crate) fn compute_list_hash(words: &[&str]) -> u64 {
     let mut h = FNV64_OFFSET;
     for w in words {
         for b in word_id(w).to_be_bytes() {

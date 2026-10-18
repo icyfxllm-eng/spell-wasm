@@ -81,7 +81,7 @@ pub(crate) fn retier_active() -> bool {
 /// because the word bank has no AppState in reach; it is the same source
 /// `settings::load_prefs` reads.
 #[cfg(not(test))]
-fn junior_profile() -> bool {
+pub(crate) fn junior_profile() -> bool {
     let kid = crate::storage::get_json::<crate::model::Prefs>(crate::model::PREFS_KEY)
         .map(|p| p.kid)
         .unwrap_or(false);
@@ -94,7 +94,7 @@ thread_local! {
 }
 
 #[cfg(test)]
-fn junior_profile() -> bool {
+pub(crate) fn junior_profile() -> bool {
     JUNIOR_TEST.with(|c| c.get())
 }
 

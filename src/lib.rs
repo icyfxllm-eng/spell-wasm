@@ -101,6 +101,7 @@ mod haptics;
 mod hangul;
 mod homophones;
 mod soundalikes;
+mod impossible; // CC-IMPOSSIBLE v1.2 Mix Phase A -- the registry and pool artifacts (flags off)
 mod i18n;
 mod importer;
 mod jamo;
