@@ -364,6 +364,17 @@ export async function run(browser, base, suite) {
           const dt = Date.now() - t0;
           if (tap) {
             tapRuns++; tappedMax = Math.max(tappedMax, dt);
+            // The run is over when the engine says so, but the pieces are drawn a frame or two later (the walk's
+            // data-moving clears and the last layout lands); wait for that settle, then measure and assert.
+            await page.waitForFunction(() => {
+              if (document.getElementById('bgPieces').hasAttribute('data-moving')) return false;
+              const st = JSON.parse(window.__spelltest.boardgameState());
+              const tiles = [...document.querySelectorAll('#bgBoard .bg-t')].map((t) => t.getBoundingClientRect());
+              return [...document.querySelectorAll('#bgPieces .bg-pc')].every((p, i) => {
+                const a = p.getBoundingClientRect(), t = tiles[st.pos[i]];
+                return Math.hypot((a.left + a.right) / 2 - (t.left + t.right) / 2, (a.top + a.bottom) / 2 - (t.top + t.bottom) / 2) / a.width < 1.6;
+              });
+            }, null, { timeout: 3000, polling: 'raf' }).catch(() => {});
             const off = await piecesOnTiles();
             assert(off.every((d) => d < 1.6), `after a tap a piece is not on its engine tile: ${off.map((d) => d.toFixed(2))}`);
           } else {

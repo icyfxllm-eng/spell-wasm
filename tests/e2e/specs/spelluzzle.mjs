@@ -80,8 +80,27 @@ export async function run(browser, base, suite) {
       assert(m.n > 0 && m.text === '', `an untouched board shows text: ${JSON.stringify(m.text)}`);
       assert(m.labels.every((l) => /^Rune \d+$/.test(l)), `labels leak or are off: ${JSON.stringify(m.labels.slice(0, 4))}`);
       const ws = await words(page);
-      const html = await page.evaluate(() => document.getElementById('szScreen').innerHTML.toLowerCase());
-      for (const w of ws) assert(!html.includes(`>${w}<`) && !html.includes(`"${w}"`), `answer ${w} is in the markup`);
+      // Where an answer could leak: a cell's text, or an attribute that carries content (labels, titles, data-*).
+      // Not "any quoted occurrence in the markup": the screen legitimately says "easy" (tier) and aria-hidden="true"
+      // is markup, so a random board whose answer was "easy" or "true" failed this for no reason. data-state is a
+      // state keyword, not content.
+      const carried = await page.evaluate(() => {
+        const out = [];
+        for (const e of document.querySelectorAll('#szScreen *')) {
+          if (e.children.length === 0 && e.closest('#szBoard')) out.push(e.textContent.trim().toLowerCase());
+          for (const at of e.attributes) {
+            if (at.name === 'data-state') continue;
+            if (!e.closest('#szBoard')) continue;
+            const v = at.value.trim().toLowerCase();
+            // Descriptive attributes are matched as whole words; data-* values only when they ARE the word.
+            // (cell labels are already pinned to /^Rune \d+$/ above, and "rune" is a plausible answer word)
+            if (['aria-label', 'aria-description', 'title', 'alt'].includes(at.name)) { if (!e.classList.contains('sz-cell')) out.push(...v.split(/[^\p{L}]+/u)); }
+            else if (at.name.startsWith('data-')) out.push(v);
+          }
+        }
+        return out;
+      });
+      for (const w of ws) assert(!carried.includes(w), `answer ${w} is carried by a board cell (text or attribute)`);
     } finally { await ctx.close(); }
   });
 

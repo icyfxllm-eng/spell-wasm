@@ -750,6 +750,9 @@ export async function run(browser, base, suite) {
     }
   });
 
+  // The badge waits only bound a FAILURE: a pass returns the moment the condition holds. 4 s was tight when the gate
+  // runs ~420 pages on a loaded machine (meaning fetch + two settle reads), so the budget is generous.
+  const BADGE_MS = 20000;
   // v1.2 D15 / I12 — the legend offers a definition card where the language's
   // definition pool is live, and a definition that would spell the symbol is
   // not shown at all.
@@ -766,7 +769,7 @@ export async function run(browser, base, suite) {
         body: JSON.stringify({ pos: 'noun', definition: `a kind of ${w} you can see`, example: '' }),
       }));
       await page.click('#sdLegend [data-sd-def="1"]');
-      await page.waitForFunction(() => !/^\s*$/.test(document.getElementById('sdBadge').textContent), null, { timeout: 4000 });
+      await page.waitForFunction(() => !/^\s*$/.test(document.getElementById('sdBadge').textContent), null, { timeout: BADGE_MS });
       // Wait for the badge to SETTLE, not for 300ms. Non-blank is not the same
       // as finished: the card can show an interim string while the meaning
       // fetch is in flight, and reading during that window reads the wrong
@@ -787,7 +790,7 @@ export async function run(browser, base, suite) {
           return last === t ? t : false;
         },
         null,
-        { timeout: 4000, polling: 150 },
+        { timeout: BADGE_MS, polling: 150 },
       ).then((h) => h.jsonValue());
       // The mocked definition deliberately SPELLS the word, and the app is
       // supposed to reject it (spelldoku_ui.rs only shows a definition that
@@ -808,7 +811,7 @@ export async function run(browser, base, suite) {
         body: JSON.stringify({ pos: 'noun', definition: 'something you might find at home', example: '' }),
       }));
       await page.click('#sdLegend [data-sd-def="1"]');
-      await page.waitForFunction(() => /home/.test(document.getElementById('sdBadge').textContent), null, { timeout: 4000 });
+      await page.waitForFunction(() => /home/.test(document.getElementById('sdBadge').textContent), null, { timeout: BADGE_MS });
     } finally { await ctx.close(); }
   });
 }
