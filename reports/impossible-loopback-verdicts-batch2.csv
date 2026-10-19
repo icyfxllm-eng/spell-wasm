@@ -1,0 +1,748 @@
+﻿lang,spoken_word,asr_heard,flagged_against,verdict,kind,cause,note
+fr,abandonnent,Abandonne.,abandonne,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,abandonné,Abandonner,abandonner,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,abandonnée,Abandonner,abandonner,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,abandonnées,Abandonner,abandonner,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,académiques,académique,académique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,accueille,accueil,accueil,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,activités,activité,activité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,administratives,administrative,administrative,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,administrer,administré,administré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,adversaires,adversaire,adversaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,affectées,affecté,affecté,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,agglomérations,agglomération,agglomération,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,agricoles,Agricole,agricole,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,aidée,aider,aider,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,allemandes,Allemande.,allemande,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,allemands,Allemand,allemand,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,alliée,allié,allié,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,allures,Allure,allure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,amoureuses,amoureuse,amoureuse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,américaines,américaine,américaine,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,américains,américain,américain,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,anciennes,ancienne,ancienne,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,angoisses,Angoisse.,angoisse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,antérieures,antérieure,antérieure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,antérieurs,antérieure,antérieure,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,apparement,Apparemment.,apparemment,REJECT,,HYGIENE,apparement is a misspelling of apparemment — remove from bank (PURITY) | orig: already in rules net
+fr,apparitions,apparition,apparition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,appelaient,appelé,appelé,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,applications,Application,application,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,apportez,Apporter,apporter,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,approchent,Approche,approche,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,architectes,Architecte,architecte,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,archéologiques,archéologique,archéologique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,arrivaient,arriver,arriver,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,arrêtées,arrêtez !,arrêtez,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,artistiques,artistique,artistique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,associations,Association,association,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,assurait,Assurer,assurer,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,attributions,attribution,attribution,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,autorités,Autorité,autorité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,aventures,Aventure,aventure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,avertissements,Avertissement,avertissement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,axé,Accès,accès,KEEP,accent,SOUNDALIKE,[akse] vs [aksɛ]; é/è merger
+fr,barons,baron,baron,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,batailles,bataille,bataille,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,blacks,Black,black,KEEP,true,SOUNDALIKE,true homophone; anglicism used as an ethnic label — Spell Jr exclusion | orig: auto: differs only by silent ending
+fr,blessures,blessure,blessure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,bouchée,Boucher,boucher,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,bravoure,Bravo.,bravo,REJECT,,ASR_UNRELATED,
+fr,britanniques,britannique,britannique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,buteurs,buteur,buteur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,bâtiments,bâtiment,bâtiment,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,cages,cash,cash,REJECT,,ASR_UNRELATED,English drift
+fr,campagnes,Campagne.,campagne,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,capacités,Capacité,capacité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,caractères,Caractère,caractère,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,catalogue,Catalogues,catalogues,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,catholiques,catholique,catholique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,centrales,centrale,centrale,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,certaines,certain,certain,REJECT,,AUTO_RULE_WRONG,feminine -e makes the n audible: [sɛʁtɛn] vs [sɛʁtɛ̃] | orig: auto: differs only by silent ending
+fr,chaleurs,Chaleur,chaleur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,championnats,Championnat,championnat,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,champions,Champion,champion,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,changée,Changer.,changer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,chapelles,Chapelle,chapelle,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,cherchent,Cherche.,cherche,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,cheveu,Cheveux,cheveux,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,chirurgiens,Chirurgien,chirurgien,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,chuter,Chuté,chuté,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,chuté,Chuter,chuter,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,cimetières,Cimetière,cimetière,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,cinémas,cinéma,cinéma,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,classements,Placement,placement,REJECT,,ASR_NEAR,| orig: already in rules net
+fr,classiques,Classique.,classique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,collectionneurs,Collectionneur,collectionneur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,collections,Collection,collection,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,commandes,commande,commande,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,commentaires,Commentaire,commentaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,commerces,commerce,commerce,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,commerciale,commercial,commercial,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,commerciales,commercial,commercial,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,commissions,Commission,commission,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,communications,Communication,communication,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,communistes,communiste,communiste,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,complexes,complexe,complexe,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,compliqués,compliqué,compliqué,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,complètent,Complètement.,complètement,REJECT,,ASR_NEAR,[kɔ̃plɛt] vs [kɔ̃plɛtmɑ̃] | orig: already in rules net
+fr,complétée,Compléter,compléter,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,comportements,comportement,comportement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,comportent,comporte,comporte,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,composent,compose,compose,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,compositeurs,compositeur,compositeur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,compositions,Composition,composition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,compétence,compétences,compétences,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,compétitions,Compétition,compétition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,comtes,Compte,compte,KEEP,true,SOUNDALIKE,comte/compte/conte all [kɔ̃t] — auto missed it
+fr,concentrations,Concentration,concentration,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,conceptions,conception,conception,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,concernait,Concerné,concerné,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,conclus,Compris.,compris,REJECT,,ASR_NEAR,
+fr,conditions,Condition,condition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,conférences,Conférence,conférence,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,connaissances,connaissance,connaissance,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,consacrer,consacré,consacré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,consacrée,consacré,consacré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,conseillers,Conseiller,conseiller,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,conservée,Conserver,conserver,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,conservés,Conserver,conserver,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,considérer,Considéré,considéré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,considérée,Considéré,considéré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,considérées,Considéré,considéré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,considérés,Considéré,considéré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,constante,Constant.,constant,REJECT,,AUTO_RULE_WRONG,[kɔ̃stɑ̃t] vs [kɔ̃stɑ̃] — final t audible — rules net lists this word: confirm it is not paired with constant | orig: auto: differs only by silent ending; already in rules net
+fr,constantes,Constant.,constant,REJECT,,AUTO_RULE_WRONG,[kɔ̃stɑ̃t] vs [kɔ̃stɑ̃] — final t audible | orig: auto: differs only by silent ending
+fr,constants,Constant.,constant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,constituent,Constitue.,constitue,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,constitué,Constituer,constituer,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,constituée,Constituer,constituer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,constituées,Constituer,constituer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,constructions,Construction,construction,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,construites,Construite,construite,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,construits,construit,construit,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,conséquences,Conséquence,conséquence,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,contemporains,Contemporain,contemporain,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,contenue,Continue.,continue,REJECT,,ASR_NEAR,[kɔ̃t(ə)ny] vs [kɔ̃tiny]
+fr,contenues,CONTENU,contenu,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,contextes,Contexte,contexte,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,continuent,Continue.,continue,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,contrôlés,Contrôler,contrôler,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,conçues,Conçu,conçu,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,critiques,critique,critique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,croissants,croissant,croissant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,créatures,Créature,créature,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,crétins,Crétin,crétin,KEEP,true,SOUNDALIKE,true homophone; insult — Spell Jr exclusion | orig: auto: differs only by silent ending; already in rules net
+fr,culturelles,culturelle,culturelle,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,cérémonies,Cérémonie,cérémonie,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,demandent,demande,demande,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,dernières,Dernière,dernière,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,dessinées,dessiner,dessiner,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,destinées,Destinée,destinée,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,deviennent,devienne,devienne,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,difficiles,difficile,difficile,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,difficultés,difficulté,difficulté,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,différences,différence,différence,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,différend,différent,différent,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,différends,différent,différent,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,différentes,Différente,différente,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,différents,différent,différent,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,dimensions,Dimension,dimension,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,dirigeants,Dirigeant,dirigeant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,disciplines,Discipline,discipline,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,discussions,Discussion,discussion,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,disparues,Disparu.,disparu,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,disponibles,disponible,disponible,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,dispositions,Disposition,disposition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,disputent,Dispute,dispute,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,distinct,Distant,distant,REJECT,,ASR_NEAR,
+fr,distinctes,Distinct,distinct,KEEP,accent,SOUNDALIKE,distinct is said both [distɛ̃] and [distɛ̃kt] | orig: auto: differs only by silent ending
+fr,divisions,Division,division,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,domestiques,domestique,domestique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,douzième,deuxième,deuxième,REJECT,,ASR_NEAR,
+fr,décisions,décision,décision,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,déclara,Déclare,déclare,REJECT,,ASR_NEAR,passé simple -a is audible
+fr,découvertes,découverte,découverte,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,découvrent,découvre,découvre,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,départemental,départementale,départementale,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,départements,département,département,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,déplacements,déplacement,déplacement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,déplacée,déplacer,déplacer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,déterminer,déterminé,déterminé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,déterminée,déterminé,déterminé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,déterminées,Déterminé.,déterminé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,détruites,détruite,détruite,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,développent,développe,développe,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,développé,développer,développer,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,développée,développer,développer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,développées,développer,développer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,effectuent,Effectue.,effectue,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,emplacements,emplacement,emplacement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,engueuler,Anglais,anglais,REJECT,,ASR_UNRELATED,vulgar register — Spell Jr exclusion
+fr,ennemies,Ennemi,ennemi,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,ensembles,ensemble.,ensemble,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,ensuit,Ensuite.,ensuite,REJECT,,AUTO_RULE_WRONG,[ɑ̃sɥi] vs [ɑ̃sɥit] | orig: auto: differs only by silent ending
+fr,entourer,Entouré.,entouré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,entourés,Entouré,entouré,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,entreprises,entreprise,entreprise,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,entres,entre.,entre,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,envole,En vol.,envol,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,envoyait,Envoyez.,envoyez,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,espagnole,Espagnol,espagnol,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,espagnols,Espagnol,espagnol,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,esthétiques,esthétique,esthétique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,européennes,européenne,européenne,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,européens,Européen,européen,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,exemplaire,exemplaires,exemplaires,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,exemplaires,exemplaire,exemplaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,expositions,Exposition,exposition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,expériences,expérience,expérience,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,fabriquées,Fabriquer,fabriquer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,favorables,Favorable,favorable,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,festivals,Festival,festival,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,financiers,financier,financier,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,financières,financière,financière,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,fleuves,fleuve,fleuve,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,fonctionnait,fonctionner,fonctionner,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,fondateurs,fondateur,fondateur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,fondations,Fondation,fondation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,formations,Formation,formation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,fragments,Fragment,fragment,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,francophones,francophone,francophone,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,françaises,Française,française,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,frontières,Frontière,frontière,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,fréquentes,fréquente,fréquente,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,gant,non,non,REJECT,,ASR_UNRELATED,monosyllable
+fr,gland,Blanc !,blanc,REJECT,,ASR_NEAR,monosyllable
+fr,gouvernements,GOUVERNEMENT,gouvernement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,grenouilles,Grenouille,grenouille,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,générales,Général,général,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,générations,Génération,génération,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,génériques,Générique,générique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,géographiques,géographique,géographique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,habituée,habitué,habitué,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,heureuses,heureuse.,heureuse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,histoires,histoire,histoire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,historiques,historique,historique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,hivers,Hiver,hiver,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,hypothèses,hypothèse,hypothèse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,identifié,Identifier,identifier,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,identifiés,Identifier,identifier,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,implications,implication,implication,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,importantes,Importante,importante,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,importants,important,important,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,importé,Importer,importer,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,importés,Importer,importer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,indigènes,Indigène,indigène,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,industriel,industrielle,industrielle,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,industrielles,industrielle,industrielle,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,industriels,industrielle,industrielle,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,indépendantistes,indépendantiste.,indépendantiste,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,indépendants,Indépendant,indépendant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,informations,information,information,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,infrastructures,Infrastructure,infrastructure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,inférieure,inférieur,inférieur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,initiés,initier,initier,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,inquiètent,Inquiète !,inquiète,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,institutions,Institution,institution,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,instruments,Instrument,instrument,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,intacte,intact,intact,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,intelligentes,intelligente,intelligente,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,intermédiaires,Intermédiaire,intermédiaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,internationale,international,international,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,internationales,international,international,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,internationaux,international,international,REJECT,,ASR_NEAR,-aux [o] vs -al
+fr,internaute,Internet,internet,REJECT,,ASR_NEAR,
+fr,intitulée,Intitulé,intitulé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,intrigues,intrigue,intrigue,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,intègrent,Intègre,intègre,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,intérieure,Intérieur,intérieur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,jouaient,Jouer,jouer,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,journalistes,journaliste,journaliste,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,juridictions,Juridiction,juridiction,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,juridiques,juridique,juridique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,kilomètres,Kilomètre,kilomètre,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,laissées,Laissez,laissez,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,lances,Lance.,lance,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,lanceurs,Lancer,lancer,REJECT,,ASR_NEAR,[lɑ̃sœʁ] vs [lɑ̃se]
+fr,langages,Langage,langage,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,lesquelles,lesquels,lesquels,KEEP,true,SOUNDALIKE,both [lekɛl] — auto missed it
+fr,limitent,Limite,limite,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,lisais,lisez,lisez,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers | orig: already in rules net
+fr,lisée,lisez,lisez,KEEP,true,SOUNDALIKE,"true homophone with lisez, but lisée looks like a non-headword — check (PURITY) | orig: already in rules net"
+fr,littéraires,littéraire,littéraire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,logiciels,logiciel,logiciel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,majoritaires,majoritaire,majoritaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,manifestations,Manifestation,manifestation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,manipulations,Manipulation,manipulation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,mannequins,mannequin,mannequin,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,marchands,Marchand,marchand,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,marraine,Marine,marine,REJECT,,ASR_NEAR,[maʁɛn] vs [maʁin]
+fr,massives,massive,massive,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,masson,maçon,maçon,KEEP,true,SOUNDALIKE,"true homophone, but Masson is a surname — proper noun (PURITY)"
+fr,maçons,maçon,maçon,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,meilleure,meilleur,meilleur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,meilleures,meilleur,meilleur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,meilleurs,meilleur,meilleur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,melon,Non.,non,REJECT,,ASR_UNRELATED,
+fr,menacées,menacé,menacé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,mensuels,mensuel,mensuel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,mentionné,Mentionner,mentionner,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,militaires,militaire,militaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,minier,mini,mini,REJECT,,AUTO_RULE_WRONG,[minje] vs [mini] | orig: auto: differs only by silent ending
+fr,ministres,ministre,ministre,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,minuscules,minuscule,minuscule,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,modifications,Modification,modification,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,modifiées,Modifier.,modifier,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,montagnes,montagne,montagne,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,montées,monter,monter,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,monuments,Monument,monument,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,motards,Motard,motard,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,mouvements,Mouvement,mouvement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,municipale,municipal,municipal,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,municipales,municipal,municipal,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,munis,mini,mini,REJECT,,ASR_NEAR,[myni] vs [mini]
+fr,musicales,musical,musical,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,musiciens,Musicien,musicien,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,médailles,médaille,médaille,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,nationale,national,national,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,nationales,national,national,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,nationaux,National,national,REJECT,,ASR_NEAR,-aux [o] vs -al
+fr,naturelle,naturel,naturel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,naturelles,naturel,naturel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,nouvelles,Nouvelle,nouvelle,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,nuisibles,nuisible,nuisible,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,numériques,numérique,numérique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,nécessaires,nécessaire,nécessaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,objectifs,objectif,objectif,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,occasions,occasion,occasion,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,officielle,officiel,officiel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,officiels,officiel,officiel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,officiers,officier,officier,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,olympiques,Olympique,olympique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,opérations,Opération,opération,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,oranges,Orange,orange,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,organisations,organisation,organisation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,organisée,Organiser,organiser,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,organisés,organisé.,organisé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,originale,original,original,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,originales,original,original,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,pacifiques,Pacifique,pacifique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,paragraphes,Paragraphe,paragraphe,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,parallèle,Parallèles,parallèles,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,paroisses,paroisse,paroisse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,partenaires,partenaire,partenaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,participants,Participant,participant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,participent,participe,participe,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,participé,participer,participer,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,particuliers,Particulier,particulier,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,partielles,Partiel,partiel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,partiels,Partiel,partiel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,paré,Bye !,bye,REJECT,,ASR_UNRELATED,English drift
+fr,performances,performance,performance,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,permanentes,permanente,permanente,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,personnages,Personnage,personnage,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,personnalités,Personnalité,personnalité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,personnelle,personnel,personnel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,personnelles,personnel,personnel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,personnels,personnel,personnel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,personnes,personne,personne,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,persuader,Persuadé,persuadé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,persuadée,Persuadé,persuadé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,physiques,physique,physique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,phénomènes,Phénomène,phénomène,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,poings,Poing !,poing,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,policiers,Policier,policier,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,politiques,politique,politique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,poney,Bonne.,bonne,REJECT,,ASR_UNRELATED,
+fr,populaires,populaire,populaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,populations,Population,population,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,portraits,Portrait,portrait,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,positions,Position.,position,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,possibilités,possibilité,possibilité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,possibles,possible,possible,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,possèdent,possède,possède,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,possédait,posséder,posséder,KEEP,accent,SOUNDALIKE,-ait/-ais [ɛ] vs -é/-er/-ez [e]; merged for many speakers
+fr,possédé,posséder,posséder,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,pousses,Pousse,pousse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,poutre,Pote,pote,REJECT,,ASR_NEAR,
+fr,pratiques,pratique,pratique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,premières,première,première,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,pressée,pressé,pressé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,pressés,pressé,pressé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,primaires,Primaire,primaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,princesses,Princesse,princesse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,principale,principal,principal,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,principales,principal,principal,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,principes,principe,principe,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,prisonniers,prisonnier,prisonnier,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,probabilités,Probabilité,probabilité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,problèmes,problème,problème,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,procédures,procédure,procédure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,producteurs,Producteur,producteur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,productions,production,production,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,professeure,Professeur,professeur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,professeurs,Professeur,professeur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,professionnelle,professionnel,professionnel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,professionnels,professionnel,professionnel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,programmes,programme,programme,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,proportion,Proportions,proportions,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,proposent,Propose,propose,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,proposez,Proposé,proposé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,propositions,Proposition,proposition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,propriétaires,propriétaire,propriétaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,propriétés,Propriété,propriété,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,provinces,province,province,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,précipiter,précipité,précipité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,précédentes,précédente,précédente,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,précédents,précédent,précédent,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,préparations,Préparation,préparation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,présentations,présentation,présentation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,présentent,présente,présente,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,présentes,présente,présente,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,prêtent,Prête !,prête,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,publications,Publication,publication,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,publient,Publie,publie,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,publiques,public,public,KEEP,true,SOUNDALIKE,publiques/public both [pyblik] — auto missed it
+fr,puissants,puissant,puissant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,pêches,Pêche !,pêche,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,qualifications,Qualification.,qualification,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,qualifiées,qualifier,qualifier,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,qualifiés,qualifier,qualifier,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,questions,Question,question,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,quitta,quitte,quitte,REJECT,,ASR_NEAR,passé simple -a is audible
+fr,radiations,Radiation,radiation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,rapprochent,Rapproche,rapproche,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,rassurez,Rassurer,rassurer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,rattrapé,rattraper,rattraper,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,recherches,Recherche.,recherche,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,refais,refait,refait,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,relations,Relation,relation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,relatives,Relative,relative,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,reliefs,Relief,relief,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,religieuses,Religieuse,religieuse,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,remarquables,Remarquable !,remarquable,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,remarquée,remarquer,remarquer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,remorque,Remarque,remarque,REJECT,,ASR_NEAR,
+fr,remplacent,Remplace.,remplace,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,remplissent,Remplace.,remplace,REJECT,,ASR_UNRELATED,
+fr,remèdes,remède,remède,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,rencontrent,rencontre,rencontre,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,rencontres,rencontre,rencontre,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,rencontré,rencontrer,rencontrer,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,représentants,représentant,représentant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,représentations,Représentation,représentation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,représentent,représente,représente,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,responsables,responsable,responsable,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,ressources,Ressource,ressource,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,restaurants,Restaurant,restaurant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,retrouvent,retrouve,retrouve,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,retrouves,retrouve,retrouve,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,revoit,Revois !,revois,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,romane,Roman,roman,REJECT,,AUTO_RULE_WRONG,[ʁɔman] vs [ʁɔmɑ̃] | orig: auto: differs only by silent ending
+fr,ruralités,Ruralité,ruralité,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,réactions,Réaction,réaction,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,réalises,réalise,réalise,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,réalisées,réaliser,réaliser,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,récompenses,Récompense,récompense,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,références,Référence,référence,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,régiments,Régiment,régiment,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,régionale,Régional,régional,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,régionales,Régional,régional,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,réjouit,Réjouis !,réjouis,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,rénover,Rénové,rénové,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,résidences,résidence,résidence,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,résistances,résistance,résistance,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,résultats,Résultat,résultat,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,saines,Saine,saine,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,salades,salade,salade,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,salauds,Salaud !,salaud,KEEP,true,SOUNDALIKE,true homophone; profanity — Spell Jr exclusion | orig: auto: differs only by silent ending; already in rules net
+fr,satellites,satellite,satellite,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,savoirs,savoir,savoir,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,scientifiques,scientifique,scientifique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,scolaires,Scolaire,scolaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sculptures,Sculpture,sculpture,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,secondaires,Secondaire,secondaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,secoue,secours,secours,REJECT,,ASR_NEAR,[səku] vs [s(ə)kuʁ]; its rules-net entry must be a different pair | orig: already in rules net
+fr,secrétaires,Secrétaire,secrétaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,seigneurs,Seigneur,seigneur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sels,celles,celles,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,sembles,semble,semble,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sensibles,sensible,sensible,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sentiments,sentiment,sentiment,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,sets,SET,set,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,similaires,similaire,similaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sin,Signe,signe,REJECT,,HYGIENE,sin is not a French headword
+fr,situations,Situation,situation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,solutions,Solution.,solution,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,souveraine,Souverain,souverain,REJECT,,AUTO_RULE_WRONG,[suvʁɛn] vs [suvʁɛ̃] — rules net lists this word: confirm it is not paired with souverain | orig: auto: differs only by silent ending; already in rules net
+fr,soviétiques,soviétique,soviétique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,spectacles,spectacle,spectacle,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sportives,sportive,sportive,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,spéciales,spécial,spécial,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,spécialistes,spécialiste,spécialiste,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,spécialisée,spécialisé,spécialisé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,spécifiques,spécifique,spécifique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,standards,Standard,standard,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,stands,Stand.,stand,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,statu,Statue,statue,KEEP,true,SOUNDALIKE,"statue = statu, but statu only exists inside 'statu quo' — not a headword (PURITY) | orig: auto: differs only by silent ending"
+fr,structures,structure,structure,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,subies,Subis !,subis,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,subsistent,subsiste,subsiste,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,successeurs,Successeur,successeur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,suffisants,suffisant.,suffisant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,suivantes,Suivante,suivante,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,supplémentaires,supplémentaire,supplémentaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,supérieure,Supérieur,supérieur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,supérieures,supérieur,supérieur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,supérieurs,Supérieur,supérieur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,susceptibles,susceptible,susceptible,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,symboliques,Symbolique,symbolique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,sélections,Sélection.,sélection,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,séminaires,Séminaire,séminaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,techniques,technique,technique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,technologies,Technologie,technologie,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,telecom,Télécom,télécom,KEEP,true,SOUNDALIKE,true homophone; unaccented spelling of télécom (PURITY) | orig: auto: differs only by silent ending; already in rules net
+fr,températures,température,température,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,tendres,Tandis.,tandis,REJECT,,ASR_NEAR,
+fr,tentatives,Tentative,tentative,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,terminent,Termine.,termine,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,terminées,Terminé.,terminé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,terminés,Terminé.,terminé,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,terrestres,terrestre,terrestre,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,territoires,Territoire,territoire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,thématiques,thématique,thématique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,tombait,Tombe !,tombe,REJECT,,ASR_NEAR,[tɔ̃bɛ] vs [tɔ̃b]
+fr,touristiques,Touristique,touristique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,tournai,Tourne,tourne,REJECT,,ASR_NEAR,[tuʁne] vs [tuʁn]
+fr,traditionnelle,Traditionnel,traditionnel,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,traditionnels,Traditionnel,traditionnel,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,traditions,Tradition,tradition,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,traductions,Traduction,traduction,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,traitements,traitement,traitement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,transformé,Transformer,transformer,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,transformée,Transformer,transformer,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,transports,Transport,transport,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,transportés,Transporter,transporter,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,travaille,travail,travail,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,travaillent,travail,travail,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,travaillez,Travailler,travailler,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,travaillé,Travailler,travailler,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,traversée,traverser,traverser,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it | orig: already in rules net
+fr,traîne,train,train,REJECT,,AUTO_RULE_WRONG,[tʁɛn] vs [tʁɛ̃] | orig: auto: differs only by silent ending
+fr,téléchargé,télécharger,télécharger,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,télévisé,télévisée,télévisée,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,témoignages,témoignage,témoignage,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,témoignent,témoigne,témoigne,KEEP,true,SOUNDALIKE,silent -ent — auto missed it
+fr,universitaires,universitaire,universitaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,universités,université,université,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,utilisations,Utilisation,utilisation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,utilisent,Utilise.,utilise,KEEP,true,SOUNDALIKE,silent -ent — auto missed it | orig: already in rules net
+fr,utilises,Utilise.,utilise,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,vainqueurs,vainqueur,vainqueur,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,vante,Vente.,vente,KEEP,true,SOUNDALIKE,vante/vente both [vɑ̃t] — auto missed it
+fr,variations,Variation,variation,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,versée,verser,verser,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,versés,verser,verser,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,victoires,victoire,victoire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,vieilli,Vieille !,vieille,REJECT,,ASR_NEAR,[vjeji] vs [vjɛj]
+fr,violences,violence,violence,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,volontaires,Volontaire,volontaire,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,volontés,volonté,volonté,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,véhicules,véhicule,véhicule,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,vétérans,Vétéran,vétéran,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,vêtements,Vêtement,vêtement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,économiques,économique,économique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,écrivains,Écrivain,écrivain,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,élargi,Élargie,élargie,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,électriques,électrique,électrique,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,éloignées,Éloigner,éloigner,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,émissions,émission,émission,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,éprouvé,Éprouver,éprouver,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,établissements,établissement,établissement,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending; already in rules net
+fr,étrangères,étrangère,étrangère,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,étudiants,étudiant,étudiant,KEEP,true,SOUNDALIKE,silent inflection | orig: auto: differs only by silent ending
+fr,étudiée,étudier,étudier,KEEP,true,SOUNDALIKE,same sound (é/er/ée/ez or silent letters) — auto missed it
+fr,évidement,Évidemment.,évidemment,REJECT,,ASR_NEAR,[evidmɑ̃] vs [evidamɑ̃]
+de,Arbeitern,Arbeiten,arbeiten,REJECT,,ASR_NEAR,-ern [ɐn] vs -en [ən]
+de,Bäder,wieder,wieder,REJECT,,ASR_UNRELATED,
+de,Computern,Computer,Computer,REJECT,,ASR_NEAR,dative -n audible
+de,Endstand,Entstand,entstand,KEEP (borderline),accent,SOUNDALIKE,segments identical [ɛntʃtant] via final devoicing; only stress differs; also a case pair
+de,Expertin,Experten,Experten,REJECT,,ASR_NEAR,-in vs -en
+de,Gunst,Kunst,Kunst,REJECT,,ASR_NEAR,g/k onset
+de,Ligen,liegen,liegen,KEEP,true,SOUNDALIKE,both [ˈliːɡn̩]; also a case pair
+de,Prosa,Pause,pause,REJECT,,ASR_UNRELATED,
+de,Prämie,Premier,Premier,REJECT,,ASR_UNRELATED,
+de,Seide,Seite,Seite,KEEP (borderline),accent,SOUNDALIKE,d/t distinct in standard; merged in Saxon/Southern lenition
+de,Wahrung,Warum?,warum,REJECT,,ASR_UNRELATED,
+de,Wales,Weils!,weils,REJECT,,HYGIENE,proper noun (PURITY)
+de,Wucht,Wort,Wort,REJECT,,ASR_UNRELATED,
+de,bayrischen,Bayerischen,bayerischen,KEEP,variant,VARIANT_SPELLING,two valid spellings of one word — accept both
+de,bekannter,Bekannte,bekannte,REJECT,,ASR_NEAR,-er [ɐ] vs -e [ə]
+de,bergab,Back up.,Backup,REJECT,,ASR_UNRELATED,English drift
+de,bestimmten,Bestimmen,bestimmen,REJECT,,ASR_NEAR,
+de,bezeichneten,Bezeichnen,bezeichnen,REJECT,,ASR_NEAR,
+de,bliebe,Liebe,liebe,REJECT,,ASR_NEAR,
+de,deutscher,Deutsche,deutsche,REJECT,,ASR_NEAR,-er [ɐ] vs -e [ə]
+de,dringt,bringt,bringt,REJECT,,ASR_NEAR,
+de,entscheidend,Entscheiden,entscheiden,REJECT,,ASR_NEAR,final -d [t] lost
+de,erschienenen,Erschienen,erschienen,REJECT,,ASR_NEAR,
+de,innerer,innere,innere,REJECT,,ASR_NEAR,-er [ɐ] vs -e [ə]
+de,komischer,Komische,komische,REJECT,,ASR_NEAR,-er [ɐ] vs -e [ə]
+de,kürzen,kurzen,kurzen,REJECT,,ASR_NEAR,ü vs u
+de,nationaler,Nationale,nationale,REJECT,,ASR_NEAR,-er [ɐ] vs -e [ə]
+de,potentiellen,Potenziellen,potenziellen,KEEP,variant,VARIANT_SPELLING,old t vs reformed z spelling; identical sound — accept both
+de,selbständig,Selbstständig,selbstständig,KEEP,variant,VARIANT_SPELLING,both spellings official; same sound — accept both
+de,vergaß,Fertig.,fertig,REJECT,,ASR_UNRELATED,
+de,verliehen,Verlieren,verlieren,REJECT,,ASR_NEAR,
+de,vielem,Film,Film,REJECT,,ASR_UNRELATED,
+de,warnte,Warte!,warte,REJECT,,ASR_NEAR,
+de,wählten,"""Welten""",Welten,REJECT,,ASR_NEAR,long ä vs short e
+de,übernahmen,übernommen,übernommen,REJECT,,ASR_NEAR,
+pt,abaixar,Abaixa!,abaixa,REJECT,,ASR_NEAR,BR drops final r but stress moves (abaiXAR vs aBAIxa)
+pt,adi,Ad,ad,REJECT,,HYGIENE,neither looks like a pt headword
+pt,alemãs,Alemães,alemães,REJECT,,ASR_NEAR,[ɐ̃s] vs [ɐ̃js]
+pt,blogueiro,Blogueiros,blogueiros,REJECT,,ASR_NEAR,plural s audible
+pt,completou,completo!,completo,REJECT,,STRESSED_OU_LOST,stress-final -OU vs -o
+pt,cês,Seis,seis,REJECT,,HYGIENE,cês is a colloquial clipping of vocês
+pt,decretou,Decreto,decreto,REJECT,,STRESSED_OU_LOST,stress-final -OU vs -o
+pt,desejou,Desejo,desejo,REJECT,,STRESSED_OU_LOST,stress-final -OU vs -o
+pt,distancia,Distância,distância,REJECT,,ASR_NEAR,stress differs (distanCIa verb vs disTÂNcia noun)
+pt,encontrou,Encontro!,encontro,REJECT,,STRESSED_OU_LOST,stress-final -OU vs -o
+pt,expulsou,expulso,expulso,REJECT,,STRESSED_OU_LOST,stress-final -OU vs -o
+pt,fev,Fevereiro.,fevereiro,REJECT,,HYGIENE,"abbreviation, not a word"
+pt,formula,Fórmula,fórmula,REJECT,,ASR_NEAR,stress differs (forMUla vs FÓRmula)
+pt,incluía,Incluir.,incluir,REJECT,,ASR_NEAR,
+pt,luva,Lua.,lua,REJECT,,ASR_NEAR,
+pt,moscas,Músicas,músicas,REJECT,,ASR_UNRELATED,
+pt,motivou,Motivo,motivo,REJECT,,STRESSED_OU_LOST,stress-final -OU vs -o
+pt,objectivo,Objetivo,objetivo,KEEP,variant,VARIANT_SPELLING,pre-1990 European spelling with silent c — bank should hold the current standard (PURITY)
+pt,palace,Palácio!,palácio,REJECT,,HYGIENE,English word
+pt,portuguese,Português,português,REJECT,,HYGIENE,English word
+pt,rapto,Rápido!,rápido,REJECT,,ASR_NEAR,
+pt,remete,Remédio.,remédio,REJECT,,ASR_UNRELATED,
+pt,riu,Rio!,rio,KEEP (borderline),accent,SOUNDALIKE,rio [ˈʁi.u] often glides to [ˈʁiw] in BR = riu
+pt,roxa,Rocha,rocha,REJECT,,ASR_NEAR,x and ch are both [ʃ] but closed [o] vs open [ɔ]
+pt,rum,Homem!,homem,REJECT,,ASR_UNRELATED,
+pt,sérvios,Servos!,servos,REJECT,,ASR_NEAR,
+pt,temple,tempo,tempo,REJECT,,HYGIENE,English word
+pt,têxtil,Teste.,teste,REJECT,,ASR_UNRELATED,
+pt,utilizá,Utilizar,utilizar,KEEP (borderline),accent,SOUNDALIKE,BR drops final r → both [utʃiliˈza]; utilizá is a clitic-host fragment (utilizá-lo) — PURITY
+pt,visitam,Visita,visita,REJECT,,ASR_NEAR,nasal -am audible
+pt,visitá,Visita!,visita,REJECT,,ASR_NEAR,stress differs; visitá is a clitic-host fragment (PURITY)
+pl,acta,Akta,akta,REJECT,,HYGIENE,"acta is Latin/English, not Polish (same sound as akta)"
+pl,agencje,Agencję.,agencję,KEEP,accent,SOUNDALIKE,word-final ę denasalises to [ɛ] in normal speech
+pl,agencję,Agencje,agencje,KEEP,accent,SOUNDALIKE,"same pair, other direction"
+pl,bogatą,Bogato.,bogato,REJECT,,ASR_NEAR,final ą usually keeps nasality
+pl,falę,Fala.,fala,REJECT,,ASR_NEAR,ę vs a
+pl,jednostkę,Jednostka.,jednostka,REJECT,,ASR_NEAR,ę vs a
+pl,ministerstwa,Ministerstwo,ministerstwo,REJECT,,ASR_NEAR,
+pl,ny,Nie.,nie,REJECT,,HYGIENE,not a Polish headword
+pl,organizację,Organizacje,organizacje,KEEP,accent,SOUNDALIKE,word-final ę denasalisation
+pl,pad,Pat.,pat,KEEP,true,SOUNDALIKE,final devoicing: pad = [pat]
+pl,piece,Pieca,pieca,REJECT,,ASR_NEAR,
+pl,popularny,Popularne.,popularne,REJECT,,ASR_NEAR,
+pl,prawe,Prawa.,prawa,REJECT,,ASR_NEAR,
+pl,przyjdź,Przejdź.,przejdź,REJECT,,ASR_NEAR,y vs e
+pl,przyniósł,Przeniósł.,przeniósł,REJECT,,ASR_NEAR,y vs e
+pl,rejs,RACE,race,REJECT,,ASR_UNRELATED,English drift; race in the pl bank is hygiene
+pl,restauracje,Restauracja,restauracja,REJECT,,ASR_NEAR,
+pl,rodzinna,Rodzina.,rodzina,KEEP (borderline),accent,SOUNDALIKE,geminate nn shortens in fast speech
+pl,równowagę,Równowaga.,równowaga,REJECT,,ASR_NEAR,ę vs a
+pl,ustanowienia,Ustawienia.,ustawienia,REJECT,,ASR_NEAR,
+pl,wesela,Wesele,wesele,REJECT,,ASR_NEAR,
+pl,wilka,Wielka.,wielka,REJECT,,ASR_NEAR,
+pl,wybuchł,Wybuchu.,wybuchu,REJECT,,ASR_NEAR,
+pl,wyjaśnień,Wyjaśnienie,wyjaśnienie,REJECT,,ASR_NEAR,
+pl,zmianom,Z mianą.,zmianą,KEEP (borderline),accent,SOUNDALIKE,final ą regionally [ɔm]; ASR split hid the real pair
+vi,bong bóng,Bóng bóng,bóng,REJECT,,TONE,bong (level) vs bóng (rising)
+vi,bức tượng,Bức tường,bức tường,REJECT,,TONE,tượng (nặng) vs tường (huyền): statue vs wall
+vi,chính sách,Chính xác.,chính xác,REJECT,,ASR_NEAR,s/x merge in Northern speech but rhymes differ (-ach vs -ac)
+vi,chưa chắc,Chạy chạy.,chạy,REJECT,,ASR_UNRELATED,
+vi,công nguyên,Công viên.,công viên,REJECT,,ASR_NEAR,
+vi,công việc,Công viên.,công viên,REJECT,,TONE,việc vs viên: tone and final differ
+vi,công đoạn,Công đoàn,công đoàn,REJECT,,TONE,nặng vs huyền
+vi,giải tích,Giải thích?,giải thích,REJECT,,ASR_NEAR,t vs aspirated th
+vi,gánh nặng,Nhanh nhanh,nhanh,REJECT,,ASR_UNRELATED,
+vi,không kích,Hôm nay,hôm nay,REJECT,,ASR_UNRELATED,
+vi,không ngờ,Không.,không,REJECT,,TOKEN_SPLIT,second syllable lost
+vi,khăng khăng,Khăn khăn.,khăn,REJECT,,ASR_NEAR,"-ng/-n merge in Southern speech, but khăn khăn is not a word"
+vi,kích thước,Kết thúc.,kết thúc,REJECT,,ASR_UNRELATED,
+vi,linh thiêng,Lên tiếng,lên tiếng,REJECT,,ASR_UNRELATED,
+vi,mua chuộc,Mọi người.,mọi người,REJECT,,ASR_UNRELATED,
+vi,nghị viện,Nghị viên.,nghị viên,REJECT,,TONE,viện (nặng) vs viên (ngang)
+vi,ngoại ngữ,Mọi người...,mọi người,REJECT,,ASR_UNRELATED,
+vi,nhanh nhẹn,Nhanh nhanh,nhanh,REJECT,,ASR_NEAR,
+vi,nhìn nhận,Nhìn nhìn.,nhìn,REJECT,,ASR_NEAR,
+vi,phát thanh,Phát hành,phát hành,REJECT,,ASR_NEAR,
+vi,phân loại,Phân loài,phân loài,REJECT,,TONE,loại (nặng) vs loài (huyền)
+vi,quan quân,Quán quân,quán quân,REJECT,,TONE,quan (ngang) vs quán (sắc)
+vi,tháp chuông,Tập trung.,tập trung,REJECT,,ASR_UNRELATED,
+vi,thân nhân,Tất nhiên.,tất nhiên,REJECT,,ASR_UNRELATED,
+vi,thí nghiệm,Tình yêu.,tình yêu,REJECT,,ASR_UNRELATED,
+vi,trầm trọng,Chông chông.,chông,REJECT,,ASR_NEAR,tr/ch merge in Northern speech but tones and vowels differ
+vi,tuần trước,Tuyệt!,tuyệt,REJECT,,ASR_UNRELATED,
+vi,tận hưởng,Tất nhiên.,tất nhiên,REJECT,,ASR_UNRELATED,
+vi,xương sườn,Sương sương,sương,REJECT,,ASR_NEAR,x/s merge in Northern speech (xương = sương) but sườn ≠ sương; the merger belongs in the rules net
+fil,anung,Anong,anong,KEEP,variant,VARIANT_SPELLING,anung is a nonstandard o/u spelling of anong (PURITY / Paul)
+fil,araw-araw,Araw-araw.,araw,REJECT,,TOKEN_SPLIT,heard correctly
+fil,awtoridad,Autoridad,autoridad,KEEP,variant,VARIANT_SPELLING,Filipinized vs Spanish spelling — Paul picks
+fil,bagay-bagay,Bagay bagay.,bagay,REJECT,,TOKEN_SPLIT,heard correctly
+fil,industriyal,Industrial.,industrial,KEEP,variant,VARIANT_SPELLING,industrial is a raw English/Spanish spelling — PURITY says out; Paul rules
+fil,inuming,Inumin,inumin,REJECT,,ASR_NEAR,-ng linker form vs base word; linker forms are not headwords (PURITY)
+fil,kadalasang,Kadalasan.,kadalasan,REJECT,,ASR_NEAR,linker form (PURITY)
+fil,kailangang,Kailangan.,kailangan,REJECT,,ASR_NEAR,linker form (PURITY)
+fil,kompanyang,Kumpanyang,kumpanyang,KEEP,variant,VARIANT_SPELLING,o/u spelling variants; both are linker forms (PURITY)
+fil,mag-aaral,Mag-aral.,mag-aral,REJECT,,ASR_NEAR,reduplicated aa audible (glottal stop)
+fil,mahahalagang,Mahalagang.,mahalagang,REJECT,,ASR_NEAR,reduplication audible; linker forms (PURITY)
+fil,naaapektuhan,Naapektuhan.,naapektuhan,REJECT,,ASR_NEAR,aspect reduplication audible
+fil,ngayun,Ngayon.,ngayon,KEEP,variant,VARIANT_SPELLING,ngayun is nonstandard — PURITY should drop it
+fil,nuon,Noon,noon,KEEP,variant,VARIANT_SPELLING,nuon is an informal spelling of noon — Paul
+fil,pagkakasunud,Pagkakasunod.,pagkakasunod,KEEP,variant,VARIANT_SPELLING,o/u variants; both are fragments of pagkakasunod-sunod (PURITY)
+fil,pinansiyal,Pinansyal,pinansyal,KEEP,variant,VARIANT_SPELLING,-iya-/-ya- spellings; same sound
+fil,sabay-sabay,Sabay sabay.,sabay,REJECT,,TOKEN_SPLIT,heard correctly
+fil,simbahang,Simbahan,simbahan,REJECT,,ASR_NEAR,linker form (PURITY)
+fil,sunod-sunod,Sunod sunod.,sunod,REJECT,,TOKEN_SPLIT,heard correctly
+fil,sunud-sunod,Sunod sunod.,sunod; sunod-sunod,KEEP,variant,VARIANT_SPELLING,o/u variant of sunod-sunod
+fil,tau,Tao,tao,KEEP,variant,VARIANT_SPELLING,tau is a nonstandard spelling of tao (PURITY)
+fil,taun,Taon.,taon,KEEP,variant,VARIANT_SPELLING,taun is nonstandard (PURITY)
+ar,أعلام,علام,علام,REJECT,,ASR_NEAR,initial hamza dropped
+ar,اراد,أرادة,إرادة,REJECT,,ASR_NEAR,اراد is أراد missing its hamza (PURITY)
+ar,استعدادا,أستعداد,استعداد,REJECT,,ASR_NEAR,adverbial tanwin -an audible
+ar,استقالته,استقالة,استقالة,REJECT,,ASR_NEAR,attached-pronoun form (PURITY: attached forms out)
+ar,اصل,أسلوب,أسلوب,REJECT,,ASR_UNRELATED,اصل missing its hamza (PURITY)
+ar,الأفق,الأفضل,الأفضل,REJECT,,ASR_NEAR,
+ar,الأميركي,الأمريكي,الأمريكي,KEEP,variant,VARIANT_SPELLING,two accepted spellings of al-amrīkī
+ar,الاستعماري,الاستعمارية,الاستعمارية,REJECT,,ASR_NEAR,-ī vs -iyya
+ar,التفاح,الدفع,الدفع,REJECT,,ASR_UNRELATED,
+ar,التليفزيونية,التلفزيونية,التلفزيونية,KEEP,variant,VARIANT_SPELLING,two accepted spellings
+ar,الجاد,الجد,الجد,REJECT,,ASR_NEAR,long ā vs short
+ar,السيئ,السيء,السيء,KEEP,variant,VARIANT_SPELLING,hamza-seat spellings of one word
+ar,الصداع,أصدار,إصدار,REJECT,,ASR_UNRELATED,
+ar,الصمود,أسود,أسود; اسود,REJECT,,ASR_UNRELATED,
+ar,العالميين,العالمين,العالمين,REJECT,,ASR_NEAR,-iyyīn vs -īn
+ar,العب,الاب,الاب,REJECT,,ASR_NEAR,ʿayn vs hamza
+ar,العد,العدو,العدو,REJECT,,ASR_NEAR,
+ar,الفاعل,الفعل,الفعل,REJECT,,ASR_NEAR,long ā
+ar,الكومبيوتر,الكمبيوتر,الكمبيوتر,KEEP,variant,VARIANT_SPELLING,two accepted spellings
+ar,المتلازمات,المتلازمة,المتلازمة,REJECT,,ASR_NEAR,plural -āt audible
+ar,المساهمات,المساهمة,المساهمة,REJECT,,ASR_NEAR,plural -āt audible
+ar,المستقبلي,المستقبلية,المستقبلية,REJECT,,ASR_NEAR,
+ar,المشاهدة,المشاهدات,المشاهدات,REJECT,,ASR_NEAR,
+ar,تري,تيري,تيري,REJECT,,HYGIENE,تيري looks like a name (Terry)
+ar,تشاهد,تشهد,تشهد,REJECT,,ASR_NEAR,long ā
+ar,راعي,راي,راي,REJECT,,ASR_NEAR,
+ar,رح,روح,روح,REJECT,,ASR_NEAR,رح is a Levantine dialect particle (PURITY)
+ar,صدقت,صدق,صدق,REJECT,,ASR_NEAR,subject-suffix form
+ar,عقبة,عقب,عقب,REJECT,,ASR_NEAR,
+ar,فيينا,وين,وين,REJECT,,HYGIENE,proper noun Vienna (PURITY)
+ar,قانونا,قانون,قانون,REJECT,,ASR_NEAR,adverbial tanwin audible
+ar,قيادات,قيادة,قيادة,REJECT,,ASR_NEAR,
+ar,كدة,كده,كده,KEEP,variant,VARIANT_SPELLING,Egyptian dialect word with two spellings — dialect in the bank is a PURITY question
+ar,مار,لا,لأ; لا,REJECT,,ASR_UNRELATED,
+ar,معقولة,مقولة,مقولة,REJECT,,ASR_NEAR,ʿayn dropped
+ar,ميشال,ميشيل,ميشيل,REJECT,,HYGIENE,proper-name variants (PURITY: proper nouns out)
+ar,نو,لا,لأ; لا,REJECT,,HYGIENE,"نو is English ""no"" transliterated — the ASR translated it to لا"
+ar,واين,وين,وين,REJECT,,HYGIENE,"looks like English ""wine"" transliterated"
+ar,يستطيعوا,يستطيع,يستطيع,REJECT,,ASR_NEAR,
+ar,يونغ,يوم,يوم,REJECT,,HYGIENE,name (Young/Jung)

@@ -1,0 +1,42 @@
+lang,word,flagged_against,cause,note
+fr,apparement,apparemment,HYGIENE,apparement is a misspelling of apparemment — remove from bank (PURITY)
+fr,lisée,lisez,SOUNDALIKE,"true homophone with lisez, but lisée looks like a non-headword — check (PURITY)"
+fr,masson,maçon,SOUNDALIKE,"true homophone, but Masson is a surname — proper noun (PURITY)"
+fr,sin,signe,HYGIENE,sin is not a French headword
+fr,statu,statue,SOUNDALIKE,"statue = statu, but statu only exists inside 'statu quo' — not a headword (PURITY)"
+fr,telecom,télécom,SOUNDALIKE,true homophone; unaccented spelling of télécom (PURITY)
+de,Wales,weils,HYGIENE,proper noun (PURITY)
+pt,adi,ad,HYGIENE,neither looks like a pt headword
+pt,cês,seis,HYGIENE,cês is a colloquial clipping of vocês
+pt,fev,fevereiro,HYGIENE,"abbreviation, not a word"
+pt,objectivo,objetivo,VARIANT_SPELLING,pre-1990 European spelling with silent c — bank should hold the current standard (PURITY)
+pt,palace,palácio,HYGIENE,English word
+pt,portuguese,português,HYGIENE,English word
+pt,temple,tempo,HYGIENE,English word
+pt,utilizá,utilizar,SOUNDALIKE,BR drops final r → both [utʃiliˈza]; utilizá is a clitic-host fragment (utilizá-lo) — PURITY
+pt,visitá,visita,ASR_NEAR,stress differs; visitá is a clitic-host fragment (PURITY)
+pl,acta,akta,HYGIENE,"acta is Latin/English, not Polish (same sound as akta)"
+pl,ny,nie,HYGIENE,not a Polish headword
+fil,anung,anong,VARIANT_SPELLING,anung is a nonstandard o/u spelling of anong (PURITY / Paul)
+fil,industriyal,industrial,VARIANT_SPELLING,industrial is a raw English/Spanish spelling — PURITY says out; Paul rules
+fil,inuming,inumin,ASR_NEAR,-ng linker form vs base word; linker forms are not headwords (PURITY)
+fil,kadalasang,kadalasan,ASR_NEAR,linker form (PURITY)
+fil,kailangang,kailangan,ASR_NEAR,linker form (PURITY)
+fil,kompanyang,kumpanyang,VARIANT_SPELLING,o/u spelling variants; both are linker forms (PURITY)
+fil,mahahalagang,mahalagang,ASR_NEAR,reduplication audible; linker forms (PURITY)
+fil,ngayun,ngayon,VARIANT_SPELLING,ngayun is nonstandard — PURITY should drop it
+fil,pagkakasunud,pagkakasunod,VARIANT_SPELLING,o/u variants; both are fragments of pagkakasunod-sunod (PURITY)
+fil,simbahang,simbahan,ASR_NEAR,linker form (PURITY)
+fil,tau,tao,VARIANT_SPELLING,tau is a nonstandard spelling of tao (PURITY)
+fil,taun,taon,VARIANT_SPELLING,taun is nonstandard (PURITY)
+ar,اراد,إرادة,ASR_NEAR,اراد is أراد missing its hamza (PURITY)
+ar,استقالته,استقالة,ASR_NEAR,attached-pronoun form (PURITY: attached forms out)
+ar,اصل,أسلوب,ASR_UNRELATED,اصل missing its hamza (PURITY)
+ar,تري,تيري,HYGIENE,تيري looks like a name (Terry)
+ar,رح,روح,ASR_NEAR,رح is a Levantine dialect particle (PURITY)
+ar,فيينا,وين,HYGIENE,proper noun Vienna (PURITY)
+ar,كدة,كده,VARIANT_SPELLING,Egyptian dialect word with two spellings — dialect in the bank is a PURITY question
+ar,ميشال,ميشيل,HYGIENE,proper-name variants (PURITY: proper nouns out)
+ar,نو,لأ; لا,HYGIENE,"نو is English ""no"" transliterated — the ASR translated it to لا"
+ar,واين,وين,HYGIENE,"looks like English ""wine"" transliterated"
+ar,يونغ,يوم,HYGIENE,name (Young/Jung)
