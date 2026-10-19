@@ -264,16 +264,31 @@ def _is_word_char(ch: str) -> bool:
     return unicodedata.category(ch)[0] in ("L", "M")
 
 
-def validate_word(word: str):
-    """Normalize and validate a word. Returns cleaned word or None."""
+# CC-IMPOSSIBLE-LAUNCH Feature 8 / L-D6: languages whose words are written as space-separated
+# syllables. Vietnamese is the only one: all 2,500 of its Expert rows, 1,499 of 1,500 Hard and 419 of
+# 833 Medium contain a space, and a joined "rượtđuổi" is mispronounced. No other language has a space in
+# any tier (checked 2026-10-19), so no other language is allowed one.
+SPACED_LANGS = frozenset({"vi"})
+
+
+def validate_word(word: str, allow_inner_space: bool = False):
+    """Normalize and validate a word. Returns cleaned word or None.
+
+    allow_inner_space (speak endpoint, SPACED_LANGS only): single U+0020 between letters is part of the
+    answer and is kept; the text is normalised to NFC; a double space is refused. Leading and trailing
+    spaces are trimmed exactly as they always were, for every language."""
     word = word.lower().strip()
+    if allow_inner_space:
+        word = unicodedata.normalize("NFC", word)
+        if "  " in word:
+            return None
     if not word or len(word) > MAX_WORD_LENGTH:
         return None
     # Letters + combining marks (+ hyphen/apostrophe) only — still blocks
     # whitespace, digits, and punctuation that could inject arbitrary text into
     # TTS (protecting both your quota and the cache), while accepting every
     # supported script.
-    if not all(_is_word_char(ch) for ch in word):
+    if not all(_is_word_char(ch) or (allow_inner_space and ch == " ") for ch in word):
         return None
     return word
 
@@ -702,13 +717,13 @@ def speak():
 
 
 def _speak(meta):
-    word = validate_word(request.args.get("word", ""))
-    if word is None:
-        return jsonify({"error": "invalid word"}), 400
-    variant = "slow" if request.args.get("variant") == "slow" else "normal"
     lang = request.args.get("lang", DEFAULT_LANG)
     if lang not in LANG_VOICES and lang not in AZURE_VOICES:
         lang = DEFAULT_LANG
+    word = validate_word(request.args.get("word", ""), allow_inner_space=lang in SPACED_LANGS)
+    if word is None:
+        return jsonify({"error": "invalid word"}), 400
+    variant = "slow" if request.args.get("variant") == "slow" else "normal"
     meta["lang"], meta["variant"] = lang, variant
 
     # F6: Mandarin must name its reading. No reading, no audio -- guessing is
