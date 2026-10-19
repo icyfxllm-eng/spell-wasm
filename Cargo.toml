@@ -58,6 +58,8 @@ regex = "1"
 unicode-normalization = "0.1"
 unicode-segmentation = "1"
 console_error_panic_hook = "0.1"
+# CC-IMPOSSIBLE-COMPLETE F4: verify-only Ed25519 for the signed kill-flag file. No rand, no std features.
+ed25519-dalek = { version = "2", default-features = false }
 
 [dev-dependencies]
 proptest = "1"

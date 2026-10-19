@@ -27,6 +27,10 @@ fn resolve(stored: Option<&str>, default: bool) -> bool {
 
 #[cfg(not(test))]
 fn stored(name: &str) -> Option<String> {
+    // F4: the signed kill-only file can switch a flag OFF and nothing else (src/killflags.rs).
+    if crate::killflags::is_killed(name) {
+        return Some("off".to_string());
+    }
     storage::get_raw(&format!("spell_flag_{name}"))
 }
 
@@ -36,7 +40,10 @@ thread_local! {
 }
 
 #[cfg(test)]
-fn stored(_name: &str) -> Option<String> {
+fn stored(name: &str) -> Option<String> {
+    if crate::killflags::is_killed(name) {
+        return Some("off".to_string());
+    }
     TEST_OVERRIDE.with(|c| c.borrow().clone())
 }
 

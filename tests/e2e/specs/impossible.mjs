@@ -41,7 +41,31 @@ async function startImpossible(page) {
   });
 }
 
+// A kill document signed with the REAL key by tools/killflags/sign.py (kills impossible_fr + impossible_mix).
+const KILL_DOC = JSON.stringify({ v: 1, issued: '2026-10-19T12:00:00Z', kill: ['impossible_fr', 'impossible_mix'],
+  sig: 'bd2e970d4e27620794019a061fe849b2c3a9f7704f98811d4a6f3af78aa23a823657dd22db41ad6ac079cd4ff1bb3162fbf6fb739a77e09b3d59f9408199180e' });
+
 export async function run(browser, base, suite) {
+  await suite.test('F4: a signed kill file switches Mix off after it is cached; a tampered one does nothing', async () => {
+    for (const [doc, killed] of [[KILL_DOC, true], [KILL_DOC.replace('impossible_mix', 'impossible_xx'), false]]) {
+      const { ctx, page } = await open(browser, base, ON);
+      try {
+        await ctx.route('**/api/kill-flags', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: doc }));
+        await page.reload({ waitUntil: 'load' });
+        await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+        await page.waitForTimeout(800); // the silent refresh
+        const cached = await page.evaluate(() => localStorage.getItem('spell_kill_flags_v1'));
+        assert(killed ? !!cached : !cached, `cache after refresh: killed=${killed} cached=${!!cached}`);
+        await page.reload({ waitUntil: 'load' });
+        await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+        const o = await options(page);
+        const mix = o.find((x) => x.v === 'impossible_mix');
+        assert(killed ? !mix : !!mix, `Mix entry with killed=${killed}: ${JSON.stringify(o)}`);
+        assert(o.some((x) => x.v === 'impossible'), 'the unnamed Impossible flag keeps the build value');
+      } finally { await ctx.close(); }
+    }
+  });
+
   await suite.test('flags OFF: no Impossible entry in the level picker', async () => {
     const { ctx, page } = await open(browser, base, {});
     try {

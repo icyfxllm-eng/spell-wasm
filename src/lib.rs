@@ -101,6 +101,7 @@ mod haptics;
 mod hangul;
 mod homophones;
 mod soundalikes;
+mod killflags; // CC-IMPOSSIBLE-COMPLETE F4 -- signed, kill-only remote flag file
 mod impossible; // CC-IMPOSSIBLE v1.2 Mix Phase A -- the registry and pool artifacts (flags off)
 mod i18n;
 mod importer;
@@ -228,6 +229,10 @@ pub type App = Rc<RefCell<AppState>>;
 pub fn start() -> Result<(), JsValue> {
     // Console output as before, plus one F1 `wasm_panic` record per panic site.
     telemetry::install_panic_hook();
+
+    // F4: the cached, re-verified kill list is in force before any flag is read; the refresh is silent.
+    killflags::init();
+    wasm_bindgen_futures::spawn_local(killflags::refresh());
 
     let mut state = AppState::default();
     settings::load_prefs(&mut state);

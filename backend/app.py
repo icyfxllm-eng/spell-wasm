@@ -661,6 +661,24 @@ def fetch_meaning(word: str):
 # Routes
 # ---------------------------------------------------------------
 
+# CC-IMPOSSIBLE-COMPLETE F4 -- the signed, kill-only flag document. The server only HANDS OVER the
+# file that tools/killflags/sign.py wrote; it holds no key and decides nothing, and the app verifies
+# the signature itself (src/killflags.rs). No file means 204: the app keeps its build's values.
+KILL_FLAGS_FILE = os.environ.get("KILL_FLAGS_FILE", os.path.join(os.path.dirname(os.path.abspath(__file__)), "kill-flags.json"))
+
+
+@app.route("/api/kill-flags")
+def kill_flags():
+    try:
+        with open(KILL_FLAGS_FILE, "rb") as fh:
+            body = fh.read(65536)
+    except OSError:
+        return "", 204
+    resp = app.response_class(body, mimetype="application/json")
+    resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
+
 @app.route("/api/health")
 def health():
     """Quick check that the server is up (doesn't call Google)."""
