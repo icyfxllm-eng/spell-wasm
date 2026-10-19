@@ -879,6 +879,7 @@
   "bg.trap.lose": "한 번 쉬기",
   "bg.trap.switch": "칸 바꾸기",
   "bg.trap.double": "더블 전문가",
+  "bg.trap.impossible": "불가능한 단어",
   "bg.roll": "굴리기",
   "bg.replay": "다시 듣기",
   "bg.start": "시작",

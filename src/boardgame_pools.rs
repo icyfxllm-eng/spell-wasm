@@ -139,6 +139,23 @@ pub fn supply(lang: &str, v: Variant, ledger: &Ledger, day: u32, seed: u64) -> R
     Ok(Supply { pools, relaxed })
 }
 
+/// CC-IMPOSSIBLE-COMPLETE F8: give the trap its Impossible pool when the language has one.
+///
+/// The pool is the language's Impossible pool only when the Impossible registry says it is
+/// available (flags, entitlement, floor, profile), and never for Spell Jr. A language that grades
+/// case strictly stays out: this screen's keyboard has no Shift, so a capitalised word could not be
+/// typed. An empty pool keeps the Double Expert trap exactly as it was (D-C14).
+pub fn with_impossible(mut pools: TierPools, lang: &str, v: Variant) -> TierPools {
+    if !v.cfg().has_traps() || v == Variant::Jr || crate::impossible::engine::needs_shift(lang) {
+        return pools;
+    }
+    use crate::impossible::{lang_availability, pool, with_live_inputs, Availability};
+    if with_live_inputs(|i| matches!(lang_availability(lang, i), Availability::Available(_))) {
+        pools.impossible = pool(lang).map(|p| p.words.clone()).unwrap_or_default();
+    }
+    pools
+}
+
 /// D19: write the game's drawn words to the ledger, once, for a finished or an
 /// abandoned game alike. Only words the engine actually drew are recorded.
 pub fn record(ledger: &mut Ledger, lang: &str, s: &BoardGameState, day: u32, relaxed: usize) {

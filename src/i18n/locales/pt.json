@@ -879,6 +879,7 @@
   "bg.trap.lose": "Perde uma jogada",
   "bg.trap.switch": "Troca de casas",
   "bg.trap.double": "Duplo especialista",
+  "bg.trap.impossible": "Palavra impossível",
   "bg.roll": "Rolar",
   "bg.replay": "Repetir",
   "bg.start": "Começar",

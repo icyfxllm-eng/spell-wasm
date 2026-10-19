@@ -534,3 +534,47 @@ fn serve_langs_obey_the_gate() {
     // Misses tag: re-served at Impossible rules (M9) via the tier string.
     assert_eq!(engine::MISS_TAG, "impossible");
 }
+
+// ---------- CC-IMPOSSIBLE-COMPLETE F7: Impossible Daily (A-10) ----------
+
+/// A-10: every device on the same language and date gets the same words in the same order, whatever
+/// order its pool arrived in, and the words come from the pool.
+#[test]
+fn impossible_daily_is_the_same_for_everyone() {
+    for lang in pool_langs() {
+        let words = &pool(lang).unwrap().words;
+        let a = crate::daily::impossible_slice(lang, words, "2026-10-19");
+        let mut rev = words.clone();
+        rev.reverse();
+        assert_eq!(a, crate::daily::impossible_slice(lang, &rev, "2026-10-19"), "{lang}: pool order must not matter");
+        assert_eq!(a.len(), crate::daily::IMP_DAILY_WORDS, "{lang}");
+        assert!(a.iter().all(|w| words.contains(w)), "{lang}");
+        assert_eq!(a.iter().collect::<std::collections::HashSet<_>>().len(), a.len(), "{lang}: a word twice in one day");
+        assert_ne!(a, crate::daily::impossible_slice(lang, words, "2026-10-20"), "{lang}: the next day is a new set");
+    }
+    let es = crate::daily::impossible_slice("es", &pool("es").unwrap().words, "2026-10-19");
+    let ru = crate::daily::impossible_slice("ru", &pool("ru").unwrap().words, "2026-10-19");
+    assert_ne!(es, ru);
+}
+
+/// No word returns before the whole pool has been dealt (the Daily's cycle walk).
+#[test]
+fn impossible_daily_does_not_repeat_within_a_cycle() {
+    let words: Vec<String> = (0..150).map(|i| format!("w{i:03}")).collect();
+    let mut seen = std::collections::HashSet::new();
+    // 2026-01-01 is day 0, so these fifteen days are exactly one 150/10-day cycle.
+    for d in 1..=15 {
+        for w in crate::daily::impossible_slice("xx", &words, &format!("2026-01-{d:02}")) {
+            assert!(seen.insert(w.clone()), "{w} repeated inside one cycle (day {d})");
+        }
+    }
+    assert_eq!(seen.len(), 150);
+}
+
+/// I9: Mix never offers Daily, and the Impossible Daily is its own surface.
+#[test]
+fn there_is_no_mix_daily() {
+    assert_eq!(run(|_| {}, |i| mix_status(Surface::ImpossibleDaily, i)), MixStatus::Hidden);
+    let g = include_str!("../game.rs");
+    assert!(g.contains("level == crate::impossible::engine::LEVEL"), "the Daily button is Impossible only on the single-language level");
+}

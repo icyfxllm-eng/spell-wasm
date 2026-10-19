@@ -294,6 +294,11 @@ fn build_keys(app: &App) {
     let mut html = String::new();
     for (ri, letters) in layout.rows.iter().enumerate() {
         html.push_str("<div class=\"kb-row\">");
+        if ri == last && locale == "de" {
+            // CC-IMPOSSIBLE-COMPLETE: German Impossible grades capitals. Hidden (inert) unless the
+            // word on screen needs one; see game::toggle_shift.
+            html.push_str("<button class=\"kb-key kb-shift btn-hide\" id=\"kbShift\" aria-label=\"shift\">\u{21e7}</button>");
+        }
         for c in letters.chars() {
             html.push_str(&key_button(c, false, accents_for(c)));
         }
@@ -304,6 +309,10 @@ fn build_keys(app: &App) {
         html.push_str("</div>");
     }
     dom::set_html("kbLetters", &html);
+    if locale == "de" {
+        let a = app.clone();
+        dom::on_click("kbShift", move || game::toggle_shift(&a));
+    }
 
     // Uniform key width is derived from the widest row's column count (10 for
     // QWERTY, 11 for QWERTZ/kana), so every key is the same size regardless of
@@ -590,7 +599,9 @@ fn wire_physical(app: &App) {
             // for every language; apostrophe/hyphen for My Words / Filipino.
             if c.is_alphabetic() || c.is_ascii_digit() || c == '\'' || c == '-' {
                 e.prevent_default();
-                let lower = c.to_lowercase().next().unwrap_or(c);
+                // Impossible German grades capitals, so a physical Shift keeps its capital there;
+                // everywhere else the key is lowercased exactly as before.
+                let lower = if e.shift_key() && game::impossible_case(&a) { c } else { c.to_lowercase().next().unwrap_or(c) };
                 game::emit_key(&a, lower);
             }
         }

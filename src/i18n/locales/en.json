@@ -879,6 +879,7 @@
   "bg.trap.lose": "Lose a Roll",
   "bg.trap.switch": "Switch Tiles",
   "bg.trap.double": "Double Expert",
+  "bg.trap.impossible": "Impossible word",
   "bg.roll": "Roll",
   "bg.replay": "Replay",
   "bg.start": "Start",

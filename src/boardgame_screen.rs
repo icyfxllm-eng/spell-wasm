@@ -113,6 +113,10 @@ enum Land {
 }
 
 thread_local! {
+    /// F8: this game's Double Expert trap is the single Impossible word (the game has an Impossible pool).
+    static IMPOSSIBLE_TRAP: Cell<bool> = const { Cell::new(false) };
+    /// Replays spent on the current Impossible trap word (the engine allows one).
+    static IMP_REPLAYS: Cell<u8> = const { Cell::new(0) };
     static SETUP: RefCell<Setup> = RefCell::new(Setup::fresh());
     static UI: RefCell<Option<Ui>> = const { RefCell::new(None) };
     static LANG: RefCell<(String, bool)> = const { RefCell::new((String::new(), false)) };
@@ -404,10 +408,12 @@ fn start() {
     let ledger = load_ledger();
     let d = day();
     let variant = pools::variant_for(kid, s.sprint);
-    let Ok(sup) = pools::supply(&lang, variant, &ledger, d, seed) else {
+    let Ok(mut sup) = pools::supply(&lang, variant, &ledger, d, seed) else {
         dom::set_text("bgNote", &i18n::t("bg.soon"));
         return;
     };
+    sup.pools = pools::with_impossible(sup.pools, &lang, variant);
+    IMPOSSIBLE_TRAP.with(|c| c.set(!sup.pools.impossible.is_empty()));
     let cfg = if s.solo {
         GameConfig::solo(variant, s.diff, s.count, s.piece, &lang, kid, crate::boardgame_grade::grade)
     } else {
@@ -420,6 +426,7 @@ fn start() {
     // The keys come from every word that can be served this game.
     let mut entries: Vec<String> = sup.pools.tiers.iter().flatten().cloned().collect();
     entries.extend(sup.pools.long_word.iter().cloned());
+    entries.extend(sup.pools.impossible.iter().cloned());
     let keys = input::layout(&lang, kid, &entries);
     let Ok(game) = boardgame::new_game(seed, cfg, sup.pools) else {
         dom::set_text("bgNote", &i18n::t("bg.soon"));
@@ -709,13 +716,13 @@ fn chip_for(u: &Ui, e: &Event, star: bool) -> Option<String> {
     Some(match e {
         Event::Stretched { .. } | Event::WardGained { .. } => return None,
         Event::BoostHit { seat, boost, .. } => format!("{} {} {}", p(*seat), boost_glyph(*boost), i18n::t(&format!("bg.boost.{}", boost.key()))),
-        Event::TrapBlocked { seat, trap, .. } => format!("{} {} {}", p(*seat), WARD_GLYPH, i18n::tp("bg.wardBlocked", &[("trap", &i18n::t(&format!("bg.trap.{}", trap.key())))])),
+        Event::TrapBlocked { seat, trap, .. } => format!("{} {} {}", p(*seat), WARD_GLYPH, i18n::tp("bg.wardBlocked", &[("trap", &trap_name(*trap))])),
         Event::StreakEarned { seat } => format!("{} {}", p(*seat), STREAK_GLYPH),
         Event::StreakBonusUsed { seat } => format!("{} {}+1", p(*seat), STREAK_GLYPH),
         Event::Rolled { seat, roll, .. } => format!("{} \u{1f3b2} {roll}", p(*seat)),
         Event::Moved { seat, from, to } => format!("{}{st} \u{2713} {from}\u{2192}{to}", p(*seat)),
         Event::Missed { seat, at, .. } => format!("{}{st} \u{2717} {at}", p(*seat)),
-        Event::TrapHit { seat, trap, .. } => format!("{} \u{26a0} {}", p(*seat), i18n::t(&format!("bg.trap.{}", trap.key()))),
+        Event::TrapHit { seat, trap, .. } => format!("{} \u{26a0} {}", p(*seat), trap_name(*trap)),
         Event::TrapSpellOk { seat, .. } => format!("{} \u{2713}", p(*seat)),
         Event::Teleported { seat, from, to } => format!("{} \u{21a9} {from}\u{2192}{to}", p(*seat)),
         Event::SkipSet { seat } | Event::Skipped { seat } => format!("{} \u{23ed}", p(*seat)),
@@ -746,7 +753,10 @@ fn render() {
         let (state, face, aria) = if human_turn && g.phase == Phase::AwaitRoll {
             ("roll", i18n::t("bg.roll"), i18n::t("bg.roll"))
         } else if human_turn && g.phase == Phase::AwaitSpelling {
-            ("replay", "\u{25b6}".to_string(), i18n::t("bg.replay"))
+            // F5: an Impossible trap word whose one replay is spent leaves the orb inert.
+            let spent = g.pending.as_ref().is_some_and(|p| p.kind == SpellKind::Impossible)
+                && !crate::impossible::engine::replay_allowed(IMP_REPLAYS.with(Cell::get));
+            if spent { ("wait", "\u{2026}".to_string(), String::new()) } else { ("replay", "\u{25b6}".to_string(), i18n::t("bg.replay")) }
         } else {
             ("wait", "\u{2026}".to_string(), String::new())
         };
@@ -821,8 +831,15 @@ fn land_view(u: &Ui) -> Option<Land> {
     spelling_dest.map(Land::Tier).or(u.land)
 }
 
+/// A trap's display name. Where the Double Expert trap is the single Impossible word (F8), it is
+/// named for what it now asks.
+fn trap_name(t: boardgame::Trap) -> String {
+    let key = if t == boardgame::Trap::DoubleExpert && IMPOSSIBLE_TRAP.with(Cell::get) { "impossible" } else { t.key() };
+    i18n::t(&format!("bg.trap.{key}"))
+}
+
 fn blocked_text(t: boardgame::Trap) -> String {
-    i18n::tp("bg.wardBlocked", &[("trap", &i18n::t(&format!("bg.trap.{}", t.key())))])
+    i18n::tp("bg.wardBlocked", &[("trap", &trap_name(t))])
 }
 
 fn tier_name(t: boardgame::Tier) -> String {
@@ -834,7 +851,7 @@ fn tier_name(t: boardgame::Tier) -> String {
 fn land_pill(u: &Ui) -> String {
     match land_view(u) {
         Some(Land::Tier(t)) => format!("<span class=\"bg-pill\"><i class=\"bg-sw t-{0}\"></i><span data-tier>{1}</span></span>", t.name(), dom::escape_html(&tier_name(t))),
-        Some(Land::Trap(t)) => format!("<span class=\"bg-pill\" data-land=\"trap\"><i class=\"bg-sw trap\">\u{26a0}</i>{}</span>", dom::escape_html(&i18n::t(&format!("bg.trap.{}", t.key())))),
+        Some(Land::Trap(t)) => format!("<span class=\"bg-pill\" data-land=\"trap\"><i class=\"bg-sw trap\">\u{26a0}</i>{}</span>", dom::escape_html(&trap_name(t))),
         Some(Land::Boost(b)) => format!("<span class=\"bg-pill\" data-land=\"boost\"><i class=\"bg-sw boost\">{}</i>{}</span>", boost_glyph(b), dom::escape_html(&i18n::t(&format!("bg.boost.{}", b.key())))),
         Some(Land::Blocked(t)) => format!("<span class=\"bg-pill\" data-land=\"blocked\"><i class=\"bg-sw boost\">{}</i>{}</span>", WARD_GLYPH, dom::escape_html(&blocked_text(t))),
         None => String::new(),
@@ -1253,7 +1270,7 @@ fn paint_stage(g: Geom) -> bool {
             )
         }
         Some(Land::Trap(t)) => {
-            let name = i18n::t(&format!("bg.trap.{}", t.key()));
+            let name = trap_name(t);
             (format!("<i class=\"bg-sw trap\">\u{26a0}</i><span data-land=\"trap\">{}</span>", dom::escape_html(&name)), name, format!("x{}", t.key()))
         }
         Some(Land::Boost(b)) => {
@@ -1567,6 +1584,16 @@ fn orb() {
             after_roll(walk);
         }
         Phase::AwaitSpelling => {
+            // F5: the Impossible trap word allows ONE replay, counted by the one engine.
+            let impossible = with_ui(|u| u.game.pending.as_ref().is_some_and(|p| p.kind == SpellKind::Impossible)).unwrap_or(false);
+            if impossible {
+                let used = IMP_REPLAYS.with(Cell::get);
+                if !crate::impossible::engine::replay_allowed(used) {
+                    return;
+                }
+                IMP_REPLAYS.with(|c| c.set(used + 1));
+                render(); // the orb goes inert once the replay is spent
+            }
             if let Some((w, l)) = pending_word() {
                 speak(&w, &l);
             }
@@ -1613,6 +1640,7 @@ fn stretch_tap(e: web_sys::MouseEvent) {
 }
 
 fn start_spelling() {
+    IMP_REPLAYS.with(|c| c.set(0));
     with_ui(|u| u.typed.clear());
     render();
     restart_timer();

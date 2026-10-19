@@ -29,6 +29,13 @@ pub const MAX_ATTEMPTS: u8 = 1;
 /// (D-C4, Eric 2026-10-18: German nouns are capitalised).
 const CASE_STRICT: [&str; 1] = ["de"];
 
+/// Does this language need the player to be able to type a capital? True where Impossible grades
+/// case strictly. Every on-screen keyboard is lowercase-only, so such a language needs a Shift key
+/// (main game) or stays out of a surface that has none (the board-game trap).
+pub fn needs_shift(lang: &str) -> bool {
+    CASE_STRICT.contains(&lang)
+}
+
 pub fn is_level(level: &str) -> bool {
     level == LEVEL || level == MIX_LEVEL
 }

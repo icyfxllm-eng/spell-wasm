@@ -879,6 +879,7 @@
   "bg.trap.lose": "Пропуск хода",
   "bg.trap.switch": "Обмен клетками",
   "bg.trap.double": "Двойной эксперт",
+  "bg.trap.impossible": "Невозможное слово",
   "bg.roll": "Бросить",
   "bg.replay": "Повторить",
   "bg.start": "Начать",

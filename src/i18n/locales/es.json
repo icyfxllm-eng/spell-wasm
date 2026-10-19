@@ -879,6 +879,7 @@
   "bg.trap.lose": "Pierde una tirada",
   "bg.trap.switch": "Cambio de casillas",
   "bg.trap.double": "Doble experto",
+  "bg.trap.impossible": "Palabra imposible",
   "bg.roll": "Tirar",
   "bg.replay": "Repetir",
   "bg.start": "Empezar",

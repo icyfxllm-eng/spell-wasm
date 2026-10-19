@@ -879,6 +879,7 @@
   "bg.trap.lose": "停掷一次",
   "bg.trap.switch": "交换格子",
   "bg.trap.double": "双倍专家",
+  "bg.trap.impossible": "不可能的单词",
   "bg.roll": "掷骰子",
   "bg.replay": "重听",
   "bg.start": "开始",

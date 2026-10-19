@@ -973,7 +973,7 @@ fn wire_modes(app: &App) {
         dom::on_click("dailyBtn", move || {
             if a.borrow().daily.active {
                 game::exit_daily(&a);
-            } else if daily::is_done_today() {
+            } else if game::daily_done_now(&a) {
                 game::show_today_result(&a);
             } else {
                 game::enter_daily(&a);
@@ -1080,6 +1080,7 @@ fn wire_source_level(app: &App) {
             a.borrow_mut().level = dom::select("levelSel").value();
             a.borrow_mut().jr_climb_served = 0; // CC-ONBOARD-JR F3: a new level is a new run
             game::update_setup_chip(&a);
+            game::refresh_daily_btn(&a); // F7: the Daily button is the Impossible Daily on the Impossible level
             // Pull a fresh word at the newly-selected difficulty right away,
             // instead of leaving the old (wrong-tier) word on screen until
             // the current round ends on its own.

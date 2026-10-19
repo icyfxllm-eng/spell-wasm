@@ -879,6 +879,7 @@
   "bg.trap.lose": "Perds un lancer",
   "bg.trap.switch": "Échange de cases",
   "bg.trap.double": "Double expert",
+  "bg.trap.impossible": "Mot impossible",
   "bg.roll": "Lancer",
   "bg.replay": "Réécouter",
   "bg.start": "Commencer",

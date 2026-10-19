@@ -55,6 +55,9 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
         queues[t.ix()] = shuffled(&mut rng, pools.tiers[t.ix()].len());
     }
     let long_queue = if c.has_traps() { shuffled(&mut rng, pools.long_word.len()) } else { Vec::new() };
+    // F8: drawn AFTER everything else, and only when there is a pool, so a game without one
+    // consumes the same rng stream it always did.
+    let imp_queue = if c.has_traps() && !pools.impossible.is_empty() { shuffled(&mut rng, pools.impossible.len()) } else { Vec::new() };
 
     let players = cfg
         .seats
@@ -76,6 +79,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
         pools: Arc::new(pools),
         queues,
         long_queue,
+        imp_queue,
         used: BTreeSet::new(),
         recycled: 0,
         drawn: Vec::new(),
@@ -173,6 +177,8 @@ pub fn applied(s: &BoardGameState, action: Action) -> Result<BoardGameState, Rej
 enum Src {
     Tier(Tier),
     Long,
+    /// F8: the trap's Impossible word.
+    Impossible,
 }
 
 /// What the tile a piece arrived on does.
@@ -207,7 +213,7 @@ impl BoardGameState {
     fn draw(&mut self, src: Src) -> String {
         let tier = match src {
             Src::Tier(t) => t,
-            Src::Long => Tier::Expert,
+            Src::Long | Src::Impossible => Tier::Expert,
         };
         let w = self.draw_raw(src);
         self.drawn.push((tier, w.clone()));
@@ -219,10 +225,13 @@ impl BoardGameState {
         let (list, qi) = match src {
             Src::Tier(t) => (&pools.tiers[t.ix()], Some(t.ix())),
             Src::Long => (&pools.long_word, None),
+            Src::Impossible => (&pools.impossible, None),
         };
+        let imp = matches!(src, Src::Impossible);
         loop {
             let q = match qi {
                 Some(i) => &mut self.queues[i],
+                None if imp => &mut self.imp_queue,
                 None => &mut self.long_queue,
             };
             while let Some(ix) = q.pop() {
@@ -236,6 +245,7 @@ impl BoardGameState {
             let fresh = shuffled(&mut self.rng, list.len());
             let q = match qi {
                 Some(i) => &mut self.queues[i],
+                None if imp => &mut self.imp_queue,
                 None => &mut self.long_queue,
             };
             *q = fresh;
@@ -421,6 +431,10 @@ impl BoardGameState {
     }
 
     fn grade(&self, typed: &str, sp: &Spell) -> bool {
+        // F8 / F5: the trap's Impossible word is graded by the ONE strict Impossible grader.
+        if sp.kind == SpellKind::Impossible {
+            return crate::impossible::engine::grade(&self.cfg.lang, typed, &sp.word);
+        }
         (self.cfg.grader)(&self.cfg.lang, self.cfg.kid, typed, &sp.word, sp.tier)
     }
 
@@ -466,6 +480,21 @@ impl BoardGameState {
                     self.players[seat as usize].pos = to;
                     self.push(Event::Missed { seat, at: from, word: Some(sp.word) });
                     self.push(Event::Teleported { seat, from, to });
+                    self.end_turn();
+                }
+            }
+            SpellKind::Impossible => {
+                // One word. A miss costs the next turn, exactly as a missed Double Expert did.
+                if ok {
+                    self.players[seat as usize].spelled.push(sp.word.clone());
+                    self.push(Event::TrapSpellOk { seat, trap: Trap::DoubleExpert });
+                    self.end_turn();
+                } else {
+                    self.players[seat as usize].missed.push(sp.word.clone());
+                    let at = self.players[seat as usize].pos;
+                    self.players[seat as usize].skip = true;
+                    self.push(Event::Missed { seat, at, word: Some(sp.word) });
+                    self.push(Event::SkipSet { seat });
                     self.end_turn();
                 }
             }
@@ -533,6 +562,12 @@ impl BoardGameState {
             Trap::LongWord => {
                 let word = self.draw(Src::Long);
                 self.pending = Some(Spell { kind: SpellKind::LongWord, tier: Tier::Expert, word, dest, step: 0, stretch: false });
+                self.phase = Phase::AwaitSpelling;
+            }
+            Trap::DoubleExpert if !self.pools.impossible.is_empty() => {
+                // F8 (Eric, 2026-10-18): where the language has Impossible, this trap is ONE Impossible word.
+                let word = self.draw(Src::Impossible);
+                self.pending = Some(Spell { kind: SpellKind::Impossible, tier: Tier::Expert, word, dest, step: 0, stretch: false });
                 self.phase = Phase::AwaitSpelling;
             }
             Trap::DoubleExpert => {
@@ -669,6 +704,18 @@ impl BoardGameState {
                     self.swap(seat, lead as u8);
                 } else {
                     self.push(Event::SwitchDeclined { seat });
+                }
+            }
+            Trap::DoubleExpert if !self.pools.impossible.is_empty() => {
+                // F8 / CC-IMPOSSIBLE O3: an NPC meets the Impossible word at its EXPERT accuracy, and
+                // one word means one draw.
+                let ok = self.chance(p);
+                self.graded(seat, ok);
+                if ok {
+                    self.push(Event::TrapSpellOk { seat, trap });
+                } else {
+                    self.players[seat as usize].skip = true;
+                    self.push(Event::SkipSet { seat });
                 }
             }
             Trap::DoubleExpert => {

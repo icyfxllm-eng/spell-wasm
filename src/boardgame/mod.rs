@@ -247,6 +247,11 @@ pub struct TierPools {
     /// The Long Word band (D25), computed once by the pool builder. The engine
     /// does no length math.
     pub long_word: Vec<String>,
+    /// CC-IMPOSSIBLE-COMPLETE F8: the language's Impossible pool when it is available for this
+    /// game (the screen decides, through the Impossible registry). EMPTY keeps the Double Expert
+    /// trap exactly as it was; non-empty turns it into ONE Impossible word (D-C14: fallback is the
+    /// old behaviour). Never filled for Spell Jr.
+    pub impossible: Vec<String>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -310,6 +315,8 @@ pub enum SpellKind {
     LongWord,
     /// `step` 0 then 1; both required.
     DoubleExpert,
+    /// F8: the trap's single Impossible word (graded by `impossible::engine::grade`).
+    Impossible,
 }
 
 /// The word the current player owes.
@@ -455,6 +462,9 @@ pub struct BoardGameState {
     /// Indices into `pools`, popped from the back.
     pub(crate) queues: [Vec<u32>; 4],
     pub(crate) long_queue: Vec<u32>,
+    /// F8: the shuffled Impossible pool. Empty (and never shuffled, so the rng stream is
+    /// untouched) when the pool is empty.
+    pub(crate) imp_queue: Vec<u32>,
     /// I5: every word drawn this game.
     pub used: BTreeSet<String>,
     /// Draws that had to reuse a word because a queue ran dry. Zero in every

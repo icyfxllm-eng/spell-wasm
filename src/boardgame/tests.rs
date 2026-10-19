@@ -1535,3 +1535,104 @@ fn a_p8_replay_reproduces_final_positions() {
         assert_eq!(t.digest(), s.digest());
     }
 }
+
+// ------------------------------------------------ CC-IMPOSSIBLE-COMPLETE F8: the Impossible trap
+
+fn imp_pools(v: Variant) -> TierPools {
+    let mut p = pools_for(v);
+    p.impossible = (0..40).map(|i| format!("imp{i:04}")).collect();
+    p
+}
+
+fn imp_state(human: bool, lang: &str, words: Option<Vec<String>>) -> BoardGameState {
+    let mut pools = imp_pools(Variant::Full);
+    if let Some(w) = words {
+        pools.impossible = w;
+    }
+    let cfg = if human { GameConfig::pass_and_play(Variant::Full, 2, lang, false, exact) } else { solo(Variant::Full, Difficulty::Normal, 3) };
+    let mut s = new_game(7, cfg, pools).unwrap();
+    for t in 1..=6 {
+        s.board.traps[t] = Some(Trap::DoubleExpert);
+    }
+    s
+}
+
+/// F8 (Eric, 2026-10-18): where the language has an Impossible pool, the trap is ONE Impossible word,
+/// and a miss still costs the next turn.
+#[test]
+fn trap_impossible_is_one_word_and_a_miss_costs_the_next_turn() {
+    let mut s = imp_state(true, "en", None);
+    let me = s.current_seat() as usize;
+    human_lands(&mut s);
+    let a = s.pending.clone().unwrap();
+    assert_eq!((a.kind, a.tier, a.step), (SpellKind::Impossible, Tier::Expert, 0));
+    assert!(a.word.starts_with("imp"), "the word comes from the Impossible pool, not Expert");
+    apply(&mut s, Action::SubmitSpelling(a.word.clone())).unwrap();
+    assert!(s.pending.is_none(), "one word: a right answer ends the trap");
+    assert!(!s.players[me].skip);
+    let mut s = imp_state(true, "en", None);
+    let me = s.current_seat() as usize;
+    human_lands(&mut s);
+    apply(&mut s, Action::SubmitSpelling("wrong".into())).unwrap();
+    assert!(s.players[me].skip && s.pending.is_none(), "a miss costs the next turn");
+}
+
+/// Without an Impossible pool the trap is today's Double Expert, word for word (D-C14).
+#[test]
+fn trap_without_an_impossible_pool_is_still_double_expert() {
+    let mut s = forced_trap_state(Trap::DoubleExpert, true);
+    human_lands(&mut s);
+    assert_eq!(s.pending.clone().unwrap().kind, SpellKind::DoubleExpert);
+}
+
+/// F5: the trap word is graded by the ONE strict Impossible grader: German case counts.
+#[test]
+fn trap_impossible_grades_with_the_engine() {
+    let words: Vec<String> = (0..40).map(|i| format!("Wort{i:04}")).collect();
+    let mut s = imp_state(true, "de", Some(words.clone()));
+    human_lands(&mut s);
+    let w = s.pending.clone().unwrap().word;
+    let me = s.current_seat() as usize;
+    apply(&mut s, Action::SubmitSpelling(w.to_lowercase())).unwrap();
+    assert!(s.players[me].skip, "wort for Wort is a miss at Impossible");
+    let mut s = imp_state(true, "de", Some(words));
+    human_lands(&mut s);
+    let w = s.pending.clone().unwrap().word;
+    apply(&mut s, Action::SubmitSpelling(w)).unwrap();
+    assert!(s.pending.is_none());
+    // And outside German, case never matters, exactly as at Expert.
+    let mut s = imp_state(true, "en", None);
+    human_lands(&mut s);
+    let w = s.pending.clone().unwrap().word;
+    let me = s.current_seat() as usize;
+    apply(&mut s, Action::SubmitSpelling(w.to_uppercase())).unwrap();
+    assert!(!s.players[me].skip, "case is not strict in English");
+}
+
+/// An NPC meets the trap with ONE draw at its Expert accuracy, never two.
+#[test]
+fn npc_meets_the_impossible_trap_with_one_draw() {
+    let mut s = imp_state(false, "en", None);
+    to_current(&mut s, true);
+    let before = s.drawn.len();
+    let npc = s.current_seat() as usize;
+    apply(&mut s, Action::AdvanceNpc).unwrap();
+    assert!(s.pending.is_none());
+    let hit = s.revealed.contains(&(s.players[npc].pos));
+    if hit {
+        assert!(s.events.iter().any(|e| matches!(e, Event::TrapSpellOk { .. } | Event::SkipSet { .. })), "the trap resolved");
+    }
+    assert!(s.drawn.len() <= before + 1 + 1, "no second trap word was drawn");
+}
+
+/// Spell Jr never gets the trap, and a case-strict language stays out (this screen has no Shift key).
+#[test]
+fn jr_and_case_strict_languages_never_get_an_impossible_pool() {
+    let base = pools_for(Variant::Jr);
+    assert!(crate::boardgame_pools::with_impossible(base, "en", Variant::Jr).impossible.is_empty());
+    let base = pools_for(Variant::Full);
+    assert!(crate::boardgame_pools::with_impossible(base, "de", Variant::Full).impossible.is_empty());
+    // The Jr generator never names Trap at all: no Jr board holds a trap tile.
+    let s = new_game(3, GameConfig::pass_and_play(Variant::Jr, 2, "en", true, exact), jr_pools()).unwrap();
+    assert!(s.board.traps.iter().all(Option::is_none));
+}

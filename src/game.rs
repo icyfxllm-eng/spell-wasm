@@ -645,9 +645,50 @@ pub fn type_char(app: &App, ch: char) {
     announce(&ch.to_string());
 }
 
+thread_local! {
+    /// The on-screen Shift key is armed: the next letter is typed as a capital. One-shot.
+    static SHIFT: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+}
+
+/// Does the word on screen need capitals typed (Impossible in a case-strict language)?
+pub fn impossible_case(app: &App) -> bool {
+    let s = app.borrow();
+    s.impossible_word && crate::impossible::engine::needs_shift(&s.cur_lang)
+}
+
+/// The on-screen Shift key. One-shot: it capitalises the next letter and clears itself.
+pub fn toggle_shift(app: &App) {
+    if !impossible_case(app) {
+        return;
+    }
+    let on = !SHIFT.with(|s| s.get());
+    SHIFT.with(|s| s.set(on));
+    shift_key_class("on", on);
+}
+
+fn clear_shift() {
+    SHIFT.with(|s| s.set(false));
+    shift_key_class("on", false);
+}
+
+/// The Shift key is built only into the German keyboard, so it is looked up, never assumed
+/// (dom::el panics on a missing id).
+fn shift_key_class(class: &str, on: bool) {
+    if let Some(el) = dom::doc().get_element_by_id("kbShift") {
+        let _ = if on { el.class_list().add_1(class) } else { el.class_list().remove_1(class) };
+    }
+}
+
 /// Route a key press to the right input path for the active keyboard: Korean
 /// composes jamo into syllables (crate::hangul); everything else appends.
 pub fn emit_key(app: &App, ch: char) {
+    // Impossible German: an armed Shift capitalises this letter, once.
+    let ch = if SHIFT.with(|s| s.get()) && impossible_case(app) && ch.is_alphabetic() {
+        clear_shift();
+        ch.to_uppercase().next().unwrap_or(ch)
+    } else {
+        ch
+    };
     if crate::keyboard::active_is_korean(app) {
         type_jamo(app, ch);
     } else {
@@ -1671,6 +1712,11 @@ pub fn next_word(app: &App) {
             s.daily.idx += 1;
             s.cur_lang = s.daily.locale.clone();
             s.cur_tier = length_tier(&w).to_string();
+            if s.daily.impossible {
+                // F7: an Impossible Daily word is played at Impossible rules (the one engine).
+                s.impossible_word = true;
+                s.cur_tier = "expert".into();
+            }
             crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Daily);
             s.word = w;
         } else if matches!(pick_serve, crate::pick_queue::Serve::Exhausted) {
@@ -1993,6 +2039,8 @@ pub fn next_word(app: &App) {
     dom::set_disabled("defBtn", !has_defs);
     dom::set_disabled("sentenceBtn", !has_sentence);
     dom::set_text("hintLine", "");
+    clear_shift();
+    shift_key_class("btn-hide", !impossible_case(app)); // the Shift key exists only where capitals are graded
     {
         // F5: no hints at Impossible. The buttons are hidden and disabled, not just inert.
         let imp = app.borrow().impossible_word;
@@ -3309,6 +3357,18 @@ fn now_ms() -> f64 {
 
 /// Start today's Daily Challenge: a fixed, date+language-seeded set played once
 /// through, one attempt per word, isolated from streak/stats/Misses/Climb.
+/// F7: is the Daily button an Impossible Daily right now? Only on the single-language Impossible
+/// level, in a language whose gate is open, never for a Jr profile. There is no Mix Daily (I9): on
+/// the Mix level the button is the ordinary Daily.
+pub fn impossible_daily_applies(app: &App) -> bool {
+    let (level, lang, kid) = {
+        let s = app.borrow();
+        (s.level.clone(), s.lang.clone(), s.kid)
+    };
+    use crate::impossible::{lang_availability, with_live_inputs, Availability};
+    !kid && level == crate::impossible::engine::LEVEL && with_live_inputs(|i| matches!(lang_availability(&lang, i), Availability::Available(_)))
+}
+
 pub fn enter_daily(app: &App) {
     crate::telemetry::set_mode(crate::telemetry::schema::Mode::Daily);
     let (lang, kid) = {
@@ -3316,7 +3376,12 @@ pub fn enter_daily(app: &App) {
         (s.lang.clone(), s.kid)
     };
     let date = crate::daily::today();
-    let (locale, words) = crate::daily::build_words(&lang, &date, kid);
+    let impossible = impossible_daily_applies(app);
+    let (locale, words) = if impossible {
+        (lang.clone(), crate::daily::build_impossible_words(&lang, &date))
+    } else {
+        crate::daily::build_words(&lang, &date, kid)
+    };
     if words.is_empty() {
         return;
     }
@@ -3325,6 +3390,7 @@ pub fn enter_daily(app: &App) {
         s.review = false;
         s.daily.active = true;
         s.daily.spelloff = false; // an ordinary Daily run, not an online Spell Off
+        s.daily.impossible = impossible;
         s.daily.locale = locale;
         s.daily.date = date;
         s.daily.words = words;
@@ -3357,6 +3423,8 @@ pub fn enter_daily(app: &App) {
 pub fn exit_daily(app: &App) {
     {
         let mut s = app.borrow_mut();
+        s.impossible_word = false;
+        s.daily.impossible = false;
         s.daily.active = false;
         s.daily.spelloff = false;
         s.word = String::new();
@@ -3388,6 +3456,7 @@ pub fn start_spelloff_run(app: &App, locale: String, words: Vec<String>) {
         s.review = false;
         s.daily.active = true;
         s.daily.spelloff = true;
+        s.daily.impossible = false;
         s.daily.locale = locale;
         s.daily.date = crate::daily::today();
         s.daily.words = words;
@@ -3450,6 +3519,7 @@ pub fn start_race(app: &App, circuit: crate::racing::track::Circuit, opponent: c
         s.review = false;
         s.daily.active = true;
         s.daily.spelloff = false;
+        s.daily.impossible = false;
         s.daily.racing = true;
         s.daily.locale = lang;
         s.daily.date = crate::daily::today();
@@ -3523,9 +3593,17 @@ fn finish_daily(app: &App) {
         crate::online_spelloff::finish_run(app, correct, total);
         return;
     }
-    let (streak, best) = crate::daily::record_result(&date, correct);
+    let impossible = app.borrow().daily.impossible;
+    let (streak, best) = if impossible {
+        let lang = app.borrow().daily.locale.clone();
+        crate::daily::record_imp_result(&lang, &date, correct)
+    } else {
+        crate::daily::record_result(&date, correct)
+    };
     {
         let mut s = app.borrow_mut();
+        s.impossible_word = false;
+        s.daily.impossible = false;
         s.daily.active = false;
         s.word = String::new();
         s.answered = false;
@@ -3670,21 +3748,36 @@ fn show_daily_result(app: &App, correct: u32, total: u32, streak: u32, best: u32
 
 /// Re-show today's result (when the Daily button is tapped after it's done).
 pub fn show_today_result(app: &App) {
-    let r = crate::daily::load();
-    let today = crate::daily::today();
-    let correct = r.history.get(&today).copied().unwrap_or(0);
     let (lang, kid) = {
         let s = app.borrow();
         (s.lang.clone(), s.kid)
     };
+    let today = crate::daily::today();
+    if impossible_daily_applies(app) {
+        let r = crate::daily::load_imp(&lang);
+        let correct = r.history.get(&today).copied().unwrap_or(0);
+        show_daily_result(app, correct, crate::daily::IMP_DAILY_WORDS as u32, r.streak, r.best_streak);
+        return;
+    }
+    let r = crate::daily::load();
+    let correct = r.history.get(&today).copied().unwrap_or(0);
     let (_, words) = crate::daily::build_words(&lang, &today, kid);
     show_daily_result(app, correct, words.len() as u32, r.streak, r.best_streak);
+}
+
+/// Has today's run (Impossible Daily on the Impossible level, else the ordinary Daily) been played?
+pub fn daily_done_now(app: &App) -> bool {
+    if impossible_daily_applies(app) {
+        crate::daily::is_imp_done_today(&app.borrow().lang)
+    } else {
+        crate::daily::is_done_today()
+    }
 }
 
 /// Update the Daily button label/state (Rust-managed, like the Misses button).
 pub fn refresh_daily_btn(app: &App) {
     let active = app.borrow().daily.active;
-    let done = crate::daily::is_done_today();
+    let done = daily_done_now(app);
     let label = if active {
         crate::i18n::t("daily.exit")
     } else if done {

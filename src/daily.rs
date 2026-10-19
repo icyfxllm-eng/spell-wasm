@@ -40,6 +40,9 @@ pub struct DailyState {
     /// Daily streak. Default false → ordinary Daily behavior unchanged. (DailyState
     /// is session-only, not persisted, so no serde attribute is needed.)
     pub racing: bool,
+    /// CC-IMPOSSIBLE-COMPLETE F7: this run is the Impossible Daily (the language's Impossible pool,
+    /// its own seed, its own per-language record). Default false -> every other run is unchanged.
+    pub impossible: bool,
 }
 
 /// Persisted daily progress.
@@ -57,6 +60,20 @@ pub struct Record {
 
 pub fn load() -> Record {
     storage::get_json(KEY).unwrap_or_default()
+}
+
+/// F7: the Impossible Daily keeps its own streak and history per language, apart from the Daily
+/// Challenge's (a player's Impossible Daily never marks the ordinary Daily done, or the reverse).
+pub fn imp_key(lang: &str) -> String {
+    format!("spell_daily_imp_v1_{lang}")
+}
+
+pub fn load_imp(lang: &str) -> Record {
+    storage::get_json(&imp_key(lang)).unwrap_or_default()
+}
+
+pub fn is_imp_done_today(lang: &str) -> bool {
+    load_imp(lang).history.contains_key(&today())
 }
 
 fn save(r: &Record) {
@@ -325,6 +342,41 @@ pub fn record_result(date: &str, correct: u32) -> (u32, u32) {
     r.history.insert(date.to_string(), correct);
     save(&r);
     (r.streak, r.best_streak)
+}
+
+/// F7: the same bookkeeping for one language's Impossible Daily.
+pub fn record_imp_result(lang: &str, date: &str, correct: u32) -> (u32, u32) {
+    let mut r = load_imp(lang);
+    if r.history.contains_key(date) {
+        return (r.streak, r.best_streak);
+    }
+    r.streak = if r.last_completed == yesterday() { r.streak + 1 } else { 1 };
+    r.best_streak = r.best_streak.max(r.streak);
+    r.last_completed = date.to_string();
+    r.history.insert(date.to_string(), correct);
+    storage::set_json(&imp_key(lang), &r);
+    (r.streak, r.best_streak)
+}
+
+/// F7: words in one Impossible Daily.
+pub const IMP_DAILY_WORDS: usize = 10;
+
+/// F7 seed namespace. Never changes (it would re-deal every player's history).
+const IMP_DAILY_NS: &str = "daily-impossible-v1";
+
+/// F7: today's Impossible Daily for a language, a pure function of (pool, language, date). Every
+/// player of that language on that date gets the same words in the same order: the existing cycle
+/// walk over the sorted pool (no word repeats until the pool is spent), under its own namespace.
+pub fn impossible_slice(lang: &str, pool: &[String], date: &str) -> Vec<String> {
+    let mut sorted: Vec<&str> = pool.iter().map(String::as_str).collect();
+    sorted.sort_unstable();
+    sorted.dedup();
+    tier_slice_ns(IMP_DAILY_NS, lang, "impossible", &sorted, IMP_DAILY_WORDS, day_index(date))
+}
+
+/// F7: today's words from the language's Impossible pool artifact (empty when it has none).
+pub fn build_impossible_words(lang: &str, date: &str) -> Vec<String> {
+    crate::impossible::pool(lang).map(|p| impossible_slice(lang, &p.words, date)).unwrap_or_default()
 }
 
 #[cfg(test)]

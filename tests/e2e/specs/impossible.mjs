@@ -45,7 +45,70 @@ async function startImpossible(page) {
 const KILL_DOC = JSON.stringify({ v: 1, issued: '2026-10-19T12:00:00Z', kill: ['impossible_fr', 'impossible_mix'],
   sig: 'bd2e970d4e27620794019a061fe849b2c3a9f7704f98811d4a6f3af78aa23a823657dd22db41ad6ac079cd4ff1bb3162fbf6fb739a77e09b3d59f9408199180e' });
 
+async function answerRight(page, word) {
+  // A capital is typed with the on-screen Shift key (German Impossible grades case).
+  const first = word[0];
+  if (first !== first.toLowerCase()) {
+    await page.waitForSelector('#kbShift:not(.btn-hide)', { timeout: 3000 });
+    await page.click('#kbShift');
+    await page.click(`#gameKeyboard .kb-key[data-k="${first.toLowerCase()}"]`);
+    await typeOnKeyboard(page, word.slice(1));
+  } else {
+    await typeOnKeyboard(page, word);
+  }
+  await page.click('#checkBtn');
+  await page.waitForFunction(() => {
+    const c = document.getElementById('feedback')?.className || '';
+    return c.includes('good') || c.includes('bad');
+  }, null, { timeout: 15000 });
+  return page.$eval('#feedback', (e) => e.className.includes('good'));
+}
+
 export async function run(browser, base, suite) {
+  await suite.test('F7: the Daily button on the Impossible level is the Impossible Daily, with its own record', async () => {
+    const { ctx, page } = await open(browser, base, ON);
+    try {
+      await page.click('#setupChip').catch(() => {});
+      await page.selectOption('#levelSel', 'impossible');
+      await clickSettled(page, '#setupDone').catch(() => {});
+      await page.evaluate(() => document.getElementById('dailyBtn').click()); // the hub tile sits under an overlay
+      await page.click('#orbWrap');
+      const seen = [];
+      for (let i = 0; i < 10; i++) {
+        await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+        const word = await page.evaluate(() => window.__spelltest.currentWord());
+        seen.push(word);
+        assert(await page.$eval('#hintBtn', (e) => e.classList.contains('btn-hide')), 'no hints in the Impossible Daily');
+        assert(await answerRight(page, word), `"${word}" typed exactly must be correct`);
+        await page.click('#orbWrap'); // next word, or the result
+      }
+      assert(new Set(seen).size === 10, `ten different words: ${seen}`);
+      const imp = await page.evaluate(() => JSON.parse(localStorage.getItem('spell_daily_imp_v1_en') || '{}'));
+      assert(Object.values(imp.history || {}).includes(10), `the Impossible record holds today's 10/10: ${JSON.stringify(imp)}`);
+      const plain = await page.evaluate(() => localStorage.getItem('spell_daily_v1'));
+      assert(!plain || !Object.keys(JSON.parse(plain).history || {}).length, 'the ordinary Daily must stay unplayed');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('German Impossible: a capitalised noun is typed with the Shift key and counts', async () => {
+    const { ctx, page } = await open(browser, base, { ...ON, spell_flag_impossible_de: 'on', spell_dev_entitlements: 'on' });
+    try {
+      await page.click('#setupChip').catch(() => {});
+      await page.selectOption('#langSel', 'de');
+      await page.selectOption('#levelSel', 'impossible');
+      await clickSettled(page, '#setupDone').catch(() => {});
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      let capital = false;
+      for (let i = 0; i < 25 && !capital; i++) {
+        const word = await page.evaluate(() => window.__spelltest.currentWord());
+        capital = word[0] !== word[0].toLowerCase();
+        assert(await answerRight(page, word), `"${word}" typed exactly (with Shift for a capital) must be correct`);
+        if (!capital) { await page.click('#orbWrap'); await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }); }
+      }
+      assert(capital, 'no capitalised German word came up in 25 words');
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('F4: a signed kill file switches Mix off after it is cached; a tampered one does nothing', async () => {
     for (const [doc, killed] of [[KILL_DOC, true], [KILL_DOC.replace('impossible_mix', 'impossible_xx'), false]]) {
       const { ctx, page } = await open(browser, base, ON);
