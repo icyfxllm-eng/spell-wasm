@@ -42,6 +42,9 @@ pub struct RunAids {
     /// slow button). A correct first submission after a replay grades Hard,
     /// not Good (CC-LEARNING-ENGINE-L0 D3). Cleared when a new word starts.
     pub replayed: bool,
+    /// Replays used on the current word. Only Impossible words read it, against
+    /// `impossible::engine::MAX_REPLAYS`. Cleared when a new word starts.
+    pub replays: u8,
 }
 
 // ---------- run / word lifecycle ----------
@@ -57,6 +60,7 @@ pub fn reset_run(state: &mut AppState) {
 pub fn start_word(state: &mut AppState) {
     state.aids.retry_used = false;
     state.aids.replayed = false;
+    state.aids.replays = 0;
 }
 
 // ---------- Feature 1: extra attempts (normal mode) ----------

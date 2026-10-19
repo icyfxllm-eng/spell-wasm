@@ -331,6 +331,10 @@
   "level.easy.desc": "Short, common words to warm up.",
   "level.expert": "Expert",
   "level.expert.desc": "The toughest words, less time.",
+  "level.impossible": "Impossible",
+  "level.impossible.desc": "Spell it from the sound alone. One replay, one try, no hints.",
+  "level.impossible_mix": "Impossible Mix",
+  "level.impossible_mix.desc": "Impossible words from every language you have. One replay, one try, no hints.",
   "level.hard": "Hard",
   "level.hard.desc": "Longer, trickier words.",
   "level.medium": "Medium",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Play again",
   "qbd.rank": "Place {n} on your drawn board",
   "qbd.boardTitle": "Drawn · best runs on this device",
-  "qbd.boardEmpty": "No drawn runs yet."
+  "qbd.boardEmpty": "No drawn runs yet.",
+  "impossible.mix.notice": "Impossible Mix: words from {langs}. Any of them can come up next. Continue?",
+  "impossible.lock.needs_complete": "Comes with SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Needs two Impossible languages",
+  "impossible.lock.pool_below_floor": "Not enough words yet",
+  "impossible.lock.no_exclusion_gate": "Not ready in this language yet",
+  "impossible.lock.no_drawn_entry": "Coming with drawn entry"
 }

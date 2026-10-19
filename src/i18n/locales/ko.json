@@ -331,6 +331,10 @@
   "level.easy.desc": "몸풀기용 짧고 흔한 단어.",
   "level.expert": "전문가",
   "level.expert.desc": "가장 어려운 단어, 더 짧은 시간.",
+  "level.impossible": "불가능",
+  "level.impossible.desc": "소리만 듣고 철자를 쓰세요. 다시 듣기 1회, 시도 1회, 힌트 없음.",
+  "level.impossible_mix": "불가능 믹스",
+  "level.impossible_mix.desc": "보유한 모든 언어의 불가능 단어. 다시 듣기 1회, 시도 1회, 힌트 없음.",
   "level.hard": "어려움",
   "level.hard.desc": "더 길고 까다로운 단어.",
   "level.medium": "보통",
@@ -1107,5 +1111,11 @@
   "qbd.again": "다시 하기",
   "qbd.rank": "손글씨 기록 {n}위",
   "qbd.boardTitle": "손글씨 · 이 기기의 최고 기록",
-  "qbd.boardEmpty": "아직 손글씨 기록이 없어요."
+  "qbd.boardEmpty": "아직 손글씨 기록이 없어요.",
+  "impossible.mix.notice": "불가능 믹스: {langs}의 단어. 다음에 어느 것이든 나올 수 있어요. 계속할까요?",
+  "impossible.lock.needs_complete": "SpellGame Complete에 포함",
+  "impossible.lock.needs_two_languages": "불가능 언어가 2개 필요해요",
+  "impossible.lock.pool_below_floor": "아직 단어가 부족해요",
+  "impossible.lock.no_exclusion_gate": "이 언어는 아직 준비 중이에요",
+  "impossible.lock.no_drawn_entry": "손글씨 입력과 함께 출시 예정"
 }

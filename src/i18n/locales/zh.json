@@ -331,6 +331,10 @@
   "level.easy.desc": "简短常见的词，热热身。",
   "level.expert": "专家",
   "level.expert.desc": "最难的词，时间更短。",
+  "level.impossible": "不可能",
+  "level.impossible.desc": "只凭听音拼写。重听一次，只有一次机会，没有提示。",
+  "level.impossible_mix": "不可能混合",
+  "level.impossible_mix.desc": "来自你所有语言的不可能单词。重听一次，只有一次机会，没有提示。",
   "level.hard": "困难",
   "level.hard.desc": "更长更难的词。",
   "level.medium": "中等",
@@ -1107,5 +1111,11 @@
   "qbd.again": "再玩一次",
   "qbd.rank": "手写榜第 {n} 名",
   "qbd.boardTitle": "手写 · 本设备最佳成绩",
-  "qbd.boardEmpty": "还没有手写成绩。"
+  "qbd.boardEmpty": "还没有手写成绩。",
+  "impossible.mix.notice": "不可能混合：来自{langs}的单词。下一个可能是其中任何一种。继续吗？",
+  "impossible.lock.needs_complete": "随 SpellGame Complete 提供",
+  "impossible.lock.needs_two_languages": "需要两种不可能语言",
+  "impossible.lock.pool_below_floor": "单词数量还不够",
+  "impossible.lock.no_exclusion_gate": "该语言暂未就绪",
+  "impossible.lock.no_drawn_entry": "手写输入即将推出"
 }

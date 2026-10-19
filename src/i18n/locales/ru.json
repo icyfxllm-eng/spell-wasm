@@ -331,6 +331,10 @@
   "level.easy.desc": "Короткие частые слова для разминки.",
   "level.expert": "Эксперт",
   "level.expert.desc": "Самые трудные слова, меньше времени.",
+  "level.impossible": "Невозможный",
+  "level.impossible.desc": "Напишите слово только на слух. Одно повторение, одна попытка, без подсказок.",
+  "level.impossible_mix": "Невозможный микс",
+  "level.impossible_mix.desc": "Невозможные слова из всех ваших языков. Одно повторение, одна попытка, без подсказок.",
   "level.hard": "Сложно",
   "level.hard.desc": "Слова длиннее и хитрее.",
   "level.medium": "Средне",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Играть снова",
   "qbd.rank": "Место {n} в твоём списке рисования",
   "qbd.boardTitle": "Рисование · лучшие забеги на этом устройстве",
-  "qbd.boardEmpty": "Пока нет забегов с рисованием."
+  "qbd.boardEmpty": "Пока нет забегов с рисованием.",
+  "impossible.mix.notice": "Невозможный микс: слова из {langs}. Выпасть может любое. Продолжить?",
+  "impossible.lock.needs_complete": "Входит в SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Нужны два языка уровня «Невозможный»",
+  "impossible.lock.pool_below_floor": "Пока недостаточно слов",
+  "impossible.lock.no_exclusion_gate": "На этом языке пока не готово",
+  "impossible.lock.no_drawn_entry": "Скоро: рукописный ввод"
 }

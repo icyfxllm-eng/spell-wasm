@@ -635,8 +635,9 @@ fn wire_orb_and_answer(app: &App) {
             if !active || answered {
                 game::next_word(&a);
             } else {
-                game::note_replay(&a);
-                game::speak_current(&a);
+                if game::note_replay(&a) {
+                    game::speak_current(&a);
+                }
             }
         });
     }
@@ -653,8 +654,9 @@ fn wire_orb_and_answer(app: &App) {
                 if !active || answered {
                     game::next_word(&a);
                 } else {
-                    game::note_replay(&a);
-                    game::speak_current(&a);
+                    if game::note_replay(&a) {
+                        game::speak_current(&a);
+                    }
                 }
             }
         });
@@ -662,15 +664,17 @@ fn wire_orb_and_answer(app: &App) {
     {
         let a = app.clone();
         dom::on_click("replayBtn", move || {
-            game::note_replay(&a);
-            game::speak_current(&a);
+            if game::note_replay(&a) {
+                game::speak_current(&a);
+            }
         });
     }
     {
         let a = app.clone();
         dom::on_click("slowBtn", move || {
-            game::note_replay(&a);
-            game::replay_slow(&a);
+            if game::note_replay(&a) {
+                game::replay_slow(&a);
+            }
         });
     }
     // CC-AUDIO-CLARITY F6a — the rescue. Every step is local and silent (I12).
@@ -681,8 +685,9 @@ fn wire_orb_and_answer(app: &App) {
     {
         let a = app.clone();
         dom::on_click("rescueSlow", move || {
-            game::note_replay(&a);
-            game::replay_slow(&a);
+            if game::note_replay(&a) {
+                game::replay_slow(&a);
+            }
         });
     }
     {
@@ -1060,6 +1065,13 @@ fn wire_source_level(app: &App) {
     {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("levelSel", "change", move |_| {
+            // Mix spec M3: one plain notice before the first Mix run, and again when the set of
+            // languages changes. It informs; it never lets the player choose.
+            if crate::impossible::engine::is_mix(&dom::select("levelSel").value()) && !game::mix_notice_accepted() {
+                let prev = a.borrow().level.clone();
+                dom::select("levelSel").set_value(&prev);
+                return;
+            }
             a.borrow_mut().level = dom::select("levelSel").value();
             a.borrow_mut().jr_climb_served = 0; // CC-ONBOARD-JR F3: a new level is a new run
             game::update_setup_chip(&a);

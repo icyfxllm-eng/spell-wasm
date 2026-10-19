@@ -411,3 +411,126 @@ fn expert_tiers_unchanged_by_pools() {
         assert_eq!(crate::wordid::list_hash(lang, "expert"), crate::wordid::compute_list_hash(crate::words::tier_for(lang, "expert")));
     }
 }
+
+// ---------- CC-IMPOSSIBLE-COMPLETE F5 / F6: the shared engine (A-4, A-8, A-9) ----------
+
+use super::engine;
+
+fn xorshift(seed: &mut u64) -> f64 {
+    *seed ^= *seed << 13;
+    *seed ^= *seed >> 7;
+    *seed ^= *seed << 17;
+    (*seed >> 11) as f64 / (1u64 << 53) as f64
+}
+
+/// A-4 / D-C4: German case counts at Impossible only.
+#[test]
+fn german_case_is_strict_only_at_impossible() {
+    assert!(engine::grade("de", "Haus", "Haus"));
+    assert!(!engine::grade("de", "haus", "Haus"), "haus for Haus is a miss at Impossible");
+    assert!(crate::norm::answer_matches("haus", "Haus", false), "and unchanged at Expert and below");
+    assert!(engine::grade("es", "CASA", "casa"), "case is not strict outside German");
+    assert!(!engine::grade("es", "cafe", "café"), "accents stay strict");
+    assert!(engine::grade("fr", " é crit ", "écrit"), "whitespace is ignored");
+}
+
+/// A-4 golden: outside German, the Impossible grader and the Expert grader agree on every
+/// typed variant of every pool word, so strictness never differs from today's Expert fold.
+#[test]
+fn impossible_grading_matches_expert_outside_german() {
+    for lang in pool_langs().into_iter().filter(|l| *l != "de") {
+        for w in pool(lang).unwrap().words.iter().take(400) {
+            for typed in [w.to_uppercase(), w.to_lowercase(), format!(" {w} "), w.chars().rev().collect::<String>()] {
+                assert_eq!(engine::grade(lang, &typed, w), crate::norm::answer_matches(&typed, w, false), "{lang}: {typed:?} vs {w:?}");
+            }
+        }
+    }
+}
+
+/// A-8 / I10 / D-C7: the limits live in one module; game.rs and lib.rs only ask it.
+#[test]
+fn one_engine() {
+    assert!(!engine::replay_allowed(engine::MAX_REPLAYS) && engine::replay_allowed(0));
+    assert!(!engine::attempt_allowed(engine::MAX_ATTEMPTS) && engine::attempt_allowed(0));
+    let game = include_str!("../game.rs");
+    let lib = include_str!("../lib.rs");
+    for (name, src) in [("game.rs", game), ("lib.rs", lib)] {
+        assert!(!src.contains("MAX_REPLAYS") && !src.contains("MAX_ATTEMPTS"), "{name} holds its own copy of an Impossible limit");
+    }
+    assert!(game.contains("engine::replay_allowed") && game.contains("engine::grade"), "game.rs must ask the engine");
+    // The attempt gate: the extra-attempt toggle, shields and retries are all closed at Impossible.
+    assert!(game.contains("&& !s.impossible_word"), "extra_attempt_ctx must exclude Impossible words");
+}
+
+/// A-9: language frequencies over 10,000 draws are within +-3% of uniform; D-C12.
+#[test]
+fn mix_draw_is_uniform_over_languages() {
+    let langs = ["en", "es", "ru", "fr", "ko"];
+    let mut seed = 0x9E37_79B9_7F4A_7C15u64;
+    let mut n = [0usize; 5];
+    for _ in 0..10_000 {
+        let l = engine::draw_language(&langs, xorshift(&mut seed)).unwrap();
+        n[langs.iter().position(|x| *x == l).unwrap()] += 1;
+    }
+    for (l, c) in langs.iter().zip(n) {
+        let p = c as f64 / 10_000.0;
+        assert!((p - 0.2).abs() <= 0.03, "{l}: {p}");
+    }
+    assert_eq!(engine::draw_language(&[], 0.5), None);
+}
+
+/// A-9: no word repeats within a language's pass, over 1,000 seeded runs of the real draw.
+#[test]
+fn mix_never_repeats_within_a_pass() {
+    use std::collections::HashSet;
+    let langs = ["en", "es", "ru"];
+    for run in 0..1000u64 {
+        let mut seed = 0xABCD_1234u64 ^ (run.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
+        let mut decks: Vec<crate::deck::Deck> = langs.iter().map(|_| Default::default()).collect();
+        let pools: Vec<Vec<String>> = langs.iter().map(|l| (0..150).map(|k| format!("{l}{k}")).collect()).collect();
+        let mut seen: Vec<HashSet<String>> = vec![HashSet::new(); 3];
+        for _ in 0..120 {
+            let l = engine::draw_language(&langs, xorshift(&mut seed)).unwrap();
+            let i = langs.iter().position(|x| *x == l).unwrap();
+            let w = decks[i].next_with(&pools[i], &mut |n| (xorshift(&mut seed) * n as f64) as usize % n);
+            assert!(seen[i].insert(w.clone()), "run {run}: {l} repeated {w} inside one pass");
+        }
+    }
+}
+
+/// F3 / F5 / F6: what the level picker shows. Nothing by default; a real lock shows with its
+/// reason; Spell Jr sees nothing.
+#[test]
+fn picker_entries_follow_the_gates() {
+    let none = |e: Vec<engine::PickerEntry>| e.is_empty();
+    assert!(none(run(|i| i.master = false, |i| engine::picker_entries("es", i))));
+    assert!(none(run(|i| i.junior = true, |i| engine::picker_entries("es", i))));
+    assert_eq!(run(|_| {}, |i| engine::picker_entries("es", i)), vec![(engine::LEVEL, None), (engine::MIX_LEVEL, None)]);
+    let free = free_tier();
+    assert_eq!(
+        run(|i| i.entitlements = &free, |i| engine::picker_entries("en", i)),
+        vec![(engine::LEVEL, None), (engine::MIX_LEVEL, Some(LockReason::NeedsComplete))]
+    );
+    assert_eq!(
+        run(|i| i.entitlements = &free, |i| engine::picker_entries("es", i)),
+        vec![(engine::LEVEL, Some(LockReason::NeedsComplete)), (engine::MIX_LEVEL, Some(LockReason::NeedsComplete))]
+    );
+    assert_eq!(run(|_| {}, |i| engine::picker_entries("hi", i))[0], (engine::LEVEL, Some(LockReason::NoExclusionGate)));
+    assert_eq!(run(|_| {}, |i| engine::picker_entries("zh", i))[0], (engine::LEVEL, Some(LockReason::NoDrawnEntry)));
+    for r in [LockReason::NeedsComplete, LockReason::NeedsTwoLanguages, LockReason::PoolBelowFloor, LockReason::NoExclusionGate, LockReason::NoDrawnEntry] {
+        assert!(engine::lock_copy_key(r).starts_with("impossible.lock."));
+    }
+}
+
+/// F5: a serve draws only from languages that pass the gate; a closed gate returns None so the
+/// caller falls back to plain Expert instead of serving a word nobody is entitled to.
+#[test]
+fn serve_langs_obey_the_gate() {
+    assert_eq!(run(|_| {}, |i| engine::serve_langs(engine::LEVEL, "fr", i)), Some(vec!["fr"]));
+    assert_eq!(run(|_| {}, |i| engine::serve_langs(engine::MIX_LEVEL, "fr", i)), Some(pool_langs()));
+    assert_eq!(run(|i| i.master = false, |i| engine::serve_langs(engine::LEVEL, "fr", i)), None);
+    assert_eq!(run(|_| {}, |i| engine::serve_langs(engine::LEVEL, "hi", i)), None);
+    assert_eq!(run(|_| {}, |i| engine::serve_langs("expert", "fr", i)), None);
+    // Misses tag: re-served at Impossible rules (M9) via the tier string.
+    assert_eq!(engine::MISS_TAG, "impossible");
+}

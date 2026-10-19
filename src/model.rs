@@ -270,6 +270,10 @@ pub struct AppState {
     /// `"{lang}:{tier}"`) plus `"__review"` for misses practice. Session-only
     /// — not persisted to storage.
     pub decks: HashMap<String, crate::deck::Deck>,
+    /// CC-IMPOSSIBLE-COMPLETE F5: the word on screen is played at Impossible rules
+    /// (one replay, one attempt, no hints, strict grading, tagged in Misses). Set per
+    /// serve in `next_word`; the rules themselves live in `crate::impossible::engine`.
+    pub impossible_word: bool,
 }
 
 impl Default for AppState {
@@ -333,6 +337,7 @@ impl Default for AppState {
             versus: crate::versus::Versus::default(),
             daily: crate::daily::DailyState::default(),
             decks: HashMap::new(),
+            impossible_word: false,
         }
     }
 }

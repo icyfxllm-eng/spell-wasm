@@ -850,14 +850,16 @@ pub fn refresh_mode_buttons(app: &App) {
 /// The trailing affordance arrow on "Climb →" is trimmed for the value list.
 pub fn update_setup_chip(app: &App) {
     let s = app.borrow();
-    let lang_label = if s.lang == MINE {
+    // Impossible Mix: the chip names the language of the word on screen, not the study language.
+    let chip_lang = if s.impossible_word && crate::impossible::engine::is_mix(&s.level) { &s.cur_lang } else { &s.lang };
+    let lang_label = if *chip_lang == MINE {
         "My Words".to_string()
     } else {
         crate::consts::BUILTIN_LANGS
             .iter()
-            .find(|(c, _, _, _)| *c == s.lang)
+            .find(|(c, _, _, _)| c == chip_lang)
             .map(|(_, n, _, _)| (*n).to_string())
-            .unwrap_or_else(|| s.lang.clone())
+            .unwrap_or_else(|| chip_lang.clone())
     };
     let level_label = crate::i18n::t(&format!("level.{}", s.level));
     let level_label = level_label.trim_end_matches(|c: char| c == '\u{2192}' || c.is_whitespace());
@@ -898,19 +900,38 @@ pub fn build_source_options(app: &App) {
 
 pub fn build_level_options(app: &App) {
     let offered = offered_levels(crate::experience::of_kid(app.borrow().kid));
-    let opts: String = offered
+    let mut opts: String = offered
         .iter()
         .map(|v| {
             let label = crate::i18n::t(&format!("level.{v}"));
             format!("<option value=\"{v}\">{label}</option>")
         })
         .collect();
+    // CC-IMPOSSIBLE-COMPLETE F3/F5/F6: Impossible and Mix, only when their gates say so. A flag
+    // that is off, a Jr profile, or a closed language adds nothing; a true lock shows its reason.
+    let mut impossible_open: Vec<&str> = Vec::new();
+    if !app.borrow().kid {
+        let lang = app.borrow().lang.clone();
+        for (v, lock) in crate::impossible::with_live_inputs(|i| crate::impossible::engine::picker_entries(&lang, i)) {
+            let label = crate::i18n::t(&format!("level.{v}"));
+            match lock {
+                None => {
+                    impossible_open.push(v);
+                    opts.push_str(&format!("<option value=\"{v}\">{label}</option>"));
+                }
+                Some(r) => {
+                    let why = crate::i18n::t(crate::impossible::engine::lock_copy_key(r));
+                    opts.push_str(&format!("<option value=\"{v}\" disabled>{label} \u{2014} {}</option>", dom::escape_html(&why)));
+                }
+            }
+        }
+    }
     dom::set_html("levelSel", &opts);
     {
         // A level the experience no longer offers (Expert, when Spell Jr turns
         // on) falls back to Medium rather than leaving the select blank.
         let mut s = app.borrow_mut();
-        if !offered.contains(&s.level.as_str()) {
+        if !offered.contains(&s.level.as_str()) && !impossible_open.contains(&s.level.as_str()) {
             s.level = "medium".to_string();
         }
     }
@@ -1352,11 +1373,61 @@ thread_local! {
 
 /// The player asked to hear the current word again (orb, replay, slow).
 /// Grades a correct first submission Hard rather than Good (L0 D3).
-pub fn note_replay(app: &App) {
+/// The languages this serve may draw Impossible words from, or None for any other level (or an
+/// Impossible level whose gate has since closed). One read of the live gate inputs.
+fn impossible_langs(s: &AppState) -> Option<Vec<&'static str>> {
+    if !crate::impossible::engine::is_level(&s.level) || s.review {
+        return None;
+    }
+    crate::impossible::with_live_inputs(|i| crate::impossible::engine::serve_langs(&s.level, &s.lang, i))
+}
+
+/// Mix spec M3: the pre-run notice. True when the player may start (already acknowledged this
+/// exact language set, or tapped continue); false when they cancelled.
+pub fn mix_notice_accepted() -> bool {
+    use crate::impossible::{self, MixStatus, Surface};
+    let langs: Vec<&'static str> = impossible::with_live_inputs(|i| match impossible::mix_status(Surface::Normal, i) {
+        MixStatus::Available(v) => v,
+        _ => Vec::new(),
+    });
+    if langs.is_empty() {
+        return false;
+    }
+    let ack = crate::storage::get_raw(impossible::NOTICE_ACK_KEY);
+    if !impossible::notice_due(&langs, ack.as_deref()) {
+        return true;
+    }
+    let names: Vec<String> = langs
+        .iter()
+        .map(|l| crate::consts::BUILTIN_LANGS.iter().find(|(c, _, _, _)| c == l).map(|(_, n, _, _)| (*n).to_string()).unwrap_or_else(|| (*l).to_string()))
+        .collect();
+    let msg = crate::i18n::t("impossible.mix.notice").replace("{langs}", &names.join(", "));
+    let ok = web_sys::window().and_then(|w| w.confirm_with_message(&msg).ok()).unwrap_or(false);
+    if ok {
+        crate::storage::set_raw(impossible::NOTICE_ACK_KEY, &langs.join(","));
+    }
+    ok
+}
+
+/// Records a replay request. Returns false when the replay is NOT allowed (an Impossible word
+/// that has used its one replay): the caller must then play nothing.
+pub fn note_replay(app: &App) -> bool {
     let mut s = app.borrow_mut();
     if has_active_word(&s) && !s.answered {
+        if s.impossible_word {
+            if !crate::impossible::engine::replay_allowed(s.aids.replays) {
+                return false;
+            }
+            s.aids.replays += 1;
+        }
         s.aids.replayed = true;
+        if s.impossible_word && !crate::impossible::engine::replay_allowed(s.aids.replays) {
+            drop(s);
+            dom::set_disabled("replayBtn", true);
+            dom::set_disabled("slowBtn", true);
+        }
     }
+    true
 }
 
 pub fn note_key_time() {
@@ -1581,6 +1652,7 @@ pub fn next_word(app: &App) {
         // easy to medium is the same cause, because a placement serve sets
         // cur_tier from the WORD LENGTH rather than from the Climb.
         PLACEMENT_LIVE.with(|c| c.set(false));
+        s.impossible_word = false; // per serve: only the Impossible branch (or a tagged miss) sets it
         // CC-PICK-QUEUE: the lineup's say over the Misses queue. `Open` (flag
         // off, no session, nothing left to line up) falls straight through to
         // the branches below untouched.
@@ -1678,6 +1750,19 @@ pub fn next_word(app: &App) {
             s.cur_tier = length_tier(&typed).to_string();
             crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Requested);
             s.word = w;
+        } else if let Some(langs) = impossible_langs(&s) {
+            // CC-IMPOSSIBLE-COMPLETE F5/F6: language first (uniform over the run's languages), then
+            // the existing no-repeat deck over that language's pool. cur_lang is set BEFORE the
+            // keyboard rebuild and the audio below, so the label and keyboard lead the sound (I8).
+            use crate::impossible::engine as imp;
+            let lang = imp::draw_language(&langs, js_sys::Math::random()).unwrap_or(crate::consts::EN).to_string();
+            let pool: Vec<String> = crate::impossible::pool(&lang).map(|p| p.words.clone()).unwrap_or_default();
+            let w = s.decks.entry(format!("{lang}:{}", imp::LEVEL)).or_default().next(&pool);
+            s.cur_lang = lang;
+            s.cur_tier = "expert".into();
+            s.impossible_word = true;
+            crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Deck);
+            s.word = w;
         } else {
             PLACEMENT_LIVE.with(|c| c.set(false)); // redundant now; harmless
             {
@@ -1699,6 +1784,8 @@ pub fn next_word(app: &App) {
                 let (t, beat) = serve_climb_tier(&mut s);
                 jr_level_up = beat;
                 t
+            } else if crate::impossible::engine::is_level(&s.level) {
+                "expert".to_string() // the Impossible level lost its gate mid-session: plain Expert
             } else {
                 s.level.clone()
             };
@@ -1828,6 +1915,16 @@ pub fn next_word(app: &App) {
         }
     }
 
+    // Mix spec M9: a missed Impossible word comes back from Misses at Impossible rules, in its
+    // own language. The tag lives in the miss's tier; the word is served as Expert-timed.
+    {
+        let mut s = app.borrow_mut();
+        if s.cur_tier == crate::impossible::engine::MISS_TAG {
+            s.cur_tier = "expert".into();
+            s.impossible_word = true;
+        }
+    }
+
     // Persist the decks so the free-play no-repeat cursor survives an app
     // restart and carries across days (Feature 2 / I4).
     crate::storage::set_json(crate::model::DECKS_KEY, &app.borrow().decks);
@@ -1896,6 +1993,18 @@ pub fn next_word(app: &App) {
     dom::set_disabled("defBtn", !has_defs);
     dom::set_disabled("sentenceBtn", !has_sentence);
     dom::set_text("hintLine", "");
+    {
+        // F5: no hints at Impossible. The buttons are hidden and disabled, not just inert.
+        let imp = app.borrow().impossible_word;
+        dom::toggle_class("hintBtn", "btn-hide", imp);
+        dom::toggle_class("cantHearBtn", "btn-hide", imp);
+        if imp {
+            for id in ["hintBtn", "defBtn", "sentenceBtn", "cantHearBtn"] {
+                dom::add_class(id, "btn-hide");
+                dom::set_disabled(id, true);
+            }
+        }
+    }
     render_tries(app);
     dom::el("feedback").set_class_name("feedback");
     dom::set_text("feedback", "");
@@ -1904,6 +2013,9 @@ pub fn next_word(app: &App) {
     }
     update_voice_note(app);
     sync_keyboard(app);
+    if crate::impossible::engine::is_level(&app.borrow().level) || app.borrow().impossible_word {
+        update_setup_chip(app); // I8: the chip names the word's language before the audio plays
+    }
     if app.borrow().daily.active {
         render_daily_bar(app);
     }
@@ -1974,19 +2086,24 @@ pub fn submit_guess(app: &App) {
     // true for a word against itself (same group), and short-circuiting there
     // would quietly remove backend verification from ordinary English answers.
     // Only a DIFFERENT member of the collision set resolves locally.
-    let en_other_sense = cur_lang == EN
+    let impossible = app.borrow().impossible_word;
+    let en_other_sense = !impossible
+        && cur_lang == EN
         && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word)
         && crate::homophones::accepts(EN, &word, &typed);
     if en_other_sense {
         VALID_OTHER_SENSE.with(|c| c.set(true));
     }
-    if cur_lang == EN && !en_other_sense {
+    if cur_lang == EN && !en_other_sense && !impossible {
         spawn_local(backend_verify(app.clone(), word, typed, kid));
         return;
     }
     // Mandarin compares tone-numbered pinyin (v→ü, neutral-5 optional); every
     // other language uses the NFC/case fold (accent-strict, Kid-lenient).
-    let correct = if cur_lang == crate::consts::ZH {
+    let correct = if impossible {
+        // F5: the ONE strict grader. No accept-any layer: I1 removed every word with a rival spelling.
+        crate::impossible::engine::grade(&cur_lang, &typed, &word)
+    } else if cur_lang == crate::consts::ZH {
         // F2: Little Speller is tone-blind by FLAG on the one matcher, never
         // by a second code path (Invariant 5). F3: keep the per-syllable
         // verdict — it decides which queue a miss studies in, and what the
@@ -2612,6 +2729,7 @@ fn extra_attempt_ctx(s: &AppState) -> bool {
         && !s.versus.enabled
         && !s.daily.active
         && !s.review
+        && !s.impossible_word
 }
 
 thread_local! {
@@ -2772,6 +2890,10 @@ fn zh_tone_retry_available(app: &App) -> bool {
 }
 
 fn record_miss_routed(app: &App, word: &str, lang: &str, tier: &str) {
+    // Mix spec M9: an Impossible miss is filed under the Impossible tag, on the ONE function every
+    // recorded miss goes through, so it returns from Misses at Impossible rules in its own language.
+    let tagged = if app.borrow().impossible_word { crate::impossible::engine::MISS_TAG } else { tier };
+    let tier = tagged;
     use crate::tone_drill::Queue;
     let queue = ZH_VERDICT.with(|v| {
         v.borrow().as_ref().map_or(Queue::General, crate::tone_drill::route)

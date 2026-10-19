@@ -331,6 +331,10 @@
   "level.easy.desc": "Krótkie, częste słowa na rozgrzewkę.",
   "level.expert": "Ekspert",
   "level.expert.desc": "Najtrudniejsze słowa, mniej czasu.",
+  "level.impossible": "Niemożliwy",
+  "level.impossible.desc": "Przeliterować tylko ze słuchu. Jedno powtórzenie, jedna próba, bez podpowiedzi.",
+  "level.impossible_mix": "Mix Niemożliwy",
+  "level.impossible_mix.desc": "Niemożliwe słowa ze wszystkich twoich języków. Jedno powtórzenie, jedna próba, bez podpowiedzi.",
   "level.hard": "Trudny",
   "level.hard.desc": "Dłuższe, trudniejsze słowa.",
   "level.medium": "Średni",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Zagraj ponownie",
   "qbd.rank": "Miejsce {n} w twoim rankingu rysowania",
   "qbd.boardTitle": "Rysowanie · najlepsze wyniki na tym urządzeniu",
-  "qbd.boardEmpty": "Brak jeszcze rozegranych rund."
+  "qbd.boardEmpty": "Brak jeszcze rozegranych rund.",
+  "impossible.mix.notice": "Mix Niemożliwy: słowa z {langs}. Każde może wypaść jako następne. Kontynuować?",
+  "impossible.lock.needs_complete": "W zestawie SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Wymaga dwóch języków na poziomie Niemożliwy",
+  "impossible.lock.pool_below_floor": "Za mało słów",
+  "impossible.lock.no_exclusion_gate": "Jeszcze niegotowe w tym języku",
+  "impossible.lock.no_drawn_entry": "Wkrótce z wpisywaniem odręcznym"
 }

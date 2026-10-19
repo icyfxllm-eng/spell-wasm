@@ -302,5 +302,7 @@ pub fn with_live_inputs<R>(f: impl FnOnce(&Inputs) -> R) -> R {
     f(&inputs)
 }
 
+pub mod engine;
+
 #[cfg(test)]
 mod tests;

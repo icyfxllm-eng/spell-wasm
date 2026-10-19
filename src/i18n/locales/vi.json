@@ -331,6 +331,10 @@
   "level.easy.desc": "Từ ngắn, quen thuộc để khởi động.",
   "level.expert": "Chuyên gia",
   "level.expert.desc": "Những từ khó nhất, ít thời gian hơn.",
+  "level.impossible": "Bất khả thi",
+  "level.impossible.desc": "Chỉ nghe âm thanh để đánh vần. Một lần nghe lại, một lần thử, không gợi ý.",
+  "level.impossible_mix": "Hỗn hợp Bất khả thi",
+  "level.impossible_mix.desc": "Từ bất khả thi từ mọi ngôn ngữ của bạn. Một lần nghe lại, một lần thử, không gợi ý.",
   "level.hard": "Khó",
   "level.hard.desc": "Từ dài hơn, khó hơn.",
   "level.medium": "Trung bình",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Chơi lại",
   "qbd.rank": "Hạng {n} trên bảng vẽ của bạn",
   "qbd.boardTitle": "Vẽ · các lượt chơi tốt nhất trên thiết bị này",
-  "qbd.boardEmpty": "Chưa có lượt vẽ nào."
+  "qbd.boardEmpty": "Chưa có lượt vẽ nào.",
+  "impossible.mix.notice": "Hỗn hợp Bất khả thi: từ vựng từ {langs}. Từ nào cũng có thể xuất hiện tiếp theo. Tiếp tục?",
+  "impossible.lock.needs_complete": "Có trong SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Cần hai ngôn ngữ Bất khả thi",
+  "impossible.lock.pool_below_floor": "Chưa đủ từ",
+  "impossible.lock.no_exclusion_gate": "Ngôn ngữ này chưa sẵn sàng",
+  "impossible.lock.no_drawn_entry": "Sắp có chế độ viết tay"
 }

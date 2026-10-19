@@ -331,6 +331,10 @@
   "level.easy.desc": "Kurze, häufige Wörter zum Aufwärmen.",
   "level.expert": "Experte",
   "level.expert.desc": "Die schwersten Wörter, weniger Zeit.",
+  "level.impossible": "Unmöglich",
+  "level.impossible.desc": "Buchstabiere nur nach dem Klang. Ein Wiederholen, ein Versuch, keine Hinweise.",
+  "level.impossible_mix": "Unmöglich-Mix",
+  "level.impossible_mix.desc": "Unmögliche Wörter aus allen deinen Sprachen. Ein Wiederholen, ein Versuch, keine Hinweise.",
   "level.hard": "Schwer",
   "level.hard.desc": "Längere, kniffligere Wörter.",
   "level.medium": "Mittel",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Nochmal spielen",
   "qbd.rank": "Platz {n} in deiner Zeichen-Bestenliste",
   "qbd.boardTitle": "Gezeichnet · beste Läufe auf diesem Gerät",
-  "qbd.boardEmpty": "Noch keine gezeichneten Läufe."
+  "qbd.boardEmpty": "Noch keine gezeichneten Läufe.",
+  "impossible.mix.notice": "Unmöglich-Mix: Wörter aus {langs}. Jedes davon kann als Nächstes kommen. Weiter?",
+  "impossible.lock.needs_complete": "Gehört zu SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Braucht zwei Sprachen mit Unmöglich",
+  "impossible.lock.pool_below_floor": "Noch nicht genug Wörter",
+  "impossible.lock.no_exclusion_gate": "In dieser Sprache noch nicht bereit",
+  "impossible.lock.no_drawn_entry": "Kommt mit Handschrifteingabe"
 }

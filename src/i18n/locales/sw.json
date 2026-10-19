@@ -331,6 +331,10 @@
   "level.easy.desc": "Maneno mafupi ya kawaida ya kuanzia.",
   "level.expert": "Bingwa",
   "level.expert.desc": "Maneno magumu zaidi, muda mfupi.",
+  "level.impossible": "Haiwezekani",
+  "level.impossible.desc": "Tamka kwa sauti pekee. Rudia mara moja, jaribu mara moja, bila vidokezo.",
+  "level.impossible_mix": "Mchanganyiko Haiwezekani",
+  "level.impossible_mix.desc": "Maneno yasiyowezekana kutoka lugha zako zote. Rudia mara moja, jaribu mara moja, bila vidokezo.",
   "level.hard": "Ngumu",
   "level.hard.desc": "Maneno marefu na magumu zaidi.",
   "level.medium": "Wastani",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Cheza tena",
   "qbd.rank": "Nafasi ya {n} kwenye ubao wako wa kuchora",
   "qbd.boardTitle": "Kuchora · raundi bora kwenye kifaa hiki",
-  "qbd.boardEmpty": "Bado hakuna raundi za kuchora."
+  "qbd.boardEmpty": "Bado hakuna raundi za kuchora.",
+  "impossible.mix.notice": "Mchanganyiko Haiwezekani: maneno kutoka {langs}. Lolote linaweza kuja baadaye. Endelea?",
+  "impossible.lock.needs_complete": "Inakuja na SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Inahitaji lugha mbili za Haiwezekani",
+  "impossible.lock.pool_below_floor": "Maneno bado hayatoshi",
+  "impossible.lock.no_exclusion_gate": "Bado haijawa tayari kwa lugha hii",
+  "impossible.lock.no_drawn_entry": "Inakuja na uandishi kwa mkono"
 }

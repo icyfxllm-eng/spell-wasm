@@ -331,6 +331,10 @@
   "level.easy.desc": "Maiikli at pamilyar na salita para mag-warm up.",
   "level.expert": "Eksperto",
   "level.expert.desc": "Ang pinakamahihirap na salita, mas maikli ang oras.",
+  "level.impossible": "Imposible",
+  "level.impossible.desc": "Baybayin ito mula sa tunog lang. Isang ulit, isang subok, walang pahiwatig.",
+  "level.impossible_mix": "Halong Imposible",
+  "level.impossible_mix.desc": "Mga imposibleng salita mula sa lahat ng wika mo. Isang ulit, isang subok, walang pahiwatig.",
   "level.hard": "Mahirap",
   "level.hard.desc": "Mas mahaba at mas mahirap na salita.",
   "level.medium": "Katamtaman",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Maglaro ulit",
   "qbd.rank": "Ika-{n} sa iyong guhit na listahan",
   "qbd.boardTitle": "Guhit · pinakamahusay na laro sa device na ito",
-  "qbd.boardEmpty": "Wala pang laro ng pagguhit."
+  "qbd.boardEmpty": "Wala pang laro ng pagguhit.",
+  "impossible.mix.notice": "Halong Imposible: mga salita mula sa {langs}. Alinman sa mga ito ang puwedeng lumabas. Magpatuloy?",
+  "impossible.lock.needs_complete": "Kasama sa SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Kailangan ng dalawang wika sa Imposible",
+  "impossible.lock.pool_below_floor": "Kulang pa ang mga salita",
+  "impossible.lock.no_exclusion_gate": "Hindi pa handa sa wikang ito",
+  "impossible.lock.no_drawn_entry": "Darating kasama ang pagsulat gamit ang kamay"
 }

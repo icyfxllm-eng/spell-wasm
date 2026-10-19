@@ -331,6 +331,10 @@
   "level.easy.desc": "वार्म-अप के लिए छोटे, आम शब्द।",
   "level.expert": "विशेषज्ञ",
   "level.expert.desc": "सबसे कठिन शब्द, कम समय।",
+  "level.impossible": "असंभव",
+  "level.impossible.desc": "सिर्फ़ आवाज़ सुनकर स्पेल करें। एक रीप्ले, एक कोशिश, कोई संकेत नहीं।",
+  "level.impossible_mix": "असंभव मिक्स",
+  "level.impossible_mix.desc": "आपकी सभी भाषाओं से असंभव शब्द। एक रीप्ले, एक कोशिश, कोई संकेत नहीं।",
   "level.hard": "कठिन",
   "level.hard.desc": "लंबे, पेचीदा शब्द।",
   "level.medium": "मध्यम",
@@ -1107,5 +1111,11 @@
   "qbd.again": "फिर खेलें",
   "qbd.rank": "आपके चित्रित बोर्ड पर स्थान {n}",
   "qbd.boardTitle": "चित्रित · इस डिवाइस के सर्वश्रेष्ठ राउंड",
-  "qbd.boardEmpty": "अभी तक कोई चित्रित राउंड नहीं।"
+  "qbd.boardEmpty": "अभी तक कोई चित्रित राउंड नहीं।",
+  "impossible.mix.notice": "असंभव मिक्स: {langs} के शब्द। इनमें से कोई भी अगला आ सकता है। जारी रखें?",
+  "impossible.lock.needs_complete": "SpellGame Complete के साथ मिलता है",
+  "impossible.lock.needs_two_languages": "दो असंभव भाषाएँ चाहिए",
+  "impossible.lock.pool_below_floor": "अभी पर्याप्त शब्द नहीं हैं",
+  "impossible.lock.no_exclusion_gate": "इस भाषा में अभी तैयार नहीं है",
+  "impossible.lock.no_drawn_entry": "हस्तलेखन इनपुट के साथ जल्द आ रहा है"
 }

@@ -331,6 +331,10 @@
   "level.easy.desc": "كلمات قصيرة شائعة للإحماء.",
   "level.expert": "خبير",
   "level.expert.desc": "أصعب الكلمات ووقت أقل.",
+  "level.impossible": "مستحيل",
+  "level.impossible.desc": "اكتب الكلمة من الصوت فقط. إعادة واحدة، محاولة واحدة، بلا تلميحات.",
+  "level.impossible_mix": "المزيج المستحيل",
+  "level.impossible_mix.desc": "كلمات مستحيلة من كل لغاتك. إعادة واحدة، محاولة واحدة، بلا تلميحات.",
   "level.hard": "صعب",
   "level.hard.desc": "كلمات أطول وأصعب.",
   "level.medium": "متوسط",
@@ -1107,5 +1111,11 @@
   "qbd.again": "العب مجددًا",
   "qbd.rank": "المركز {n} في لوحة الرسم الخاصة بك",
   "qbd.boardTitle": "رسم · أفضل الجولات على هذا الجهاز",
-  "qbd.boardEmpty": "لا توجد جولات رسم بعد."
+  "qbd.boardEmpty": "لا توجد جولات رسم بعد.",
+  "impossible.mix.notice": "المزيج المستحيل: كلمات من {langs}. قد تظهر أي منها بعد ذلك. هل تتابع؟",
+  "impossible.lock.needs_complete": "يأتي مع SpellGame Complete",
+  "impossible.lock.needs_two_languages": "يحتاج إلى لغتين في وضع المستحيل",
+  "impossible.lock.pool_below_floor": "لا توجد كلمات كافية بعد",
+  "impossible.lock.no_exclusion_gate": "غير جاهز بهذه اللغة بعد",
+  "impossible.lock.no_drawn_entry": "قريبًا مع الإدخال بالكتابة اليدوية"
 }

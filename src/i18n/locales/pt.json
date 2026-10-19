@@ -331,6 +331,10 @@
   "level.easy.desc": "Palavras curtas e comuns para aquecer.",
   "level.expert": "Especialista",
   "level.expert.desc": "As palavras mais difíceis, menos tempo.",
+  "level.impossible": "Impossível",
+  "level.impossible.desc": "Soletre só pelo som. Uma repetição, uma tentativa, sem dicas.",
+  "level.impossible_mix": "Mix Impossível",
+  "level.impossible_mix.desc": "Palavras impossíveis de todos os seus idiomas. Uma repetição, uma tentativa, sem dicas.",
   "level.hard": "Difícil",
   "level.hard.desc": "Palavras mais longas e difíceis.",
   "level.medium": "Médio",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Jogar de novo",
   "qbd.rank": "Posição {n} no seu placar de desenho",
   "qbd.boardTitle": "Desenho · melhores partidas neste dispositivo",
-  "qbd.boardEmpty": "Ainda não há partidas desenhadas."
+  "qbd.boardEmpty": "Ainda não há partidas desenhadas.",
+  "impossible.mix.notice": "Mix Impossível: palavras de {langs}. Qualquer uma pode aparecer a seguir. Continuar?",
+  "impossible.lock.needs_complete": "Incluído no SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Requer dois idiomas em Impossível",
+  "impossible.lock.pool_below_floor": "Ainda não há palavras suficientes",
+  "impossible.lock.no_exclusion_gate": "Ainda não está pronto neste idioma",
+  "impossible.lock.no_drawn_entry": "Em breve, com escrita à mão"
 }

@@ -331,6 +331,10 @@
   "level.easy.desc": "肩慣らしの短くよくある単語。",
   "level.expert": "エキスパート",
   "level.expert.desc": "最難関の単語、時間は短め。",
+  "level.impossible": "不可能",
+  "level.impossible.desc": "音だけで綴ろう。リプレイは1回、挑戦は1回、ヒントなし。",
+  "level.impossible_mix": "不可能ミックス",
+  "level.impossible_mix.desc": "あなたの全言語から選ぶ不可能な単語。リプレイは1回、挑戦は1回、ヒントなし。",
   "level.hard": "むずかしい",
   "level.hard.desc": "長めで難しい単語。",
   "level.medium": "ふつう",
@@ -1107,5 +1111,11 @@
   "qbd.again": "もう一度あそぶ",
   "qbd.rank": "手書きボードの第{n}位",
   "qbd.boardTitle": "手書き・このデバイスのベストラン",
-  "qbd.boardEmpty": "手書きのランはまだありません。"
+  "qbd.boardEmpty": "手書きのランはまだありません。",
+  "impossible.mix.notice": "不可能ミックス：{langs}の単語。次はどれが出るかわかりません。続けますか？",
+  "impossible.lock.needs_complete": "SpellGame Completeに含まれます",
+  "impossible.lock.needs_two_languages": "不可能の言語が2つ必要です",
+  "impossible.lock.pool_below_floor": "単語がまだ足りません",
+  "impossible.lock.no_exclusion_gate": "この言語ではまだ準備中です",
+  "impossible.lock.no_drawn_entry": "手書き入力と同時に登場予定"
 }

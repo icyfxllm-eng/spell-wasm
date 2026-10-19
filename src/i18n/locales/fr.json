@@ -331,6 +331,10 @@
   "level.easy.desc": "Des mots courts et courants pour s'échauffer.",
   "level.expert": "Expert",
   "level.expert.desc": "Les mots les plus durs, moins de temps.",
+  "level.impossible": "Impossible",
+  "level.impossible.desc": "Épelez au son seulement. Une réécoute, un essai, aucun indice.",
+  "level.impossible_mix": "Mix impossible",
+  "level.impossible_mix.desc": "Des mots extrêmes de toutes vos langues. Une réécoute, un essai, aucun indice.",
   "level.hard": "Difficile",
   "level.hard.desc": "Des mots plus longs et plus difficiles.",
   "level.medium": "Moyen",
@@ -1107,5 +1111,11 @@
   "qbd.again": "Rejouer",
   "qbd.rank": "Place {n} sur ton classement dessiné",
   "qbd.boardTitle": "Dessin · meilleures parties sur cet appareil",
-  "qbd.boardEmpty": "Aucune partie dessinée pour l'instant."
+  "qbd.boardEmpty": "Aucune partie dessinée pour l'instant.",
+  "impossible.mix.notice": "Mix impossible : des mots en {langs}. N'importe lequel peut tomber. Continuer ?",
+  "impossible.lock.needs_complete": "Inclus dans SpellGame Complete",
+  "impossible.lock.needs_two_languages": "Nécessite deux langues en Extrême",
+  "impossible.lock.pool_below_floor": "Pas encore assez de mots",
+  "impossible.lock.no_exclusion_gate": "Pas encore prêt dans cette langue",
+  "impossible.lock.no_drawn_entry": "Bientôt avec la saisie manuscrite"
 }
