@@ -51,9 +51,12 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await open(browser, base, ON);
       try {
         await ctx.route('**/api/kill-flags', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: doc }));
+        const answered = page.waitForResponse('**/api/kill-flags');
         await page.reload({ waitUntil: 'load' });
+        await answered; // the silent refresh has been answered; adoption follows in the same tasks
         await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-        await page.waitForTimeout(800); // the silent refresh
+        if (killed) await page.waitForFunction(() => !!localStorage.getItem('spell_kill_flags_v1'), null, { timeout: 5000 });
+        else await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
         const cached = await page.evaluate(() => localStorage.getItem('spell_kill_flags_v1'));
         assert(killed ? !!cached : !cached, `cache after refresh: killed=${killed} cached=${!!cached}`);
         await page.reload({ waitUntil: 'load' });
