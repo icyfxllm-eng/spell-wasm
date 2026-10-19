@@ -1,0 +1,27 @@
+{
+ "lang": "sw",
+ "status": "exclusion_only",
+ "voice": "sw-TZ-RehemaNeural",
+ "clipCacheVersion": "v4",
+ "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
+ "expertRows": 683,
+ "rulesNet": [
+  "mmojawapo",
+  "unaonekana",
+  "unaoonekana"
+ ],
+ "loopbackKeep": [
+  "mmojawapo",
+  "uanachama",
+  "unaoonekana"
+ ],
+ "loopbackPartners": [
+  "unaonekana"
+ ],
+ "excluded": [
+  "mmojawapo",
+  "uanachama",
+  "unaonekana",
+  "unaoonekana"
+ ]
+}

@@ -5,8 +5,19 @@
 use super::*;
 use crate::entitlements::{free_tier, resolve_entitlements};
 
-/// The languages with a built pool today (v1.2 P5 after SENSE-CUE Phase B).
+/// The languages with a verified SENSE-CUE table (v1.2 P5 after SENSE-CUE Phase B).
 const POOL_LANGS: [&str; 3] = ["en", "es", "ru"];
+
+/// CC-IMPOSSIBLE-COMPLETE F1: languages that open through an `exclusion_only` gate.
+const GATED_LANGS: [&str; 7] = ["fr", "de", "pt", "pl", "ko", "fil", "sw"];
+
+/// hi, vi and ar are held (Eric, 2026-10-19): the recogniser could not hear them.
+const HELD_LANGS: [&str; 3] = ["vi", "ar", "hi"];
+
+/// Every language with a pool today, in registry order.
+fn pool_langs() -> Vec<&'static str> {
+    registry_langs().filter(|l| POOL_LANGS.contains(l) || GATED_LANGS.contains(l)).collect()
+}
 
 /// The tier a language's pool is drawn from, as the app serves it.
 fn source_tier(lang: &str) -> &'static [&'static str] {
@@ -73,13 +84,13 @@ fn every_registry_language_has_an_artifact() {
     }
 }
 
-/// v1.2 P5 after Phase B: exactly en (re-tier), es and ru have pools; zh and ja
-/// are locked by D4; every other language waits for a sound-alike table.
+/// en (re-tier), es and ru have pools through verified tables; fr de pt pl ko fil sw through
+/// the F1 exclusion gate; zh and ja are locked by D4; hi, vi and ar are held.
 #[test]
 fn which_languages_have_pools_today() {
     for lang in registry_langs() {
         let p = pool(lang).unwrap();
-        let want = if POOL_LANGS.contains(&lang) {
+        let want = if POOL_LANGS.contains(&lang) || GATED_LANGS.contains(&lang) {
             None
         } else if lang == "zh" || lang == "ja" {
             Some("drawn-entry")
@@ -88,6 +99,8 @@ fn which_languages_have_pools_today() {
         };
         assert_eq!(p.reason.as_deref(), want, "{lang}");
         assert_eq!(p.status == "pool", want.is_none(), "{lang}");
+        let table = if GATED_LANGS.contains(&lang) { "exclusion_only" } else if POOL_LANGS.contains(&lang) { "verified" } else { "missing" };
+        assert_eq!(p.table, table, "{lang}");
     }
     assert_eq!(pool("en").unwrap().source, "en-retier-expert");
 }
@@ -97,7 +110,7 @@ fn which_languages_have_pools_today() {
 /// bar the PURITY and sound-alike removals (no slice, no ranking).
 #[test]
 fn impossible_pool_subset_and_all_expert() {
-    for lang in POOL_LANGS {
+    for lang in pool_langs() {
         let p = pool(lang).unwrap();
         let tier: std::collections::HashSet<&str> = source_tier(lang).iter().copied().collect();
         for w in &p.words {
@@ -167,7 +180,7 @@ fn impossible_gate_threshold() {
     let p150 = fixture("es", 150);
     let at149 = |_: &str| Some(p149);
     let at150 = |_: &str| Some(p150);
-    assert_eq!(run(|i| i.pools = &at149, |i| lang_availability("es", i)), Availability::Locked(LockReason::NotEnoughWords));
+    assert_eq!(run(|i| i.pools = &at149, |i| lang_availability("es", i)), Availability::Locked(LockReason::PoolBelowFloor));
     assert_eq!(run(|i| i.pools = &at150, |i| lang_availability("es", i)), Availability::Available(150));
 }
 
@@ -178,15 +191,101 @@ fn impossible_closed_language() {
     let closed = |l: &str| l != "ar";
     assert_eq!(run(|i| i.lang_open = &closed, |i| lang_availability("ar", i)), Availability::Hidden);
     for lang in ["zh", "ja"] {
-        assert_eq!(run(|_| {}, |i| lang_availability(lang, i)), Availability::Locked(LockReason::DrawnEntry), "{lang}");
+        assert_eq!(run(|_| {}, |i| lang_availability(lang, i)), Availability::Locked(LockReason::NoDrawnEntry), "{lang}");
     }
 }
 
-/// v1.1 A3: a `missing` table keeps the language locked (fail closed).
+/// v1.1 A3: a `missing` table with no exclusion gate keeps the language locked (fail closed).
 #[test]
 fn missing_table_locks() {
-    for lang in ["fr", "de", "ar", "hi"] {
-        assert_eq!(run(|_| {}, |i| lang_availability(lang, i)), Availability::Locked(LockReason::NotEnoughWords), "{lang}");
+    for lang in HELD_LANGS {
+        assert_eq!(run(|_| {}, |i| lang_availability(lang, i)), Availability::Locked(LockReason::NoExclusionGate), "{lang}");
+    }
+}
+
+/// CC-IMPOSSIBLE-COMPLETE A-1 / I2: an `exclusion_only` language is available only when its
+/// pool after exclusion clears 150; below that it is `pool_below_floor`, never open.
+#[test]
+fn exclusion_only_opens_and_respects_floor() {
+    for lang in GATED_LANGS {
+        let n = pool(lang).unwrap().words.len();
+        assert!(n >= FLOOR, "{lang}: gated language below the floor");
+        assert_eq!(run(|_| {}, |i| lang_availability(lang, i)), Availability::Available(n), "{lang}");
+    }
+    let thin = fixture("fr", 149);
+    let thin = Box::leak(Box::new(Pool { table: "exclusion_only".into(), ..thin.clone() }));
+    let at = |_: &str| Some(&*thin);
+    assert_eq!(run(|i| i.pools = &at, |i| lang_availability("fr", i)), Availability::Locked(LockReason::PoolBelowFloor));
+}
+
+/// A-3 / I3 / D-C1: an `exclusion_only` gate opens Impossible and nothing else. The SENSE-CUE
+/// table behind the cues and the sound-alike bonus stays `missing` for every gated language.
+#[test]
+fn exclusion_only_never_enables_cues() {
+    for lang in GATED_LANGS.iter().chain(HELD_LANGS.iter()) {
+        assert_eq!(crate::soundalikes::soundalikes(lang).status, "missing", "{lang}: cues must stay off");
+        assert!(crate::soundalikes::sets_of_kind(lang, &["true", "accent"]).is_empty(), "{lang}");
+    }
+}
+
+/// A-1: the reviewed pairs are excluded, and the exclusion data names its voice (D-C16).
+#[test]
+fn exclusion_gate_catches_reviewed_pairs() {
+    let gone = |lang: &str, w: &str| !pool(lang).unwrap().words.iter().any(|x| x == w);
+    for (lang, w) in [("ko", "계통"), ("ko", "미처"), ("fr", "abandonnent"), ("sw", "unaoonekana"), ("de", "bayrischen")] {
+        assert!(gone(lang, w), "{lang}: {w} is a reviewed sound-alike and is in the pool");
+    }
+    // REJECT rows stay: recogniser noise is not a sound-alike.
+    assert!(!gone("ko", "단면"), "ko: 단면 was REJECT and must stay in the pool");
+    for lang in GATED_LANGS {
+        let json = std::fs::read_to_string(format!("{}/data/impossible/exclusion/{lang}.json", env!("CARGO_MANIFEST_DIR"))).unwrap();
+        assert!(json.contains("\"voice\"") && json.contains("clipCacheVersion"), "{lang}");
+    }
+}
+
+/// A-14 / F11: the availability report has one row per registry language and its pool counts
+/// match the artifacts (the generator also checks it on every gate run).
+#[test]
+fn availability_report_matches_artifacts() {
+    let md = std::fs::read_to_string(format!("{}/reports/impossible-availability.md", env!("CARGO_MANIFEST_DIR"))).unwrap();
+    for lang in registry_langs() {
+        let row = md.lines().find(|l| l.starts_with(&format!("| {lang} |"))).unwrap_or_else(|| panic!("{lang}: no row"));
+        let cells: Vec<&str> = row.split('|').map(str::trim).collect();
+        assert_eq!(cells[5], pool(lang).unwrap().words.len().to_string(), "{lang}: report count differs from the artifact");
+    }
+    assert_eq!(md.lines().filter(|l| l.starts_with("| ") && !l.starts_with("| Lang")).count(), registry_langs().count());
+}
+
+/// F3 / A-6: the true reason for every lock, as a stable code.
+#[test]
+fn reason_codes() {
+    let free = free_tier();
+    // A free English-only profile: Mix comes with Complete, not "needs two languages".
+    assert_eq!(run(|i| i.entitlements = &free, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::NeedsComplete));
+    // A regional grant is an owned language; one passing language is still not two.
+    let grant = resolve_entitlements(false, &["es"], false);
+    let only_es = |l: &str| l == "es";
+    assert_eq!(
+        run(|i| { i.entitlements = &grant; i.lang_flag = &only_es; }, |i| mix_status(Surface::Normal, i)),
+        MixStatus::Locked(LockReason::NeedsTwoLanguages)
+    );
+    // A Spell Jr profile is profile_blocked with every flag on.
+    assert_eq!(run(|i| i.junior = true, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::ProfileBlocked));
+    assert_eq!(run(|i| i.junior = true, |i| lang_availability("fr", i)), Availability::Locked(LockReason::ProfileBlocked));
+    // Flags off.
+    assert_eq!(run(|i| i.master = false, |i| lang_availability("fr", i)), Availability::Locked(LockReason::FlagOff));
+    assert_eq!(run(|i| i.mix_flag = false, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::FlagOff));
+    // Stable codes.
+    for (r, code) in [
+        (LockReason::NeedsComplete, "needs_complete"),
+        (LockReason::NeedsTwoLanguages, "needs_two_languages"),
+        (LockReason::ProfileBlocked, "profile_blocked"),
+        (LockReason::FlagOff, "flag_off"),
+        (LockReason::PoolBelowFloor, "language_locked:pool_below_floor"),
+        (LockReason::NoExclusionGate, "language_locked:no_exclusion_gate"),
+        (LockReason::NoDrawnEntry, "language_locked:no_drawn_entry"),
+    ] {
+        assert_eq!(r.code(), code);
     }
 }
 
@@ -195,9 +294,9 @@ fn missing_table_locks() {
 fn defaults_offer_nothing() {
     crate::flags::set_test_override(None);
     assert!(!crate::flags::impossible() && !crate::flags::impossible_mix() && !crate::flags::impossible_lang("es"));
-    assert_eq!(run(|i| i.master = false, |i| mix_status(Surface::Normal, i)), MixStatus::Hidden);
-    assert_eq!(run(|i| i.master = false, |i| lang_availability("es", i)), Availability::Hidden);
-    assert_eq!(run(|i| i.mix_flag = false, |i| mix_status(Surface::Normal, i)), MixStatus::Hidden);
+    assert_eq!(run(|i| i.master = false, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::FlagOff));
+    assert_eq!(run(|i| i.master = false, |i| lang_availability("es", i)), Availability::Locked(LockReason::FlagOff));
+    assert_eq!(run(|i| i.mix_flag = false, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::FlagOff));
 }
 
 /// v1 F11: a language below Full access is locked "Unlock with SpellGame
@@ -235,11 +334,12 @@ fn mix_unavailable_languages_excluded() {
         MixStatus::Available(v) => v,
         _ => Vec::new(),
     };
-    assert_eq!(run(|i| i.lang_flag = &no_ru, langs), vec!["en", "es"]);
-    assert_eq!(run(|i| i.lang_open = &no_ru, langs), vec!["en", "es"]);
+    let without_ru = || pool_langs().into_iter().filter(|l| *l != "ru").collect::<Vec<_>>();
+    assert_eq!(run(|i| i.lang_flag = &no_ru, langs), without_ru());
+    assert_eq!(run(|i| i.lang_open = &no_ru, langs), without_ru());
     let thin = fixture("ru", 149);
     let thin_ru = |l: &str| if l == "ru" { Some(thin) } else { pool(l) };
-    assert_eq!(run(|i| i.pools = &thin_ru, langs), vec!["en", "es"]);
+    assert_eq!(run(|i| i.pools = &thin_ru, langs), without_ru());
     let grant = resolve_entitlements(false, &["es"], false);
     assert_eq!(run(|i| i.entitlements = &grant, langs), vec!["en", "es"]);
     assert!(run(|i| i.lang_flag = &no_ru, |i| mix_pool(i)).iter().all(|(l, _)| *l != "ru"));
@@ -252,7 +352,7 @@ fn mix_unavailable_languages_excluded() {
 #[test]
 fn mix_pool_is_union() {
     let mix = run(|_| {}, |i| mix_pool(i));
-    let want: usize = POOL_LANGS.iter().map(|l| pool(l).unwrap().words.len()).sum();
+    let want: usize = pool_langs().iter().map(|l| pool(l).unwrap().words.len()).sum();
     assert_eq!(mix.len(), want);
     for (lang, w) in &mix {
         assert!(pool(lang).unwrap().words.iter().any(|x| x == w), "{lang}: {w} is not in its own pool");
@@ -264,11 +364,11 @@ fn mix_pool_is_union() {
 /// languages", and the notice is due on first run and whenever the set changes.
 #[test]
 fn mix_no_chooser_notice() {
-    assert_eq!(run(|_| {}, |i| mix_status(Surface::Normal, i)), MixStatus::Available(vec!["en", "es", "ru"]));
+    assert_eq!(run(|_| {}, |i| mix_status(Surface::Normal, i)), MixStatus::Available(pool_langs()));
     let free = free_tier();
-    assert_eq!(run(|i| i.entitlements = &free, |i| mix_status(Surface::Normal, i)), MixStatus::NeedsTwoLanguages);
+    assert_eq!(run(|i| i.entitlements = &free, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::NeedsComplete));
     let only_es = |l: &str| l == "es";
-    assert_eq!(run(|i| i.lang_flag = &only_es, |i| mix_status(Surface::Normal, i)), MixStatus::NeedsTwoLanguages);
+    assert_eq!(run(|i| i.lang_flag = &only_es, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::NeedsTwoLanguages));
     // M-I7: the gate's inputs are flags, entitlements, release gates and pools;
     // none is a player setting, so there is nothing a player can untick.
     let langs = ["en", "es", "ru"];
@@ -281,8 +381,8 @@ fn mix_no_chooser_notice() {
 /// only on the Normal surface.
 #[test]
 fn mix_kid_surfaces() {
-    assert_eq!(run(|i| i.junior = true, |i| mix_status(Surface::Normal, i)), MixStatus::Hidden);
-    assert_eq!(run(|i| i.junior = true, |i| lang_availability("es", i)), Availability::Hidden);
+    assert_eq!(run(|i| i.junior = true, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::ProfileBlocked));
+    assert_eq!(run(|i| i.junior = true, |i| lang_availability("es", i)), Availability::Locked(LockReason::ProfileBlocked));
     assert!(run(|i| i.junior = true, |i| mix_pool(i)).is_empty());
     for s in [Surface::KidMode, Surface::LittleSpeller, Surface::SpellJr, Surface::Randospell, Surface::ImpossibleDaily, Surface::BoardGame, Surface::Climb] {
         assert_eq!(run(|_| {}, |i| mix_status(s, i)), MixStatus::Hidden, "{s:?}");
