@@ -1546,7 +1546,6 @@ złodzieja
 śmiechem
 śpiewu
 żałuje
-acta
 ag
 anioły
 aniołów
@@ -2702,7 +2701,6 @@ nawiązania
 nici
 niejako
 nominowany
-ny
 obniża
 obowiązkowo
 obrazem

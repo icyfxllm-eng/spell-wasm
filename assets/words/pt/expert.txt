@@ -1075,7 +1075,6 @@ capturou
 caracterizada
 cartuchos
 cegueira
-cês
 chefia
 chiclete
 ciclismo
@@ -1224,7 +1223,6 @@ abaixa
 absorver
 acende
 acolhimento
-adi
 adicione
 adoramos
 advento
@@ -1357,7 +1355,6 @@ nus
 ordenar
 ouvida
 ouçam
-palace
 permitia
 persegue
 persistente
@@ -1613,7 +1610,6 @@ térreo
 universais
 vacinação
 vassoura
-visitá
 vitorioso
 weber
 íntimas
@@ -1983,7 +1979,6 @@ sintoma
 subterrânea
 sérvios
 tardes
-temple
 terceirização
 tocada
 tonta
@@ -2313,7 +2308,6 @@ permanecerá
 pescar
 piranha
 piscinas
-portuguese
 portáteis
 preferidos
 prejudicado
@@ -2371,7 +2365,6 @@ trator
 travesti
 troquei
 turbulência
-utilizá
 valentina
 vertentes
 viaduto
@@ -2463,7 +2456,6 @@ farmacêutico
 fausto
 fenda
 ferroviária
-fev
 fluidos
 focados
 fofocas
@@ -2788,7 +2780,6 @@ localidades
 mercadorias
 muçulmanos
 múltiplos
-objectivo
 perguntas
 precipitação
 preparado

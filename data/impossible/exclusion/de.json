@@ -4,7 +4,7 @@
  "voice": "de-DE-Neural2-A",
  "clipCacheVersion": "v4",
  "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
- "expertRows": 2996,
+ "expertRows": 2995,
  "rulesNet": [
   "Armeen",
   "Beeren",

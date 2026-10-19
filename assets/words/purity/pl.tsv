@@ -3,7 +3,7 @@
 #tier	easy	0x2BEAEE485F3D563C
 #tier	medium	0x46BCA61456635DD4
 #tier	hard	0xB166599A2DDC0B69
-#tier	expert	0x966232745ABA6CDE
+#tier	expert	0x03384657A4B8A530
 aparat	dictionary	pl_PL
 autobus	dictionary	pl_PL
 biały	dictionary	pl_PL
@@ -4768,7 +4768,6 @@ złodzieja	dictionary	pl_PL
 śmiechem	dictionary	pl_PL
 śpiewu	dictionary	pl_PL
 żałuje	dictionary	pl_PL
-acta	dictionary	pl_PL
 ag	dictionary	pl_PL
 anioły	dictionary	pl_PL
 aniołów	dictionary	pl_PL
@@ -5924,7 +5923,6 @@ nawiązania	dictionary	pl_PL
 nici	dictionary	pl_PL
 niejako	dictionary	pl_PL
 nominowany	dictionary	pl_PL
-ny	dictionary	pl_PL
 obniża	dictionary	pl_PL
 obowiązkowo	dictionary	pl_PL
 obrazem	dictionary	pl_PL

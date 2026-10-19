@@ -1035,13 +1035,11 @@ sociologique
 soixantaine
 souhaites
 souhaits
-statu
 stipule
 syndicaliste
 sécu
 sérum
 taxation
-telecom
 temporel
 textiles
 tigres
@@ -1465,7 +1463,6 @@ alertes
 alternatifs
 amnistie
 amorce
-apparement
 arrangé
 ars
 atteste
@@ -1572,7 +1569,6 @@ lisais
 maléfique
 marijuana
 massacrer
-masson
 menacées
 mignons
 minces
@@ -1818,7 +1814,6 @@ réjouis
 répit
 semé
 serviront
-sin
 soufre
 souscrit
 souterraine
@@ -2539,7 +2534,6 @@ judas
 jumeau
 lepage
 limitations
-lisée
 louper
 légitimement
 meetings

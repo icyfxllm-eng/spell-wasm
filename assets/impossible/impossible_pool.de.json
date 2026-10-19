@@ -1,8 +1,8 @@
 {
  "lang": "de",
  "source": "expert",
- "bankHash": "0xB79DBEEFA33A555D",
- "expertRows": 2996,
+ "bankHash": "0x0D71053E93904C94",
+ "expertRows": 2995,
  "table": "exclusion_only",
  "removedPurity": 2,
  "removedSoundalike": 30,
@@ -881,7 +881,6 @@
   "Wahlergebnis",
   "Wahrheiten",
   "Wahrzeichen",
-  "Wales",
   "Warnungen",
   "Wasserfall",
   "Websites",

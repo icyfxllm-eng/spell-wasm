@@ -9358,3 +9358,44 @@ fil,par,expert,1410,wrong_language_english,C1 ruling Eric 2026-10-12: evidence r
 fil,pres,expert,1499,wrong_language_english,C1 ruling Eric 2026-10-12: evidence run,2026-10-12
 fil,sim,expert,1611,wrong_language_english,C1 ruling Eric 2026-10-12: evidence run,2026-10-12
 fil,reference,expert,1716,wrong_language_english,C1 ruling Eric 2026-10-12: evidence run,2026-10-12
+fr,apparement,expert,1467,misspelled_missing_diacritic,loopback review (Eric 2026-10-19),2026-10-19
+fr,lisée,expert,2541,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+fr,masson,expert,1574,proper_noun,loopback review (Eric 2026-10-19),2026-10-19
+fr,sin,expert,1820,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+fr,statu,expert,1037,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fr,telecom,expert,1043,misspelled_missing_diacritic,loopback review (Eric 2026-10-19),2026-10-19
+de,Wales,expert,819,proper_noun,loopback review (Eric 2026-10-19),2026-10-19
+pt,adi,expert,1226,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+pt,cês,expert,1077,abbreviation_or_noise,loopback review (Eric 2026-10-19),2026-10-19
+pt,fev,expert,2465,abbreviation_or_noise,loopback review (Eric 2026-10-19),2026-10-19
+pt,objectivo,expert,2790,variety_mismatch,loopback review (Eric 2026-10-19),2026-10-19
+pt,palace,expert,1359,wrong_language_english,loopback review (Eric 2026-10-19),2026-10-19
+pt,portuguese,expert,2315,wrong_language_english,loopback review (Eric 2026-10-19),2026-10-19
+pt,temple,expert,1985,wrong_language_english,loopback review (Eric 2026-10-19),2026-10-19
+pt,utilizá,expert,2373,fragment,loopback review (Eric 2026-10-19),2026-10-19
+pt,visitá,expert,1615,fragment,loopback review (Eric 2026-10-19),2026-10-19
+pl,acta,expert,1548,wrong_language_other,loopback review (Eric 2026-10-19),2026-10-19
+pl,ny,expert,2704,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+fil,anung,expert,1320,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+fil,industriyal,expert,1605,wrong_language_other,loopback review (Eric 2026-10-19),2026-10-19
+fil,inuming,expert,1452,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,kadalasang,expert,84,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,kailangang,expert,169,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,kompanyang,expert,390,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,mahahalagang,expert,293,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,ngayun,expert,1291,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+fil,pagkakasunud,expert,1294,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,simbahang,expert,252,fragment,loopback review (Eric 2026-10-19),2026-10-19
+fil,tau,expert,1370,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+fil,taun,expert,818,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+ar,اراد,expert,1364,misspelled_missing_diacritic,loopback review (Eric 2026-10-19),2026-10-19
+ar,استقالته,expert,1679,particle_attached,loopback review (Eric 2026-10-19),2026-10-19
+ar,اصل,expert,2375,misspelled_missing_diacritic,loopback review (Eric 2026-10-19),2026-10-19
+ar,تري,expert,2262,proper_noun,loopback review (Eric 2026-10-19),2026-10-19
+ar,رح,expert,1762,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+ar,فيينا,expert,1474,proper_noun,loopback review (Eric 2026-10-19),2026-10-19
+ar,كدة,expert,2484,not_a_dictionary_headword,loopback review (Eric 2026-10-19),2026-10-19
+ar,ميشال,expert,2514,proper_noun,loopback review (Eric 2026-10-19),2026-10-19
+ar,نو,expert,2344,wrong_language_english,loopback review (Eric 2026-10-19),2026-10-19
+ar,واين,expert,2177,wrong_language_english,loopback review (Eric 2026-10-19),2026-10-19
+ar,يونغ,expert,1186,proper_noun,loopback review (Eric 2026-10-19),2026-10-19

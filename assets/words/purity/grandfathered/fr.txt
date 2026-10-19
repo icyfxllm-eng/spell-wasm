@@ -4,13 +4,10 @@ ouai
 urss
 ipod
 ribéry
-telecom
 ille
 dupuis
 fabius
-apparement
 bernier
-masson
 ptit
 cnil
 télécom
@@ -25,5 +22,4 @@ linkedin
 hallyday
 ibrahimovic
 lepage
-lisée
 montebourg

@@ -1,11 +1,11 @@
 {
  "lang": "fr",
  "source": "expert",
- "bankHash": "0x5FB8CE47C00D67B2",
- "expertRows": 3000,
+ "bankHash": "0x7823847A277E00E3",
+ "expertRows": 2994,
  "table": "exclusion_only",
  "removedPurity": 3,
- "removedSoundalike": 1171,
+ "removedSoundalike": 1164,
  "status": "pool",
  "reason": null,
  "words": [
@@ -98,6 +98,7 @@
   "apparaissent",
   "apparaître",
   "apparence",
+  "apparent",
   "appartenait",
   "appartenu",
   "appartient",

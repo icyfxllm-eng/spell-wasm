@@ -4,7 +4,7 @@
  "voice": "pt-BR-Neural2-B",
  "clipCacheVersion": "v4",
  "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
- "expertRows": 3000,
+ "expertRows": 2991,
  "rulesNet": [
   "acadêmicas",
   "acompanhadas",
@@ -364,7 +364,6 @@
   "usarem",
   "utilizada",
   "utilizadas",
-  "utilizá",
   "valiosa",
   "valiosas",
   "vantagens",
@@ -373,15 +372,12 @@
   "vibração",
   "vibrações",
   "visam",
-  "visitá",
   "vitima",
   "voltarem",
   "zinco"
  ],
  "loopbackKeep": [
-  "objectivo",
-  "riu",
-  "utilizá"
+  "riu"
  ],
  "loopbackPartners": [],
  "excluded": [
@@ -627,7 +623,6 @@
   "negocio",
   "noutra",
   "noutras",
-  "objectivo",
   "observação",
   "observações",
   "ocupações",
@@ -744,7 +739,6 @@
   "usarem",
   "utilizada",
   "utilizadas",
-  "utilizá",
   "valiosa",
   "valiosas",
   "vantagens",
@@ -753,7 +747,6 @@
   "vibração",
   "vibrações",
   "visam",
-  "visitá",
   "vitima",
   "voltarem",
   "zinco"

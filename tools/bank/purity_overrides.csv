@@ -171,3 +171,44 @@ fil,urban,wrong_language_english,Eric 2026-10-12,C1 ruling: fil evidence-only En
 fil,video,wrong_language_english,Eric 2026-10-12,C1 ruling: fil evidence-only English rows out; the Filipino auditor may restore via c1-review.csv
 fil,virus,wrong_language_english,Eric 2026-10-12,C1 ruling: fil evidence-only English rows out; the Filipino auditor may restore via c1-review.csv
 ru,экз,abbreviation_or_noise,Eric 2026-10-17,same-sound review: экз is an abbreviation (экземпляр); reports/sense-cue-phase-b.md
+fr,apparement,misspelled_missing_diacritic,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fr,lisée,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fr,masson,proper_noun,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fr,sin,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fr,statu,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fr,telecom,misspelled_missing_diacritic,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+de,Wales,proper_noun,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,adi,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,cês,abbreviation_or_noise,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,fev,abbreviation_or_noise,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,objectivo,variety_mismatch,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,palace,wrong_language_english,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,portuguese,wrong_language_english,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,temple,wrong_language_english,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,utilizá,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pt,visitá,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pl,acta,wrong_language_other,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+pl,ny,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,anung,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,industriyal,wrong_language_other,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,inuming,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,kadalasang,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,kailangang,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,kompanyang,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,mahahalagang,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,ngayun,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,pagkakasunud,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,simbahang,fragment,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,tau,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+fil,taun,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,اراد,misspelled_missing_diacritic,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,استقالته,particle_attached,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,اصل,misspelled_missing_diacritic,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,تري,proper_noun,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,رح,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,فيينا,proper_noun,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,كدة,not_a_dictionary_headword,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,ميشال,proper_noun,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,نو,wrong_language_english,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,واين,wrong_language_english,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row
+ar,يونغ,proper_noun,Eric 2026-10-19,CC-IMPOSSIBLE-LAUNCH L-D2: loopback review hygiene row

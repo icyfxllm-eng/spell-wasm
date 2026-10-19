@@ -407,7 +407,6 @@ pangalawang
 pagkakaroon
 pambansang
 sistemang
-kadalasang
 sinaunang
 naglalaman
 tumutukoy
@@ -447,7 +446,6 @@ pagbibigay
 programang
 kakayahang
 humantong
-kailangang
 nangungunang
 munisipalidad
 pamahalaang
@@ -480,7 +478,6 @@ direktang
 nag-iisang
 paghahanap
 lumilitaw
-simbahang
 inilathala
 nagngangalang
 ipinahayag
@@ -496,7 +493,6 @@ pinakamatandang
 kalakhang
 pagtanggap
 malubhang
-mahahalagang
 bahagyang
 inilalarawan
 mabilisang
@@ -542,7 +538,6 @@ pagkasira
 pagpapakita
 papuntang
 idinagdag
-kompanyang
 pagpapanatili
 paniniwalang
 pinakaunang
@@ -897,9 +892,7 @@ nabigla
 nakatago
 napigilan
 natagpuang
-ngayun
 niyaya
-pagkakasunud
 pagkapanalo
 paglalakad
 pagtalakay
@@ -907,7 +900,6 @@ pagtigil
 pangkapayapaan
 pinangarap
 tropang
-anung
 diyagnosis
 inisyal
 isalin
@@ -963,7 +955,6 @@ eksklusibong
 hikayatin
 inaasam
 inalok
-inuming
 ipag
 isat
 kalayaang
