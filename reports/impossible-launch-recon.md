@@ -127,3 +127,15 @@ for i in 1 2 3 4 5 6 7 8 9 10; do node tests/e2e/run.mjs spelluzzle || break; do
 ```
 
 Groups: `spelldoku` (spelldoku + spelldoku-tier), `boardgame` (7 specs), `spelluzzle` (6 specs). Commit f821855c touched the three specs that were flaky (`boardgame-boost`, `spelldoku`, `spelluzzle`). Caveats: `scripts/gate.sh` is the one gate battery and it also runs cargo tests; a worktree needs `node_modules` linked first; the e2e-sleep-ratchet forbids new `waitForTimeout`. Each group takes several minutes, so the 30 runs are a long job. UNKNOWN: whether "clean" means zero failing tests per run (assumed).
+
+## Addendum 2026-10-19: decisions and a second look at R4
+
+**Decisions (Eric):** the Climb x1.5 multiplier is struck from Feature 7 (and AT-7.4 with it). The server-side key work is a work in progress and is deferred, so C2 and C3 stay open as written. The other contradictions stand as listed.
+
+**R4, second look.** What exists, with dates:
+
+- 2026-10-16: Eric ruled on the 200-row staged-word sample (`reports/en-staged-review-sample-graded.csv`, ruling recorded in `reports/en-staged-definition-review-2026-10-16.md`): keep all 200, agree with the estimated tiers. Keep rate 200/200 meets the 95% bar for admitting staged words. The CSV's own verdict column is still blank (the ruling lives in the report and the commit message, 2b564f86). This is the closest thing to an "R8 sample" in the repo.
+- 2026-10-16 to 10-18: about 2,700 English words graded and used to build the re-tier. The calibration reports say the grades began as model suggestions that Eric chose to record as his, so they measure the suggestion model more than a blind human grader.
+- 2026-10-17/18: the re-tier bank was built behind `en.retier` with tests A8-A11 and the partition test passing and the full gate passing (`reports/en-retier-plan.md`).
+
+What I still cannot find: a record that the **built re-tier bank** (Easy 825, Medium 1,753, Hard 1,310, Expert 279) was spot-checked and promoted, and any check that the audio for the roughly 1,200 new words exists and sounds right. The word-admission ruling covers whether the words are real; it does not cover whether each sits in the right tier of the final bank. So R4 is **partly met**: admission yes, final-bank spot check and audio no.
