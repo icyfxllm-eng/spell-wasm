@@ -1,0 +1,10 @@
+lang,spoken_word,asr_heard,flagged_against,verdict,kind,cause,note
+ko,계통,개통,개통,KEEP,accent,SOUNDALIKE,ㅖ→[ㅔ] after ㄱ plus ㅐ/ㅔ merger
+ko,미처,미쳐,미쳐,KEEP,true,SOUNDALIKE,ㅕ after ㅈ/ㅊ/ㅉ is pronounced [ㅓ] (Standard Pronunciation Art. 5)
+ko,실재,실제,실제,KEEP,accent,SOUNDALIKE,[실째]/[실쩨] — both tensed; ㅐ/ㅔ merger
+ko,이례,이래,이래,KEEP (borderline),accent,SOUNDALIKE,standard keeps 례=[례]; colloquial [레] + merger → 래; listen-check
+ko,자재,자제,자제,KEEP,accent,SOUNDALIKE,ㅐ/ㅔ merger
+ko,재주,제주,제주,KEEP,accent,SOUNDALIKE,ㅐ/ㅔ merger; 제주 is a proper noun (PURITY)
+sw,mmojawapo,Mojawapo,mojawapo,KEEP,accent,SOUNDALIKE,syllabic m before m reduces; ASR heard single m
+sw,unaoonekana,Unaonekana,unaonekana,KEEP,accent,SOUNDALIKE,oo across morpheme boundary collapses to o
+sw,uanachama,Wa na chama,chama,KEEP (borderline),accent,SOUNDALIKE,flag hit for the wrong reason; whole-string heard = wanachama (in bank) → real pair uanachama/wanachama via u+a → [wa] glide; listen-check
