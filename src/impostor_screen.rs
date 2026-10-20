@@ -37,6 +37,8 @@ use crate::{dom, haptics, i18n, speech_out, storage, App};
 /// D4: flair thresholds, as config constants rather than magic numbers.
 const FLAIR: [u32; 3] = [5, 10, 20];
 const SET_LEN: usize = 10;
+/// How long a right answer's green card stays up before the next set.
+const RIGHT_HOLD_MS: i32 = 600;
 
 thread_local! {
     static LANG: RefCell<String> = const { RefCell::new(String::new()) };
@@ -47,6 +49,10 @@ thread_local! {
     static RIGHT: Cell<u32> = const { Cell::new(0) };
     /// True while a miss is on screen: the next tap advances rather than answers.
     static REVEALING: Cell<bool> = const { Cell::new(false) };
+    /// A right answer holds its green card for RIGHT_HOLD_MS before the next set;
+    /// taps are refused meanwhile. EPOCH cancels the delayed advance on close/reopen.
+    static HOLDING: Cell<bool> = const { Cell::new(false) };
+    static EPOCH: Cell<u32> = const { Cell::new(0) };
 }
 
 fn best_key(lang: &str) -> String {
@@ -95,6 +101,8 @@ pub fn open(app: &App) {
     BEST.with(|c| c.set(0));
     RIGHT.with(|c| c.set(0));
     REVEALING.with(|c| c.set(false));
+    HOLDING.with(|c| c.set(false));
+    EPOCH.with(|c| c.set(c.get().wrapping_add(1)));
 
     // D7: the free tier is easy. I5 caps Kid Mode regardless of what is asked.
     let tier = impostor::effective_tier(Tier::Easy, kid);
@@ -112,6 +120,8 @@ pub fn open(app: &App) {
 }
 
 fn close() {
+    EPOCH.with(|c| c.set(c.get().wrapping_add(1)));
+    HOLDING.with(|c| c.set(false));
     speech_out::stop();
     dom::remove_class("impostor", "show");
 }
@@ -163,6 +173,9 @@ fn speak(app: &App) {
 }
 
 fn tap(app: &App, e: &web_sys::MouseEvent) {
+    if HOLDING.with(Cell::get) {
+        return;
+    }
     // A miss leaves the reveal on screen; the next tap anywhere advances it.
     if REVEALING.with(Cell::get) {
         REVEALING.with(|c| c.set(false));
@@ -189,7 +202,18 @@ fn tap(app: &App, e: &web_sys::MouseEvent) {
         let _ = el.class_list().add_1("right");
         haptics::correct();
         render_streak();
-        advance(app);
+        // advance() re-renders the cards, so advancing in the same tick meant the
+        // green "right" card was never on screen. Hold it first.
+        HOLDING.with(|c| c.set(true));
+        let epoch = EPOCH.with(Cell::get);
+        let a = app.clone();
+        dom::after_ms(RIGHT_HOLD_MS, move || {
+            if EPOCH.with(Cell::get) != epoch {
+                return; // closed or reopened meanwhile
+            }
+            HOLDING.with(|c| c.set(false));
+            advance(&a);
+        });
     } else {
         // D4: the streak resets, the set continues. No elimination, anywhere.
         STREAK.with(|c| c.set(0));

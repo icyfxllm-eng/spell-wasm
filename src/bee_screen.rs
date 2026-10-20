@@ -38,6 +38,8 @@ use crate::{dom, haptics, i18n, speech_out, storage, App};
 const OFFICIAL_KEY: &str = "spell_bee_official";
 const FIELD: usize = 12;
 const MAX_ROUNDS: u32 = 12;
+/// How long a Kid Mode miss keeps the right spelling on screen before the next word.
+const KID_REVEAL_MS: i32 = 1800;
 
 thread_local! {
     static LANG: RefCell<String> = const { RefCell::new(String::new()) };
@@ -50,6 +52,11 @@ thread_local! {
     static ASKED: Cell<bool> = const { Cell::new(false) };
     static CLEAN: Cell<u32> = const { Cell::new(0) };
     static OVER: Cell<bool> = const { Cell::new(false) };
+    /// A Kid Mode miss holds the shown word on screen before the next round, and
+    /// input is refused while it does. EPOCH ties the delayed advance to the bee
+    /// that scheduled it, so closing or restarting cancels it.
+    static HOLD: Cell<bool> = const { Cell::new(false) };
+    static EPOCH: Cell<u32> = const { Cell::new(0) };
     /// D4's hook: the round the NEXT bee begins at, one below where the player
     /// fell. Held here because the end screen promises it by name and the
     /// button has to honour that.
@@ -117,6 +124,8 @@ fn open_at(app: &App, start: u32) {
     ROUND.with(|c| c.set(start.max(1)));
     CLEAN.with(|c| c.set(0));
     OVER.with(|c| c.set(false));
+    HOLD.with(|c| c.set(false));
+    EPOCH.with(|c| c.set(c.get().wrapping_add(1)));
     ASKED.with(|c| c.set(false));
     CURRENT.with(|c| c.borrow_mut().clear());
 
@@ -138,6 +147,8 @@ fn open_at(app: &App, start: u32) {
 }
 
 fn close() {
+    EPOCH.with(|c| c.set(c.get().wrapping_add(1)));
+    HOLD.with(|c| c.set(false));
     speech_out::stop();
     dom::remove_class("bee", "show");
 }
@@ -295,7 +306,7 @@ fn variant_for(rate: f32) -> &'static str {
 }
 
 fn tap(e: web_sys::MouseEvent) {
-    if OVER.with(Cell::get) {
+    if OVER.with(Cell::get) || HOLD.with(Cell::get) {
         return;
     }
     let Some(el) = e
@@ -323,7 +334,7 @@ fn tap(e: web_sys::MouseEvent) {
 
 fn delete() {
     // I5: committed means committed. Belt and braces with the hidden control.
-    if official() || OVER.with(Cell::get) {
+    if official() || OVER.with(Cell::get) || HOLD.with(Cell::get) {
         return;
     }
     let lang = LANG.with(|l| l.borrow().clone());
@@ -340,7 +351,7 @@ fn delete() {
 }
 
 fn submit(app: &App) {
-    if OVER.with(Cell::get) {
+    if OVER.with(Cell::get) || HOLD.with(Cell::get) {
         return;
     }
     let Some(target) = word_now() else { return };
@@ -375,17 +386,28 @@ fn submit(app: &App) {
             render_round(app);
         }
     } else if KID.with(Cell::get) {
-        // D6: no elimination. The word is shown and the bee moves on.
+        // D6: no elimination. The word is shown and the bee moves on. It used to
+        // move on in the same tick, and render_round clears #beeSpelling, so the
+        // shown word was never on screen: hold it for KID_REVEAL_MS first.
         dom::set_text("beeSpelling", target_word);
         haptics::key_tap();
-        let n = ROUND.with(Cell::get) + 1;
-        let have = WORDS.with(|w| w.borrow().len()) as u32;
-        if n > have || n > MAX_ROUNDS {
-            finish(None);
-        } else {
-            ROUND.with(|c| c.set(n));
-            render_round(app);
-        }
+        HOLD.with(|c| c.set(true));
+        let epoch = EPOCH.with(Cell::get);
+        let a = app.clone();
+        dom::after_ms(KID_REVEAL_MS, move || {
+            if EPOCH.with(Cell::get) != epoch || OVER.with(Cell::get) {
+                return; // the bee was closed or restarted meanwhile
+            }
+            HOLD.with(|c| c.set(false));
+            let n = ROUND.with(Cell::get) + 1;
+            let have = WORDS.with(|w| w.borrow().len()) as u32;
+            if n > have || n > MAX_ROUNDS {
+                finish(None);
+            } else {
+                ROUND.with(|c| c.set(n));
+                render_round(&a);
+            }
+        });
     } else {
         // D4: the bell, then the spelling shown plainly, then the placement.
         crate::audio_boost::chime();

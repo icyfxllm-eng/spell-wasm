@@ -36,6 +36,7 @@ import * as humanAudio from './specs/human-audio.mjs';
 import * as finaleRelaunch from './specs/finale-relaunch.mjs';
 import * as metadataAudit from './specs/metadata-audit.mjs';
 import * as kidReveal from './specs/kid-reveal.mjs';
+import * as feedbackHolds from './specs/feedback-holds.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
@@ -111,6 +112,7 @@ const SPECS = [
   ['finale-relaunch', finaleRelaunch],
   ['metadata-audit', metadataAudit],
   ['kid-reveal', kidReveal],
+  ['feedback-holds', feedbackHolds],
   ['picker-continue', pickerContinue],
   ['finale-pixels', finalePixels],
   ['platform', platform],
