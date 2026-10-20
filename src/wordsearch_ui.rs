@@ -496,7 +496,7 @@ fn submit_lock_in() {
         let word = g.puzzle.targets[order[*at]].word.clone();
         // F-S4: graded as the base game grades, and recorded through the same
         // door on the typed channel (F-X6).
-        let correct = crate::norm::answer_matches(typed, &word, kid)
+        let correct = crate::norm::answer_matches_in(&lang, typed, &word, kid)
             || (crate::homophones::accepts(&lang, &word, typed)
                 && crate::norm::fold_strict(typed) != crate::norm::fold_strict(&word));
         crate::learner::note_built(&lang, lock_in_attempt(&lang, &word, typed, correct, crate::learner::day_now()));

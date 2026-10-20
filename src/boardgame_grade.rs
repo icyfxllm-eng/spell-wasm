@@ -38,7 +38,7 @@ pub fn grade(lang: &str, kid: bool, typed: &str, entry: &str, tier: Tier) -> boo
     if lang == consts::KO {
         return crate::jamo::grade(typed, word).correct;
     }
-    crate::norm::answer_matches(typed, word, kid)
+    crate::norm::answer_matches_in(lang, typed, word, kid)
         || crate::homophones::accepts(lang, word, typed)
         || (lang == consts::EN && crate::variants::accepts(word, typed))
 }

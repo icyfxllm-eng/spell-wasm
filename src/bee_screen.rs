@@ -365,11 +365,12 @@ fn submit(app: &App) {
     // English and silently drops tone for Mandarin -- lv4 would not match lü4
     // and a tone-perfect answer could be marked wrong. Tone-blindness for
     // Little Speller is the matcher's FLAG, not a branch of its own.
-    let correct = if LANG.with(|l| l.borrow().clone()) == crate::consts::ZH {
+    let lang = LANG.with(|l| l.borrow().clone());
+    let correct = if lang == crate::consts::ZH {
         let mode = crate::pinyin::ToneMode::for_kid(KID.with(Cell::get));
         crate::pinyin::matches_with(&typed, target_word, mode)
     } else {
-        crate::norm::fold_strict(&typed) == crate::norm::fold_strict(target_word)
+        crate::norm::same_answer(&lang, &typed, target_word)
     };
 
     if correct {

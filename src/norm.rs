@@ -94,6 +94,26 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
     }
 }
 
+/// Strict (non-Kid) answer equality for a known language: [`fold_strict`], plus
+/// the per-language grading key where one exists. Today that is Vietnamese only:
+/// both tone-placement conventions grade as the same answer
+/// ([`crate::viet::answer_key`], signing sheet K-Q2). The key is an extra way to
+/// match, never a replacement, so no answer that matched before can stop matching.
+pub fn same_answer(lang: &str, typed: &str, word: &str) -> bool {
+    fold_strict(typed) == fold_strict(word)
+        || (lang == crate::consts::VI && crate::viet::answer_key(typed) == crate::viet::answer_key(word))
+}
+
+/// [`answer_matches`] for a known language. Prefer this wherever the language is
+/// in hand, so a per-language grading key is never skipped by one surface.
+pub fn answer_matches_in(lang: &str, typed: &str, word: &str, kid: bool) -> bool {
+    if kid {
+        fold_lenient(typed) == fold_lenient(word)
+    } else {
+        same_answer(lang, typed, word)
+    }
+}
+
 /// Say-It mode match rule (Feature F2, Decision D2): the target word is
 /// considered *said* iff, after NFC + Unicode case folding, it appears as one of
 /// the tokens in the recognizer's transcription. This is an **exact token match
@@ -127,6 +147,21 @@ fn trim_edge_punct(tok: &str) -> &str {
 mod tests {
     use super::*;
     use unicode_normalization::UnicodeNormalization;
+
+    #[test]
+    fn vi_accepts_both_tone_placements_and_nothing_looser() {
+        assert!(answer_matches_in("vi", "hàng hoá", "hàng hóa", false));
+        assert!(answer_matches_in("vi", "hàng hóa", "hàng hoá", false));
+        assert!(answer_matches_in("vi", "sức khoẻ", "sức khỏe", false));
+        assert!(answer_matches_in("vi", "vănhoá", "văn hóa", false), "spaces are still optional");
+        assert!(answer_matches_in("vi", "hóachất", "hóa chất", false), "unspaced input that matched before still matches");
+        assert!(!answer_matches_in("vi", "ngòai", "ngoài", false), "oai has one placement");
+        assert!(!answer_matches_in("vi", "hàng hòa", "hàng hóa", false), "a different tone is still wrong");
+        assert!(!answer_matches_in("vi", "hàng hoa", "hàng hóa", false), "a missing tone is still wrong");
+        // The placement key is Vietnamese-only: no other language's accents move.
+        assert!(!answer_matches_in("es", "hoá", "hóa", false));
+        assert!(!answer_matches("hoá", "hóa", false), "the language-blind matcher is unchanged");
+    }
 
     #[test]
     fn case_insensitive_with_diacritics() {

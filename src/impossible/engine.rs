@@ -91,9 +91,8 @@ pub fn grade(lang: &str, typed: &str, word: &str) -> bool {
         let strip = |s: &str| s.nfc().filter(|c| !c.is_whitespace()).collect::<String>();
         return strip(typed) == strip(word);
     }
-    let t = crate::norm::fold_strict(typed);
-    t == crate::norm::fold_strict(word)
-        || accepted_alternates(lang, word).iter().any(|a| crate::norm::fold_strict(a) == t)
+    crate::norm::same_answer(lang, typed, word)
+        || accepted_alternates(lang, word).iter().any(|a| crate::norm::same_answer(lang, typed, a))
         || (lang == crate::consts::EN && crate::variants::accepts(word, typed))
 }
 

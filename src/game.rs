@@ -2193,7 +2193,7 @@ pub fn submit_guess(app: &App) {
         // Normal fold, plus the data-driven accept-any homophone layer: a real
         // homophone of the prompt (audio can't carry b/v, silent h, seseo,
         // yeísmo) is accepted. Empty table for languages without a file -> no-op.
-        crate::norm::answer_matches(&typed, &word, kid) || en_variant || {
+        crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid) || en_variant || {
             let other = crate::homophones::accepts(&cur_lang, &word, &typed)
                 && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
             if other {
