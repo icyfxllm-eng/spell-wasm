@@ -588,6 +588,10 @@ fn accepted_alternates_are_per_word() {
     assert!(engine::grade("en", "comptroller", "comptroller"));
     assert!(!engine::grade("en", "controller", "controlled"), "an alternate counts only for its own word");
     assert!(!engine::grade("es", "controller", "comptroller"), "and only in its own language");
+    assert!(engine::grade("en", "marquis", "marquess"));
+    assert!(engine::grade("en", "bosun", "boatswain"));
+    assert!(engine::grade("en", "straight jacket", "straitjacket") && engine::grade("en", "straightjacket", "straitjacket"));
+    assert!(!engine::grade("en", "marquess", "marquis"), "the relation is one way: it is keyed by the pool word");
     assert!(engine::accepted_alternates("en", "demesne").is_empty());
 }
 
