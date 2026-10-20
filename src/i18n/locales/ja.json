@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "毎日のお知らせを送る時刻",
   "settings.slow": "ゆっくりの声",
   "settings.slowSmall": "単語をよりゆっくり読む",
+  "settings.british": "イギリス式のつづり",
+  "settings.britishSmall": "colour や centre のような語をイギリス式で表示します。どちらのつづりも常に正解です。",
   "settings.telemetry": "SpellGame の改善に協力",
   "settings.telemetrySmall": "クラッシュと速度のレポートを送信します。単語や回答、あなたに関する情報は送信しません。",
   "settings.title": "設定",

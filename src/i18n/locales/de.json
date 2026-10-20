@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "Wann die tägliche Erinnerung gesendet wird",
   "settings.slow": "Langsamere Stimme",
   "settings.slowSmall": "Spricht jedes Wort langsamer",
+  "settings.british": "Britische Schreibweise",
+  "settings.britishSmall": "Zeigt Wörter wie colour und centre britisch an. Beide Schreibweisen gelten immer.",
   "settings.telemetry": "SpellGame verbessern helfen",
   "settings.telemetrySmall": "Sendet Absturz- und Geschwindigkeitsberichte. Niemals deine Wörter, Antworten oder etwas über dich.",
   "settings.title": "Einstellungen",

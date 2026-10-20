@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "When to send the daily nudge",
   "settings.slow": "Slower voice",
   "settings.slowSmall": "Speak each word more slowly",
+  "settings.british": "British spellings",
+  "settings.britishSmall": "Show words like colour and centre the British way. Either spelling is always accepted.",
   "settings.telemetry": "Help improve SpellGame",
   "settings.telemetrySmall": "Sends crash and speed reports. Never your words, answers, or anything about you.",
   "settings.title": "Settings",

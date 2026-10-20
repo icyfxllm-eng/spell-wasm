@@ -870,6 +870,10 @@ fn wire_glow_and_settings(app: &App) {
             settings::apply_settings(&a);
         });
     }
+    dom::on::<web_sys::Event, _>("britishToggle", "change", move |_| {
+        // Display only: both spellings are graded correct whatever this says (src/variants.rs).
+        variants::set_prefers_british(dom::input("britishToggle").checked());
+    });
     credits::wire(); // CC-HUMAN-AUDIO F7
     {
         // CC-HUMAN-AUDIO F6 — "Real voices when available" (default on, D4).

@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "Kailan ipapadala ang pang-araw-araw na paalala",
   "settings.slow": "Mas mabagal na boses",
   "settings.slowSmall": "Bigkasin ang bawat salita nang mas mabagal",
+  "settings.british": "Baybay na British",
+  "settings.britishSmall": "Ipakita ang mga salitang tulad ng colour at centre sa British na baybay. Tinatanggap ang alinman.",
   "settings.telemetry": "Tumulong pagbutihin ang SpellGame",
   "settings.telemetrySmall": "Nagpapadala ng ulat tungkol sa crash at bilis. Hindi kailanman ang iyong mga salita, sagot, o anumang tungkol sa iyo.",
   "settings.title": "Mga setting",

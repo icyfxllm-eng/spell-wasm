@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "매일 알림을 보낼 시간",
   "settings.slow": "느린 음성",
   "settings.slowSmall": "각 단어를 더 천천히 읽기",
+  "settings.british": "영국식 철자",
+  "settings.britishSmall": "colour, centre 같은 단어를 영국식으로 보여 줍니다. 두 철자 모두 항상 정답으로 인정됩니다.",
   "settings.telemetry": "SpellGame 개선에 참여",
   "settings.telemetrySmall": "오류 및 속도 보고서를 보냅니다. 단어, 답변, 개인 정보는 절대 보내지 않습니다.",
   "settings.title": "설정",

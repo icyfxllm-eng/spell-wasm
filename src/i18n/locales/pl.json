@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "Kiedy wysłać codzienne przypomnienie",
   "settings.slow": "Wolniejszy głos",
   "settings.slowSmall": "Wymawia każde słowo wolniej",
+  "settings.british": "Pisownia brytyjska",
+  "settings.britishSmall": "Pokazuje słowa takie jak colour i centre w pisowni brytyjskiej. Obie pisownie są zawsze uznawane.",
   "settings.telemetry": "Pomóż ulepszyć SpellGame",
   "settings.telemetrySmall": "Wysyła raporty o awariach i szybkości. Nigdy twoich słów, odpowiedzi ani niczego o tobie.",
   "settings.title": "Ustawienia",

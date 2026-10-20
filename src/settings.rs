@@ -229,6 +229,7 @@ pub fn apply_settings(app: &App) {
     dom::input("readToggle").set_checked(s.readable);
     dom::input("bigTextToggle").set_checked(s.big_text);
     dom::input("slowToggle").set_checked(s.slow);
+    dom::input("britishToggle").set_checked(crate::variants::prefers_british());
     // CC-HUMAN-AUDIO F6: the switch and the router read one value.
     crate::human_audio::set_enabled(!s.real_voices_off);
     dom::input("realVoicesToggle").set_checked(!s.real_voices_off);

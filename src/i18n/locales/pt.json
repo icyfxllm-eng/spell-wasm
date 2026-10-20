@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "Quando enviar o lembrete diário",
   "settings.slow": "Voz mais lenta",
   "settings.slowSmall": "Fala cada palavra mais devagar",
+  "settings.british": "Ortografia britânica",
+  "settings.britishSmall": "Mostra palavras como colour e centre na forma britânica. As duas grafias são sempre aceitas.",
   "settings.telemetry": "Ajude a melhorar o SpellGame",
   "settings.telemetrySmall": "Envia relatórios de falhas e de velocidade. Nunca as suas palavras, respostas ou nada sobre você.",
   "settings.title": "Configurações",

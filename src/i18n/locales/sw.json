@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "Wakati wa kutuma kikumbusho cha siku",
   "settings.slow": "Sauti ya polepole",
   "settings.slowSmall": "Tamka kila neno polepole zaidi",
+  "settings.british": "Tahajia ya Uingereza",
+  "settings.britishSmall": "Onyesha maneno kama colour na centre kwa tahajia ya Uingereza. Tahajia zote mbili hukubaliwa daima.",
   "settings.telemetry": "Saidia kuboresha SpellGame",
   "settings.telemetrySmall": "Hutuma ripoti za hitilafu na kasi. Kamwe si maneno yako, majibu, au chochote kukuhusu.",
   "settings.title": "Mipangilio",

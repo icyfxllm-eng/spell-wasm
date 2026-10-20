@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "何时发送每日提醒",
   "settings.slow": "慢速语音",
   "settings.slowSmall": "更慢地朗读每个词",
+  "settings.british": "英式拼写",
+  "settings.britishSmall": "以英式拼写显示 colour、centre 等单词。两种拼写始终都算正确。",
   "settings.telemetry": "帮助改进 SpellGame",
   "settings.telemetrySmall": "发送崩溃和速度报告。绝不发送你的单词、答案或任何关于你的信息。",
   "settings.title": "设置",

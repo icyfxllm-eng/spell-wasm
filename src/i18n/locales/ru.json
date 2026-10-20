@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "Когда присылать ежедневное напоминание",
   "settings.slow": "Медленный голос",
   "settings.slowSmall": "Произносить каждое слово медленнее",
+  "settings.british": "Британское написание",
+  "settings.britishSmall": "Показывать слова вроде colour и centre по-британски. Принимаются оба варианта.",
   "settings.telemetry": "Помочь улучшить SpellGame",
   "settings.telemetrySmall": "Отправляет отчёты о сбоях и скорости. Никогда — ваши слова, ответы или что-либо о вас.",
   "settings.title": "Настройки",

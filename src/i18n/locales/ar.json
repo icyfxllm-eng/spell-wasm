@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "متى يُرسل التنبيه اليومي",
   "settings.slow": "صوت أبطأ",
   "settings.slowSmall": "نطق كل كلمة ببطء أكثر",
+  "settings.british": "التهجئة البريطانية",
+  "settings.britishSmall": "اعرض كلمات مثل colour وcentre بالتهجئة البريطانية. يُقبل الشكلان دائمًا.",
   "settings.telemetry": "ساعد في تحسين SpellGame",
   "settings.telemetrySmall": "يرسل تقارير الأعطال والسرعة. لا يرسل أبدًا كلماتك أو إجاباتك أو أي شيء عنك.",
   "settings.title": "الإعدادات",

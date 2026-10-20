@@ -596,6 +596,8 @@
   "settings.remindTimeSmall": "रोज़ की याद कब भेजें",
   "settings.slow": "धीमी आवाज़",
   "settings.slowSmall": "हर शब्द और धीरे बोलो",
+  "settings.british": "ब्रिटिश वर्तनी",
+  "settings.britishSmall": "colour और centre जैसे शब्द ब्रिटिश वर्तनी में दिखाएँ। दोनों वर्तनी हमेशा मान्य हैं।",
   "settings.telemetry": "SpellGame को बेहतर बनाने में मदद करें",
   "settings.telemetrySmall": "क्रैश और गति की रिपोर्ट भेजता है। आपके शब्द, उत्तर या आपके बारे में कुछ भी कभी नहीं।",
   "settings.title": "सेटिंग्स",

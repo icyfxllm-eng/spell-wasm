@@ -1550,6 +1550,16 @@ pub fn can_void(app: &App) -> bool {
 /// The word is never placed in the answer field and can never be submitted
 /// (I11) -- the input is locked before it is shown, and `answered` is set, so
 /// the submit path returns before it validates anything.
+/// The word as the player is shown it: English follows their spelling (British / American); every other language
+/// is unchanged. Display only -- the answer is graded against both forms.
+fn shown_form(lang: &str, word: &str) -> String {
+    if lang == crate::consts::EN {
+        crate::variants::display(word, crate::variants::prefers_british())
+    } else {
+        word.to_string()
+    }
+}
+
 pub fn reveal_word(app: &App) {
     let (answered, word, lang) = {
         let s = app.borrow();
@@ -2626,7 +2636,7 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
         dom::set_html("feedback", &format!("{prefix}{zh}"));
         dom::el("feedback").set_class_name(feedback_class);
     } else {
-        dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
+        dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&shown_form(&cur_lang, &reveal))));
         dom::el("feedback").set_class_name(feedback_class);
     }
     // AUDIT-PREVIEW ONLY: expose the just-revealed word + its language on the DOM
@@ -3657,7 +3667,7 @@ fn daily_answer(app: &App, correct: bool) {
         dom::add_class("orbWrap", "bad");
         spell_feedback(false);
         dom::set_text("orbGlyph", "\u{2717}");
-        dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&word)));
+        dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&shown_form(&cur_lang, &word))));
         dom::el("feedback").set_class_name("feedback bad");
     }
     // CC-SPELL-RACING: record this lap into the live race (timing + correctness).
