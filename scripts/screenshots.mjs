@@ -64,7 +64,12 @@ for (const loc of locales) {
     await page.selectOption('#langSel', loc.code).catch(() => {});
     await page.waitForTimeout(1200);
     await page.screenshot({ path: `${outDir}/${d.name}-1-play.png` });
-    await page.click('#setBtn').catch(() => {});
+    // Settings through the drawer (#setBtn is retired, display:none). No
+    // .catch(): a silent miss used to save the home screen as "settings".
+    await page.click('#navBurger');
+    await page.waitForSelector('#navDrawer.show', { timeout: 4000 });
+    await page.click('.nav-row[data-mode="help_settings.title"]');
+    await page.waitForSelector('#setScrim.show', { timeout: 4000 });
     await page.waitForTimeout(700);
     await page.screenshot({ path: `${outDir}/${d.name}-2-settings.png` });
     await ctx.close();

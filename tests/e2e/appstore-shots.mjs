@@ -4,7 +4,7 @@
 //   node tests/e2e/appstore-shots.mjs
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { startServer, launch, painted, domSettled} from './harness.mjs';
+import { startServer, launch, painted, domSettled, openSettings } from './harness.mjs';
 
 const OUT = 'tests/e2e/shots/appstore';
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
@@ -39,7 +39,12 @@ for (const [loc, dir] of Object.entries(LOCALES)) {
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
       await painted(page);
       if (screen === 'settings') {
-        await page.click('#setBtn').catch(() => {});
+        // Through the drawer, the way a player gets there. #setBtn is retired
+        // (display:none), and the old silent .catch() turned a failed click into
+        // a "settings" screenshot of the home screen. No catch: a missing door
+        // must stop the run.
+        await openSettings(page);
+        await page.waitForSelector('#setScrim.show', { timeout: 4000 });
         await domSettled(page);
       }
       await page.screenshot({ path: join(OUT, dir, `${dev}-${idx}-${screen}.png`) }); // viewport = exact required px

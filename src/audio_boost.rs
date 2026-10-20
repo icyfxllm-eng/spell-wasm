@@ -110,11 +110,15 @@ const CHIME_ATTACK: f64 = 0.02;
 ///
 /// This is the one caller that creates the shared `AudioContext` without a
 /// boost being requested. The anti-fingerprinting caution in `ensure_ctx`
-/// is about web browsers — and the only caller of this function is the
-/// picture reveal, which is compiled out of the web build entirely, so a
-/// browser never reaches here. Routing through the shared gain node is the
-/// "respecting sound settings" clause: the volume slider applies to the
-/// chime exactly as it does to word audio.
+/// is about web browsers. Callers: the picture reveal (wordpic_screen) and
+/// the Word Bee bell (bee_screen), both app-only; the dev C3 probe; and the
+/// calendar goal ceremony (calendar::check_goal_done), which IS compiled into
+/// the web build. On the web it can only fire once a goal exists, and goals
+/// are set from the app-only calendar screen, so a browser should not reach
+/// it in practice, but that is a data path, not a compile-time guarantee.
+/// Routing through the shared gain node is the "respecting sound settings"
+/// clause: the volume slider applies to the chime exactly as it does to word
+/// audio.
 pub fn chime() {
     let Some((ctx, gain)) = ensure_ctx() else { return };
     if ctx.state() == web_sys::AudioContextState::Suspended {
