@@ -2431,8 +2431,6 @@ fn on_typed(app: &App) {
         // At expert the wrong letters STAY — erase-to-recover means the
         // player backspaces them out; the viable-again branch below lifts
         // the charge the moment they have.
-        dom::add_class("wpStatus", "pulse");
-        after(400, || dom::remove_class("wpStatus", "pulse"));
         haptics::key_tap();
         // A miss never replays the word at tiers where Replay is gated
         // away (feature 5: at expert the word plays once, full stop).
@@ -2451,8 +2449,6 @@ fn on_typed(app: &App) {
         if crate::input_provenance::is_dictated("wpInput", value.chars().count() as u32) {
             inp.set_value("");
             crate::input_provenance::reset("wpInput");
-            dom::add_class("wpStatus", "pulse");
-            after(400, || dom::remove_class("wpStatus", "pulse"));
             replay(app);
             return;
         }

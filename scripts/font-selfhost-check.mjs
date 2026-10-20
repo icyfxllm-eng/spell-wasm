@@ -42,23 +42,23 @@ const MIN_CACHE_VERSION = 39;
 const LAZY = [
   {
     file: './fonts/naskh-arabic.woff2',
-    why: 'Arabic script face (94KB) behind a unicode-range. ar/fa are rtl_blocked, so ' +
-         'no LTR user ever renders a glyph in its range; the SW fetch handler caches it ' +
-         'on first real use. Revisit if the UI itself is ever localised into Arabic — ' +
-         'then it becomes an eager UI font and belongs in the precache.',
+    why: 'Arabic script face (94KB) behind a unicode-range. Arabic is Active (RTL_SUPPORTED ' +
+         'is on), but only players studying or using Arabic render a glyph in its range; ' +
+         'precaching would charge every other player 94KB up front. The SW fetch handler ' +
+         'caches it on first real use.',
   },
   {
     file: './fonts/nastaliq-urdu.woff2',
     why: 'Urdu Nastaliq face (~436KB — Nastaliq carries ~1100 contextual glyphs). Same ' +
-         'reasoning as naskh, more so given the size: ur is rtl_blocked, unicode-range ' +
-         'gates the download to Urdu Arabic-script text, and precaching it would push ' +
-         '436KB onto every user for a language none can select. Cached on first real use.',
+         'reasoning as naskh, more so given the size: ur is not a registered language, ' +
+         'unicode-range gates the download to Urdu Arabic-script text, and precaching it ' +
+         'would push 436KB onto every user for a language none can select. Cached on first real use.',
   },
   {
     file: './fonts/devanagari.woff2',
     why: 'Hindi Devanagari face (~161KB). unicode-range gates it to Devanagari text, and ' +
-         'Hindi is not even registered yet, so no user renders it. Precaching it would ' +
-         'cost every user for a script none of them see. Cached on first real use.',
+         'only players studying or using Hindi render it. Precaching it would cost every ' +
+         'other player for a script they never see. Cached on first real use.',
   },
 ];
 const isLazy = (ref) => LAZY.find((l) => l.file === ref);
