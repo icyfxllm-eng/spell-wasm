@@ -87,7 +87,6 @@ convalescent
 crocheting
 croquet
 crystallography
-cynicism
 dachshund
 daiquiri
 deciduous
@@ -101,6 +100,7 @@ discernible
 discotheque
 dreadnought
 eavesdropping
+ebullient
 ecclesiastic
 ecclesiastical
 edelweiss
@@ -150,7 +150,6 @@ intaglio
 intelligentsia
 internecine
 iridescent
-irrepressible
 isosceles
 isthmus
 jojoba
@@ -235,6 +234,7 @@ rescission
 rhinoceros
 rhododendron
 ricochet
+rotisserie
 saccharin
 saccharine
 sachet
@@ -265,15 +265,14 @@ syncope
 tachycardia
 tourmaline
 tourniquet
+transcendence
 triptych
 turquoise
 tyrannosaurus
 unconscionable
 unctuous
 vignette
-voyeurism
 voyeuristic
-yacht
 yachtsman
 yttrium
 zeitgeist

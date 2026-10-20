@@ -60,7 +60,7 @@
    "voiceMatchesLayer1": true
   },
   "en+retier": {
-   "bankRows": 4368,
+   "bankRows": 4367,
    "bonusEligibleBankWords": 305,
    "confirmedSets": 19,
    "generator": "build_collisions.key_en@1+retier",

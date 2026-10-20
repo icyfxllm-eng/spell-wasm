@@ -325,6 +325,7 @@ culture
 cultures
 current
 curricular
+cynicism
 cytoplasm
 cytoplasmic
 damaged
@@ -401,7 +402,6 @@ drunkenness
 earlier
 earliest
 eastern
-ebullient
 eccentricity
 economic
 economy
@@ -658,6 +658,7 @@ irrelevance
 irreparable
 irreparably
 irreplaceable
+irrepressible
 irresistible
 irresistibly
 irresponsibility
@@ -1077,7 +1078,6 @@ rhubarb
 rhythm
 righteousness
 rotation
-rotisserie
 roughly
 running
 sanctimonious
@@ -1235,7 +1235,6 @@ trachea
 trading
 traffic
 training
-transcendence
 transfer
 treated
 triumvirate
@@ -1305,6 +1304,7 @@ written
 xenophobia
 xenophobic
 xerox
+yacht
 yeoman
 yeshiva
 younger
