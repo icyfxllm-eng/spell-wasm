@@ -25,6 +25,12 @@ fn synth() -> Option<web_sys::SpeechSynthesis> {
     }
 }
 
+/// True when the browser has a Web Speech synthesizer at all (false on Android
+/// WebView, see `synth`).
+pub fn available() -> bool {
+    synth().is_some()
+}
+
 pub fn load_voices() {
     if let Some(s) = synth() {
         let arr = s.get_voices();

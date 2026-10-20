@@ -49,6 +49,7 @@ fn set_source(s: &'static str) {
             "pack" => "offline pack",
             "server-cache" => "server clip",
             "native-tts" => "on-device voice",
+            "web-speech" => "browser voice",
             "none" => "NO SOURCE — every source failed",
             _ => s,
         },
@@ -220,7 +221,7 @@ fn observe_resolution(s: &str) {
             telemetry::record_perf(PerfMetric::TapToAudioMs, Bucket::of_ms(telemetry::now_ms() - t0), &lang);
             telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Resolved, &lang);
         }
-        "native-tts" => telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Resolved, &lang),
+        "native-tts" | "web-speech" => telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Resolved, &lang),
         "none" => telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Unavailable, &lang),
         _ => {}
     }
@@ -432,7 +433,22 @@ pub fn play_device_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail
 /// variant has no native pre-render, so slowness is met by a lower rate here.
 fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
     if !native_lang::available() {
-        on_fail();
+        // No native layer (the web build, or a browser): the device's own voice
+        // is the browser's Web Speech synthesizer. Same slot in the order as
+        // AVSpeech in the app, so this changes no routing (I5): it is what the
+        // last source IS on the web. Before this, the web had no last source, so
+        // a word whose clips are all verdict-FAIL (and any server outage) played
+        // nothing at all. Eric, 2026-10-20: FAIL words on the web use Web Speech.
+        // zh never gets here (its order drops NativeTts, Invariant 4).
+        if crate::speech_out::available() {
+            let eff_rate = if variant == "slow" { rate.min(0.7) } else { rate };
+            // zh-ok(audio): play_word_with drops Source::NativeTts from zh's order, so a zh
+            // word never reaches this source.
+            crate::speech_out::speak(word, eff_rate as f32, lang);
+            set_source("web-speech");
+        } else {
+            on_fail();
+        }
         return;
     }
     let eff_rate = if variant == "slow" { rate.min(0.7) } else { rate };
