@@ -40,6 +40,62 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // Every share door, not just the reveal's. share.rs gates the call itself, so the
+  // test clicks each button by dispatch (CSS cannot stop that) and counts what
+  // reached navigator.share: zero for a kid, and the adult control proves the
+  // counter and the click path work at all.
+  const SHARE_IDS = ['shareBtn', 'dailyShare', 'prShare', 'bgShare', 'rsDailyShare', 'rsShare', 'wpShare'];
+  const shareProbe = async (ctx, age) => {
+    await ctx.addInitScript(([age]) => {
+      localStorage.setItem('byear_agegate_v1', age);
+      localStorage.setItem('spellgame.locale', 'en');
+      window.__shareCalls = 0;
+      Object.defineProperty(navigator, 'share', {
+        configurable: true,
+        value: () => { window.__shareCalls += 1; return Promise.resolve(); },
+      });
+    }, [age]);
+    await ctx.route('**/api/speak**', (r) =>
+      r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
+    const page = await ctx.newPage();
+    await page.goto(base);
+    await page.waitForFunction(
+      () => window.__spelltest && window.__spelltest.build() === 'testseam',
+      null, { timeout: 30000 });
+    return page.evaluate((ids) => {
+      const display = Object.fromEntries(ids.map((id) => {
+        const el = document.getElementById(id);
+        return [id, el ? getComputedStyle(el).display : 'missing'];
+      }));
+      document.getElementById('shareBtn').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      return { kid: document.body.classList.contains('kid'), display, calls: window.__shareCalls };
+    }, SHARE_IDS);
+  };
+
+  await suite.test('kid mode: every share door is hidden and the share call is refused', async () => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+    await pinBaseline(ctx);
+    try {
+      const r = await shareProbe(ctx, AGE_KID);
+      assert(r.kid, 'the agegate verdict did not put the app in Kid Mode');
+      for (const id of SHARE_IDS) {
+        assert(r.display[id] === 'none', `Kid Mode must hide #${id} (display: ${r.display[id]})`);
+      }
+      assert(r.calls === 0, `a kid's share click reached navigator.share ${r.calls} time(s)`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('kid mode share control: an adult share click reaches the share sheet', async () => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+    await pinBaseline(ctx);
+    try {
+      const r = await shareProbe(ctx, JSON.stringify({ verdict: 'full', checkedAt: 1700000000 }));
+      assert(!r.kid, 'an adult verdict must not be Kid Mode');
+      assert(r.display.shareBtn !== 'none', 'an adult keeps the chain Share button');
+      assert(r.calls === 1, `an adult share click should reach navigator.share once (got ${r.calls})`);
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('kid reveal control: an adult sees both actions', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {

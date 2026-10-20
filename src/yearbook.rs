@@ -123,6 +123,21 @@ impl Book {
     }
 }
 
+/// Every built-in bank word of `lang`, across all tiers. Mandarin entries are
+/// `"pinyin|hanzi"`, so each half is admitted too: the log may hold either.
+fn printable_words(lang: &str) -> std::collections::HashSet<&'static str> {
+    let mut set = std::collections::HashSet::new();
+    for tier in crate::experience::TIERS {
+        for &w in crate::words::tier_for(lang, tier) {
+            set.insert(w);
+            if w.contains('|') {
+                set.extend(w.split('|'));
+            }
+        }
+    }
+    set
+}
+
 /// Pure compile over already-kept stores. `today` is an epoch-day.
 pub fn compile(state: &crate::model::AppState, period: Period, today: u32) -> Book {
     let (lo, hi) = period.day_bounds(today);
@@ -148,6 +163,12 @@ pub fn compile(state: &crate::model::AppState, period: Period, today: u32) -> Bo
         &crate::learner_query::live(state), crate::learner_query::DEVICE, &state.lang);
     let in_period =
         |day: u32| day >= lo && day <= hi;
+    // The learner log also holds My Words and photo-imported words: text a child
+    // typed or photographed, which can be their own name. The yearbook is a shared
+    // document, so the two word slots it prints (hardest, first) only ever show a
+    // word from the built-in bank that the kid filter allows.
+    let bank = printable_words(&state.lang);
+    let printable = |w: &str| bank.contains(w) && crate::kid_filter::kid_allowed(&state.lang, w);
     let mastered_in_period = log
         .iter()
         .filter(|a| a.correct && in_period(a.day))
@@ -156,11 +177,11 @@ pub fn compile(state: &crate::model::AppState, period: Period, today: u32) -> Bo
         .len();
     let hardest_word = log
         .iter()
-        .filter(|a| a.correct && in_period(a.day))
+        .filter(|a| a.correct && in_period(a.day) && printable(&a.word))
         .max_by_key(|a| a.word.chars().count())
         .map(|a| a.word.clone());
     let mut first_words: Vec<(String, String)> = Vec::new();
-    if let Some(first) = log.iter().find(|a| a.correct && in_period(a.day)) {
+    if let Some(first) = log.iter().find(|a| a.correct && in_period(a.day) && printable(&a.word)) {
         first_words.push((state.lang.clone(), first.word.clone()));
     }
 
@@ -220,6 +241,14 @@ fn date_key_in(key: &str, lo: u32, hi: u32) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn printable_words_are_bank_words_only() {
+        let en = printable_words(crate::consts::EN);
+        let some_bank_word = crate::words::tier_for(crate::consts::EN, "easy")[0];
+        assert!(en.contains(some_bank_word), "a bank word must be printable");
+        assert!(!en.contains("Zxqvbjorn"), "a typed name is not a bank word");
+    }
 
     #[test]
     fn calendar_year_bounds_are_jan1_dec31() {

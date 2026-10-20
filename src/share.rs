@@ -51,9 +51,25 @@ fn nav_share() -> Option<(JsValue, Function)> {
     Some((nav, f))
 }
 
-/// True when some share mechanism exists (native app or mobile web).
+/// Kid Mode (Spell Jr / Little Speller, and every under-13 agegate verdict) never
+/// opens a share sheet. This is the one gate: every player-facing share in the app
+/// goes through `share_text` or `share_image`, so a share button a mode forgets to
+/// hide still does nothing. `body.kid` is the flag settings::apply keeps in step
+/// with `AppState.kid` (the calendar planner reads it the same way); the stylesheet
+/// hides the buttons from the same class. The yearbook's `share_file` is not gated
+/// here: it sits behind the grown-ups gate, which is its own control.
+fn kid_mode() -> bool {
+    web_sys::window()
+        .and_then(|w| w.document())
+        .and_then(|d| d.body())
+        .map(|b| b.class_list().contains("kid"))
+        .unwrap_or(false)
+}
+
+/// True when some share mechanism exists (native app or mobile web) and the
+/// player is allowed to use it (never in Kid Mode).
 pub fn available() -> bool {
-    cap_share().is_some() || nav_share().is_some()
+    !kid_mode() && (cap_share().is_some() || nav_share().is_some())
 }
 
 fn build_message(streak: u32, best: u32) -> String {
@@ -81,6 +97,9 @@ fn base_opts(text: &str) -> Object {
 /// `pub(crate)` so a mode can compose its own message without share.rs
 /// needing to know what that mode is (CC-PICTURE-PLATFORM I3).
 pub(crate) fn share_text(text: &str) {
+    if kid_mode() {
+        return;
+    }
     let opts = base_opts(text);
     if let Some(share) = cap_share() {
         if let Some(f) = get(&share, "share").and_then(|f| f.dyn_into::<Function>().ok()) {
@@ -171,6 +190,9 @@ pub(crate) fn share_file(fs: JsValue, share: JsValue, path: &str, b64: String) {
 }
 
 pub(crate) fn share_image(fs: JsValue, share: JsValue, text: String, b64: String) {
+    if kid_mode() {
+        return;
+    }
     let write = Object::new();
     let _ = Reflect::set(&write, &JsValue::from_str("path"), &JsValue::from_str("share/spell-chain.png"));
     let _ = Reflect::set(&write, &JsValue::from_str("data"), &JsValue::from_str(&b64));

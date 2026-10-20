@@ -1344,7 +1344,9 @@
      which the reveal spec's own device sweep caught. */
   .wp-reveal-acts .btn,.wp-reveal-acts .ghost{flex:1 1 auto;min-width:92px;min-height:44px}
   /* D4: Kid Mode celebrates and saves, but does not share. */
-  body.kid #wpShare{display:none}
+  /* Kid Mode never shares (share.rs gates the call itself; this hides the doors). */
+  body.kid #wpShare, body.kid #shareBtn, body.kid #dailyShare, body.kid #prShare,
+  body.kid #bgShare, body.kid #rsDailyShare, body.kid #rsShare{display:none!important}
   /* Someone who asked for less motion still gets the piece, just not the build. */
   @media (prefers-reduced-motion: reduce){
     .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:1;animation:none}
