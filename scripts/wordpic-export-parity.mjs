@@ -37,6 +37,24 @@ const screen = readFileSync(join(ROOT, 'src/wordpic_screen.rs'), 'utf8');
 
 const problems = [];
 
+// CC-VISUAL-ECLIPSE A1: index.html now names its colours as tokens
+// (var(--x)), with the values in design/tokens.json. Resolve a token
+// reference to its value before comparing, so this gate still compares the
+// colour the screen paints with the colour the export carries.
+const { flatten } = await import('./tokens-build.mjs');
+const TOKENS = new Map(
+  flatten(JSON.parse(readFileSync(join(ROOT, 'design/tokens.json'), 'utf8'))).map((l) => [l.css, l.value]),
+);
+// The same tokens by their Rust constant name (tokens-build.mjs's ident()).
+const RUST_TOKENS = new Map(
+  flatten(JSON.parse(readFileSync(join(ROOT, 'design/tokens.json'), 'utf8')))
+    .map((l) => [l.path.toUpperCase().replace(/[^A-Z0-9]+/g, '_'), l.value]),
+);
+const resolve = (v) => {
+  const out = v.replace(/var\((--[\w-]+)\)/g, (all, name) => (TOKENS.has(name) ? TOKENS.get(name) : all));
+  return out === v ? v : resolve(out);
+};
+
 /** Pull one `Ground { ... }` constant out of the Rust source. */
 function ground(name) {
   const m = rust.match(new RegExp(`pub const ${name}: Ground = Ground \\{([^}]*)\\}`));
@@ -46,6 +64,12 @@ function ground(name) {
   }
   const out = {};
   for (const f of m[1].matchAll(/(\w+)\s*:\s*"([^"]+)"/g)) out[f[1]] = f[2];
+  // Since A1 the grounds name generated tokens (crate::tokens::NAME.value);
+  // resolve each to its value in design/tokens.json.
+  for (const f of m[1].matchAll(/(\w+)\s*:\s*crate::tokens::(\w+)\.value/g)) {
+    if (RUST_TOKENS.has(f[2])) out[f[1]] = RUST_TOKENS.get(f[2]);
+    else problems.push(`${name}.${f[1]}: crate::tokens::${f[2]} is not in design/tokens.json`);
+  }
   for (const k of ['bg', 'ink', 'stroke', 'feature', 'outline', 'guide']) {
     if (!out[k]) problems.push(`${name} is missing the "${k}" token`);
   }
@@ -73,7 +97,7 @@ function declares(selector, prop, expected, label) {
     problems.push(`index.html ${selector}: no "${prop}" declaration (${label})`);
     return;
   }
-  const got = m[1].trim();
+  const got = resolve(m[1].trim());
   if (got !== expected) {
     problems.push(
       `${label}: index.html has ${selector} { ${prop}: ${got} } ` +

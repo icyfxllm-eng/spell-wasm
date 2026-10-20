@@ -123,7 +123,7 @@ impl Default for DrawState {
             active_pointer: None,
             tool: Tool::Pen,
             brush: 4.0,
-            color: "#ffb14d".to_string(),
+            color: crate::tokens::COLOR_ACCENT.value.to_string(),
             guide: false,
             canvas_ready: false,
         }
@@ -194,7 +194,7 @@ pub fn size_canvas() {
 
 fn draw_guides(ctx: &CanvasRenderingContext2d, css_w: f64, css_h: f64) {
     ctx.save();
-    ctx.set_stroke_style_str("rgba(255,177,77,.45)");
+    ctx.set_stroke_style_str(crate::tokens::CHROME_INK_PAD_GUIDE.value);
     ctx.set_line_width(1.0);
     let _ = ctx.set_line_dash(&js_sys::Array::of2(&JsValue::from_f64(6.0), &JsValue::from_f64(5.0)));
     // baseline (where letters sit) and x-height guide (top of lowercase letters)
@@ -465,9 +465,9 @@ fn render_for_ocr() -> HtmlCanvasElement {
     out.set_width(out_w.round() as u32);
     out.set_height(out_h.round() as u32);
     let o = ctx_2d(&out);
-    o.set_fill_style_str("#fff");
+    o.set_fill_style_str("#fff"); // token-exempt: OCR input, not style. The recogniser wants pure black ink on pure white.
     o.fill_rect(0.0, 0.0, out.width() as f64, out.height() as f64);
-    o.set_stroke_style_str("#000");
+    o.set_stroke_style_str("#000"); // token-exempt: OCR input, see above
     o.set_line_cap("round");
     o.set_line_join("round");
     // A pen line, not a hairline. Thin strokes survived the local test, but a

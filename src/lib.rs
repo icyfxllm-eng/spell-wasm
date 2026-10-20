@@ -129,6 +129,7 @@ pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse
 mod dev; // TEMP dev door (5-tap logo → hidden racing/aloud screens); remove at activation
 mod settings;
 mod share;
+mod tokens; // CC-VISUAL-ECLIPSE F1: generated from design/tokens.json (scripts/tokens-build.mjs)
 mod speech_out;
 mod stats;
 pub mod snap_clean; // CC-SNAP-CLEAN v1 — OCR lines to word candidates (tests/snap_clean_golden.rs)

@@ -8,9 +8,9 @@ use crate::App;
 
 pub fn load_prefs(state: &mut AppState) {
     let p: Prefs = storage::get_json(PREFS_KEY).unwrap_or_default();
-    state.glow = p.glow.unwrap_or_else(|| "#ffb14d".to_string());
-    state.bg_color = p.bg_color.unwrap_or_else(|| "#1c1830".to_string());
-    state.orb_color = p.orb_color.unwrap_or_else(|| "#ffb14d".to_string());
+    state.glow = p.glow.unwrap_or_else(|| crate::tokens::COLOR_GLOW.value.to_string());
+    state.bg_color = p.bg_color.unwrap_or_else(|| crate::tokens::COLOR_BG_USER.value.to_string());
+    state.orb_color = p.orb_color.unwrap_or_else(|| crate::tokens::COLOR_ORB_CORE.value.to_string());
     state.last_lang = p.last_lang;
     state.kid = p.kid;
     state.readable = p.readable;
@@ -155,8 +155,8 @@ fn contrast_ratio(l1: f64, l2: f64) -> f64 {
     (hi + 0.05) / (lo + 0.05)
 }
 
-const LIGHT_INK: &str = "#efeaf7";
-const DARK_INK: &str = "#191527";
+const LIGHT_INK: &str = crate::tokens::COLOR_TEXT.value;
+const DARK_INK: &str = crate::tokens::COLOR_TEXT_ON_LIGHT.value;
 
 /// Picks whichever of a light or dark ink color has better contrast against
 /// `hex`, by actual contrast ratio rather than a brightness guess.
@@ -177,9 +177,9 @@ fn best_contrast_ink(hex: &str) -> &'static str {
 /// saturated hues).
 fn contrasting_text(hex: &str) -> &'static str {
     if best_contrast_ink(hex) == DARK_INK {
-        "#2a1a06"
+        crate::tokens::COLOR_ORB_TEXT_DARK.value
     } else {
-        "#fdf6ec"
+        crate::tokens::COLOR_ORB_TEXT_LIGHT.value
     }
 }
 

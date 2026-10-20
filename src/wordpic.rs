@@ -107,12 +107,12 @@ pub struct Ground {
 
 /// The default: near-white on near-black. 15.57:1.
 pub const DARK: Ground = Ground {
-    bg: "#0e1420",
-    ink: "#e8ecf5",
-    stroke: "rgba(232,236,245,.92)",
-    feature: "rgba(232,236,245,.95)",
-    outline: "rgba(255,255,255,.22)",
-    guide: "rgba(232,236,245,.62)",
+    bg: crate::tokens::PALETTE_MODE_SCREEN_BG.value,
+    ink: crate::tokens::MODE_WORDPIC_DARK_INK.value,
+    stroke: crate::tokens::MODE_WORDPIC_DARK_STROKE.value,
+    feature: crate::tokens::MODE_WORDPIC_DARK_FEATURE.value,
+    outline: crate::tokens::ALPHA_WHITE_22.value,
+    guide: crate::tokens::MODE_WORDPIC_DARK_GUIDE.value,
 };
 
 /// The gallery ground for paintings. Warm off-white rather than plain white
@@ -121,12 +121,12 @@ pub const DARK: Ground = Ground {
 /// `#e8e0d0` was the other candidate and is REJECTED — Mona's dress lands at
 /// 2.70:1 there and fails even the large-glyph threshold.
 pub const LIGHT: Ground = Ground {
-    bg: "#f4efe4",
-    ink: "#1a1712",
-    stroke: "rgba(26,23,18,.92)",
-    feature: "rgba(26,23,18,.95)",
-    outline: "rgba(0,0,0,.22)",
-    guide: "rgba(26,23,18,.58)",
+    bg: crate::tokens::MODE_WORDPIC_LIGHT_BG.value,
+    ink: crate::tokens::MODE_WORDPIC_LIGHT_INK.value,
+    stroke: crate::tokens::MODE_WORDPIC_LIGHT_STROKE.value,
+    feature: crate::tokens::MODE_WORDPIC_LIGHT_FEATURE.value,
+    outline: crate::tokens::ALPHA_BLACK_22.value,
+    guide: crate::tokens::MODE_WORDPIC_LIGHT_GUIDE.value,
 };
 
 /// Which ground a picture renders on. Masterpieces are paintings and get the

@@ -184,7 +184,7 @@ pub fn card_svg(piece_svg: &str, meta: &CardMeta) -> String {
     let inner = piece_svg;
     let dots: String = (0..4)
         .map(|i| {
-            let fill = if i < meta.tier_dots { "#ffb14d" } else { "#3a4258" };
+            let fill = if i < meta.tier_dots { crate::tokens::COLOR_ACCENT.value } else { crate::tokens::MODE_WORDPIC_EXPORT_TIER_DOT_OFF.value };
             format!("<circle cx=\"{}\" cy=\"557\" r=\"5\" fill=\"{fill}\"/>", 258 + i as i32 * 18)
         })
         .collect();
@@ -192,14 +192,19 @@ pub fn card_svg(piece_svg: &str, meta: &CardMeta) -> String {
         String::new()
     } else {
         format!(
-            "<text x=\"256\" y=\"592\" text-anchor=\"middle\" font-size=\"12\" fill=\"#95a0bb\" font-style=\"italic\">{}</text>",
-            crate::dom::escape_html(meta.attribution)
+            "<text x=\"256\" y=\"592\" text-anchor=\"middle\" font-size=\"12\" fill=\"{slate}\" font-style=\"italic\">{}</text>",
+            crate::dom::escape_html(meta.attribution),
+            slate = crate::tokens::PALETTE_SLATE_TEXT.value
         )
     };
     format!(
-        "<svg viewBox=\"0 0 512 600\" xmlns=\"http://www.w3.org/2000/svg\">         <rect width=\"512\" height=\"600\" fill=\"#0e1420\"/>         <svg x=\"0\" y=\"0\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\">{inner}</svg>         <rect x=\"0\" y=\"512\" width=\"512\" height=\"88\" fill=\"#121a2b\"/>         <text x=\"22\" y=\"563\" font-size=\"30\">{icon}</text>         {dots}         <text x=\"490\" y=\"560\" text-anchor=\"end\" font-size=\"15\" fill=\"#eef1f8\" font-weight=\"600\">SpellGame</text>         <text x=\"70\" y=\"560\" font-size=\"14\" fill=\"#95a0bb\">{lang}</text>         {attribution}         </svg>",
+        "<svg viewBox=\"0 0 512 600\" xmlns=\"http://www.w3.org/2000/svg\">         <rect width=\"512\" height=\"600\" fill=\"{bg}\"/>         <svg x=\"0\" y=\"0\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\">{inner}</svg>         <rect x=\"0\" y=\"512\" width=\"512\" height=\"88\" fill=\"{band}\"/>         <text x=\"22\" y=\"563\" font-size=\"30\">{icon}</text>         {dots}         <text x=\"490\" y=\"560\" text-anchor=\"end\" font-size=\"15\" fill=\"{mark}\" font-weight=\"600\">SpellGame</text>         <text x=\"70\" y=\"560\" font-size=\"14\" fill=\"{slate}\">{lang}</text>         {attribution}         </svg>",
         icon = crate::dom::escape_html(meta.icon),
         lang = crate::dom::escape_html(meta.lang_endonym),
+        bg = crate::tokens::PALETTE_MODE_SCREEN_BG.value,
+        band = crate::tokens::MODE_WORDPIC_EXPORT_FOOTER_BG.value,
+        mark = crate::tokens::MODE_WORDPIC_EXPORT_WORDMARK.value,
+        slate = crate::tokens::PALETTE_SLATE_TEXT.value,
     )
 }
 

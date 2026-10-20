@@ -158,8 +158,9 @@ async fn export_pdf(app: crate::App) {
 
 fn report_page_svg(q: &dyn crate::learner_query::LearnerQuery, lang: &str, today: u32) -> String {
     let t = |k: &str| crate::i18n::t(k);
-    let mut svg = String::from(
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1240\" height=\"1754\"          viewBox=\"0 0 1240 1754\"><rect width=\"1240\" height=\"1754\" fill=\"#ffffff\"/>",
+    let mut svg = format!(
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1240\" height=\"1754\"          viewBox=\"0 0 1240 1754\"><rect width=\"1240\" height=\"1754\" fill=\"{bg}\"/>",
+        bg = crate::tokens::PRINT_PAGE_BG.value,
     );
     let mut y = 140u32;
     fn text_line(svg: &mut String, y: &mut u32, s: &str, size: u32) {
@@ -194,9 +195,10 @@ fn report_page_svg(q: &dyn crate::learner_query::LearnerQuery, lang: &str, today
     let (tw, lw) = crate::reports::week_over_week(lang, today);
     line(&mut svg, &mut y, &crate::i18n::tp("gdash.week", &[("n", &tw.to_string()), ("m", &lw.to_string())]), 30);
     // D5: the wordmark, footer — earned marketing on a teacher-bound page.
-    svg.push_str(
-        "<text x=\"620\" y=\"1700\" text-anchor=\"middle\" font-size=\"24\"          font-family=\"sans-serif\" fill=\"#888888\">SpellGame \u{2014} spellgame.net</text>",
-    );
+    svg.push_str(&format!(
+        "<text x=\"620\" y=\"1700\" text-anchor=\"middle\" font-size=\"24\"          font-family=\"sans-serif\" fill=\"{ink}\">SpellGame \u{2014} spellgame.net</text>",
+        ink = crate::tokens::PRINT_REPORT_FOOTER_TEXT.value,
+    ));
     svg.push_str("</svg>");
     svg
 }

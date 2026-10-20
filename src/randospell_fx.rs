@@ -140,8 +140,8 @@ pub fn burst(kind: Burst, n: usize) {
             let _ = &p.r;
         }
         match kind {
-            Burst::Stream => ctx.set_fill_style_str(&format!("rgba(170,205,255,{fade:.2})")),
-            Burst::Shatter => ctx.set_fill_style_str(&format!("rgba(150,140,175,{fade:.2})")),
+            Burst::Stream => ctx.set_fill_style_str(&format!("rgba(170,205,255,{fade:.2})")), // token-exempt: per-frame alpha, built at runtime (mode-owned art)
+            Burst::Shatter => ctx.set_fill_style_str(&format!("rgba(150,140,175,{fade:.2})")), // token-exempt: see above
         }
         for p in &ps {
             ctx.fill_rect(p.x, p.y, p.r * 2.0, p.r * 2.0);

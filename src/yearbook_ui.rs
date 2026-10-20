@@ -128,7 +128,8 @@ fn pages_svg(book: &Book, lang: &str) -> Vec<String> {
     const H: u32 = 1754;
     let head = format!(
         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{W}\" height=\"{H}\" \
-         viewBox=\"0 0 {W} {H}\"><rect width=\"{W}\" height=\"{H}\" fill=\"#ffffff\"/>"
+         viewBox=\"0 0 {W} {H}\"><rect width=\"{W}\" height=\"{H}\" fill=\"{bg}\"/>",
+        bg = crate::tokens::PRINT_PAGE_BG.value
     );
     let esc = crate::dom::escape_html;
     let mut pages = Vec::new();
@@ -212,7 +213,8 @@ fn pages_svg(book: &Book, lang: &str) -> Vec<String> {
     // D3: wordmark on the BACK (this last page's foot), never interior.
     mj.push_str(&format!(
         "<text x=\"620\" y=\"1700\" text-anchor=\"middle\" font-size=\"22\" \
-         font-family=\"sans-serif\" fill=\"#999999\">spellgame.net</text>"
+         font-family=\"sans-serif\" fill=\"{ink}\">spellgame.net</text>",
+        ink = crate::tokens::PRINT_FOOTER_TEXT.value
     ));
     mj.push_str("</svg>");
     pages.push(mj);

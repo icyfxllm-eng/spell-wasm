@@ -237,21 +237,21 @@ fn render_card_png(streak: u32, best: u32) -> Option<String> {
 
     let cx = 540.0;
     // Background.
-    ctx.set_fill_style_str("#1c1830");
+    ctx.set_fill_style_str(crate::tokens::COLOR_BG_2.value);
     ctx.fill_rect(0.0, 0.0, 1080.0, 1080.0);
 
     // Orb with highlight + "S", echoing the app icon.
     ctx.begin_path();
     let _ = ctx.arc(cx, 340.0, 150.0, 0.0, std::f64::consts::PI * 2.0);
-    ctx.set_fill_style_str("#ffb14d");
+    ctx.set_fill_style_str(crate::tokens::COLOR_ACCENT.value);
     ctx.fill();
     ctx.begin_path();
     let _ = ctx.arc(495.0, 300.0, 52.0, 0.0, std::f64::consts::PI * 2.0);
-    ctx.set_fill_style_str("#ffd9a0");
+    ctx.set_fill_style_str(crate::tokens::COLOR_ACCENT_SOFT.value);
     ctx.fill();
     ctx.set_text_align("center");
     ctx.set_text_baseline("middle");
-    ctx.set_fill_style_str("#3a2416");
+    ctx.set_fill_style_str(crate::tokens::SHARE_CARD_ORB_TEXT.value);
     ctx.set_font("800 165px sans-serif");
     let _ = ctx.fill_text("S", cx, 355.0);
 
@@ -261,31 +261,31 @@ fn render_card_png(streak: u32, best: u32) -> Option<String> {
     } else {
         (best, "BEST CHAIN")
     };
-    ctx.set_fill_style_str("#ffffff");
+    ctx.set_fill_style_str(crate::tokens::SHARE_CARD_TEXT.value);
     if hero > 0 {
         ctx.set_font("800 300px sans-serif");
         let _ = ctx.fill_text(&hero.to_string(), cx, 620.0);
-        ctx.set_fill_style_str("#ffb14d");
+        ctx.set_fill_style_str(crate::tokens::COLOR_ACCENT.value);
         ctx.set_font("700 48px sans-serif");
         let _ = ctx.fill_text(label, cx, 800.0);
         if streak > 0 && best > 0 {
-            ctx.set_fill_style_str("#b9b3d0");
+            ctx.set_fill_style_str(crate::tokens::SHARE_CARD_MUTED.value);
             ctx.set_font("500 40px sans-serif");
             let _ = ctx.fill_text(&format!("your best: {best} words"), cx, 872.0);
         }
     } else {
         ctx.set_font("800 130px sans-serif");
         let _ = ctx.fill_text("Spell", cx, 600.0);
-        ctx.set_fill_style_str("#ffb14d");
+        ctx.set_fill_style_str(crate::tokens::COLOR_ACCENT.value);
         ctx.set_font("600 44px sans-serif");
         let _ = ctx.fill_text("Can you keep the chain?", cx, 730.0);
     }
 
     // Brand footer.
-    ctx.set_fill_style_str("#ffffff");
+    ctx.set_fill_style_str(crate::tokens::SHARE_CARD_TEXT.value);
     ctx.set_font("700 42px sans-serif");
     let _ = ctx.fill_text("hear it \u{b7} spell it \u{b7} keep the chain", cx, 975.0);
-    ctx.set_fill_style_str("#7c7796");
+    ctx.set_fill_style_str(crate::tokens::SHARE_CARD_FOOTER.value);
     ctx.set_font("500 36px sans-serif");
     let _ = ctx.fill_text("spellgame.net", cx, 1030.0);
 

@@ -67,11 +67,11 @@ pub enum ParseError {
 /// apart.
 pub const TONE_COLOURS: [&str; 6] = [
     "",        // unused
-    "#d0342c", // 1 high level    — red
-    "#2e9e4f", // 2 rising        — green
-    "#2f6fd0", // 3 falling-rising— blue
-    "#8b46c4", // 4 falling       — purple
-    "#7a7a7a", // 5 neutral       — grey
+    crate::tokens::CHROME_TONE_1.value, // 1 high level    — red
+    crate::tokens::CHROME_TONE_2.value, // 2 rising        — green
+    crate::tokens::CHROME_TONE_3.value, // 3 falling-rising— blue
+    crate::tokens::CHROME_TONE_4.value, // 4 falling       — purple
+    crate::tokens::CHROME_TONE_5.value, // 5 neutral       — grey
 ];
 
 /// CC-ZH-PINYIN-DISPLAY F1 — THE PRECOMPOSED DISPLAY ALPHABET.
