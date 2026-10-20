@@ -1,0 +1,483 @@
+loc	emoji	class	context
+src/api.rs:85	→*	comment	/// Pure config → source-order mapping (unit-tested). DEFAULT is server-primary /
+src/api.rs:408	→*	comment	// Native download/playback failed → try the <audio> mechanism
+src/bee_screen.rs:228	✓*	ui-icon?	dom::set_text("beeOfficial", if on { "✓" } else { "—" });
+src/board.rs:45	⏱	ui-icon?	if e.timed { "⏱ " } else { "" },
+src/boardgame/tests.rs:324	🐝	ui-icon?	_ => "zzź🐝".into(),
+src/boardgame_input.rs:90	◌*	ui-icon?	Key::Tone(m) => format!("◌{m}"),
+src/boardgame_screen.rs:31	🎩 🐝 🪄 📖	ui-icon?	const PIECES: [&str; 4] = ["🎩", "🐝", "🪄", "📖"];
+src/boardgame_screen.rs:697	🔮	ui-icon?	const WARD_GLYPH: &str = "🔮";
+src/boardgame_screen.rs:698	🔥	ui-icon?	const STREAK_GLYPH: &str = "🔥";
+src/boardgame_screen.rs:702	💨	ui-icon?	Boost::Tailwind => "💨",
+src/boardgame_screen.rs:703	🎲	ui-icon?	Boost::ExtraRoll => "🎲",
+src/boardgame_screen.rs:714	★* ✓* →*	comment	// Feature 1: a Stretch move reads "<piece> ★ ✓ 6→10".
+src/boardgame_screen.rs:715	★*	ui-icon?	let st = if star { " ★" } else { "" };
+src/boardgame_screen.rs:722	🎲	ui-icon?	Event::Rolled { seat, roll, .. } => format!("{} 🎲 {roll}", p(*seat)),
+src/boardgame_screen.rs:723	✓* →*	ui-icon?	Event::Moved { seat, from, to } => format!("{}{st} ✓ {from}→{to}", p(*seat)),
+src/boardgame_screen.rs:724	✗*	ui-icon?	Event::Missed { seat, at, .. } => format!("{}{st} ✗ {at}", p(*seat)),
+src/boardgame_screen.rs:725	⚠	ui-icon?	Event::TrapHit { seat, trap, .. } => format!("{} ⚠ {}", p(*seat), trap_name(*trap)),
+src/boardgame_screen.rs:726	✓*	ui-icon?	Event::TrapSpellOk { seat, .. } => format!("{} ✓", p(*seat)),
+src/boardgame_screen.rs:727	↩ →*	ui-icon?	Event::Teleported { seat, from, to } => format!("{} ↩ {from}→{to}", p(*seat)),
+src/boardgame_screen.rs:728	⏭	ui-icon?	Event::SkipSet { seat } | Event::Skipped { seat } => format!("{} ⏭", p(*seat)),
+src/boardgame_screen.rs:729	⇄*	ui-icon?	Event::Swapped { a, b } => format!("{} ⇄ {}", p(*a), p(*b)),
+src/boardgame_screen.rs:731	🏁	ui-icon?	Event::Finished { seat } => format!("{} 🏁", p(*seat)),
+src/boardgame_screen.rs:759	▶	ui-icon?	if spent { ("wait", "…".to_string(), String::new()) } else { ("replay", "▶".to_string(), i18n::t("bg.replay")) }
+src/boardgame_screen.rs:780	←* →*	ui-icon?	let arrow = if rtl { "←" } else { "→" };
+src/boardgame_screen.rs:786	★*	ui-icon?	if star { format!("★ {} · ", dom::escape_html(&i18n::t("bg.stretch"))) } else { String::new() },
+src/boardgame_screen.rs:854	⚠	ui-icon?	Some(Land::Trap(t)) => format!("<span class=\"bg-pill\" data-land=\"trap\"><i class=\"bg-sw trap\">⚠</i>{}</span>", dom::escape_html(&trap_name(t))),
+src/boardgame_screen.rs:992	🏁	ui-icon?	None => s.push_str(&format!("<text class=\"bg-flag\" style=\"font-size:{}px\" x=\"{cx}\" y=\"{cy}\">🏁</text>", th * 0.62)),
+src/boardgame_screen.rs:1000	⚠	ui-icon?	s.push_str(&format!("<text class=\"bg-trap\" style=\"font-size:{}px\" x=\"{}\" y=\"{}\">⚠</text>", th * 0.5, slot(k) + 0.5, cy - th * 0.12));
+src/boardgame_screen.rs:1082	🏁	ui-icon?	None => extras.push_str(&format!("<text class=\"bg-flag\" x=\"{cx}\" y=\"{cy}\">🏁</text>")),
+src/boardgame_screen.rs:1096	⚠	ui-icon?	extras.push_str(&format!("<circle class=\"bg-trapbg\" cx=\"{cx}\" cy=\"{}\" r=\"0.27\"/><text class=\"bg-trap\" x=\"{cx}\" y=\"{}\">⚠</text>", cy - 0.12, cy - 0
+src/boardgame_screen.rs:1242	←* →*	ui-icon?	let arrow = if rtl { "←" } else { "→" };
+src/boardgame_screen.rs:1274	⚠	ui-icon?	(format!("<i class=\"bg-sw trap\">⚠</i><span data-land=\"trap\">{}</span>", dom::escape_html(&name)), name, format!("x{}", t.key()))
+src/boardgame_screen.rs:1285	🏁	ui-icon?	Some(d) if d == last => (format!("<span dir=\"ltr\">{arrow} {d} </span>🏁"), String::new(), "f".to_string()),
+src/boardgame_screen.rs:1783	🥇 🥈 🥉	ui-icon?	let medal = ["🥇", "🥈", "🥉"].get(rank).copied().unwrap_or("");
+src/c3_probe.rs:98	→*	ui-icon?	say(&format!("category → {c1}; tone now…"));
+src/c3_probe.rs:118	→*	ui-icon?	<li><b>Control.</b> Ring switch <b>NORMAL</b> → tap <i>Run the split</i>. You
+src/c3_probe.rs:121	→*	ui-icon?	<li><b>The test.</b> Ring switch <b>SILENT</b> → tap <i>Run the split</i> again.</li>
+src/c3_probe.rs:125	→*	ui-icon?	<button class="ghost" id="{MARKER}Split">Run the split (tone → word)</button>
+src/c3_probe.rs:168	→*	ui-icon?	spawn_local(async { let c = set_category("ambient").await; say(&format!("category → {c}")); })
+src/c3_probe.rs:171	→*	ui-icon?	spawn_local(async { let c = set_category("playback").await; say(&format!("category → {c}")); })
+src/calendar_ui.rs:57	⭐ ◐*	ui-icon?	if g.done { "⭐" } else { "◐" },
+src/calendar_ui.rs:87	📣	ui-icon?	"<div class=\"cal-cheer\">📣 {}</div>",
+src/calendar_ui.rs:113	●*	ui-icon?	dots.push('●');
+src/calendar_ui.rs:116	⭐	ui-icon?	dots.push('⭐');
+src/calendar_ui.rs:122	🎁	ui-icon?	dots.push('🎁');
+src/calendar_ui.rs:159	▶	ui-icon?	"<div class=\"rep-row door\" data-cal-door=\"{}\"><span>{}</span><span>▶</span></div>",
+src/calendar_ui.rs:209	✕*	ui-icon?	"<div class=\"rep-row\"><span>{}</span><button class=\"ghost\" data-cal-unplan=\"{}\">✕</button></div>",
+src/chains.rs:18	→*	comment	//! ar     27.6% dead            ة→ه, ى→ي, أإآ→ا then last letter       2.4%
+src/climb.rs:164	👤	comment	// 👤 glyph and convey state via aria-label + a `signed-in` accent class,
+src/climb.rs:292	⚑*	ui-icon?	<button class=\"c-report\" data-uid=\"{uid}\" title=\"Report name\">⚑</button></div>",
+src/consts.rs:18	→*	comment	/// -- "Climb →", "Easy" -- that nothing rendered, and CC-HUB-GROUP-L10N I8's
+src/consts.rs:150	→*	comment	/// REGISTRY and nowhere else — "no hardcoded language→direction checks anywhere
+src/consts.rs:331	→*	comment	/// tr id cs da nl no nn nb ms pl ro sv → 12 of our 14 are Native; fil and sw
+src/consts.rs:462	🎯	ui-icon?	Achievement { id: "first", ic: "🎯", nm: "First Word", desc: "Spell your first word correctly." },
+src/consts.rs:463	🔥	ui-icon?	Achievement { id: "chain5", ic: "🔥", nm: "On a Roll", desc: "Reach a 5-word chain." },
+src/consts.rs:464	⚡	ui-icon?	Achievement { id: "chain10", ic: "⚡", nm: "Locked In", desc: "Reach a 10-word chain." },
+src/consts.rs:465	🌟	ui-icon?	Achievement { id: "chain25", ic: "🌟", nm: "Unstoppable", desc: "Reach a 25-word chain." },
+src/consts.rs:466	⏱	ui-icon?	Achievement { id: "timed10", ic: "⏱", nm: "Beat the Clock", desc: "Reach a 10-chain in Quick Spell." },
+src/consts.rs:467	✨	word-content?	Achievement { id: "cleared", ic: "✨", nm: "Clean Slate", desc: "Clear all your missed words." },
+src/consts.rs:468	📥	word-content?	Achievement { id: "importer", ic: "📥", nm: "Own Words", desc: "Import your own word list." },
+src/daily.rs:35	→*	comment	/// Daily streak/history. Default false → ordinary Daily behavior unchanged.
+src/daily.rs:40	→*	comment	/// Daily streak. Default false → ordinary Daily behavior unchanged. (DailyState
+src/daily.rs:234	→*	comment	/// (date, locale, kid) triple. Words within each tier are ordered easiest→
+src/daily.rs:306	→*	comment	/// the Daily Challenge. Words are returned easiest→hardest (length proxy), like
+src/defmatch.rs:373	→*	comment	/// Acceptance #1: same (tier, word, seed) → byte-identical rounds, 100 runs.
+src/defmatch.rs:388	×*	comment	/// Acceptance #2: sweep every word × 50 seeds — no distractor from the
+src/defmatch_screen.rs:8	→*	comment	//! Timing model: cards are CSS-animated (translateY bottom→top). Spawn stagger
+src/defmatch_screen.rs:11	→*	comment	//! tap→input-ready stays far under the 200ms budget (Invariant 5); the reveal
+src/defmatch_screen.rs:24	→*	comment	/// Tier-scaled float timing (ms): (spawn stagger, dwell spawn→top-exit).
+src/defmatch_screen.rs:78	🐢	ui-icon?	"relaxed" => "🐢",
+src/defmatch_screen.rs:79	🐇	ui-icon?	"swift" => "🐇",
+src/defmatch_screen.rs:80	▶	ui-icon?	_ => "▶️",
+src/defmatch_screen.rs:481	→*	comment	// Feature 4: the miss that teaches. Wrong tap → reveal beat.
+src/defmatch_screen.rs:522	→*	comment	/// How far along its float a card is (0.0 spawn → 1.0 top-exit), from the CSS
+src/defmatch_screen.rs:617	🔥	ui-icon?	dom::set_text("dmStreak", &if n > 0 { format!("🔥 {n}") } else { String::new() });
+src/dev.rs:123	→*	comment	// a slow sequence never reaches five (each gap too long → resets to 1)
+src/dom.rs:272	🏆	ui-icon?	let html = format!("<span class=\"ti\">🏆</span>Achievement — {}", escape_html(msg));
+src/drawer.rs:124	🏔	comment	/// `top.theClimb` is "🏔 The Climb" because the hub button has no separate
+src/drawer.rs:125	🏔	comment	/// glyph slot; the drawer does, so rendering both gave "🏔🏔 The Climb".
+src/drawer.rs:221	⚙	ui-icon?	let mut v = vec![("settings.title", "⚙", "setBtn")];
+src/drawer.rs:228	🎤	ui-icon?	v.push(("spellit.guide.again", "🎤", "spellItGuideAgain"));
+src/drawer.rs:231	🎙	ui-icon?	v.push(("credits.title", "🎙", "creditsBtn"));
+src/drawer.rs:513	✕*	comment	// on the ✕ when the ✕ was the first thing in the drawer; v1.3.2 moves the
+src/drawer.rs:514	✕*	comment	// ✕ to the bottom, and focusing it now would scroll a screen-reader user
+src/drawer.rs:575	✕*	comment	/// ✕ buttons already carry in all 15 locales, so the VoiceOver name costs no
+src/drawer.rs:602	✕*	ui-icon?	btn.set_text_content(Some("✕"));
+src/drawer.rs:621	✕*	comment	// v1.3.2 F2: the top-right ✕ is gone, view and all. It rendered inside the
+src/drawer.rs:637	👤	ui-icon?	h.push_str(&row_html("acct", "👤", dedupe_icon("👤", &label), acct.action.map(|(_, el)| el)));
+src/drawer.rs:806	☰*	ui-icon?	b.set_text_content(Some("☰"));
+src/drawer.rs:958	🏔	comment	/// "🏔 The Climb" to prove the icon is not doubled -- and on the comments
+src/drawer.rs:992	→*	test	assert!(!code.contains("\"Climb \→\""), "the dead LEVEL_OPTS label is back");
+src/drawer.rs:1146	🏔	test	assert_eq!(dedupe_icon("🏔", "🏔 The Climb"), "The Climb");
+src/drawer.rs:1148	📷 →*	test	assert_eq!(dedupe_icon("📷", "Photo → word list"), "Photo → word list");
+src/drawer.rs:1149	🌱	test	assert_eq!(dedupe_icon("🌱", "Practice"), "Practice");
+src/editor.rs:11	◌*	comment	//! input (`e` + ◌̂ + ◌́) and its precomposed form (`ế`) behave identically — one
+src/editor.rs:14	→*	comment	//! Hangul backspace: one full grapheme cluster (a whole syllable block `학` →
+src/editor.rs:152	→*	comment	// ế composed vs decomposed → one cell either way (NFC boundary policy).
+src/entitlements.rs:98	→*	comment	/// VisionKit photo → word-list OCR (Complete parent-premium).
+src/entitlements.rs:301	←*	comment	// ("zh", 1), ("ja", 1), ("ko", 1),  // ← one-line override when settled.
+src/entitlements.rs:332	→*	comment	// Feature 2 — country → language map (single source of truth, bundled)
+src/entitlements.rs:335	→*	comment	/// The bundled country→language grant map. THE single source of truth — the
+src/entitlements.rs:339	→*	comment	/// Parse the bundled map: ISO 3166-1 alpha-2 country code → granted lang codes.
+src/flags.rs:18	→*	comment	/// Pure flag resolver (unit-tested). "on"/"1"/"true"/"yes" → true,
+src/flags.rs:19	→*	comment	/// "off"/"0"/"false"/"no" → false, anything else (incl. absent) → `default`.
+src/game.rs:252	↑*	ui-icon?	let msg = format!("{} ↑ {}", crate::i18n::t("praise.3"), crate::i18n::t("level.medium"));
+src/game.rs:304	→*	comment	/// Climb band index → tier name (0=easy … 3=expert).
+src/game.rs:397	→*	comment	/// straight from the registry (D3: "no hardcoded language→direction checks
+src/game.rs:800	→*	comment	// Korean decomposes one jamo at a time (한 → 하 → ㅎ → ∅); others pop a char.
+src/game.rs:858	↻*	ui-icon?	format!("<span class=\"dc-ico\">↻</span><span class=\"dc-lbl\">{}</span>", crate::i18n::t("top.missesExit"))
+src/game.rs:861	↻*	ui-icon?	"<span class=\"dc-ico\">↻</span><span class=\"dc-lbl\">{}</span><b class=\"dc-badge\">{}</b>",
+src/game.rs:891	→*	comment	/// The trailing affordance arrow on "Climb →" is trimmed for the value list.
+src/game.rs:906	→*	ui-icon?	let level_label = level_label.trim_end_matches(|c: char| c == '→' || c.is_whitespace());
+src/game.rs:928	✏	word-content?	opts.push_str(&format!("<option value=\"{}\">My Words ✏</option>", MINE));
+src/game.rs:1089	✨	ui-icon?	" ✨"
+src/game.rs:1128	🔊	word-content?	"<span class=\"m-ex\">“{}” <button class=\"m-spk\" id=\"spkEx\">🔊 sentence</button></span>",
+src/game.rs:2152	→*	comment	// Mandarin compares tone-numbered pinyin (v→ü, neutral-5 optional); every
+src/game.rs:2332	→*	comment	// beat the solo correct→next path already uses, keeping Daily's rhythm
+src/game.rs:2411	✓*	ui-icon?	dom::set_text("orbGlyph", "✓");
+src/game.rs:2436	✓*	ui-icon?	dom::set_text("orbGlyph", "✓");
+src/game.rs:2467	✗*	comment	/// an i18n prefix key, and a CSS class. That triple WAS the outcome -- (✗,
+src/game.rs:2502	✓*	ui-icon?	Outcome::Correct | Outcome::OtherSense => "✓",
+src/game.rs:2503	✗*	ui-icon?	Outcome::Misspelled => "✗",
+src/game.rs:2504	⏱	ui-icon?	Outcome::TimedOut => "⏱",
+src/game.rs:2602	🔊	ui-icon?	"{}<span class=\"reveal syllabified\">{}</span> <button type=\"button\" class=\"syl-slow\" id=\"sylSlowBtn\" aria-label=\"{}\">🔊 {}</button>",
+src/game.rs:3008	✗*	ui-icon?	dom::set_text("orbGlyph", "✗");
+src/game.rs:3640	→*	comment	/// taps the orb to advance (which runs `next_word` → serves the next word or
+src/game.rs:3652	✓*	ui-icon?	dom::set_text("orbGlyph", "✓");
+src/game.rs:3659	✗*	ui-icon?	dom::set_text("orbGlyph", "✗");
+src/game.rs:3787	🗓 ✓*	ui-icon?	format!("🗓 {} ✓", crate::i18n::t("daily.title"))
+src/game.rs:3789	🗓	ui-icon?	format!("🗓 {}", crate::i18n::t("daily.title"))
+src/game.rs:4142	✓*	ui-icon?	dom::set_text("orbGlyph", "✓");
+src/game.rs:4405	👨 👩 👧	test	let (_, n) = super::mask_word("👨‍👩‍👧");
+src/game.rs:4473	→*	comment	assert_eq!(band_to_tier(a.borrow().climb_band), "medium"); // 3 correct → +1
+src/game.rs:4478	→*	comment	note_climb(&a, false); // one miss → down ONE, not to easy
+src/ghost.rs:324	✕*	comment	/// Wire the screen once at startup. Two ways out (✕ and the backdrop), because a
+src/ghost.rs:380	→*	comment	// No prior best → candidate is kept.
+src/ghost.rs:382	→*	comment	// Strictly better (higher) → replaced.
+src/ghost.rs:384	→*	comment	// Not better → incumbent kept (same reached, slower candidate).
+src/ghost.rs:399	→*	comment	// Past the ghost's final time → clamped at its reached score.
+src/ghost.rs:401	→*	comment	// No ghost → always 0.
+src/hangul.rs:11	×*	comment	//! Syllable math: `U+AC00 + (initial×21 + medial)×28 + final`, with 19 initials,
+src/impostor_screen.rs:149	🔥	ui-icon?	20 => "🔥🔥🔥",
+src/impostor_screen.rs:150	🔥	ui-icon?	10 => "🔥🔥",
+src/impostor_screen.rs:151	🔥	ui-icon?	_ => "🔥",
+src/ink_probe.rs:158	✓*	ui-icon?	dom::set_text("inkPrompt", "✓");
+src/ink_probe.rs:334	→*	ui-icon?	lines.push_str(&format!("{want} → {}\n", if got.is_empty() { "—" } else { got }));
+src/ink_probe.rs:339	✓*	ui-icon?	dom::set_text("inkPrompt", "✓");
+src/inspector.rs:48	→*	comment	/// Whole days since the epoch → "YYYY-MM-DD" (the yearbook's civil date).
+src/jamo.rs:5	→*	comment	//! (e.g. typed 핝 for 한 → the final consonant).
+src/jamo.rs:84	→*	comment	// typed nothing (or a non-syllable) here → every unit wrong.
+src/jamo.rs:105	→*	comment	/// syllable (한 → "ㅎㅏㄴ", 의 → "ㅇㅢ", 값 → "ㄱㅏㅄ"). The Kid-Mode hint.
+src/jamo.rs:147	→*	comment	// 핝 for 한: ㅎ ok, ㅏ ok, final ㅌ vs ㄴ wrong → 2/3.
+src/jamo.rs:157	→*	comment	// 갑 for 값: final ㅂ vs ㅄ wrong → 2/3, localized to Final.
+src/jamo.rs:166	→*	comment	// 이 for 의: medial ㅣ vs ㅢ wrong → 1/2.
+src/jamo.rs:174	→*	comment	// 각 for 가: expected has no final, typed added ㄱ → Final wrong, 2/3.
+src/jamo.rs:182	→*	comment	// 한 for 한국: 국 missing → its 3 units all wrong → 3/6 = 0.5.
+src/journal.rs:5	×*	comment	//! timestamps, no open counts; I3), outcomes only, per profile ×
+src/keyboard.rs:89	→*	comment	// directly (か→が, は→ばぱ, つ→づっ, や→ゃ …). Every kana is reachable in ≤2 taps.
+src/keyboard.rs:106	→*	comment	// ü on long-press v (v→ü is the standard pinyin-input convention, also folded in
+src/keyboard.rs:264	◌*	comment	// dotted-circle placeholder (◌ + mark), e.g. ◌́ ◌̀.
+src/keyboard.rs:270	◌*	ui-icon?	format!("◌{ch}")
+src/keyboard.rs:300	⇧*	ui-icon?	html.push_str("<button class=\"kb-key kb-shift btn-hide\" id=\"kbShift\" aria-label=\"shift\">⇧</button>");
+src/keyboard.rs:538	◌*	ui-icon?	let face = format!("◌{mark}");
+src/kid_filter.rs:65	→*	comment	/// Unknown language or empty list → always allowed.
+src/kid_filter.rs:123	→*	comment	// A language with no kid list → nothing filtered.
+src/learner.rs:3	×*	comment	//! One serialised state per (profile × language): per-skill Bayesian
+src/learner.rs:16	→*	comment	//! **Determinism (Done #1c)** is byte-level: same state + attempt stream →
+src/learner.rs:35	→*	comment	/// v2 (2026-09-18): same shape as v1; the v1→v2 migration resets every
+src/learner.rs:162	→*	comment	/// Versioned load. The v1→v2 harness exists NOW (Done #8) so the first
+src/lib.rs:129	→*	comment	mod dev; // TEMP dev door (5-tap logo → hidden racing/aloud screens); remove at activation
+src/lib.rs:477	→*	comment	dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
+src/lib.rs:540	→*	comment	// DOB prompt → compute age locally, store the verdict only.
+src/lib.rs:1385	→*	comment	// Undo emptied My Words while it's the active source → fall back to
+src/lists_screen.rs:187	↑*	ui-icon?	"<button type=\"button\" class=\"ghost\" data-e-up=\"{idx}\"{}>↑</button>\
+src/lists_screen.rs:188	↓*	ui-icon?	<button type=\"button\" class=\"ghost\" data-e-down=\"{idx}\"{}>↓</button>",
+src/lists_screen.rs:195	↑*	ui-icon?	<button type=\"button\" class=\"ghost\" data-e-up=\"{idx}\"{}>↑</button>\
+src/lists_screen.rs:196	↓*	ui-icon?	<button type=\"button\" class=\"ghost\" data-e-down=\"{idx}\"{}>↓</button>",
+src/lists_screen.rs:198	★* ☆*	ui-icon?	if e.starred { "★" } else { "☆" },
+src/lists_screen.rs:358	🔒	ui-icon?	if kid { " 🔒" } else { "" },
+src/native_lang.rs:112	→*	comment	/// `checkWord(word, lang)` → resolves `{supported, isWord}`. Returns `None` when
+src/native_lang.rs:120	→*	comment	/// `detectLanguage(text)` → resolves `{supported, lang, confidence}`.
+src/native_lang.rs:125	→*	comment	/// `capabilities(lang)` → resolves the full CapabilityReport.
+src/native_lang.rs:364	→*	comment	// Registry-driven (consts::ocr_support): Native → correction ON;
+src/native_lang.rs:365	→*	comment	// EnglishFallback → OFF, so Vision can't "correct" fil/sw into English.
+src/norm.rs:7	→*	comment	//! * [`fold_lenient`] — `fold_strict` plus accent-stripping (é→e, ñ→n) and the
+src/norm.rs:8	→*	comment	//!   folds for letters with no NFD decomposition (ß→ss, æ→ae, œ→oe, ł→l, ø→o,
+src/norm.rs:9	→*	comment	//!   ı→i). Accepts `cafe` for `café`. Kid Mode only — spelling confidence first,
+src/norm.rs:418	👨 👩 👧	test	let family = "👨‍👩‍👧";
+src/norm.rs:419	👨 👩 👧	test	let three = "👨👩👧";
+src/notifications.rs:138	✨	ui-icon?	set(&notif, "title", &JsValue::from_str("Time to spell ✨"));
+src/online_spelloff.rs:124	→*	comment	/// language, and their level clamped to a real tier (Climb → medium).
+src/online_spelloff.rs:130	→*	comment	_ => "medium".to_string(), // "climb" (adaptive) or unknown → a fixed tier
+src/online_spelloff.rs:246	→*	comment	/// → "you won/lost" transition, since there's no push channel).
+src/online_spelloff.rs:288	→*	comment	// Entry point → open the create/join modal (guarded).
+src/photo_import.rs:17	→*	comment	//!                     promote Custom→InDictionary but never demote.
+src/photo_import.rs:63	→*	comment	/// Phase 2 entry: recognized `(line, confidence)` pairs → parsed, deduped,
+src/photo_import.rs:328	→*	comment	/// Out-of-bank but clean → Custom (the player's own word), never dropped.
+src/photo_list.rs:149	×*	ui-icon?	<button type=\"button\" class=\"pchip-x\" aria-label=\"{aria}\">×</button>\
+src/photo_list.rs:203	→*	comment	// Native → the language's own model, correction ON. EnglishFallback (fil/sw)
+src/photo_list.rs:204	→*	comment	// → the ENGLISH recognizer with correction OFF, so Vision can't "fix" a
+src/photo_list.rs:238	→*	comment	/// extract→classify pipeline for the STUDY language, and open the review screen.
+src/photo_list.rs:456	×*	ui-icon?	<button type=\"button\" class=\"pchip-x\" aria-label=\"{aria}\">×</button>\
+src/pick_ui.rs:101	★* ☆*	ui-icon?	glyph = if on { "★" } else { "☆" },
+src/pinyin.rs:11	→*	comment	//!   * ü substitutes — `v` and `u:` (lv → lü, nu:3 → nǚ);
+src/practice.rs:322	→*	comment	/// seed) → the same line on every platform. None on an empty pool (the orb
+src/practice.rs:544	→*	comment	// Coach pick: same (pool, index, seed) → same line, and a different
+src/practice_screen.rs:63	→*	comment	// Intro dismissed → the trap's micro-interaction, if it has one (D5).
+src/practice_screen.rs:224	→*	comment	return; // continues in prIntroOk → micro_open/start_word
+src/practice_screen.rs:363	→*	comment	Some(false) => micro_done(app, true), // two misses → unfailable auto-reveal
+src/practice_screen.rs:837	●* ★*	ui-icon?	let glyph = if i < practice::FIRST_CONTACT { "●" } else { "★" };
+src/quickbee_draw_screen.rs:387	✓*	ui-icon?	format!("<span class=\"qbd-cell {cls}\" aria-hidden=\"true\">{}</span>", if i < cell { "✓" } else { "" })
+src/racing/format.rs:16	→*	comment	//! - **Deterministic.** serde preserves field order, so encode→decode→encode is
+src/racing/format.rs:80	→*	comment	/// Recorded by a newer major version → "made in a newer version of Spell."
+src/racing/format.rs:88	→*	comment	/// A word ID isn't in the current list → abort (never substitute).
+src/racing/format.rs:266	→*	comment	// 0 is not a real word ID in en/easy → must abort, not swap in another word.
+src/racing/garage.rs:13	×*	comment	//! **Granularity note (interpretation, flag for Eric):** F2 says "per language ×
+src/racing/pace.rs:9	⇒*	comment	//! same band + same track seed ⇒ **byte-identical** ghost on every device, so a pace
+src/racing/pace.rs:83	→*	comment	// frac in [-1000, 1000] from a stable hash → jitter in ±jitter_pct% of base.
+src/racing/pace.rs:93	⇒*	comment	/// Deterministic in `(band, words, seed)` — same inputs ⇒ byte-identical ghost.
+src/racing/pace.rs:162	⇒*	comment	/// Acceptance #2: same band + same track seed ⇒ byte-identical ghost.
+src/racing/screen.rs:183	→*	comment	// The dev door (5-tap logo → dev menu) lives in `crate::dev`; it routes here.
+src/racing/track.rs:217	×*	comment	/// D7 across the whole lineup: for EVERY registered language × tier × available
+src/randospell_screen.rs:496	🎩 🐝 🪄 📖	ui-icon?	["🎩", "🐝", "🪄", "📖"].get(seat.saturating_sub(1)).copied().unwrap_or("")
+src/randospell_screen.rs:785	×*	ui-icon?	let mult_txt = if d == 1 { format!("×{n}") } else { format!("×{}.{}", n / d, (n * 10 / d) % 10) };
+src/randospell_screen.rs:786	●* ○*	ui-icon?	let pips: String = (0..7).map(|i| if i < heat { '●' } else { '○' }).collect();
+src/randospell_screen.rs:793	×*	ui-icon?	format!("{} · ×1.5", i18n::tp("rs.streak", &[("n", &streak.to_string())]))
+src/reports_ui.rs:12	●* ○*	ui-icon?	format!("{}{}", "●".repeat(n), "○".repeat(4 - n))
+src/reports_ui.rs:34	▶	ui-icon?	"<div class=\"rep-row door\" data-door=\"rematch\"><span>{}</span><span>▶</span></div>",
+src/reports_ui.rs:46	⭐	ui-icon?	"<div class=\"rep-row\"><span>{}</span><span>⭐</span></div>",
+src/selection.rs:12	→*	comment	//!      and consecutive fresh words cycle low→mid→high, so a tier feels
+src/selection.rs:39	→*	comment	/// Pool ordered easiest→hardest. Length is the runtime proxy for within-island
+src/selection.rs:64	→*	comment	/// cycle low→mid→high.
+src/selection.rs:217	→*	comment	// 9 words, lengths 1..=9 → terciles of 3.
+src/selection.rs:240	→*	comment	assert_eq!(target_band(3), 0); // then cycle low→mid→high
+src/snap_clean.rs:183	◦* ▪	ui-icon?	'•', '·', '◦', '▪', '‣', '⁃', '-', '–',
+src/snap_clean.rs:184	○* ●* ■* □* ✓*	ui-icon?	'—', '*', '○', '●', '■', '□', '✓',
+src/snap_layout.rs:20	→*	comment	//! below threshold → fall back to plain list import with every line
+src/spell_aloud/loopback.rs:5	→*	comment	//! actually emits ("see/sea"→c, "why"→y, "double u"→w) — through the SAME parser the
+src/spell_aloud/loopback.rs:9	→* ×*	comment	//! TTS→whisper→parser loop (3 synthetic voices × 3 speeds, the ≥95%-under-ASR-noise
+src/spell_aloud/loopback.rs:71	→*	comment	// 50 Spanish words, spelled with canonical letter names (be→b, uve→v, ce→c, ere→r…).
+src/spell_aloud/loopback.rs:121	→*	log/debug	assert_eq!(buf, target, "C,A,T assembles to the target → submit grades correct");
+src/spell_aloud/loopback.rs:148	→*	comment	// accept: letters + done → the word, submit flagged
+src/spell_aloud/tests.rs:13	→*	comment	// English: letter sequences → exact strings (≥40 known-answer cases)
+src/spell_aloud/tests.rs:94	→*	comment	// "a con tilde, erre, be, o, ele" → árbol (NFC).
+src/spell_aloud/tests.rs:114	→*	comment	assert_eq!(spell(ES, "doble ele"), "ll"); // → two letters l l
+src/spell_aloud/tests.rs:117	→*	comment	assert_eq!(spell(ES, "elle"), "ll"); // letter name elle → ll
+src/spell_aloud/tests.rs:118	→*	comment	assert_eq!(spell(ES, "che"), "ch"); // letter name che → ch
+src/spell_aloud/tests.rs:159	→*	comment	// EVERY lexicon entry has a fixture → its letter (both languages)
+src/spell_aloud/tests.rs:183	→*	comment	// Whole-word rejection (Feature 7): ≥20 target words → nothing inserted
+src/spell_aloud/tests.rs:215	⇒*	comment	// High yield ⇒ never a whole-word rejection — and the matcher never saw a target.
+src/spell_aloud/tests.rs:285	→*	comment	// "c a t done" → three letters then Done, in order.
+src/spell_aloud/tests.rs:393	→*	comment	// Confident → always accept, even a confusable letter with a rival alternative.
+src/spell_aloud/tests.rs:395	→*	comment	// Low confidence, confusable letter, same-class alternative → two-choice chip.
+src/spell_aloud/tests.rs:397	→*	comment	// Low confidence but the alternative is NOT same-class → take the best guess.
+src/spell_aloud/tests.rs:399	→*	comment	// Low confidence, no alternative offered → best guess.
+src/spell_aloud/tests.rs:401	→*	comment	// Low confidence on a non-confusable letter (a vowel) → accept.
+src/spell_aloud/tests.rs:425	→*	comment	// Multigraph "doble ve"/"uve doble" → w, never a chip.
+src/spell_aloud/tests.rs:430	→*	comment	// A clarifier whose example starts with neither b nor v can't disambiguate → chip.
+src/spell_aloud/tests.rs:525	⇒*	comment	/// on identical input ⇒ identical streak delta. (The end-to-end delta with a running
+src/spell_aloud/tests.rs:540	→*	comment	// A cheat (saying the word) yields NO answer → never submits → never scores (so it
+src/spell_aloud/tests.rs:551	→*	comment	/// (`game::next_word` → `words::tier_for` + `deck::Deck`). So every word it can serve
+src/spell_aloud/tests.rs:590	⇒*	comment	// A8 distribution parity: same pool + seed ⇒ identical sequence, so any two
+src/spell_aloud/tests.rs:592	⇒*	share-text	assert_eq!(served, draw_200(&pool), "shared selection path ⇒ identical distribution");
+src/spell_aloud/tests.rs:635	→*	comment	assert!(!says_target("see ay tee", "cat")); // homophone letter names → C A T
+src/spell_aloud/tests.rs:645	→*	comment	assert!(says_target("sea", "sea")); // "sea" == target → rejected
+src/spell_aloud/tests.rs:646	→*	comment	assert!(!says_target("see", "sea")); // "see" != "sea" → spells C, not rejected
+src/spell_aloud/tests.rs:678	→*	comment	// an UNREGISTERED code instead. (fr sanity ride-along: bé → b.)
+src/spell_aloud.rs:55	→*	comment	/// Spoken editing/turn commands (Phase 2): phrase → command id
+src/spell_aloud.rs:68	→*	comment	/// can't disambiguate (es "be"/"ve" → b/v). In the MODE these ALWAYS chip; the
+src/spell_aloud.rs:69	→*	comment	/// input-method `parse` keeps its plain mapping. phrase → [choiceA, choiceB].
+src/spell_aloud.rs:109	→*	comment	/// A compiled lexicon: the merged phrase→letters table (keys normalized for
+src/spell_aloud.rs:114	→*	comment	/// Spoken commands (Phase 2): normalized phrase → `Command`.
+src/spell_aloud.rs:120	→*	comment	/// Ambiguous names (Phase 4): normalized phrase → (choiceA, choiceB).
+src/spell_aloud.rs:182	→*	comment	// Commands (Phase 2): a parallel phrase→Command table, biased like the letters.
+src/spell_aloud.rs:211	→*	comment	// Ambiguous names (Phase 4): normalized phrase → (a, b). Only well-formed pairs.
+src/spell_aloud.rs:246	→*	comment	/// ("c"); a multigraph name ("elle"→"ll") or an accented vowel phrase
+src/spell_aloud.rs:247	→*	comment	/// ("a con tilde"→"á") is still ONE slot. The push-and-hold mode (Phase 1) renders
+src/spell_aloud.rs:272	→*	comment	/// spelling ("see ay tee" → 1.0); ~0 for a spoken whole word ("cat").
+src/spell_aloud.rs:284	→*	comment	/// win over their single-word prefixes. All the actual name→letter mappings live
+src/spell_aloud.rs:546	→*	comment	// it by the example word's first letter ("be de burro" → B). The
+src/spell_aloud.rs:689	→*	comment	// Low confidence but no same-class alternative to offer → take the best guess.
+src/spell_aloud.rs:837	→*	comment	// ladder: "installed" → live mic; "downloadable" → the mic shows with a
+src/spell_aloud.rs:839	→*	comment	// "unavailable" → hidden (no on-device path exists — never a server).
+src/spell_aloud.rs:845	🌐	comment	// still get the mic through the backend — explicit consent card, a 🌐
+src/spell_aloud.rs:863	⇒*	comment	/// Attach the mic handlers — ONLY when the flag is on. Flag off ⇒ nothing wired.
+src/spell_aloud.rs:1518	→*	comment	// D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
+src/spelldoku/copy.rs:118	✓*	test	(Kind::Numbers, "Tap a number, then spell it", "Spell the number, then ✓"),
+src/spelldoku/copy.rs:119	▶ ✓*	test	(Kind::Letters, "Tap a letter to hear its word", "Tap ▶ to hear the word, spell it, then ✓"),
+src/spelldoku/rules.rs:38	→*	comment	/// The first unit, in row → column → box order, that already holds it.
+src/spelldoku/wordmode.rs:6	×*	comment	//! - F12 band mix: 9×9 Medium 3 medium + 6 easy, Hard 5 hard + 4 medium,
+src/spelldoku/wordmode.rs:7	×*	comment	//!   Expert 6 expert + 3 hard; 12×12 Expert 8 expert + 4 hard (Phase A3).
+src/spelldoku/wordmode.rs:36	×*	comment	/// Spell Jr never sees letters (D16), and no size but 9×9 has a bank shaped for
+src/spelldoku/wordmode_tests.rs:120	×*	comment	/// Done #15 / #22 in full: 10,000 sets per (language, 9×9, tier).
+src/spelldoku/wordmode_tests.rs:196	⌈* ⌉*	comment	/// saved words in the right bands gets at least ⌈2N/3⌉ of them.
+src/spelldoku_ui.rs:511	▶	ui-icon?	if g.picked == Some(v) { " ▶" } else { "" },
+src/spelldoku_ui.rs:843	▶	ui-icon?	"<button type=\"button\" class=\"sd-replay\" data-sd-replay aria-label=\"{}\">▶</button>",
+src/spelldoku_ui.rs:925	⌫*	ui-icon?	const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-sd-back>⌫</button>\
+src/spelldoku_ui.rs:926	✓*	ui-icon?	<button type=\"button\" class=\"kb-key wide go\" data-sd-go>✓</button>";
+src/spelldoku_ui.rs:1345	×*	ui-icon?	"<option value=\"{n}-{}\">{n}×{n} · {}</option>",
+src/spellpic.rs:315	→*	comment	/// Determinism: same (subject, lang, seed) → same plan, so a resumed
+src/spellpic_export.rs:388	🐺	test	let meta = CardMeta { icon: "🐺", lang_endonym: "Español", attribution: "", tier_dots: 3 };
+src/spellpic_export.rs:401	🖼	test	let with = card_svg(piece, &CardMeta { icon: "🖼", lang_endonym: "English",
+src/spellpic_export.rs:404	⭐	test	let without = card_svg(piece, &CardMeta { icon: "⭐", lang_endonym: "English",
+src/spelluzzle/render.rs:215	★* ☆*	ui-icon?	let one = |on: bool, key: &str| format!("<li class=\"sz-star{}\"><span aria-hidden=\"true\">{}</span> {}</li>", if on { " on" } else { "" }, if on { "★" } else 
+src/spelluzzle_screen.rs:972	⌫*	ui-icon?	let del = format!("<button type=\"button\" class=\"sz-key sz-del\" data-del=\"1\" aria-label=\"{}\">⌫</button>", dom::escape_html(&tr("aria.backspace", &[])));
+src/spelluzzle_screen.rs:1058	★*	ui-icon?	msg.push_str(&format!("<p class=\"sz-parres\">★ {}/9</p>", r.stars.iter().map(|&s| s as u32).sum::<u32>()));
+src/spelluzzle_screen.rs:1593	✓* ✗*	ui-icon?	du.note = if out.correct { format!("✓ +{}", out.points) } else { "✗".to_string() };
+src/spelluzzle_screen.rs:1642	✓* ✗*	ui-icon?	NpcDone::Spelled { spelled, .. } => format!("{name} {}", if spelled.correct { format!("✓ +{}", spelled.points) } else { "✗".to_string() }),
+src/syllable.rs:137	→*	comment	// No nucleus (no vowels) or a single nucleus → one syllable (whole word).
+src/syllable.rs:203	→*	comment	// --- monosyllables (single-syllable → whole word) ---
+src/telemetry/mod.rs:10	→*	comment	//! - Standard player → per-error events with a per-launch random session id.
+src/telemetry/mod.rs:11	→*	comment	//! - Jr, age not yet answered, or the Education edition → daily aggregate
+src/telemetry/mod.rs:13	→*	comment	//! - Toggle off, or the remote kill switch off → nothing; the queue is cleared.
+src/telemetry/mod.rs:40	→*	comment	/// F5 histogram cells for a standard player, "metric|bucket|lang" → count.
+src/telemetry/mod.rs:101	→*	comment	/// F5 cells with no language: "metric|bucket" → count.
+src/testseam.rs:87	×*	comment	// The export renderer's 1× SVG for the open picture (a Promise —
+src/translate_ui.rs:198	↔	ui-icon?	"<div class=\"tr-pair\">{} {} ↔ {}</div>",
+src/word_lists.rs:370	→*	comment	/// F3.3: every live list's words, deduplicated by text + language, sorted A→Z
+src/word_stories.rs:190	×*	ui-icon?	"<button class=\"dyk-x\" id=\"dykDismiss\" aria-label=\"{}\">×</button>\
+src/wordcross_ui.rs:332	▶	ui-icon?	<button type=\"button\" class=\"ws-play\" data-xw-say=\"{i}\" aria-label=\"{}\">▶</button>\
+src/wordcross_ui.rs:356	⌫*	ui-icon?	const BACK: &str = "<button type=\"button\" class=\"kb-key wide\" data-xw-back>⌫</button>";
+src/wordcross_ui.rs:367	★* ☆*	ui-icon?	let s: String = (0..STARS).map(|i| if i < *stars { '★' } else { '☆' }).collect();
+src/wordid.rs:12	⇒*	comment	//!   hashes ⇒ two devices have the identical word set ⇒ a seeded track reproduces
+src/wordpic.rs:211	×*	comment	/// column × size and solves glyph size per word (fill-the-column).
+src/wordpic.rs:955	⭐	test	icon: "⭐".into(),
+src/wordpic_layout.rs:5	×*	comment	//!  * L1 fill-the-line SOLVER: font size = pathLen / (units × script advance),
+src/wordpic_layout.rs:29	→*	comment	/// L7 band → [min, max] solved size at the reference viewport.
+src/wordpic_layout.rs:177	→*	comment	// Endpoint-parameterized arc → sampled (rx==ry assumed, the
+src/wordpic_layout.rs:538	→*	comment	return None; // under-fills even at band max → longer word needed
+src/wordpic_layout.rs:541	→*	comment	return None; // over-long even at the floor → never squeeze (L3)
+src/wordpic_layout.rs:803	×*	comment	// own law flags (fish tail: p0×p1 share an endpoint).
+src/wordpic_layout.rs:1279	×*	comment	/// L9 — THE SWEEP (V1/V3): every picture × language × 5 seeds — zero
+src/wordpic_layout.rs:1341	×*	comment	// Realistic mean glyph box: x-height ≈ 0.75×size (few
+src/wordpic_layout.rs:1457	×*	test	"{}/{}/{}: overlap '{}'(s{} p{})×'{}'(s{} p{})",
+src/wordpic_screen.rs:4	→*	comment	//!  * flow paths → SVG <textPath> for scripts that shape safely along curves;
+src/wordpic_screen.rs:8	→*	comment	//!  * stacks → one <text> per NFC unit, top-down (script-universal).
+src/wordpic_screen.rs:30	🔍	comment	/// L7: expert auto-center zoom (toggle 🔍; docked default ON for expert).
+src/wordpic_screen.rs:667	✓*	test	Some(r) if r.done => ("wp-tile done", "✓".to_string()),
+src/wordpic_screen.rs:971	🔤	test	("🔤".to_string(), wordpic::FOLDERS.len().to_string())
+src/wordpic_screen.rs:1970	🖼	test	let icon = wordpic::picture(pic).map(|p| p.icon.as_str()).unwrap_or("🖼️");
+src/wordpic_screen.rs:1980	🖼	test	let icon = wordpic::picture(pic).map(|p| p.icon.as_str()).unwrap_or("🖼️");
+src/wordpic_screen.rs:2102	●*	test	html.push_str(if k < ok { "<span class=\"on\">●</span>" } else { "<span>–</span>" });
+src/wordpic_screen.rs:2585	×*	comment	/// renderer's 1× piece SVG for the currently open picture, through the
+src/wordpic_screen.rs:2604	→*	comment	/// the same plan → svg → rasterize path Save and Share use, keepsake or
+src/wordsearch/gen.rs:25	→* ↓* ↘ ↗	comment	/// → ↓ ↘ ↗, then the four backwards directions. A tier uses a prefix.
+src/wordsearch/tests.rs:162	×*	comment	/// Test 1 in full: 10,000 seeds × every eligible language × every tier.
+src/wordsearch/tests.rs:350	→* ↓*	comment	/// Test 12. An under-13 player reaches Jr only: → ↓, no decoys.
+src/wordsearch/tests.rs:360	→* ↓*	log/debug	assert!(step == 1 || step == p.size, "{lang} Jr: {} runs off → ↓", t.word);
+src/wordsearch/tests.rs:405	×*	comment	/// E4: every offered tier's pool meets targets × 20 × 1.5, or the no-repeat
+src/wordsearch_ui.rs:294	▶	ui-icon?	<button type=\"button\" class=\"ws-play\" data-ws-play=\"{i}\" aria-label=\"{}\">▶</button>\
+src/wordsearch_ui.rs:302	🐢	ui-icon?	"<button type=\"button\" class=\"ws-slow\" data-ws-slow=\"{i}\" aria-label=\"{}\">🐢</button>",
+src/wordsearch_ui.rs:355	⌫*	ui-icon?	const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-ws-back>⌫</button>\
+src/wordsearch_ui.rs:356	✓*	ui-icon?	<button type=\"button\" class=\"kb-key wide go\" data-ws-go>✓</button>";
+src/wordsearch_ui.rs:365	★* ☆*	ui-icon?	let s: String = (0..STARS).map(|i| if i < *stars { '★' } else { '☆' }).collect();
+index.html:1117	✕*	ui-icon?	✕ exit under the notch — Practice looked like it had no way out. */
+index.html:1194	✓*	ui-icon?	.wp-tile.done .ico::after{content:" ✓"}
+index.html:1398	→*	comment	/* Setup sheet fields (icon + native picker; no text labels → no new i18n keys) */
+index.html:1489	⬇	comment	/* Mic-everywhere: a downloadable-state mic wears a small ⬇ badge — the first
+index.html:1492	🌐	ui-icon?	.voice-spell-mic.net::after{content:"🌐";position:absolute;inset-inline-end:-4px;bottom:-4px;font-size:11px;line-height:1}
+index.html:1493	⬇	ui-icon?	.voice-spell-mic.dl::after{content:"⬇";position:absolute;inset-inline-end:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,#7aa2ff);color:#
+index.html:1609	→*	comment	/* Accessibility: Big text / Kid mode → larger keys (raise the shared width cap
+index.html:1610	→*	ui-icon?	+ height/font so every key scales together); Readable → high contrast. */
+index.html:2286	✕*	ui-icon?	The 56x56 hit rect is the whole point (I4): the ✕ it replaces was an
+index.html:2461	👤	ui-icon?	<button class="meta-icon retired" id="accountBtn" aria-label="Sign in" data-i18n-aria="aria.signIn">👤</button>
+index.html:2462	⚙	ui-icon?	<button class="meta-icon retired" id="setBtn" aria-label="Settings" data-i18n-aria="settings.title">⚙</button>
+index.html:2490	→*	comment	<!-- Home control groups, ordered header → my-data → modes → setup → play
+index.html:2502	📷	ui-icon?	<button class="data-chip btn-hide" id="photoBtn" data-i18n="photo.button">📷 From a photo</button>
+index.html:2516	⚡	ui-icon?	<button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
+index.html:2517	🏔	ui-icon?	<button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
+index.html:2518	🗓	ui-icon?	<button class="launch" id="dailyBtn">🗓 Daily</button>
+index.html:2533	🖼	ui-icon?	<button class="launch" id="wordPicTile"><span aria-hidden="true">🖼</span> <span data-i18n="tools.wordpic.name">Spell Picture</span></button>
+index.html:2538	🎤	ui-icon?	<button class="launch btn-hide" id="spellItBtn">🎤 <span data-i18n="top.spellIt">Spell It</span></button>
+index.html:2542	🌍	ui-icon?	<button class="launch btn-hide" id="soBtn" data-i18n="so.entry">🌍 Challenge a friend</button>
+index.html:2546	⚙	ui-icon?	<span class="setup-chip-chev" aria-hidden="true">⚙</span>
+index.html:2582	🎤	ui-icon?	<button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span aria-hidden="true">🎤</span></butt
+index.html:2607	✎*	ui-icon?	<button type="button" class="ghost" id="inkWriteBtn" data-i18n="ink.write">✎ Write it</button>
+index.html:2678	⌫*	ui-icon?	<button class="kb-back" id="kbBackspace" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
+index.html:2689	📖	ui-icon?	<button class="ghost" id="defBtn" data-i18n="btn.definition" disabled title="Shows a masked definition — helps tell apart tricky homonyms">📖 Definition</button
+index.html:2690	💬	word-content?	<button class="ghost" id="sentenceBtn" data-i18n="btn.sentence" disabled title="Hear (and see a masked version of) the word used in a sentence">💬 Sentence</but
+index.html:2713	🛡	ui-icon?	<div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic" aria-hidden="true">🛡</span><span id="shieldCount">0</span></div>
+index.html:2731	↗	share-text	<button class="pill share-cta btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain">↗ <span data-i18n="share.button">Share your ch
+index.html:2764	↻*	ui-icon?	<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻
+index.html:2817	👻	ui-icon?	<h3><span aria-hidden="true">👻</span> <span id="ghostTitle"></span></h3>
+index.html:2834	🏁	ui-icon?	<h3><span aria-hidden="true">🏁</span> <span id="srTitle"></span></h3>
+index.html:2883	🛠	ui-icon?	<h3><span aria-hidden="true">🛠️</span> Dev preview</h3>
+index.html:2885	🏁	ui-icon?	<button type="button" class="dev-item" id="devOpenRacing">🏁 Spell Racing</button>
+index.html:2886	✍	ui-icon?	<button type="button" class="dev-item" id="devOpenInk">✍️ CJK ink probe (F1)</button>
+index.html:2890	🎟	ui-icon?	🎟️ Test entitlements (Complete)
+index.html:2901	↺*	ui-icon?	<button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
+index.html:2911	🔊	ui-icon?	<button class="btn btn-check pr-replay" id="prReplay" data-i18n="practice.replay">🔊 Hear it again</button>
+index.html:2912	💡	ui-icon?	<button class="btn btn-check pr-hintbtn" id="prHintBtn">💡 <span data-i18n="practice.hint">Hint</span></button>
+index.html:2924	🔊	ui-icon?	<button class="btn btn-check btn-hide" id="prMicroPlay" style="width:100%;margin-top:8px">🔊</button>
+index.html:2931	🎉	ui-icon?	<h3 data-i18n="practice.ceremonyTitle">🎉 First 20 done!</h3>
+index.html:2937	⭐	ui-icon?	<h3 data-i18n="practice.nextTitle">⭐ You did it!</h3>
+index.html:2951	✕*	ui-icon?	anything not pinned scrolls away — including the ✕. An exit you
+index.html:2961	🎲	ui-icon?	<button class="btn btn-check" id="wpSurprise" data-i18n="wordpic.surprise">🎲</button>
+index.html:3001	🔍	ui-icon?	<button class="ghost btn-hide" id="wpZoom" aria-label="Zoom" data-i18n-aria="aria.zoom">🔍</button>
+index.html:3002	↺*	ui-icon?	<button class="ghost" id="wpRestart">↺</button>
+index.html:3009	🔊	ui-icon?	<button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay" data-i18n-aria="btn.replay">🔊</button>
+index.html:3038	🖼	ui-icon?	<h2 class="sr-only" id="wpRevealTitle" data-i18n="wordpic.doneTitle">🖼️ Your picture!</h2>
+index.html:3124	🔊	ui-icon?	<button type="button" class="imp-orb" id="impOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
+index.html:3215	⌫*	ui-icon?	<button type="button" class="bg-btn" id="bgDel" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
+index.html:3216	✓*	ui-icon?	<button type="button" class="bg-btn" id="bgGo" aria-label="Spell it" data-i18n-aria="bee.submit">✓</button>
+index.html:3287	⌫*	ui-icon?	<button type="button" class="rs-btn" id="rsDel" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
+index.html:3288	✓*	ui-icon?	<button type="button" class="rs-btn" id="rsGo" aria-label="Spell it" data-i18n-aria="bee.submit">✓</button>
+index.html:3419	→*	comment	<!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
+index.html:3424	🔊	ui-icon?	<button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
+index.html:3426	🐢	ui-icon?	<button type="button" class="ghost mode-btn" id="dmSpeed" aria-label="Card speed" data-i18n-aria="aria.cardSpeed" style="margin-inline-start:auto">🐢</button>
+index.html:3453	📸	ui-icon?	<button class="btn btn-check" id="photoSrcCamera" data-i18n="photo.takePhoto" style="width:100%;margin-bottom:8px">📸 Take a photo</button>
+index.html:3454	🖼	ui-icon?	<button class="btn btn-check" id="photoSrcLibrary" data-i18n="photo.fromLibrary" style="width:100%">🖼 Choose from Photos</button>
+index.html:3619	🎤	ui-icon?	<h3><span aria-hidden="true">🎤</span> <span data-i18n="top.spellIt">Spell It</span></h3>
+index.html:3624	✓*	ui-icon?	<li data-i18n="spellit.guide.check">Tap ✓ when your word looks right.</li>
+index.html:3697	🛡	ui-icon?	<div class="score-pop" aria-hidden="true">🛡</div>
+index.html:3722	🏔	ui-icon?	<button class="ghost" id="acctClimb" data-i18n="top.theClimb" style="width:100%;margin-bottom:10px">🏔 The Climb</button>
+index.html:3752	🏔	ui-icon?	<h3>🏔 The Climb</h3>
+index.html:3770	🌐	ui-icon?	<label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🌐</span>
+index.html:3772	🎚	ui-icon?	<label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
+index.html:3777	⏱	ui-icon?	<label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
+index.html:3818	🔊	ui-icon?	<button type="button" class="tr-audio" id="trSrcAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear">🔊</button>
+index.html:3822	⇅*	ui-icon?	<button type="button" class="tr-swap" id="trSwap" aria-label="Swap languages" data-i18n-aria="tr.swap">⇅</button>
+index.html:3830	🔊	ui-icon?	<button type="button" class="tr-audio" id="trTgtAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear">🔊</button>
+index.html:3834	↔	ui-icon?	<button type="button" class="tr-translit-toggle" id="trTranslitToggle" aria-pressed="false" data-i18n="tr.translit">Aa ↔ 拼</button>
+index.html:3934	▶	ui-icon?	<button class="btn btn-check" id="wsLockPlay" aria-label="Play" data-i18n-aria="aria.play">▶</button>
+index.html:3977	▶	ui-icon?	<button class="btn btn-check" id="xwKeyPlay" aria-label="Play" data-i18n-aria="aria.play">▶</button>
+index.html:3978	✓*	ui-icon?	<button class="ghost" id="xwKeyGo">✓</button>
+index.html:4043	×*	ui-icon?	<label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text 
+index.html:4068	🔤	ui-icon?	<label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i
+index.html:4069	📷 →*	ui-icon?	<label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n
+index.html:4070	🎤	ui-icon?	<label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data
+index.html:4071	📖	ui-icon?	<label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i1
+index.html:4072	🌍	ui-icon?	<label class="set-row tool-row" id="toolSpelloffRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🌍</span> <span data-i
+index.html:4073	🛡	ui-icon?	<label class="set-row tool-row" id="toolShieldsRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🛡</span> <span data-i1
+index.html:4119	↓*	comment	// ↓ Word-server backend URL. Change ONLY this line when you deploy.
+audio-native.js:56	→*	comment	// focus:true → the plugin sets AVAudioSession category .playback, so word
+native-language-kit.js:254	→*	comment	*   NOT fall back to a server), "PERMISSION_DENIED" (→ needs-mic state),
+src/i18n/locales/en.json:94	📖	ui-icon?	"btn.definition": "📖 Definition",
+src/i18n/locales/en.json:99	💬	word-content?	"btn.sentence": "💬 Sentence",
+src/i18n/locales/en.json:152	✓*	ui-icon?	"coming.confirmed": "Vote counted ✓",
+src/i18n/locales/en.json:162	🔥	ui-icon?	"daily.finale": "🔥 Expert finale",
+src/i18n/locales/en.json:163	🗓 ✓*	ui-icon?	"daily.progress": "🗓 {i}/{n} · ✓{c}",
+src/i18n/locales/en.json:166	🔥	ui-icon?	"daily.streakDays": "🔥 {n}-day streak",
+src/i18n/locales/en.json:233	✓*	ui-icon?	"fv.approved": "Approved ✓",
+src/i18n/locales/en.json:237	→*	ui-icon?	"fv.none": "No Personal Voice here yet — record one in iOS Settings (Accessibility → Personal Voice)",
+src/i18n/locales/en.json:258	×*	ui-icon?	"gdash.troubleRow": "{a} mixed with {b} ({n}×)",
+src/i18n/locales/en.json:261	👻	ui-icon?	"ghost.ahead": "👻 Ahead by {n}",
+src/i18n/locales/en.json:262	👻	ui-icon?	"ghost.beat": "New best! You beat your ghost 👻",
+src/i18n/locales/en.json:263	👻	ui-icon?	"ghost.behind": "👻 Behind by {n}",
+src/i18n/locales/en.json:264	👻	ui-icon?	"ghost.even": "👻 Neck and neck",
+src/i18n/locales/en.json:273	↻*	word-content?	"help.howItWorks": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return 
+src/i18n/locales/en.json:274	↻*	word-content?	"help.howItWorks.native": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses 
+src/i18n/locales/en.json:312	✎*	ui-icon?	"ink.write": "✎ Write it",
+src/i18n/locales/en.json:328	→*	ui-icon?	"level.climb": "Climb →",
+src/i18n/locales/en.json:439	📷	ui-icon?	"photo.button": "📷 From a photo",
+src/i18n/locales/en.json:445	🖼	ui-icon?	"photo.fromLibrary": "🖼 Choose from Photos",
+src/i18n/locales/en.json:455	📸	ui-icon?	"photo.takePhoto": "📸 Take a photo",
+src/i18n/locales/en.json:466	🎉	ui-icon?	"practice.ceremonyTitle": "🎉 First 20 done!",
+src/i18n/locales/en.json:479	⭐	ui-icon?	"practice.nextTitle": "⭐ You did it!",
+src/i18n/locales/en.json:480	🔊	ui-icon?	"practice.replay": "🔊 Hear it again",
+src/i18n/locales/en.json:481	↺*	ui-icon?	"practice.restart": "↺",
+src/i18n/locales/en.json:482	🌱 →*	share-text	"practice.shareText": "🌱 I just spelled my first 20 words in {lang} on Spell! hear it · spell it →",
+src/i18n/locales/en.json:512	🏁	ui-icon?	"racing.won": "🏁 You won!",
+src/i18n/locales/en.json:563	✓*	ui-icon?	"sd.spell": "Spell the number, then ✓",
+src/i18n/locales/en.json:564	▶ ✓*	ui-icon?	"sd.spellWord": "Tap ▶ to hear the word, spell it, then ✓",
+src/i18n/locales/en.json:573	×*	ui-icon?	"sd.tier.symbols": "Tier symbols (4×4)",
+src/i18n/locales/en.json:581	×*	ui-icon?	"settings.bigTextSmall": "Enlarge the interface text (about 1.5×)",
+src/i18n/locales/en.json:605	🔥 →*	share-text	"share.chain": "🔥 I just spelled a {n}-word chain on Spell! My best is {best}. hear it · spell it · keep the chain →",
+src/i18n/locales/en.json:606	→*	share-text	"share.chainBest": "I'm practicing spelling on Spell — my best chain is {best} words. hear it · spell it · keep the chain →",
+src/i18n/locales/en.json:607	🗓 →*	share-text	"share.daily": "🗓 SpellGame Daily: {c}/{t}. hear it · spell it →",
+src/i18n/locales/en.json:608	🗓 🔥 →*	share-text	"share.dailyStreak": "🗓 SpellGame Daily: {c}/{t} — 🔥 {n}-day streak! hear it · spell it →",
+src/i18n/locales/en.json:627	🌍	ui-icon?	"so.entry": "🌍 Challenge a friend",
+src/i18n/locales/en.json:646	✓*	ui-icon?	"spellit.guide.check": "Tap ✓ when your word looks right.",
+src/i18n/locales/en.json:671	→*	ui-icon?	"tools.photo.name": "Photo → word list",
+src/i18n/locales/en.json:701	👤	ui-icon?	"top.signIn": "👤 Sign in",
+src/i18n/locales/en.json:703	🏔	ui-icon?	"top.theClimb": "🏔 The Climb",
+src/i18n/locales/en.json:727	↔	ui-icon?	"tr.translit": "Aa ↔ 拼",
+src/i18n/locales/en.json:767	🖼	ui-icon?	"wordpic.doneTitle": "🖼️ Your picture!",
+src/i18n/locales/en.json:797	🎲	ui-icon?	"wordpic.surprise": "🎲 Surprise me",
+src/i18n/locales/en.json:822	▶	ui-icon?	"ws.pickSlot": "Tap ▶ on a word first",
+src/i18n/locales/en.json:959	×*	ui-icon?	"spz.duel.unheard": "Spell unheard ×{m}",
+src/i18n/locales/en.json:1062	×*	ui-icon?	"rs.stretch": "Stretch ×1.5 (harder word)",
+src/i18n/locales/en.json:1063	×*	ui-icon?	"rs.ear": "No replay ×1.5",
+src/i18n/locales/en.json:1066	×*	ui-icon?	"rs.glow": "Doubles ×2!",

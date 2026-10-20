@@ -1,0 +1,29 @@
+file,total,colors,hex,colorfn,named,dims,dims_dynamic,durations,var_defs,colors_in_defs,dims_in_defs,durs_in_defs,var_uses,keyframes,style_attrs,timeouts
+index.html [<style>],2567,454,339,109,6,2004,0,109,69,43,14,0,621,40,0,0
+index.html [markup],81,33,32,1,0,48,0,0,14,28,0,0,0,0,102,0
+privacy.html [<style>],48,18,14,4,0,30,0,0,0,0,0,0,0,0,0,0
+notices.html [<style>],34,10,10,0,0,24,0,0,10,10,0,0,6,0,0,0
+src/c3_probe.rs,26,0,0,0,0,26,0,0,0,0,0,0,2,0,12,1
+src/share.rs,18,10,10,0,0,8,0,0,0,0,0,0,0,0,0,0
+src/wordpic.rs,16,16,8,8,0,0,0,0,0,0,0,0,0,0,0,0
+src/boardgame_screen.rs,15,0,0,0,0,15,15,0,2,0,0,0,0,0,6,7
+src/inspector.rs,10,0,0,0,0,10,0,0,0,0,0,0,1,0,6,0
+src/drawer.rs,8,0,0,0,0,8,4,0,0,0,0,0,0,0,2,0
+src/spellpic_export.rs,8,8,8,0,0,0,0,0,0,0,0,0,0,0,2,0
+src/settings.rs,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0
+src/wordpic_screen.rs,7,6,6,0,0,0,0,1,0,0,0,0,0,0,0,1
+src/randospell_screen.rs,6,0,0,0,0,6,6,0,0,0,0,0,0,0,4,6
+src/wordpic_layout.rs,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0
+src/pinyin.rs,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0
+src/drawing.rs,4,4,3,1,0,0,0,0,0,0,0,0,0,0,0,0
+src/model.rs,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0
+src/guardian_dash.rs,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+src/keyboard.rs,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1
+src/randospell_fx.rs,2,2,0,2,0,0,0,0,0,0,0,0,0,0,0,0
+src/yearbook_ui.rs,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,0
+src/spelldoku_tier_census.rs,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+src/spelldoku_tier_preview.rs,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+src/spelldoku_ui.rs,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1
+src/wordcross_ui.rs,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0
+src/wordsearch_ui.rs,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+TOTAL,2877,586,455,125,6,2181,27,110,101,81,14,0,630,40,135,17
