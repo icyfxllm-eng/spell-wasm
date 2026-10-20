@@ -764,7 +764,6 @@ khu phố
 niên đại
 phu nhân
 tin tức
-văn hoá
 vượt quá
 đầm lầy
 biểu thị
@@ -1475,7 +1474,6 @@ diện mạo
 dịu dàng
 gọi tắt
 hoảng sợ
-hàng hoá
 hình học
 hải sản
 khai mạc
@@ -1496,5 +1494,4 @@ nửa đầu
 pho mát
 quân hàm
 sau cùng
-sức khoẻ
 sự không
