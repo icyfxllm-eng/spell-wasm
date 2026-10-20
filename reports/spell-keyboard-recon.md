@@ -3,7 +3,7 @@
 **Date:** 2026-10-20. **Tree:** origin/main `575cc38a`. **Read-only:** nothing under `src/`, `assets/`, `config/` or `index.html` was changed.
 The bank charset scan was a throwaway script run outside the repo. Its numbers are reproduced in R4.
 
-**Status: STOPPED for Eric's review.** Phases A–E have not started.
+**Status: STOPPED for Eric's review.** Phases A–E have not started. §2a records Eric's first answers (2026-10-20) and Claude's recommendations for everything else.
 
 **Gate note.** §0 was meant to wait on CC-VISUAL-ECLIPSE being signed. Eclipse is itself stopped at its own §0 (`reports/visual-eclipse-recon.md`), and Eric chose to run this recon anyway. Three Eclipse answers bear directly on this file: Q3 (per-key haptics), Q4 (play-screen fold) and Q6 (feedback registry).
 
@@ -45,6 +45,39 @@ The bank charset scan was a throwaway script run outside the repo. Its numbers a
 | Q7 | **KF8 hidden vs disabled.** Today a spent Impossible cap *disables* `replayBtn` and `slowBtn` (`game.rs:1465-1468`), and RandoSpell Ear disables `rsOrb`. KF8 says hidden. Should the orb key follow KF8 while the existing buttons stay disabled, or should everything become hidden? | R9 |
 | Q8 | **Shift beyond Impossible.** Case isn't graded outside Impossible, so is Shift shown only in de Impossible (today), or in all de play (it would type capitals that `fold_strict` then folds)? K-D19 says labels show the case typed. Today keycaps display uppercase but type lowercase (`keyboard.rs:271-272`), which violates K-D19 for every language. | P7 |
 | Q9 | **K-D6 (Latin legends on non-Latin keys)** has no existing code. Confirm it is still wanted. It is the only K-D item that adds key content depending on tier. | — |
+
+### 2a. Recommendations and Eric's answers (2026-10-20)
+
+**Eric** marks an answer Eric gave in chat. **Rec** marks Claude's recommendation, not yet signed.
+
+**Before anything else**
+- **Rec:** Answer CC-VISUAL-ECLIPSE Q3, Q4 and Q6 first. Phase D (skins) needs Eclipse's tokens anyway. Eric's Q4 answer below settles Eclipse Q3.
+- **Rec:** Strike "build 56" from both specs (P13).
+- **Rec:** Accept this recon's readings of the missing CC files (P14) rather than adding them to `docs/`. Only Q2 depends on them.
+
+| # | Status | Answer |
+|---|---|---|
+| Q1 | Rec | **Consolidate onto K1 in stages.** Every later feature (keycaps, feel, constellation, watermark) needs one component; otherwise each skin is built ~8 times. Stage 1: the `boardgame_input` screens (BoardGame, RandoSpell, Spelluzzle), then Bee and Chains. Stage 2: SpellDoku, Spell Search and Spell Cross. Practice's tile tray and Letter Forge stay as they are, because they aren't keyboards. **Drop the per-language `keyboard.layout.<lang>` flags** (P4). Model choice from R2-c: long-press everywhere, keeping bank-derived extra rows only as a fallback for a surface too small for a popover. |
+| Q2 | Eric + Rec | **Eric:** keep tone buttons for vi. They are required: they're the only on-screen way to enter a tone, and every vi word uses one. **Rec on hoá / hóa:** accept both placements in grading, as a small separate grading fix outside this file (it implements VI-BANK-GROWTH D2 as the vi census reads it), and remove the duplicate rows in the same fix. **Don't** auto-place vi tones by the modern rule: the 9 old-style rows would become untypeable, and making them typeable again would need a bank edit (trigger 5). The tone row stays as shipped. KT-7 then passes once the grading fix lands. |
+| Q3 | Eric + Rec | **Eric:** keep tone buttons for zh. **Rec:** keep the shipped CC-ZH-TONE five-button row, including neutral tone 5 and the absence at Expert. Drop KF2's "1–4". Keep the digit buffer with marks on display, as today, so KT-3 parity needs no re-proof. |
+| Q4 | Eric + Rec | **Eric:** keep per-key haptics "unless it would screw something up". Keeping them breaks nothing; it is shipped behaviour. **Rec:** sign K-D4, which amends Eclipse F6 so keystrokes are exempt from the 2-per-word cap. Sort the 47 `key_tap` sites into keystroke and feedback (the bee and impostor wrong-answer taps go to feedback), and add the "Key feel" toggle. |
+| Q5 | Rec | `input` means "does the shared keyboard mount on this screen". Practice and Spell Search are `typed`, Letter Forge is `tap`, Quick Bee Draw is `drawn`. No `mixed` value. |
+| Q6 | Rec | Add columns to `config/modes.json`, gated by `modes-check.mjs`, plus a level-scoped override for Impossible. |
+| Q7 | Rec | The new orb key is hidden when replay is unavailable (KF8). The existing replay and slow buttons stay disabled, as today. |
+| Q8 | Rec | Shift only where case is graded: de Impossible, as today. Narrow K-D19 to surfaces that show Shift. Elsewhere, uppercase keycap labels are harmless because case isn't graded. |
+| Q9 | Rec | Defer K-D6. |
+| R5 (ja) | Rec | Keep the shipped gojūon grid as the ja layout. iOS-style flick input would be a new input method (K-D2). Closes K-D8 and O3. |
+| P12 | Rec | Retarget KF9.2 (IME) from desktop web to iPad with a hardware keyboard, after a device check. |
+
+**Defects in §3: how to handle them**
+
+| Handling | Items |
+|---|---|
+| **Fix now, separately** (proposed as its own session) | SpellDoku Tier-Mode grading bypass; Spell Aloud replay-cap bypass |
+| **Device check first** | Practice Audio phase may be untypeable on touch (P1 if real); long-press reachability with Switch Control (before Phase A) |
+| **Fold into Phase A** (KF10 / consolidation) | vi tone-key labels; unannounced tone taps; English "delete"; popover ARIA; Reduce Motion for keys; Bee/Chains labels; `aria-disabled` on the locked keyboard; Spelluzzle 40 px keys |
+| **Fold into Phase B** (KF9) | `isComposing` in `wire_physical`; digits accepted in every language |
+| **Opportunistic or ignore** | stale ar/hi and RTL-doc comments; Shift on ß; English server grader without NFC |
 
 ---
 
