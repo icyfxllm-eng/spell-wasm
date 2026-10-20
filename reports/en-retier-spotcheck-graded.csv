@@ -1,0 +1,101 @@
+word,built_tier,new_or_existing,difficulty_score,in_impossible_pool,your_tier (easy/medium/hard/expert),verdict (keep/move/cut),note
+superior,hard,existing,0.407,no,medium,move,common; regular spelling
+physical,hard,existing,0.343,no,medium,move,common; ph is the only trap
+historically,medium,existing,0.349,no,medium,keep,
+oscillatory,expert,new,nan,yes,expert,keep,sc + double l + -atory; score missing
+senescence,expert,new,0.707,yes,expert,keep,sc twice
+failure,hard,existing,0.444,no,medium,move,common; regular
+ciao,expert,new,0.631,no,expert,keep,"sound-alike of chow, so already out of Impossible — correct"
+cloture,expert,new,nan,yes,expert,keep,score missing
+egregious,expert,new,0.666,yes,expert,keep,
+poinsettia,expert,new,nan,yes,expert,keep,score missing
+eucalyptus,expert,new,0.670,yes,expert,keep,
+cynicism,expert,new,0.599,yes,hard,move,cyn- + -icism is regular once heard; leaves the Impossible pool
+procedural,hard,new,0.629,no,hard,keep,
+amelioration,expert,new,nan,yes,expert,keep,score missing
+sibyl,expert,new,nan,yes,expert,keep,score missing; often capitalized as a name — confirm common-noun use
+operation,medium,existing,0.318,no,medium,keep,
+chiaroscuro,expert,existing,nan,yes,expert,keep,score missing on an existing row
+electrical,medium,existing,0.385,no,medium,keep,
+designs,hard,existing,0.402,no,medium,move,silent g is the only trap; inflected form (R9)
+strike,medium,existing,0.465,no,easy,move,common; regular
+arrhythmia,expert,new,0.718,yes,expert,keep,
+doctrine,hard,existing,0.416,no,medium,move,regular
+yacht,expert,existing,0.548,yes,hard,move,famous trap but a common word; leaves the Impossible pool
+runs,easy,existing,0.420,no,easy,keep,inflected form (R9)
+irresponsibly,hard,new,0.719,no,hard,keep,
+psychosomatic,hard,new,0.739,no,hard,keep,
+plank,easy,new,0.529,no,easy,keep,
+transcendence,hard,new,0.674,no,expert,move,sc + -ence + -dence; joins the Impossible pool
+publishing,medium,existing,0.259,no,medium,keep,
+obfuscate,hard,existing,0.541,no,hard,keep,
+wind,easy,existing,0.175,no,easy,keep,
+quarter,hard,existing,0.323,no,medium,move,common; qu + -er
+file,easy,existing,0.298,no,easy,keep,
+research,hard,existing,0.419,no,medium,move,common; regular
+streptococcus,expert,new,0.724,yes,expert,keep,
+cost,easy,existing,0.155,no,easy,keep,
+them,easy,existing,0.063,no,easy,keep,
+betterment,medium,new,0.521,no,medium,keep,
+rotisserie,hard,new,0.686,no,expert,move,double s + -erie; joins the Impossible pool
+chutzpah,expert,new,nan,yes,expert,keep,score missing
+elephant,medium,existing,0.440,no,medium,keep,
+isthmus,expert,existing,0.658,yes,expert,keep,
+encephalitis,expert,new,0.667,yes,expert,keep,
+celebrated,medium,existing,0.227,no,medium,keep,
+arts,easy,existing,0.277,no,easy,keep,inflected form (R9)
+ricochet,expert,new,0.681,yes,expert,keep,
+daiquiri,expert,new,nan,yes,expert,keep,score missing
+mainly,medium,existing,0.273,no,medium,keep,
+modified,hard,existing,0.502,no,medium,move,regular inflection
+gooseberry,medium,new,0.695,no,medium,keep,high score comes from rarity; the spelling is two known words
+closed,medium,existing,0.110,no,easy,move,common; regular
+add,easy,existing,0.327,no,easy,keep,
+causing,hard,existing,0.164,no,medium,move,score 0.164; regular
+wing,easy,existing,0.177,no,easy,keep,
+hide,easy,existing,0.246,no,easy,keep,
+etiquette,hard,new,0.641,no,hard,keep,
+marquess,expert,new,0.659,yes,expert,keep,check sound-alike with marquis (MAR-kwis) — Impossible excludes it if so
+mitochondria,hard,new,0.691,no,hard,keep,
+need,easy,existing,0.312,no,easy,keep,sound-alike of knead (bonus pair)
+her,easy,existing,0.043,no,easy,keep,
+whom,easy,existing,0.437,no,medium,move,wh- is a real trap for young spellers
+benzene,medium,new,0.626,no,hard,move,"-ene, z; uncommon"
+jawbone,easy,new,0.677,no,medium,move,compound of two easy words; high score comes from rarity
+got,easy,existing,0.067,no,easy,keep,
+financial,medium,existing,0.375,no,medium,keep,
+abalone,hard,new,0.625,no,hard,keep,
+painting,medium,existing,0.147,no,medium,keep,
+pharynx,expert,new,nan,yes,expert,keep,score missing
+glass,medium,existing,0.311,no,easy,move,common; regular
+ebullient,hard,existing,0.696,no,expert,move,rare + double l + -ient; joins the Impossible pool
+irrepressible,expert,new,0.768,yes,hard,move,regular ir- + repress + -ible; leaves the Impossible pool
+combined,hard,existing,0.199,no,medium,move,score 0.199; regular
+engaged,hard,existing,0.182,no,medium,move,score 0.182; regular
+kite,easy,existing,0.547,no,easy,keep,
+attempt,hard,existing,0.289,no,medium,move,score 0.289; double t is the only trap
+grid,easy,existing,0.278,no,easy,keep,
+formerly,hard,existing,0.246,no,medium,move,score 0.246; regular
+psoriasis,expert,new,0.690,yes,expert,keep,
+brougham,expert,new,nan,yes,expert,keep,score missing; said 'broom' — check sound-alike before it stays in Impossible
+amygdala,expert,new,0.666,yes,expert,keep,
+oral,easy,existing,0.248,no,easy,keep,sound-alike of aural (bonus pair)
+varied,medium,existing,0.433,no,medium,keep,
+root,easy,existing,0.392,no,easy,keep,sound-alike of route (bonus pair)
+manner,medium,existing,0.402,no,medium,keep,sound-alike of manor (bonus pair)
+exuberance,hard,new,0.710,no,hard,keep,
+voyeurism,expert,new,nan,yes,expert,cut,not suitable for a kids' spelling app; score missing
+along,medium,existing,0.201,no,easy,move,common; regular
+sanctification,medium,new,0.763,no,hard,move,long and rare; regular sanctify + -cation
+association,medium,existing,0.499,no,medium,keep,
+discernible,expert,new,0.659,yes,expert,keep,sc + -ible vs -able
+acquiesce,expert,new,0.726,yes,expert,keep,
+soliloquy,expert,existing,0.717,yes,expert,keep,
+peddler,medium,new,0.668,no,hard,move,double d + -er vs -ar (peddlar); uncommon
+pirouette,expert,new,nan,yes,expert,keep,score missing
+named,medium,existing,0.266,no,easy,move,common; regular
+desk,easy,existing,0.270,no,easy,keep,
+slavery,hard,existing,0.345,no,medium,move,score 0.345; regular
+things,medium,existing,0.108,no,easy,move,common; inflected form (R9)
+knead,medium,new,0.665,no,hard,move,silent k; sound-alike of need (bonus pair)
+technology,medium,existing,0.474,no,medium,keep,
