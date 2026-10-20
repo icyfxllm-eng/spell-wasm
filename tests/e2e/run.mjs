@@ -39,6 +39,7 @@ import * as kidReveal from './specs/kid-reveal.mjs';
 import * as feedbackHolds from './specs/feedback-holds.mjs';
 import * as webSpeechFallback from './specs/web-speech-fallback.mjs';
 import * as playFold from './specs/play-fold.mjs';
+import * as scriptRender from './specs/script-render.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
@@ -117,6 +118,7 @@ const SPECS = [
   ['feedback-holds', feedbackHolds],
   ['web-speech-fallback', webSpeechFallback],
   ['play-fold', playFold],
+  ['script-render', scriptRender],
   ['picker-continue', pickerContinue],
   ['finale-pixels', finalePixels],
   ['platform', platform],

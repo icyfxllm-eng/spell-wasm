@@ -587,6 +587,16 @@ pub fn pick_queue_d() -> bool {
     false
 }
 
+/// CC-VISUAL-ECLIPSE `visual.type` (Phase A3): per-script typography beyond the
+/// shared type roles -- taller line height on word surfaces for scripts with
+/// stacked marks (vi, hi, ar, fa, ur) and explicit regional system faces for zh,
+/// ja and ko. **Default OFF** (V-D22: the build turns it on, the signed kill file
+/// can only switch it off, as `visual_type`). Off is a true no-op: the body never
+/// gets the `visual-type` class, so none of its rules match.
+pub fn visual_type() -> bool {
+    resolve(stored("visual_type").as_deref(), false)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:
@@ -675,6 +685,15 @@ mod tests {
                     "{} is in the registry but is_on has no arm for it, so it falls through to \
                      `_ => false` and is on paper only", m.id);
         }
+    }
+
+    #[test]
+    fn visual_type_ships_dark() {
+        set_test_override(None);
+        assert!(!visual_type(), "visual.type is default off until a build turns it on (V-D22)");
+        set_test_override(Some("on"));
+        assert!(visual_type());
+        set_test_override(None);
     }
 
     #[test]

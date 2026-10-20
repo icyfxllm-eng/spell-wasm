@@ -99,16 +99,16 @@
   #letters:lang(ar), #letters:lang(fa),
   #feedback:lang(ar), #feedback:lang(fa),
   #meaning:lang(ar), #meaning:lang(fa),
-  #hintLine:lang(ar), #hintLine:lang(fa){font-family:'Noto Naskh Arabic',serif}
+  #hintLine:lang(ar), #hintLine:lang(fa){font-family:var(--type-face-arabic),var(--body)}
   #letters:lang(ur), #feedback:lang(ur),
-  #meaning:lang(ur), #hintLine:lang(ur){font-family:'Noto Nastaliq Urdu',serif}
+  #meaning:lang(ur), #hintLine:lang(ur){font-family:var(--type-face-urdu),var(--body)}
   /* The typed letters (.ltr) and the revealed spelling (.reveal) set their own
      font-family (var(--mono)), which beats the inherited :lang() face above, so
      without these the word being spelled fell through Space Mono to whatever system
      face had the glyphs. Space Mono stays as the fallback chain. */
   #letters:lang(ar) .ltr, #letters:lang(fa) .ltr,
-  #feedback:lang(ar) .reveal, #feedback:lang(fa) .reveal{font-family:'Noto Naskh Arabic',var(--mono)}
-  #letters:lang(ur) .ltr, #feedback:lang(ur) .reveal{font-family:'Noto Nastaliq Urdu',var(--mono)}
+  #feedback:lang(ar) .reveal, #feedback:lang(fa) .reveal{font-family:var(--type-face-arabic),var(--mono)}
+  #letters:lang(ur) .ltr, #feedback:lang(ur) .reveal{font-family:var(--type-face-urdu),var(--mono)}
   /* Devanagari for Hindi (OFL — licence in fonts/OFL.txt, attribution in NOTICES.md).
      Subset of Noto Sans Devanagari (fonts/devanagari.woff2, all layout features kept
      so conjuncts/matra reordering shape; verified against the akshara render prototype,
@@ -117,8 +117,8 @@
      using Hindi (now Active) fetch it. Devanagari is LTR; no dir/RTL involvement. */
   @font-face{font-family:'Noto Sans Devanagari';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/devanagari.woff2') format('woff2');unicode-range:U+0900-097F,U+A8E0-A8FF,U+200C-200D,U+0964-0965}
   #letters:lang(hi), #feedback:lang(hi),
-  #meaning:lang(hi), #hintLine:lang(hi){font-family:'Noto Sans Devanagari',serif}
-  #letters:lang(hi) .ltr, #feedback:lang(hi) .reveal{font-family:'Noto Sans Devanagari',var(--mono)}
+  #meaning:lang(hi), #hintLine:lang(hi){font-family:var(--type-face-devanagari),var(--body)}
+  #letters:lang(hi) .ltr, #feedback:lang(hi) .reveal{font-family:var(--type-face-devanagari),var(--mono)}
 
   /* OpenDyslexic — readable-mode face only (body.readable). The bundled file's
      name table says Version 2.001; it ships as woff only (no woff2). font-display:optional (was swap): it never
@@ -351,21 +351,39 @@
     --print-page-bg:#ffffff;
     --print-footer-text:#999999;
     --print-report-footer-text:#888888;
-  }
-  :root[data-lang="ja"]{--glow:#ff8fab;--amber:#ff8fab;--amber-soft:#ffc2d1;--glow-streak-1:#ff8fab;--glow-streak-2:#ff6f91;--glow-streak-3:#ff4f77}
-  :root[data-lang="zh"]{--glow:#e6b422;--amber:#e63946;--amber-soft:#f4c95d;--glow-streak-1:#e6b422;--glow-streak-2:#e0952a;--glow-streak-3:#d67d2e}
-  /* tokens:end */
-  :root{
-    /* Type roles (CC-VISUAL-ECLIPSE A3 moves these into design/tokens.json). */
     --display:'Bricolage Grotesque',sans-serif;
     --body:'Instrument Sans',system-ui,sans-serif;
     --mono:'Space Mono',ui-monospace,monospace;
+    --readable:'OpenDyslexic','Instrument Sans',system-ui,sans-serif;
+    --type-face-arabic:'Noto Naskh Arabic';
+    --type-face-urdu:'Noto Nastaliq Urdu';
+    --type-face-devanagari:'Noto Sans Devanagari';
+    --type-face-vietnamese-ui:'Bricolage Body';
+    --type-face-zh:'PingFang SC','Hiragino Sans GB','Noto Sans SC';
+    --type-face-ja:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP';
+    --type-face-ko:'Apple SD Gothic Neo','Noto Sans KR';
+    --type-line-height-tall:1.6;
   }
-  /* Vietnamese: body text in a face that has the Vietnamese subset (see 'Bricolage Body'). */
-  :lang(vi){--body:'Bricolage Body','Instrument Sans',system-ui,sans-serif}
+  :root[data-lang="ja"]{--glow:#ff8fab;--amber:#ff8fab;--amber-soft:#ffc2d1;--glow-streak-1:#ff8fab;--glow-streak-2:#ff6f91;--glow-streak-3:#ff4f77}
+  :root[data-lang="zh"]{--glow:#e6b422;--amber:#e63946;--amber-soft:#f4c95d;--glow-streak-1:#e6b422;--glow-streak-2:#e0952a;--glow-streak-3:#d67d2e}
+  :lang(vi){--body:var(--type-face-vietnamese-ui),'Instrument Sans',system-ui,sans-serif}
+  /* tokens:end */
   /* #meaning inherits its face from body (resolved under the UI language), so a vi word
      being studied under another UI language needs the face set on the surface itself. */
   #meaning:lang(vi){font-family:var(--body)}
+  /* CC-VISUAL-ECLIPSE A3, behind visual.type (body.visual-type). Word surfaces
+     that wrap get a taller line for scripts with stacked marks or tall clusters,
+     so a second line never crowds the first; and zh, ja and ko name their own
+     regional system faces instead of leaving the choice to the engine's
+     fallback (Han unification: the same codepoint draws differently in a
+     Chinese and a Japanese face). System faces cost zero payload on iOS. */
+  body.visual-type :is(#feedback,#meaning,#hintLine):is(:lang(vi),:lang(hi),:lang(ar),:lang(fa),:lang(ur)){line-height:var(--type-line-height-tall)}
+  body.visual-type:lang(zh),body.visual-type :lang(zh){--body:'Instrument Sans',var(--type-face-zh),system-ui,sans-serif}
+  body.visual-type:lang(ja),body.visual-type :lang(ja){--body:'Instrument Sans',var(--type-face-ja),system-ui,sans-serif}
+  body.visual-type:lang(ko),body.visual-type :lang(ko){--body:'Instrument Sans',var(--type-face-ko),system-ui,sans-serif}
+  body.visual-type :is(#letters,#feedback,#hintLine):lang(zh) :is(.ltr,.reveal){font-family:'Space Mono',var(--type-face-zh),ui-monospace,monospace}
+  body.visual-type :is(#letters,#feedback,#hintLine):lang(ja) :is(.ltr,.reveal){font-family:'Space Mono',var(--type-face-ja),ui-monospace,monospace}
+  body.visual-type :is(#letters,#feedback,#hintLine):lang(ko) :is(.ltr,.reveal){font-family:'Space Mono',var(--type-face-ko),ui-monospace,monospace}
   *{box-sizing:border-box;margin:0;padding:0}
   /* iOS WKWebView auto-zooms when a focused field's font-size is < 16px and
      often fails to zoom back out. Enforce a 16px floor on every focusable field
@@ -407,7 +425,7 @@
   html.booting [data-i18n-html],
   html.booting #brandTag{ visibility:hidden; animation:i18nCloakReveal 0.01s linear 2500ms forwards }
   @keyframes i18nCloakReveal{ to{ visibility:visible } }
-  body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
+  body.readable{ font-family:var(--readable); letter-spacing:.01em; }
   body.readable .ltr{ letter-spacing:.05em; }
   /* CC-RTL F4 — the cursive answer path (game::render_letters_joined). The whole
      answer is ONE text node so the shaper joins it; `isolate` stops an RTL answer

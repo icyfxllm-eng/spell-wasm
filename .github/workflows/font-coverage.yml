@@ -1,0 +1,46 @@
+# CC-VISUAL-ECLIPSE AT-5 / I3 — no glyph renders as tofu.
+#
+# tools/font-coverage.py checks every codepoint in every word bank, Impossible
+# pool and UI string against the font chain the stylesheet gives it: the bundled
+# faces (within their unicode-range) and then the system fallback. The system
+# side is checked against macOS's fonts, the closest stand-in for iOS, which is
+# why this job runs on a macOS runner rather than Ubuntu. It only runs when
+# something it reads changes.
+name: Font coverage
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "src/word_data.rs"
+      - "src/words.rs"
+      - "src/i18n/locales/**"
+      - "assets/impossible/**"
+      - "fonts/**"
+      - "index.html"
+      - "design/tokens.json"
+      - "tools/font-coverage.py"
+      - ".github/workflows/font-coverage.yml"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  coverage:
+    name: Every bank and UI codepoint has a font
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install fontTools
+        run: python -m pip install fonttools
+
+      - name: Glyph coverage (bundled faces + macOS system fonts as the iOS proxy)
+        run: python -I tools/font-coverage.py

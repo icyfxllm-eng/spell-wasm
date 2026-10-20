@@ -215,6 +215,9 @@ pub fn apply_settings(app: &App) {
     crate::i18n::update_tagline();
     let _ = body.class_list().toggle_with_force("readable", s.readable);
     let _ = body.class_list().toggle_with_force("big-text", s.big_text);
+    // CC-VISUAL-ECLIPSE A3: per-script typography rides on one body class, so the
+    // flag being off is a true no-op for the stylesheet.
+    let _ = body.class_list().toggle_with_force("visual-type", crate::flags::visual_type());
     dom::input("kidToggle").set_checked(s.kid);
     // CC-ONBOARD-JR F5: a locked Spell Jr player (under-13 verdict) gets no
     // switch at all. The only way out is a grown-up, so the row offers exactly

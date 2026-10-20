@@ -239,7 +239,11 @@ function pageInit([seed, animAt]) {
     });
   } catch (_) { /* --mute-audio still covers it */ }
   const css = `*,*::before,*::after{animation-play-state:paused!important;animation-delay:${animAt ? '-' + animAt + 's' : '0s'}!important;`
-    + 'transition:none!important;caret-color:transparent!important}';
+    // will-change:auto -- a promoted layer (the orb has will-change:transform)
+    // rasterises its large blurred glow down one of two GPU paths from run to
+    // run, about 95k pixels apart with nothing changed. Off the compositor
+    // layer it rasterises the same way every time. Found 2026-10-20 (A3).
+    + 'transition:none!important;caret-color:transparent!important;will-change:auto!important}';
   const add = () => {
     if (document.getElementById('__zeroDiffFreeze')) return true;
     const root = document.head || document.documentElement;
