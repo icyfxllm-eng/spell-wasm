@@ -207,6 +207,7 @@ eve
 even
 ever
 evil
+exist
 eye
 eyes
 face

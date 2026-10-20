@@ -13,6 +13,8 @@ Rules (reports/en-retier-plan.md, signed 2026-10-17):
   * current Expert rows go where the re-grade puts them; cut -> quarantine list (never deleted, I9);
     unsure -> stays Expert
   * current Easy and Medium rows keep their tier (not re-graded)
+  * calibration/en_tier_overrides.csv (word, tier, signed_by, basis): Eric's per-word tier calls on current
+    Easy / Medium / Hard rows, applied last; a word not in the current bank is an error
   * current HARD rows go to Medium (Eric, 2026-10-19, after reading a random 100 of them: "they all look
     like medium difficulty words"). The old Hard tier was a letter-count tier (7-8 letters), not a
     difficulty tier; see reports/en-regrade-proposal.csv and reports/en-retier-promotion-evidence.md
@@ -112,6 +114,18 @@ def build():
         elif w not in ok:
             problems.append(f"{w}: rejected by PURITY ({rejected.get(w)})")
         else:
+            placed[t].append(w)
+    # Signed per-word overrides for rows that kept their old tier (see the header).
+    ov_path = ROOT / "calibration" / "en_tier_overrides.csv"
+    if ov_path.exists():
+        for x in csv.DictReader(open(ov_path, encoding="utf-8")):
+            w, t = x["word"], x["tier"]
+            if t not in TIERS or w not in tier_of or tier_of[w] == "expert" or not x["signed_by"].strip():
+                problems.append(f"override {w!r}->{t!r}: not a signed override of a current Easy/Medium/Hard row")
+                continue
+            for k in TIERS:
+                if w in placed[k]:
+                    placed[k].remove(w)
             placed[t].append(w)
     seen = {}
     for t in TIERS:
