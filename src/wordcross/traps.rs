@@ -28,7 +28,7 @@ pub fn trap_positions(lang: &str, word: &str) -> Vec<usize> {
 /// other spelling that sounds like it. None when the word is in no collision
 /// group (nothing to tell apart); an empty list when no single position can.
 pub fn distinguishing(lang: &str, word: &str) -> Option<Vec<usize>> {
-    let members = crate::homophones::group_members(lang, word);
+    let members = crate::words::with_current_english(|| crate::homophones::group_members(lang, word));
     if members.is_empty() {
         return None;
     }

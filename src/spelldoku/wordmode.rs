@@ -269,7 +269,7 @@ pub fn compatible(lang: &str, picked: &[(String, String)], spelling: &str, key: 
     picked.iter().all(|(s, k)| {
         k != key
             && s != spelling
-            && !crate::homophones::accepts(lang, s, spelling)
+            && !crate::words::with_current_english(|| crate::homophones::accepts(lang, s, spelling))
             && !(crate::wordsearch::confusion::has_decoys(lang) && confusable(lang, s, spelling))
     })
 }

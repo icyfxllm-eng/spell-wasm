@@ -57,7 +57,7 @@ pub fn playable_word(word: &str) -> bool {
 }
 
 fn bank_words(lang: &str, tier: &str) -> impl Iterator<Item = String> {
-    crate::words::tier_for(lang, tier).iter().map(|w| w.split('|').next().unwrap_or(w).to_string())
+    crate::words::tier_for_fixed(lang, tier).iter().map(|w| w.split('|').next().unwrap_or(w).to_string())
 }
 
 pub struct Lexicon {

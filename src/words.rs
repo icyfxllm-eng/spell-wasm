@@ -46,6 +46,29 @@ pub const LANGUAGES: [(&str, LangInfo); 18] = [
     ("ca", LangInfo { name: "Catal\u{e0}", code: "ca-ES" }),
 ];
 
+/// English's CURRENT bank, whatever en.retier says. The modes whose boards, seeds and goldens are pinned to
+/// this bank (Spelluzzle, Spell Search, WordCross, Randospell) read it through [`tier_for_fixed`], so that
+/// turning the re-tier on changes Normal practice, the Daily and the Climb and nothing else
+/// (CC-IMPOSSIBLE-LAUNCH TestFlight 1: one change at a time).
+fn en_tier_current(tier: &str) -> &'static [&'static str] {
+    match tier {
+        "easy" => EN_EASY,
+        "medium" => EN_MEDIUM,
+        "hard" => EN_HARD,
+        "expert" => EN_EXPERT,
+        _ => EN_MEDIUM,
+    }
+}
+
+/// [`tier_for`], except English never switches to the re-tiered bank.
+pub fn tier_for_fixed(lang: &str, tier: &str) -> &'static [&'static str] {
+    if lang == crate::consts::EN {
+        en_tier_current(tier)
+    } else {
+        tier_for(lang, tier)
+    }
+}
+
 pub fn en_tier(tier: &str) -> &'static [&'static str] {
     // CC-EN-EXPERT-GROWTH F4: the re-tiered bank, only behind en.retier, and
     // never for a Spell Jr / Kid Mode profile -- I5 says their word sets stay
@@ -73,7 +96,30 @@ pub fn en_tier(tier: &str) -> &'static [&'static str] {
 /// switch: the bank (`en_tier`) and the sound-alike table
 /// (`soundalikes::soundalikes`) both read it, so they can never disagree.
 pub(crate) fn retier_active() -> bool {
+    if FIXED_ENGLISH.with(|c| c.get()) > 0 {
+        return false;
+    }
     crate::flags::en_retier() && !junior_profile()
+}
+
+thread_local! {
+    /// Nesting depth of [`with_current_english`].
+    static FIXED_ENGLISH: std::cell::Cell<u32> = const { std::cell::Cell::new(0) };
+}
+
+/// Runs `f` with English pinned to its CURRENT bank and table, whatever en.retier says. The puzzle modes whose
+/// boards and seeds are pinned to that bank read their sound-alike sets through it (the bank itself is read with
+/// [`tier_for_fixed`]), so turning the re-tier on changes Normal practice, the Daily and the Climb only.
+pub fn with_current_english<R>(f: impl FnOnce() -> R) -> R {
+    struct Guard;
+    impl Drop for Guard {
+        fn drop(&mut self) {
+            FIXED_ENGLISH.with(|c| c.set(c.get() - 1));
+        }
+    }
+    FIXED_ENGLISH.with(|c| c.set(c.get() + 1));
+    let _g = Guard;
+    f()
 }
 
 /// Whether the active profile is Spell Jr / Kid Mode: the Kid Mode preference,

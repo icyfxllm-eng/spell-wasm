@@ -135,7 +135,7 @@ pub fn fits(lang: &str, size: usize, picked: &[String], w: &str) -> bool {
     let r: String = g.iter().rev().cloned().collect();
     picked.iter().all(|p| {
         !(p.contains(&f) || f.contains(p.as_str()) || p.contains(&r) || r.contains(p.as_str()))
-            && !crate::homophones::accepts(lang, p, &f)
+            && !crate::words::with_current_english(|| crate::homophones::accepts(lang, p, &f))
     })
 }
 

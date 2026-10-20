@@ -20,7 +20,7 @@ pub fn load(lang: &str, extra_validity: Vec<String>) -> Result<Lexicon, String> 
     for tier in Tier::ALL {
         let mut words: Vec<String> = Vec::new();
         for band in tier.bands() {
-            for row in crate::words::tier_for(lang, band) {
+            for row in crate::words::tier_for_fixed(lang, band) {
                 let w = bare(row).to_lowercase();
                 if crate::profanity::is_blocked(&w) || !crate::audio_verdict::servable(lang, &w, "normal") {
                     continue;
@@ -34,9 +34,9 @@ pub fn load(lang: &str, extra_validity: Vec<String>) -> Result<Lexicon, String> 
         eligible.push((tier, words));
     }
     for band in crate::experience::TIERS {
-        for row in crate::words::tier_for(lang, band) {
+        for row in crate::words::tier_for_fixed(lang, band) {
             let w = bare(row).to_lowercase();
-            let mut set = crate::homophones::group_members(lang, &w);
+            let mut set = crate::words::with_current_english(|| crate::homophones::group_members(lang, &w));
             if !set.is_empty() {
                 set.push(w.clone());
                 set.sort();

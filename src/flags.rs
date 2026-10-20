@@ -61,8 +61,11 @@ pub fn set_test_override(v: Option<&str>) {
 /// (`word_data_en_retier.rs`) instead of the current one. **Default OFF**: with
 /// it off English plays exactly as before (I8). Spell Jr and Kid Mode never see
 /// the re-tier whatever this says (I5; `words::en_tier`).
+///
+/// **TestFlight 1 (CC-IMPOSSIBLE-LAUNCH Feature 6, Eric 2026-10-19): default ON.**
+/// The signed kill file (`killflags`) can still switch it off with the name `en_retier`.
 pub fn en_retier() -> bool {
-    resolve(stored("en_retier").as_deref(), false)
+    resolve(stored("en_retier").as_deref(), true)
 }
 
 /// CC-IMPOSSIBLE v1 F12 -- the master Impossible flag. **Default OFF.** Nothing

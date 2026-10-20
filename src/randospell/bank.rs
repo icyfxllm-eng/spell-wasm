@@ -162,7 +162,7 @@ impl Bank {
             if !tier_owned(lang, exp, level, t) {
                 continue;
             }
-            for row in crate::words::tier_for(lang, name) {
+            for row in crate::words::tier_for_fixed(lang, name) {
                 let w = row.split('|').next().unwrap_or(row);
                 if crate::profanity::is_blocked(w) || !crate::audio_verdict::servable(lang, w, "normal") {
                     continue;

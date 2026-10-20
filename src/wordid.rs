@@ -117,7 +117,8 @@ mod tests {
         // Rust and require equality. A mismatch means the two hash implementations
         // diverged — which would silently break ghost determinism across devices.
         for (lang, tier, golden) in crate::word_data::TIER_HASHES {
-            let got = compute_list_hash(crate::words::tier_for(lang, tier));
+            // The goldens describe the CURRENT bank (the Python build hashes those files), never the re-tier.
+            let got = compute_list_hash(crate::words::tier_for_fixed(lang, tier));
             assert_eq!(got, *golden, "list_hash drift for {lang}/{tier}");
             assert_eq!(list_hash(lang, tier), *golden);
         }
