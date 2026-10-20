@@ -1,0 +1,7 @@
+{
+ "lang": "en",
+ "note": "Words where a second real spelling is also right at Impossible. The key is the pool word; each value is accepted as a correct answer. Decided by Eric 2026-10-19 for comptroller: the voice says controller, a real word that is not in the bank, so the sound-alike gates cannot see it.",
+ "accepted": {
+  "comptroller": ["controller"]
+ }
+}

@@ -579,3 +579,27 @@ fn there_is_no_mix_daily() {
     let g = include_str!("../game.rs");
     assert!(g.contains("level == crate::impossible::engine::LEVEL"), "the Daily button is Impossible only on the single-language level");
 }
+
+/// Eric 2026-10-19: comptroller stays in the pool and controller is accepted for it, and only for it.
+#[test]
+fn accepted_alternates_are_per_word() {
+    assert!(engine::grade("en", "controller", "comptroller"));
+    assert!(engine::grade("en", "Controller", "comptroller"));
+    assert!(engine::grade("en", "comptroller", "comptroller"));
+    assert!(!engine::grade("en", "controller", "controlled"), "an alternate counts only for its own word");
+    assert!(!engine::grade("es", "controller", "comptroller"), "and only in its own language");
+    assert!(engine::accepted_alternates("en", "demesne").is_empty());
+}
+
+/// Every accepted-alternates key is a word in that language's pool (a stale entry would be dead data), and no
+/// alternate is the pool word itself.
+#[test]
+fn accepted_alternates_name_pool_words() {
+    let json: serde_json::Value = serde_json::from_str(include_str!("../../data/impossible/accepted/en.json")).unwrap();
+    for (word, alts) in json["accepted"].as_object().unwrap() {
+        assert!(pool("en").unwrap().words.iter().any(|w| w == word), "{word} is not in the English pool");
+        for a in alts.as_array().unwrap() {
+            assert_ne!(a.as_str().unwrap(), word);
+        }
+    }
+}

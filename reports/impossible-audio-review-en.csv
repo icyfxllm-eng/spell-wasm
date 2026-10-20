@@ -6,7 +6,7 @@ word,verdict,other_spelling,note
 "caisson","clear","",""
 "cetacean","clear","",""
 "challis","clear","",""
-"comptroller","clear","","Eric asked whether it should sound like COMP-troller; the shipping voice says controller (a real word), so a listener may spell controller. Open."
+"comptroller","clear","controller","Eric 2026-10-19: keep in the pool and accept controller as correct (data/impossible/accepted/en.json)"
 "dachshund","clear","",""
 "demesne","clear","","Eric 2026-10-19: first marked other by mistake, corrected to clear"
 "disburse","clear","",""

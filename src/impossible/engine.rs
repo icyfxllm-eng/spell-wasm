@@ -54,6 +54,32 @@ pub fn attempt_allowed(used: u8) -> bool {
     used < MAX_ATTEMPTS
 }
 
+/// Accepted alternates (Eric, 2026-10-19): a word whose sound fits a second real spelling that is not in
+/// the bank (comptroller / controller) stays in the pool and counts either spelling as right, instead of
+/// leaving the pool. Data lives in `data/impossible/accepted/<lang>.json`; only languages with a file
+/// have any. The pool word is the key, so a typed alternate is accepted only for that word.
+fn accepted_json(lang: &str) -> Option<&'static str> {
+    match lang {
+        "en" => Some(include_str!("../../data/impossible/accepted/en.json")),
+        _ => None,
+    }
+}
+
+pub fn accepted_alternates(lang: &str, word: &str) -> Vec<String> {
+    use std::collections::HashMap;
+    use std::sync::{Mutex, OnceLock};
+    static CACHE: OnceLock<Mutex<HashMap<String, HashMap<String, Vec<String>>>>> = OnceLock::new();
+    let cache = CACHE.get_or_init(Default::default);
+    let mut c = cache.lock().unwrap();
+    let map = c.entry(lang.to_string()).or_insert_with(|| {
+        accepted_json(lang)
+            .and_then(|j| serde_json::from_str::<serde_json::Value>(j).ok())
+            .and_then(|v| serde_json::from_value::<HashMap<String, Vec<String>>>(v.get("accepted")?.clone()).ok())
+            .unwrap_or_default()
+    });
+    map.get(word).cloned().unwrap_or_default()
+}
+
 /// Strict grading (F2). NFC, whitespace ignored, accent-strict like Expert, and for
 /// the case-bearing languages case-strict too. Everything else about the comparison is
 /// today's Expert fold, so a word graded here and at Expert differ only in case for de.
@@ -65,7 +91,8 @@ pub fn grade(lang: &str, typed: &str, word: &str) -> bool {
         let strip = |s: &str| s.nfc().filter(|c| !c.is_whitespace()).collect::<String>();
         return strip(typed) == strip(word);
     }
-    crate::norm::fold_strict(typed) == crate::norm::fold_strict(word)
+    let t = crate::norm::fold_strict(typed);
+    t == crate::norm::fold_strict(word) || accepted_alternates(lang, word).iter().any(|a| crate::norm::fold_strict(a) == t)
 }
 
 /// Mix draw step one (D-C12): a language uniformly from the run's languages. `r` is a
