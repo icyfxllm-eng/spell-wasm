@@ -6,6 +6,7 @@
  "table": "exclusion_only",
  "removedPurity": 2,
  "removedSoundalike": 30,
+ "removedReviewed": 0,
  "status": "pool",
  "reason": null,
  "words": [

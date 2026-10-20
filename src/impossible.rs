@@ -53,6 +53,9 @@ pub struct Pool {
     pub removed_purity: usize,
     #[serde(rename = "removedSoundalike")]
     pub removed_soundalike: usize,
+    /// Words an audio review ruled out by ear (`data/impossible/reviewed/<lang>.json`).
+    #[serde(rename = "removedReviewed", default)]
+    pub removed_reviewed: usize,
     /// "pool" or "locked".
     pub status: String,
     /// Why it is locked: "drawn-entry", "table-missing" or "thin".

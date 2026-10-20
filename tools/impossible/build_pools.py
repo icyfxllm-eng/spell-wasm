@@ -49,6 +49,7 @@ FLOOR = 150  # v1 D3, kept by v1.2 P3
 DRAWN_ENTRY = ("zh", "ja")  # v1 D4
 CASE_BEARING = ("de",)  # capitalised common nouns: the proper-noun assertion does not apply
 EXCLUSION = ROOT / "data" / "impossible" / "exclusion"
+REVIEWED = ROOT / "data" / "impossible" / "reviewed"  # words ruled out by ear (audio review), counted separately
 KINDS = ("true", "accent")  # v1.1 A2: Impossible is stricter than the bonus
 
 _FNV64_OFF = 0xCBF29CE484222325
@@ -108,6 +109,7 @@ def build(lang, root=ROOT):
         "table": table["status"],
         "removedPurity": 0,
         "removedSoundalike": 0,
+        "removedReviewed": 0,
         "status": "locked",
         "reason": None,
         "words": [],
@@ -127,6 +129,8 @@ def build(lang, root=ROOT):
             doc["reason"] = "table-missing"
             return doc
         doc["table"] = "exclusion_only"
+    rp = REVIEWED / f"{lang}.json"
+    reviewed = {nfc(w) for w in json.loads(rp.read_text(encoding="utf-8"))["excluded"]} if rp.exists() else set()
     awaiting = {nfc(w) for w in lines(root / "assets" / "words" / "purity" / "awaiting-c6" / f"{lang}.txt")}
     members = {nfc(m).lower() for s in sa.sets_of_kind(lang, KINDS, root=root, variant=variant) for m in s}
     pool = []
@@ -135,6 +139,8 @@ def build(lang, root=ROOT):
             doc["removedPurity"] += 1
         elif nfc(w).lower() in members or nfc(w) in extra:
             doc["removedSoundalike"] += 1
+        elif nfc(w) in reviewed:
+            doc["removedReviewed"] += 1
         else:
             pool.append(nfc(w))
     proper = [] if lang in CASE_BEARING else [w for w in pool if w[:1] != w[:1].lower()]

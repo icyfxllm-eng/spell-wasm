@@ -36,6 +36,10 @@ import rules_nets  # noqa: E402
 import soundalikes as sa  # noqa: E402
 
 OUT = ROOT / "data" / "impossible" / "exclusion"
+# Words a listener ruled out by ear (an audio review), kept apart from the sound-alike gates because they
+# are a human verdict about specific words, not a net: data/impossible/reviewed/<lang>.json.
+REVIEWED = ROOT / "data" / "impossible" / "reviewed"
+AUDIO_REVIEWS = {"en": "reports/impossible-audio-review-en.csv"}
 GATED = ("fr", "de", "pt", "pl", "ko", "fil", "sw")
 HELD = ("hi", "vi", "ar")  # no gate: recogniser too weak (whisper-small heard 14/287 hi clips)
 REVIEWS = (
@@ -96,6 +100,18 @@ def build(lang):
     }
 
 
+def build_reviewed(lang):
+    """Words the audio review marked `other` (a different real spelling fits the sound): out of the pool."""
+    path = ROOT / AUDIO_REVIEWS[lang]
+    rows = list(csv.DictReader(path.open(encoding="utf-8-sig")))
+    return {
+        "lang": lang,
+        "source": AUDIO_REVIEWS[lang],
+        "rule": "verdict 'other' = another real spelling fits the sound, so the word cannot be spelled from audio alone (I1)",
+        "excluded": sorted(nfc(r["word"]) for r in rows if r["verdict"] == "other"),
+    }
+
+
 def render(doc):
     return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
 
@@ -111,6 +127,15 @@ def main(argv):
                 bad.append(f"{path.relative_to(ROOT)} is stale: run python3 tools/impossible/build_exclusion.py")
         else:
             OUT.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+    for lang in AUDIO_REVIEWS:
+        path = REVIEWED / f"{lang}.json"
+        text = render(build_reviewed(lang))
+        if check:
+            if not path.exists() or path.read_text(encoding="utf-8") != text:
+                bad.append(f"{path.relative_to(ROOT)} is stale: run python3 tools/impossible/build_exclusion.py")
+        else:
+            REVIEWED.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8")
     for lang in HELD:
         if (OUT / f"{lang}.json").exists():

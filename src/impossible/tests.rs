@@ -37,6 +37,7 @@ fn fixture(lang: &str, n: usize) -> &'static Pool {
         table: "verified".into(),
         removed_purity: 0,
         removed_soundalike: 0,
+        removed_reviewed: 0,
         status: if n >= FLOOR { "pool" } else { "locked" }.into(),
         reason: if n >= FLOOR { None } else { Some("thin".into()) },
         words: (0..n).map(|k| format!("{lang}{k}")).collect(),
@@ -117,7 +118,7 @@ fn impossible_pool_subset_and_all_expert() {
             assert!(tier.contains(w.as_str()), "{lang}: {w} is not in its Expert tier");
         }
         assert_eq!(p.expert_rows, tier.len(), "{lang}: expertRows drifted from the tier");
-        assert_eq!(p.words.len() + p.removed_purity + p.removed_soundalike, tier.len(), "{lang}: pool is not all of Expert");
+        assert_eq!(p.words.len() + p.removed_purity + p.removed_soundalike + p.removed_reviewed, tier.len(), "{lang}: pool is not all of Expert");
         let others: Vec<&str> = if lang == "en" {
             use crate::word_data_en_retier::*;
             [EN_RETIER_EASY, EN_RETIER_MEDIUM, EN_RETIER_HARD].concat()

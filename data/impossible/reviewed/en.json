@@ -1,0 +1,6 @@
+{
+ "lang": "en",
+ "source": "reports/impossible-audio-review-en.csv",
+ "rule": "verdict 'other' = another real spelling fits the sound, so the word cannot be spelled from audio alone (I1)",
+ "excluded": []
+}

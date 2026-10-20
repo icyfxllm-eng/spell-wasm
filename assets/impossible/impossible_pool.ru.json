@@ -6,6 +6,7 @@
  "table": "verified",
  "removedPurity": 0,
  "removedSoundalike": 3,
+ "removedReviewed": 0,
  "status": "pool",
  "reason": null,
  "words": [
