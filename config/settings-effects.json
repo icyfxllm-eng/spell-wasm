@@ -38,6 +38,15 @@
       "harness": "web"
     },
     {
+      "key": "britishToggle",
+      "surface": "settings",
+      "state": "localStorage spell_british (absent = device region)",
+      "effect": "on: an English miss reveals the British form (colour), off: the American (color); display only, both are always graded correct",
+      "test": "display_follows_the_player_and_never_changes_other_words",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
       "key": "realVoicesToggle",
       "surface": "settings",
       "state": "real_voices_off (inverted)",
