@@ -12,7 +12,10 @@ Sources, all committed:
 Rules (reports/en-retier-plan.md, signed 2026-10-17):
   * current Expert rows go where the re-grade puts them; cut -> quarantine list (never deleted, I9);
     unsure -> stays Expert
-  * current Easy / Medium / Hard rows keep their tier (not re-graded)
+  * current Easy and Medium rows keep their tier (not re-graded)
+  * current HARD rows go to Medium (Eric, 2026-10-19, after reading a random 100 of them: "they all look
+    like medium difficulty words"). The old Hard tier was a letter-count tier (7-8 letters), not a
+    difficulty tier; see reports/en-regrade-proposal.csv and reports/en-retier-promotion-evidence.md
   * staged words graded keep go to their graded tier; cut / unsure stay out
   * low-band words (Zipf 2.0-2.5) go in ONLY when graded Expert (D4 amendment: Expert candidates only)
   * every new word must pass the PURITY classifier (tools/bank/purity_admit) and the en exclusion
@@ -80,6 +83,8 @@ def build():
                 placed["expert"].append(w)
                 continue
             placed[GRADE_TO_TIER[g["est_tier"]]].append(w)
+        elif t == "hard":
+            placed["medium"].append(w)   # signed 2026-10-19: the 800 old letter-count Hard rows are Medium
         else:
             placed[t].append(w)
     # new rows
