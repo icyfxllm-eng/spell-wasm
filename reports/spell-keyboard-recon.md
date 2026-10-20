@@ -50,6 +50,13 @@ The bank charset scan was a throwaway script run outside the repo. Its numbers a
 
 **Eric** marks an answer Eric gave in chat. **Rec** marks Claude's recommendation, not yet signed.
 
+> **Sign on `reports/eclipse-keyboard-signing-sheet.md`, not here.** A peer session pushed that sheet (`059af6e4`) at the same time as this section. They agree everywhere except three rows, where this section's recommendation differs:
+> - **K-Q2 (vi hoá/hóa):** the sheet says drop "both accepted" from KT-7. This section says accept both, through a separate grading fix. Both agree the grading change is outside this file.
+> - **K-Q5 (mixed modes):** the sheet adds `input: mixed` with a per-language override. This section uses no `mixed` value: `input` only says whether the keyboard mounts.
+> - **K-Q8 (key labels):** the sheet makes labels lowercase in every language, uppercase only while Shift is armed. This section keeps the uppercase labels and narrows K-D19 to surfaces with Shift.
+>
+> Eric's own answers (tone buttons for vi and zh, keep per-key haptics) agree with the sheet's K-Q3 and E-Q3/K-D4 rows.
+
 **Before anything else**
 - **Rec:** Answer CC-VISUAL-ECLIPSE Q3, Q4 and Q6 first. Phase D (skins) needs Eclipse's tokens anyway. Eric's Q4 answer below settles Eclipse Q3.
 - **Rec:** Strike "build 56" from both specs (P13).
