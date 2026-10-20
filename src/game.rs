@@ -2142,7 +2142,10 @@ pub fn submit_guess(app: &App) {
     if en_other_sense {
         VALID_OTHER_SENSE.with(|c| c.set(true));
     }
-    if cur_lang == EN && !en_other_sense && !impossible {
+    // Eric 2026-10-19: both national spellings are right (colour / color). Resolved here, locally, because the
+    // server compares one spelling only; it is a plain correct answer, not an "other sense".
+    let en_variant = !impossible && cur_lang == EN && crate::variants::accepts(&word, &typed);
+    if cur_lang == EN && !en_other_sense && !impossible && !en_variant {
         spawn_local(backend_verify(app.clone(), word, typed, kid));
         return;
     }
@@ -2180,7 +2183,7 @@ pub fn submit_guess(app: &App) {
         // Normal fold, plus the data-driven accept-any homophone layer: a real
         // homophone of the prompt (audio can't carry b/v, silent h, seseo,
         // yeísmo) is accepted. Empty table for languages without a file -> no-op.
-        crate::norm::answer_matches(&typed, &word, kid) || {
+        crate::norm::answer_matches(&typed, &word, kid) || en_variant || {
             let other = crate::homophones::accepts(&cur_lang, &word, &typed)
                 && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
             if other {

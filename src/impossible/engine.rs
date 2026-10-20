@@ -92,7 +92,9 @@ pub fn grade(lang: &str, typed: &str, word: &str) -> bool {
         return strip(typed) == strip(word);
     }
     let t = crate::norm::fold_strict(typed);
-    t == crate::norm::fold_strict(word) || accepted_alternates(lang, word).iter().any(|a| crate::norm::fold_strict(a) == t)
+    t == crate::norm::fold_strict(word)
+        || accepted_alternates(lang, word).iter().any(|a| crate::norm::fold_strict(a) == t)
+        || (lang == crate::consts::EN && crate::variants::accepts(word, typed))
 }
 
 /// Mix draw step one (D-C12): a language uniformly from the run's languages. `r` is a

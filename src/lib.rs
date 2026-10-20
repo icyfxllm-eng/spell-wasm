@@ -100,6 +100,7 @@ mod ghost;
 mod haptics;
 mod hangul;
 mod homophones;
+mod variants; // CC-IMPOSSIBLE-LAUNCH: British/American spelling pairs, both accepted
 mod soundalikes;
 mod killflags; // CC-IMPOSSIBLE-COMPLETE F4 -- signed, kill-only remote flag file
 mod impossible; // CC-IMPOSSIBLE v1.2 Mix Phase A -- the registry and pool artifacts (flags off)
