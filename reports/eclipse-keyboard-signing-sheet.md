@@ -3,10 +3,8 @@
 > **SIGNED by Eric, 2026-10-20: Parts 1–6 as recommended** ("part 1-6 look good to me").
 > - **E-Q1 resolved:** the "after build 56" clause is deleted from both files. Eric: "We're on 280+, build 56 is ancient." There is no build gate on starting.
 > - **Still open after signing:**
->   - **AT-19 device:** Eric has not named a stand-in yet. This blocks Phase A5 only.
->   - **Two Part 6 rows that had no recommendation:**
->     - the iOS server-clip volume boost (bug or fine?)
->     - FAIL-verdict words being silent on the web (fall back or stay silent?)
+>   - ~~AT-19 device~~ **Resolved:** iPhone SE (2nd gen), the oldest phone on iOS 27 (A13) and the 375×667 screen. Eric: "a great controller for this".
+>   - **Part 6 rulings (2026-10-20):** no volume boost on iOS server clips; FAIL-verdict words on the web use Web Speech (shipped in `740b1447`, not yet deployed to the site).
 >   - **`wrangler login`:** Eric runs it himself.
 > - **Approved by signing:** batch 5 (drop the `.br` / `.gz` wasm copies from the app build only, after a simulator smoke test). Store screenshots get regenerated from a release build when Eric chooses.
 
