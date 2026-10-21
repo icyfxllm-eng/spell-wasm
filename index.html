@@ -363,6 +363,63 @@
     --type-face-ja:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP';
     --type-face-ko:'Apple SD Gothic Neo','Noto Sans KR';
     --type-line-height-tall:1.6;
+    --motion-duration-instant:80ms;
+    --motion-duration-quick:160ms;
+    --motion-duration-base:240ms;
+    --motion-duration-slow:400ms;
+    --motion-anim-i18n-cloak:10ms;
+    --motion-anim-i18n-cloak-delay:2500ms;
+    --motion-anim-orb-emit:1500ms;
+    --motion-anim-emit-stagger-1:500ms;
+    --motion-anim-emit-stagger-2:1000ms;
+    --motion-anim-orb-breathe:4500ms;
+    --motion-anim-orb-pulse:550ms;
+    --motion-anim-orb-shake:400ms;
+    --motion-anim-mic-pulse:1100ms;
+    --motion-anim-correct-hold:500ms;
+    --motion-anim-wrong-hold:400ms;
+    --motion-anim-letter-pop:280ms;
+    --motion-anim-caret-blink:1050ms;
+    --motion-mode-defmatch-orb-glow:300ms;
+    --motion-mode-defmatch-pulse:500ms;
+    --motion-mode-defmatch-sway:2600ms;
+    --motion-mode-defmatch-caught:180ms;
+    --motion-mode-defmatch-dissolve:250ms;
+    --motion-mode-defmatch-returned:500ms;
+    --motion-mode-boardgame-hop:160ms;
+    --motion-mode-boardgame-fade-a:300ms;
+    --motion-mode-boardgame-fade-b:300ms;
+    --motion-mode-boardgame-tumble:700ms;
+    --motion-mode-boardgame-land-in:250ms;
+    --motion-mode-boardgame-timer:30000ms;
+    --motion-mode-randospell-fade:250ms;
+    --motion-mode-randospell-timer:30000ms;
+    --motion-mode-randospell-lantern-fill:500ms;
+    --motion-mode-randospell-dial:700ms;
+    --motion-mode-randospell-orbit:14000ms;
+    --motion-mode-randospell-fx-host:300ms;
+    --motion-mode-randospell-eclipse:1600ms;
+    --motion-mode-randospell-shake:450ms;
+    --motion-mode-quickbee-bar:100ms;
+    --motion-mode-spelluzzle-wobble:500ms;
+    --motion-mode-spelluzzle-fade:200ms;
+    --motion-mode-chains-shake:300ms;
+    --motion-mode-chains-bounce:300ms;
+    --motion-mode-forge-bar:250ms;
+    --motion-mode-forge-shake:300ms;
+    --motion-mode-forge-bounce:300ms;
+    --motion-mode-forge-pop:450ms;
+    --motion-mode-practice-echo:120ms;
+    --motion-mode-practice-wiggle:350ms;
+    --motion-mode-practice-input:600ms;
+    --motion-mode-practice-pulse:400ms;
+    --motion-mode-wordpic-resume-ink:900ms;
+    --motion-mode-wordpic-pulse:1400ms;
+    --motion-mode-wordpic-word-in:1000ms;
+    --motion-mode-wordpic-build:500ms;
+    --motion-mode-spelldoku-shake:300ms;
+    --motion-mode-spelldoku-flash:600ms;
+    --motion-mode-wordsearch-trap:200ms;
   }
   :root[data-lang="ja"]{--glow:#ff8fab;--amber:#ff8fab;--amber-soft:#ffc2d1;--glow-streak-1:#ff8fab;--glow-streak-2:#ff6f91;--glow-streak-3:#ff4f77}
   :root[data-lang="zh"]{--glow:#e6b422;--amber:#e63946;--amber-soft:#f4c95d;--glow-streak-1:#e6b422;--glow-streak-2:#e0952a;--glow-streak-3:#d67d2e}
@@ -411,7 +468,7 @@
        home indicator. env() is 0 on desktop, so the layout is unchanged there. */
     padding:calc(env(safe-area-inset-top, 0px) + 24px) 18px calc(env(safe-area-inset-bottom, 0px) + 56px);
     -webkit-font-smoothing:antialiased;
-    transition:background .25s ease;
+    transition:background var(--motion-duration-base) ease;
   }
   /* i18n boot cloak (FIX 3). Only applied when the head script added `booting`
      (i.e. a non-English shipped locale). Hides the translatable chrome — the
@@ -423,7 +480,7 @@
      reveals itself after 2.5s so text is never permanently hidden. */
   html.booting [data-i18n],
   html.booting [data-i18n-html],
-  html.booting #brandTag{ visibility:hidden; animation:i18nCloakReveal 0.01s linear 2500ms forwards }
+  html.booting #brandTag{ visibility:hidden; animation:i18nCloakReveal var(--motion-anim-i18n-cloak) linear var(--motion-anim-i18n-cloak-delay) forwards }
   @keyframes i18nCloakReveal{ to{ visibility:visible } }
   body.readable{ font-family:var(--readable); letter-spacing:.01em; }
   body.readable .ltr{ letter-spacing:.05em; }
@@ -594,7 +651,7 @@
     background-repeat:no-repeat;background-position:right 10px center}
   select:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
   select:disabled{opacity:.45;cursor:default}
-  .pill{background:var(--panel);border:1px solid var(--edge);color:var(--ink);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color .15s,background .15s,transform .1s}
+  .pill{background:var(--panel);border:1px solid var(--edge);color:var(--ink);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color var(--motion-duration-quick),background var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .pill:hover{border-color:var(--amber)}
   .pill:active{transform:translateY(1px)}
   .pill:disabled{opacity:.45;cursor:default}
@@ -625,7 +682,7 @@
   .burger{width:88px;height:44px;border-radius:22px;background:var(--panel);
     border:1px solid var(--edge);color:var(--ink);font-size:22px;line-height:1;
     display:grid;place-items:center;cursor:pointer;padding:0;position:relative;
-    transition:border-color .15s,color .15s,transform .1s}
+    transition:border-color var(--motion-duration-quick),color var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .burger:hover{border-color:var(--amber)}
   .burger:active{transform:translateY(1px)}
   .burger:disabled{opacity:.45;cursor:default}
@@ -642,7 +699,7 @@
      in. hub_tiles.rs learned the same lesson with tile-off. The elements stay
      in the DOM because the drawer proxies clicks to them. */
   .retired{display:none!important}
-  .meta-icon{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--edge);color:var(--muted);font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .15s,color .15s,transform .1s}
+  .meta-icon{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--edge);color:var(--muted);font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color var(--motion-duration-quick),color var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .meta-icon:hover{border-color:var(--amber);color:var(--ink)}
   .meta-icon:active{transform:translateY(1px)}
   .meta-icon.signed-in{border-color:var(--teal);color:var(--teal)}
@@ -673,7 +730,7 @@
   .home-group{width:100%;max-width:600px;display:flex;gap:8px;margin-bottom:10px}
 
   /* Data chips (F5): word inventory — outlined, muted, badge-capable. Not a launcher. */
-  .data-chip{flex:1;min-height:48px;background:transparent;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,background .15s,transform .1s}
+  .data-chip{flex:1;min-height:48px;background:transparent;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:border-color var(--motion-duration-quick),background var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .data-chip:hover{border-color:var(--amber)}
   .data-chip:active{transform:translateY(1px)}
   .data-chip:disabled{opacity:.45;cursor:default}
@@ -699,8 +756,8 @@
   .dm-screen.show{display:flex}
   /* Same exit-outranks-overlays rule as .pr-top (the recap is inset:0). */
   .dm-top{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative;z-index:6}
-  .dm-orb{font-size:28px;width:56px;height:56px;border-radius:50%;border:2px solid var(--edge);background:var(--panel-2);transition:box-shadow .3s}
-  .dm-orb.pulse{animation:dmPulse .5s}
+  .dm-orb{font-size:28px;width:56px;height:56px;border-radius:50%;border:2px solid var(--edge);background:var(--panel-2);transition:box-shadow var(--motion-mode-defmatch-orb-glow)}
+  .dm-orb.pulse{animation:dmPulse var(--motion-mode-defmatch-pulse)}
   .dm-orb.good{box-shadow:0 0 18px 4px var(--mode-defmatch-good-shadow)}
   .dm-orb.heat3{box-shadow:0 0 10px 2px var(--mode-defmatch-heat3-shadow)}
   .dm-orb.heat5{box-shadow:0 0 16px 4px var(--mode-defmatch-heat5-shadow)}
@@ -714,16 +771,16 @@
     animation-name:dmFloat;animation-timing-function:linear;animation-fill-mode:forwards;
     display:flex;flex-direction:column;gap:4px;justify-content:center;min-height:72px}
   @keyframes dmFloat{from{transform:translateY(0)}to{transform:translateY(-130vh)}}
-  .dm-card.sway .dm-def{animation:dmSway 2.6s ease-in-out infinite alternate}
+  .dm-card.sway .dm-def{animation:dmSway var(--motion-mode-defmatch-sway) ease-in-out infinite alternate}
   @keyframes dmSway{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
   .dm-card.paused{animation-play-state:paused}
-  .dm-card.caught{animation-play-state:paused;transition:transform .18s ease-in,opacity .18s;
+  .dm-card.caught{animation-play-state:paused;transition:transform var(--motion-mode-defmatch-caught) ease-in,opacity var(--motion-mode-defmatch-caught);
     transform:scale(.2) translateY(-40vh);opacity:0;background:var(--mode-defmatch-caught-bg)}
-  .dm-card.dissolve{animation-play-state:paused;transition:opacity .25s;opacity:0}
+  .dm-card.dissolve{animation-play-state:paused;transition:opacity var(--motion-mode-defmatch-dissolve);opacity:0}
   .dm-card.wrong{background:var(--mode-defmatch-wrong-bg);border-color:var(--bad,var(--palette-flag-red))}
   .dm-card.reveal-gold{background:var(--mode-defmatch-reveal-gold-bg);border-color:var(--mode-defmatch-reveal-gold-border);box-shadow:0 0 14px var(--mode-defmatch-reveal-gold-shadow)}
   .dm-card.reveal-calm{background:var(--mode-defmatch-reveal-calm-bg);border-color:var(--accent,var(--ui-chrome))}
-  .dm-card.returned{animation:none;bottom:auto;top:35%;transition:top .5s ease-out}
+  .dm-card.returned{animation:none;bottom:auto;top:35%;transition:top var(--motion-mode-defmatch-returned) ease-out}
   .dm-owner{font-size:12px;opacity:.85;font-weight:700}
   body.kid .dm-card{font-size:17px;min-height:88px}
   .dm-prompt{margin:4px 14px;padding:10px 12px;border:1px solid var(--accent,var(--ui-chrome));border-radius:12px;
@@ -891,10 +948,10 @@
   .bg-pc.c2,.bg-disc.c2{background:var(--mode-boardgame-c2-bg);fill:var(--mode-boardgame-c2-bg)}.bg-pc.c3,.bg-disc.c3{background:var(--mode-boardgame-c3-bg);fill:var(--mode-boardgame-c3-bg)}
   .bg-pc.act{box-shadow:0 0 0 3px var(--palette-game-gold),0 2px 6px var(--alpha-black-xa)}
   .bg-disc{stroke:var(--color-white);stroke-width:.06}.bg-disc.act{stroke:var(--palette-game-gold);stroke-width:.12}
-  .bg-pc[data-h="a"]>span{animation:bg-hop-a var(--hop,160ms) ease-out}
-  .bg-pc[data-h="b"]>span{animation:bg-hop-b var(--hop,160ms) ease-out}
-  .bg-pc[data-f="a"]{animation:bg-fade-a .3s ease-out}
-  .bg-pc[data-f="b"]{animation:bg-fade-b .3s ease-out}
+  .bg-pc[data-h="a"]>span{animation:bg-hop-a var(--hop,var(--motion-mode-boardgame-hop)) ease-out}
+  .bg-pc[data-h="b"]>span{animation:bg-hop-b var(--hop,var(--motion-mode-boardgame-hop)) ease-out}
+  .bg-pc[data-f="a"]{animation:bg-fade-a var(--motion-mode-boardgame-fade-a) ease-out}
+  .bg-pc[data-f="b"]{animation:bg-fade-b var(--motion-mode-boardgame-fade-b) ease-out}
   @keyframes bg-hop-a{0%{transform:translateY(0)}50%{transform:translateY(-32%)}100%{transform:translateY(0)}}
   @keyframes bg-hop-b{0%{transform:translateY(0)}50%{transform:translateY(-32%)}100%{transform:translateY(0)}}
   @keyframes bg-fade-a{from{opacity:0}to{opacity:1}}
@@ -910,8 +967,8 @@
   .bg-st-row{display:flex;align-items:center;justify-content:center;gap:12px;min-height:34px;flex-wrap:wrap}
   .bg-st-die:empty,.bg-st-land:empty{display:none}
   .bg-die{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--color-white);color:var(--panel-2);font-size:1.2rem;
-    animation:bg-tumble .7s ease-out both}
-  .bg-st-land{display:inline-flex;align-items:center;gap:6px;font-size:.95rem;font-weight:600;animation:bg-land-in .25s ease-out both}
+    animation:bg-tumble var(--motion-mode-boardgame-tumble) ease-out both}
+  .bg-st-land{display:inline-flex;align-items:center;gap:6px;font-size:.95rem;font-weight:600;animation:bg-land-in var(--motion-mode-boardgame-land-in) ease-out both}
   .bg-stage.compact{flex-direction:row;flex-wrap:wrap;gap:4px 12px;align-content:center}
   .bg-stage.compact .bg-st-tile{font-size:.9rem}
   @keyframes bg-tumble{0%{transform:rotate(0) scale(.6)}40%{transform:rotate(300deg) scale(1.12)}75%{transform:rotate(600deg) scale(.95)}100%{transform:rotate(720deg) scale(1)}}
@@ -934,7 +991,7 @@
   .bg-screen.spelling .bg-results{max-height:62px;overflow:hidden}
   .bg-res{padding:4px 8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;border-radius:999px;background:var(--alpha-white-x14);font-size:.85rem;white-space:nowrap}
   .bg-timer{height:3px;border-radius:2px;background:var(--amber,var(--palette-game-gold));transform-origin:left;flex:none}
-  .bg-timer.run{animation:bg-timer 30s linear forwards}
+  .bg-timer.run{animation:bg-timer var(--motion-mode-boardgame-timer) linear forwards}
   @keyframes bg-timer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
   .bg-spell{display:flex;flex-direction:column;gap:6px;flex:none;margin-top:auto}
   .bg-line{display:flex;gap:var(--bg-gap);align-items:stretch;flex:none}
@@ -988,14 +1045,14 @@
   .rs-stage{flex:1 1 auto;min-height:0;display:grid;place-items:center}
   .rs-die{min-width:120px;min-height:120px;display:grid;place-items:center;border-radius:24px;background:var(--color-white);color:var(--panel-2);
     font-size:3.4rem;font-weight:800;font-variant-numeric:tabular-nums;opacity:.0}
-  .rs-die.land{opacity:1;animation:rs-fade .25s ease-out both}
+  .rs-die.land{opacity:1;animation:rs-fade var(--motion-mode-randospell-fade) ease-out both}
   .rs-die.jackpot{background:var(--amber,var(--palette-game-gold));box-shadow:0 0 0 6px var(--mode-randospell-jackpot-shadow)}
   .rs-die:empty{opacity:.15}
   .rs-stage{flex-direction:column;gap:8px}
   .rs-letters{font-size:1rem;font-weight:600;min-height:1.3em;text-align:center}
   .rs-letters:empty{display:none}
   .rs-timer{height:3px;border-radius:2px;background:var(--amber,var(--palette-game-gold));transform-origin:left;flex:none}
-  .rs-timer.run{animation:rs-timer 30s linear forwards}
+  .rs-timer.run{animation:rs-timer var(--motion-mode-randospell-timer) linear forwards}
   .rs-pot,.rs-ward,.rs-turn{font-size:.9rem;font-weight:600}
   .rs-final{text-align:center;font-weight:700;font-size:.9rem;padding:4px 10px;border-radius:999px;background:var(--mode-randospell-final-bg-2);align-self:center}
   .rs-final[hidden]{display:none}
@@ -1011,14 +1068,14 @@
   .rs-play{position:relative}
   .rs-screen.fx .rs-lantern{display:block;position:absolute;inset-inline-start:2px;inset-block-start:64px;width:10px;height:90px;
     border:2px solid var(--mode-randospell-lantern-border);border-radius:6px;overflow:hidden;background:var(--alpha-white-x10)}
-  .rs-lantern-fill{position:absolute;inset-inline:0;inset-block-end:0;background:var(--palette-game-gold);transition:height .5s ease-out}
+  .rs-lantern-fill{position:absolute;inset-inline:0;inset-block-end:0;background:var(--palette-game-gold);transition:height var(--motion-mode-randospell-lantern-fill) ease-out}
   .rs-moon{fill:var(--mode-randospell-moon-fill);stroke:var(--mode-randospell-moon-stroke);stroke-width:1.2}
   .rs-moon.danger{stroke:var(--mode-randospell-danger-stroke);stroke-width:2.4;stroke-dasharray:4 3}
   .rs-tick{stroke:var(--mode-randospell-tick-stroke);stroke-width:1}
   .rs-tick.on{stroke:var(--color-white);stroke-width:3}
   .rs-tnum{fill:var(--mode-randospell-tnum-fill);font-size:7px;text-anchor:middle;dominant-baseline:central}
   .rs-tnum.on{fill:var(--color-white);font-weight:700;font-size:9px}
-  .rs-dial{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+  .rs-dial{transition:transform var(--motion-mode-randospell-dial) cubic-bezier(.2,.8,.2,1)}
   .rs-notch{fill:none;stroke:var(--mode-randospell-notch-stroke);stroke-width:1}
   .rs-notch.on{fill:var(--mode-randospell-on-fill)}
   .rs-corona{fill:none;stroke:var(--mode-randospell-on-fill);stroke-width:3;opacity:.55}
@@ -1029,12 +1086,12 @@
   .rs-stone circle{fill:var(--mode-randospell-circle-fill);stroke:var(--mode-randospell-circle-stroke);stroke-width:1}
   .rs-stone text{fill:var(--mode-randospell-text-fill);font-size:7px;font-weight:700;text-anchor:middle;dominant-baseline:central}
   .rs-potnum{fill:var(--mode-randospell-circle-stroke);font-size:22px;font-weight:700;text-anchor:middle}
-  .rs-orbit{animation:rs-orbit 14s linear infinite}
+  .rs-orbit{animation:rs-orbit var(--motion-mode-randospell-orbit) linear infinite}
   .rs-screen.fx .rs-die{box-shadow:0 0 0 2px var(--mode-randospell-die-shadow)}
-  .rs-screen.fx.desat .rs-fx-host{filter:grayscale(1);transition:filter .3s}
+  .rs-screen.fx.desat .rs-fx-host{filter:grayscale(1);transition:filter var(--motion-mode-randospell-fx-host)}
   .rs-eclipse{display:none}
   .rs-screen.fx .rs-eclipse{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:var(--palette-game-gold);position:relative;overflow:hidden}
-  .rs-screen.fx .rs-eclipse::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--mode-randospell-fx-bg);transform:translateX(-120%);animation:rs-eclipse 1.6s ease-in-out forwards}
+  .rs-screen.fx .rs-eclipse::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--mode-randospell-fx-bg);transform:translateX(-120%);animation:rs-eclipse var(--motion-mode-randospell-eclipse) ease-in-out forwards}
   .rs-stone-hist{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:320px}
   .rs-stone-hist .rs-hs{display:grid;place-items:center;border-radius:50%;background:var(--mode-randospell-circle-fill);color:var(--mode-randospell-text-fill);font-weight:700;font-size:.75rem;
     border:2px solid var(--mode-randospell-circle-stroke)}
@@ -1070,7 +1127,7 @@
   .rs-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;direction:ltr}
   .rs-orb{flex:none;width:88px;height:88px;border-radius:50%;border:none;background:var(--amber,var(--palette-game-gold));color:var(--palette-on-gold-text);
     font-size:1rem;font-weight:700;cursor:pointer;touch-action:manipulation;padding:4px}
-  .rs-orb.shake{animation:rs-shake .45s ease-in-out}
+  .rs-orb.shake{animation:rs-shake var(--motion-mode-randospell-shake) ease-in-out}
   .rs-screen.spelling .rs-orb{width:56px;height:56px;font-size:.75rem}
   .rs-exit{min-width:56px;height:48px;margin-inline-start:auto}
   .rs-spell{display:flex;flex-direction:column;gap:6px;flex:none}
@@ -1095,7 +1152,7 @@
   @keyframes rs-fade{from{opacity:0}to{opacity:1}}
   @keyframes rs-timer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
   @keyframes rs-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-  @media (prefers-reduced-motion:reduce){.rs-orb.shake{animation:none}.rs-die.land{animation:rs-fade .25s ease-out both}}
+  @media (prefers-reduced-motion:reduce){.rs-orb.shake{animation:none}.rs-die.land{animation:rs-fade var(--motion-mode-randospell-fade) ease-out both}}
   /* RANDOSPELL:END */
 
   /* QUICKBEEDRAW:BEGIN CC-QUICKBEE-DRAW v1 -- stripped from the site build */
@@ -1115,7 +1172,7 @@
   .qbd-score{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums}
   .qbd-time{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums;margin-inline-start:auto}
   .qbd-barwrap{height:4px;border-radius:2px;background:var(--alpha-white-x18);flex:none;overflow:hidden}
-  .qbd-bar{height:100%;background:var(--amber,var(--palette-game-gold));width:100%;transition:width .1s linear}
+  .qbd-bar{height:100%;background:var(--amber,var(--palette-game-gold));width:100%;transition:width var(--motion-mode-quickbee-bar) linear}
   .qbd-cells{display:flex;gap:8px;justify-content:center;min-height:34px;flex:none}
   .qbd-cell{width:30px;height:30px;border-radius:8px;border:2px solid var(--alpha-white-x55);display:grid;place-items:center;font-weight:700}
   .qbd-cell.cur{border-color:var(--amber,var(--palette-game-gold))}
@@ -1171,7 +1228,7 @@
   .sz-cell.typed{background:var(--alpha-white-x2b)}
   .sz-cell.amber{background:var(--mode-spelluzzle-amber-bg);color:var(--amber,var(--palette-game-gold));box-shadow:inset 0 0 0 2px var(--amber,var(--palette-game-gold))}
   .sz-rune{width:68%;height:68%;color:currentColor;display:block}
-  .sz-row.off .sz-cell{animation:szWobble .5s ease-in-out 2;box-shadow:inset 0 0 0 2px var(--amber,var(--palette-game-gold))}
+  .sz-row.off .sz-cell{animation:szWobble var(--motion-mode-spelluzzle-wobble) ease-in-out 2;box-shadow:inset 0 0 0 2px var(--amber,var(--palette-game-gold))}
   @keyframes szWobble{0%,100%{transform:none}25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
   .sz-msg{min-height:1.2em;text-align:center;font-weight:600;color:var(--amber,var(--palette-game-gold));flex:none}
   .sz-runekey{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;flex:none}
@@ -1213,9 +1270,9 @@
   .sz-k.sz-s .sz-rune{width:16px;height:16px}
   .sz-k.sz-s small{font-size:11px;line-height:1.1;opacity:.85}
   .sz-k.sz-s small b{margin-inline-start:2px}
-  .sz-fade{animation:szFade .2s ease-out}
+  .sz-fade{animation:szFade var(--motion-mode-spelluzzle-fade) ease-out}
   @keyframes szFade{from{opacity:.55}to{opacity:1}}
-  @media (prefers-reduced-motion:reduce){.sz-fade{animation:szFade .2s ease-out}}
+  @media (prefers-reduced-motion:reduce){.sz-fade{animation:szFade var(--motion-mode-spelluzzle-fade) ease-out}}
   /* CC-SPELLUZZLE v1.1 Phase F: Par boards. One shared Listen bar above the keyboard (census C21). */
   .sz-par{text-align:center;font-weight:700;color:var(--amber,var(--palette-game-gold));flex:none;min-height:1.2em}
   .sz-par[hidden]{display:none}
@@ -1290,8 +1347,8 @@
   .cn-status{min-height:1.2em;text-align:center;font-size:.9rem;opacity:.8}
   .cn-word{min-height:1.8em;font-size:1.6rem;font-weight:700;text-align:center}
   .cn-word.good{color:var(--palette-word-good)}
-  .cn-word.dup{color:var(--palette-dup-gray);animation:cn-shake .3s}
-  .cn-word.miss{animation:cn-bounce .3s}
+  .cn-word.dup{color:var(--palette-dup-gray);animation:cn-shake var(--motion-mode-chains-shake)}
+  .cn-word.miss{animation:cn-bounce var(--motion-mode-chains-bounce)}
   @keyframes cn-shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
   @keyframes cn-bounce{50%{transform:translateY(4px)}}
   .cn-keys{display:flex;flex-direction:column;gap:6px;margin-top:auto;
@@ -1320,14 +1377,14 @@
   .fg-rank{font-weight:600}
   .fg-score{margin-inline-start:auto;font-variant-numeric:tabular-nums;font-weight:700}
   .fg-bar{height:6px;border-radius:3px;background:var(--alpha-white-x1a);overflow:hidden}
-  .fg-bar i{display:block;height:100%;width:0;background:var(--accent,var(--palette-word-good));transition:width .25s}
+  .fg-bar i{display:block;height:100%;width:0;background:var(--accent,var(--palette-word-good));transition:width var(--motion-mode-forge-bar)}
   .fg-status{min-height:1.2em;text-align:center;font-size:.9rem;opacity:.8}
   .fg-word{min-height:2.2em;font-size:1.8rem;font-weight:700;text-align:center;letter-spacing:.04em}
   /* D5: three distinct feels, none of them a punishment. */
   .fg-word.good{color:var(--palette-word-good)}
-  .fg-word.dup{color:var(--palette-dup-gray);animation:fg-shake .3s}
-  .fg-word.miss{animation:fg-bounce .3s}
-  .fg-word.pangram{color:var(--palette-game-gold);animation:fg-pop .45s}
+  .fg-word.dup{color:var(--palette-dup-gray);animation:fg-shake var(--motion-mode-forge-shake)}
+  .fg-word.miss{animation:fg-bounce var(--motion-mode-forge-bounce)}
+  .fg-word.pangram{color:var(--palette-game-gold);animation:fg-pop var(--motion-mode-forge-pop)}
   @keyframes fg-shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
   @keyframes fg-bounce{50%{transform:translateY(4px)}}
   @keyframes fg-pop{40%{transform:scale(1.18)}}
@@ -1368,19 +1425,19 @@
   .pr-slot{display:inline-block;min-width:1em;border-bottom:2px solid var(--alpha-white-35);line-height:1.25;font-weight:800}
   .pr-slot.ghost{opacity:.28}
   .pr-slot.fill{opacity:1;border-bottom-color:var(--mode-practice-done-text)}
-  .pr-slot.echo{color:var(--accent,var(--ui-chrome));transform:scale(1.25);transition:transform .12s}
+  .pr-slot.echo{color:var(--accent,var(--ui-chrome));transform:scale(1.25);transition:transform var(--motion-mode-practice-echo)}
   .pr-built{text-align:center;font-size:30px;font-weight:800;min-height:0}
   .pr-coach{text-align:center;font-size:14px;min-height:20px;opacity:.9;font-style:italic}
   .pr-tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:4px 0;min-height:0}
   .pr-tile{font-size:24px;font-weight:800;padding:12px 16px;border-radius:14px;border:1px solid var(--alpha-white-2);background:var(--alpha-white-08);color:inherit;min-width:52px}
   .pr-tile:active{transform:scale(.94)}
   .pr-tile.used{opacity:.2;pointer-events:none}
-  .pr-tile.wiggle{animation:prWiggle .35s}
+  .pr-tile.wiggle{animation:prWiggle var(--motion-mode-practice-wiggle)}
   .pr-tile.hintlit{border-color:var(--accent,var(--ui-chrome));box-shadow:0 0 10px var(--accent,var(--ui-chrome))}
   .pr-micro-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
   .pr-micro-opts .pr-tile.good{border-color:var(--mode-practice-done-text);box-shadow:0 0 10px var(--mode-practice-done-text)}
   .pr-row{display:flex;gap:8px;justify-content:center}
-  .pr-input{transition:opacity .6s}
+  .pr-input{transition:opacity var(--motion-mode-practice-input)}
   /* SPELL-PICTURE:BEGIN — stripped from the site build (I1) */
   /* CC-WORD-PICTURE v5 */
     /* The BOTTOM inset was missing while the top was respected, so on any
@@ -1495,7 +1552,7 @@
   .wp-modal-card{background:var(--mode-wordpic-modal-card-bg);border:1px solid var(--mode-wordpic-modal-card-border);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:230px}
   .wp-hk-title{font-weight:650;text-align:center;padding-bottom:4px}
   .wp-modal-card .danger{color:var(--mode-wordpic-danger-text);border-color:var(--mode-wordpic-danger-border)}
-  #wpStage.resume-anim .wp-word{opacity:.15;animation:wpResumeInk .9s ease forwards}
+  #wpStage.resume-anim .wp-word{opacity:.15;animation:wpResumeInk var(--motion-mode-wordpic-resume-ink) ease forwards}
   @keyframes wpResumeInk{to{opacity:1}}
   @media (prefers-reduced-motion: reduce){#wpStage.resume-anim .wp-word{opacity:1;animation:none}}
   .plc-body{color:var(--palette-slate-text);font-size:14px;text-align:center;margin:0 0 6px}
@@ -1508,7 +1565,7 @@
   .wp-outline{stroke:var(--alpha-white-22);stroke-width:3;fill:none;stroke-linecap:round}
   /* the next stroke is signalled by BRIGHTNESS and dash, never by the
      reserved chrome accent (F6) */
-  .wp-outline.next{stroke:var(--alpha-white-92);stroke-dasharray:6 8;animation:wpPulse 1.4s infinite}
+  .wp-outline.next{stroke:var(--alpha-white-92);stroke-dasharray:6 8;animation:wpPulse var(--motion-mode-wordpic-pulse) infinite}
   /* CC-PICTURE-BANK F6 — error economics, advanced and expert only. Both
      classes only ever land on .next (the stroke being earned), so no
      other correct stroke can be touched by construction. */
@@ -1533,7 +1590,7 @@
   .wp-light .wp-outline.next.miss-charged{stroke:var(--mode-wordpic-miss-charged-stroke)}
   @keyframes wpPulse{50%{stroke-opacity:.45}}
   .wp-word{fill:var(--wp-ink,var(--mode-wordpic-dark-ink));font-weight:700;font-family:inherit}
-  .wp-word.new{animation:wpIn 1s ease}
+  .wp-word.new{animation:wpIn var(--motion-mode-wordpic-word-in) ease}
   @keyframes wpIn{from{opacity:0;letter-spacing:.5em}to{opacity:1}}
   @media (prefers-reduced-motion: reduce){.wp-word.new{animation:none}.wp-outline.next{animation:none}}
 
@@ -1551,7 +1608,7 @@
   .wp-reveal.show{display:flex}
   .wp-reveal-stage{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
   .wp-reveal-stage svg{width:100%;height:100%;max-height:66vh}
-  .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:0;animation:wpBuild .5s ease forwards}
+  .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:0;animation:wpBuild var(--motion-mode-wordpic-build) ease forwards}
   /* Rest state: everything settled, nothing animating, nothing counting down. */
   .wp-reveal.rest .wp-word,.wp-reveal.rest .wp-pinned,.wp-reveal.rest .wp-feature{opacity:1;animation:none}
   @keyframes wpBuild{from{opacity:0}to{opacity:1}}
@@ -1586,7 +1643,7 @@
   #wpKbSlot{width:100%}
   /* SPELL-PICTURE:END */
   @keyframes prWiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-  .pr-slots.pulse{animation:prPulse .4s}
+  .pr-slots.pulse{animation:prPulse var(--motion-mode-practice-pulse)}
   @keyframes prPulse{25%{transform:translateX(-6px);color:var(--accent,var(--ui-chrome))}75%{transform:translateX(6px)}}
   .pr-input{font-size:22px;padding:10px;border-radius:12px;border:1px solid var(--edge);background:var(--panel-2);color:var(--ink);text-align:center}
   .pr-replay{width:100%}
@@ -1618,7 +1675,7 @@
 
   /* Launchers (F4): ways to play — brightest family, filled card, equal width, iconed */
   .modes-row{gap:8px}
-  .launch{flex:1;min-height:62px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:14px;padding:10px 8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;line-height:1.15;box-shadow:inset 0 1px 0 var(--alpha-white-03);transition:border-color .15s,background .15s,transform .1s}
+  .launch{flex:1;min-height:62px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:14px;padding:10px 8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;line-height:1.15;box-shadow:inset 0 1px 0 var(--alpha-white-03);transition:border-color var(--motion-duration-quick),background var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .launch:hover{border-color:var(--amber);background:color-mix(in srgb, var(--panel-2) 82%, var(--amber))}
   .launch:active{transform:translateY(1px)}
   .launch.on{border-color:var(--amber);color:var(--amber-soft)}
@@ -1627,7 +1684,7 @@
 
   /* Setup chip (F3): config family — muted, chevroned, full width, directly above
      the play button. It configures; it must not read as a launcher. */
-  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s,transform .1s}
+  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .setup-chip:hover{border-color:var(--amber)}
   .setup-chip:active{transform:translateY(1px)}
   .setup-chip-text{color:var(--ink);white-space:nowrap}
@@ -1649,12 +1706,12 @@
   .stage{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center}
 
   .orb-wrap{position:relative;width:230px;height:230px;display:grid;place-items:center;margin:18px 0 8px;cursor:pointer;user-select:none}
-  .timer-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;opacity:0;transition:opacity .3s ease}
+  .timer-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;opacity:0;transition:opacity var(--motion-duration-base) ease}
   .orb-wrap.timed .timer-ring{opacity:1}
   .t-track{fill:none;stroke:var(--alpha-white-07);stroke-width:3}
-  .t-prog{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;transition:stroke .25s ease}
+  .t-prog{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;transition:stroke var(--motion-duration-base) ease}
   .t-prog.low{stroke:var(--coral)}
-  .timer-badge{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--edge);padding:2px 9px;border-radius:999px;opacity:0;transition:opacity .3s ease}
+  .timer-badge{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--edge);padding:2px 9px;border-radius:999px;opacity:0;transition:opacity var(--motion-duration-base) ease}
   .orb-wrap.timed .timer-badge{opacity:1}
   .timer-badge.low{color:var(--coral);border-color:var(--coral)}
   .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--amber);opacity:0}
@@ -1662,9 +1719,9 @@
      ring to its own compositor layer so the transform/opacity animation
      composites instead of repainting siblings. Scoped to .speaking so idle
      rings don't hold extra layers. */
-  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite;will-change:transform,opacity}
-  .orb-wrap.speaking .ring:nth-child(4){animation-delay:.5s}
-  .orb-wrap.speaking .ring:nth-child(5){animation-delay:1s}
+  .orb-wrap.speaking .ring{animation:emit var(--motion-anim-orb-emit) ease-out infinite;will-change:transform,opacity}
+  .orb-wrap.speaking .ring:nth-child(4){animation-delay:var(--motion-anim-emit-stagger-1)}
+  .orb-wrap.speaking .ring:nth-child(5){animation-delay:var(--motion-anim-emit-stagger-2)}
   @keyframes emit{0%{transform:scale(.62);opacity:.7}100%{transform:scale(1.18);opacity:0}}
   .orb{width:150px;height:150px;border-radius:50%;
     /* Brighter, glossier gem: a hot white specular near the top-left, a vivid
@@ -1676,7 +1733,7 @@
       0 0 68px 12px color-mix(in srgb, var(--orb-color) 50%, transparent),
       inset 0 -16px 30px color-mix(in srgb, var(--orb-color) 60%, black),
       inset 0 10px 22px color-mix(in srgb, white 34%, transparent);
-    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease;
+    display:grid;place-items:center;position:relative;animation:breathe var(--motion-anim-orb-breathe) ease-in-out infinite;transition:background var(--motion-duration-slow) ease, box-shadow var(--motion-duration-slow) ease;
     /* will-change:transform (FIX 4): the orb runs breathe/pulse (transform)
        forever AND carries a big 68px-blurred glow. Without a dedicated
        compositor layer, some mobile browsers repaint that blurred shadow every
@@ -1705,12 +1762,12 @@
   .coming-notify{min-width:230px}
   .coming-notify.confirmed{background:var(--teal);color:var(--chrome-notify-confirmed-text);border-color:var(--teal);cursor:default}
   @keyframes breathe{0%,100%{transform:scale(.98)}50%{transform:scale(1.02)}}
-  .orb-wrap.speaking .orb{animation:pulse .55s ease-in-out infinite}
+  .orb-wrap.speaking .orb{animation:pulse var(--motion-anim-orb-pulse) ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
   .orb-glyph{font-family:var(--display);font-weight:700;font-size:15px;color:var(--orb-text);letter-spacing:.06em;text-align:center;padding:0 14px;line-height:1.25}
   .orb-wrap.good .orb{background:radial-gradient(circle at 38% 32%, var(--chrome-orb-good-light) 0%, var(--teal) 42%, var(--chrome-orb-good-deep) 100%);box-shadow:0 0 0 1px var(--chrome-orb-good-rim), 0 0 48px 6px var(--chrome-orb-good-glow);animation:none}
   .orb-wrap.good .orb-glyph{color:var(--chrome-orb-good-glyph)}
-  .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, var(--chrome-orb-bad-light) 0%, var(--coral) 42%, var(--chrome-orb-bad-deep) 100%);box-shadow:0 0 0 1px var(--chrome-orb-bad-rim), 0 0 40px 4px var(--chrome-orb-bad-glow);animation:shake .4s ease}
+  .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, var(--chrome-orb-bad-light) 0%, var(--coral) 42%, var(--chrome-orb-bad-deep) 100%);box-shadow:0 0 0 1px var(--chrome-orb-bad-rim), 0 0 40px 4px var(--chrome-orb-bad-glow);animation:shake var(--motion-anim-orb-shake) ease}
   .orb-wrap.bad .orb-glyph{color:var(--chrome-orb-bad-glyph)}
   @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 
@@ -1724,7 +1781,7 @@
   .fh-left{display:flex;align-items:center;gap:9px}
   .field-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted-on-bg)}
   /* Spell It Out Loud — mic beside the answer field (voice spelling INPUT). */
-  .voice-spell-mic{width:44px;height:44px;margin-inline-start:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
+  .voice-spell-mic{width:44px;height:44px;margin-inline-start:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform var(--motion-duration-quick),box-shadow var(--motion-duration-base),border-color var(--motion-duration-base);touch-action:none;user-select:none;-webkit-user-select:none}
   body.kid .voice-spell-mic{width:52px;height:52px;font-size:26px}
   .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
   /* Mic-everywhere: a downloadable-state mic wears a small ⬇ badge — the first
@@ -1733,25 +1790,25 @@
   .voice-spell-mic.net::after{content:"🌐";position:absolute;inset-inline-end:-4px;bottom:-4px;font-size:11px;line-height:1}
   .voice-spell-mic.dl::after{content:"⬇";position:absolute;inset-inline-end:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,var(--ui-chrome));color:var(--color-white);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
   .voice-spell-mic:active{transform:scale(.9)}
-  .voice-spell-mic.listening{border-color:var(--teal,var(--teal));box-shadow:0 0 0 5px var(--chrome-mic-listening-ring);animation:micPulse 1.1s ease-in-out infinite}
+  .voice-spell-mic.listening{border-color:var(--teal,var(--teal));box-shadow:0 0 0 5px var(--chrome-mic-listening-ring);animation:micPulse var(--motion-anim-mic-pulse) ease-in-out infinite}
   .voice-spell-status{width:100%;min-height:16px;margin:6px 0 0;font-size:12.5px;color:var(--muted-on-bg);text-align:center}
   .voice-spell-perm{width:100%;margin:8px 0 0;padding:12px 14px;border:1.5px solid var(--edge);border-radius:12px;background:var(--panel-2);font-size:13px}
   .voice-spell-perm p{margin:0 0 10px}
   .glow-pick{display:flex;align-items:center;gap:7px}
   .glow-pick .gl{font-size:10px;color:var(--muted-on-bg);text-transform:uppercase;letter-spacing:.12em}
-  .swatch,.theme-swatch{width:17px;height:17px;border-radius:50%;border:2px solid transparent;background:var(--s);cursor:pointer;padding:0;box-shadow:0 0 6px var(--s);transition:transform .12s}
+  .swatch,.theme-swatch{width:17px;height:17px;border-radius:50%;border:2px solid transparent;background:var(--s);cursor:pointer;padding:0;box-shadow:0 0 6px var(--s);transition:transform var(--motion-duration-quick)}
   .swatch:hover,.theme-swatch:hover{transform:scale(1.12)}
   .swatch.active,.theme-swatch.active{border-color:var(--ink)}
   .swatch.custom,.theme-swatch.custom{background:conic-gradient(var(--coral),var(--chrome-swatch-amber),var(--chrome-swatch-yellow),var(--teal),var(--ui-chrome),var(--chrome-swatch-violet),var(--coral));position:relative;overflow:hidden;box-shadow:none}
   .swatch.custom input,.theme-swatch.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
   .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 
-  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color .3s ease,box-shadow .3s ease}
+  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color var(--motion-duration-base) ease,box-shadow var(--motion-duration-base) ease}
   .spellbox.focus{border-color:var(--amber);box-shadow:0 0 0 4px var(--chrome-focus-ring)}
   /* F1 answer feedback (global, identical every language + Kid Mode). Input is
      preserved so the player can fix, not retype. Classes cleared on animationend. */
-  .spellbox.is-correct{border-color:var(--success);box-shadow:0 0 0 4px var(--success-glow);animation:fbHold .5s ease}
-  .spellbox.is-wrong{border-color:var(--warn);box-shadow:0 0 0 4px var(--warn-glow);animation:wrongFb .4s ease}
+  .spellbox.is-correct{border-color:var(--success);box-shadow:0 0 0 4px var(--success-glow);animation:fbHold var(--motion-anim-correct-hold) ease}
+  .spellbox.is-wrong{border-color:var(--warn);box-shadow:0 0 0 4px var(--warn-glow);animation:wrongFb var(--motion-anim-wrong-hold) ease}
   /* Both animations exist so the state class is removed on animationend (no
      timeouts racing). Correct holds ≤500ms; wrong shakes ≤160ms (≤6px, warm,
      never a screen flash — D3) then holds the glow to 400ms. */
@@ -1766,11 +1823,11 @@
   .letters{position:relative;z-index:1;min-height:62px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.02em;padding:18px;pointer-events:none}
   .ltr{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--glow);text-shadow:0 0 7px var(--glow),0 0 16px var(--glow);line-height:1}
   .ltr.space{width:.45em;text-shadow:none}
-  .ltr.pop{animation:pop .28s ease}
+  .ltr.pop{animation:pop var(--motion-anim-letter-pop) ease}
   @keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
   .placeholder{font-family:var(--mono);color:var(--muted-2);font-weight:400;font-size:16px;letter-spacing:.04em}
   .caret{display:inline-block;width:2px;height:26px;background:var(--glow);margin-inline-start:3px;border-radius:1px;opacity:0;box-shadow:0 0 6px var(--glow)}
-  .spellbox.focus .caret{opacity:1;animation:blink 1.05s step-end infinite}
+  .spellbox.focus .caret{opacity:1;animation:blink var(--motion-anim-caret-blink) step-end infinite}
   @keyframes blink{50%{opacity:0}}
   /* Visually-hidden live region (announces typed letters to screen readers). */
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
@@ -1804,7 +1861,7 @@
   .kb-row{display:flex;justify-content:center;gap:var(--kb-gap)}
   .kb-key,.kb-back,.kb-submit{min-height:46px;border:1px solid var(--edge);
     background:var(--panel);color:var(--ink);border-radius:9px;font-family:var(--body);font-size:17px;font-weight:600;
-    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .08s,transform .06s,border-color .08s;
+    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background var(--motion-duration-instant),transform var(--motion-duration-instant),border-color var(--motion-duration-instant);
     -webkit-tap-highlight-color:transparent;touch-action:manipulation}
   .kb-key{flex:0 0 auto;width:var(--kb-key)}
   .kb-key:active,.kb-back:active{background:var(--amber);color:var(--palette-on-gold-text);border-color:var(--amber);transform:translateY(1px)}
@@ -1865,7 +1922,7 @@
   .stage > .action-row .btn-check{min-height:var(--kb-act-h);pointer-events:auto}
   body.kid #kbHome .kb-back,body.big-text #kbHome .kb-back{--kb-back-w:88px}
   body.kid .stage > .action-row,body.big-text .stage > .action-row{--kb-back-w:88px;--kb-act-h:56px}
-  .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
+  .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter var(--motion-duration-quick),transform var(--motion-duration-instant),opacity var(--motion-duration-quick)}
   .btn:active{transform:translateY(1px)}
   .btn-check{background:var(--amber);color:var(--palette-on-gold-text)}
   /* The way out of a finished run. Deliberately quieter than .btn-check:
@@ -2035,7 +2092,7 @@
   .feedback .reveal .rv-bad{color:var(--coral)}
   .feedback .reveal .rv-sp{color:inherit}
   /* F7 syllable replay (feature-flagged; classes appear only when the flag is on) */
-  .feedback .reveal.syllabified .syl{transition:color .12s ease,text-shadow .12s ease;opacity:.72}
+  .feedback .reveal.syllabified .syl{transition:color var(--motion-duration-quick) ease,text-shadow var(--motion-duration-quick) ease;opacity:.72}
   .feedback .reveal.syllabified .syl+.syl::before{content:"\00b7";opacity:.5;margin:0 .12em}
   .feedback .reveal.syllabified .syl.syl-on{opacity:1;color:var(--amber);text-shadow:0 0 10px var(--amber-soft)}
   .feedback .syl-slow{margin-inline-start:.5em;font-size:13px;font-weight:600;color:var(--amber-soft);background:transparent;border:1px solid var(--amber-soft);border-radius:999px;padding:2px 10px;cursor:pointer;vertical-align:middle}
@@ -2076,7 +2133,7 @@
   .ghost-pace{width:fit-content;max-width:92%;margin:-2px auto 10px;padding:5px 13px;border-radius:999px;
     background:var(--panel);border:1px solid var(--edge);color:var(--muted-on-bg);
     font-size:12px;font-weight:700;letter-spacing:.02em;text-align:center;
-    transition:color .15s,border-color .15s,background .15s}
+    transition:color var(--motion-duration-quick),border-color var(--motion-duration-quick),background var(--motion-duration-quick)}
   .ghost-pace.btn-hide{display:none}
   .ghost-pace.ahead{color:var(--good,var(--teal));border-color:color-mix(in srgb,var(--good,var(--teal)) 55%,transparent)}
   .ghost-pace.behind{color:var(--bad,var(--coral));border-color:color-mix(in srgb,var(--bad,var(--coral)) 55%,transparent)}
@@ -2095,7 +2152,7 @@
   .daily-best{color:var(--muted);font-size:13px;margin-top:-4px}
   .daily-proverb{margin-top:12px;font-style:italic;color:var(--amber-soft);font-size:15px;line-height:1.4}
   .daily-proverb .dp-tr{display:block;font-style:normal;color:var(--muted);font-size:13px;margin-top:3px}
-  .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color .2s,box-shadow .2s}
+  .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color var(--motion-duration-base),box-shadow var(--motion-duration-base)}
   .vs-side.active{border-color:var(--amber);box-shadow:0 0 0 3px var(--chrome-versus-active-glow)}
   .vs-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .vs-side.active .vs-name{color:var(--amber-soft)}
@@ -2119,7 +2176,7 @@
   .srow:first-of-type{border-top:none}
   .stier{color:var(--muted);font-weight:600;text-transform:capitalize}
   .sbar{height:7px;border-radius:99px;background:var(--alpha-white-06);overflow:hidden}
-  .sfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--chrome-stats-fill),var(--amber));transition:width .5s ease}
+  .sfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--chrome-stats-fill),var(--amber));transition:width var(--motion-duration-slow) ease}
   .snum{font-family:var(--mono);color:var(--muted-2);font-size:12px;white-space:nowrap}
   .snum b{color:var(--amber-soft)}
   .stats-empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 4px}
@@ -2128,7 +2185,7 @@
 
   .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:14px}
   .ach-badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:11px 6px;border-radius:12px;background:var(--panel-2);border:1px solid var(--edge)}
-  .ach-badge .ic{font-size:23px;filter:grayscale(1);opacity:.38;transition:filter .2s,opacity .2s}
+  .ach-badge .ic{font-size:23px;filter:grayscale(1);opacity:.38;transition:filter var(--motion-duration-base),opacity var(--motion-duration-base)}
   .ach-badge.got{border-color:var(--chrome-badge-got-border)}
   .ach-badge.got .ic{filter:none;opacity:1}
   .ach-badge .nm{font-size:10px;color:var(--muted-2);line-height:1.2}
@@ -2226,8 +2283,8 @@
      stays live, because dimming never stands in for validation. */
   @keyframes sd-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
   @keyframes sd-flash{0%,100%{background:var(--panel)}45%{background:color-mix(in srgb,var(--bad,var(--palette-flag-red)) 32%,transparent)}}
-  .sd-cell.shake{animation:sd-shake .3s}
-  .sd-cell.flash{animation:sd-flash .6s}
+  .sd-cell.shake{animation:sd-shake var(--motion-mode-spelldoku-shake)}
+  .sd-cell.flash{animation:sd-flash var(--motion-mode-spelldoku-flash)}
   /* CC-AUDIO-CLARITY F6a. The rescue is a panel, not a screen: it opens over
      the play surface and every step it offers is one the player can act on. */
   /* The rescue OVERLAYS the screen it belongs to. In flow it pushed Spell
@@ -2387,7 +2444,7 @@
   .ws-lock{display:flex;flex-direction:column;gap:8px;align-items:stretch}
   .ws-lock h3{margin:0;text-align:center}
   .ws-stars{font-size:40px;text-align:center;color:var(--amber)}
-  @media (prefers-reduced-motion:no-preference){.ws-cell.trap{transition:background .2s}}
+  @media (prefers-reduced-motion:no-preference){.ws-cell.trap{transition:background var(--motion-mode-wordsearch-trap)}}
   /* CC-WORDGRID v1 Phase B — Spell Cross. A clue is a number, a length and a
      play button: the word itself is never written down (D1, F-C1). */
   .xw-grid{--xw-w:9;--xw-h:9;display:grid;grid-template-columns:repeat(var(--xw-w),1fr);gap:1px;max-width:520px;margin:0 auto;touch-action:manipulation}
@@ -2572,7 +2629,7 @@
   .nav-close{width:56px;height:56px;border-radius:50%;background:transparent;
     border:1px solid var(--edge);color:var(--muted);font-size:28px;line-height:1;
     display:grid;place-items:center;cursor:pointer;padding:0;font-family:inherit;
-    transition:border-color .15s,color .15s,transform .1s}
+    transition:border-color var(--motion-duration-quick),color var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .nav-close:hover{border-color:var(--amber);color:var(--ink)}
   .nav-close:active{transform:translateY(1px)}
   @media (prefers-reduced-motion:reduce){.nav-close{transition:none}.nav-close:active{transform:none}}
@@ -2661,9 +2718,9 @@
   .tool-avail{color:var(--teal)!important;opacity:.85;font-size:11px!important;margin-top:3px!important}
   .setup-field-desc{display:block;font-size:12px;color:var(--muted-2);margin:-4px 0 10px 34px}
   body.kid .tools-title{font-size:15px}
-  .switch{position:relative;appearance:none;width:44px;height:25px;flex:0 0 auto;background:var(--edge);border-radius:99px;cursor:pointer;transition:background .2s}
+  .switch{position:relative;appearance:none;width:44px;height:25px;flex:0 0 auto;background:var(--edge);border-radius:99px;cursor:pointer;transition:background var(--motion-duration-base)}
   .switch:checked{background:var(--teal)}
-  .switch::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:21px;height:21px;border-radius:50%;background:var(--color-white);transition:transform .2s}
+  .switch::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:21px;height:21px;border-radius:50%;background:var(--color-white);transition:transform var(--motion-duration-base)}
   .switch:checked::after{transform:translateX(19px)}
   /* CSS has no logical translate. `inset-inline-start` above flips the knob's
      resting edge in RTL, so the travel must flip too — otherwise the knob slides
@@ -2673,7 +2730,7 @@
   .foot{max-width:600px;margin-top:34px;text-align:center;color:var(--muted-on-bg);font-size:11.5px;line-height:1.6}
   .foot b{color:var(--ink-on-bg)}
 
-  #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--teal);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:40;box-shadow:0 8px 30px var(--alpha-black-45)}
+  #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--teal);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity var(--motion-duration-base),transform var(--motion-duration-base);z-index:40;box-shadow:0 8px 30px var(--alpha-black-45)}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   #toast .ti{margin-inline-end:8px}
 
@@ -2755,6 +2812,28 @@
     body.kid .orb-wrap,body.big-text .orb-wrap{width:92px;height:92px}
     body.kid .orb,body.big-text .orb{width:70px;height:70px}
   }
+  /* CC-VISUAL-ECLIPSE I4 (A4): under Reduce Motion nothing moves (no transform,
+     translate, scale or rotate animation, and no transform transition); colour
+     and opacity still carry every state (D8). scripts/reduce-motion-check.mjs
+     walks every moving @keyframes and transform transition and fails if one is
+     not neutralised here or in a block like it. */
+  @media (prefers-reduced-motion: reduce){
+    /* Press and hover nudges: the state still changes, instantly, in place. */
+    .pill,.meta-icon,.data-chip,.launch,.setup-chip,.voice-spell-mic,.swatch,.theme-swatch,
+    .kb-key,.kb-back,.kb-submit,.switch::after,.pr-slot.echo,.dm-card.caught{transition:none}
+    /* The toast fades in place instead of sliding up. */
+    #toast{transition:opacity var(--motion-duration-base)}
+    #toast,#toast.show{transform:translateX(-50%)}
+    /* Mode feedback wobbles: the colour class on the same element still marks it. */
+    .dm-orb.pulse,.dm-card,.dm-card.sway .dm-def,.cn-word.dup,.cn-word.miss,
+    .fg-word.dup,.fg-word.miss,.fg-word.pangram,.pr-tile.wiggle,.pr-slots.pulse,
+    .bg-pc[data-h="a"]>span,.bg-pc[data-h="b"]>span{animation:none}
+    /* Round timers still show the time left, by width instead of a scale. */
+    .bg-timer.run{animation-name:bg-timer-calm}
+    .rs-timer.run{animation-name:rs-timer-calm}
+  }
+  @keyframes bg-timer-calm{from{width:100%}to{width:0}}
+  @keyframes rs-timer-calm{from{width:100%}to{width:0}}
   @media (prefers-reduced-motion: reduce){
     /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
     .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
