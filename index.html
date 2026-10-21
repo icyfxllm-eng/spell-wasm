@@ -1776,6 +1776,8 @@
      the compact rules below fold them onto one row. */
   .play-controls{width:100%;display:flex;flex-direction:column;align-items:center}
   .voice-note{min-height:16px;margin-bottom:14px;color:var(--muted-on-bg);font-size:11.5px;text-align:center;max-width:320px}
+  /* Empty most of the time: it only reserves its line while it has something to say. */
+  .voice-note:empty{min-height:0;margin-bottom:6px}
 
   .field-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
   .fh-left{display:flex;align-items:center;gap:9px}
@@ -2758,6 +2760,12 @@
     .play-controls .replay-row{margin:0}
     .play-controls .field-head{width:auto;margin:0}
     .play-controls .field-label{display:none}
+    /* On iOS the voice-spell mic joins this row; Replay and Slow go icon-only
+       so the five glow swatches still fit. The label stays in the accessible
+       name (visually hidden, the same as .sr-only). */
+    .play-controls .pill{width:44px;min-height:40px;padding:0;justify-content:center}
+    .play-controls .pill span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+    .play-controls .voice-spell-mic{margin-inline-start:0}
     .voice-note{min-height:0;margin-bottom:4px}
     #voiceSpellStatus:empty{display:none}
     .feedback{min-height:24px;margin-top:4px}
@@ -2768,11 +2776,15 @@
        tightens so all five swatches stay on screen. */
     .play-controls{gap:4px}
     .play-controls .replay-row{gap:6px}
-    .play-controls .pill{padding:7px 11px}
     .play-controls .glow-pick{gap:5px}
     .play-controls .glow-pick .gl{display:none}
   }
   @media (max-height:620px){
+    .feedback{min-height:20px;margin-top:2px}
+    .topbar{margin-bottom:2px}
+    .setup-chip{margin-bottom:2px}
+    .play-controls{margin-bottom:2px}
+    .play-controls .voice-spell-mic{width:40px;height:40px;font-size:19px}
     #orbWrap{width:104px;height:104px}
     #orbWrap .orb{width:76px;height:76px}
     #orbWrap .orb-glyph{font-size:10.5px;padding:0 6px}
@@ -2792,6 +2804,9 @@
     body.kid .play-controls .replay-row,body.big-text .play-controls .replay-row{margin:0}
     body.kid .play-controls .field-head,body.big-text .play-controls .field-head{width:auto;margin:0}
     body.kid .play-controls .field-label,body.big-text .play-controls .field-label{display:none}
+    body.kid .play-controls .pill,body.big-text .play-controls .pill{width:48px;min-height:44px;padding:0;justify-content:center}
+    body.kid .play-controls .pill span,body.big-text .play-controls .pill span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+    body.kid .play-controls .voice-spell-mic,body.big-text .play-controls .voice-spell-mic{margin-inline-start:0}
     body.kid .voice-note,body.big-text .voice-note{min-height:0;margin-bottom:4px}
     body.kid #voiceSpellStatus:empty,body.big-text #voiceSpellStatus:empty{display:none}
     body.kid .feedback,body.big-text .feedback{min-height:24px;margin-top:4px}
@@ -2813,6 +2828,11 @@
     body.kid .letters,body.big-text .letters{min-height:44px;padding:6px 10px}
     body.kid .game-kb,body.big-text .game-kb{gap:4px}
     body.kid #orbWrap,body.big-text #orbWrap{width:92px;height:92px}
+    body.kid .play-controls .voice-spell-mic,body.big-text .play-controls .voice-spell-mic{width:40px;height:40px;font-size:19px}
+    body.kid .setup-chip,body.big-text .setup-chip{margin-bottom:2px}
+    body.kid .feedback,body.big-text .feedback{min-height:20px;margin-top:2px}
+    body.kid .topbar,body.big-text .topbar{margin-bottom:2px}
+    body.kid .play-controls,body.big-text .play-controls{margin-bottom:2px}
     body.kid #orbWrap .orb,body.big-text #orbWrap .orb{width:70px;height:70px}
   }
   /* CC-VISUAL-ECLIPSE I4 (A4): under Reduce Motion nothing moves (no transform,

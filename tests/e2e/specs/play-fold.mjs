@@ -76,6 +76,15 @@ export async function run(browser, base, suite) {
           return w[0] === 'q' ? 'z' : 'q';
         });
         await tap(page, `#gameKeyboard .kb-key[data-k="${wrong}"]`);
+        // iOS shows the voice-spell mic in the same row as Replay, Slow and the
+        // glow picker (Chromium has no recognizer, so it stays hidden here);
+        // show it, as the simulator did, and require every swatch on screen.
+        const swatchesFit = await page.evaluate(() => {
+          document.getElementById('voiceSpellMic').classList.remove('btn-hide');
+          const last = [...document.querySelectorAll('#glowPick .swatch')].pop().getBoundingClientRect();
+          return last.right <= innerWidth && document.documentElement.scrollWidth <= innerWidth;
+        });
+        assert(swatchesFit, 'with the voice-spell mic shown, the glow swatches run off the screen');
         const before = await measure(page);
         const b = inView(before, ['spellbox', 'keyboard', 'check']);
         assert(!b.length, `before Check: ${b.join('; ')}`);
