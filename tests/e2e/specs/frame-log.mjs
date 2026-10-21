@@ -28,6 +28,8 @@ export async function run(browser, base, suite) {
       assert(!(await page.evaluate(() => document.getElementById('devFrameLog').checked)), 'the logger switch starts on');
       const r = await report(page);
       assert(!/\n(idle|typing|result|speaking)\s/.test(r), `the logger recorded frames while off:\n${r}`);
+      assert(/logger off \| loop callbacks 0/.test(r), `the report does not say the logger is off:\n${r}`);
+      assert(/the logger is OFF/.test(r), `an empty report does not say why:\n${r}`);
     } finally { await ctx.close(); }
   });
 
@@ -50,6 +52,7 @@ export async function run(browser, base, suite) {
       assert(Number(row('typing')) > 0, `no typing frames in the report:\n${r}`);
       assert(Number(row('result')) > 0, `no result frames in the report:\n${r}`);
       assert(/AT-19/.test(r) && /(PASS|FAIL)/.test(r), `the report carries no verdict:\n${r}`);
+      assert(/logger on \| loop callbacks [1-9]/.test(r), `the report's health line does not show a running loop:\n${r}`);
       await page.reload({ waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
       assert(await page.evaluate(() => document.getElementById('devFrameLog').checked), 'the logger switch did not survive a reload');

@@ -158,6 +158,10 @@ thread_local! {
     static ON: Cell<bool> = const { Cell::new(false) };
     static LOG: RefCell<Log> = RefCell::new(Log::default());
     static RUN: Cell<u32> = const { Cell::new(0) };
+    /// Loop health, printed in the report so an empty report says WHY:
+    /// callbacks seen, frames skipped as hidden, deltas rejected as pauses.
+    static TICKS: Cell<u64> = const { Cell::new(0) };
+    static HIDDEN: Cell<u64> = const { Cell::new(0) };
 }
 
 fn now() -> f64 {
@@ -187,7 +191,25 @@ pub fn report() -> String {
             format!("build {build} | viewport {sw}x{sh} @{dpr}x | {ua}")
         })
         .unwrap_or_default();
-    LOG.with(|l| l.borrow().report(&device))
+    let health = format!(
+        "logger {} | loop callbacks {} | hidden-skipped {}\n",
+        if is_on() { "on" } else { "off" },
+        TICKS.with(Cell::get),
+        HIDDEN.with(Cell::get)
+    );
+    let mut r = LOG.with(|l| l.borrow().report(&device));
+    if LOG.with(|l| l.borrow().stats().is_empty()) {
+        r.push_str(if is_on() {
+            "\nNo frames yet. Close this menu and play; frames are counted while the app is on screen.\n"
+        } else {
+            "\nNo frames recorded: the logger is OFF. Tick Frame logger (AT-19) above, close this menu, play, then come back here.\n"
+        });
+    }
+    // The health line goes right after the device line.
+    match r.find("budget:") {
+        Some(i) => format!("{}{}{}", &r[..i], health, &r[i..]),
+        None => r + &health,
+    }
 }
 
 pub fn clear() {
@@ -228,10 +250,13 @@ fn start_loop() {
             tick2.borrow_mut().take(); // drop the closure: the loop ends here
             return;
         }
+        TICKS.with(|c| c.set(c.get() + 1));
         let prev = last.replace(t);
         if prev >= 0.0 {
             let hidden = web_sys::window().and_then(|w| w.document()).map(|d| d.hidden()).unwrap_or(false);
-            if !hidden {
+            if hidden {
+                HIDDEN.with(|c| c.set(c.get() + 1));
+            } else {
                 LOG.with(|l| l.borrow_mut().frame(t - prev, t));
             }
         }

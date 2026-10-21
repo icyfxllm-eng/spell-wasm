@@ -2659,7 +2659,10 @@
   .dev-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
   .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:start}
   .dev-item:active{border-color:var(--amber)}
-  .dev-report pre{font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre;overflow-x:auto;max-height:50vh;
+  /* min-width:0 so the unwrapped report scrolls inside the panel instead of
+     widening it past the screen edge (seen on the iPhone SE simulator). */
+  .dev-report{min-width:0;max-width:100%}
+  .dev-report pre{max-width:100%;font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre;overflow-x:auto;max-height:50vh;
     text-align:start;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:10px;user-select:text;-webkit-user-select:text}
   .dev-report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
   /* Spell Racing screen — same containing-block requirement as the hub. */
