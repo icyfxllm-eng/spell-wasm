@@ -40,7 +40,9 @@ const measure = (page) => page.evaluate(() => {
   const rows = [...document.querySelectorAll('#gameKeyboard .kb-row')].filter((e) => e.offsetParent !== null);
   const kbTop = Math.min(...rows.map((e) => e.getBoundingClientRect().top));
   const kbBottom = Math.max(...rows.map((e) => e.getBoundingClientRect().bottom));
+  const back = document.getElementById('kbBackspace').getBoundingClientRect();
   return {
+    backTop: Math.round(back.top),
     vh: innerHeight,
     scrollY: Math.round(scrollY),
     spellbox: r('#spellbox'),
@@ -63,6 +65,27 @@ function inView(m, names) {
 }
 
 export async function run(browser, base, suite) {
+  // Chromium reports every safe-area inset as 0. A phone with a home indicator
+  // pads the keyboard by 34 pt; simulate that through the one variable both the
+  // keyboard and Check read, and require Check to stay beside Delete and on screen.
+  for (const [w, h] of [[390, 844], [440, 956]]) {
+    await suite.test(`AT-4 ${w}x${h} with a 34 pt home-indicator inset: Check stays beside Delete and on screen`, async () => {
+      const { ctx, page } = await openApp(browser, base, { lang: 'en', viewport: { width: w, height: h } });
+      try {
+        await page.evaluate(() => {
+          document.documentElement.style.setProperty('--kb-inset-bottom', '34px');
+          document.getElementById('voiceSpellMic').classList.remove('btn-hide');
+        });
+        await tap(page, '#orbWrap');
+        await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+        const m = await measure(page);
+        assert(Math.abs(m.check.top - m.backTop) <= 2, `Check (top ${m.check.top}) is not beside Delete (top ${m.backTop})`);
+        const bad = inView(m, ['spellbox', 'keyboard', 'check']);
+        assert(!bad.length, bad.join('; '));
+      } finally { await ctx.close(); }
+    });
+  }
+
   for (const [profile, age] of PROFILES) for (const [w, h] of SIZES) {
     await suite.test(`AT-4 ${profile} ${w}x${h}: spellbox, keyboard, Check and the result line fit without scrolling`, async () => {
       const { ctx, page } = await openApp(browser, base, { lang: 'en', viewport: { width: w, height: h }, ...(age ? { age } : {}) });
@@ -88,6 +111,7 @@ export async function run(browser, base, suite) {
         const before = await measure(page);
         const b = inView(before, ['spellbox', 'keyboard', 'check']);
         assert(!b.length, `before Check: ${b.join('; ')}`);
+        assert(Math.abs(before.check.top - before.backTop) <= 2, `Check (top ${before.check.top}) is not beside Delete (top ${before.backTop})`);
         await tap(page, '#checkBtn');
         await page.waitForFunction(() => document.getElementById('feedback').textContent.trim().length > 0, null, { timeout: 5000 });
         const after = await measure(page);

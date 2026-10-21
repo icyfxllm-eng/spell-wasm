@@ -1857,7 +1857,11 @@
        key width AND that the row still fits its container. */
     --kb-key:min(var(--kb-key-max), calc((100% - (var(--kb-cols) - 1) * var(--kb-gap)) / var(--kb-cols)));
     padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);
-    padding-bottom:env(safe-area-inset-bottom, 0px)}
+    padding-bottom:var(--kb-inset-bottom)}
+  /* The home-indicator inset under the keyboard, named once: the keyboard pads by it
+     and Check's pull-up (below) has to count it, or on a phone with a home
+     indicator Check lands that far below Delete (seen on the 17 Pro Max simulator). */
+  :root{--kb-inset-bottom:env(safe-area-inset-bottom, 0px)}
   .game-kb.locked{opacity:.5;pointer-events:none}
   #kbLetters{display:flex;flex-direction:column;gap:7px}
   .kb-row{display:flex;justify-content:center;gap:var(--kb-gap)}
@@ -1920,7 +1924,7 @@
      submit control on screen (submit-advance A1). */
   #kbHome .kb-actions{justify-content:flex-end}
   #kbHome .kb-back{flex:0 0 auto;width:var(--kb-back-w,76px)}
-  .stage > .action-row{--kb-back-w:76px;--kb-act-h:46px;margin-top:calc(-1 * var(--kb-act-h));padding-inline-end:calc(var(--kb-back-w) + 8px);pointer-events:none}
+  .stage > .action-row{--kb-back-w:76px;--kb-act-h:46px;margin-top:calc(-1 * (var(--kb-act-h) + var(--kb-inset-bottom)));padding-inline-end:calc(var(--kb-back-w) + 8px);pointer-events:none}
   .stage > .action-row .btn-check{min-height:var(--kb-act-h);pointer-events:auto}
   body.kid #kbHome .kb-back,body.big-text #kbHome .kb-back{--kb-back-w:88px}
   body.kid .stage > .action-row,body.big-text .stage > .action-row{--kb-back-w:88px;--kb-act-h:56px}
