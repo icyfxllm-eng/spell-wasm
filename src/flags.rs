@@ -596,7 +596,8 @@ pub fn pick_queue_d() -> bool {
 /// can only switch it off, as `visual_type`). Off is a true no-op: the body never
 /// gets the `visual-type` class, so none of its rules match.
 pub fn visual_type() -> bool {
-    resolve(stored("visual_type").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 287, CC-VISUAL-ECLIPSE Phase A review): on.
+    resolve(stored("visual_type").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.feedback` (Phase B, F4): answer feedback that
@@ -751,7 +752,8 @@ mod tests {
     #[test]
     fn visual_type_ships_dark() {
         set_test_override(None);
-        assert!(!visual_type(), "visual.type is default off until a build turns it on (V-D22)");
+        // Release branch for build 287: the build turns it on (V-D22).
+        assert!(visual_type(), "build 287 turns visual.type on");
         set_test_override(Some("on"));
         assert!(visual_type());
         set_test_override(None);
