@@ -37,7 +37,7 @@ from collections import OrderedDict, defaultdict
 try:
     from fontTools.ttLib import TTCollection, TTFont
 except ImportError:
-    sys.exit("font-coverage: needs fontTools (pip install fonttools)")
+    sys.exit("font-coverage: needs fontTools and brotli (pip install fonttools brotli)")
 logging.getLogger("fontTools").setLevel(logging.ERROR)  # benign "extra bytes in post" noise from system fonts
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
