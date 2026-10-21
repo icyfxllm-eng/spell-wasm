@@ -682,6 +682,7 @@ fn shift_key_class(class: &str, on: bool) {
 /// Route a key press to the right input path for the active keyboard: Korean
 /// composes jamo into syllables (crate::hangul); everything else appends.
 pub fn emit_key(app: &App, ch: char) {
+    crate::frame_log::mark(crate::frame_log::Moment::Typing);
     // Impossible German: an armed Shift capitalises this letter, once.
     let ch = if SHIFT.with(|s| s.get()) && impossible_case(app) && ch.is_alphabetic() {
         clear_shift();
@@ -2099,6 +2100,7 @@ fn lock_inputs() {
 }
 
 pub fn submit_guess(app: &App) {
+    crate::frame_log::mark(crate::frame_log::Moment::Result);
     let (answered, composing, cur_lang, word, kid) = {
         let s = app.borrow();
         (s.answered, s.composing, s.cur_lang.clone(), s.word.clone(), s.kid)

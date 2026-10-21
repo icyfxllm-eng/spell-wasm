@@ -240,6 +240,7 @@ pub fn play_word_with(
     on_fail: impl FnOnce() + 'static,
 ) {
     PLAY_START.with(|c| *c.borrow_mut() = Some((crate::telemetry::now_ms(), lang.to_string())));
+    crate::frame_log::mark(crate::frame_log::Moment::Speaking);
     let mut order = source_order();
     if lang == crate::consts::ZH {
         order.retain(|s| *s != Source::NativeTts);

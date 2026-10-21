@@ -11,6 +11,8 @@
 
 use std::cell::RefCell;
 
+use wasm_bindgen::JsCast;
+
 use crate::{dom, App};
 
 thread_local! {
@@ -96,6 +98,37 @@ pub fn wire(app: &App) {
         // Re-reflect the surfaces that consult entitlements live.
         crate::photo_list::reflect_visibility(&a_ent);
     });
+    // CC-VISUAL-ECLIPSE A5: the AT-19 frame logger. The switch persists, so a
+    // measurement started here survives a relaunch; restore() resumes it.
+    crate::frame_log::restore();
+    dom::input("devFrameLog").set_checked(crate::frame_log::is_on());
+    dom::on::<web_sys::Event, _>("devFrameLog", "change", |_| {
+        crate::frame_log::set_on(dom::input("devFrameLog").checked());
+    });
+    let show_report = || {
+        dom::set_text("devFrameReportText", &crate::frame_log::report());
+        dom::set_hidden("devFrameReportBox", false);
+    };
+    dom::on_click("devFrameReport", show_report);
+    dom::on_click("devFrameReset", move || {
+        crate::frame_log::clear();
+        show_report();
+    });
+    // Copy through the async clipboard where WebKit allows it; the report is
+    // also selectable text, so a long-press copy always works.
+    dom::on_click("devFrameCopy", || {
+        let text = crate::frame_log::report();
+        let ok = web_sys::window()
+            .and_then(|w| js_sys::Reflect::get(&w.navigator(), &"clipboard".into()).ok())
+            .filter(|c| !c.is_undefined())
+            .and_then(|c| {
+                let f = js_sys::Reflect::get(&c, &"writeText".into()).ok()?.dyn_into::<js_sys::Function>().ok()?;
+                f.call1(&c, &text.into()).ok()
+            })
+            .is_some();
+        dom::set_text("devFrameCopy", if ok { "Copied" } else { "Select the text to copy" });
+    });
+
     // Spell Aloud is no longer a dev-door overlay: it's a real Play-hub mode
     // (CC-SPELL-ALOUD-INTEGRATION G-INT-1). Only Spell Racing remains dev-gated.
 

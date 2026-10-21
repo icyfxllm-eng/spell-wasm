@@ -963,6 +963,7 @@ fn set_die(text: &str, jackpot: bool, glow: bool) {
     // state is not colour alone.
     dom::set_text("rsGlow", &if glow { i18n::t("rs.glow") } else { String::new() });
     // Restart the fade/shake by toggling a class the CSS animates.
+    crate::frame_log::mark(crate::frame_log::Moment::RandospellRoll);
     dom::remove_class("rsDie", "land");
     dom::after_ms(16, || dom::add_class("rsDie", "land"));
 }

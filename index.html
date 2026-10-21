@@ -2653,6 +2653,9 @@
   .dev-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
   .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:start}
   .dev-item:active{border-color:var(--amber)}
+  .dev-report pre{font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre;overflow-x:auto;max-height:50vh;
+    text-align:start;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:10px;user-select:text;-webkit-user-select:text}
+  .dev-report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
   /* Spell Racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
   .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
@@ -3311,6 +3314,19 @@
           <input type="checkbox" id="devEntitlements" style="width:20px;height:20px" />
           🎟️ Test entitlements (Complete)
         </label>
+        <!-- CC-VISUAL-ECLIPSE A5 (AT-19): the frame-time logger. Dev door only. -->
+        <label class="dev-item" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="devFrameLog" style="width:20px;height:20px" />
+          ⏱ Frame logger (AT-19)
+        </label>
+        <button type="button" class="dev-item" id="devFrameReport">📊 Frame report</button>
+        <div class="dev-report" id="devFrameReportBox" hidden>
+          <pre id="devFrameReportText"></pre>
+          <div class="dev-report-actions">
+            <button type="button" class="ghost" id="devFrameCopy">Copy</button>
+            <button type="button" class="ghost" id="devFrameReset">Reset log</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

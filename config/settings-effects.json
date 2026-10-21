@@ -103,6 +103,15 @@
       "suppressed_by": null
     },
     {
+      "key": "devFrameLog",
+      "surface": "dev drawer",
+      "state": "(dev only)",
+      "effect": "AT-19 frame-time logger: samples every frame by moment (CC-VISUAL-ECLIPSE A5)",
+      "test": "tests/e2e/specs/frame-log.mjs",
+      "dev_only": true,
+      "suppressed_by": null
+    },
+    {
       "key": "toolSyllableToggle",
       "surface": "tools",
       "flag": "syllable",

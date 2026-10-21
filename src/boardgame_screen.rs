@@ -1406,6 +1406,7 @@ fn anim_step(token: u32) {
                 let _ = el.set_attribute("data-h", v);
             }
             anim_counter("data-hops");
+            crate::frame_log::mark(crate::frame_log::Moment::BoardgameHop);
             if !reduce_motion() {
                 anim_counter("data-ticks");
                 haptics::key_tap();

@@ -126,6 +126,7 @@ mod notify;
 mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod frame_log; // CC-VISUAL-ECLIPSE A5: AT-19 frame-time logger, dev door only
 mod dev; // TEMP dev door (5-tap logo → hidden racing/aloud screens); remove at activation
 mod settings;
 mod share;

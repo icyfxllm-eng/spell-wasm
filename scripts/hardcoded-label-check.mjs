@@ -39,6 +39,8 @@ const EXEMPT_TEXT = [
   'SPELL', 'Spell', 'spell', 'Game',
   'Dev preview', '🏁 Spell Racing', '✍️ CJK ink probe (F1)', 'ع Arabic (العربية)',
   '🎟️ Test entitlements (Complete)',
+  // The AT-19 frame logger (CC-VISUAL-ECLIPSE A5), reached only through the dev door.
+  '⏱ Frame logger (AT-19)', '📊 Frame report', 'Reset log',
   'Native status (debug)', 'checking…', 'Audio source (debug)', 'nothing played yet',
   // The CJK ink probe, reached only through devOpenInk in src/dev.rs.
   'Undo', 'Clear', 'Skip', 'Read it',
