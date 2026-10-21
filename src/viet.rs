@@ -77,6 +77,73 @@ pub fn answer_key(s: &str) -> String {
     s.split_whitespace().map(|t| placement_key(&crate::norm::fold_strict(t))).collect()
 }
 
+/// Letter (base plus letter marks) and tone of one NFC character.
+fn letter_and_tone(c: char) -> (String, Option<char>) {
+    let mut letter = String::new();
+    let mut tone = None;
+    for m in c.nfd() {
+        if TONE_MARKS.contains(&m) {
+            tone = Some(m);
+        } else {
+            letter.push(m);
+        }
+    }
+    (letter, tone)
+}
+
+/// Can `typed` still grow into `target`? The letter-by-letter checks (Spell
+/// Picture, Practice) call a unit wrong the moment it differs, but on this
+/// keyboard a tone is tapped AFTER its vowel (`retone` acts on the last
+/// character), so the bare vowel in "hó..." is progress, not a miss. Two
+/// allowances, nothing else:
+/// * the last typed vowel may still be waiting for its tone;
+/// * in a word-final plain oa / oe / uy the tone may sit on either vowel
+///   ([`placement_key`]), so the pair is checked as one unit.
+///
+/// Letters, letter marks and every other tone stay strict.
+pub fn prefix_viable(target: &str, typed: &str) -> bool {
+    let t: Vec<(String, Option<char>)> =
+        target.nfc().collect::<String>().to_lowercase().chars().map(letter_and_tone).collect();
+    let y: Vec<(String, Option<char>)> =
+        typed.nfc().collect::<String>().to_lowercase().chars().map(letter_and_tone).collect();
+    if y.len() > t.len() || t.iter().zip(&y).any(|(a, b)| a.0 != b.0) {
+        return false;
+    }
+    let last = match y.len() {
+        0 => return true,
+        n => n - 1,
+    };
+    let word_final_pair = |p: usize| {
+        p + 1 < t.len()
+            && matches!((t[p].0.as_str(), t[p + 1].0.as_str()), ("o", "a") | ("o", "e") | ("u", "y"))
+            && t.get(p + 2).map_or(true, |c| c.0.chars().all(char::is_whitespace))
+    };
+    let mut i = 0;
+    while i < y.len() {
+        if word_final_pair(i) {
+            let want = t[i].1.or(t[i + 1].1);
+            let got: Vec<char> = y[i..y.len().min(i + 2)].iter().filter_map(|c| c.1).collect();
+            let ok = match (want, got.as_slice()) {
+                (None, []) => true,
+                (Some(w), [g]) => *g == w,
+                (Some(_), []) => last <= i + 1, // tone still to come on this pair
+                _ => false,
+            };
+            if !ok {
+                return false;
+            }
+            i += 2;
+            continue;
+        }
+        let ok = y[i].1 == t[i].1 || (y[i].1.is_none() && i == last);
+        if !ok {
+            return false;
+        }
+        i += 1;
+    }
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -152,6 +219,42 @@ mod tests {
             let f = crate::norm::fold_strict(w);
             assert_eq!(answer_key(w), f, "{w}");
         }
+    }
+
+    #[test]
+    fn a_vowel_waiting_for_its_tone_is_progress() {
+        // h, o, then the tone key: "ho" must not be a miss against hóa.
+        for p in ["h", "ho", "hó", "hóa"] {
+            assert!(prefix_viable("hóa", p), "{p}");
+        }
+        for p in ["h", "họ", "học", "học ", "học s", "học si", "học sinh"] {
+            assert!(prefix_viable("học sinh", p), "{p}");
+        }
+        // Once the next letter is typed, the tone can no longer reach the vowel.
+        assert!(!prefix_viable("học sinh", "hoc"));
+        assert!(prefix_viable("người", "ngươ"), "letter-marked vowel waiting for its tone");
+    }
+
+    #[test]
+    fn either_placement_is_progress_in_a_word_final_pair() {
+        for p in ["ho", "hoa", "hoá", "hó", "hóa"] {
+            assert!(prefix_viable("hóa", p), "stored hóa, typed {p}");
+            assert!(prefix_viable("hoá", p), "stored hoá, typed {p}");
+        }
+        assert!(prefix_viable("sức khỏe", "sức khoẻ"));
+        assert!(prefix_viable("thủy", "thuỷ"));
+    }
+
+    #[test]
+    fn real_mistakes_are_still_misses() {
+        assert!(!prefix_viable("hóa", "hò"), "wrong tone");
+        assert!(!prefix_viable("hóa", "hòa"), "wrong tone on the pair");
+        assert!(!prefix_viable("hóa", "hóá"), "two tones");
+        assert!(!prefix_viable("hóa", "hu"), "wrong letter");
+        assert!(!prefix_viable("người", "ngu"), "missing letter mark");
+        assert!(!prefix_viable("ngoài", "ngò"), "oai is not a free pair");
+        assert!(!prefix_viable("hoàng", "hòa"), "closed syllable is not a free pair");
+        assert!(!prefix_viable("hóa", "hóax"), "too long");
     }
 
     #[test]

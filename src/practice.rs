@@ -393,7 +393,12 @@ pub fn check_prefix(lang: &str, target: &str, typed: &str) -> (usize, bool) {
             break;
         }
     }
-    (ok, ok == t.len() && y.len() >= t.len())
+    // vi: either tone placement completes the word, as it grades (signing sheet
+    // K-Q2). `ok` stays exact-letter progress, so a slot fills only once its
+    // vowel carries the stored tone and a repair can never type a tone the
+    // player has not.
+    let vi_done = lang == crate::consts::VI && y.len() == t.len() && crate::norm::same_answer(lang, typed, target);
+    (ok, (ok == t.len() && y.len() >= t.len()) || vi_done)
 }
 
 /// Whether typed input can still GROW into the target (nothing wrong yet) —
@@ -408,6 +413,10 @@ pub fn prefix_viable(lang: &str, target: &str, typed: &str) -> bool {
             .flat_map(|c| units(lang, &c.to_string()))
             .collect();
         return y.len() <= t.len() && t.iter().zip(y.iter()).all(|(a, b)| a == b);
+    }
+    if lang == crate::consts::VI {
+        // A vowel waiting for its tone is progress, not a wrong unit.
+        return crate::viet::prefix_viable(target, typed);
     }
     let t: Vec<char> = target.nfc().collect();
     let y: Vec<char> = typed.nfc().collect();
@@ -524,6 +533,13 @@ mod tests {
         assert!(!prefix_viable("ko", "한글", "말"), "wrong block is wrong");
         assert_eq!(check_prefix("ko", "한글", "한글"), (2, true));
         assert_eq!(check_prefix("ko", "한글", "한"), (1, false));
+        // vi: the bare vowel before its tone tap is not a wrong unit, and either
+        // placement completes the word.
+        assert!(prefix_viable("vi", "hóa", "ho"), "tone still to come");
+        assert!(!prefix_viable("vi", "hóa", "hò"), "a wrong tone is still wrong");
+        assert_eq!(check_prefix("vi", "hóa", "ho"), (1, false), "slots count exact letters only");
+        assert_eq!(check_prefix("vi", "hóa", "hoá"), (1, true), "the other placement completes");
+        assert_eq!(check_prefix("vi", "hóa", "hóa"), (3, true));
     }
 
     /// I4 golden — identical trays, decoys and coach picks from the same
