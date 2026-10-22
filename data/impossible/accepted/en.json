@@ -1,6 +1,6 @@
 {
  "lang": "en",
- "note": "Words where a second real spelling is also right at Impossible. The key is the pool word; each value is accepted as a correct answer. Decided by Eric 2026-10-19 for comptroller: the voice says controller, a real word that is not in the bank, so the sound-alike gates cannot see it. Eric added marquess/marquis, boatswain/bosun and straitjacket/straight jacket the same day.",
+ "note": "Words where a second real spelling is also right at Impossible. The key is the pool word; each value is accepted as a correct answer. Decided by Eric 2026-10-19 for comptroller: the voice says controller, a real word that is not in the bank, so the sound-alike gates cannot see it. Eric added marquess/marquis, boatswain/bosun and straitjacket/straight jacket the same day. 2026-10-22 twin sweep (CMUdict, 11 pool words): anesthesiology/anaesthesiology and archaeological/archeological are covered by assets/words/en/spelling-variants.tsv; rescission/recision and sibyl/sybil added here. The other twins CMUdict lists (mer, murr, cayson, kessen, kesten, shali, dumaine, nissei, irv, irve, yott) are names or non-words, not spellings of the pool word, so they are not accepted.",
  "accepted": {
   "boatswain": [
    "bosun"
@@ -10,6 +10,12 @@
   ],
   "marquess": [
    "marquis"
+  ],
+  "rescission": [
+   "recision"
+  ],
+  "sibyl": [
+   "sybil"
   ],
   "straitjacket": [
    "straight jacket"
