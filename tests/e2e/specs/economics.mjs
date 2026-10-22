@@ -14,11 +14,14 @@
 import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 import { pickTile } from './finale.mjs';
 
-/** Open picture `pic` and dismiss the how-to card if it appears. */
-async function openPicture(page, pic) {
+/** Open picture `pic` (or, when null, whatever Surprise me opens) and
+ *  dismiss the how-to card if it appears. */
+export async function openPicture(page, pic) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
-  await pickTile(page, pic);
+  // No pic: Surprise me, which opens a picture this player has available.
+  if (pic) await pickTile(page, pic);
+  else await page.click('#wpSurprise');
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   // The how-to card arrives a beat after the play screen and swallows
   // key taps. Wait for the card itself; the loop below handles its

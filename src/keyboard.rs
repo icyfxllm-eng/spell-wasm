@@ -378,6 +378,12 @@ fn wire_long_press(app: &App) {
     {
         let a = app.clone();
         dom::on_window::<web_sys::PointerEvent, _>("pointerdown", move |e| {
+            // A new press always starts clean. `suppress_click` swallows the click
+            // a touch release sends to the key it began on (implicit pointer
+            // capture). A mouse or trackpad releases over the popover instead, so
+            // that click never comes, and without this the flag ate the player's
+            // NEXT key.
+            HOLD.with(|h| h.borrow_mut().suppress_click = false);
             let Some(target) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
             let Some(key) = target.closest(".kb-key[data-acc]").ok().flatten() else {
                 return;

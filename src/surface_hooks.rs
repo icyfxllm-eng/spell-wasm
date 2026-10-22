@@ -29,6 +29,9 @@ pub struct Hooks {
     pub type_char: Option<fn(char)>,
     pub type_jamo: Option<fn(char)>,
     pub backspace: Option<fn()>,
+    /// The Vietnamese tone row. Without it a tone tap on a borrowing surface
+    /// fell through to the base game's own (hidden) answer.
+    pub tone: Option<fn(char)>,
     /// (target word, current buffer, input live)
     pub voice_state: Option<fn() -> (String, String, bool)>,
     pub voice_set: Option<fn(&str)>,
@@ -36,7 +39,7 @@ pub struct Hooks {
 
 thread_local! {
     static HOOKS: Cell<Hooks> = const { Cell::new(Hooks {
-        type_char: None, type_jamo: None, backspace: None,
+        type_char: None, type_jamo: None, backspace: None, tone: None,
         voice_state: None, voice_set: None,
     }) };
 }

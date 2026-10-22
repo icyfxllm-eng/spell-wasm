@@ -1990,6 +1990,7 @@ pub fn install_surface_hooks() {
         type_char: Some(kb_type),
         type_jamo: Some(kb_jamo),
         backspace: Some(kb_backspace),
+        tone: Some(kb_tone),
         voice_state: Some(voice_state),
         voice_set: Some(voice_set),
     });
@@ -2014,10 +2015,29 @@ pub fn kb_jamo(jamo: char) {
     dom::el("wpInput").dispatch_event(&web_sys::Event::new("input").unwrap()).ok();
 }
 
-pub fn kb_backspace() {
+/// Vietnamese tone row: re-tone the last typed vowel, exactly as the base game
+/// does (`viet::retone`). A non-vowel last character is left alone.
+pub fn kb_tone(mark: char) {
     let Some(inp) = wp_input() else { return };
     let mut v = inp.value();
+    let Some(r) = v.chars().last().and_then(|last| crate::viet::retone(last, mark)) else { return };
     v.pop();
+    v.push_str(&r);
+    crate::input_provenance::note_insert("wpInput", "insertText", 1);
+    inp.set_value(&v);
+    dom::el("wpInput").dispatch_event(&web_sys::Event::new("input").unwrap()).ok();
+}
+
+pub fn kb_backspace() {
+    let Some(inp) = wp_input() else { return };
+    // Korean takes back one jamo (한 → 하), as the base game's backspace does.
+    let v = if LANG.with(|l| l.borrow().as_str() == crate::consts::KO) {
+        crate::hangul::backspace(&inp.value())
+    } else {
+        let mut v = inp.value();
+        v.pop();
+        v
+    };
     inp.set_value(&v);
     dom::el("wpInput").dispatch_event(&web_sys::Event::new("input").unwrap()).ok();
 }

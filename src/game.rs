@@ -730,6 +730,13 @@ pub fn type_jamo(app: &App, jamo: char) {
 /// Vietnamese tone key: apply `tone` to the last typed vowel (replacing any
 /// existing tone). No-op if the last character isn't a Vietnamese vowel.
 pub fn apply_vi_tone(app: &App, tone: char) {
+    crate::spell_aloud::note_manual_edit();
+    if let Some(f) = crate::surface_hooks::get().tone {
+        if crate::spell_aloud::surface() != crate::spell_aloud::Surface::Game {
+            f(tone);
+            return;
+        }
+    }
     if !can_type(&app.borrow()) {
         return;
     }
