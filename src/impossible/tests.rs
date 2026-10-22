@@ -620,3 +620,13 @@ fn accepted_alternates_name_pool_words() {
         }
     }
 }
+
+/// Outside-twin sweep 2026-10-22: Russian ё / е are one spelling to the ear, so either is right.
+#[test]
+fn russian_yo_and_ye_are_both_accepted() {
+    assert!(engine::grade("ru", "актёр", "актер"));
+    assert!(engine::grade("ru", "актер", "актёр"));
+    assert!(engine::grade("ru", "Дойдёт", "дойдет"));
+    assert!(!engine::grade("ru", "актор", "актер"), "only ё/е are folded");
+    assert!(!engine::grade("de", "aktor", "actor"));
+}

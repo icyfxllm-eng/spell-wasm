@@ -1,0 +1,151 @@
+pool_word,n_internal_twins,twins_sample,kind
+Absender,1,absehender,internal
+Aufruhr,1,auffuhr,internal
+Auszahlung,2,Auszählung auszählung,internal
+Bauhaus,2,Baus baus,internal
+Bestehens,1,bestens,internal
+Blöcke,2,blocke blöke,internal
+Brei,0,Breie breie,inflection-only
+Buffet,2,Büfett büfett,internal
+Burgen,1,bürgen,internal
+Denkmalschutz,2,Denkmalsschutz denkmalsschutz,internal
+Direktorin,0,Direktorien direktorien,inflection-only
+Donner,2,Döner döner,internal
+Düren,2,Dürren dürren,internal
+Ehrungen,2,Rührungen rührungen,internal
+Früchten,1,fruchten,internal
+Gassen,2,Gasen gasen,internal
+Gedenkstätte,1,Gedenkstädte,internal
+Geiseln,2,Geißeln geißeln,internal
+Geschrei,0,Geschreie geschreie,inflection-only
+Gesten,4,Geästen Gästen geästen gästen,internal
+Glied,1,glitt,internal
+Jugoslawien,0,JugoslawIn Jugoslawin jugoslawIn jugoslawin,inflection-only
+Kahn,1,kühn,internal
+Kathrin,1,Katrin,internal
+Komma,2,Koma koma,internal
+Küsten,1,küssten,internal
+Lot,2,Löt löt,internal
+Minen,2,Mienen mienen,internal
+Missstände,1,mistende,internal
+Mohr,3,Mehr Mr mehr,internal
+Mühlen,3,Mehlen mahlen mehlen,internal
+Müttern,2,Muttern muttern,internal
+Nasen,1,nassen,internal
+Nußknacker,2,Nussknacker nussknacker,internal
+Panther,2,Panter panter,internal
+Posen,2,Possen possen,internal
+Raphael,1,Rafael,internal
+Referenz,1,Reverenz,internal
+Reinhardt,0,Reinhard,inflection-only
+Riese,2,Risse risse,internal
+Rohre,19,Ehre Ohre Rehe Reihe Ruhe Röhre,internal
+Ruck,2,Rück rück,internal
+Rumpf,1,rümpf,internal
+Rückgrat,0,Rückgrad,inflection-only
+Speer,4,Sperr Späher sperr späher,internal
+Spott,0,Spot spot,inflection-only
+Stile,2,Stiele stiele,internal
+Thun,2,Tun tun,internal
+Umsätze,1,umsetze,internal
+Verbote,1,verböte,internal
+Verse,2,Ferse ferse,internal
+Widersprüche,1,Wiedersprüche,internal
+Wiederaufnahme,1,wiederaufnehme,internal
+Xylophon,2,Xylofon xylofon,internal
+Zins,2,Zinns zinns,internal
+aufnehmen,2,Aufnahmen aufnahmen,internal
+aufsetzen,2,Aufsätzen aufsätzen,internal
+ausgelöst,1,ausgelost,internal
+aussenseiter,2,Außenseiter außenseiter,internal
+ausstoss,0,Ausstoß ausstoß,inflection-only
+auszuführen,1,auszufahren,internal
+bayerischer,1,bayrischer,internal
+behalte,3,Balte ballte balte,internal
+behindern,2,Bindern bindern,internal
+belle,3,Bälle beleihe bälle,internal
+bellen,5,Beleihen Bällen beleihen beliehen bällen,internal
+bestehende,2,Bestände bestände,internal
+bestehenden,2,Beständen beständen,internal
+beugen,1,beäugen,internal
+bewährte,1,bewahrte,internal
+bieber,3,Biber bibber biber,internal
+blühen,5,Blähen Bohlen blähen bohlen buhlen,internal
+bohren,6,Bahren Brenn Brühen bahren brenn brühen,internal
+drehe,1,drohe,internal
+drohenden,1,drehenden,internal
+eingefügt,1,eingefugt,internal
+einsetzen,2,Einsätzen einsätzen,internal
+einstigen,2,Einstiegen einstiegen,internal
+empfohlen,3,Empfehlen empfahlen empfehlen,internal
+entsprechen,1,entsprächen,internal
+fantastischen,1,phantastischen,internal
+fasten,1,fassten,internal
+fehlenden,3,flehenden fliehenden fühlenden,internal
+flogen,1,flögen,internal
+flöte,2,Flotte flotte,internal
+forderten,1,förderten,internal
+frohes,5,Fress Fräs fress fräs frühes,internal
+frühesten,2,frohesten frästen,internal
+färben,2,Verben verben,internal
+führenden,1,fahrenden,internal
+führender,1,fahrender,internal
+gedruckten,1,gedrückten,internal
+geehrte,5,Gerte gerte geruhte gerührte gärte,internal
+geforderte,1,geförderte,internal
+gefühlte,1,gefehlte,internal
+gelte,2,gellte gälte,internal
+geographische,1,geografische,internal
+gerechten,1,gerächten,internal
+gerieten,1,geritten,internal
+geschehen,4,Gässchen geschahen geschähen gässchen,internal
+gesünder,1,gesunder,internal
+gewandt,1,gewannt,internal
+gewohnten,2,gewähnten gewöhnten,internal
+hausen,2,Haussen haussen,internal
+hold,1,holt,internal
+hopp,1,hob,internal
+hüten,2,Hütten hütten,internal
+kill,2,Kiel kiel,internal
+kippe,2,Kiepe kiepe,internal
+klaut,2,Kehllaut kehllaut,internal
+koche,2,Köche köche,internal
+kühne,3,Kähne kniehohe kähne,internal
+lehne,3,Löhne lohne löhne,internal
+matte,1,Mathe,internal
+münden,1,munden,internal
+passe,0,passee,inflection-only
+quälen,2,Quellen quellen,internal
+schaff,0,Schaf schaf,inflection-only
+schafften,2,Schaften schaften,internal
+schalte,1,schallte,internal
+schlechter,2,Schlächter schlächter,internal
+schließen,1,schlissen,internal
+sende,2,sehende säende,internal
+soooo,1,so,internal
+spiess,0,Spieß spieß,inflection-only
+staatliche,1,stattliche,internal
+staatlichen,1,stattlichen,internal
+starr,0,Star star,inflection-only
+teilnehmen,1,teilnahmen,internal
+verbrennt,2,verbohrend verbrühend,internal
+verbunden,1,verbünden,internal
+vergrösserung,2,Vergrößerung vergrößerung,internal
+verlassen,1,verlasen,internal
+verliehen,2,Verleihen verleihen,internal
+verließen,2,Verliesen verliesen,internal
+vernehmen,1,vernahmen,internal
+verschließen,1,verschlissen,internal
+verweise,1,verwaise,internal
+verwenden,1,verwehenden,internal
+vorzugehen,1,fortzugehen,internal
+weissrussland,2,Weißrussland weißrussland,internal
+weiterführende,1,weiterfahrende,internal
+wohle,2,wähle wühle,internal
+wohnten,1,wähnten,internal
+wusstest,2,wüsstest wüstest,internal
+wählten,1,wühlten,internal
+ziehst,1,zähst,internal
+äste,1,eheste,internal
+überführt,3,überfahrt überfuhrt überfährt,internal
+überlassen,1,überlasen,internal

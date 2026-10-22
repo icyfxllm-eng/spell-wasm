@@ -42,6 +42,7 @@ pub fn grade(lang: &str, kid: bool, typed: &str, entry: &str, tier: Tier) -> boo
         || crate::homophones::accepts(lang, word, typed)
         || (lang == consts::EN && crate::variants::accepts(word, typed))
         // The Impossible trap word: its reviewed second spellings (comptroller / controller) count here too.
+        || (lang == consts::RU && crate::impossible::engine::grade(lang, typed, word))
         || crate::impossible::engine::accepted_alternates(lang, word).iter().any(|a| crate::norm::same_answer(lang, typed, a))
 }
 
