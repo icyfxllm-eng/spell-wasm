@@ -1,0 +1,158 @@
+pool_word,n_internal_twins,twins_sample,kind
+가마,1,감아,internal
+각인,1,깎인,internal
+갈비,1,갈피,internal
+강자,1,강짜,internal
+경멸,1,격멸,internal
+고고,1,꼬꼬,internal
+곡물,1,공물,internal
+공명,1,곡명,internal
+공자,1,공짜,internal
+공채,1,공제,internal
+구비,1,굽이,internal
+구토,1,구도,internal
+군청,1,군정,internal
+권투,1,권두,internal
+기동,1,기통,internal
+기질,1,끼칠,internal
+기체,2,기재 기제,internal
+기피,1,깊이,internal
+깔려,1,갈려,internal
+꽝,2,광 쾅,internal
+낯,3,낫 낮 낱,internal
+놓인,1,노인,internal
+느려,1,늘여,internal
+능동,1,능통,internal
+다친,3,다진 따진 타진,internal
+단단히,1,탄탄히,internal
+단련,1,딸년,internal
+달릴,1,딸릴,internal
+달인,1,다린,internal
+대교,1,태교,internal
+대국,1,태국,internal
+대두,1,태두,internal
+대문,1,때문,internal
+대인,1,떼인,internal
+덧,1,덫,internal
+도보,1,도포,internal
+따를,1,다를,internal
+뗄,3,댈 델 땔,internal
+뜬,2,든 튼,internal
+띄워,1,틔워,internal
+마차,1,맞아,internal
+만주,1,만추,internal
+매기,1,매끼,internal
+매운,1,메운,internal
+메카,1,메가,internal
+문체,2,문재 문제,internal
+밀집,1,밀짚,internal
+박자,1,박차,internal
+박혀,1,밝혀,internal
+박힌,1,밝힌,internal
+반도,1,판도,internal
+발각,1,발칵,internal
+발탁,2,발딱 팔딱,internal
+배분,1,베푼,internal
+밸,3,벨 뺄 팰,internal
+벌여,1,버려,internal
+본데,1,본때,internal
+본드,1,폰트,internal
+부제,2,부재 부채,internal
+분수,1,푼수,internal
+불려,1,풀려,internal
+불빛,1,풀빛,internal
+비어,2,삐어 피어,internal
+비켜,3,비겨 비껴 피겨,internal
+뽕,1,봉,internal
+뾰족,1,뾰쪽,internal
+사이다,2,싸이다 쌓이다,internal
+상동,1,상통,internal
+상수,1,쌍수,internal
+서둘러,1,서툴러,internal
+서재,1,서체,internal
+서클,2,섞을 썩을,internal
+섞여,1,썩여,internal
+섞인,1,썩인,internal
+세울,1,새울,internal
+소동,2,소똥 소통,internal
+소정,1,소청,internal
+소피,1,소비,internal
+수반,1,수판,internal
+수제,2,수재 수채,internal
+순차,1,순자,internal
+시조,1,시초,internal
+실증,1,싫증,internal
+쏙,1,속,internal
+아사,1,앗아,internal
+애칭,1,에칭,internal
+양대,1,양태,internal
+여보,1,여포,internal
+연패,1,연배,internal
+위촉,1,위쪽,internal
+유체,2,유제 유채,internal
+이지,1,이치,internal
+인척,1,인적,internal
+일전,1,일천,internal
+자진,1,차진,internal
+자질,1,차질,internal
+작물,1,장물,internal
+잠수,1,참수,internal
+잠옷,1,자못,internal
+재기,1,제기,internal
+재발,1,제발,internal
+재외,2,제외 체외,internal
+저분,1,처분,internal
+전복,1,전폭,internal
+절도,1,철도,internal
+정제,1,정체,internal
+제복,1,재복,internal
+제지,1,재치,internal
+조그만,2,쪼그만 쪼끄만,internal
+조조,1,초조,internal
+죄악,1,최악,internal
+줄일,2,주릴 추릴,internal
+중추,1,충주,internal
+지울,2,찌울 치울,internal
+지자체,1,지자제,internal
+지질,2,지칠 치질,internal
+지퍼,2,집어 짚어,internal
+징징,2,찡찡 칭칭,internal
+짤,2,잘 찰,internal
+쫄,1,졸,internal
+차마,1,참아,internal
+착,2,작 짝,internal
+착오,1,차고,internal
+창구,2,장구 짱구,internal
+채색,1,재색,internal
+처해,1,저해,internal
+척도,1,적도,internal
+첩,2,접 쩝,internal
+체질,3,재질 제칠 째질,internal
+총체,2,총재 총채,internal
+추산,1,주산,internal
+추종,2,주종 주총,internal
+출자,1,줄자,internal
+춰,1,줘,internal
+치사,1,지사,internal
+치타,3,지다 찌다 치다,internal
+코딩,1,코팅,internal
+쾌,4,괘 궤 꽤 꾀,internal
+쿵,1,궁,internal
+키운,2,기운 끼운,internal
+탄산,1,단산,internal
+토록,1,도록,internal
+통지,2,동지 통치,internal
+통틀,1,동틀,internal
+통행,1,동행,internal
+퇴진,1,뒈진,internal
+트인,1,뜨인,internal
+파동,1,바통,internal
+팍,3,박 밖 빡,internal
+팔꿈치,1,발꿈치,internal
+펀드,1,번트,internal
+편해,1,변해,internal
+포화,1,보화,internal
+푸딩,1,부팅,internal
+피난,1,비난,internal
+필연,1,비련,internal
+항문,1,학문,internal

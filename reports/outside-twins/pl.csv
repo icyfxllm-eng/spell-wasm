@@ -1,0 +1,669 @@
+pool_word,n_internal_twins,twins_sample,kind
+aborcję,0,aborcje,inflection-only
+absurdalne,0,absurdalnie,inflection-only
+aktorką,0,aktorko,inflection-only
+alternatywne,0,alternatywnie,inflection-only
+ambicje,0,ambicję,inflection-only
+aresztowania,0,aresztowana,inflection-only
+aresztowano,0,aresztowaną,inflection-only
+atrakcje,0,atrakcję,inflection-only
+atrakcją,0,atrakcjo,inflection-only
+atrakcyjne,0,atrakcyjnie,inflection-only
+autorką,0,autorko,inflection-only
+babcie,1,papcie,internal
+babki,1,papki,internal
+badaniach,2,badanach padaniach,internal
+bakterie,0,bakterię,inflection-only
+bankowe,1,pankowe,internal
+baru,2,parru paru,internal
+bałem,2,balem palem,internal
+beczki,1,pęczki,internal
+beton,1,pedon,internal
+betonu,1,pedonu,internal
+bieżącego,2,bieszącego pierzącego,internal
+bieżących,2,bieszących pierzących,internal
+bin,1,pin,internal
+biorących,1,piorących,internal
+bit,3,bid pit pitt,internal
+biurem,1,piórem,internal
+biurko,1,piórko,internal
+blogi,2,bloki błogi,internal
+blokowanie,1,blogowanie,internal
+boba,1,popa,internal
+bobby,2,boby popy,internal
+boczne,2,pocznie pocznę,internal
+bogowie,1,pąkowie,internal
+boimy,1,poimy,internal
+boleć,2,poleć połeć,internal
+boom,1,bom,internal
+boską,0,bosko,inflection-only
+brałem,1,prałem,internal
+brednie,0,brednię,inflection-only
+buddy,4,budy buty pudy póty,internal
+budka,1,butka,internal
+burzę,3,busze pusze puszę,internal
+bus,4,buz buś buź póz,internal
+będą,3,beto betą pęto,internal
+błotem,2,płodem płotem,internal
+błoto,2,ploto plotą,internal
+błyskawicznie,0,błyskawiczne,inflection-only
+castro,0,castrą,inflection-only
+cechuje,0,cechuję,inflection-only
+charakteryzuje,0,charakteryzuję,inflection-only
+che,2,he hę,internal
+chi,1,hi,internal
+chirurgii,0,chirurgi,inflection-only
+ciekawsze,1,ciekawże,internal
+ciemna,0,ciemnia,inflection-only
+ciemnej,1,ciemniej,internal
+cienie,0,cienię,inflection-only
+ciepłą,0,ciepło,inflection-only
+ciesze,2,ciężę ciężże,internal
+corocznie,0,coroczne,inflection-only
+czasowo,0,czasową,inflection-only
+czekania,0,czekana,inflection-only
+czekanie,0,czekane,inflection-only
+czerpie,0,czerpię,inflection-only
+czyje,2,cyje cyję,internal
+czynników,1,cyników,internal
+częściowo,0,częściową,inflection-only
+darmową,0,darmowo,inflection-only
+dary,1,tary,internal
+dałeś,1,tałes,internal
+definicje,0,definicję,inflection-only
+definitywnie,0,definitywne,inflection-only
+delikatne,0,delikatnie,inflection-only
+dobór,1,topór,internal
+docenia,1,toczenia,internal
+dodatkowo,0,dodatkową,inflection-only
+dofinansowania,0,dofinansowana,inflection-only
+dog,3,dok tog tok,internal
+dokonane,0,dokonanie,inflection-only
+dokładnie,0,dokładne,inflection-only
+dolary,1,tolary,internal
+dolina,0,dolinna,inflection-only
+dopasowanie,0,dopasowane,inflection-only
+doradcy,0,doradczy,inflection-only
+doradcą,0,doradco doradczą,inflection-only
+dostawca,0,dostawcza,inflection-only
+dostało,0,dostałą,inflection-only
+dotarli,1,dodarli,internal
+dowiaduje,0,dowiaduję,inflection-only
+dowolnej,1,dowolniej,internal
+drastycznie,0,drastyczne,inflection-only
+drogowe,1,drągowe,internal
+drogowych,1,drągowych,internal
+dumnie,0,dumne,inflection-only
+dusz,2,tusz tuż,internal
+duszą,5,dużo dużą turzą tuszo tuszą,internal
+dwukrotnie,0,dwukrotne,inflection-only
+dystansie,0,dystanse,inflection-only
+dziedzinie,0,dziedzinę,inflection-only
+dzielnie,0,dzielne,inflection-only
+dziwo,0,dziwą,inflection-only
+ee,2,e ę,internal
+efektywnie,0,efektywne,inflection-only
+ekologicznej,1,egologicznej,internal
+ekologii,1,egologii,internal
+fa,2,va wa,internal
+fabułę,1,fabule,internal
+falę,5,fale vale wale walę wwalę,internal
+fiat,1,wiat,internal
+finansowane,0,finansowanie,inflection-only
+fit,1,wid,internal
+flag,1,flak,internal
+formach,1,wormach,internal
+formalnie,0,formalne,inflection-only
+funkcjonuje,0,funkcjonuję,inflection-only
+funkcją,0,funkcjo,inflection-only
+gazetach,1,kasetach,internal
+generalnej,1,generalniej,internal
+godna,1,kotna,internal
+gospodarcze,0,gospodarce,inflection-only
+gotowania,4,kodowana kodowania kotowana kotowania,internal
+grający,1,krający,internal
+groby,1,kropy,internal
+grono,0,gronią,inflection-only
+grosz,2,grąż krąż,internal
+gumy,1,kumy,internal
+guru,1,kuru,internal
+górna,1,kurna,internal
+górnicy,1,kórniccy,internal
+górnik,1,kurnik,internal
+górny,1,kurny,internal
+górski,1,kurski,internal
+gębę,1,kępę,internal
+głosami,4,glosami glossami kłosami kłosiami,internal
+głosowania,4,glosowana glosowania kłosowana kłosowania,internal
+głosował,2,glosował kłosował,internal
+głosowało,2,glosowało kłosowało,internal
+głosujących,2,glosujących kłosujących,internal
+głownie,1,klownie,internal
+głupią,0,głupio,inflection-only
+hale,4,chale chałę halle halę,internal
+han,1,chan,internal
+handlową,0,handlowo,inflection-only
+historyczne,0,historycznie,inflection-only
+igrzyskach,1,ikrzyskach,internal
+ilustracje,0,ilustrację,inflection-only
+informacje,0,informację,inflection-only
+inteligentne,0,inteligentnie,inflection-only
+intensywnej,1,intensywniej,internal
+jebana,0,jebania,inflection-only
+jednocześnie,1,jednoczesne,internal
+jezior,1,jęzor,internal
+jeziorze,1,jęzorze,internal
+kabel,1,kapel,internal
+kamienica,1,kamiennicza,internal
+kasę,3,gazie gazę kasie,internal
+kategorię,0,kategorie,inflection-only
+kawie,3,gafie gawie gawię,internal
+kierownicy,0,kierowniczy,inflection-only
+kilkakrotnie,0,kilkakrotne,inflection-only
+kin,2,gin giń,internal
+klasach,1,głazach,internal
+klatka,2,gładka kładka,internal
+klubach,2,głupach klupach,internal
+kluczy,1,kluccy,internal
+koalicję,0,koalicje,inflection-only
+kole,4,gole golę gołe kolę,internal
+koledze,1,kolędzie,internal
+komisją,0,komisjo,inflection-only
+koncertową,0,koncertowo,inflection-only
+konieczne,0,koniecznie,inflection-only
+koniu,1,gonu,internal
+konkurencję,0,konkurencje,inflection-only
+konsekwencją,0,konsekwencjo,inflection-only
+konstrukcję,0,konstrukcje,inflection-only
+kontynuuje,0,kontynuuję,inflection-only
+korporacje,0,korporację,inflection-only
+kosmiczne,0,kosmicznie,inflection-only
+kosztowne,0,kosztownie,inflection-only
+kotem,2,kodem kątem,internal
+kotka,1,kątka,internal
+końcowe,1,gońcowe,internal
+kradnie,0,kradnę,inflection-only
+krainie,0,krainę,inflection-only
+kropki,1,grobki,internal
+krytyczne,0,krytycznie,inflection-only
+krytyką,0,krytyko,inflection-only
+krąży,2,groszy grąży,internal
+kręgach,1,grekach,internal
+kształcie,1,kształćcie,internal
+kule,4,gule gulę gułę kulę,internal
+kulturalnej,1,kulturalniej,internal
+kulą,6,gulo gulą guło gułą kulo kuło,internal
+kupienia,1,gubienia,internal
+kupowanie,0,kupowane,inflection-only
+kółka,3,gulka gółka kulka,internal
+laty,3,lady łady łaty,internal
+law,2,laf ław,internal
+liberalnej,1,liberalniej,internal
+likwidację,0,likwidacje,inflection-only
+literą,0,litero,inflection-only
+lokalizację,0,lokalizacje,inflection-only
+losem,1,łosiem,internal
+luki,2,ługi łuki,internal
+maksymalnie,0,maksymalne,inflection-only
+maluje,0,maluję,inflection-only
+mangi,1,mańki,internal
+masie,3,masse masę mazie,internal
+masową,1,maziową,internal
+mass,2,mas maź,internal
+maszynę,0,maszynie,inflection-only
+mego,4,mekko mekką męko męką,internal
+mentalnie,0,mentalne,inflection-only
+metalowe,1,medalowe,internal
+misia,2,misa mizia,internal
+mocnych,1,mącznych,internal
+modlę,1,modłę,internal
+modzie,0,modzę,inflection-only
+molestowanie,0,molestowane,inflection-only
+monet,1,monnet,internal
+motto,3,modo modą moto,internal
+moście,1,mośćcie,internal
+msze,3,mrze mszę mżę,internal
+mylą,1,myło,internal
+mądrego,1,modrego,internal
+męską,0,męsko,inflection-only
+mężczyźnie,1,mężczyznę,internal
+nada,1,nadda,internal
+najmocniej,1,najmączniej,internal
+nakazuje,2,nagazuje nagazuję,internal
+nakłada,1,nagłada,internal
+napoje,1,naboje,internal
+napojów,1,nabojów,internal
+następcy,0,następczy,inflection-only
+następuje,0,następuję,inflection-only
+nauczania,0,nauczana,inflection-only
+nauczę,0,nauce nauczce,inflection-only
+nawiązania,0,nawiązana,inflection-only
+nawiązuje,0,nawiązuję,inflection-only
+nazwana,0,nazwania,inflection-only
+nazwała,1,nazwala,internal
+niebezpiecznie,0,niebezpieczne,inflection-only
+niebieska,1,niepieska,internal
+niebieskich,1,niepieskich,internal
+niedopuszczalne,0,niedopuszczalnie,inflection-only
+niejako,0,niejaką,inflection-only
+nieliczne,0,nielicznie,inflection-only
+nieprzyjemne,0,nieprzyjemnie,inflection-only
+niewygodne,0,niewygodnie,inflection-only
+niezbędne,0,niezbędnie,inflection-only
+niezwykle,1,niezwykłe,internal
+niezwłocznie,0,niezwłoczne,inflection-only
+notowania,0,notowana,inflection-only
+obowiązkowo,0,obowiązkową,inflection-only
+obrazie,0,obrazę,inflection-only
+obrażanie,0,obrażane,inflection-only
+obsada,1,obsiada,internal
+obwodzie,0,obwodzę,inflection-only
+oczekiwanie,0,oczekiwane,inflection-only
+oczyszczania,0,oczyszczana,inflection-only
+odbiorcy,0,odbiorczy,inflection-only
+oddzielnie,0,oddzielne,inflection-only
+odkryto,0,odkrytą,inflection-only
+odnotowano,0,odnotowaną,inflection-only
+odpowiednio,0,odpowiednią,inflection-only
+odzyskanie,0,odzyskane,inflection-only
+oficjalnie,0,oficjalne,inflection-only
+ognisko,1,oknisko,internal
+ograniczoną,0,ograniczono,inflection-only
+ogórek,1,okurek,internal
+ogłoszono,0,ogłoszoną,inflection-only
+opadają,1,obadają,internal
+opery,1,opeery,internal
+opiekuje,0,opiekuję,inflection-only
+opierają,1,obierają,internal
+opierać,1,obierać,internal
+opodatkowania,0,opodatkowana,inflection-only
+opowiadania,0,opowiadana,inflection-only
+opozycją,0,opozycjo,inflection-only
+opracowane,0,opracowanie,inflection-only
+opracowania,0,opracowana,inflection-only
+oprogramowania,0,oprogramowana,inflection-only
+opublikowana,0,opublikowania,inflection-only
+opublikowane,0,opublikowanie,inflection-only
+organizacyjne,0,organizacyjnie,inflection-only
+osiągnięcia,1,osiąknięcia,internal
+osiągnięciem,1,osiąknięciem,internal
+osiągnęła,1,osiąknęła,internal
+ostatecznie,0,ostateczne,inflection-only
+osłony,0,osłonny,inflection-only
+otrzymuje,0,otrzymuję,inflection-only
+owo,1,ową,internal
+oz,2,os oś,internal
+paczek,2,baczek pacek,internal
+padają,1,badają,internal
+panowania,2,banowana banowania,internal
+paradoksalnie,0,paradoksalne,inflection-only
+parków,1,barków,internal
+pasją,0,pasjo,inflection-only
+pasować,2,basować bazować,internal
+pasów,4,bassów basów passów paziów,internal
+pensję,0,pensje,inflection-only
+pieca,0,piecza,inflection-only
+piece,0,piecze pieczę,inflection-only
+pierwotnie,0,pierwotne,inflection-only
+pijesz,1,bijesz,internal
+piw,2,biff pif,internal
+piąta,1,biota,internal
+placki,1,płaczki,internal
+plamy,1,błamy,internal
+planowanie,0,planowane,inflection-only
+plażę,1,blasze,internal
+plotka,3,blotka błotka płotka,internal
+pobić,1,popić,internal
+pobrania,2,poprana poprania,internal
+początkowo,0,początkową,inflection-only
+poda,3,boota bota podda,internal
+podali,1,poddali,internal
+podanych,1,poddanych,internal
+poddany,1,podany,internal
+poddał,1,podał,internal
+podejmowane,2,poodejmowane poodejmowanie,internal
+podejmują,1,poodejmują,internal
+podpisuje,0,podpisuję,inflection-only
+podstawie,0,podstawię,inflection-only
+pokazania,0,pokazana,inflection-only
+pokolenia,1,pogolenia,internal
+pokładzie,1,pogładzę,internal
+polach,2,poolach połach,internal
+politycznej,1,polityczniej,internal
+popierać,3,pobierać poobierać poopierać,internal
+popierał,3,pobierał poobierał poopierał,internal
+popularne,0,popularnie,inflection-only
+porażką,0,porażko,inflection-only
+porcie,1,borcie,internal
+porto,3,bordo borto bortą,internal
+poruszania,0,poruszana,inflection-only
+porwanie,0,porwane,inflection-only
+poród,2,borut porut,internal
+porównuje,0,porównuję,inflection-only
+posiadają,2,poosiadają pozadają,internal
+posiadasz,1,poosiadasz,internal
+posiadała,1,poosiadała,internal
+posiadały,1,poosiadały,internal
+postanowiono,0,postanowioną,inflection-only
+postępuje,0,postępuję,inflection-only
+poszczególne,0,poszczególnie poszczególnię,inflection-only
+poszukiwania,0,poszukiwana,inflection-only
+pot,4,bod boot bot pod,internal
+potajemnie,0,potajemne,inflection-only
+potraw,0,potraf,inflection-only
+potęgi,1,bodegi,internal
+powierzchnię,0,powierzchnie,inflection-only
+powiesić,1,powięzić,internal
+powitanie,0,powitane,inflection-only
+powstanie,0,powstanę,inflection-only
+powstrzymuje,0,powstrzymuję,inflection-only
+powtórzę,0,powtórzże,inflection-only
+poznanie,0,poznane,inflection-only
+pozostaje,0,pozostaję,inflection-only
+pozostaną,0,pozostano,inflection-only
+pozostało,0,pozostałą,inflection-only
+poświęcił,1,poświecił,internal
+praktycznie,0,praktyczne,inflection-only
+prawdopodobnie,0,prawdopodobne,inflection-only
+prawe,1,bravę,internal
+preferencje,0,preferencję,inflection-only
+presją,0,presjo,inflection-only
+prezentowane,0,prezentowanie,inflection-only
+produkcję,0,produkcje,inflection-only
+programowanie,0,programowane,inflection-only
+promocje,0,promocję,inflection-only
+promowania,2,bromowana bromowania,internal
+proporcje,0,proporcję,inflection-only
+proszku,3,brożku prożku prążku,internal
+prowadzono,0,prowadzoną,inflection-only
+przebiega,1,przepieka,internal
+przechowywane,0,przechowywanie,inflection-only
+przeciętnie,0,przeciętne,inflection-only
+przedniej,1,przędnej,internal
+przekazywania,0,przekazywana,inflection-only
+przekaż,1,brzękasz,internal
+przemocą,0,przemoczą,inflection-only
+przeniesiono,0,przeniesioną,inflection-only
+przepiękne,2,przebiegnie przebiegnę,internal
+przeprowadzono,0,przeprowadzoną,inflection-only
+przestrzeni,0,przestrzenni,inflection-only
+przeszedł,1,przerzedł,internal
+przeszkodzie,0,przeszkodzę,inflection-only
+przetwarzania,0,przetwarzana,inflection-only
+prześladowania,0,prześladowana,inflection-only
+przeżywa,1,przeszywa,internal
+przyczyną,0,przyczynią przyczynną przyczyno,inflection-only
+przygotowania,0,przygotowana,inflection-only
+przyjmuje,0,przyjmuję,inflection-only
+przyjęto,0,przyjętą,inflection-only
+przykrywką,2,przygrywko przygrywką,internal
+przypisuje,0,przypisuję,inflection-only
+przyznania,0,przyznana,inflection-only
+publicznie,0,publiczne,inflection-only
+płace,2,placce place,internal
+płaczą,0,płaco płacą,inflection-only
+płonie,4,błonie błonę plonie płonne,internal
+płot,3,błot błąd plot,internal
+race,3,racze raczę racę,internal
+rade,2,radę ratę,internal
+ratowania,2,radowana radowania,internal
+ratowanie,2,radowane radowanie,internal
+realnej,1,realniej,internal
+regularnie,0,regularne,inflection-only
+rejs,1,rejz,internal
+religie,0,religię,inflection-only
+religią,0,religio,inflection-only
+restauracje,0,restaurację,inflection-only
+rewolucję,0,rewolucje,inflection-only
+robieniu,1,ropieniu,internal
+robią,1,rąbią,internal
+robotnicy,0,robotniczy,inflection-only
+romantyczne,0,romantycznie,inflection-only
+rowery,1,rovery,internal
+rowerów,1,roverów,internal
+rozczarowanie,0,rozczarowane,inflection-only
+rozegrane,0,rozegranie,inflection-only
+rozegrano,0,rozegraną,inflection-only
+rozgłos,0,rozgłoś,inflection-only
+rozpoczęto,0,rozpoczętą,inflection-only
+rozpoznanie,0,rozpoznane,inflection-only
+rozsądne,0,rozsądnie,inflection-only
+rozwiązania,0,rozwiązana,inflection-only
+rozwiązanie,0,rozwiązane,inflection-only
+rozwiązuje,0,rozwiązuję,inflection-only
+rozwiązywania,0,rozwiązywana,inflection-only
+ruski,1,rózgi,internal
+rys,2,ryz ryś,internal
+rzuci,1,żuci,internal
+równocześnie,1,równoczesne,internal
+równolegle,1,równoległe,internal
+różnej,1,różniej,internal
+samodzielnie,0,samodzielne,inflection-only
+sedno,2,setną zetną,internal
+siatki,2,sadki zadki,internal
+skale,1,skałę,internal
+skarby,1,skarpy,internal
+skutkuje,0,skutkuję,inflection-only
+socjologii,0,socjologi,inflection-only
+soku,2,siągu sągu,internal
+son,2,zioń zon,internal
+spadać,1,zbadać,internal
+spadło,0,spadłą,inflection-only
+specjalistą,0,specjalisto,inflection-only
+spokojne,0,spokojnie,inflection-only
+spotkania,0,spotkana,inflection-only
+spotkanie,0,spotkane,inflection-only
+spowodowana,0,spowodowania,inflection-only
+spowodowane,0,spowodowanie,inflection-only
+społeczne,0,społecznie,inflection-only
+sprawowania,0,sprawowana,inflection-only
+sprzedania,0,sprzedana,inflection-only
+sprzątania,0,sprzątana,inflection-only
+sprzątanie,0,sprzątane,inflection-only
+srebrne,0,srebrnie,inflection-only
+starcia,1,zdarcia,internal
+starciu,1,zdarciu,internal
+stawu,1,stafu,internal
+stoisz,1,zdoisz,internal
+stopniowo,0,stopniową,inflection-only
+stosowania,0,stosowana,inflection-only
+stosunkowo,0,stosunkową,inflection-only
+strategie,0,strategię,inflection-only
+stratą,4,strado stradą zdrado zdradą,internal
+stworzono,0,stworzoną,inflection-only
+stężenia,1,zderzenia,internal
+stężenie,1,zderzenie,internal
+sugestie,0,sugestię,inflection-only
+support,1,suport,internal
+swój,1,zwój,internal
+symbolizuje,0,symbolizuję,inflection-only
+szczególnie,0,szczególne,inflection-only
+szczątki,1,szczotki,internal
+szczęście,1,szczęśćcie,internal
+tacie,2,dacie dacię,internal
+tango,3,danko tanko tanką,internal
+tech,1,dech,internal
+techniczne,0,technicznie,inflection-only
+techniką,0,techniko,inflection-only
+technologii,0,technologi,inflection-only
+technologią,0,technologio,inflection-only
+tendencję,0,tendencje,inflection-only
+teorią,0,teorio,inflection-only
+tlen,1,tleń,internal
+tomek,1,domek,internal
+towarzysz,2,dowarzysz doważysz,internal
+trafisz,1,trawisz,internal
+trawie,2,trafie trafię,internal
+trawy,1,trafy,internal
+trendów,1,trentów,internal
+trenować,1,drenować,internal
+trudną,0,trudnią trudno,inflection-only
+trudu,1,drutu,internal
+trwałe,2,drwale trwale,internal
+trzykrotnie,0,trzykrotne,inflection-only
+twardo,0,twardą,inflection-only
+tłumie,0,tłumię,inflection-only
+ubierać,1,upierać,internal
+uchwałą,1,uchwalą,internal
+uchwałę,2,uchwale uchwalę,internal
+ucieczce,0,uciecze,inflection-only
+ugrupowania,0,ugrupowana,inflection-only
+ukończono,0,ukończoną,inflection-only
+umieszczono,0,umieszczoną,inflection-only
+unią,2,unio uno,internal
+upadnie,0,upadnę,inflection-only
+uruchomiono,0,uruchomioną,inflection-only
+usunięto,0,usuniętą,inflection-only
+usuwania,0,usuwana,inflection-only
+utrzymanie,0,utrzymane,inflection-only
+utrzymywanie,0,utrzymywane,inflection-only
+utworzono,0,utworzoną,inflection-only
+uzyskane,0,uzyskanie,inflection-only
+uzyskania,0,uzyskana,inflection-only
+użyj,1,uszyj,internal
+wada,3,fata wata watta,internal
+wahania,0,wahana,inflection-only
+walcz,2,falc wałcz,internal
+walczyła,1,wałczyła,internal
+wang,1,fang,internal
+wanna,4,fana vana wana wania,internal
+wcześniej,1,wczesnej,internal
+wesoło,0,wesołą,inflection-only
+wiarą,0,wiaro,inflection-only
+widnieje,0,widnieję,inflection-only
+wieje,2,wwieje wwieję,internal
+wielokrotnie,0,wielokrotne,inflection-only
+wierz,2,wiesz wież,internal
+wierzących,1,więżących,internal
+wilka,1,wilga,internal
+windy,2,finty winty,internal
+wiążą,1,wwiążą,internal
+więzienia,3,wiezienia więzienna wwiezienia,internal
+więzieniu,2,wiezieniu wwiezieniu,internal
+wo,1,wą,internal
+wodach,4,foodach fotach votach wotach,internal
+worka,1,forga,internal
+wpisane,0,wpisanie,inflection-only
+wprowadzono,0,wprowadzoną,inflection-only
+wschodzie,0,wschodzę,inflection-only
+wspaniałej,1,wspanialej,internal
+wspierający,1,wzbierający,internal
+wspierał,1,wzbierał,internal
+wspomnę,0,wspomnie,inflection-only
+współpracę,0,współprace,inflection-only
+wstanie,0,wstanę,inflection-only
+wstydzę,0,wstydzie,inflection-only
+wybaczyć,1,wypaczyć,internal
+wybraliśmy,1,wypraliśmy,internal
+wybrano,2,wyprano wypraną,internal
+wybudowano,0,wybudowaną,inflection-only
+wycofanie,0,wycofane,inflection-only
+wydawania,0,wydawana,inflection-only
+wygrywają,1,wykrywają,internal
+wygłosił,1,wykłosił,internal
+wykonywane,0,wykonywanie,inflection-only
+wykonywania,0,wykonywana,inflection-only
+wykorzystania,0,wykorzystana,inflection-only
+wykorzystuje,0,wykorzystuję,inflection-only
+wykorzystywana,0,wykorzystywania,inflection-only
+wykorzystywane,0,wykorzystywanie,inflection-only
+wykładowcą,0,wykładowco wykładowczą,inflection-only
+wykładów,1,wygładów,internal
+wymagania,1,wymakania,internal
+wymagało,1,wymakało,internal
+wyobraźnię,0,wyobraźnie,inflection-only
+wyrażania,0,wyrażana,inflection-only
+występuje,0,występuję,inflection-only
+wysłane,0,wysłanie,inflection-only
+wyłącznie,0,wyłączne,inflection-only
+wyśle,0,wyślę,inflection-only
+wzajemne,0,wzajemnie,inflection-only
+wzniesiono,0,wzniesioną,inflection-only
+wzrośnie,1,wzrosnę,internal
+wóz,4,fus wwóz wwóź wóź,internal
+własnoręcznie,0,własnoręczne,inflection-only
+włos,1,flos,internal
+zabieram,1,zapieram,internal
+zabierzcie,1,zapierzcie,internal
+zabijając,1,zapijając,internal
+zabiorą,1,zapiorą,internal
+zabito,2,zapito zapitą,internal
+zabudowania,0,zabudowana,inflection-only
+zachodzie,0,zachodzę,inflection-only
+zachowania,0,zachowana,inflection-only
+zaczynają,1,zaczyniają,internal
+zagrożenia,1,zakrążenia,internal
+zagrożenie,1,zakrążenie,internal
+zainteresowania,0,zainteresowana,inflection-only
+zainteresuje,0,zainteresuję,inflection-only
+zając,1,ziając,internal
+zakazać,2,zagasać zakasać,internal
+zakochana,0,zakochania,inflection-only
+zakończono,0,zakończoną,inflection-only
+zakładzie,2,zagładzie zagładzę,internal
+zaletą,0,zaleto,inflection-only
+zamierzają,1,zamieszają,internal
+zamieszania,2,zamierzana zamierzania,internal
+zamieszkuje,0,zamieszkuję,inflection-only
+zapisuje,0,zapisuję,inflection-only
+zaplanowano,0,zaplanowaną,inflection-only
+zapotrzebowania,0,zapotrzebowana,inflection-only
+zaprojektowane,0,zaprojektowanie,inflection-only
+zarejestrowane,0,zarejestrowanie,inflection-only
+zarządzania,0,zarządzana,inflection-only
+zaskakująco,0,zaskakującą,inflection-only
+zastosowanie,0,zastosowane,inflection-only
+zawieszony,1,zawierzony,internal
+zawodnicy,0,zawodniczy,inflection-only
+zawodową,0,zawodowo,inflection-only
+zbudowana,0,zbudowania,inflection-only
+zbudowane,0,zbudowanie,inflection-only
+zbudowano,0,zbudowaną,inflection-only
+zdalnie,0,zdalne,inflection-only
+zdarzało,1,starzało,internal
+zdałam,1,stałam,internal
+zdałem,1,stałem,internal
+zdecydowanie,0,zdecydowane,inflection-only
+zdecydowano,0,zdecydowaną,inflection-only
+zgaduję,2,skatuje skatuję,internal
+zginie,2,skinie skinę,internal
+zginęły,1,skinęły,internal
+zgonu,1,skonu,internal
+zgonów,1,skonów,internal
+ziarno,3,sarnią sarno sarną,internal
+zielono,0,zieloną,inflection-only
+zlikwidowano,0,zlikwidowaną,inflection-only
+zmagania,2,smagana smagania,internal
+zmieniono,0,zmienioną,inflection-only
+znaleziono,0,znalezioną,inflection-only
+zorganizowano,0,zorganizowaną,inflection-only
+zrealizowane,0,zrealizowanie,inflection-only
+zróżnicowane,0,zróżnicowanie,inflection-only
+zupy,1,siupy,internal
+złotem,3,slotem słodem zlotem,internal
+złóż,1,służ,internal
+łamania,0,łamana,inflection-only
+łamią,2,lamio lamią,internal
+łap,1,lab,internal
+łaskę,1,laskę,internal
+łuk,2,luk ług,internal
+łączna,0,łącznia,inflection-only
+ścieków,1,ściegów,internal
+ścigania,0,ścigana,inflection-only
+śladu,1,zładu,internal
+ślepy,3,sleepy słępy zlepy,internal
+ślicznie,0,śliczne,inflection-only
+śpij,2,spij zbij,internal
+śpisz,2,spisz spiż,internal
+świece,1,święcę,internal
+świeży,1,zwierzy,internal
+świąteczne,0,świątecznie,inflection-only
+świątynia,1,świątynna,internal
+świątynię,1,świątynne,internal
+świętą,0,święto,inflection-only
+żalu,2,szalu szału,internal
+żałuje,2,szaluje szaluję,internal
+żeś,4,rzez rzeź rzęs rzęź,internal
+żyd,1,żyt,internal
+żyj,1,szyj,internal
+żąda,1,szota,internal

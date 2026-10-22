@@ -86,12 +86,19 @@ pub fn accepted_alternates(lang: &str, word: &str) -> Vec<String> {
 ///
 /// Sound-alikes never need the accept-any layer: the pool builder removed every word
 /// with a valid competing spelling (I1), so exactly one spelling is right.
+/// Russian writes ё as е in ordinary print, and the dictionary writes the ё: both are the right spelling (the
+/// pool holds "актер", the dictionary has "актёр"). Voice cannot tell them apart, so both are accepted.
+fn yo_fold(s: &str) -> String {
+    crate::norm::fold_strict(s).replace('ё', "е")
+}
+
 pub fn grade(lang: &str, typed: &str, word: &str) -> bool {
     if CASE_STRICT.contains(&lang) {
         let strip = |s: &str| s.nfc().filter(|c| !c.is_whitespace()).collect::<String>();
         return strip(typed) == strip(word);
     }
     crate::norm::same_answer(lang, typed, word)
+        || (lang == crate::consts::RU && yo_fold(typed) == yo_fold(word))
         || accepted_alternates(lang, word).iter().any(|a| crate::norm::same_answer(lang, typed, a))
         || (lang == crate::consts::EN && crate::variants::accepts(word, typed))
 }
