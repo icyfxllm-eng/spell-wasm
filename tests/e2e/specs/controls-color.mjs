@@ -67,4 +67,47 @@ export async function run(browser, base, suite) {
       assert(ratio >= 4.5, `setup bar text contrast ${ratio.toFixed(2)} on a white pick`);
     } finally { await ctx.close(); }
   });
+
+  // --- Settings > Buttons ---
+  const btn = (page) => page.evaluate(() => {
+    const cs = (id) => getComputedStyle(document.getElementById(id));
+    return { check: cs('checkBtn').backgroundColor, done: cs('setDone').backgroundColor, ink: cs('checkBtn').color,
+      checkSize: cs('checkBtn').fontSize, doneSize: cs('setDone').fontSize };
+  });
+
+  await suite.test('Buttons colour: unset, primary buttons are the amber accent with dark text', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      const r = await btn(page);
+      assert(near(r.check, [255, 177, 77]) && r.done === r.check, `default fill ${JSON.stringify(r)}`);
+      assert(rgb(r.ink).every((x) => x < 80), `default text is not dark: ${r.ink}`);
+      assert(r.checkSize === '16.5px' && r.doneSize !== '16.5px', `only Check gets the big label: ${r.checkSize} / ${r.doneSize}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('Buttons colour: a swatch fills Check and Done, a dark pick flips the text light, and it survives a reload', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.evaluate(() => document.querySelector('#btnPick .theme-swatch[data-c="#46d6b8"]').click());
+      let r = await btn(page);
+      assert(near(r.check, [70, 214, 184]) && r.done === r.check, `teal did not reach both: ${JSON.stringify(r)}`);
+      await page.evaluate(() => { const i = document.getElementById('btnColorInput'); i.value = '#1a2a6c'; i.dispatchEvent(new Event('input')); });
+      r = await btn(page);
+      assert(near(r.check, [26, 42, 108]), `custom fill ${r.check}`);
+      assert(rgb(r.ink).every((x) => x > 200), `text on a dark fill is not light: ${r.ink}`);
+      await page.reload({ waitUntil: 'load' });
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      assert(near((await btn(page)).check, [26, 42, 108]), 'the pick did not survive a reload');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('Buttons colour: unset, the Japanese accent still reaches the buttons', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'ja' });
+    try {
+      const r = await btn(page);
+      // ja overrides color.accent to #ff8fab.
+      assert(near(r.check, [255, 143, 171]), `ja buttons are ${r.check}, not the ja accent`);
+    } finally { await ctx.close(); }
+  });
 }
+

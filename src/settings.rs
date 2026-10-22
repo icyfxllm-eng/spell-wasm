@@ -12,6 +12,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.bg_color = p.bg_color.unwrap_or_else(|| crate::tokens::COLOR_BG_USER.value.to_string());
     state.orb_color = p.orb_color.unwrap_or_else(|| crate::tokens::COLOR_ORB_CORE.value.to_string());
     state.controls_color = p.controls_color.unwrap_or_else(|| crate::tokens::COLOR_CONTROLS.value.to_string());
+    state.button_color = p.button_color.unwrap_or_default();
     state.last_lang = p.last_lang;
     state.kid = p.kid;
     state.readable = p.readable;
@@ -42,6 +43,7 @@ pub fn save_prefs(state: &AppState) {
         bg_color: Some(state.bg_color.clone()),
         orb_color: Some(state.orb_color.clone()),
         controls_color: Some(state.controls_color.clone()),
+        button_color: Some(state.button_color.clone()),
         last_lang: Some(state.lang.clone()),
         kid: state.kid,
         readable: state.readable,
@@ -219,12 +221,18 @@ const CONTROLS_SWATCHES: [(crate::tokens::Token, &str); 5] = [
 ];
 
 fn build_controls_swatches() {
-    let pick = dom::el("ctlPick");
+    build_swatches("ctlPick", &CONTROLS_SWATCHES);
+}
+
+/// Swatch buttons for a Settings colour row, from tokens, ahead of its custom
+/// picker. Built once.
+fn build_swatches(container: &str, swatches: &[(crate::tokens::Token, &str)]) {
+    let pick = dom::el(container);
     if pick.query_selector(".theme-swatch[data-c]").ok().flatten().is_some() {
         return;
     }
     let custom = pick.first_element_child();
-    for (tok, key) in CONTROLS_SWATCHES {
+    for &(tok, key) in swatches {
         let Ok(b) = dom::doc().create_element("button") else { continue };
         b.set_class_name("theme-swatch");
         let _ = b.set_attribute("type", "button");
@@ -234,6 +242,37 @@ fn build_controls_swatches() {
         let _ = b.set_attribute("data-i18n-aria", key);
         let _ = pick.insert_before(&b, custom.as_ref().map(|c| c.as_ref()));
     }
+}
+
+/// The Buttons colour: the fill of every primary (.btn-check) button. Empty
+/// means "follow the accent" -- the stylesheet defaults, which the ja/zh
+/// accent overrides reach. A picked colour gets light or dark text by actual
+/// contrast ratio, since a fill can be any brightness.
+pub fn set_button_color(app: &App, color: &str) {
+    build_button_swatches();
+    app.borrow_mut().button_color = color.to_string();
+    if color.is_empty() {
+        dom::set_css_var("--button-color", "var(--amber)");
+        dom::set_css_var("--button-ink", "var(--palette-on-gold-text)");
+    } else {
+        dom::set_css_var("--button-color", color);
+        dom::set_css_var("--button-ink", best_contrast_ink(color));
+        dom::input("btnColorInput").set_value(color);
+    }
+    sync_swatches("btnPick", ".theme-swatch[data-c]", color);
+    save_prefs(&app.borrow());
+}
+
+const BUTTON_SWATCHES: [(crate::tokens::Token, &str); 5] = [
+    (crate::tokens::COLOR_BUTTON_SWATCH_AMBER, "aria.btnAmber"),
+    (crate::tokens::COLOR_BUTTON_SWATCH_TEAL, "aria.btnTeal"),
+    (crate::tokens::COLOR_BUTTON_SWATCH_BLUE, "aria.btnBlue"),
+    (crate::tokens::COLOR_BUTTON_SWATCH_VIOLET, "aria.btnViolet"),
+    (crate::tokens::COLOR_BUTTON_SWATCH_ROSE, "aria.btnRose"),
+];
+
+fn build_button_swatches() {
+    build_swatches("btnPick", &BUTTON_SWATCHES);
 }
 
 /// Sets the shared playback volume/boost (0.5-2.0), persists it, and syncs

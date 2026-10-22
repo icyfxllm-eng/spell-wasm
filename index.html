@@ -135,6 +135,13 @@
     --panel-2:#1b1730;
     --edge:#322a4f;
     --controls-color:#7a66c2;
+    --button-color:var(--amber);
+    --button-ink:var(--palette-on-gold-text);
+    --color-button-swatch-amber:#ffb14d;
+    --color-button-swatch-teal:#46d6b8;
+    --color-button-swatch-blue:#6f9bff;
+    --color-button-swatch-violet:#a98bff;
+    --color-button-swatch-rose:#ff7a9a;
     --color-controls-swatch-violet:#7a66c2;
     --color-controls-swatch-blue:#4f7fe0;
     --color-controls-swatch-teal:#2fae95;
@@ -1945,7 +1952,12 @@
   body.kid .stage > .action-row,body.big-text .stage > .action-row{--kb-back-w:88px;--kb-act-h:56px}
   .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter var(--motion-duration-quick),transform var(--motion-duration-instant),opacity var(--motion-duration-quick)}
   .btn:active{transform:translateY(1px)}
-  .btn-check{background:var(--amber);color:var(--palette-on-gold-text);font-size:16.5px;font-weight:800;box-shadow:0 0 18px color-mix(in srgb,var(--amber) 35%,transparent)}
+  /* Settings > Buttons: --button-color / --button-ink (settings::set_button_color).
+     Unset, they follow the accent, so ja/zh keep their own button colour. */
+  .btn-check{background:var(--button-color);color:var(--button-ink);box-shadow:0 0 18px color-mix(in srgb,var(--button-color) 35%,transparent)}
+  /* The bigger, heavier label is the play screen's Check alone (build 289 put
+     it on every primary button, which was not the request). */
+  #checkBtn{font-size:16.5px;font-weight:800}
   /* The way out of a finished run. Deliberately quieter than .btn-check:
      playing again is the expected choice, leaving is the one that must
      always be THERE. An outline reads as a control without competing. */
@@ -4646,6 +4658,13 @@
              so the colours live in design/tokens.json and nowhere else. -->
         <span class="theme-pick" id="ctlPick">
           <label class="theme-swatch custom" aria-label="Pick a custom controls color" data-i18n-aria="aria.ctlCustom"><input type="color" id="ctlColorInput" /></label>
+        </span>
+      </div>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.buttons">Buttons</span><small data-i18n="settings.buttonsSmall">Check spelling, Done and other main buttons</small></span>
+        <!-- Built by settings::build_button_swatches from the button-swatch tokens. -->
+        <span class="theme-pick" id="btnPick">
+          <label class="theme-swatch custom" aria-label="Pick a custom button color" data-i18n-aria="aria.btnCustom"><input type="color" id="btnColorInput" /></label>
         </span>
       </div>
       <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>

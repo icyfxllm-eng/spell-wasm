@@ -294,6 +294,8 @@ pub fn start() -> Result<(), JsValue> {
     settings::set_orb_color(&app, &orb_color);
     let controls_color = app.borrow().controls_color.clone();
     settings::set_controls_color(&app, &controls_color);
+    let button_color = app.borrow().button_color.clone();
+    settings::set_button_color(&app, &button_color);
     settings::apply_settings(&app);
     i18n::init(&app.borrow().lang);
     game::build_source_options(&app);
@@ -776,6 +778,7 @@ fn wire_glow_and_settings(app: &App) {
     wire_swatches("#bgPick .theme-swatch[data-c]", app, settings::set_bg_color);
     wire_swatches("#orbPick .theme-swatch[data-c]", app, settings::set_orb_color);
     wire_swatches("#ctlPick .theme-swatch[data-c]", app, settings::set_controls_color);
+    wire_swatches("#btnPick .theme-swatch[data-c]", app, settings::set_button_color);
     {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("glowColor", "input", move |_| {
@@ -802,6 +805,13 @@ fn wire_glow_and_settings(app: &App) {
         dom::on::<web_sys::Event, _>("ctlColorInput", "input", move |_| {
             let v = dom::input("ctlColorInput").value();
             settings::set_controls_color(&a, &v);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("btnColorInput", "input", move |_| {
+            let v = dom::input("btnColorInput").value();
+            settings::set_button_color(&a, &v);
         });
     }
 
