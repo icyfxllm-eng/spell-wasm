@@ -54,6 +54,15 @@ pub fn play_word(asset_id: &str, url: &str) -> Option<Promise> {
     r.dyn_into::<Promise>().ok()
 }
 
+/// CC-VISUAL-ECLIPSE F3 / E-Q2 (a): the cached clip's bytes, read from disk for
+/// the orb's envelope. Resolves to an ArrayBuffer, or null when it is not
+/// cached. `None` when the bridge has no such method (the web build).
+pub fn read_cached(asset_id: &str) -> Option<Promise> {
+    let obj = bridge()?;
+    let f = method(&obj, "readCached")?;
+    f.call1(&obj, &JsValue::from_str(asset_id)).ok()?.dyn_into::<Promise>().ok()
+}
+
 /// Fire-and-forget: download+cache a clip to on-device storage for later
 /// (offline pack / warming the next word). No playback.
 pub fn prefetch(asset_id: &str, url: &str) {

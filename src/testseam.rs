@@ -61,6 +61,16 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> f64>::new(move || a.borrow().rate as f64);
         set(&obj, "rate", cb.into_js_value());
     }
+    {
+        // CC-VISUAL-ECLIPSE F3. Observation only: the orb's state as the
+        // machine holds it (the DOM attribute lags `fetching` by the grace on
+        // purpose), and how many undefined moves were refused -- which a
+        // correct build never makes.
+        let cb = Closure::<dyn Fn() -> String>::new(|| crate::orb_view::state().name().to_string());
+        set(&obj, "orbState", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> u32>::new(crate::orb_view::refused);
+        set(&obj, "orbRefused", cb.into_js_value());
+    }
     // Spell Picture keeps its own feed, so the base game's currentWord is
     // not the picture's. CC-FINALE Done #2 needs a picture played to
     // completion to reach the reveal at all. Absent on the site build with

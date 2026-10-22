@@ -126,6 +126,8 @@ mod notify;
 mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod orb; // CC-VISUAL-ECLIPSE F3: orb states, transition table and speech envelope (pure)
+mod orb_view; // CC-VISUAL-ECLIPSE F3: applies the orb to #orbWrap behind visual.orb
 mod answer_reveal; // CC-VISUAL-ECLIPSE F4: the You wrote / Correct rows (behind visual.feedback)
 mod display_diff; // CC-VISUAL-ECLIPSE F4/V-D14: the letter diff under a reveal (display only, AT-12)
 mod frame_log; // CC-VISUAL-ECLIPSE A5: AT-19 frame-time logger, dev door only
@@ -371,6 +373,10 @@ pub fn start() -> Result<(), JsValue> {
             game::render_coming_soon(&lang);
         }
     }
+
+    // CC-VISUAL-ECLIPSE F3: the orb's starting state and rest listeners, only
+    // with visual.orb on (a no-op otherwise).
+    orb_view::init();
 
     // Observation-only E2E test seam — dev builds only (`--features testseam`);
     // stripped from production (proven by scripts/seam-absence-check.mjs).

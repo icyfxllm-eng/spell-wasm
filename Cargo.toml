@@ -84,6 +84,7 @@ features = [
   "AudioContext", "AudioContextState", "GainNode", "AudioNode", "AudioParam", "MediaElementAudioSourceNode",
   "DynamicsCompressorNode",
   "AudioDestinationNode", "OscillatorNode", "OscillatorType",
+  "OfflineAudioContext", "BaseAudioContext", "AudioBuffer",
 ]
 
 [profile.release]

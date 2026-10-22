@@ -2021,6 +2021,7 @@ pub fn next_word(app: &App) {
     update_shield_hud(app);
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
+    crate::orb_view::idle();
     dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
     // Voice spelling: any live capture session, its append-base, and its target
     // belong to the OLD word — stop and reset so the new word starts with a clean
@@ -2418,6 +2419,7 @@ fn on_correct(app: &App) {
         dom::set_text("streakNum", &streak.to_string());
         dom::set_text("bestNum", &app.borrow().best.to_string());
         dom::add_class("orbWrap", "good");
+        crate::orb_view::verdict(true);
         spell_feedback(true);
         lift_letters(app);
         set_streak_tier(streak);
@@ -2445,6 +2447,7 @@ fn on_correct(app: &App) {
         // Rescued: advance without scoring. The streak stays where the miss left
         // it (0); the shield/attempt kept the run alive.
         dom::add_class("orbWrap", "good");
+        crate::orb_view::verdict(true);
         spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
         dom::set_text("feedback", &pick_praise(app));
@@ -2596,6 +2599,7 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
     }
 
     dom::add_class("orbWrap", "bad");
+    crate::orb_view::verdict(false);
     spell_feedback(false);
     set_streak_tier(0);
     dom::set_text("orbGlyph", glyph);
@@ -3095,6 +3099,7 @@ fn grant_retry(app: &App, feedback_key: &str) {
     dom::set_disabled("sentenceBtn", !api::sentence_supported(&l));
     render_letters(app, false);
     dom::add_class("orbWrap", "bad");
+    crate::orb_view::verdict(false);
     spell_feedback(false);
     set_streak_tier(0);
     dom::set_text("orbGlyph", "\u{2717}");
@@ -3740,6 +3745,7 @@ fn daily_answer(app: &App, correct: bool) {
         crate::haptics::correct();
         app.borrow_mut().daily.correct += 1;
         dom::add_class("orbWrap", "good");
+        crate::orb_view::verdict(true);
         spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
         dom::set_text("feedback", &crate::i18n::t(&format!("praise.{}", rand_index(8) + 1)));
@@ -3747,6 +3753,7 @@ fn daily_answer(app: &App, correct: bool) {
     } else {
         crate::haptics::incorrect(kid);
         dom::add_class("orbWrap", "bad");
+        crate::orb_view::verdict(false);
         spell_feedback(false);
         dom::set_text("orbGlyph", "\u{2717}");
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&shown_form(&cur_lang, &word))));
@@ -4228,6 +4235,7 @@ fn versus_on_correct(app: &App) {
     render_versus_bar(app);
 
     dom::add_class("orbWrap", "good");
+    crate::orb_view::verdict(true);
     spell_feedback(true);
     // Head-to-head warmth rides the active player's current chain.
     set_streak_tier(app.borrow().versus.active_player().current);

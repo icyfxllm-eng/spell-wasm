@@ -94,11 +94,17 @@ pub fn speak(text: &str, rate: f32, code: &str) {
     utter.set_onstart(Some(start_cb.as_ref().unchecked_ref()));
     start_cb.forget();
 
-    let end_cb = Closure::<dyn FnMut()>::new(|| remove_class("orbWrap", "speaking"));
+    let end_cb = Closure::<dyn FnMut()>::new(|| {
+        remove_class("orbWrap", "speaking");
+        crate::orb_view::untracked_ended();
+    });
     utter.set_onend(Some(end_cb.as_ref().unchecked_ref()));
     end_cb.forget();
 
-    let err_cb = Closure::<dyn FnMut()>::new(|| remove_class("orbWrap", "speaking"));
+    let err_cb = Closure::<dyn FnMut()>::new(|| {
+        remove_class("orbWrap", "speaking");
+        crate::orb_view::untracked_ended();
+    });
     utter.set_onerror(Some(err_cb.as_ref().unchecked_ref()));
     err_cb.forget();
 

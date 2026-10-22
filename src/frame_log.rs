@@ -205,11 +205,13 @@ pub fn report() -> String {
             "\nNo frames recorded: the logger is OFF. Tick Frame logger (AT-19) above, close this menu, play, then come back here.\n"
         });
     }
-    // The health line goes right after the device line.
-    match r.find("budget:") {
+    // The health line goes right after the device line; the orb's AT-8 line
+    // (visual.orb only) goes last.
+    let r = match r.find("budget:") {
         Some(i) => format!("{}{}{}", &r[..i], health, &r[i..]),
         None => r + &health,
-    }
+    };
+    r + &crate::orb_view::sync_report()
 }
 
 pub fn clear() {

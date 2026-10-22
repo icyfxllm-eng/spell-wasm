@@ -241,6 +241,7 @@ pub fn play_word_with(
 ) {
     PLAY_START.with(|c| *c.borrow_mut() = Some((crate::telemetry::now_ms(), lang.to_string())));
     crate::frame_log::mark(crate::frame_log::Moment::Speaking);
+    crate::orb_view::requested();
     let mut order = source_order();
     if lang == crate::consts::ZH {
         order.retain(|s| *s != Source::NativeTts);
@@ -274,6 +275,7 @@ fn play_chain(
         Some(&s) => s,
         None => {
             set_source("none");
+            crate::orb_view::unheard();
             on_fail();
             return;
         }
@@ -318,6 +320,7 @@ fn play_pack(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn 
         match crate::packs::src_for(&lang, &word, &variant).await {
             Some(src) => {
                 if let Ok(audio) = HtmlAudioElement::new_with_src(&src) {
+                    crate::orb_view::watch_element(&audio, &src);
                     audio.set_playback_rate(rate);
                     if audio.play().is_ok() {
                         set_source("pack");
@@ -352,6 +355,7 @@ fn play_human(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn
         audio.set_cross_origin(Some("anonymous"));
     }
     audio_boost::wire(&audio);
+    crate::orb_view::watch_element(&audio, &src);
     let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("preservesPitch"), &JsValue::TRUE);
     let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("webkitPreservesPitch"), &JsValue::TRUE);
     audio.set_playback_rate(crate::human_audio::playback_rate(variant, rate));
@@ -400,6 +404,7 @@ fn play_server_cache(word: &str, py: Option<&str>, variant: &str, rate: f64, lan
     if native_audio::available() {
         let asset_id = native_audio::asset_id(word, variant, lang);
         let url = speak_url(word, py, variant, lang);
+        crate::orb_view::prepare_native(&asset_id);
         if let Some(promise) = native_audio::play_word(&asset_id, &url) {
             let word = word.to_string();
             let variant = variant.to_string();
@@ -412,6 +417,7 @@ fn play_server_cache(word: &str, py: Option<&str>, variant: &str, rate: f64, lan
                     play_word_html(&word, py.as_deref(), &variant, rate, &lang, on_fail);
                 } else {
                     set_source("server-cache");
+                    crate::orb_view::native_started(&native_audio::asset_id(&word, &variant, &lang), rate);
                 }
             });
             return;
@@ -443,6 +449,7 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
         // zh never gets here (its order drops NativeTts, Invariant 4).
         if crate::speech_out::available() {
             let eff_rate = if variant == "slow" { rate.min(0.7) } else { rate };
+            crate::orb_view::untracked_started();
             // zh-ok(audio): play_word_with drops Source::NativeTts from zh's order, so a zh
             // word never reaches this source.
             crate::speech_out::speak(word, eff_rate as f32, lang);
@@ -471,7 +478,11 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
         };
         match native_lang::speak(&word, &voice, eff_rate) {
             Some(promise) => {
-                if JsFuture::from(promise).await.is_ok() {
+                crate::orb_view::untracked_started();
+                let spoke = JsFuture::from(promise).await.is_ok();
+                // The device voice resolves when it has FINISHED speaking.
+                crate::orb_view::untracked_ended();
+                if spoke {
                     set_source("native-tts");
                 } else {
                     on_fail();
@@ -523,6 +534,8 @@ fn play_word_html(word: &str, py: Option<&str>, variant: &str, rate: f64, lang: 
         // Wired once per element, never on the reuse path — a second source
         // node on the same element would be a duplicate gain graph.
         audio_boost::wire(&a);
+        // CC-VISUAL-ECLIPSE F3: the orb listens to this element (observe only).
+        crate::orb_view::watch_element(&a, &url);
         a
     };
     audio.set_playback_rate(rate);

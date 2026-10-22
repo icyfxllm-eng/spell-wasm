@@ -237,5 +237,22 @@
     prefetch: function (assetId, url) {
       return ensureCached(assetId, url).then(function () {}, function () {});
     },
+
+    // CC-VISUAL-ECLIPSE F3 / E-Q2 (a): a SIDE READ of a clip already cached on
+    // disk, as an ArrayBuffer, so the orb can follow the voice. Read-only: it
+    // never downloads, preloads or plays, and resolves null when the file is
+    // not there (the orb then breathes). Playback above is untouched.
+    readCached: function (assetId) {
+      var P = plugins();
+      if (!P) return Promise.resolve(null);
+      return P.Filesystem.readFile({ path: fileName(assetId), directory: CACHE_DIR })
+        .then(function (r) {
+          var bin = atob(typeof r.data === "string" ? r.data : "");
+          var out = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+          return out.buffer;
+        })
+        .catch(function () { return null; });
+    },
   };
 })();

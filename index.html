@@ -381,6 +381,10 @@
     --motion-anim-letter-pop:280ms;
     --motion-anim-letter-lift:180ms;
     --motion-anim-letter-lift-stagger:25ms;
+    --motion-anim-orb-fetch-grace:120ms;
+    --motion-anim-orb-rest-after:30000ms;
+    --motion-anim-orb-flare:520ms;
+    --motion-anim-orb-inhale:900ms;
     --motion-anim-letter-lift-budget:120ms;
     --motion-anim-caret-blink:1050ms;
     --motion-mode-defmatch-orb-glow:300ms;
@@ -1772,6 +1776,31 @@
   .orb-wrap.good .orb-glyph{color:var(--chrome-orb-good-glyph)}
   .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, var(--chrome-orb-bad-light) 0%, var(--coral) 42%, var(--chrome-orb-bad-deep) 100%);box-shadow:0 0 0 1px var(--chrome-orb-bad-rim), 0 0 40px 4px var(--chrome-orb-bad-glow);animation:shake var(--motion-anim-orb-shake) ease}
   .orb-wrap.bad .orb-glyph{color:var(--chrome-orb-bad-glyph)}
+  /* CC-VISUAL-ECLIPSE F3, behind visual.orb (body.visual-orb): the orb as a
+     living character. The state is #orbWrap[data-orb], set by orb_view from the
+     transition table in src/orb.rs; while speaking, --orb-env (0..1) follows the
+     voice's RMS envelope every frame. Reduce Motion keeps every state as a
+     brightness or opacity change only (see the reduce block). data-orb-rest
+     pauses the idle breath when hidden or after 30 s without input (V-D23). */
+  body.visual-orb #orbWrap[data-orb-rest] .orb,
+  body.visual-orb #orbWrap[data-orb-rest] .ring{animation-play-state:paused}
+  body.visual-orb #orbWrap[data-orb="fetching"] .orb{animation:orbInhale var(--motion-anim-orb-inhale) ease-in-out infinite}
+  @keyframes orbInhale{0%,100%{transform:scale(.97);filter:brightness(.92)}50%{transform:scale(1.01);filter:brightness(1.06)}}
+  @keyframes orbInhaleFade{0%,100%{filter:brightness(.92)}50%{filter:brightness(1.06)}}
+  body.visual-orb #orbWrap[data-orb="speaking"] .orb{animation:none;filter:brightness(calc(1 + var(--orb-env,0) * .28))}
+  body.visual-orb #orbWrap[data-orb="speaking"] .ring{animation:none;opacity:calc(var(--orb-env,0) * .85);transform:scale(calc(.86 + var(--orb-env,0) * .3))}
+  body.visual-orb #orbWrap[data-orb="speaking"] .ring:nth-child(4){opacity:calc(var(--orb-env,0) * .55);transform:scale(calc(.92 + var(--orb-env,0) * .4))}
+  body.visual-orb #orbWrap[data-orb="speaking"] .ring:nth-child(5){opacity:calc(var(--orb-env,0) * .3);transform:scale(calc(.98 + var(--orb-env,0) * .5))}
+  body.visual-orb #orbWrap .orb::after{content:"";position:absolute;inset-inline:12%;inset-block-end:-20%;height:32%;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent);filter:blur(6px);opacity:0;transition:opacity var(--motion-duration-slow) ease;pointer-events:none}
+  body.visual-orb #orbWrap[data-orb="awaiting"] .orb::after{opacity:.6}
+  body.visual-orb #orbWrap[data-orb="correct"] .orb{animation:orbFlare var(--motion-anim-orb-flare) ease-out}
+  @keyframes orbFlare{0%{transform:scale(1);filter:brightness(1)}35%{transform:scale(1.08);filter:brightness(1.45)}100%{transform:scale(1);filter:brightness(1)}}
+  @keyframes orbFlareFade{0%,100%{filter:brightness(1)}35%{filter:brightness(1.45)}}
+  body.visual-orb #orbWrap[data-orb="wrong"] .orb{animation:orbDim var(--motion-anim-wrong-hold) ease}
+  body.visual-orb #orbWrap[data-orb="milestone"] .orb{background:radial-gradient(circle at 50% 50%, var(--bg) 0 60%, var(--orb-color) 64%, color-mix(in srgb,var(--orb-color) 40%,transparent) 100%);box-shadow:0 0 0 1px var(--amber-soft), 0 0 64px 16px var(--glow);animation:orbTotality var(--motion-anim-orb-breathe) ease-in-out infinite}
+  body.visual-orb #orbWrap[data-orb="milestone"] .orb-glyph{color:var(--amber-soft)}
+  body.visual-orb #orbWrap[data-orb="milestone"] .ring{animation:none;opacity:.5}
+  @keyframes orbTotality{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
   @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 
   .replay-row{display:flex;gap:10px;margin-bottom:8px}
@@ -2906,6 +2935,15 @@
     /* F4: the lift is movement and goes; the dim is brightness and stays. */
     .ltr.lift{animation:none!important}
     body.visual-feedback .orb-wrap.bad .orb{animation:orbDim var(--motion-anim-wrong-hold) ease!important}
+    /* F3: under Reduce Motion each orb state is brightness or opacity only. */
+    body.visual-orb #orbWrap[data-orb="fetching"] .orb{animation:orbInhaleFade var(--motion-anim-orb-inhale) ease-in-out infinite!important}
+    body.visual-orb #orbWrap[data-orb="speaking"] .ring,
+    body.visual-orb #orbWrap[data-orb="speaking"] .ring:nth-child(4),
+    body.visual-orb #orbWrap[data-orb="speaking"] .ring:nth-child(5){transform:none!important}
+    body.visual-orb #orbWrap[data-orb="correct"] .orb{animation:orbFlareFade var(--motion-anim-orb-flare) ease-out!important}
+    body.visual-orb #orbWrap[data-orb="wrong"] .orb{animation:orbDim var(--motion-anim-wrong-hold) ease!important}
+    body.visual-orb #orbWrap[data-orb="milestone"] .orb{animation:orbTotality var(--motion-anim-orb-breathe) ease-in-out infinite!important}
+    body.visual-orb #orbWrap .orb::after{transition:none!important}
     /* FIX 4: also drop the non-essential repaint-y transitions (animated
        box-shadow / filter) and release the compositor-layer hints, so a
        reduced-motion user gets zero incidental motion or extra layers. Static
