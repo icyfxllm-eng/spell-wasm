@@ -55,15 +55,32 @@ export function validate(tokens) {
   return { leaves, byPath, problems };
 }
 
+// App-only modes are cut from the site build by sentinel comments
+// (scripts/build-web.sh). Their tokens are named after them, so each mode's
+// tokens go in their own :root block inside that mode's sentinels -- a token
+// called --mode-boardgame-* on the site is a Board Game string on the site.
+export const WALLED = { boardgame: 'BOARDGAME', randospell: 'RANDOSPELL', spelluzzle: 'SPELLUZZLE', quickbee: 'QUICKBEEDRAW' };
+export const wallOf = (path) => {
+  const m = path.match(/^(?:motion\.)?mode\.([a-z]+)\./);
+  return m && WALLED[m[1]] ? WALLED[m[1]] : null;
+};
+
 export function cssBlock(tokens) {
   const { leaves, byPath } = validate(tokens);
   const lines = [
     `  ${BEGIN}: GENERATED from design/tokens.json by scripts/tokens-build.mjs.`,
     '     Edit the JSON and run `node scripts/tokens-build.mjs --write`; never edit this block by hand. */',
     '  :root{',
-    ...leaves.map((l) => `    ${l.css}:${l.value};`),
+    ...leaves.filter((l) => !wallOf(l.path)).map((l) => `    ${l.css}:${l.value};`),
     '  }',
   ];
+  for (const wall of Object.values(WALLED)) {
+    const own = leaves.filter((l) => wallOf(l.path) === wall);
+    if (!own.length) continue;
+    lines.push(`  /* ${wall}:BEGIN tokens (app only; stripped from the site build) */`);
+    lines.push(`  :root{${own.map((l) => `${l.css}:${l.value}`).join(';')}}`);
+    lines.push(`  /* ${wall}:END */`);
+  }
   for (const [sel, map] of Object.entries(tokens.$overrides || {})) {
     const decls = Object.entries(map).map(([p, v]) => `${byPath.get(p).css}:${v}`).join(';');
     lines.push(`  ${sel}{${decls}}`);

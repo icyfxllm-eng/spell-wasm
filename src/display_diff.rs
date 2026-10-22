@@ -413,6 +413,61 @@ mod tests {
         }
     }
 
+    // --- AT-12, the regression half: grading is identical with visual.* on and off ---
+
+    /// Every grader the base game calls, over a corpus of right answers and
+    /// near misses in nine languages, with each verdict recorded.
+    fn grade_corpus() -> Vec<(String, bool)> {
+        let words: &[(&str, &str)] = &[
+            ("en", "necessary"), ("en", "receive"), ("en", "colour"), ("en", "color"), ("en", "rhythm"),
+            ("en", "their"), ("en", "kitten"), ("de", "Hund"), ("de", "Straße"), ("de", "Mädchen"),
+            ("fr", "café"), ("fr", "élève"), ("es", "español"), ("es", "llave"), ("vi", "việt"),
+            ("vi", "tiếng"), ("ko", "한국어"), ("ko", "사랑해"), ("ru", "молоко"), ("hi", "नमस्ते"),
+        ];
+        let mut out = Vec::new();
+        for (lang, w) in words {
+            let cs = clusters(w);
+            let mut attempts = vec![w.to_string(), w.to_lowercase(), w.to_uppercase(), format!("{w}x")];
+            attempts.push(cs[..cs.len() - 1].concat());
+            if cs.len() > 1 {
+                let mut sw = cs.clone();
+                sw.swap(0, 1);
+                attempts.push(sw.concat());
+            }
+            attempts.push(crate::norm::fold_strict(w));
+            for a in attempts {
+                for kid in [false, true] {
+                    out.push((format!("{lang}|{w}|{a}|norm|{kid}"), crate::norm::answer_matches_in(lang, &a, w, kid)));
+                }
+                out.push((format!("{lang}|{w}|{a}|homophones"), crate::homophones::accepts(lang, w, &a)));
+                out.push((format!("{lang}|{w}|{a}|impossible"), crate::impossible::engine::grade(lang, &a, w)));
+                if *lang == "en" {
+                    out.push((format!("{w}|{a}|variants"), crate::variants::accepts(w, &a)));
+                }
+                if *lang == "ko" {
+                    out.push((format!("{w}|{a}|jamo"), crate::jamo::grade(&a, w).correct));
+                }
+            }
+        }
+        out
+    }
+
+    #[test]
+    fn grading_is_identical_with_the_visual_flags_on_and_off() {
+        crate::flags::set_test_override(None);
+        assert!(!crate::flags::visual_feedback() && !crate::flags::visual_orb() && !crate::flags::visual_type());
+        let off = grade_corpus();
+        crate::flags::set_test_override(Some("on"));
+        assert!(crate::flags::visual_feedback() && crate::flags::visual_orb() && crate::flags::visual_type());
+        let on = grade_corpus();
+        crate::flags::set_test_override(None);
+        // The corpus has to hold both verdicts, or "identical" proves nothing.
+        assert!(off.iter().any(|(_, v)| *v) && off.iter().any(|(_, v)| !*v), "the corpus is one-sided");
+        assert!(off.len() > 300, "only {} verdicts", off.len());
+        let moved: Vec<_> = off.iter().zip(&on).filter(|(a, b)| a.1 != b.1).map(|(a, _)| a.0.clone()).collect();
+        assert!(moved.is_empty(), "verdicts moved with visual.* on: {moved:?}");
+    }
+
     // --- AT-12: grading never imports the diff ---
 
     /// Every file that may reach into the diff. Presentation only: the module
