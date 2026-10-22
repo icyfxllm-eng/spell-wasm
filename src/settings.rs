@@ -17,6 +17,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.kid = p.kid;
     state.readable = p.readable;
     state.big_text = p.big_text;
+    state.device_keyboard = p.device_keyboard;
     state.slow = p.slow;
     state.real_voices_off = p.real_voices_off;
     // 0.55, not 0.7 (Eric, 2026-08-06). The Aug 6 audit read Slower
@@ -48,6 +49,7 @@ pub fn save_prefs(state: &AppState) {
         kid: state.kid,
         readable: state.readable,
         big_text: state.big_text,
+        device_keyboard: state.device_keyboard,
         slow: state.slow,
         real_voices_off: state.real_voices_off,
         volume: Some(state.volume),
@@ -306,6 +308,11 @@ pub fn apply_settings(app: &App) {
     let _ = body.class_list().toggle_with_force("visual-orb", crate::flags::visual_orb());
     // CC-SPELL-KEYBOARD Phase A: the shared keyboard's styles key off this class.
     let _ = body.class_list().toggle_with_force("kb-core", crate::flags::keyboard_core());
+    // O1 lives on the shared keyboard: without keyboard.core the setting is not offered.
+    let device = crate::flags::keyboard_core() && s.device_keyboard;
+    let _ = body.class_list().toggle_with_force("device-kb", device);
+    dom::toggle_class("deviceKbRow", "btn-hide", !crate::flags::keyboard_core());
+    dom::input("deviceKbToggle").set_checked(s.device_keyboard);
     dom::input("kidToggle").set_checked(s.kid);
     // CC-ONBOARD-JR F5: a locked Spell Jr player (under-13 verdict) gets no
     // switch at all. The only way out is a grown-up, so the row offers exactly

@@ -18,6 +18,10 @@ pub struct Prefs {
     pub readable: bool,
     #[serde(rename = "bigText", default)]
     pub big_text: bool,
+    /// CC-SPELL-KEYBOARD O1: type answers on the device's own keyboard instead of
+    /// Spell's (an accessibility setting; autocorrect stays off). Absent = off.
+    #[serde(rename = "deviceKeyboard", default)]
+    pub device_keyboard: bool,
     pub slow: bool,
     /// CC-HUMAN-AUDIO F6/D4 — "Real voices when available", stored inverted so
     /// that absent (a fresh install, or prefs from an older build) means ON.
@@ -238,6 +242,8 @@ pub struct AppState {
     pub age_locked: bool,
     pub readable: bool,
     pub big_text: bool,
+    /// CC-SPELL-KEYBOARD O1 — see `Prefs::device_keyboard`.
+    pub device_keyboard: bool,
     pub slow: bool,
     /// CC-HUMAN-AUDIO F6 — see `Prefs::real_voices_off`.
     pub real_voices_off: bool,
@@ -321,6 +327,7 @@ impl Default for AppState {
             age_locked: false,
             readable: false,
             big_text: false,
+            device_keyboard: false,
             slow: false,
             real_voices_off: false,
             volume: 1.0,

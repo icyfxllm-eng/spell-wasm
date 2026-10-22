@@ -593,6 +593,8 @@
   "settings.backgroundSmall": "ページの背景色",
   "settings.bigText": "大きな文字",
   "settings.bigTextSmall": "画面の文字を拡大（約1.5倍）",
+  "settings.deviceKb": "端末のキーボードを使う",
+  "settings.deviceKbSmall": "端末のキーボードで答えを入力します。自動修正はオフのままです。",
   "settings.done": "完了",
   "settings.extraAttempts": "ミス時に追加の挑戦",
   "settings.extraAttemptsSmall": "単語を間違えたときにもう一度挑戦",
