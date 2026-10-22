@@ -84,6 +84,130 @@ pub struct Mode {
 
     /// CC-HUB-NAV F3 — the drawer group. Required; see [`Group`].
     pub group: Group,
+
+    /// CC-VISUAL-ECLIPSE F4 / CC-SPELL-KEYBOARD (K-Q5): how answers are entered.
+    /// Required, no serde default, like `juniorPolicy`.
+    pub input: Input,
+    /// CC-VISUAL-ECLIPSE F4 (V-D15, I6): what this mode already reveals. Required:
+    /// an entry without it does not parse, so it cannot ship. Read through
+    /// [`feedback_policy`], never field by field from a surface.
+    pub feedback: Feedback,
+    /// Per-level overrides (Impossible is a level of the base game, not a mode).
+    #[serde(rename = "feedbackLevels", default)]
+    pub feedback_levels: std::collections::BTreeMap<String, FeedbackOverride>,
+}
+
+/// How a mode's answers are entered.
+#[derive(Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum Input {
+    Typed,
+    Drawn,
+    Tap,
+    Voice,
+    /// A mode with phases (tiles then typing, a grid then a lock-in keyboard);
+    /// the mode decides when its keyboard shows.
+    Mixed,
+}
+
+/// Whether a per-word verdict is shown.
+#[derive(Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum Verdict {
+    PerWord,
+    None,
+    /// Spelluzzle: only in Duel (D23); never while a solo board is open (I6).
+    DuelOnly,
+}
+
+/// Whether the word's length is visible before answering.
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
+#[serde(untagged)]
+pub enum LengthRaw {
+    Flag(bool),
+    Word(String),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Length {
+    Shown,
+    Hidden,
+    /// Only on request: the base game's opt-in Hint shows "N letters".
+    OnRequest,
+}
+
+impl LengthRaw {
+    fn resolve(self) -> Length {
+        match self {
+            LengthRaw::Flag(true) => Length::Shown,
+            LengthRaw::Word(w) if w == "on_request" => Length::OnRequest,
+            // false, or anything modes-check would have refused: the safe answer.
+            _ => Length::Hidden,
+        }
+    }
+}
+
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
+pub struct Feedback {
+    pub verdict: Verdict,
+    #[serde(rename = "revealCorrect")]
+    pub reveal_correct: bool,
+    pub diff: bool,
+    #[serde(rename = "lengthBeforeAnswer")]
+    pub length_before_answer: LengthRaw,
+}
+
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq, Default)]
+pub struct FeedbackOverride {
+    pub verdict: Option<Verdict>,
+    #[serde(rename = "revealCorrect")]
+    pub reveal_correct: Option<bool>,
+    pub diff: Option<bool>,
+    #[serde(rename = "lengthBeforeAnswer")]
+    pub length_before_answer: Option<LengthRaw>,
+}
+
+/// The resolved policy a surface reads.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Policy {
+    pub verdict: Verdict,
+    pub reveal_correct: bool,
+    pub diff: bool,
+    pub length: Length,
+}
+
+impl Policy {
+    /// What a surface falls back to for a mode it cannot find: reveal nothing.
+    pub const CLOSED: Policy = Policy { verdict: Verdict::None, reveal_correct: false, diff: false, length: Length::Hidden };
+    /// F4's letter rows may be drawn: both the verdict and the spelling are
+    /// already shown, so the comparison adds nothing a player could not see.
+    pub fn may_draw_diff(&self) -> bool {
+        self.verdict != Verdict::None && self.reveal_correct && self.diff
+    }
+}
+
+/// The feedback policy for `mode_id`, at `level` when the level overrides it
+/// ("impossible"). An unknown mode FAILS CLOSED (no verdict, no reveal, no diff)
+/// and says so in the console: never a silent fallback.
+pub fn feedback_policy(mode_id: &str, level: Option<&str>) -> Policy {
+    let Some(m) = all().into_iter().find(|m| m.id == mode_id) else {
+        #[cfg(target_arch = "wasm32")]
+        web_sys::console::error_1(&format!("modes: no feedback policy for {mode_id:?}; failing closed").into());
+        return Policy::CLOSED;
+    };
+    let mut p = Policy {
+        verdict: m.feedback.verdict,
+        reveal_correct: m.feedback.reveal_correct,
+        diff: m.feedback.diff,
+        length: m.feedback.length_before_answer.clone().resolve(),
+    };
+    if let Some(ov) = level.and_then(|l| m.feedback_levels.get(l)) {
+        if let Some(v) = ov.verdict { p.verdict = v; }
+        if let Some(v) = ov.reveal_correct { p.reveal_correct = v; }
+        if let Some(v) = ov.diff { p.diff = v; }
+        if let Some(v) = ov.length_before_answer.clone() { p.length = v.resolve(); }
+    }
+    p
 }
 
 /// CC-HUB-NAV F3/D-N6 — which drawer group a mode belongs to.
@@ -274,6 +398,7 @@ pub fn catalog(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
 // of these that changes its expectations based on cfg -- a test that moves
 // its own goalposts proves whichever config you happened to run.
 #[cfg(not(feature = "web"))]
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -711,4 +836,56 @@ mod web_wall_tests {
         }
     }
 
+}
+
+#[cfg(test)]
+mod feedback_policy_tests {
+    use super::*;
+
+    #[test]
+    fn every_mode_has_a_policy_and_an_input() {
+        // Parsing is the real gate (the fields have no serde default); this names it.
+        for m in all() {
+            let p = feedback_policy(&m.id, None);
+            if p.diff {
+                assert!(p.reveal_correct, "{}: a diff without a reveal would leak the spelling", m.id);
+            }
+        }
+    }
+
+    #[test]
+    fn spelluzzle_never_has_a_per_word_verdict_outside_duel() {
+        let p = feedback_policy("spelluzzle", None);
+        // The web build strips app-only modes, so there it fails closed instead.
+        #[cfg(not(feature = "web"))]
+        assert_eq!(p.verdict, Verdict::DuelOnly);
+        #[cfg(feature = "web")]
+        assert_eq!(p, Policy::CLOSED);
+        assert!(!p.reveal_correct && !p.may_draw_diff());
+    }
+
+    #[test]
+    fn the_base_game_may_diff_and_impossible_hides_the_length() {
+        let p = feedback_policy("standard", None);
+        assert!(p.may_draw_diff());
+        assert_eq!(p.length, Length::OnRequest, "the opt-in Hint shows the length");
+        let imp = feedback_policy("standard", Some("impossible"));
+        assert_eq!(imp.length, Length::Hidden, "Impossible disables hints");
+        assert!(imp.may_draw_diff(), "the reveal still happens at Impossible");
+    }
+
+    #[test]
+    fn an_unknown_mode_fails_closed() {
+        let p = feedback_policy("no_such_mode", None);
+        assert_eq!(p, Policy::CLOSED);
+        assert!(!p.may_draw_diff());
+    }
+
+    #[test]
+    fn length_resolves_safely() {
+        assert_eq!(LengthRaw::Flag(true).resolve(), Length::Shown);
+        assert_eq!(LengthRaw::Flag(false).resolve(), Length::Hidden);
+        assert_eq!(LengthRaw::Word("on_request".into()).resolve(), Length::OnRequest);
+        assert_eq!(LengthRaw::Word("maybe".into()).resolve(), Length::Hidden);
+    }
 }

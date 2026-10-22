@@ -40,6 +40,27 @@ const PREMIUM = new Set(['photo_ocr', 'multiple_profiles', 'progress_reports', '
 // CC-HUB-DEADROWS F4 — the groups that render as drawer rows. An icon only has
 // to be unique among rows a player can see side by side.
 const DRAWER_GROUPS = new Set(['spell_it', 'word_puzzles', 'meaning', 'your_words']);
+// CC-VISUAL-ECLIPSE F4 / CC-SPELL-KEYBOARD K-Q5-Q6 — the feedback policy and input
+// columns. Required on every mode: a mode with no policy would let F4 or the
+// keyboard's reactions reveal something the mode withholds (I6).
+const INPUTS = new Set(['typed', 'drawn', 'tap', 'voice', 'mixed']);
+const VERDICTS = new Set(['per_word', 'none', 'duel_only']);
+const LENGTH = new Set([true, false, 'on_request']);
+const FEEDBACK_LEVELS = new Set(['impossible']);
+function feedbackProblems(at, fb, partial = false) {
+  const out = [];
+  if (!fb || typeof fb !== 'object') return [`${at}: missing feedback policy`];
+  const has = (k) => Object.prototype.hasOwnProperty.call(fb, k);
+  for (const k of Object.keys(fb)) if (!['verdict', 'revealCorrect', 'diff', 'lengthBeforeAnswer'].includes(k)) out.push(`${at}: unknown feedback field ${k}`);
+  if ((!partial || has('verdict')) && !VERDICTS.has(fb.verdict)) out.push(`${at}: feedback.verdict must be per_word | none | duel_only, got ${JSON.stringify(fb.verdict)}`);
+  if ((!partial || has('revealCorrect')) && typeof fb.revealCorrect !== 'boolean') out.push(`${at}: feedback.revealCorrect must be a boolean`);
+  if ((!partial || has('diff')) && typeof fb.diff !== 'boolean') out.push(`${at}: feedback.diff must be a boolean`);
+  if ((!partial || has('lengthBeforeAnswer')) && !LENGTH.has(fb.lengthBeforeAnswer)) out.push(`${at}: feedback.lengthBeforeAnswer must be true | false | "on_request"`);
+  // A diff is drawn from the attempt and the revealed spelling; with no reveal
+  // there is nothing to diff against without revealing the spelling (I6).
+  if (!partial && fb.diff === true && fb.revealCorrect !== true) out.push(`${at}: feedback.diff without revealCorrect would reveal the spelling`);
+  return out;
+}
 
 // CC-HUB-DEADROWS F3 (static half) — the mode -> entry-point table in
 // src/play_hub.rs, read as text for the same reason this file reads flags.rs:
@@ -69,6 +90,12 @@ function validate(reg, { locale, flags, launch } = {}) {
     if (!m.nameKey) problems.push(`${at}: missing nameKey`);
     if (!m.descKey) problems.push(`${at}: missing descKey`);
     if (!m.icon) problems.push(`${at}: missing icon`);
+    if (!INPUTS.has(m.input)) problems.push(`${at}: input must be one of ${[...INPUTS].join('|')}, got ${JSON.stringify(m.input)}`);
+    problems.push(...feedbackProblems(at, m.feedback));
+    for (const [lvl, ov] of Object.entries(m.feedbackLevels || {})) {
+      if (!FEEDBACK_LEVELS.has(lvl)) problems.push(`${at}: feedbackLevels.${lvl} is not a known level`);
+      problems.push(...feedbackProblems(`${at} feedbackLevels.${lvl}`, ov, true));
+    }
 
     // CC-ONBOARD-JR I4: no mode ships without a junior policy.
     if (typeof m.juniorPolicy !== 'string' || !m.juniorPolicy) {
@@ -158,6 +185,7 @@ if (process.argv.includes('--selftest')) {
     id: 'ghost_racing', nameKey: 'tools.racing.name', descKey: 'tools.racing.desc', icon: '👻',
     status: 'live', kidSafe: true, platforms: ['web'], entitlementLevel: 'full', requiresPremium: null, languages: null,
     juniorPolicy: 'ceiling:medium',
+    input: 'typed', feedback: { verdict: 'per_word', revealCorrect: true, diff: false, lengthBeforeAnswer: false },
   });
   const cases = [
     ['bad status', (m) => { m.status = 'enabled'; }],
@@ -172,6 +200,13 @@ if (process.argv.includes('--selftest')) {
     ['unknown juniorPolicy', (m) => { m.juniorPolicy = 'sometimes'; }],
     ['junior ceiling above medium', (m) => { m.juniorPolicy = 'ceiling:hard'; }],
     ['kid-unsafe mode not hidden from junior', (m) => { m.kidSafe = false; }],
+    ['missing input', (m) => { delete m.input; }],
+    ['unknown input', (m) => { m.input = 'telepathy'; }],
+    ['missing feedback', (m) => { delete m.feedback; }],
+    ['bad verdict', (m) => { m.feedback.verdict = 'sometimes'; }],
+    ['diff without reveal', (m) => { m.feedback.revealCorrect = false; m.feedback.diff = true; }],
+    ['bad lengthBeforeAnswer', (m) => { m.feedback.lengthBeforeAnswer = 'maybe'; }],
+    ['unknown feedback level', (m) => { m.feedbackLevels = { nightmare: { lengthBeforeAnswer: false } }; }],
   ];
   const missed = [];
   for (const [name, mutate] of cases) {

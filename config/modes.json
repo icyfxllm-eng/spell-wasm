@@ -15,7 +15,10 @@
     "requiresPremium": "Optional parent-premium entitlement (EntitlementSet boolean) this mode needs, or null. See $deviations.",
     "languages": "Language codes the mode supports, or null for any. Absent outside them.",
     "ordering": "Hub tile order = FILE order (D6, RECONSTRUCTED — Eric must confirm). No popularity sort, no per-user reordering in v1.",
-    "juniorPolicy": "REQUIRED (I4 — a missing policy fails the build). What Spell Jr may do with this mode, read by experience::allowed_tiers and nothing else. ceiling:<tier> = offer tiers up to and including <tier>. variant:<id> = junior plays a junior variant (Jr Climb, Jr Daily), always Easy + Medium. hidden = absent from every junior surface. ungated = the mode has no difficulty ladder (Reports, Calendar); junior is still held to Easy + Medium defensively, so a future word source cannot leak Hard."
+    "juniorPolicy": "REQUIRED (I4 — a missing policy fails the build). What Spell Jr may do with this mode, read by experience::allowed_tiers and nothing else. ceiling:<tier> = offer tiers up to and including <tier>. variant:<id> = junior plays a junior variant (Jr Climb, Jr Daily), always Easy + Medium. hidden = absent from every junior surface. ungated = the mode has no difficulty ladder (Reports, Calendar); junior is still held to Easy + Medium defensively, so a future word source cannot leak Hard.",
+    "input": "CC-VISUAL-ECLIPSE F4 / CC-SPELL-KEYBOARD (signing sheet K-Q5): how answers are entered. typed | drawn | tap | voice | mixed (a mode with phases, e.g. tiles then typing; the mode decides when its keyboard shows).",
+    "feedback": "CC-VISUAL-ECLIPSE F4 (V-D15, I6): what the mode reveals TODAY, copied from the Phase 0 recon (reports/visual-eclipse-recon.md R8). verdict = per_word | none | duel_only. revealCorrect = the correct spelling is shown after a miss. diff = a letter-by-letter comparison may be shown; it is only ever drawn from the two strings already on screen (the attempt and the revealed spelling), so it reveals nothing new. lengthBeforeAnswer = true | false | on_request (the base game's opt-in Hint shows 'N letters'). F4 and the keyboard's reactions may never reveal more than this. REQUIRED: a mode without it fails the build.",
+    "feedbackLevels": "Optional per-level overrides of `feedback` (Impossible is a level of the base game, not a mode): e.g. impossible.lengthBeforeAnswer = false because Impossible disables hints."
   },
   "$decisionsPending": [
     "D6 (RECONSTRUCTED): tile ordering = registry file order. Implemented as stated; confirm.",
@@ -40,7 +43,15 @@
       "languages": null,
       "$note": "CC-PRACTICE: first among modes (D9). Per-language availability = consts::practice (D7: en pre-audit exempt; others await the interim-content ruling).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "mixed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "letters are graded as they are typed and a wrong one is refused; tiles then typing"
     },
     {
       "id": "ghost_racing",
@@ -60,7 +71,15 @@
       "$note": "CC-HUB-CLEANUP D4: user-facing name is Spell Racing (tools.racing.name); internal id stays ghost_racing per CC-SPELL-RACING.",
       "exitStyle": "confirm",
       "statusNote": "AUDITPASS F7 / D2 (Eric, 2026-08-06): Spell Racing is cut. Hidden removes every tile; the compiled flag default stays ON so the code path survives one release and a revert is a flag flip, not a git revert. Delete the code next release if there is no reversal.",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "hidden (cut); not re-audited"
     },
     {
       "id": "syllable_replay",
@@ -81,7 +100,15 @@
       ],
       "$note": "es-only: it needs syllabification data, and absence is data-driven (CC-MODE-HUB I4.1).",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      },
+      "$feedbackNote": "a feature of the base game (es); the base game's policy"
     },
     {
       "id": "photo_list",
@@ -99,7 +126,15 @@
       "languages": null,
       "$note": "The mode CC-MODE-HUB calls 'ocrMode'/'Photo/OCR' is `photo_list` here. Gated by the photo_ocr parent-premium entitlement — see $deviations.entitlementLevel. CC-HUB-NAV v1.3.1 H3: status was `hidden`, which permitted() rejects first, so it had no drawer row -- and the Phase C cut-over had already retired the utility row its button lived in. It was reachable from nowhere in build 252.",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "typed",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "no answer loop of its own: hands off to the base game"
     },
     {
       "id": "spell_aloud",
@@ -117,7 +152,15 @@
       "languages": null,
       "$note": "CC-SPELL-ALOUD-INTEGRATION Feature 6: shown on ALL platforms(ios) languages; per-language availability is the language registry's voiceSpell gate (consts::voice_spell / VOICE_SPELL_LANGS), which opened to every registered language under Eric's mic-everywhere ruling 2026-07-27 -- it read en,es before that and this note said so until 2026-10-02 -- and now holds FOURTEEN: ko was withdrawn 2026-10-03 because Korean voice spelling cannot compose a syllable (see consts::VOICE_SPELL_LANGS and norm.rs::ko_voice_spelling_needs_positional_jamo_not_a_lexicon_edit). The unavailable tile therefore only appears for an UNREGISTERED code now (play_hub::a7_spell_aloud_is_available_in_every_registered_language pins that). What still varies per language is the runtime ladder in spell_aloud::reflect: on-device installed gives a live mic, downloadable gives a mic with a download badge, and a language with no on-device path falls to the server rung behind a consent card -- never in Kid Mode, never in education builds. Available is not the same as verified: thirteen of the fifteen letter lexicons are machine-drafted and still pending native review. languages:null (not a list) so an unsupported language shows the unavailable tile rather than being filtered out (A7).",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "voice",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      },
+      "$feedbackNote": "hidden; spells the base game's word aloud, so the base game's policy"
     },
     {
       "id": "word_stories",
@@ -139,7 +182,15 @@
       ],
       "$note": "F8/D5: hidden until spec'd and reviewed — a hard gate. The spec proposal ALREADY EXISTS: docs/word-stories-review.md (37e5a0f), which recommends keeping it hub-hidden pending (1) CC BY-SA attribution via the CC-WORDLIST-SOURCES Tier-B credits surface and (2) a kid-appropriateness spot-check of the en/es strings. Its flag is OFF for the same reason. `hidden` here matches all of that.",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "tap",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "hidden; no answer loop"
     },
     {
       "id": "online_spelloff",
@@ -162,7 +213,15 @@
       "languages": null,
       "$note": "Flag OFF because /api/match is not deployed yet — 'ships dark until then' IS coming_soon. See $deviations.online_spelloff.",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "hidden (no backend); not re-audited"
     },
     {
       "id": "def_match",
@@ -181,7 +240,15 @@
       "languages": null,
       "$note": "CC-DEF-MATCH: P3 loop live. Per-language activation = consts::def_match (D3 pool floor + interim-content ruling); inactive languages render the unavailable teaser. PREVIEW depth = easy tier only (defmatch::allowed_tiers).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "tap",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "multiple choice; the right card is shown after a miss"
     },
     {
       "id": "letter_forge",
@@ -199,7 +266,15 @@
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. Per-language offer is forge::forge_ready — Hindi is excluded because its bank cannot sustain a board. Flipped on with two gaps Eric accepted: Done #4's Korean jamo block-assembly capture was never reviewed, and F4's daily archive and F5's how-to cards do not exist, so a first-time player gets no intro.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "mixed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "open-ended; valid/duplicate/invalid per word; tile composition"
     },
     {
       "id": "word_chains",
@@ -217,7 +292,14 @@
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. The three D1 settings are DATA in chains::Strictness, so reversing one is a table edit rather than a code change and one language can move without the others. As built: vi diacritic-SENSITIVE, zh tone-INSENSITIVE, ja dakuten flexible. The zh tone call is the one Eric flipped live WITHOUT a native check — tones are lexical, but casual 接龙 does not require them and the toneless reading triples the successor pool. Untimed mood only: D3's Timed mood, its clock ring and D4's dead-end rejection are not built, nor is Phase 2 pass-and-play. ko/pl/ru/hi median 7-9 links.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      }
     },
     {
       "id": "impostor",
@@ -235,7 +317,15 @@
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. D3 bank-vs-dictionary gap ACCEPTED 2026-08-12: the validity screen checks the audited BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders (arid for acid). ko sits at 3.0% exclusion against D3's 2% REVIEW TRIGGER — examined and accepted, because the excluded words are single-block Korean and excluding them is correct rather than a defect. D1 built as option B: shape transforms everywhere, nine authored English trap classes. Reveal-why is English-only per I4. Not built: D7 tier gating beyond the free easy set, F4 how-to cards, D6 analytics write.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "tap",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "all spellings are on screen, so length is visible"
     },
     {
       "id": "bee_sim",
@@ -253,7 +343,15 @@
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. The 24-name contestant table went live WITHOUT a line-by-line review — it is displayed content in every market, and Eric flipped it knowing that. Flags were removed first so the table carries no claim about anybody's origin; what ships is given names and a colour. D3's Definition request is NOT BUILT and cannot be: definitions arrive from /api/defpool over the network and D7 requires offline, so I1 renders no button. Not built: F4 how-to cards, D5's spoken letter input (a v2 door by the spec).",
       "exitStyle": "confirm",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "no explicit \"correct\"; a miss rings the bell and shows the spelling"
     },
     {
       "id": "word_picture",
@@ -271,7 +369,15 @@
       "languages": null,
       "$note": "CC-WORD-PICTURE v5: calligram mode — words typeset along guide strokes. Menu grows to 4 (CC-HUB-CLEANUP D5 reconciliation: Word Picture registered second, per that spec's own note). PREVIEW = free trio from pictures.json; Kid Mode = computed eligibility (tier<=medium + kid-filtered feed).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "the word lands on the picture; dashes show the length"
     },
     {
       "id": "my_words",
@@ -294,7 +400,14 @@
       "languages": null,
       "$note": "CC-HUB-NAV C1/F4. A SURFACE, not a mode: it has no round and never tiles in the Play hub, but the drawer lists it and I2 says a row resolves through this registry, so it is governed here — the same reason CC-ONBOARD-JR option (a) put the base game, The Climb and the Daily here. juniorPolicy records what the button already does: importBtn is not Kid-Mode gated today. descKey repeats nameKey because a core surface never tiles and the drawer renders no description (D-N3), so no description is ever read.",
       "exitStyle": "instant",
-      "juniorPolicy": "ungated"
+      "juniorPolicy": "ungated",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      }
     },
     {
       "id": "misses",
@@ -317,7 +430,19 @@
       "languages": null,
       "$note": "CC-HUB-NAV C1/F4a. As my_words: a surface the registry governs so the drawer can resolve it. missesBtn is never Kid-Mode gated — it is DISABLED when nothing is due, which is a state, not a policy — so juniorPolicy is ungated.",
       "exitStyle": "instant",
-      "juniorPolicy": "ungated"
+      "juniorPolicy": "ungated",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      },
+      "feedbackLevels": {
+        "impossible": {
+          "lengthBeforeAnswer": false
+        }
+      }
     },
     {
       "id": "reports",
@@ -335,7 +460,15 @@
       "languages": null,
       "$note": "CC-REPORTS D1: kid tab FREE (drives daily play). Conquest framing only (I4); guardian diagnostics live behind the parent gate, never here. Little Speller: registry-filtered out by its edition profile.",
       "exitStyle": "instant",
-      "juniorPolicy": "ungated"
+      "juniorPolicy": "ungated",
+      "input": "tap",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "a dashboard; no answers"
     },
     {
       "id": "calendar",
@@ -353,7 +486,15 @@
       "languages": null,
       "$note": "CC-CALENDAR v2: kid surface; goals originate HERE only (I7 CI-enforced). D2: view/recap/goals free; multi-week planner Complete (checked in-surface). Parent side is read+cheer in the dash.",
       "exitStyle": "instant",
-      "juniorPolicy": "ungated"
+      "juniorPolicy": "ungated",
+      "input": "tap",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "a planner; no answers"
     },
     {
       "id": "translate",
@@ -371,7 +512,15 @@
       "languages": null,
       "$note": "CC-TRANSLATE-TOOLS core (D5 signed: whole suite app-only). Closed space (I1): bank words only, lookup via pick-only UI (I4). Fan-out rows arrive through the gloss_rows seam when CC-BANK-TRANSLATE lands; today cards render the word's own row — absent, not locked. Wave 2/3 tools build per their gates.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "no answer loop of its own: hands off to the base game"
     },
     {
       "id": "spelldoku",
@@ -389,7 +538,15 @@
       "languages": null,
       "$note": "CC-SPELLDOKU v1: Sudoku committed by spelling number words. App only (D9). A language plays only when its number-word table is servable in this build (D3); otherwise the tile is the unavailable teaser. Spell Jr: 4x4 Easy and 6x6 Medium (F7).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "Hard/Expert hold logic errors until Check Board; Fragment clues show some letters"
     },
     {
       "id": "spell_search",
@@ -407,7 +564,15 @@
       "languages": null,
       "$note": "CC-WORDGRID v1 Phase A: a word search where every target is heard, never shown (F-S1), with trap spellings from the hand-authored confusion list (F-S2). App only. Launch set en, es, ru, fr, de, pt, pl, fil; English alone has decoys and all five tiers, the rest play Easy (D11). Under-13 players get the Jr grid only (F-X5). ko and zh never (D4).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:easy"
+      "juniorPolicy": "ceiling:easy",
+      "input": "mixed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "grid finding, then Lock-It-In typing"
     },
     {
       "id": "spell_cross",
@@ -425,71 +590,126 @@
       "languages": null,
       "$note": "CC-WORDGRID v1 Phase B: a criss-cross of the list's own words, every clue heard and never read (D1, F-C1). App only. Same launch set as Spell Search; crossings are weighted onto trap positions at Jr, Easy and Medium and off them at Hard and Expert (F-C2), and a list that will not interlock five words is offered as a Spell Search instead (D2, F-C7).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:easy"
+      "juniorPolicy": "ceiling:easy",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "flags wrong cells by position as its own mechanic (live below Hard) without revealing the word; that is not an F4 diff, so diff is false; the keystone reveals"
     },
     {
       "id": "spelluzzle",
       "group": "word_puzzles",
       "nameKey": "spz.name",
       "descKey": "spz.tagline",
-      "icon": "\ud83d\udddd\ufe0f",
+      "icon": "🗝️",
       "status": "live",
       "kidSafe": true,
-      "platforms": ["ios"],
+      "platforms": [
+        "ios"
+      ],
       "entitlementLevel": "preview",
       "requiresPremium": null,
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "$note": "CC-SPELLUZZLE v1 Phase B: a rune cipher where the words on a board depend on each other. App only (O1). English only at launch (census, Eric 2026-10-09); All five tiers are built; Medium to Expert serve only seeds verified at build time (assets/spelluzzle/seeds-en.json). A Jr profile gets Spell Jr boards only. On by default for TestFlight (Eric, 2026-10-09); kill-switch is the spelluzzle flag (F13). Never ko, zh, ja, ar or hi (F12).",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:easy"
+      "juniorPolicy": "ceiling:easy",
+      "input": "typed",
+      "feedback": {
+        "verdict": "duel_only",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "I6: no per-word verdict outside Duel (D23)"
     },
     {
       "id": "boardgame",
       "group": "spell_it",
       "nameKey": "bg.name",
       "descKey": "bg.desc",
-      "icon": "\u265f\ufe0f",
+      "icon": "♟️",
       "status": "live",
       "kidSafe": true,
-      "platforms": ["ios"],
+      "platforms": [
+        "ios"
+      ],
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-BOARD-GAME v1.2 D26: roll-and-spell race on a ring of tiles. App only (I13): cfg, registry strip, BOARDGAME markup sentinels and the bg. locale prefix. Spell Jr is the same mode with the Jr variant (ceiling:medium). The group is PROVISIONAL (spell_it): D26 leaves it to Eric at build time, and choosing one edits the signed d_n6_membership_is_what_was_signed test. Per-language availability is boardgame_pools::gate (F9): a language short of the unique-word floor shows coming soon.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      }
     },
     {
       "id": "randospell",
       "group": "spell_it",
       "nameKey": "rs.name",
       "descKey": "rs.desc",
-      "icon": "\ud83c\udfb2",
+      "icon": "🎲",
       "status": "live",
       "kidSafe": true,
-      "platforms": ["ios"],
+      "platforms": [
+        "ios"
+      ],
       "entitlementLevel": "preview",
       "requiresPremium": null,
-      "languages": ["en", "es"],
+      "languages": [
+        "en",
+        "es"
+      ],
       "$note": "CC-RANDOSPELL v1 Phase A: the orb rolls two dice and speaks a word of exactly that many letters. App only (O3): cfg, registry strip, RANDOSPELL markup sentinels and the rs. locale prefix. Languages for the first cut are en and es only: the census-signed engine set is en es fr de pt pl ru vi ar sw fil, but every non-English rs. string is a machine draft awaiting the locale audit, so the rest are listed as each is audited. ko, hi, ja and zh stay off until a bank grows (D1), and randospell::bank::eligible_at re-checks coverage for what the player owns (D10) at run time. Spell Jr is the Sprint-only Jr variant (Phase D, F7): ceiling:medium, a one-die game, on only where randospell_jr is on and randospell::bank::jr_eligible holds (play_hub filters the kid hub on both). The group is PROVISIONAL (spell_it, like boardgame): choosing one edits the signed d_n6_membership_is_what_was_signed test. Icon is the die emoji (Eric, 2026-10-14); Board Game moved to the chess pawn so modes-check's no-shared-icon rule holds.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "the dice total is the letter count, by design"
     },
     {
       "id": "quickbee_draw",
       "group": "spell_it",
       "nameKey": "qbd.name",
       "descKey": "qbd.desc",
-      "icon": "\u270d\ufe0f",
+      "icon": "✍️",
       "status": "live",
       "kidSafe": false,
-      "platforms": ["ios"],
+      "platforms": [
+        "ios"
+      ],
       "entitlementLevel": "preview",
       "requiresPremium": null,
-      "languages": ["zh", "ja"],
+      "languages": [
+        "zh",
+        "ja"
+      ],
       "$note": "CC-QUICKBEE-DRAW v1 Phase A: Quick Bee where you DRAW each character. App only. zh and ja first (Eric, 2026-10-15): Korean waits for its own measurement and stays out of ink_allowed (CC-CJK-INK D1, I5); Spell Jr gets no pad (CC-CJK-INK D6, I6), so juniorPolicy is hidden. One recogniser path, Apple Vision (CC-CJK-INK D2, I3). Ships dark: quickbee_draw::PHASE_B_BUILT keeps the entry absent until the run loop exists, and each language has its own default-off flag.",
       "exitStyle": "instant",
-      "juniorPolicy": "hidden"
+      "juniorPolicy": "hidden",
+      "input": "drawn",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": false,
+        "lengthBeforeAnswer": true
+      },
+      "$feedbackNote": "reveals only the character that failed; one cell per character"
     },
     {
       "id": "standard",
@@ -508,7 +728,19 @@
       "languages": null,
       "$note": "CC-ONBOARD-JR option (a): the base game. Its difficulty selector is LEVEL_OPTS, now filtered through experience::allowed_tiers. Core: never a hub tile. CC-HUB-DEADROWS F2 (Eric, 2026-10-02): unlisted, because its drawer row was the surface the drawer opens over -- tapping it closed the drawer and arrived, which reads as a dead row. Closing the drawer still arrives; there is simply no row claiming to take you somewhere.",
       "exitStyle": "instant",
-      "juniorPolicy": "ceiling:medium"
+      "juniorPolicy": "ceiling:medium",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      },
+      "feedbackLevels": {
+        "impossible": {
+          "lengthBeforeAnswer": false
+        }
+      }
     },
     {
       "id": "climb",
@@ -532,7 +764,20 @@
       "languages": null,
       "$note": "CC-ONBOARD-JR F3: junior plays Jr Climb — words 1-20 Easy, 21+ Medium, unranked, zero leaderboard calls. Core: never a hub tile.",
       "exitStyle": "instant",
-      "juniorPolicy": "variant:jr-climb"
+      "juniorPolicy": "variant:jr-climb",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      },
+      "feedbackLevels": {
+        "impossible": {
+          "lengthBeforeAnswer": false
+        }
+      },
+      "$feedbackNote": "reveal waits for the shield prompt when a shield is available"
     },
     {
       "id": "daily",
@@ -555,7 +800,20 @@
       "languages": null,
       "$note": "CC-ONBOARD-JR F4: junior plays Jr Daily — Easy + Medium, its own seed namespace. Core: never a hub tile.",
       "exitStyle": "instant",
-      "juniorPolicy": "variant:jr-daily"
+      "juniorPolicy": "variant:jr-daily",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      },
+      "feedbackLevels": {
+        "impossible": {
+          "lengthBeforeAnswer": false
+        }
+      },
+      "$feedbackNote": "the Impossible Daily is the level override"
     },
     {
       "id": "versus",
@@ -578,7 +836,14 @@
       "languages": null,
       "$note": "CC-HUB-NAV v1.3.1 H1. Two players, one device -- no network, no chat, which is why it is kidSafe and ungated, matching what vsBtn already does in Kid Mode today. `core` like the base game, the Climb and the Daily: it always runs and has no flag, so it is governed here and rendered elsewhere. It had no registry entry at all until F2 deleted the tile that was its only door.",
       "exitStyle": "instant",
-      "juniorPolicy": "ungated"
+      "juniorPolicy": "ungated",
+      "input": "typed",
+      "feedback": {
+        "verdict": "per_word",
+        "revealCorrect": true,
+        "diff": true,
+        "lengthBeforeAnswer": "on_request"
+      }
     }
   ]
 }
