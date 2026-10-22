@@ -166,6 +166,15 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
   // default, which leaves the kill switch unknown so the app sends nothing.
   // telemetry.spec passes its own handler to capture and answer.
   await ctx.route('**/telemetry/**', telemetry || ((r) => r.fulfill({ status: 404, body: '' })));
+  // SPELL_FLAGS="keyboard_core=on,other=off" runs the WHOLE suite with those
+  // flags set, so a shipped-dark feature can be checked against every existing
+  // spec before it is turned on. A spec that sets a flag itself still wins.
+  const forced = (process.env.SPELL_FLAGS || '').split(',').map((p) => p.trim().split('=')).filter(([k, v]) => k && v);
+  if (forced.length) {
+    await ctx.addInitScript((pairs) => {
+      for (const [k, v] of pairs) if (!localStorage.getItem(`spell_flag_${k}`)) localStorage.setItem(`spell_flag_${k}`, v);
+    }, forced);
+  }
   // A spec's own pre-app script (telemetry.spec seeds Math.random with it).
   if (init) await ctx.addInitScript(init);
   // Stub the backend audio so no real TTS traffic + deterministic timing.

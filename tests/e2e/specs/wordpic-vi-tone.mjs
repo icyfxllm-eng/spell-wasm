@@ -19,9 +19,10 @@ async function longPress(page, base, want) {
   const k = await key.boundingBox();
   await page.mouse.move(k.x + k.width / 2, k.y + k.height / 2);
   await page.mouse.down();
-  await page.waitForSelector('#kbPop.show', { timeout: 3000 });
+  // #kbPop is the legacy keyboard's popover, #skbPop the shared one (keyboard.core).
+  await page.waitForSelector('#kbPop.show, #skbPop.show', { timeout: 3000 });
   const opt = await page.evaluateHandle((w) =>
-    [...document.querySelectorAll('#kbPop .kb-acc')].find((b) => b.textContent.toLowerCase() === w), want);
+    [...document.querySelectorAll('.kb-popover.show .kb-acc')].find((b) => b.textContent.toLowerCase() === w), want);
   const o = await opt.asElement()?.boundingBox();
   assert(o, `${want} is not offered on ${base}`);
   await page.mouse.move(o.x + o.width / 2, o.y + o.height / 2, { steps: 4 });

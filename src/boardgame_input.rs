@@ -19,50 +19,10 @@ use unicode_normalization::UnicodeNormalization;
 
 use crate::consts;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Key {
-    /// Append this unit (for Korean, feed it to the Hangul automaton).
-    Unit(String),
-    /// Vietnamese tone mark applied to the last vowel (`viet::retone`).
-    Tone(char),
-    /// Japanese modifier: dakuten, handakuten or small kana, applied to the last
-    /// typed kana (D29: modifier keys are allowed for Japanese in this mode's own
-    /// key grid; the shared game keyboard still uses long-press).
-    Mod(Modifier),
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Modifier {
-    Dakuten,
-    Handakuten,
-    Small,
-}
-
-const DAKUTEN: char = '\u{3099}';
-const HANDAKUTEN: char = '\u{309a}';
-/// Large kana and the small form it takes (the small-kana key swaps them).
-const SMALL_PAIRS: [(char, char); 10] = [('あ', 'ぁ'), ('い', 'ぃ'), ('う', 'ぅ'), ('え', 'ぇ'), ('お', 'ぉ'), ('つ', 'っ'), ('や', 'ゃ'), ('ゆ', 'ゅ'), ('よ', 'ょ'), ('わ', 'ゎ')];
-
-/// What the modifier makes of `c`, or None when `c` cannot take it. Voicing and
-/// semi-voicing toggle (は ば は; は ぱ は); the small key swaps large and small.
-pub fn apply_mod(c: char, m: Modifier) -> Option<char> {
-    match m {
-        Modifier::Small => SMALL_PAIRS.iter().find_map(|&(big, small)| if c == big { Some(small) } else if c == small { Some(big) } else { None }),
-        Modifier::Dakuten | Modifier::Handakuten => {
-            let mark = if m == Modifier::Dakuten { DAKUTEN } else { HANDAKUTEN };
-            let d: Vec<char> = c.nfd().collect();
-            let single = |v: &[char]| -> Option<char> {
-                let n: Vec<char> = v.iter().copied().nfc().collect();
-                (n.len() == 1).then(|| n[0])
-            };
-            match d.as_slice() {
-                [base, x] if *x == mark => Some(*base),
-                [base] => single(&[*base, mark]).filter(|r| *r != c),
-                _ => None,
-            }
-        }
-    }
-}
+// The key model lives in the shared keyboard (CC-SPELL-KEYBOARD); re-exported
+// so this module's callers and tests keep their paths.
+pub use crate::spellkb::{apply_mod, Key, Modifier};
+use crate::spellkb::SMALL_PAIRS;
 
 /// How to type kana `c` from the base rows: the base kana and the modifier presses.
 fn kana_reach(c: char, rows: &BTreeSet<char>) -> Option<(char, Vec<Modifier>)> {
@@ -79,45 +39,6 @@ fn kana_reach(c: char, rows: &BTreeSet<char>) -> Option<(char, Vec<Modifier>)> {
         }
     }
     None
-}
-
-impl Key {
-    /// What the keycap shows. A tone mark rides on a dotted circle.
-    pub fn face(&self) -> String {
-        match self {
-            Key::Unit(u) if u == " " => "\u{2423}".to_string(),
-            Key::Unit(u) => u.clone(),
-            Key::Tone(m) => format!("\u{25cc}{m}"),
-            Key::Mod(Modifier::Dakuten) => "\u{309b}".to_string(),
-            Key::Mod(Modifier::Handakuten) => "\u{309c}".to_string(),
-            Key::Mod(Modifier::Small) => "\u{5c0f}".to_string(),
-        }
-    }
-
-    /// The `data-k` attribute value.
-    pub fn data(&self) -> String {
-        match self {
-            Key::Unit(u) => format!("u:{u}"),
-            Key::Tone(m) => format!("t:{:x}", *m as u32),
-            Key::Mod(Modifier::Dakuten) => "m:d".to_string(),
-            Key::Mod(Modifier::Handakuten) => "m:h".to_string(),
-            Key::Mod(Modifier::Small) => "m:s".to_string(),
-        }
-    }
-
-    pub fn parse(d: &str) -> Option<Key> {
-        if let Some(u) = d.strip_prefix("u:") {
-            return Some(Key::Unit(u.to_string()));
-        }
-        match d {
-            "m:d" => return Some(Key::Mod(Modifier::Dakuten)),
-            "m:h" => return Some(Key::Mod(Modifier::Handakuten)),
-            "m:s" => return Some(Key::Mod(Modifier::Small)),
-            _ => {}
-        }
-        let hex = d.strip_prefix("t:")?;
-        char::from_u32(u32::from_str_radix(hex, 16).ok()?).map(Key::Tone)
-    }
 }
 
 /// The per-language facts of the input path, in one table (single source).
