@@ -607,7 +607,8 @@ pub fn visual_type() -> bool {
 /// (V-D22), killable as `visual_feedback`. Off is a true no-op: no body class,
 /// and the reveal takes today's path.
 pub fn visual_feedback() -> bool {
-    resolve(stored("visual_feedback").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 288, CC-VISUAL-ECLIPSE Phase B review): on.
+    resolve(stored("visual_feedback").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.orb` (Phase B, F3): the orb as a living character
@@ -615,7 +616,8 @@ pub fn visual_feedback() -> bool {
 /// (V-D22), killable as `visual_orb`. Off: no body class, no state machine
 /// attribute, no envelope decode.
 pub fn visual_orb() -> bool {
-    resolve(stored("visual_orb").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 288, CC-VISUAL-ECLIPSE Phase B review): on.
+    resolve(stored("visual_orb").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.sound` (Phase C, F5): the synthesized game sounds
@@ -774,7 +776,8 @@ mod tests {
     #[test]
     fn visual_feedback_and_orb_ship_dark() {
         set_test_override(None);
-        assert!(!visual_feedback() && !visual_orb(), "Phase B ships dark until a build turns it on (V-D22)");
+        // Release branch for build 288: the build turns them on (V-D22).
+        assert!(visual_feedback() && visual_orb(), "build 288 turns visual.feedback and visual.orb on");
         set_test_override(Some("on"));
         assert!(visual_feedback() && visual_orb());
         set_test_override(None);
