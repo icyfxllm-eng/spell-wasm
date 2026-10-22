@@ -134,6 +134,8 @@
     --panel:#221d36;
     --panel-2:#1b1730;
     --edge:#322a4f;
+    --panel-raised:#2c2549;
+    --edge-strong:#5b4c8c;
     --ink:#efeaf7;
     --muted:#968cb4;
     --muted-2:#6f6690;
@@ -647,8 +649,8 @@
      button: no shape, no border, and a tap target well under the 44pt
      minimum. Double width (88) because it is the sole navigation control;
      44 tall because that is the floor, and the same one .meta-icon uses. */
-  .burger{width:88px;height:44px;border-radius:22px;background:var(--panel);
-    border:1px solid var(--edge);color:var(--ink);font-size:22px;line-height:1;
+  .burger{width:88px;height:44px;border-radius:22px;background:var(--panel-raised);
+    border:1.5px solid var(--edge-strong);color:var(--ink);font-size:22px;font-weight:700;line-height:1;
     display:grid;place-items:center;cursor:pointer;padding:0;position:relative;
     transition:border-color var(--motion-duration-quick),color var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .burger:hover{border-color:var(--amber)}
@@ -1652,7 +1654,7 @@
 
   /* Setup chip (F3): config family — muted, chevroned, full width, directly above
      the play button. It configures; it must not read as a launcher. */
-  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color var(--motion-duration-quick),transform var(--motion-duration-instant)}
+  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel-raised);border:1.5px solid var(--edge-strong);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color var(--motion-duration-quick),transform var(--motion-duration-instant)}
   .setup-chip:hover{border-color:var(--amber)}
   .setup-chip:active{transform:translateY(1px)}
   .setup-chip-text{color:var(--ink);white-space:nowrap}
@@ -1798,7 +1800,7 @@
   .swatch.custom input,.theme-swatch.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
   .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 
-  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color var(--motion-duration-base) ease,box-shadow var(--motion-duration-base) ease}
+  .spellbox{position:relative;width:100%;background:var(--panel-raised);border:2px solid var(--edge-strong);border-radius:14px;transition:border-color var(--motion-duration-base) ease,box-shadow var(--motion-duration-base) ease}
   .spellbox.focus{border-color:var(--amber);box-shadow:0 0 0 4px var(--chrome-focus-ring)}
   /* F1 answer feedback (global, identical every language + Kid Mode). Input is
      preserved so the player can fix, not retype. Classes cleared on animationend. */
@@ -1820,7 +1822,7 @@
   .ltr.space{width:.45em;text-shadow:none}
   .ltr.pop{animation:pop var(--motion-anim-letter-pop) ease}
   @keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
-  .placeholder{font-family:var(--mono);color:var(--muted-2);font-weight:400;font-size:16px;letter-spacing:.04em}
+  .placeholder{font-family:var(--mono);color:var(--muted);font-weight:700;font-size:16px;letter-spacing:.04em}
   .caret{display:inline-block;width:2px;height:26px;background:var(--glow);margin-inline-start:3px;border-radius:1px;opacity:0;box-shadow:0 0 6px var(--glow)}
   .spellbox.focus .caret{opacity:1;animation:blink var(--motion-anim-caret-blink) step-end infinite}
   @keyframes blink{50%{opacity:0}}
@@ -1883,7 +1885,7 @@
      gone the delete key fills the action row, reading as the keyboard's own
      control rather than a floating button. */
   .kb-submit.btn-hide{display:none}
-  .kb-back{flex:1 1 auto;width:auto;min-width:64px;font-size:19px;color:var(--muted)}
+  .kb-back{flex:1 1 auto;width:auto;min-width:64px;font-size:19px;color:var(--ink);background:var(--panel-raised);border:1.5px solid var(--edge-strong)}
   .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
   /* Vietnamese tone row: applies huyền/sắc/hỏi/ngã/nặng to the last vowel. */
   .kb-tones.btn-hide{display:none}
@@ -1923,7 +1925,7 @@
   body.kid .stage > .action-row,body.big-text .stage > .action-row{--kb-back-w:88px;--kb-act-h:56px}
   .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter var(--motion-duration-quick),transform var(--motion-duration-instant),opacity var(--motion-duration-quick)}
   .btn:active{transform:translateY(1px)}
-  .btn-check{background:var(--amber);color:var(--palette-on-gold-text)}
+  .btn-check{background:var(--amber);color:var(--palette-on-gold-text);font-size:16.5px;font-weight:800;box-shadow:0 0 18px color-mix(in srgb,var(--amber) 35%,transparent)}
   /* The way out of a finished run. Deliberately quieter than .btn-check:
      playing again is the expected choice, leaving is the one that must
      always be THERE. An outline reads as a control without competing. */
