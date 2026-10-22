@@ -1922,6 +1922,14 @@
   body.kid .kb-key,body.kid .kb-back,body.kid .kb-submit,
   body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px}
   body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
+  /* CC-SPELL-KEYBOARD (keyboard.core): the one shared keyboard. K-D17 key
+     heights (standard 44, Spell Jr 52, Big Text 56); K-D19 labels show the case
+     a key types, so they are lowercase and go uppercase only while Shift is armed. */
+  body.kb-core{--skb-key-h:44px}
+  body.kb-core.kid{--skb-key-h:52px}
+  body.kb-core.big-text{--skb-key-h:56px}
+  body.kb-core .game-kb .skb-key{min-height:var(--skb-key-h)}
+  body.kb-core #gameKeyboard.shift-on .skb-key{text-transform:uppercase}
 
   .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
   /* CC-VISUAL-ECLIPSE A2 (AT-4): Check joins the keyboard's bottom row, beside
@@ -2896,7 +2904,8 @@
   @media (prefers-reduced-motion: reduce){
     /* Press and hover nudges: the state still changes, instantly, in place. */
     .pill,.meta-icon,.data-chip,.launch,.setup-chip,.voice-spell-mic,.swatch,.theme-swatch,
-    .kb-key,.kb-back,.kb-submit,.switch::after,.pr-slot.echo,.dm-card.caught{transition:none}
+    .kb-key,.skb-key,.kb-back,.kb-submit,.switch::after,.pr-slot.echo,.dm-card.caught{transition:none}
+    .skb-key:active{transform:none}
     /* The toast fades in place instead of sliding up. */
     #toast{transition:opacity var(--motion-duration-base)}
     #toast,#toast.show{transform:translateX(-50%)}

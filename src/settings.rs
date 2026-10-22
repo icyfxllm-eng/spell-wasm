@@ -304,6 +304,8 @@ pub fn apply_settings(app: &App) {
     // CC-VISUAL-ECLIPSE Phase B: the same, for F4 feedback and the F3 orb.
     let _ = body.class_list().toggle_with_force("visual-feedback", crate::flags::visual_feedback());
     let _ = body.class_list().toggle_with_force("visual-orb", crate::flags::visual_orb());
+    // CC-SPELL-KEYBOARD Phase A: the shared keyboard's styles key off this class.
+    let _ = body.class_list().toggle_with_force("kb-core", crate::flags::keyboard_core());
     dom::input("kidToggle").set_checked(s.kid);
     // CC-ONBOARD-JR F5: a locked Spell Jr player (under-13 verdict) gets no
     // switch at all. The only way out is a grown-up, so the row offers exactly

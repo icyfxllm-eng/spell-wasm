@@ -283,6 +283,10 @@ fn key_button(ch: char, punct: bool, accents: &str) -> String {
 }
 
 fn build_keys(app: &App) {
+    if crate::flags::keyboard_core() {
+        build_keys_shared(app);
+        return;
+    }
     let locale = keyboard_locale(app);
     let layout = layout_for(&locale);
     let accents_for = |c: char| -> &'static str { layout.long_press.iter().find(|(k, _)| *k == c).map(|(_, a)| *a).unwrap_or("") };
@@ -351,6 +355,72 @@ fn build_keys(app: &App) {
     }
 }
 
+/// The main keyboard drawn and pressed through the shared keyboard
+/// (`keyboard.core`). Same rows, alternates, shift, punctuation and tone row as
+/// [`build_keys`]; the keys type through `game::emit_key` exactly as before.
+/// Labels are lowercase and go uppercase only while Shift is armed (K-D19).
+fn build_keys_shared(app: &App) {
+    use crate::spellkb::{Attr, Cap, Edges, Key, Surface};
+    let locale = keyboard_locale(app);
+    let layout = layout_for(&locale);
+    let accents_for = |c: char| -> &'static str { layout.long_press.iter().find(|(k, _)| *k == c).map(|(_, a)| *a).unwrap_or("") };
+    let last = layout.rows.len().saturating_sub(1);
+    let rows: Vec<Vec<Cap>> = layout
+        .rows
+        .iter()
+        .enumerate()
+        .map(|(ri, letters)| {
+            let mut row: Vec<Cap> = letters.chars().map(|c| Cap { key: Key::Unit(c.to_string()), accents: accents_for(c).to_string(), class: "" }).collect();
+            if ri == last {
+                for p in ['\'', '-'] {
+                    row.push(Cap { key: Key::Unit(p.to_string()), accents: String::new(), class: "kb-punct" });
+                }
+            }
+            row
+        })
+        .collect();
+    // CC-IMPOSSIBLE-COMPLETE: German Impossible grades capitals. Hidden (inert)
+    // unless the word on screen needs one; see game::toggle_shift.
+    let shift = if locale == "de" {
+        "<button type=\"button\" class=\"kb-key kb-shift btn-hide\" id=\"kbShift\" aria-label=\"shift\">\u{21e7}</button>"
+    } else {
+        ""
+    };
+    let letters = Surface { host: "kbLetters", row_class: "kb-row", key_class: "kb-key", attr: Attr::Raw("data-k"), long_press: true };
+    let a = app.clone();
+    crate::spellkb::mount(letters, &rows, Edges { lead: shift, tail: "" }, move |k| {
+        if let Key::Unit(u) = k {
+            if let Some(ch) = u.chars().next() {
+                game::emit_key(&a, ch);
+            }
+        }
+    });
+    if locale == "de" {
+        let a = app.clone();
+        dom::on_click("kbShift", move || game::toggle_shift(&a));
+    }
+    let base_cols = layout.rows.iter().map(|r| r.chars().count()).max().unwrap_or(10);
+    let cols = base_cols.max(layout.rows[last].chars().count() + 2);
+    if let Some(el) = dom::doc().get_element_by_id("gameKeyboard").and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
+        let _ = el.style().set_property("--kb-cols", &cols.to_string());
+    }
+    // The Vietnamese tone row, now with a name per tone (KF10).
+    if locale == "vi" {
+        let tones: Vec<Cap> = crate::viet::TONE_MARKS.iter().map(|&m| Cap::key(Key::Tone(m))).collect();
+        let row = Surface { host: "kbToneRow", row_class: "", key_class: "kb-key kb-tone", attr: Attr::ToneHex("data-tone"), long_press: false };
+        let a = app.clone();
+        crate::spellkb::mount(row, &[tones], Edges::default(), move |k| {
+            if let Key::Tone(m) = k {
+                game::apply_vi_tone(&a, *m);
+            }
+        });
+        dom::remove_class("kbToneRow", "btn-hide");
+    } else {
+        dom::set_html("kbToneRow", "");
+        dom::add_class("kbToneRow", "btn-hide");
+    }
+}
+
 // ---------- long-press accent popovers ----------
 
 #[derive(Default)]
@@ -378,6 +448,9 @@ fn wire_long_press(app: &App) {
     {
         let a = app.clone();
         dom::on_window::<web_sys::PointerEvent, _>("pointerdown", move |e| {
+            if crate::flags::keyboard_core() {
+                return; // the shared keyboard owns long-press (spellkb)
+            }
             // A new press always starts clean. `suppress_click` swallows the click
             // a touch release sends to the key it began on (implicit pointer
             // capture). A mouse or trackpad releases over the popover instead, so
