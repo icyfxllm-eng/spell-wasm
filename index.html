@@ -379,6 +379,9 @@
     --motion-anim-correct-hold:500ms;
     --motion-anim-wrong-hold:400ms;
     --motion-anim-letter-pop:280ms;
+    --motion-anim-letter-lift:180ms;
+    --motion-anim-letter-lift-stagger:25ms;
+    --motion-anim-letter-lift-budget:120ms;
     --motion-anim-caret-blink:1050ms;
     --motion-mode-defmatch-orb-glow:300ms;
     --motion-mode-defmatch-pulse:500ms;
@@ -2105,6 +2108,31 @@
   .feedback .syl-slow:hover{color:var(--amber);border-color:var(--amber)}
   .feedback.good{color:var(--teal)}
   .feedback.bad{color:var(--coral)}
+  /* CC-VISUAL-ECLIPSE F4, behind visual.feedback (body.visual-feedback; the
+     classes below only ever appear with it on). A wrong answer is caution amber,
+     never red -- in the base game and in DefMatch, Spelldoku, Spell Cross and
+     Impostor too (E-Q7); mode-owned scenes keep their palettes. The orb's shake
+     becomes a brief dim (E-Q7b). The You wrote / Correct marks are text
+     decorations and backgrounds only, never a box, so a cursive word joins. */
+  body.visual-feedback{--mode-defmatch-wrong-bg:color-mix(in srgb,var(--warn) 30%,transparent);--mode-impostor-wrong-bg:color-mix(in srgb,var(--warn) 50%,var(--orb-text));--mode-spelldoku-wrong-text:var(--warn);--mode-wordcross-wrong-bg:color-mix(in srgb,var(--warn) 24%,transparent)}
+  body.visual-feedback .dm-card.wrong{border-color:var(--warn)}
+  body.visual-feedback .xw-cell.wrong{color:var(--warn)}
+  body.visual-feedback .feedback.bad,
+  body.visual-feedback .feedback .reveal .rv-bad{color:var(--warn)}
+  body.visual-feedback .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, var(--amber-soft) 0%, var(--warn) 42%, color-mix(in srgb,var(--warn) 55%,var(--bg)) 100%);box-shadow:0 0 0 1px var(--warn-glow), 0 0 40px 4px var(--warn-glow);animation:orbDim var(--motion-anim-wrong-hold) ease}
+  body.visual-feedback .orb-wrap.bad .orb-glyph{color:var(--orb-text)}
+  @keyframes orbDim{0%,100%{filter:brightness(1)}35%{filter:brightness(.62)}}
+  .reveal-diff{display:block}
+  .rd-row{display:block;text-align:start;line-height:1.5}
+  .rd-label{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:normal;color:var(--muted-on-bg);margin-inline-end:.35em}
+  .feedback .rd-you .reveal{color:var(--warn)}
+  .feedback .rd-ok .reveal{color:var(--ink-on-bg)}
+  .rd-word mark.rd-sub{background:color-mix(in srgb,var(--warn) 34%,transparent);color:inherit}
+  .rd-word s.rd-extra{text-decoration:line-through 2px var(--warn)}
+  .rd-word u.rd-missing{text-decoration:underline 2px var(--warn);text-underline-offset:3px}
+  .rd-word .rd-swap{text-decoration:overline 2px var(--warn)}
+  .ltr.lift{animation:lift var(--motion-anim-letter-lift) ease both;animation-delay:calc(var(--i,0) * min(var(--motion-anim-letter-lift-stagger), var(--motion-anim-letter-lift-budget) / max(var(--n,1) - 1, 1)))}
+  @keyframes lift{0%,100%{transform:translateY(0)}45%{transform:translateY(-6px)}}
   .hint-line{text-align:center;margin-top:6px;font-family:var(--mono);font-size:18px;letter-spacing:.28em;color:var(--muted-on-bg);min-height:22px;word-break:break-word}
   .tries-line{text-align:center;margin-top:6px;font-size:11px;letter-spacing:.3em;min-height:14px}
   .tries-line .try-dot{color:var(--amber-soft)}
@@ -2875,6 +2903,9 @@
   @media (prefers-reduced-motion: reduce){
     /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
     .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
+    /* F4: the lift is movement and goes; the dim is brightness and stays. */
+    .ltr.lift{animation:none!important}
+    body.visual-feedback .orb-wrap.bad .orb{animation:orbDim var(--motion-anim-wrong-hold) ease!important}
     /* FIX 4: also drop the non-essential repaint-y transitions (animated
        box-shadow / filter) and release the compositor-layer hints, so a
        reduced-motion user gets zero incidental motion or extra layers. Static

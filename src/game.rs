@@ -2419,6 +2419,7 @@ fn on_correct(app: &App) {
         dom::set_text("bestNum", &app.borrow().best.to_string());
         dom::add_class("orbWrap", "good");
         spell_feedback(true);
+        lift_letters(app);
         set_streak_tier(streak);
         dom::set_text("orbGlyph", "\u{2713}");
         if earned {
@@ -2463,6 +2464,32 @@ fn spell_feedback(correct: bool) {
     dom::remove_class("spellbox", "is-correct");
     dom::remove_class("spellbox", "is-wrong");
     dom::add_class("spellbox", if correct { "is-correct" } else { "is-wrong" });
+}
+
+/// CC-VISUAL-ECLIPSE F4: on a correct answer the typed letters lift and settle
+/// in a stagger. Each letter carries its index and the count; the stylesheet
+/// turns those into a delay of 25 ms per letter, compressed so the whole wave
+/// ends inside 300 ms however long the word (motion tokens `letter-lift*`).
+/// A cursive word is one run and cannot be split, so it does not lift (CC-RTL
+/// F4); neither does anything with the flag off.
+fn lift_letters(app: &App) {
+    let joins = {
+        let s = app.borrow();
+        joins_for(&s, &s.lang)
+    };
+    if !crate::flags::visual_feedback() || joins {
+        return;
+    }
+    let Ok(list) = dom::el("letters").query_selector_all(".ltr") else { return };
+    let n = list.length();
+    for i in 0..n {
+        let Some(el) = list.item(i).and_then(|x| x.dyn_into::<web_sys::HtmlElement>().ok()) else { continue };
+        let style = el.style();
+        let _ = style.set_property("--i", &i.to_string());
+        let _ = style.set_property("--n", &n.to_string());
+        let _ = el.class_list().remove_1("pop");
+        let _ = el.class_list().add_1("lift");
+    }
 }
 
 /// Streak warmth tier (F2, D5): 0 (<3 in a row), 1 (3–5), 2 (6+). Warms the
@@ -2617,6 +2644,12 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
         );
         dom::el("feedback").set_class_name(feedback_class);
         wire_syllable_replay(app, sylls);
+    } else if let Some(rows) = diff_reveal(app, outcome, &cur_lang, &reveal, &typed) {
+        // CC-VISUAL-ECLIPSE F4: "You wrote" / "Correct", the letters marked.
+        // Before the cursive branch on purpose: its marks are inline text
+        // decorations, so an Arabic word still joins.
+        dom::set_html("feedback", &rows);
+        dom::el("feedback").set_class_name(feedback_class);
     } else if joins_for(&app.borrow(), &cur_lang) && !typed.is_empty() {
         // Cursive study language, and the player actually typed: per-akshara
         // colour feedback instead of a plain reveal. Positioned markers can't work
@@ -2656,6 +2689,53 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
     } else {
         end_chain(app);
     }
+}
+
+/// CC-VISUAL-ECLIPSE F4: the registry mode the base game is playing as, and the
+/// level that may override its feedback policy. Every surface this file serves
+/// is one of these rows in `config/modes.json`.
+fn feedback_mode(s: &AppState) -> (&'static str, Option<&'static str>) {
+    let mode = if s.versus.enabled {
+        "versus"
+    } else if s.daily.active {
+        "daily"
+    } else if s.review {
+        "misses"
+    } else if s.lang == crate::consts::MINE {
+        "my_words"
+    } else if s.level == "climb" {
+        "climb"
+    } else {
+        "standard"
+    };
+    let level = crate::impossible::engine::is_level(&s.level).then_some("impossible");
+    (mode, level)
+}
+
+/// The F4 rows for this miss, or `None` for today's reveal. Only a misspelling
+/// with an attempt, only where the mode's policy allows a diff, and never for
+/// the reveals that already teach something of their own: Mandarin's
+/// per-syllable tone verdict and Russian's stress mark.
+fn diff_reveal(app: &App, outcome: Outcome, cur_lang: &str, reveal: &str, typed: &str) -> Option<String> {
+    if !crate::flags::visual_feedback() || outcome != Outcome::Misspelled || cur_lang == crate::consts::ZH {
+        return None;
+    }
+    let s = app.borrow();
+    if ru_reveal_html(cur_lang, reveal, &effective_tier(&s)).is_some() {
+        return None;
+    }
+    let (mode, level) = feedback_mode(&s);
+    let policy = crate::modes::feedback_policy(mode, level);
+    if !crate::answer_reveal::may_show(&policy, typed) {
+        return None;
+    }
+    Some(crate::answer_reveal::rows_html(
+        &shown_form(cur_lang, reveal),
+        typed,
+        cur_lang,
+        &crate::i18n::t("fb.youWrote"),
+        &crate::i18n::t("fb.correctRow"),
+    ))
 }
 
 // ---------- F7: syllable replay on the reveal surface ----------

@@ -243,7 +243,8 @@
     "qbd.again",
     "qbd.rank",
     "qbd.boardTitle",
-    "qbd.boardEmpty"
+    "qbd.boardEmpty",
+    "fb.youWrote"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -495,7 +496,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -737,7 +739,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "de": [
       "hub.group.spell_it",
@@ -979,7 +982,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1221,7 +1225,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1463,7 +1468,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1705,7 +1711,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1947,7 +1954,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2189,7 +2197,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2431,7 +2440,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2673,7 +2683,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2915,7 +2926,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3157,7 +3169,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3399,7 +3412,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3641,7 +3655,8 @@
       "qbd.again",
       "qbd.rank",
       "qbd.boardTitle",
-      "qbd.boardEmpty"
+      "qbd.boardEmpty",
+      "fb.youWrote"
     ]
   }
 }

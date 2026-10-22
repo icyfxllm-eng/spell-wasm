@@ -597,6 +597,24 @@ pub fn visual_type() -> bool {
     resolve(stored("visual_type").as_deref(), false)
 }
 
+/// CC-VISUAL-ECLIPSE `visual.feedback` (Phase B, F4): answer feedback that
+/// teaches -- the letters lift in a stagger on a correct answer, and a wrong one
+/// is caution amber with "You wrote" / "Correct" rows marked from
+/// `display_diff`, where the mode's feedback policy allows it. **Default OFF**
+/// (V-D22), killable as `visual_feedback`. Off is a true no-op: no body class,
+/// and the reveal takes today's path.
+pub fn visual_feedback() -> bool {
+    resolve(stored("visual_feedback").as_deref(), false)
+}
+
+/// CC-VISUAL-ECLIPSE `visual.orb` (Phase B, F3): the orb as a living character
+/// -- the seven states, the speech envelope, the idle pause. **Default OFF**
+/// (V-D22), killable as `visual_orb`. Off: no body class, no state machine
+/// attribute, no envelope decode.
+pub fn visual_orb() -> bool {
+    resolve(stored("visual_orb").as_deref(), false)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:
@@ -685,6 +703,15 @@ mod tests {
                     "{} is in the registry but is_on has no arm for it, so it falls through to \
                      `_ => false` and is on paper only", m.id);
         }
+    }
+
+    #[test]
+    fn visual_feedback_and_orb_ship_dark() {
+        set_test_override(None);
+        assert!(!visual_feedback() && !visual_orb(), "Phase B ships dark until a build turns it on (V-D22)");
+        set_test_override(Some("on"));
+        assert!(visual_feedback() && visual_orb());
+        set_test_override(None);
     }
 
     #[test]

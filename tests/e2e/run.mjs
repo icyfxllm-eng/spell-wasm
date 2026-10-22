@@ -43,6 +43,7 @@ import * as scriptRender from './specs/script-render.mjs';
 import * as reduceMotion from './specs/reduce-motion.mjs';
 import * as frameLog from './specs/frame-log.mjs';
 import * as birthdayMonths from './specs/birthday-months.mjs';
+import * as answerFeedback from './specs/answer-feedback.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
@@ -125,6 +126,7 @@ const SPECS = [
   ['reduce-motion', reduceMotion],
   ['frame-log', frameLog],
   ['birthday-months', birthdayMonths],
+  ['answer-feedback', answerFeedback],
   ['picker-continue', pickerContinue],
   ['finale-pixels', finalePixels],
   ['platform', platform],
