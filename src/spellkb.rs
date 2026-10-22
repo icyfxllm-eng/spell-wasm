@@ -339,11 +339,19 @@ fn wire_host(host: &'static str) {
         let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(key) = t.closest(".skb-key").ok().flatten() else { return };
         let Some(k) = key.get_attribute(s.attr.name()).and_then(|v| s.attr.parse(&v)) else { return };
-        e.stop_propagation();
+        // The click keeps bubbling, exactly as before: a screen may do other work
+        // on any tap (Spelluzzle settles its decode ripple). A surface's own key
+        // handler steps aside for shared keys instead (`is_shared_key`).
         sink(&k);
     });
     let _ = el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref());
     cb.forget();
+}
+
+/// True when `el` is a key the shared keyboard already handled. A surface's own
+/// delegated key handler asks this and steps aside, so a press is typed once.
+pub fn is_shared_key(el: &web_sys::Element) -> bool {
+    el.class_list().contains("skb-key")
 }
 
 // ---------- long-press ----------

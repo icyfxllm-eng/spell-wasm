@@ -1522,7 +1522,27 @@ pub fn seam_hop(seat: u8, n: u32) -> i32 {
     play(vec![Seg::Walk(seat, from, from + n)])
 }
 
+/// CC-SPELL-KEYBOARD (`keyboard.core`): the same rows drawn and pressed through
+/// the shared keyboard. No long-press: this grid reaches accents, kana marks and
+/// tones through its own extra rows (BoardGame D20/D29), kept as they are.
+fn render_keys_shared() {
+    use crate::spellkb::{Attr, Cap, Edges, Surface};
+    let rows: Vec<Vec<Cap>> = with_ui(|u| {
+        u.keys
+            .iter()
+            .map(|row| row.iter().map(|k| Cap { key: k.clone(), accents: String::new(), class: if matches!(k, Key::Mod(_)) { "mod" } else { "" } }).collect())
+            .collect()
+    })
+    .unwrap_or_default();
+    let s = Surface { host: "bgKeys", row_class: "bg-row", key_class: "bg-key", attr: Attr::Prefixed("data-k"), long_press: false };
+    crate::spellkb::mount(s, &rows, Edges::default(), press_key);
+}
+
 fn render_keys() {
+    if crate::flags::keyboard_core() {
+        render_keys_shared();
+        return;
+    }
     let html: String = with_ui(|u| {
         u.keys
             .iter()
@@ -1658,13 +1678,21 @@ fn restart_timer() {
 }
 
 fn key_tap(e: web_sys::MouseEvent) {
+    if crate::flags::keyboard_core() {
+        return; // the shared keyboard routes presses to press_key
+    }
     let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-k]").ok().flatten()) else {
         return;
     };
     let Some(k) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
+    press_key(&k);
+}
+
+/// One key press, from either keyboard path.
+fn press_key(k: &Key) {
     with_ui(|u| {
         if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() {
-            u.typed = input::press(&u.lang, &u.typed, &k);
+            u.typed = input::press(&u.lang, &u.typed, k);
         }
     });
     haptics::key_tap();

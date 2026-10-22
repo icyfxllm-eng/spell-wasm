@@ -658,6 +658,47 @@ fn layout(lang: &str) -> (Vec<Vec<String>>, Vec<String>) {
 }
 
 /// The Vietnamese tone row: the five marks, entered after the syllable.
+/// One key typed into the answer, from either keyboard path.
+fn sd_type(k: &str) {
+    GAME.with(|c| {
+        if let Some(g) = c.borrow_mut().as_mut() {
+            // Nothing to spell until a symbol is picked (C2). Tier
+            // Mode's own draw counts as the pick.
+            let armed = g.picked.is_some() || g.prompt.is_some();
+            if g.sel.is_some() && armed && g.typed.chars().count() < 24 {
+                g.typed = type_key(&g.board.lang, &g.typed, k);
+            }
+        }
+    });
+    render();
+}
+
+/// CC-SPELL-KEYBOARD (`keyboard.core`): the same rows (letters, the flattened
+/// extras, the vi tone marks) drawn through the shared keyboard, with Backspace
+/// and Lock It In riding the last row as before. Those two keep their own
+/// wiring on #sdScreen; a key press reaches `sd_type`.
+fn render_keys_shared(lang: &str) {
+    use crate::spellkb::{Attr, Cap, Edges, Key, Surface};
+    let (rows, extras) = layout(lang);
+    let mut caps: Vec<Vec<Cap>> = rows
+        .iter()
+        .chain(std::iter::once(&extras))
+        .filter(|r| !r.is_empty())
+        .map(|r| r.iter().map(|c| Cap::key(Key::Unit(c.clone()))).collect())
+        .collect();
+    if lang == "vi" {
+        caps.push(VI_TONE_KEYS.iter().map(|&t| Cap::key(Key::Tone(t))).collect());
+    }
+    const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-sd-back>\u{232B}</button>\
+                          <button type=\"button\" class=\"kb-key wide go\" data-sd-go>\u{2713}</button>";
+    let s = Surface { host: "sdKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-sd-key"), long_press: false };
+    crate::spellkb::mount(s, &caps, Edges { lead: "", tail: COMMIT }, |k| match k {
+        Key::Unit(u) => sd_type(u),
+        Key::Tone(t) => sd_type(&t.to_string()),
+        Key::Mod(_) => {}
+    });
+}
+
 const VI_TONE_KEYS: [char; 5] = ['\u{0300}', '\u{0301}', '\u{0309}', '\u{0303}', '\u{0323}'];
 
 /// Add one key to what has been typed. Korean composes jamo into syllables the
@@ -883,7 +924,10 @@ fn render() {
             g.typed.clone()
         };
         dom::set_text("sdTyped", &typed);
-        let keys = if g.pencil_mode {
+        let shared = crate::flags::keyboard_core() && !g.pencil_mode;
+        let keys = if shared {
+            String::new()
+        } else if g.pencil_mode {
             // F1: pencil marks are digits and never open the keyboard.
             (1..=n as u8)
                 .map(|v| format!("<button type=\"button\" class=\"kb-key\" data-sd-pen=\"{v}\">{}</button>", dom::escape_html(&cell_label(g, v))))
@@ -935,7 +979,11 @@ fn render() {
             }
             k
         };
-        dom::set_html("sdKeys", &keys);
+        if shared {
+            render_keys_shared(&g.board.lang);
+        } else {
+            dom::set_html("sdKeys", &keys);
+        }
         let _ = dom::el("sdPencil").set_attribute("aria-pressed", if g.pencil_mode { "true" } else { "false" });
         // D2: Check Board exists on Hard and Expert, three times.
         let check = !play::logic_errors_shown_at_once(g.board.puzzle.tier);
@@ -1489,17 +1537,9 @@ pub fn wire(app: &App) {
             });
             render();
         } else if let Some(k) = el.get_attribute("data-sd-key") {
-            GAME.with(|c| {
-                if let Some(g) = c.borrow_mut().as_mut() {
-                    // Nothing to spell until a symbol is picked (C2). Tier
-                    // Mode's own draw counts as the pick.
-                    let armed = g.picked.is_some() || g.prompt.is_some();
-                    if g.sel.is_some() && armed && g.typed.chars().count() < 24 {
-                        g.typed = type_key(&g.board.lang, &g.typed, &k);
-                    }
-                }
-            });
-            render();
+            if !crate::spellkb::is_shared_key(&el) {
+                sd_type(&k);
+            }
         } else if let Some(v) = el.get_attribute("data-sd-tier").and_then(|v| v.parse::<u8>().ok()) {
             tier_digit(v);
         } else if el.get_attribute("data-sd-back").is_some() {

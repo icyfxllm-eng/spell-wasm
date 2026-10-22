@@ -175,6 +175,30 @@ pub fn unit_rows(locale: &str) -> &'static [&'static str] {
     layout_for(locale).rows
 }
 
+/// The long-press alternates the main keyboard offers on `c` in `locale` (empty
+/// when it offers none): the shared keyboard gives every surface that
+/// long-presses the same alternates, from this one registry.
+pub fn alternates(locale: &str, c: char) -> &'static str {
+    layout_for(locale).long_press.iter().find(|(k, _)| *k == c).map(|(_, a)| *a).unwrap_or("")
+}
+
+/// The shared-keyboard rows for a surface that types the layout's own units:
+/// every row key with its alternates, then, for Vietnamese, the tone row the
+/// main keyboard has. Bee and Word Chains had neither, so an accented, voiced or
+/// toned word could not be typed there at all.
+pub fn shared_rows(locale: &str) -> Vec<Vec<crate::spellkb::Cap>> {
+    use crate::spellkb::{Cap, Key};
+    let mut rows: Vec<Vec<Cap>> = layout_for(locale)
+        .rows
+        .iter()
+        .map(|r| r.chars().map(|c| Cap { key: Key::Unit(c.to_string()), accents: alternates(locale, c).to_string(), class: "" }).collect())
+        .collect();
+    if locale == "vi" {
+        rows.push(crate::viet::TONE_MARKS.iter().map(|&m| Cap::key(Key::Tone(m))).collect());
+    }
+    rows
+}
+
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
         "es" => &ES,

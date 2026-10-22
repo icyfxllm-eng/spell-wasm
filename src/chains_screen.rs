@@ -209,6 +209,12 @@ fn render_score() {
 }
 
 fn render_keys(lang: &str) {
+    if crate::flags::keyboard_core() {
+        use crate::spellkb::{Attr, Edges, Surface};
+        let s = Surface { host: "cnKeys", row_class: "cn-row", key_class: "cn-key", attr: Attr::Raw("data-k"), long_press: true };
+        crate::spellkb::mount(s, &crate::keyboard::shared_rows(lang), Edges::default(), press_key);
+        return;
+    }
     let mut html = String::new();
     for row in crate::keyboard::unit_rows(lang) {
         html.push_str("<div class=\"cn-row\">");
@@ -226,6 +232,9 @@ fn render_keys(lang: &str) {
 // ------------------------------------------------------------------ input
 
 fn tap(e: web_sys::MouseEvent) {
+    if crate::flags::keyboard_core() {
+        return; // the shared keyboard routes presses to press_key
+    }
     if OVER.with(Cell::get) {
         return;
     }
@@ -237,6 +246,35 @@ fn tap(e: web_sys::MouseEvent) {
         return;
     };
     let Some(k) = el.get_attribute("data-k") else { return };
+    type_unit(&k);
+}
+
+/// CC-SPELL-KEYBOARD (`keyboard.core`): a press from the shared keyboard.
+fn press_key(k: &crate::spellkb::Key) {
+    use crate::spellkb::Key;
+    if OVER.with(Cell::get) {
+        return;
+    }
+    match k {
+        Key::Unit(u) => type_unit(u),
+        Key::Tone(m) => {
+            // Vietnamese: re-tone the last vowel, as every other keyboard does.
+            CURRENT.with(|c| {
+                let mut cur = c.borrow_mut();
+                if let Some(r) = cur.chars().last().and_then(|last| crate::viet::retone(last, *m)) {
+                    cur.pop();
+                    cur.push_str(&r);
+                }
+            });
+            haptics::key_tap();
+            render_word();
+        }
+        Key::Mod(_) => {}
+    }
+}
+
+/// One unit typed, from either keyboard path.
+fn type_unit(k: &str) {
     let lang = LANG.with(|l| l.borrow().clone());
     CURRENT.with(|c| {
         let mut cur = c.borrow_mut();
