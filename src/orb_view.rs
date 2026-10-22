@@ -39,6 +39,10 @@ const ENV_CACHE: usize = 8;
 /// envelope clock starts there plus this offset, to be measured on a device
 /// for AT-8. Until it is, zero.
 const NATIVE_START_OFFSET_MS: f64 = 0.0;
+/// The native player sends no end event, so a native clip whose envelope never
+/// arrives (a failed read or decode) leaves `speaking` after this long rather
+/// than holding it until the answer. Word clips run about a second.
+const NATIVE_NO_ENVELOPE_END_S: f64 = 2.5;
 
 /// Where the playback clock comes from while speaking.
 #[derive(Clone)]
@@ -67,6 +71,8 @@ thread_local! {
     static SPEAK: RefCell<Option<Speak>> = const { RefCell::new(None) };
     static ENVS: RefCell<VecDeque<(String, Rc<Vec<f32>>)>> = const { RefCell::new(VecDeque::new()) };
     static LOADING: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
+    /// Reads to try once more if the one in flight comes back empty.
+    static RETRY: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
     static RAF_ON: Cell<bool> = const { Cell::new(false) };
     static REST_TIMER: Cell<i32> = const { Cell::new(0) };
     static INSTALLED: Cell<bool> = const { Cell::new(false) };
@@ -208,6 +214,15 @@ pub fn prepare_native(asset_id: &str) {
 /// The native player's play() resolved.
 pub fn native_started(asset_id: &str, rate: f64) {
     if on() {
+        // On a first play the clip was not on disk when `prepare_native` ran
+        // (the player downloads it first), so that read found nothing. It is on
+        // disk now; read again. A no-op when the envelope is already in hand.
+        let key = asset_id.to_string();
+        if LOADING.with(|l| l.borrow().contains(&key)) {
+            RETRY.with(|r| r.borrow_mut().push(key.clone()));
+        } else {
+            prepare(key.clone(), Source::Cached(key.clone()));
+        }
         start_speaking(asset_id.to_string(), Clock::Since(now() + NATIVE_START_OFFSET_MS), rate);
     }
 }
@@ -289,8 +304,20 @@ fn prepare(key: String, src: Source) {
                     e.pop_front();
                 }
             }),
-            // E-Q2 (a): a failed decode means the orb breathes; say so once.
-            None => web_sys::console::warn_1(&"orb: no envelope for this clip; the corona breathes instead".into()),
+            None => {
+                let again = RETRY.with(|r| {
+                    let mut r = r.borrow_mut();
+                    let had = r.contains(&key);
+                    r.retain(|k| k != &key);
+                    had
+                });
+                if again {
+                    prepare(key, src);
+                } else {
+                    // E-Q2 (a): a failed decode means the orb breathes; say so once.
+                    web_sys::console::warn_1(&"orb: no envelope for this clip; the corona breathes instead".into());
+                }
+            }
         }
     });
 }
@@ -380,8 +407,15 @@ fn frame() -> bool {
                 }
                 orb::level_at(env, t)
             }
-            // No envelope (yet, or ever): a gentle pulse, never frozen.
-            _ => 0.35 + 0.25 * ((t * std::f64::consts::TAU * 1.6).sin() as f32),
+            // No envelope (yet, or ever): a gentle pulse, never frozen. A
+            // native clip has no end event, so without an envelope it ends on
+            // a fixed limit instead of holding `speaking` until the answer.
+            _ => {
+                if matches!(sp.clock, Clock::Since(_)) && t > NATIVE_NO_ENVELOPE_END_S * sp.rate {
+                    done = true;
+                }
+                0.35 + 0.25 * ((t * std::f64::consts::TAU * 1.6).sin() as f32)
+            }
         };
         Some(level)
     });
