@@ -593,6 +593,8 @@
   "settings.backgroundSmall": "Kolor tła strony",
   "settings.bigText": "Duży tekst",
   "settings.bigTextSmall": "Powiększa tekst interfejsu (około 1,5×)",
+  "settings.deviceKb": "Użyj klawiatury urządzenia",
+  "settings.deviceKbSmall": "Wpisuj odpowiedzi na klawiaturze swojego urządzenia. Autokorekta pozostaje wyłączona.",
   "settings.done": "Gotowe",
   "settings.extraAttempts": "Dodatkowa próba po pomyłce",
   "settings.extraAttemptsSmall": "Druga próba, gdy pomylisz słowo",

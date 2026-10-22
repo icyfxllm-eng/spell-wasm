@@ -593,6 +593,8 @@
   "settings.backgroundSmall": "페이지 배경 색",
   "settings.bigText": "큰 글자",
   "settings.bigTextSmall": "인터페이스 글자를 확대(약 1.5×)",
+  "settings.deviceKb": "기기 키보드 사용",
+  "settings.deviceKbSmall": "기기 자체 키보드로 답을 입력합니다. 자동 수정은 계속 꺼져 있습니다.",
   "settings.done": "완료",
   "settings.extraAttempts": "틀렸을 때 추가 시도",
   "settings.extraAttemptsSmall": "단어를 틀리면 한 번 더 시도",

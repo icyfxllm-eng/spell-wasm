@@ -593,6 +593,8 @@
   "settings.backgroundSmall": "Hintergrundfarbe der Seite",
   "settings.bigText": "Großer Text",
   "settings.bigTextSmall": "Vergrößert den Oberflächentext (etwa 1,5×)",
+  "settings.deviceKb": "Gerätetastatur verwenden",
+  "settings.deviceKbSmall": "Antworten mit der Tastatur deines Geräts eingeben. Die Autokorrektur bleibt aus.",
   "settings.done": "Fertig",
   "settings.extraAttempts": "Zusätzlicher Versuch bei Fehlern",
   "settings.extraAttemptsSmall": "Ein zweiter Versuch, wenn du ein Wort verfehlst",

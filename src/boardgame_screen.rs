@@ -117,6 +117,8 @@ thread_local! {
     static IMPOSSIBLE_TRAP: Cell<bool> = const { Cell::new(false) };
     /// Replays spent on the current Impossible trap word (the engine allows one).
     static IMP_REPLAYS: Cell<u8> = const { Cell::new(0) };
+    /// CC-SPELL-KEYBOARD (`keyboard.core`): the one-shot Shift, armed for the next letter.
+    static SHIFT: Cell<bool> = const { Cell::new(false) };
     static SETUP: RefCell<Setup> = RefCell::new(Setup::fresh());
     static UI: RefCell<Option<Ui>> = const { RefCell::new(None) };
     static LANG: RefCell<(String, bool)> = const { RefCell::new((String::new(), false)) };
@@ -772,6 +774,14 @@ fn render() {
 
         // I11: the key grid exists on screen for a human's spelling only.
         dom::set_hidden("bgSpell", !spelling);
+        // The Shift shows only while a case-strict Impossible trap word is spelled.
+        if dom::exists("bgShift") {
+            let need = spelling && g.pending.as_ref().is_some_and(|p| p.kind == SpellKind::Impossible);
+            dom::toggle_class("bgShift", "btn-hide", !need);
+            if !need {
+                set_shift(false);
+            }
+        }
         // Feature 1: the Stretch choice, shown after the die and before any word (I-P6, A-P2).
         let choosing = human_turn && g.phase == Phase::AwaitStretch;
         dom::set_hidden("bgStretch", !choosing);
@@ -1534,8 +1544,32 @@ fn render_keys_shared() {
             .collect()
     })
     .unwrap_or_default();
+    // K-D18 / L-D4: a language that grades case at Impossible gets a Shift, so its
+    // Impossible trap word can be typed here at all. Drawn hidden; shown only
+    // while such a word is being spelled (render).
+    let lang = with_ui(|u| u.lang.clone()).unwrap_or_default();
+    let shift = if crate::impossible::engine::needs_shift(&lang) {
+        "<button type=\"button\" class=\"bg-shift skb-shift btn-hide\" id=\"bgShift\" aria-label=\"shift\">\u{21e7}</button>"
+    } else {
+        ""
+    };
     let s = Surface { host: "bgKeys", row_class: "bg-row", key_class: "bg-key", attr: Attr::Prefixed("data-k"), long_press: false };
-    crate::spellkb::mount(s, &rows, Edges::default(), press_key);
+    crate::spellkb::mount(s, &rows, Edges { lead: shift, tail: "" }, press_key);
+    set_shift(false);
+    if !shift.is_empty() {
+        dom::on_click("bgShift", || set_shift(!SHIFT.with(Cell::get)));
+    }
+}
+
+/// Arm or clear the one-shot Shift; the key and the key labels show its state.
+fn set_shift(on: bool) {
+    SHIFT.with(|s| s.set(on));
+    if let Some(b) = dom::doc().get_element_by_id("bgShift") {
+        let _ = b.class_list().toggle_with_force("on", on);
+    }
+    if let Some(k) = dom::doc().get_element_by_id("bgKeys") {
+        let _ = k.class_list().toggle_with_force("shift-on", on);
+    }
 }
 
 fn render_keys() {
@@ -1690,6 +1724,16 @@ fn key_tap(e: web_sys::MouseEvent) {
 
 /// One key press, from either keyboard path.
 fn press_key(k: &Key) {
+    // An armed Shift capitalises this letter, once (the Impossible trap word).
+    let upper;
+    let k = match k {
+        Key::Unit(u) if SHIFT.with(Cell::get) && u.chars().next().is_some_and(char::is_alphabetic) => {
+            set_shift(false);
+            upper = Key::Unit(u.to_uppercase());
+            &upper
+        }
+        _ => k,
+    };
     with_ui(|u| {
         if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() {
             u.typed = input::press(&u.lang, &u.typed, k);
