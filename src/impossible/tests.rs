@@ -595,6 +595,19 @@ fn accepted_alternates_are_per_word() {
     assert!(engine::accepted_alternates("en", "demesne").is_empty());
 }
 
+/// Eric 2026-10-22: the outside-twin sweep. Genuine second spellings are accepted for the pool word; names and
+/// non-words that merely share a pronunciation are not.
+#[test]
+fn outside_twins_of_pool_words_are_accepted() {
+    for (word, twin) in [("anesthesiology", "anaesthesiology"), ("archaeological", "archeological"), ("rescission", "recision"), ("sibyl", "sybil")] {
+        assert!(engine::grade("en", twin, word), "{twin} for {word}");
+        assert!(engine::grade("en", word, word));
+    }
+    assert!(!engine::grade("en", "shali", "challis"), "a non-word twin is not a spelling");
+    assert!(!engine::grade("en", "mer", "myrrh"));
+    assert!(!engine::grade("en", "dumaine", "demesne"));
+}
+
 /// Every accepted-alternates key is a word in that language's pool (a stale entry would be dead data), and no
 /// alternate is the pool word itself.
 #[test]
