@@ -2689,6 +2689,14 @@
   .age-scrim{z-index:60}
   .dob-row{display:flex;gap:8px;margin-bottom:8px}
   .dob-row select{flex:1;min-width:0;text-align:center}
+  /* Phase B carry-in B-C1: the month gets the room it needs. Day and year only
+     ever hold two and four digits, so they size to that; the month takes the rest
+     (equal thirds clipped 7 of 12 English months on an iPhone SE). */
+  .dob-row #ageDay{flex:0 0 auto;width:auto}
+  .dob-row #ageYear{flex:0 0 auto;width:auto}
+  .dob-row #ageMonth{flex:1 1 auto}
+  /* The first SE is 320pt wide: the month takes its own line there, day and year share the next. */
+  @media (max-width:360px){.dob-row{flex-wrap:wrap}.dob-row #ageMonth{flex:1 0 100%}.dob-row #ageDay,.dob-row #ageYear{flex:1 1 auto}}
   .dob-err{min-height:18px;margin-bottom:10px;color:var(--coral);font-size:12.5px;font-weight:600}
   /* The Climb — accounts + leaderboard */
   .fd-screen input[type=email],.fd-screen input[type=password],

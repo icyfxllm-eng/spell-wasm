@@ -95,13 +95,14 @@ pub fn age_from(y: i32, m: u32, d: u32) -> u32 {
 /// Fill the month/day/year selectors. Year starts at a neutral 2000 (never a
 /// value that hints at the cutoff); range is the last ~100 years.
 pub fn populate_selects() {
-    const MONTHS: [&str; 12] = [
-        "January", "February", "March", "April", "May", "June", "July", "August", "September",
-        "October", "November", "December",
-    ];
+    // Phase B carry-in B-C2: the month names come from the platform's own date
+    // formatting in the player's interface language (they were a hard-coded
+    // English list, so a Spanish player chose from "January"). The option VALUE
+    // stays the month number, so the age verdict cannot change.
+    let names = month_names(&crate::i18n::current());
     let mut mo = String::new();
-    for (i, name) in MONTHS.iter().enumerate() {
-        mo.push_str(&format!("<option value=\"{}\">{}</option>", i + 1, name));
+    for (i, name) in names.iter().enumerate() {
+        mo.push_str(&format!("<option value=\"{}\">{}</option>", i + 1, dom::escape_html(name)));
     }
     dom::set_html("ageMonth", &mo);
 
@@ -121,6 +122,37 @@ pub fn populate_selects() {
     dom::select("ageMonth").set_value("1");
     dom::select("ageDay").set_value("1");
     dom::select("ageYear").set_value("2000");
+}
+
+const MONTHS_EN: [&str; 12] = [
+    "January", "February", "March", "April", "May", "June", "July", "August", "September",
+    "October", "November", "December",
+];
+
+/// The twelve month names in `locale`, through Intl.DateTimeFormat. If the
+/// platform cannot give twelve non-empty names (no Intl, an unknown locale),
+/// this says so in the console and uses English: never a silent fallback.
+fn month_names(locale: &str) -> Vec<String> {
+    let opts = js_sys::Object::new();
+    let _ = js_sys::Reflect::set(&opts, &"month".into(), &"long".into());
+    let locales = js_sys::Array::of1(&locale.into());
+    let fmt = js_sys::Intl::DateTimeFormat::new(&locales, &opts);
+    let format = fmt.format();
+    let names: Vec<String> = (0..12)
+        .map(|m| {
+            // The 15th at noon UTC, so no time zone can push the date into the next month.
+            let d = js_sys::Date::new(&js_sys::Date::utc(2000.0, m as f64).into());
+            d.set_utc_date(15);
+            d.set_utc_hours(12);
+            format.call1(&fmt, &d).ok().and_then(|v| v.as_string()).unwrap_or_default()
+        })
+        .collect();
+    if names.len() == 12 && names.iter().all(|n| !n.trim().is_empty() && !n.chars().all(|c| c.is_ascii_digit())) {
+        names
+    } else {
+        web_sys::console::warn_1(&format!("agegate: no month names for {locale:?} from Intl; using English").into());
+        MONTHS_EN.iter().map(|s| s.to_string()).collect()
+    }
 }
 
 /// Read the current (year, month, day) from the selectors.
