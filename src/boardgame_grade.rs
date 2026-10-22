@@ -41,6 +41,8 @@ pub fn grade(lang: &str, kid: bool, typed: &str, entry: &str, tier: Tier) -> boo
     crate::norm::answer_matches_in(lang, typed, word, kid)
         || crate::homophones::accepts(lang, word, typed)
         || (lang == consts::EN && crate::variants::accepts(word, typed))
+        // The Impossible trap word: its reviewed second spellings (comptroller / controller) count here too.
+        || crate::impossible::engine::accepted_alternates(lang, word).iter().any(|a| crate::norm::same_answer(lang, typed, a))
 }
 
 #[cfg(test)]
@@ -57,6 +59,13 @@ mod tests {
         assert!(grade("en", false, "pear", "pair", Tier::Medium));
         assert!(grade("en", false, "there", "their", Tier::Hard));
         assert!(!grade("en", false, "pare ", "pail", Tier::Hard));
+    }
+
+    #[test]
+    fn the_trap_accepts_the_reviewed_second_spellings() {
+        assert!(grade("en", false, "controller", "comptroller", Tier::Expert));
+        assert!(grade("en", false, "recision", "rescission", Tier::Expert));
+        assert!(!grade("en", false, "controller", "controlled", Tier::Expert));
     }
 
     #[test]
