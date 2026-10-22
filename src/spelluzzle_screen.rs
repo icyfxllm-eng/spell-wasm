@@ -951,7 +951,26 @@ fn speak(word: &str, lang: &str) {
 
 // ------------------------------------------------------------------ render
 
+/// CC-SPELL-KEYBOARD (`keyboard.core`): the same letter rows and delete key
+/// drawn through the shared keyboard. Units only, as before (this board types
+/// no tones or kana marks).
+fn render_keys_shared() {
+    use crate::spellkb::{Attr, Cap, Edges, Surface};
+    let rows: Vec<Vec<Cap>> = with_ui(|u| {
+        u.keys.iter().map(|row| row.iter().filter(|k| matches!(k, Key::Unit(_))).map(|k| Cap::key(k.clone())).collect()).collect()
+    })
+    .unwrap_or_default();
+    // The delete key lives at the end of the last letter row, so the keyboard stays three rows tall.
+    let del = format!("<button type=\"button\" class=\"sz-key sz-del\" data-del=\"1\" aria-label=\"{}\">\u{232b}</button>", dom::escape_html(&tr("aria.backspace", &[])));
+    let s = Surface { host: "szKbKeys", row_class: "sz-krow", key_class: "sz-key", attr: Attr::Prefixed("data-k"), long_press: false };
+    crate::spellkb::mount(s, &rows, Edges { lead: "", tail: &del }, shared_key);
+}
+
 fn render_keys() {
+    if crate::flags::keyboard_core() {
+        render_keys_shared();
+        return;
+    }
     let html: String = with_ui(|u| {
         u.keys
             .iter()
@@ -1255,6 +1274,9 @@ fn board_tap(e: web_sys::MouseEvent) {
 }
 
 fn key_tap(e: web_sys::MouseEvent) {
+    if e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest(".skb-key").ok().flatten()).is_some() {
+        return; // typed already by the shared keyboard (keyboard.core)
+    }
     if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
         duel_key(e);
         return;
@@ -1266,6 +1288,24 @@ fn key_tap(e: web_sys::MouseEvent) {
     let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-k]").ok().flatten()) else { return };
     let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
     let Some(c) = u.chars().next() else { return };
+    unit_key(c);
+}
+
+/// CC-SPELL-KEYBOARD (`keyboard.core`): a press from the shared keyboard. Delete
+/// is not a key there; its click still reaches `key_tap` through `#szKb`.
+fn shared_key(k: &Key) {
+    let Key::Unit(u) = k else { return };
+    let Some(c) = u.chars().next() else { return };
+    if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
+        haptics::key_tap();
+        duel_unit(c);
+    } else {
+        unit_key(c);
+    }
+}
+
+/// One letter, outside a Duel, from either keyboard path.
+fn unit_key(c: char) {
     haptics::key_tap();
     // F16: with a rune held, the next key is its pencil mark and nothing else.
     let marked = with_ui(|ui| match ui.target.take() {
@@ -1563,6 +1603,11 @@ fn duel_key(e: web_sys::MouseEvent) {
     let Some(el) = t.closest("[data-k]").ok().flatten() else { return };
     let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
     let Some(c) = u.chars().next() else { return };
+    duel_unit(c);
+}
+
+/// A letter typed into the Duel draft, from either keyboard path.
+fn duel_unit(c: char) {
     with_ui(|ui| {
         if let Some(du) = ui.duel.as_mut() {
             if let (Some(i), Some(_)) = (du.selected, du.mode) {
