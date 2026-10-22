@@ -11,6 +11,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.glow = p.glow.unwrap_or_else(|| crate::tokens::COLOR_GLOW.value.to_string());
     state.bg_color = p.bg_color.unwrap_or_else(|| crate::tokens::COLOR_BG_USER.value.to_string());
     state.orb_color = p.orb_color.unwrap_or_else(|| crate::tokens::COLOR_ORB_CORE.value.to_string());
+    state.controls_color = p.controls_color.unwrap_or_else(|| crate::tokens::COLOR_CONTROLS.value.to_string());
     state.last_lang = p.last_lang;
     state.kid = p.kid;
     state.readable = p.readable;
@@ -40,6 +41,7 @@ pub fn save_prefs(state: &AppState) {
         glow: Some(state.glow.clone()),
         bg_color: Some(state.bg_color.clone()),
         orb_color: Some(state.orb_color.clone()),
+        controls_color: Some(state.controls_color.clone()),
         last_lang: Some(state.lang.clone()),
         kid: state.kid,
         readable: state.readable,
@@ -190,6 +192,48 @@ pub fn set_orb_color(app: &App, color: &str) {
     dom::input("orbColorInput").set_value(color);
     sync_swatches("orbPick", ".theme-swatch[data-c]", color);
     save_prefs(&app.borrow());
+}
+
+/// The Controls colour: the menu button, setup bar, answer box and Delete are
+/// mixed from it (--panel-raised, --edge-strong in the stylesheet). Their text
+/// stays light ink: the panel is a quarter of the pick over the dark base, so
+/// even a white pick leaves it dark enough to read.
+pub fn set_controls_color(app: &App, color: &str) {
+    build_controls_swatches();
+    app.borrow_mut().controls_color = color.to_string();
+    dom::set_css_var("--controls-color", color);
+    dom::input("ctlColorInput").set_value(color);
+    sync_swatches("ctlPick", ".theme-swatch[data-c]", color);
+    save_prefs(&app.borrow());
+}
+
+/// The Controls swatches, from the tokens (so no colour literal lives in the
+/// page). Built once, ahead of the custom picker; `data-i18n-aria` lets a
+/// language switch relabel them like every other swatch.
+const CONTROLS_SWATCHES: [(crate::tokens::Token, &str); 5] = [
+    (crate::tokens::COLOR_CONTROLS_SWATCH_VIOLET, "aria.ctlViolet"),
+    (crate::tokens::COLOR_CONTROLS_SWATCH_BLUE, "aria.ctlBlue"),
+    (crate::tokens::COLOR_CONTROLS_SWATCH_TEAL, "aria.ctlTeal"),
+    (crate::tokens::COLOR_CONTROLS_SWATCH_AMBER, "aria.ctlAmber"),
+    (crate::tokens::COLOR_CONTROLS_SWATCH_ROSE, "aria.ctlRose"),
+];
+
+fn build_controls_swatches() {
+    let pick = dom::el("ctlPick");
+    if pick.query_selector(".theme-swatch[data-c]").ok().flatten().is_some() {
+        return;
+    }
+    let custom = pick.first_element_child();
+    for (tok, key) in CONTROLS_SWATCHES {
+        let Ok(b) = dom::doc().create_element("button") else { continue };
+        b.set_class_name("theme-swatch");
+        let _ = b.set_attribute("type", "button");
+        let _ = b.set_attribute("style", &format!("--s:{}", tok.value));
+        let _ = b.set_attribute("data-c", tok.value);
+        let _ = b.set_attribute("aria-label", &crate::i18n::t(key));
+        let _ = b.set_attribute("data-i18n-aria", key);
+        let _ = pick.insert_before(&b, custom.as_ref().map(|c| c.as_ref()));
+    }
 }
 
 /// Sets the shared playback volume/boost (0.5-2.0), persists it, and syncs
