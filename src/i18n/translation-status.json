@@ -252,7 +252,15 @@
     "aria.ctlTeal",
     "aria.ctlAmber",
     "aria.ctlRose",
-    "aria.ctlCustom"
+    "aria.ctlCustom",
+    "settings.buttons",
+    "settings.buttonsSmall",
+    "aria.btnAmber",
+    "aria.btnTeal",
+    "aria.btnBlue",
+    "aria.btnViolet",
+    "aria.btnRose",
+    "aria.btnCustom"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -513,7 +521,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -764,7 +780,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1015,7 +1039,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1266,7 +1298,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1517,7 +1557,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1768,7 +1816,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2019,7 +2075,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2270,7 +2334,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2521,7 +2593,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2772,7 +2852,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3023,7 +3111,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3274,7 +3370,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3525,7 +3629,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3776,7 +3888,15 @@
       "aria.ctlTeal",
       "aria.ctlAmber",
       "aria.ctlRose",
-      "aria.ctlCustom"
+      "aria.ctlCustom",
+      "settings.buttons",
+      "settings.buttonsSmall",
+      "aria.btnAmber",
+      "aria.btnTeal",
+      "aria.btnBlue",
+      "aria.btnViolet",
+      "aria.btnRose",
+      "aria.btnCustom"
     ]
   }
 }
