@@ -244,7 +244,15 @@
     "qbd.rank",
     "qbd.boardTitle",
     "qbd.boardEmpty",
-    "fb.youWrote"
+    "fb.youWrote",
+    "settings.controls",
+    "settings.controlsSmall",
+    "aria.ctlViolet",
+    "aria.ctlBlue",
+    "aria.ctlTeal",
+    "aria.ctlAmber",
+    "aria.ctlRose",
+    "aria.ctlCustom"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -497,7 +505,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -740,7 +756,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "de": [
       "hub.group.spell_it",
@@ -983,7 +1007,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1226,7 +1258,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1469,7 +1509,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1712,7 +1760,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -1955,7 +2011,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2198,7 +2262,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2441,7 +2513,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2684,7 +2764,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -2927,7 +3015,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3170,7 +3266,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3413,7 +3517,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3656,7 +3768,15 @@
       "qbd.rank",
       "qbd.boardTitle",
       "qbd.boardEmpty",
-      "fb.youWrote"
+      "fb.youWrote",
+      "settings.controls",
+      "settings.controlsSmall",
+      "aria.ctlViolet",
+      "aria.ctlBlue",
+      "aria.ctlTeal",
+      "aria.ctlAmber",
+      "aria.ctlRose",
+      "aria.ctlCustom"
     ]
   }
 }

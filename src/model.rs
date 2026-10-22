@@ -8,6 +8,8 @@ pub struct Prefs {
     pub bg_color: Option<String>,
     #[serde(rename = "orbColor")]
     pub orb_color: Option<String>,
+    #[serde(rename = "controlsColor", default)]
+    pub controls_color: Option<String>,
     #[serde(rename = "lastLang")]
     pub last_lang: Option<String>,
     pub kid: bool,
@@ -222,6 +224,8 @@ pub struct AppState {
     pub glow: String,
     pub bg_color: String,
     pub orb_color: String,
+    /// The play screen's primary controls (Settings > Controls).
+    pub controls_color: String,
     pub last_lang: Option<String>,
     pub kid: bool,
     /// True when a stored "kid" age-gate verdict locks the app in Kid Mode;
@@ -306,6 +310,7 @@ impl Default for AppState {
             glow: crate::tokens::COLOR_GLOW.value.into(),
             bg_color: crate::tokens::COLOR_BG_USER.value.into(),
             orb_color: crate::tokens::COLOR_ORB_CORE.value.into(),
+            controls_color: crate::tokens::COLOR_CONTROLS.value.into(),
             last_lang: None,
             kid: false,
             age_locked: false,

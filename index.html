@@ -134,8 +134,14 @@
     --panel:#221d36;
     --panel-2:#1b1730;
     --edge:#322a4f;
-    --panel-raised:#2c2549;
-    --edge-strong:#5b4c8c;
+    --controls-color:#7a66c2;
+    --color-controls-swatch-violet:#7a66c2;
+    --color-controls-swatch-blue:#4f7fe0;
+    --color-controls-swatch-teal:#2fae95;
+    --color-controls-swatch-amber:#e0952f;
+    --color-controls-swatch-rose:#d0607a;
+    --panel-raised:color-mix(in srgb, var(--controls-color) 25%, var(--bg));
+    --edge-strong:color-mix(in srgb, var(--controls-color) 70%, var(--bg));
     --ink:#efeaf7;
     --muted:#968cb4;
     --muted-2:#6f6690;
@@ -1798,7 +1804,7 @@
   .swatch.active,.theme-swatch.active{border-color:var(--ink)}
   .swatch.custom,.theme-swatch.custom{background:conic-gradient(var(--coral),var(--chrome-swatch-amber),var(--chrome-swatch-yellow),var(--teal),var(--ui-chrome),var(--chrome-swatch-violet),var(--coral));position:relative;overflow:hidden;box-shadow:none}
   .swatch.custom input,.theme-swatch.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
-  .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap;flex:0 0 auto}
 
   .spellbox{position:relative;width:100%;background:var(--panel-raised);border:2px solid var(--edge-strong);border-radius:14px;transition:border-color var(--motion-duration-base) ease,box-shadow var(--motion-duration-base) ease}
   .spellbox.focus{border-color:var(--amber);box-shadow:0 0 0 4px var(--chrome-focus-ring)}
@@ -4618,6 +4624,14 @@
           <label class="theme-swatch custom" aria-label="Pick a custom orb color" data-i18n-aria="aria.orbCustom"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
         </span>
         <!-- token-exempt:end -->
+      </div>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.controls">Controls</span><small data-i18n="settings.controlsSmall">Menu, setup bar, answer box and Delete</small></span>
+        <!-- Built by settings::build_controls_swatches from the controls-swatch tokens,
+             so the colours live in design/tokens.json and nowhere else. -->
+        <span class="theme-pick" id="ctlPick">
+          <label class="theme-swatch custom" aria-label="Pick a custom controls color" data-i18n-aria="aria.ctlCustom"><input type="color" id="ctlColorInput" /></label>
+        </span>
       </div>
       <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
     </div>
