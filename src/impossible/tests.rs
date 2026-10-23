@@ -641,3 +641,11 @@ fn spanish_second_spellings_are_accepted() {
         assert!(pool("es").unwrap().words.iter().any(|x| x == w), "{w} must stay in the Spanish pool");
     }
 }
+
+/// Eric 2026-10-22: German second spelling (Duden accepts both), still case-strict.
+#[test]
+fn german_second_spelling_is_accepted_case_strict() {
+    assert!(engine::grade("de", "geografische", "geographische"));
+    assert!(!engine::grade("de", "Geografische", "geographische"), "case still counts");
+    assert!(pool("de").unwrap().words.iter().any(|w| w == "geographische"));
+}

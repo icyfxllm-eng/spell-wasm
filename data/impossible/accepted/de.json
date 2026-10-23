@@ -1,0 +1,9 @@
+{
+ "lang": "de",
+ "note": "Second spelling both right (Duden accepts both). Eric 2026-10-22. Key = pool word, value = also accepted (compared case-strict).",
+ "accepted": {
+  "geographische": [
+   "geografische"
+  ]
+ }
+}

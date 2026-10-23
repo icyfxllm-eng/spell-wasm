@@ -62,6 +62,7 @@ fn accepted_json(lang: &str) -> Option<&'static str> {
     match lang {
         "en" => Some(include_str!("../../data/impossible/accepted/en.json")),
         "es" => Some(include_str!("../../data/impossible/accepted/es.json")),
+        "de" => Some(include_str!("../../data/impossible/accepted/de.json")),
         _ => None,
     }
 }
@@ -96,7 +97,7 @@ fn yo_fold(s: &str) -> String {
 pub fn grade(lang: &str, typed: &str, word: &str) -> bool {
     if CASE_STRICT.contains(&lang) {
         let strip = |s: &str| s.nfc().filter(|c| !c.is_whitespace()).collect::<String>();
-        return strip(typed) == strip(word);
+        return strip(typed) == strip(word) || accepted_alternates(lang, word).iter().any(|a| strip(typed) == strip(a));
     }
     crate::norm::same_answer(lang, typed, word)
         || (lang == crate::consts::RU && yo_fold(typed) == yo_fold(word))
