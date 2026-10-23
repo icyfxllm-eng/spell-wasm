@@ -1,0 +1,12 @@
+{
+ "lang": "fr",
+ "note": "Second spellings both right. Eric 2026-10-23, outside-twin sweep. Key = pool word, value = also accepted.",
+ "accepted": {
+  "abattage": [
+   "abatage"
+  ],
+  "mafieux": [
+   "maffieux"
+  ]
+ }
+}

@@ -1,0 +1,442 @@
+﻿lang,pool_word,twin,kind,heard_pool,heard_twin,proposed,your_verdict,reason,follow_up,note
+fr,abattage,abatage,sound-twin,Abattage,Abattage,exclude,accept twin,VARIANT_SPELLING,,both spellings are in French dictionaries
+fr,abonner,abonnai,sound-twin,Abonnez !,abonnez,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,abonner,abonnée,sound-twin,Abonnez !,Abonnez !,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,abordés,abordais,sound-twin,Aborder,Aborder,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,abordés,abordait,sound-twin,Aborder,Aborder,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,abîme,abyme,sound-twin,abîme,abîme,exclude,exclude,TRUE_HOMOPHONE,,abyme is now its own word (mise en abyme)
+fr,accoucher,accouchai,sound-twin,À coucher.,À coucher.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,accumuler,accumulée,sound-twin,Accumuler,Accumuler,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,affiliés,affiliais,sound-twin,Affilier,Affilier,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,affiliés,affiliait,sound-twin,Affilier,Affilier,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,affirmait,affirmez,sound-twin,Affirmer,Affirmer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,affronter,affrontai,sound-twin,Affronter,affronter,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,affronter,affrontée,sound-twin,Affronter,affronter,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,aggraver,aggravée,sound-twin,aggraver,aggraver,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,agonie,agonît,sound-twin,Agony,Agony,exclude,exclude,TRUE_HOMOPHONE,,"agonît = agonir, past subjunctive"
+fr,appartenait,appartenez,sound-twin,appartenez.,A partenir.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,apprit,apprît,accent-only,appris,appris,your call: accent pair,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,circumflex marks mood only; same sound
+fr,appréciés,appréciais,sound-twin,Appréciez !,Appréciez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,appréciés,appréciait,sound-twin,Appréciez !,Appréciez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,archer,archée,sound-twin,Archer,Archer,exclude,exclude,TRUE_HOMOPHONE,,archée is a real word
+fr,attendra,atteindra,sound-twin,attendra,attendra,exclude,keep,PHONEMIC_CONTRAST,,nasal vowels ɑ̃ vs ɛ̃
+fr,attendra,atteindras,sound-twin,attendra,attendra,exclude,keep,PHONEMIC_CONTRAST,,nasal vowels ɑ̃ vs ɛ̃
+fr,attirée,attirai,sound-twin,attirer,attirer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,avertis,avertît,sound-twin,Averti !,Averti !,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,avérer,avérai,sound-twin,Averrez.,A verrez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,bailleur,bâilleur,accent-only,Bayeur,Bayeur,your call: accent pair,exclude,TRUE_HOMOPHONE,,â/a merged for most speakers
+fr,bailleur,bâilleurs,sound-twin,Bayeur,Bayeur,exclude,exclude,TRUE_HOMOPHONE,,â/a merged for most speakers
+fr,balayer,balayée,sound-twin,balayer,balayer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,besson,baissons,sound-twin,Besson,Besson,exclude,exclude,PURITY,PURITY,likely the surname Besson; also sounds like baissons
+fr,booster,boostée,sound-twin,Busté,Busté,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,boulots,bouleau,sound-twin,Boulot,Boulot,exclude,exclude,TRUE_HOMOPHONE,,
+fr,boulots,bouleaux,sound-twin,Boulot,Boulot,exclude,exclude,TRUE_HOMOPHONE,,
+fr,caresser,caressée,sound-twin,Carré C,Carré C,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,carreau,caron,sound-twin,Qu'est-ce qu'il y a ?,Qu'est-ce qu'il y a ?,exclude,keep,PHONEMIC_CONTRAST,AUDIO,o vs ɔ̃; pool clip heard as a whole sentence
+fr,carreau,carons,sound-twin,Qu'est-ce qu'il y a ?,Qu'est-ce qu'il y a ?,exclude,keep,PHONEMIC_CONTRAST,AUDIO,o vs ɔ̃; pool clip heard as a whole sentence
+fr,cascades,cascadais,sound-twin,Cascade,Cascade,exclude,keep,SYLLABLE_COUNT,,
+fr,cascades,cascadait,sound-twin,Cascade,Cascade,exclude,keep,SYLLABLE_COUNT,,
+fr,charia,charria,sound-twin,Charia,Charia,exclude,exclude,TRUE_HOMOPHONE,,"charria = charrier, passé simple"
+fr,charmes,charmais,sound-twin,Charme.,Charme,exclude,keep,SYLLABLE_COUNT,,
+fr,charmes,charmait,sound-twin,Charme.,Charme,exclude,keep,SYLLABLE_COUNT,,
+fr,combinée,combiner,sound-twin,Combiner,combiner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,comparaison,comparaissons,sound-twin,Comparaison,Comparaison,exclude,keep,PHONEMIC_CONTRAST,,z vs s
+fr,comportait,comportez,sound-twin,comporter,comporter,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,comprenait,comprenez,sound-twin,Comprenez.,Comprenez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,compromis,compromît,sound-twin,Compromis.,Compromis.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,compétentes,compétenttes,sound-twin,compétente,compétente,exclude,keep,TWIN_NOT_A_WORD,,
+fr,concentrés,concentrais,sound-twin,Concentrez.,Concentrez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,concentrés,concentrait,sound-twin,Concentrez.,Concentrez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,conclus,conclût,sound-twin,Compris.,Compris.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,conclusion,conclussions,sound-twin,Conclusion,conclusion,exclude,keep,TWIN_NOT_A_WORD,,
+fr,contempler,contemplai,sound-twin,Contempler,Contempler,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,contempler,contemplée,sound-twin,Contempler,Contempler,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,contrées,contrais,sound-twin,Contrait,Contrait.,exclude,exclude,BORDERLINE,,é/è merge; contrée (noun) vs contrer (verb)
+fr,contrées,contrait,sound-twin,Contrait,Contrait.,exclude,exclude,BORDERLINE,,é/è merge; contrée (noun) vs contrer (verb)
+fr,convaincant,convainquant,sound-twin,Convaincant,Convaincant,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,adjective vs participle of convaincre
+fr,convertis,convertît,sound-twin,Converti,Converti,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,cornet,cornais,sound-twin,Corne,Corne.,exclude,exclude,TRUE_HOMOPHONE,,
+fr,cornet,cornait,sound-twin,Corne,Corne.,exclude,exclude,TRUE_HOMOPHONE,,
+fr,crues,crûes,accent-only,Crue.,Crue.,your call: accent pair,keep,TWIN_NOT_A_WORD,,crû keeps its circumflex only in the masculine singular
+fr,cultivées,cultivais,sound-twin,Cultiver,Cultiver,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,cultivées,cultivait,sound-twin,Cultiver,cultiver,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,digérer,digérai,sound-twin,Digérer,digérer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,disparaît,disparais,sound-twin,disparaît,disparaît,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,disposées,disposais,sound-twin,Disposer,Disposer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,disposées,disposait,sound-twin,Disposer,Disposer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,dissuader,dissuadai,sound-twin,Dissuadé,Dissuadé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,dissuader,dissuadée,sound-twin,Dissuadé,Dissuadé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,donnerais,donnerez,sound-twin,Donnerez.,Donnerez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,"conditional vs future, a well-known merger"
+fr,dormait,dormez,sound-twin,dormez,Dormez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,drap,drain,sound-twin,- D'accord.,- D'accord.,exclude,keep,PHONEMIC_CONTRAST,AUDIO,a vs ɛ̃; pool clip heard as 'D'accord'
+fr,dédiées,dédiais,sound-twin,dédié,dédié,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,dédiées,dédiait,sound-twin,dédié,dédié,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,déduit,déduît,accent-only,déduis,déduis,your call: accent pair,keep,TWIN_NOT_A_WORD,,the subjunctive is déduisît
+fr,défie,défît,sound-twin,défi,défi,exclude,exclude,TRUE_HOMOPHONE,,défît = défaire
+fr,dégagée,dégageai,sound-twin,Dégagez.,Dégagez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,dégagée,dégager,sound-twin,Dégagez.,Dégagez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,déguster,dégustai,sound-twin,Dégustez !,Dégustez !,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,déguster,dégustée,sound-twin,Dégustez !,Dégustez !,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,démunis,démunît,sound-twin,démuni,démuni,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,dénonçant,dénoncant,accent-only,dénonçant,dénonçant,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+fr,dépendra,dépeindra,sound-twin,dépendra.,dépendra.,exclude,keep,PHONEMIC_CONTRAST,,nasal vowels ɑ̃ vs ɛ̃
+fr,dépendra,dépeindras,sound-twin,dépendra.,dépendra.,exclude,keep,PHONEMIC_CONTRAST,,nasal vowels ɑ̃ vs ɛ̃
+fr,déployés,déployais,sound-twin,déployez,Déployez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,déployés,déployait,sound-twin,déployez,Déployez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,dépression,déprécions,sound-twin,dépression,dépression,exclude,exclude,TRUE_HOMOPHONE,,unstressed è/é neutralize
+fr,déserte,desserte,sound-twin,Déserte,Déserte,exclude,keep,PHONEMIC_CONTRAST,,z vs s
+fr,détachées,détachais,sound-twin,Détaché,détaché,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,détachées,détachait,sound-twin,Détaché,détaché,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,embarras,embarrât,sound-twin,En bara.,En bara.,exclude,exclude,TRUE_HOMOPHONE,,embarrât = embarrer; confirm in census
+fr,engendrer,engendrée,sound-twin,engendré,engendré,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,engueuler,engueulai,sound-twin,Anglais,Anglais,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,engueuler,engueulée,sound-twin,Anglais,Anglais,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,entraînés,entraînais,sound-twin,Entraîner,Entraîner,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,environnement,environnant,sound-twin,Environnement,Environnement.,exclude,keep,SYLLABLE_COUNT,,
+fr,environnement,environnants,sound-twin,Environnement,Environnement.,exclude,keep,SYLLABLE_COUNT,,
+fr,expliquerait,expliquerez,sound-twin,Expliquez.,Expliquez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,exploités,exploitais,sound-twin,Exploitez !,Exploitez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,exploités,exploitait,sound-twin,Exploitez !,Exploitez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,expérimentés,expérimentais,sound-twin,expérimenter,expérimenter,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,expérimentés,expérimentait,sound-twin,expérimenter,expérimenter,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,facettes,facettais,sound-twin,Facette,Facette,exclude,keep,SYLLABLE_COUNT,,
+fr,facettes,facettait,sound-twin,Facette,Facette,exclude,keep,SYLLABLE_COUNT,,
+fr,faciliter,facilitai,sound-twin,Facilité,Facilité,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,faciliter,facilitée,sound-twin,Facilité,Facilité,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,fallut,fallût,accent-only,Salut !,Salut !,your call: accent pair,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,folies,foliées,sound-twin,folie,folie,exclude,keep,SYLLABLE_COUNT,,fo-li vs fo-li-é
+fr,forçant,forcant,accent-only,forçant,forçant,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+fr,foutez,foutait,sound-twin,footé,footé,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,fusionner,fusionnai,sound-twin,Fusionner,fusionner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,fusionner,fusionnée,sound-twin,Fusionner,Fusionner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,fusées,fusais,sound-twin,Fusée,Fusée,exclude,exclude,BORDERLINE,,noun fusée vs verb fuser
+fr,fusées,fusait,sound-twin,Fusée,Fusée,exclude,exclude,BORDERLINE,,noun fusée vs verb fuser
+fr,gages,gagait,sound-twin,Gage.,Gage,exclude,keep,TWIN_NOT_A_WORD,,the imperfect is gageait
+fr,guerriers,guéeriez,sound-twin,guerrier,guerrier,exclude,exclude,BORDERLINE,,guéeriez = guéer; unstressed è/é
+fr,gueuler,gueulai,sound-twin,Goûler,Goûler,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,généraliser,généralisée,sound-twin,généralisé,généralisé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,héberger,hébergée,sound-twin,héberger,Héberger,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,illustrée,illustrai,sound-twin,illustrer.,illustrer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,illustrée,illustrer,sound-twin,illustrer.,illustrer.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,imaginais,imaginez,sound-twin,Imaginez.,Imaginez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,impliquées,impliquais,sound-twin,impliqué,impliqué,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,impliquées,impliquait,sound-twin,impliqué,impliqué,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,impressionner,impressionnai,sound-twin,Impressionné.,Impressionné.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,impressionner,impressionnée,sound-twin,Impressionné.,Impressionné.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,inclusion,inclussions,sound-twin,Inclusion,Inclusion,exclude,keep,TWIN_NOT_A_WORD,,
+fr,indiquait,indicait,sound-twin,indiquez,indiquez,exclude,keep,TWIN_NOT_A_WORD,,
+fr,individuelles,individueles,sound-twin,individuelle,individuelle,exclude,keep,TWIN_NOT_A_WORD,,
+fr,infliger,infligée,sound-twin,Infligé,Infligé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,influence,influasse,sound-twin,Influence,Influence,exclude,keep,PHONEMIC_CONTRAST,,ɑ̃ vs a
+fr,informée,informai,sound-twin,Informer,Informer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,informée,informer,sound-twin,Informer,Informer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,innovantes,innovanttes,sound-twin,innovante,innovante,exclude,keep,TWIN_NOT_A_WORD,,
+fr,innover,innovai,sound-twin,Innover,Innover,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,innover,innovée,sound-twin,Innover,Innover,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,inspirées,inspirais,sound-twin,Inspirez !,Inspirez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,inspirées,inspirait,sound-twin,Inspirez !,Inspirez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,installés,installais,sound-twin,Installez.,Installez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,installés,installait,sound-twin,Installez.,Installez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,introduit,introduît,accent-only,Introduit.,Introduit.,your call: accent pair,keep,TWIN_NOT_A_WORD,,the subjunctive is introduisît
+fr,intégrées,intégrais,sound-twin,intégrer,intégrer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,invoquer,invoquée,sound-twin,Envoquer,Envoquer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,iras,ira,sound-twin,Ira,Ira,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,jugez,jugées,sound-twin,Jugez.,Jugez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,lima,limât,sound-twin,Lima,Lima,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,louper,loupée,sound-twin,loupez,loupez,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,mafieux,maffieux,sound-twin,Matthew,Matthew,exclude,accept twin,VARIANT_SPELLING,,both spellings are in French dictionaries
+fr,mariées,mariais,sound-twin,marier,marier,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,mariées,mariait,sound-twin,marier,marier,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,marrer,marrai,sound-twin,marée,marée,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,massacrer,massacrai,sound-twin,Massacrer,Massacrer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,massacrer,massacrée,sound-twin,Massacrer,Massacrer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,messie,messît,sound-twin,Merci.,Merci.,exclude,exclude,TRUE_HOMOPHONE,,messît = messeoir; confirm in census
+fr,mie,mi,sound-twin,MI,MI,exclude,exclude,TRUE_HOMOPHONE,,
+fr,modo,modaux,sound-twin,Modo,Modo,exclude,exclude,TRUE_HOMOPHONE,,
+fr,munis,munît,sound-twin,mini,mini,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,méditer,méditai,sound-twin,méditer,méditer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,méditer,méditée,sound-twin,méditer,méditer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,neutraliser,neutralisai,sound-twin,neutraliser.,neutraliser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,neutraliser,neutralisée,sound-twin,neutraliser.,neutraliser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,observées,observais,sound-twin,Observez.,Observez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,observées,observait,sound-twin,Observez.,Observez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,offrez,offrais,sound-twin,Offrez.,Offrez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,offrez,offrait,sound-twin,Offrez.,Offrez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,opter,opté,sound-twin,opté,opté,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,originaux,originons,sound-twin,originaux,Originaux.,exclude,keep,PHONEMIC_CONTRAST,,o vs ɔ̃
+fr,pardonnez,pardonnais,sound-twin,pardonner,pardonner,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,parfaites,parfaittes,sound-twin,Parfait !,Parfait !,exclude,keep,TWIN_NOT_A_WORD,,
+fr,partagées,partagait,sound-twin,Partager,Partager,exclude,keep,TWIN_NOT_A_WORD,,the imperfect is partageait
+fr,partagées,partageais,sound-twin,Partager,Partager,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,penseurs,panseur,sound-twin,penseur,penseur,exclude,exclude,TRUE_HOMOPHONE,,
+fr,penseurs,panseurs,sound-twin,penseur,penseur,exclude,exclude,TRUE_HOMOPHONE,,
+fr,perdait,perdez,sound-twin,perdez,Perder,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,permettait,permettez,sound-twin,Permettez.,Permettez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,pertinentes,pertinenttes,sound-twin,pertinente,pertinente,exclude,keep,TWIN_NOT_A_WORD,,
+fr,perçus,perçût,sound-twin,Perçu,Perçu,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,piment,pimant,sound-twin,Pimo,Pimo,exclude,keep,TWIN_NOT_A_WORD,AUDIO,pool clip heard as 'Pimo'
+fr,positionner,positionnai,sound-twin,Positionner,Positionner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,positionner,positionnée,sound-twin,Positionner,Positionner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,prions,priions,sound-twin,Prions.,Prions.,exclude,exclude,BORDERLINE_SAME_LEMMA,,-ions vs -iions
+fr,produites,produîtes,accent-only,Produite,Produite,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+fr,préoccuper,préoccupai,sound-twin,préoccuper,préoccuper,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,préparait,préparez,sound-twin,Préparez.,Préparez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,préserver,préservai,sound-twin,préserver,préserver,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,préserver,préservée,sound-twin,préserver,préserver,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,président,présidant,sound-twin,Président,Président,exclude,exclude,TRUE_HOMOPHONE,,noun vs participle
+fr,présidée,présider,sound-twin,présider,présider,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,prêt,près,sound-twin,Prêt !,Prêt !,exclude,exclude,TRUE_HOMOPHONE,,
+fr,prêt,prés,sound-twin,Prêt !,Prêt !,exclude,exclude,TRUE_HOMOPHONE,,
+fr,périodique,periodique,accent-only,périodique,périodique,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+fr,quartiers,cartiez,sound-twin,Cartier,Cartier,exclude,keep,TWIN_NOT_A_WORD,,confirm in census that carter is not a verb
+fr,questionner,questionnai,sound-twin,Questionner,Questionner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,questionner,questionnée,sound-twin,Questionner,Questionner,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,québécois,québecois,accent-only,Québécois.,Québécois,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+fr,raie,rai,sound-twin,Oui.,oui,exclude,exclude,TRUE_HOMOPHONE,,rai = ray (literary)
+fr,ralentit,ralentît,accent-only,RALENTI,RALENTI,your call: accent pair,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,recharger,rechargée,sound-twin,Rechargez.,Rechargez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,reconstruit,reconstruît,accent-only,reconstruis,reconstruis,your call: accent pair,keep,TWIN_NOT_A_WORD,,the subjunctive is reconstruisît
+fr,recréer,recréai,sound-twin,Recréer,Recréer.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,recréer,recréée,sound-twin,Recréer,Recréer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,reliées,reliais,sound-twin,Relier,Relier,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,remplaçant,remplacant,accent-only,Remplaçant.,Remplaçant,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+fr,renforcer,renforcée,sound-twin,renforcé,renforcé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,repousser,repoussai,sound-twin,Repousser.,repousser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,repousser,repoussée,sound-twin,Repousser.,Repousser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,représentés,représentais,sound-twin,Représentez.,représentez,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,représentés,représentait,sound-twin,Représentez.,représentez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,respectés,respectais,sound-twin,respectez,Respectez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,respectés,respectait,sound-twin,respectez,Respectez.,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,restaurer,restaurai,sound-twin,Restorez.,Restorez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,restaurer,restaurée,sound-twin,Restorez.,Restorez.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,retombées,retombais,sound-twin,Retomber,retomber,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,retombées,retombait,sound-twin,Retomber,Retomber,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,revint,revînt,accent-only,Revain.,Revain.,your call: accent pair,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,rivaliser,rivalisai,sound-twin,Rivaliser,Rivaliser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,rivaliser,rivalisée,sound-twin,Rivaliser,Rivaliser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,réconcilier,réconciliée,sound-twin,Réconcilier,réconcilier,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,réduisent,réduissent,sound-twin,réduise,réduise,exclude,keep,TWIN_NOT_A_WORD,,
+fr,saigne,ceigne,sound-twin,Seigne,Seigne,exclude,exclude,TRUE_HOMOPHONE,,ceigne = ceindre
+fr,salué,chalut,sound-twin,Salut !,Salut !,exclude,keep,PHONEMIC_CONTRAST,AUDIO,s vs ʃ; pool clip heard as 'Salut'
+fr,salué,chaluts,sound-twin,Salut !,Salut !,exclude,keep,PHONEMIC_CONTRAST,AUDIO,s vs ʃ; pool clip heard as 'Salut'
+fr,savourer,savourée,sound-twin,Savoiré,Savoiré,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,signalés,signalais,sound-twin,Signalez !,Signalez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,signalés,signalait,sound-twin,Signalez !,Signalez !,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,soignée,soigner,sound-twin,Soignez !,Soignez !,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,songer,songée,sound-twin,son G,son G,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,stabiliser,stabilisai,sound-twin,stabiliser,stabiliser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,stabiliser,stabilisée,sound-twin,stabiliser,stabiliser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,strictes,stricttes,sound-twin,strict,strict,exclude,keep,TWIN_NOT_A_WORD,,
+fr,supporter,supportai,sound-twin,supporter,Supporter,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,supporter,supportée,sound-twin,supporter,Supporter,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,supposés,supposais,sound-twin,supposer,supposer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,supposés,supposait,sound-twin,supposer,supposer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,sèvres,sevrais,sound-twin,C'est vrai.,C'est vrai.,exclude,keep,SYLLABLE_COUNT,AUDIO,pool clip heard as 'C'est vrai'
+fr,sécurisée,sécurisai,sound-twin,Sécuriser,Sécuriser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,sécurisée,sécuriser,sound-twin,Sécuriser,Sécuriser,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,terminaux,terminons,sound-twin,Terminons.,Terminons.,exclude,keep,PHONEMIC_CONTRAST,AUDIO,o vs ɔ̃; pool clip heard as the twin
+fr,transférés,transférais,sound-twin,Transférer,Transférer,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,transmises,transmisses,sound-twin,transmise,Transmise,exclude,keep,PHONEMIC_CONTRAST,,z vs s
+fr,trompée,tromper,sound-twin,tromper,tromper,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,vallon,valons,sound-twin,Valon,Valon,exclude,exclude,TRUE_HOMOPHONE,,
+fr,variantes,varianttes,sound-twin,Variante,Variante,exclude,keep,TWIN_NOT_A_WORD,,
+fr,vendait,vendez,sound-twin,Vendée,Vendée,exclude,exclude,BORDERLINE_SAME_LEMMA,,
+fr,vengeance,vengeasse,sound-twin,Vengeance,Vengeance,exclude,keep,PHONEMIC_CONTRAST,,ɑ̃ vs a
+fr,vifs,vif,sound-twin,Vif !,Vive.,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,plural -s is silent
+fr,vifs,viffe,sound-twin,Vif !,Vif !,exclude,keep,TWIN_NOT_A_WORD,,
+fr,virée,virai,sound-twin,virer,Virer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,vitamines,vitaminais,sound-twin,Vitamine,Vitamine,exclude,keep,SYLLABLE_COUNT,,
+fr,éclairée,éclairai,sound-twin,éclairer,éclairer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,éclairée,éclairer,sound-twin,éclairer,éclairer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,écouler,écoulai,sound-twin,écouler,écouler,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,écouler,écoulée,sound-twin,écouler,écouler,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,élaborée,élaborer,sound-twin,Elaborer,Elaborer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,épuisée,épuisai,sound-twin,épuisé,épuisé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,épuisée,épuiser,sound-twin,épuisé,épuisé,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,éradiquer,éradiquai,sound-twin,éradiquer,éradiquer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,éradiquer,éradiquée,sound-twin,éradiquer,éradiquer,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,éthiques,étiques,sound-twin,Éthique,Éthique,exclude,exclude,TRUE_HOMOPHONE,,
+fr,évader,évadai,sound-twin,évader,évader,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+fr,évader,évadée,sound-twin,évader,évader,exclude,exclude,TRUE_HOMOPHONE_SAME_LEMMA,,
+pt,acompanhado,aacompanhado,sound-twin,Acompanhado!,Acompanhado!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,administrativa,aadministrativa,sound-twin,a administrativa.,A ADMINISTRATIVA,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,adotaram,aadotaram,sound-twin,Adotaram!,Adotaram!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,afetando,aafetando,sound-twin,Afetando.,Afetando.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,afirmando,aafirmando,sound-twin,afirmando,afirmando.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,afronta,aafronta,sound-twin,à fronta.,à fronta.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,afundar,aafundar,sound-twin,Afundar,Afundar,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,agradeceu,aagradeceu,sound-twin,Agradeceu!,Agradeceu!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,agradeça,aagradeça,sound-twin,Agradeça!,Agradeça!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,ajudaria,aajudaria,sound-twin,Ajudaria.,Ajudaria.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alcançada,aalcançada,sound-twin,Alcançada,Alcançada,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alcançado,aalcançado,sound-twin,Alcançado,Alcançado,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alcançando,aalcançando,sound-twin,Alcançando.,Alcançando.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alcoolismo,aalcoolismo,sound-twin,Alcolismo,Alcolismo,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alheio,aalheio,sound-twin,Alheio!,Alheio!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alimentar,aalimentar,sound-twin,Alimentar,Alimentar,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alimentação,aalimentação,sound-twin,Alimentação,Alimentação,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,altera,aaltera,sound-twin,Altera.,Altera.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,alvorada,aalvorada,sound-twin,Alvorada,Alvorada,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,amas,aamas,sound-twin,Amas!,Amas!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,ambientes,ambiantes,sound-twin,Ambientes.,Ambientes.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,anais,aanais,sound-twin,"Ah, Nice!","Ah, Nice!",exclude,keep,TWIN_NOT_A_WORD,AUDIO,"pool clip heard as 'Ah, Nice!'"
+pt,anualmente,aanualmente,sound-twin,Anualmente.,Anualmente.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,anões,aanões,sound-twin,A Nois!,A Nois!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aparelhos,aaparelhos,sound-twin,Aparelhos.,Aparelhos.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aparenta,aaparenta,sound-twin,Aparenta!,Aparenta!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,apoiados,aapoiados,sound-twin,Apoiados!,Apoiados!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aprendam,aaprendam,sound-twin,Aprendam!,Aprendam!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,apresentando,aapresentando,sound-twin,apresentando,apresentando.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aproveitado,aaproveitado,sound-twin,Aproveitado!,Aproveitado!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,apto,aapto,sound-twin,apto,Apto!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aquático,aaquático,sound-twin,Aquático,AQUÁTICO,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aranhas,aaranhas,sound-twin,Aranhas,Aranhas!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,arbustos,aarbustos,sound-twin,Arbustos,Arbustos,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aroma,aaroma,sound-twin,Aroma!,Aroma!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,arranque,aarranque,sound-twin,arranque,Arranque!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,articulações,aarticulações,sound-twin,Articulações,Articulações,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,assegurar,asegurar,sound-twin,Asegurar,Asegurar,exclude,keep,TWIN_NOT_A_WORD,,asegurar is Spanish
+pt,assemelha,aassemelha,sound-twin,A semelha.,A semelha.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,assumo,aassumo,sound-twin,Assumo.,Assumo!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,atendem,aatendem,sound-twin,Atendem!,Atendem!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aterro,aaterro,sound-twin,Aterro!,Aterro!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,ativado,aativado,sound-twin,Ativado!,Ativado!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,ativação,aativação,sound-twin,Ativação,Ativação,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,atividade,aatividade,sound-twin,Atividade,Atividade,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,atividades,aatividades,sound-twin,Atividades,Atividades,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,ativismo,aativismo,sound-twin,Ativismo,Ativismo,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,atmosfera,aatmosfera,sound-twin,A atmosfera.,à atmosfera.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aumentando,aaumentando,sound-twin,aumentando.,aumentando.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aumente,aaumente,sound-twin,Aumente!,Aumente!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,aumentos,aaumentos,sound-twin,Aumentos.,Aumentos.,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,avaliado,aavaliado,sound-twin,Avaliado!,Avaliado!,exclude,keep,TWIN_NOT_A_WORD,,generator prepended an extra 'a'
+pt,avise,avice,sound-twin,Avise!,Avise!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,bateram,baterão,sound-twin,Baterão.,Baterão.,exclude,keep,STRESS_AUDIBLE,,BA-te-ram vs ba-te-RÃO
+pt,bula,bulá,accent-only,Bula,Bula!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,cassino,casino,sound-twin,Casino,Casino,exclude,keep,PHONEMIC_CONTRAST,,ss [s] vs s [z]; casino is the European spelling
+pt,celas,selas,sound-twin,Celas,Celas,exclude,exclude,TRUE_HOMOPHONE,,
+pt,científico,cientifico,accent-only,Científico,Científico,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,concertos,consertos,sound-twin,Concertos.,Concertos,exclude,exclude,TRUE_HOMOPHONE,,
+pt,conseguisse,conseguísse,accent-only,Consegui-se!,Consegui-se!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,conselheira,concelheira,sound-twin,Conselheira,Conselheira,exclude,keep,TWIN_NOT_A_WORD,,confirm in census
+pt,conselhos,concelhos,sound-twin,Conselhos,Conselhos,exclude,exclude,TRUE_HOMOPHONE,,concelho = municipality
+pt,consideraram,considerarão,sound-twin,Consideraram.,Consideraram.,exclude,keep,STRESS_AUDIBLE,,
+pt,cozido,cosido,sound-twin,Cozido,Cozido,exclude,exclude,TRUE_HOMOPHONE,,
+pt,cápsulas,capsulas,accent-only,Capsulas,Capsulas,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,depressão,depressam,sound-twin,Depressão,Depressão,exclude,keep,TWIN_NOT_A_WORD,,
+pt,diagnóstico,diagnostico,accent-only,Diagnóstico,Diagnóstico,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,distorção,distorçam,sound-twin,Distorção,Distorção.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,doa,doá,accent-only,Doa!,Doa!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,egoísmo,egoismo,accent-only,egoísmo,egoísmo,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,embaixador,imbaixador,sound-twin,Em baixador.,Embaixador.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,empregadores,impregadores,sound-twin,Empregadores,Empregadores,exclude,keep,TWIN_NOT_A_WORD,,
+pt,empregados,impregados,sound-twin,Empregados,Empregados,exclude,keep,TWIN_NOT_A_WORD,,
+pt,empresário,empresario,accent-only,Empresário.,empresário.,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,empréstimo,impréstimo,sound-twin,Empréstimo!,Empréstimo!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,encanta,incanta,sound-twin,Encanta!,Encanta!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,encantadora,incantadora,sound-twin,Encantadora!,Encantadora!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,encerramento,incerramento,sound-twin,Encerramento.,Encerramento,exclude,keep,TWIN_NOT_A_WORD,,
+pt,entendia,intendia,sound-twin,Entendia!,Entendia!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,entendida,intendida,sound-twin,Entendida!,Entendida!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,enterrada,interrada,sound-twin,enterrada.,enterrada,exclude,keep,TWIN_NOT_A_WORD,,
+pt,enterrado,interrado,sound-twin,enterrado.,enterrado.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,enviamos,invíamos,sound-twin,Enviamos!,Enviamos!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,envolvendo,involvendo,sound-twin,envolvendo.,envolvendo.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,envolvidos,involvidos,sound-twin,envolvidos,envolvidos,exclude,keep,TWIN_NOT_A_WORD,,
+pt,envolvimento,involvimento,sound-twin,envolvimento.,envolvimento,exclude,keep,TWIN_NOT_A_WORD,,
+pt,específico,especifico,accent-only,específico,Específico.,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,exagerada,hexagerada,sound-twin,Exagerada,Exagerada.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,explícita,explicita,accent-only,Explicita,Explicita,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,flui,fluí,accent-only,Flui!,Flui.,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,fluidos,fluídos,accent-only,Fluidos.,Fluidos,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,freira,freeira,sound-twin,Freira!,Freira!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,grafite,graffiti,sound-twin,Grafite,Grafite,exclude,keep,TWIN_NOT_A_WORD,,graffiti is the unadapted foreign spelling
+pt,guru,guro,sound-twin,Guru,Guru.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,habita,abita,sound-twin,Habita,Habita,exclude,keep,TWIN_NOT_A_WORD,,
+pt,habitantes,abitantes,sound-twin,Habitantes,Habitantes,exclude,keep,TWIN_NOT_A_WORD,,
+pt,hilário,hilario,accent-only,e ládio.,e ládio.,your call: accent pair,keep,TWIN_NOT_A_WORD,AUDIO,pool clip heard as 'e ládio'
+pt,hinos,inos,sound-twin,Inos!,Inos!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,impôs,impós,accent-only,Impos,Impos.,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,incorporar,encorporar,sound-twin,Incorporar.,Incorporar.,exclude,keep,PHONEMIC_CONTRAST,,ĩ vs ẽ
+pt,indivíduo,endivido,sound-twin,Indivíduo,Indivíduo.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,indivíduo,individo,sound-twin,Indivíduo,Indivíduo,exclude,keep,TWIN_NOT_A_WORD,,
+pt,infelizes,infelices,sound-twin,Infelizes!,Infelizes!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,informaram,enformaram,sound-twin,Informaram.,Informaram.,exclude,keep,PHONEMIC_CONTRAST,,ĩ vs ẽ; enformar is a real verb
+pt,insisto,encisto,sound-twin,Insisto!,Insisto!,exclude,keep,PHONEMIC_CONTRAST,,ĩ vs ẽ; encistar is a real verb
+pt,inteligência,inteligencia,accent-only,Inteligência,Inteligência,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,interface,interfaze,sound-twin,Interface,Interface,exclude,keep,TWIN_NOT_A_WORD,,
+pt,jornalística,jornalistica,accent-only,Jornalística,Jornalística,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,jornalístico,jornalistico,accent-only,Jornalístico,Jornalístico,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,judô,judo,accent-only,Judo!,Judo!,your call: accent pair,keep,PHONEMIC_CONTRAST,,judo is the European spelling and stress
+pt,laje,lage,sound-twin,Láge.,Láge.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,leram,lerão,sound-twin,Lerão.,Leirão.,exclude,keep,STRESS_AUDIBLE,,
+pt,linguagem,linguajam,sound-twin,linguagem,Linguagem,exclude,keep,PHONEMIC_CONTRAST,,-gem vs -jam endings differ
+pt,linguagem,linguajem,sound-twin,linguagem,linguagem,exclude,exclude,TRUE_HOMOPHONE,,linguajem = linguajar subjunctive; confirm in census
+pt,lâminas,laminas,accent-only,Laminas.,Laminas,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,madagáscar,madagascar,accent-only,Madagascar,Madagascar!,your call: accent pair,exclude,PURITY,PURITY,country name
+pt,magnífica,magnifica,accent-only,Magimifica,Magimifica.,your call: accent pair,keep,STRESS_AUDIBLE,AUDIO,pool clip heard as 'Magimifica'
+pt,mana,maná,accent-only,Mana!,Mana!,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,manu,mano,sound-twin,Mano!,Mano!,exclude,exclude,PURITY,PURITY,not a Portuguese common word
+pt,marquês,marques,accent-only,Marques.,Marques,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,matrimônio,matrimonio,accent-only,Matrimônio,Matrimônio,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,mattos,matos,sound-twin,Matos,Matos,exclude,exclude,PURITY,PURITY,surname
+pt,milícias,milicias,accent-only,Milícias,Milícias,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,mimi,mime,sound-twin,mimi,MIMI,exclude,exclude,PURITY,PURITY,not a standard headword
+pt,movem,movam,sound-twin,MOVEM!,MOVEM!,exclude,keep,PHONEMIC_CONTRAST,,-em vs -am
+pt,mágicas,magicas,accent-only,MÁGICAS!,MÁGICAS!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,mínimas,minímas,accent-only,Minimas.,Minimas,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,nana,nanã,accent-only,Nana!,"Na, na.",your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,opor,opôr,accent-only,Opor!,Opor!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,ouçam,oução,sound-twin,Ouça!,Ouça!,exclude,keep,TWIN_NOT_A_WORD,AUDIO,pool clip heard without its ending ('Ouça')
+pt,patrimônio,patrimonio,accent-only,Patrimônio,Patrimônio,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,possivelmente,poscivelmente,sound-twin,Possivelmente.,Possivelmente.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,possíveis,poscíveis,sound-twin,possíveis,possíveis,exclude,keep,TWIN_NOT_A_WORD,,
+pt,preferências,preferencias,accent-only,Preferências.,preferências,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,preparadas,preparradas,sound-twin,Preparadas.,Preparadas.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,preparado,preparrado,sound-twin,Preparado.,Preparado.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,preparam,preparram,sound-twin,Preparam!,Preparam.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,presentes,presantes,sound-twin,Presentes.,Presentes.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,prestígio,prestigio,accent-only,Prestígio.,Prestígio,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,procuradores,procurradores,sound-twin,Procuradores.,Procuradores,exclude,keep,TWIN_NOT_A_WORD,,
+pt,prossegue,procegue,sound-twin,Procegue!,Procegue!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,prossegue,prosegue,sound-twin,Procegue!,Procegue!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,providência,providencia,accent-only,Providência,Providência,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,quilômetro,quilometro,accent-only,quilômetro,quilômetro,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,recebendo,recebondo,sound-twin,recebendo,recebendo,exclude,keep,TWIN_NOT_A_WORD,,
+pt,recinto,ressinto,sound-twin,Recinto.,Recinto.,exclude,exclude,TRUE_HOMOPHONE,,ressinto = ressentir 1sg
+pt,recomendar,recomandar,sound-twin,Recomendar.,Recomendar.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,relataram,relatarão,sound-twin,relataram.,relataram.,exclude,keep,STRESS_AUDIBLE,,
+pt,repara,repára,accent-only,Repara!,Repara!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,repasse,repasce,sound-twin,Repasse!,Repasse!,exclude,exclude,TRUE_HOMOPHONE,,repasce = repascer; confirm in census
+pt,repasse,repasci,sound-twin,Repasse!,Repasse.,exclude,keep,STRESS_AUDIBLE,,
+pt,repertório,repertorio,accent-only,Repertório.,Repertório.,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,represa,repreza,sound-twin,Represa!,Represa!,exclude,keep,TWIN_NOT_A_WORD,,
+pt,representa,repressenta,sound-twin,Representa.,Representa.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,república,republica,accent-only,República,República,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,resistentes,reexistentes,sound-twin,resistentes,Resistentes.,exclude,keep,SYLLABLE_COUNT,,
+pt,resistentes,ressistentes,sound-twin,resistentes,resistentes,exclude,keep,TWIN_NOT_A_WORD,,
+pt,resistência,reexistência,sound-twin,Resistência.,Resistência.,exclude,keep,SYLLABLE_COUNT,,
+pt,restantes,reestantes,sound-twin,Restantes,Restantes.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,resumida,ressumida,sound-twin,Resumida.,Resumida.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,resumir,ressumir,sound-twin,Resumir,Resumir,exclude,keep,TWIN_NOT_A_WORD,,
+pt,retiraram,retirarão,sound-twin,Retiraram.,Retiraram.,exclude,keep,STRESS_AUDIBLE,,
+pt,revólver,revolver,accent-only,Revolver.,Revolver!,your call: accent pair,keep,STRESS_AUDIBLE,,
+pt,saca,sacá,accent-only,Saca!,Saca,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,secretário,secretario,accent-only,Secretário,Secretário,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,servos,cervos,sound-twin,Servos!,Servos!,exclude,exclude,TRUE_HOMOPHONE,,
+pt,signos,cignos,sound-twin,Sigue-nos!,Sigue-nos!,exclude,keep,TWIN_NOT_A_WORD,AUDIO,pool clip heard as Spanish 'Sigue-nos'
+pt,sofremos,sofreemos,sound-twin,Sofremos.,Sofremos.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,submundo,submondo,sound-twin,Submundo,Submundo,exclude,keep,TWIN_NOT_A_WORD,,
+pt,suplente,suplante,sound-twin,Suplente,Suplente,exclude,keep,PHONEMIC_CONTRAST,,ẽ vs ɐ̃
+pt,sê,cie,sound-twin,C,C,exclude,keep,TWIN_NOT_A_WORD,AUDIO,pool clip heard as the letter 'C'
+pt,súbita,subitá,accent-only,Subita!,Subita!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,tara,tará,accent-only,Tara!,Tara!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,tara,tarã,accent-only,Tara!,Tara!,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,tendência,tendencia,accent-only,tendência.,tendência.,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,transição,transiçam,sound-twin,Transição.,Transição.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,trágica,tragicá,accent-only,Tragica.,Tragica,your call: accent pair,keep,TWIN_NOT_A_WORD,,
+pt,trágica,tragiica,sound-twin,Tragica.,Tragica.,exclude,keep,TWIN_NOT_A_WORD,,
+pt,tábua,tabua,accent-only,Tá boa!,Tá boa!,your call: accent pair,keep,STRESS_AUDIBLE,,tabua (cattail) is a real word
+pt,vês,vez,sound-twin,"""Vis""","""Vis""",exclude,exclude,TRUE_HOMOPHONE,,
+pt,ético,hético,sound-twin,É tico.,É tico.,exclude,exclude,TRUE_HOMOPHONE,,hético is an old word for 'consumptive'
+pt,êxodo,hexodo,sound-twin,Exodo,Exodo,exclude,keep,TWIN_NOT_A_WORD,,

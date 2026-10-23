@@ -649,3 +649,14 @@ fn german_second_spelling_is_accepted_case_strict() {
     assert!(!engine::grade("de", "Geografische", "geographische"), "case still counts");
     assert!(pool("de").unwrap().words.iter().any(|w| w == "geographische"));
 }
+
+/// Eric 2026-10-23: French second spellings.
+#[test]
+fn french_second_spellings_are_accepted() {
+    assert!(engine::grade("fr", "abatage", "abattage"));
+    assert!(engine::grade("fr", "maffieux", "mafieux"));
+    assert!(!engine::grade("fr", "abatage", "abattoir"));
+    for w in ["abattage", "mafieux"] {
+        assert!(pool("fr").unwrap().words.iter().any(|x| x == w), "{w} must stay in the French pool");
+    }
+}

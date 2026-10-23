@@ -1,0 +1,21 @@
+{
+ "lang": "pt",
+ "rule": "verdict 'exclude' = a real rival spelling or word sounds the same to the voice, so the word cannot be spelled from audio alone (I1)",
+ "excluded": [
+  "celas",
+  "concertos",
+  "conselhos",
+  "cozido",
+  "linguagem",
+  "madagáscar",
+  "manu",
+  "mattos",
+  "mimi",
+  "recinto",
+  "repasse",
+  "servos",
+  "vês",
+  "ético"
+ ],
+ "source": "reports/impossible-outside-twins-verdicts-fr-pt-filled.csv (Eric, 2026-10-23)"
+}

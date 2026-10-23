@@ -63,6 +63,7 @@ fn accepted_json(lang: &str) -> Option<&'static str> {
         "en" => Some(include_str!("../../data/impossible/accepted/en.json")),
         "es" => Some(include_str!("../../data/impossible/accepted/es.json")),
         "de" => Some(include_str!("../../data/impossible/accepted/de.json")),
+        "fr" => Some(include_str!("../../data/impossible/accepted/fr.json")),
         _ => None,
     }
 }
