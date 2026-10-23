@@ -1940,6 +1940,9 @@
   body.kb-core.device-kb .answer-device{display:block;position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;border:0;
     background:transparent;color:transparent;caret-color:transparent;font-size:16px;opacity:0.01}
   body.kb-core.device-kb #kbHome{display:none}
+  /* With no keyboard row to tuck into, Check sits under the answer box at full width
+     (the system keyboard has its own delete). */
+  body.kb-core.device-kb .stage > .action-row{margin-top:12px;padding-inline-end:0}
   body.kb-core .skb-shift.on{background:var(--amber);color:var(--palette-on-gold-text);border-color:var(--amber)}
   /* Every shared key that long-presses shows the alternates dot, not only the main keyboard's. */
   body.kb-core .skb-key.has-acc{position:relative}

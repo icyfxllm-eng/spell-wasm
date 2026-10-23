@@ -136,6 +136,9 @@ export async function run(browser, base, suite) {
       await deviceOn(page);
       assert(await page.evaluate(() => document.body.classList.contains('device-kb')), 'body carries device-kb');
       assert(await page.$eval('#kbHome', (e) => getComputedStyle(e).display === 'none'), "Spell's keyboard steps away");
+      // Check normally tucks into the keyboard's bottom row; with no keyboard it sits under the answer box.
+      const [box, chk] = await page.evaluate(() => ['spellbox', 'checkBtn'].map((id) => document.getElementById(id).getBoundingClientRect().toJSON()));
+      assert(chk.top >= box.bottom - 0.5, `Check sits below the answer box, not under it (box ends ${box.bottom}, Check starts ${chk.top})`);
       const word = await serve(page);
       await page.focus('#answerDevice');
       await page.keyboard.type(word.toLowerCase(), { delay: 15 });
