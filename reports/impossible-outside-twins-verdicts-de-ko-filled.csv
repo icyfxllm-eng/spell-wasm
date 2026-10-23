@@ -1,0 +1,98 @@
+﻿lang,pool_word,twin,kind,heard_pool,heard_twin,proposed,your_verdict,reason,follow_up,note
+de,Blöcke,blocke,spelling-variant,Blocke,locker,accept twin,keep,PHONEMIC_CONTRAST,AUDIO,ö vs o; NOT a variant (blocke = blocken 1sg); pool clip heard without umlaut
+de,Gedenkstätte,Gedenkstädte,sound-twin,Gedenkstätte,Gedenkstätte,exclude,keep,TWIN_NOT_A_WORD,,
+de,Kathrin,Katrin,spelling-variant,Katrin,Katrin,accept twin,exclude,PURITY_PROPER_NOUN,PURITY,given name
+de,Küsten,küssten,spelling-variant,Küsten,Küsten,accept twin,exclude,TRUE_HOMOPHONE,,"NOT a variant: Küste vs küssen, both [ˈkʏstn̩]"
+de,Minen,Mienen,sound-twin,Mienen,Mienen,exclude,exclude,TRUE_HOMOPHONE,,[ˈmiːnən] both
+de,Minen,mienen,sound-twin,Mienen,Mienen,exclude,keep,TWIN_NOT_A_WORD,,lowercase form is not a word; word is out anyway via Mienen
+de,Nußknacker,Nussknacker,spelling-variant,Nussknacker,Nussknacker,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,pre-1996 spelling; key should be Nussknacker
+de,Nußknacker,nussknacker,spelling-variant,Nussknacker,Nussknacker,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,pre-1996 spelling; key should be Nussknacker
+de,Raphael,Rafael,spelling-variant,Rafael,Rafael,accept twin,exclude,PURITY_PROPER_NOUN,PURITY,given name
+de,Speer,Späher,sound-twin,Speer,Speer,exclude,keep,SYLLABLE_COUNT,,1 vs 2 syllables
+de,Stile,Stiele,sound-twin,Stile,Stile,exclude,exclude,TRUE_HOMOPHONE,,[ˈʃtiːlə] both
+de,Stile,stiele,sound-twin,Stile,Stile,exclude,keep,TWIN_NOT_A_WORD,,word is out anyway via Stiele
+de,Thun,Tun,spelling-variant,tun,tun,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,"pre-1901 spelling of tun, or the Swiss town"
+de,Thun,tun,spelling-variant,tun,tun,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,"pre-1901 spelling of tun, or the Swiss town"
+de,Umsätze,umsetze,sound-twin,Umsätze,Umsätze,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,Verse,Ferse,sound-twin,Ferse,Ferse,exclude,exclude,TRUE_HOMOPHONE,,v = f here
+de,Verse,ferse,sound-twin,Ferse,Ferse,exclude,keep,TWIN_NOT_A_WORD,,word is out anyway via Ferse
+de,Widersprüche,Wiedersprüche,sound-twin,Widersprüche,Widersprüche,exclude,keep,TWIN_NOT_A_WORD,,the wider/wieder trap is fair when the twin isn't a word
+de,Zins,Zinns,sound-twin,SINCE,SINCE!,exclude,exclude,TRUE_HOMOPHONE,,Zinns = genitive of Zinn; clip heard as English 'SINCE' (language lock)
+de,Zins,zinns,sound-twin,SINCE,SINCE!,exclude,keep,TWIN_NOT_A_WORD,,word is out anyway via Zinns
+de,aufsetzen,Aufsätzen,sound-twin,Aufsetzen,Aufsetzen,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,aufsetzen,aufsätzen,sound-twin,Aufsetzen,Aufsetzen,exclude,keep,TWIN_NOT_A_WORD,,word is out anyway via Aufsätzen
+de,aussenseiter,Außenseiter,spelling-variant,Außenseiter,Außenseiter,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,lowercase noun + ss for ß; key should be Außenseiter
+de,aussenseiter,außenseiter,spelling-variant,Außenseiter,Außenseiter,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,key should be Außenseiter
+de,bellen,Bällen,sound-twin,Bellen,Bellen,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,einsetzen,Einsätzen,sound-twin,einsetzen,einsetzen,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,einsetzen,einsätzen,sound-twin,einsetzen,einsetzen,exclude,keep,TWIN_NOT_A_WORD,,word is out anyway via Einsätzen
+de,fasten,fassten,spelling-variant,Fasten,Fasten,accept twin,exclude,TRUE_HOMOPHONE,,"NOT a variant: fasten vs fassen, both [ˈfastn̩]"
+de,gelte,gellte,sound-twin,Gelte,Gelte,exclude,exclude,TRUE_HOMOPHONE,,
+de,gelte,gälte,sound-twin,Gelte,Gelte,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,geographische,geografische,spelling-variant,Geografische,Geografische,accept twin,accept twin,VARIANT_SPELLING,,Duden accepts both
+de,gerechten,gerächten,sound-twin,gerechten,gerechten,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,geschehen,geschähen,sound-twin,Geschehen,Geschehen,exclude,exclude,BORDERLINE,,long ä/e merge for many speakers
+de,gewandt,gewannt,sound-twin,Gewand,Gewand,exclude,exclude,TRUE_HOMOPHONE,,final dt = t; gewannt = gewinnen 2pl past
+de,hausen,Haussen,spelling-variant,Hausen,Hausen,accept twin,keep,PHONEMIC_CONTRAST,,NOT a variant: Hausse is said 'Hoße'; au vs o
+de,hausen,haussen,spelling-variant,Hausen,Hausen,accept twin,keep,TWIN_NOT_A_WORD,,
+de,matte,Mathe,sound-twin,Mathe,Mathe,exclude,exclude,TRUE_HOMOPHONE,,[ˈmatə] both
+de,schafften,Schaften,sound-twin,Schafften,Schafften,exclude,keep,TWIN_NOT_A_WORD,,plural is Schäfte(n)
+de,schafften,schaften,sound-twin,Schafften,Schafften,exclude,keep,TWIN_NOT_A_WORD,,
+de,schalte,schallte,sound-twin,Schalte,Schalte,exclude,exclude,TRUE_HOMOPHONE,,
+de,schlechter,Schlächter,sound-twin,schlechter,schlechter,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,schlechter,schlächter,sound-twin,schlechter,schlechter,exclude,exclude,TRUE_HOMOPHONE,,short ä = e
+de,soooo,so,sound-twin,So.,So.,exclude,exclude,PURITY_MISSPELLED_KEY,PURITY,not a word (expressive spelling)
+de,vergrösserung,Vergrößerung,spelling-variant,Vergrößerung,Vergrößerung,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,Swiss ss + lowercase noun; key should be Vergrößerung
+de,vergrösserung,vergrößerung,spelling-variant,Vergrößerung,Vergrößerung,accept twin,exclude,PURITY_MISSPELLED_KEY,PURITY,key should be Vergrößerung
+de,verließen,Verliesen,spelling-variant,verließen,Verließen,accept twin,exclude,BORDERLINE,,NOT a variant; ß/s voicing merges in southern speech
+de,verließen,verliesen,spelling-variant,verließen,Verließen,accept twin,keep,TWIN_NOT_A_WORD,,word is out anyway via Verliesen
+de,verweise,verwaise,sound-twin,Fervaisa,Fervaisa,exclude,exclude,TRUE_HOMOPHONE,,
+de,weissrussland,Weißrussland,spelling-variant,Weiß Russland,Weiß Russland,accept twin,exclude,PURITY_PROPER_NOUN,PURITY,country name; also ss for ß
+de,weissrussland,weißrussland,spelling-variant,Weiß Russland,Weiß Russland,accept twin,exclude,PURITY_PROPER_NOUN,PURITY,country name
+ko,가마,감아,sound-twin,가마!,가마,exclude,exclude,TRUE_HOMOPHONE,,liaison: 감아 → [가마]
+ko,강자,강짜,sound-twin,강자,강자,exclude,keep,PHONEMIC_CONTRAST,,ㅈ vs ㅉ
+ko,경멸,격멸,sound-twin,경멸,경멸,exclude,exclude,TRUE_HOMOPHONE,,nasalization: 격멸 → [경멸]
+ko,곡물,공물,sound-twin,공물,공물,exclude,exclude,TRUE_HOMOPHONE,,nasalization: 곡물 → [공물]
+ko,공명,곡명,sound-twin,공명,공명,exclude,exclude,TRUE_HOMOPHONE,,nasalization: 곡명 → [공명]
+ko,구비,굽이,sound-twin,구비,구비,exclude,exclude,TRUE_HOMOPHONE,,liaison: 굽이 → [구비]
+ko,군청,군정,sound-twin,군청,군청,exclude,keep,PHONEMIC_CONTRAST,,ㅊ vs ㅈ
+ko,꽝,광,sound-twin,광,광,exclude,keep,PHONEMIC_CONTRAST,,ㄲ vs ㄱ
+ko,놓인,노인,sound-twin,노인,노인,exclude,exclude,TRUE_HOMOPHONE,,ㅎ drops: 놓인 → [노인]
+ko,달인,다린,sound-twin,달인,달인,exclude,exclude,TRUE_HOMOPHONE,,liaison: 달인 → [다린]
+ko,대교,태교,sound-twin,태경,태경,exclude,keep,PHONEMIC_CONTRAST,AUDIO,ㄷ vs ㅌ; pool clip heard as 태경
+ko,덧,덫,sound-twin,다음,다음,exclude,exclude,TRUE_HOMOPHONE,,final neutralization: both [덛]
+ko,뗄,땔,sound-twin,때,때,exclude,exclude,BORDERLINE,,ㅔ/ㅐ merged for most speakers
+ko,뜬,든,sound-twin,등!,등,exclude,keep,PHONEMIC_CONTRAST,AUDIO,ㄸ vs ㄷ; pool clip heard as 등
+ko,밀집,밀짚,sound-twin,밀집,밀집,exclude,exclude,TRUE_HOMOPHONE,,final ㅍ → [ㅂ]
+ko,밸,벨,sound-twin,배,배,exclude,exclude,BORDERLINE,,ㅐ/ㅔ
+ko,벌여,버려,sound-twin,버려,버려,exclude,exclude,TRUE_HOMOPHONE,,liaison: 벌여 → [버려]
+ko,부제,부재,sound-twin,부제,부제,exclude,exclude,BORDERLINE,,ㅔ/ㅐ
+ko,비켜,비껴,sound-twin,비켜!,비켜!,exclude,keep,PHONEMIC_CONTRAST,,ㅋ vs ㄲ
+ko,뽕,봉,sound-twin,뿅!,뿅!,exclude,keep,PHONEMIC_CONTRAST,AUDIO,ㅃ vs ㅂ; pool clip heard as 뿅
+ko,사이다,싸이다,sound-twin,사이다,사이다,exclude,keep,PHONEMIC_CONTRAST,,ㅅ vs ㅆ
+ko,사이다,쌓이다,sound-twin,사이다,사이다,exclude,keep,PHONEMIC_CONTRAST,,ㅅ vs ㅆ (쌓이다 → [싸이다])
+ko,상수,쌍수,sound-twin,상수,상수,exclude,keep,PHONEMIC_CONTRAST,,ㅅ vs ㅆ
+ko,소동,소똥,sound-twin,소동,소동,exclude,keep,PHONEMIC_CONTRAST,,ㄷ vs ㄸ
+ko,수제,수재,sound-twin,수제,수제,exclude,exclude,BORDERLINE,,ㅔ/ㅐ
+ko,실증,싫증,sound-twin,실증,실증,exclude,exclude,TRUE_HOMOPHONE,,both [실쯩]
+ko,아사,앗아,sound-twin,아사,아사,exclude,exclude,TRUE_HOMOPHONE,,liaison: 앗아 → [아사]
+ko,애칭,에칭,sound-twin,애칭,애칭,exclude,exclude,BORDERLINE,,ㅐ/ㅔ
+ko,유체,유채,sound-twin,유체,유체,exclude,exclude,BORDERLINE,,ㅔ/ㅐ
+ko,일전,일천,sound-twin,1천,1천.,exclude,keep,PHONEMIC_CONTRAST,AUDIO,[일쩐] vs [일천]; pool clip heard as 1천
+ko,작물,장물,sound-twin,장물,장물,exclude,exclude,TRUE_HOMOPHONE,,nasalization: 작물 → [장물]
+ko,잠옷,자못,sound-twin,잠옷,잠옷,exclude,exclude,TRUE_HOMOPHONE,,both [자몯]
+ko,재기,제기,sound-twin,제기,제기,exclude,exclude,BORDERLINE,,ㅐ/ㅔ
+ko,재발,제발,sound-twin,제발,제발!,exclude,exclude,BORDERLINE,,ㅐ/ㅔ
+ko,제복,재복,sound-twin,제보,제보,exclude,exclude,BORDERLINE,,ㅔ/ㅐ
+ko,조그만,쪼그만,sound-twin,조그만,조그만,exclude,keep,PHONEMIC_CONTRAST,,ㅈ vs ㅉ
+ko,조그만,쪼끄만,sound-twin,조그만,조그만,exclude,keep,PHONEMIC_CONTRAST,,"ㅈ vs ㅉ, ㄱ vs ㄲ"
+ko,죄악,최악,sound-twin,최악,최악,exclude,keep,PHONEMIC_CONTRAST,AUDIO,ㅈ vs ㅊ; pool clip heard as 최악
+ko,지퍼,짚어,sound-twin,짚어,짚어,exclude,exclude,TRUE_HOMOPHONE,,liaison: 짚어 → [지퍼]
+ko,차마,참아,sound-twin,차마,차마,exclude,exclude,TRUE_HOMOPHONE,,liaison: 참아 → [차마]
+ko,착오,차고,sound-twin,차고,차고,exclude,exclude,TRUE_HOMOPHONE,,liaison: 착오 → [차고]
+ko,총체,총채,sound-twin,총체,총체,exclude,exclude,BORDERLINE,,ㅔ/ㅐ
+ko,추종,주종,sound-twin,추종,추종,exclude,keep,PHONEMIC_CONTRAST,,ㅊ vs ㅈ
+ko,출자,줄자,sound-twin,출자,출자!,exclude,keep,PHONEMIC_CONTRAST,,ㅊ vs ㅈ
+ko,치사,지사,sound-twin,치사,치사,exclude,keep,PHONEMIC_CONTRAST,,ㅊ vs ㅈ
+ko,필연,비련,sound-twin,필연,필연,exclude,keep,PHONEMIC_CONTRAST,,ㅍ vs ㅂ
+ko,항문,학문,sound-twin,학문,학문,exclude,exclude,TRUE_HOMOPHONE,,nasalization: 학문 → [항문]
