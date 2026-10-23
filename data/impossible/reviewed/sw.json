@@ -1,0 +1,16 @@
+{
+ "lang": "sw",
+ "source": "reports/impossible-outside-twins-verdicts-sw-filled.csv (Eric's filled sheet, 2026-10-23)",
+ "rule": "verdict 'exclude' = a real rival spelling or word sounds the same to the voice, so the word cannot be spelled from audio alone (I1)",
+ "excluded": [
+  "alichukua",
+  "kuanzisha",
+  "kudumisha",
+  "kukamilisha",
+  "kupitisha",
+  "kusafisha",
+  "kushambulia",
+  "kutayarisha",
+  "kutekeleza"
+ ]
+}
