@@ -1,0 +1,1152 @@
+pool_word,twin,verdict,heard_pool,heard_twin
+abattage,abatage,SAME_HEARD,Abattage,Abattage
+abattage,embattage,DIFFERENT,Abattage,en battage
+abolir,abolît,DIFFERENT,abolir,Aboli !
+abolir,embolie,DIFFERENT,abolir,Enbolie
+abonner,abonnai,SAME_HEARD,Abonnez !,abonnez
+abonner,abonnée,SAME_HEARD,Abonnez !,Abonnez !
+abordés,abordais,SAME_HEARD,Aborder,Aborder
+abordés,abordait,SAME_HEARD,Aborder,Aborder
+aboutissement,aboutissant,DIFFERENT,aboutissement,Aboutissant
+aboutissement,aboutissants,DIFFERENT,aboutissement,Aboutissant.
+abîme,abyme,SAME_HEARD,abîme,abîme
+accordées,accordais,DIFFERENT,Accorder,Accordez !
+accordées,accordait,DIFFERENT,Accorder,Accordez !
+accoucher,accouchai,SAME_HEARD,À coucher.,À coucher.
+accoucher,accouchée,DIFFERENT,À coucher.,Accoucher
+accroît,accrois,DIFFERENT,À croire !,À croix.
+accroît,achromie,DIFFERENT,À croire !,Acromis
+accumuler,accumulai,DIFFERENT,Accumuler,Accumulez.
+accumuler,accumulée,SAME_HEARD,Accumuler,Accumuler
+accusant,accoucha,DIFFERENT,Accusant,À couche-à.
+accusant,accouchant,DIFFERENT,Accusant,À cochant !
+accéléré,accélère,DIFFERENT,Accélérer,Accélère
+achetant,achetât,DIFFERENT,Achetez-vous !,Acha ta.
+achetant,achètent,DIFFERENT,Achetez-vous !,A chette.
+achètes,achetais,DIFFERENT,A chette.,Achaute !
+achètes,achetait,DIFFERENT,A chette.,Achaute !
+acquitter,acquittai,DIFFERENT,à quitter,A qui t'es ?
+acquitter,acquittée,DIFFERENT,à quitter,acquitté
+adressent,adressant,DIFFERENT,adresse,Addressant
+adressent,adressas,DIFFERENT,adresse,Adresse-à.
+adultère,adultérai,DIFFERENT,adultère,adultérés
+adultère,adultérer,DIFFERENT,adultère,adultéré
+affectent,affectant,DIFFERENT,affect,Affectant
+affectent,affectas,DIFFERENT,affect,Afecte-à.
+affichant,affichent,DIFFERENT,affichant.,affiche
+affichant,affichât,DIFFERENT,affichant.,affichat
+affiliés,affiliais,SAME_HEARD,Affilier,Affilier
+affiliés,affiliait,SAME_HEARD,Affilier,Affilier
+affirmait,affirmes,DIFFERENT,Affirmer,Affirme.
+affirmait,affirmez,SAME_HEARD,Affirmer,Affirmer
+afflux,afflouai,DIFFERENT,À plus.,À fluer !
+afflux,affloue,DIFFERENT,À plus.,A flou !
+affronter,affrontai,SAME_HEARD,Affronter,affronter
+affronter,affrontée,SAME_HEARD,Affronter,affronter
+aggraver,aggravai,DIFFERENT,aggraver,A gravé.
+aggraver,aggravée,SAME_HEARD,aggraver,aggraver
+agonie,agonît,SAME_HEARD,Agony,Agony
+aimaient,ahanaient,DIFFERENT,et me.,"Ah, né."
+aimaient,amenaient,DIFFERENT,et me.,Amené !
+aimeraient,ahaneraient,DIFFERENT,Emmerer,À Anner
+aimeraient,amèneraient,DIFFERENT,Emmerer,Amenré !
+aimeriez,ahaneriez,DIFFERENT,et meurier,À Annerier
+aimeriez,amerries,DIFFERENT,et meurier,Améry
+aimés,ahanais,DIFFERENT,Aimez !,"Ah, né."
+aimés,ahanait,DIFFERENT,Aimez !,"Ah, né."
+aisance,eschasse,DIFFERENT,Exence.,Et chasse !
+aisance,essaimasse,DIFFERENT,Exence.,SMS
+alertes,alertais,DIFFERENT,Alert !,Alerte
+alertes,alertait,DIFFERENT,Alert !,Alerte.
+alimentaire,alimenterai,DIFFERENT,alimentaire,Alimenterez.
+allonge,analogue,DIFFERENT,Allonge,Analogues
+allégeance,allégeasse,DIFFERENT,Allégeance.,Alléjasse
+alsacien,alsaciène,DIFFERENT,Alsaciens.,Alsacienne.
+aléas,allaient,DIFFERENT,Alléa,Allez !
+aléas,halaient,DIFFERENT,Alléa,Allez !
+ambre,embraie,DIFFERENT,Amma.,En vrai.
+amiante,anémiante,DIFFERENT,Amiantes.,anémiante
+amiante,anémiantte,DIFFERENT,Amiantes.,anémiante
+amère,ahanerai,DIFFERENT,à mer,à Anrhe
+amère,aimerai,DIFFERENT,à mer,Emmerer.
+aménager,age,DIFFERENT,Amenager,Age
+aménager,amenage,DIFFERENT,Amenager,Aménage
+analystes,halictes,DIFFERENT,Analyste,"à l'île, à l'île."
+anse,ace,DIFFERENT,France,Ace.
+anse,ache,DIFFERENT,France,Ache !
+anticorps,antiquons,DIFFERENT,Anticorps,Anticom
+apartheid,apartés,DIFFERENT,Apartheid,A partez.
+apparaissent,apparaissant,DIFFERENT,Apparaissent !,Apparaissant.
+apparence,emparasse,DIFFERENT,Apparence.,en parasse
+apparent,apparat,DIFFERENT,Appareaux.,Appare.
+apparent,apparats,DIFFERENT,Appareaux.,Appare.
+appartenait,appartenez,P_HEARD_AS_T,appartenez.,A partenir.
+apprendre,empreindrai,DIFFERENT,apprendre,En prendrait.
+apprendre,empreindre,DIFFERENT,apprendre,empreindre
+apprit,apprît,SAME_HEARD,appris,appris
+appréciés,appréciais,SAME_HEARD,Appréciez !,Appréciez !
+appréciés,appréciait,SAME_HEARD,Appréciez !,Appréciez !
+archer,archée,SAME_HEARD,Archer,Archer
+archi,anarchie,DIFFERENT,archi,Anarchie
+archi,énarchie,DIFFERENT,archi,Enarchie
+arméniens,arméniène,DIFFERENT,Amenia !,Amen yen !
+arrogant,arrogent,DIFFERENT,Arogant.,A hoge.
+arrogant,arrogât,DIFFERENT,Arogant.,à Roja.
+assistant,assistent,DIFFERENT,Assistant !,assiste
+assistant,assistât,DIFFERENT,Assistant !,Assister !
+athée,aimantai,DIFFERENT,À Té !,et monter.
+athée,aimante,DIFFERENT,À Té !,Émalte.
+atome,aimantons,DIFFERENT,Atoma,et mentons.
+atome,anthonome,DIFFERENT,Atoma,Antonyme
+atteignent,atteignant,DIFFERENT,À ténis !,Atenuant.
+attendra,atteindra,SAME_HEARD,attendra,attendra
+attendra,atteindras,SAME_HEARD,attendra,attendra
+attention,aimantation,DIFFERENT,Attention !,Émentation
+attention,aimantations,DIFFERENT,Attention !,Émentation
+atteste,athéiste,DIFFERENT,A test.,à théiste
+attirance,attirasse,DIFFERENT,Atterrance,à tirasse
+attirée,amatirai,DIFFERENT,attirer,À ma tirée.
+attirée,attirai,SAME_HEARD,attirer,attirer
+attirés,amatirais,DIFFERENT,attirer,à ma tirée
+attirés,amatirait,DIFFERENT,attirer,À ma tirée.
+australiens,australiène,DIFFERENT,Australien,australienne
+avantages,avantagait,DIFFERENT,A VENTAGE,Avantager
+avantages,avantagées,DIFFERENT,A VENTAGE,Avantager
+avertis,avertît,SAME_HEARD,Averti !,Averti !
+avérer,avère,DIFFERENT,Averrez.,A verre.
+avérer,avérai,SAME_HEARD,Averrez.,A verrez.
+bagues,baguais,DIFFERENT,Bag.,Baguette
+bagues,baguait,DIFFERENT,Bag.,Baguette
+bailleur,bâilleur,SAME_HEARD,Bayeur,Bayeur
+bailleur,bâilleurs,SAME_HEARD,Bayeur,Bayeur
+baisses,baisais,DIFFERENT,Bess !,baiser
+baisses,baisait,DIFFERENT,Bess !,bêze
+balayer,balayai,DIFFERENT,balayer,Balletier
+balayer,balayée,SAME_HEARD,balayer,balayer
+bandeau,badaud,DIFFERENT,Bando,Bado
+bandeau,badauds,DIFFERENT,Bando,Bado
+bandits,bendir,DIFFERENT,bandie,BENDIR
+bandits,bendirs,DIFFERENT,bandie,BENDIR
+barème,barra,DIFFERENT,Bahem,Baha !
+barème,barrant,DIFFERENT,Bahem,Bahon !
+bataillon,batelons,DIFFERENT,Bataillon,Bâtelons !
+battait,bananâtes,DIFFERENT,Bate,Bananat
+battait,battes,DIFFERENT,Bate,But...
+besson,baisons,DIFFERENT,Besson,Baison
+besson,baissons,SAME_HEARD,Besson,Besson
+billes,bilais,DIFFERENT,B,bilet
+billes,bilait,DIFFERENT,B,bilet
+bise,bichai,DIFFERENT,Bise !,Biché
+bise,biche,DIFFERENT,Bise !,Biche !
+blindés,blindais,DIFFERENT,Blendé,Blondé
+blindés,blindait,DIFFERENT,Blendé,Blondé
+blondes,blaudes,DIFFERENT,blonde,Bloade
+bobos,bombons,DIFFERENT,Boubou,bonbon
+bobos,bonbon,DIFFERENT,Boubou,bonbon
+bombardements,bombardant,DIFFERENT,Bombardement,Bon bardan !
+bombardements,bombardas,DIFFERENT,Bombardement,Bombardat !
+booster,boostai,DIFFERENT,Busté,Buste !
+booster,boostée,SAME_HEARD,Busté,Busté
+bougent,bougant,DIFFERENT,bouge,Bougon !
+bougent,bougât,DIFFERENT,bouge,bourge à
+bouillir,bouillît,DIFFERENT,bouillir,Bouillis !
+boulots,bouleau,SAME_HEARD,Boulot,Boulot
+boulots,bouleaux,SAME_HEARD,Boulot,Boulot
+brigades,brigandais,DIFFERENT,Brigade.,Brigander
+brigades,brigandait,DIFFERENT,Brigade.,Brigander
+bugs,bug,DIFFERENT,Bag.,Baguette
+buter,boutai,DIFFERENT,buter,bouté
+buter,boute,DIFFERENT,buter,bout
+buvez,bouvet,DIFFERENT,Buvez !,bouvet
+buvez,bouvets,DIFFERENT,Buvez !,bouvet
+bélier,bailli,DIFFERENT,belier,Bye !
+bélier,baillie,DIFFERENT,belier,Bye !
+cages,caguais,DIFFERENT,cash,Kage !
+cages,caguait,DIFFERENT,cash,Qu'est-ce qu'il y a ?
+cake,caquai,DIFFERENT,cake,Qu'est-ce qu'il y a ?
+cake,caque,DIFFERENT,cake,Cac.
+calcaires,calquerais,DIFFERENT,Calcaire,Calculer.
+calcaires,calquerait,DIFFERENT,Calcaire,Calculer.
+capitaine,capitanat,DIFFERENT,Capitaine,Capitana
+capitaine,capitanats,DIFFERENT,Capitaine,Capitana
+capot,campo,DIFFERENT,Capot,Campo
+capot,campons,DIFFERENT,Capot,Compon !
+capsules,capsulais,DIFFERENT,Capsule,Capsulé
+capsules,capsulait,DIFFERENT,Capsule,Capsulet
+carburant,carburent,DIFFERENT,carburant,Carbure
+carburant,carburât,DIFFERENT,carburant,carburat
+carence,carrasse,DIFFERENT,4 ans,garrasse
+carence,carénasse,DIFFERENT,4 ans,Carénaz
+caresser,caressai,DIFFERENT,Carré C,carrécer
+caresser,caressée,SAME_HEARD,Carré C,Carré C
+carreau,caron,SAME_HEARD,Qu'est-ce qu'il y a ?,Qu'est-ce qu'il y a ?
+carreau,carons,SAME_HEARD,Qu'est-ce qu'il y a ?,Qu'est-ce qu'il y a ?
+cascades,cascadais,SAME_HEARD,Cascade,Cascade
+cascades,cascadait,SAME_HEARD,Cascade,Cascade
+cassent,cacha,DIFFERENT,Cass,Gâche à !
+cassent,cachant,DIFFERENT,Cass,Gachan
+caste,cactée,DIFFERENT,Cast,Qu'est-ce que c'est ?
+centaines,centâmes,DIFFERENT,Centaines.,Sant'âme.
+centaines,chantâmes,DIFFERENT,Centaines.,Chantame
+centime,satin,DIFFERENT,Santime,S'attends.
+centime,satinai,DIFFERENT,Santime,Sachi ne
+centraux,centrons,DIFFERENT,Centraux,centrons
+centraux,châtrons,DIFFERENT,Centraux,Châtron
+changerait,changerez,DIFFERENT,Sans水.,Changerait.
+chantait,ceintes,DIFFERENT,Chantez !,Sainte
+chantait,centais,DIFFERENT,Chantez !,santé
+chanteuse,chatteuse,DIFFERENT,chanteuse,Châteuse
+chanteuse,cémenteuse,DIFFERENT,chanteuse,Sémanteuse
+charia,charria,SAME_HEARD,Charia,Charia
+charia,charriant,DIFFERENT,Charia,Charian
+charmes,charmais,SAME_HEARD,Charme.,Charme
+charmes,charmait,SAME_HEARD,Charme.,Charme
+cheminement,cheminant,DIFFERENT,cheminement,Cheminant
+cheminement,cheminas,DIFFERENT,cheminement,cheminasse
+chevilles,chevillais,DIFFERENT,cheville,Chevillet
+chevilles,chevillait,DIFFERENT,cheville,Chevillet
+choisissant,choisissent,DIFFERENT,Choisissant.,choisisse
+chronique,chromique,DIFFERENT,chronique,Chromique
+chrétiens,chrétiène,DIFFERENT,chrétien,chrétienne
+chuchotement,chuchotant,DIFFERENT,Je suis shortement.,Je suis chaudant.
+chuchotement,chuchotants,DIFFERENT,Je suis shortement.,Je suis chaudant.
+cils,chyle,DIFFERENT,Sile,Chile
+cils,cil,DIFFERENT,Sile,SILLE
+circulaire,circulerai,DIFFERENT,Circulaire,Circulerai.
+clics,clip,DIFFERENT,Clique !,clip
+clics,clips,DIFFERENT,Clique !,clip
+coderre,coderai,DIFFERENT,Coderre,Qu'aurai ?
+coincée,coincer,DIFFERENT,Qu'en s'est-il ?,Quoi c'est ?
+coincée,coinche,DIFFERENT,Qu'en s'est-il ?,Qu'onche !
+collègues,collèges,DIFFERENT,Collègue,Collège
+colombien,colombiène,DIFFERENT,Colombien,Colombienne
+colorés,colorais,DIFFERENT,Connoiré,Conoré.
+colorés,colorait,DIFFERENT,Connoiré,Conorais.
+combinée,combinai,DIFFERENT,Combiner,Combiné.
+combinée,combiner,SAME_HEARD,Combiner,combiner
+combo,cobord,DIFFERENT,Combo,Cobore
+combo,cobords,DIFFERENT,Combo,Cobore.
+commencent,commencement,DIFFERENT,Comment se ?,Commencement.
+commencent,commencements,DIFFERENT,Comment se ?,Commencement.
+commerciaux,commercions,DIFFERENT,Commercio,Commersion.
+communiquer,communiquai,DIFFERENT,communiquez,communique
+communiquer,communiquée,DIFFERENT,communiquez,communiquer
+communiqués,communiquais,DIFFERENT,communiquez,communiquer
+communiqués,communiquait,DIFFERENT,communiquez,communiquer
+comparaison,comparaissons,SAME_HEARD,Comparaison,Comparaison
+comportait,comportes,DIFFERENT,comporter,comporte
+comportait,comportez,SAME_HEARD,comporter,comporter
+comprenait,comprenez,SAME_HEARD,Comprenez.,Comprenez.
+comprimé,coprin,DIFFERENT,Comprimer,Coprant.
+comprimé,coprins,DIFFERENT,Comprimer,Coprant.
+compromis,compromît,SAME_HEARD,Compromis.,Compromis.
+compétentes,compétenttes,SAME_HEARD,compétente,compétente
+compétentes,compétâtes,DIFFERENT,compétente,Compétate !
+concentrés,concentrais,SAME_HEARD,Concentrez.,Concentrez.
+concentrés,concentrait,SAME_HEARD,Concentrez.,Concentrez.
+conclus,conclût,SAME_HEARD,Compris.,Compris.
+conclusion,conclussions,SAME_HEARD,Conclusion,conclusion
+conduisait,conduises,DIFFERENT,conduisait,conduise
+conduisait,conduisez,DIFFERENT,conduisait,Conduisez !
+conduisent,conduisant,DIFFERENT,conduise,Conduisant
+conduisent,conduissent,DIFFERENT,conduise,conduis
+confiance,confiasse,DIFFERENT,Confiance.,Confiasse !
+confondent,cofonda,DIFFERENT,Confondent.,Coffunda.
+confondent,cofondant,DIFFERENT,Confondent.,Coffondant
+connaissent,connaissant,DIFFERENT,Connaisse.,connaissant
+connaissent,connaissement,DIFFERENT,Connaisse.,connaissons
+conscience,conchiasse,DIFFERENT,conscience,Consciousse !
+constantes,constanttes,DIFFERENT,Constant.,constante
+constantes,constatais,DIFFERENT,Constant.,constatez
+construisent,construisant,DIFFERENT,construise,Construisant
+construisent,construissant,DIFFERENT,construise,Construissant
+contempler,contemplai,SAME_HEARD,Contempler,Contempler
+contempler,contemplée,SAME_HEARD,Contempler,Contempler
+contour,contus,DIFFERENT,Contour,Conte-tu ?
+contraignant,contraignent,DIFFERENT,Contraignant.,Contraigne.
+contraintes,contrâtes,DIFFERENT,Contrinte,Contrate
+contraire,contrerai,DIFFERENT,Contraire,Contre-Rais
+contrairement,contrera,DIFFERENT,Contrairement,Contreras.
+contrairement,contreras,DIFFERENT,Contrairement,Contreras.
+contreforts,contrefont,DIFFERENT,Contrefort,contre-fonds
+contrées,contrais,SAME_HEARD,Contrait,Contrait.
+contrées,contrait,SAME_HEARD,Contrait,Contrait.
+convaincant,convainquant,SAME_HEARD,Convaincant,Convaincant
+convaincant,convainquent,DIFFERENT,Convaincant,Convainc !
+convention,convoitions,DIFFERENT,Convention,Convoitions
+convertis,convertît,SAME_HEARD,Converti,Converti
+coopérer,compère,DIFFERENT,coopérer,Compère.
+coopérer,coopère,DIFFERENT,coopérer,Coopère
+coques,cocaïers,DIFFERENT,Coq,Cocaillers
+coques,cockers,DIFFERENT,Coq,Coquer
+corail,corrèle,DIFFERENT,Correille,Correlle
+corail,corrélai,DIFFERENT,Correille,Corrêler
+cornet,cornais,SAME_HEARD,Corne,Corne.
+cornet,cornait,SAME_HEARD,Corne,Corne.
+coudes,coudais,DIFFERENT,Coups-ne,Cudé
+coudes,coudait,DIFFERENT,Coups-ne,Cudé
+coupant,coupent,DIFFERENT,Coupant,Coupe.
+coupant,coupât,DIFFERENT,Coupant,Coupa
+couronnement,couronnant,DIFFERENT,Coronement,Corona
+couronnement,couronnas,DIFFERENT,Coronement,Corona
+craignait,craignes,DIFFERENT,Crénier,Traignez !
+craignait,craignez,DIFFERENT,Crénier,craignée
+croate,chromate,DIFFERENT,Quoi ?,Chromat
+croissance,croisasse,DIFFERENT,Croissance,Croise S
+crosse,crochai,DIFFERENT,cross,Koshe
+crosse,croche,DIFFERENT,cross,crache
+crues,crûes,SAME_HEARD,Crue.,Crue.
+cueillir,cueillît,DIFFERENT,cueillir,- - - - - - -
+culminant,culminent,DIFFERENT,Culminant,Culmine
+culminant,culminât,DIFFERENT,Culminant,CULMINA
+culottes,culottais,DIFFERENT,Q-Lot,Qu'il y a de la même chose.
+culottes,culottait,DIFFERENT,Q-Lot,Qu'il y a aussi.
+cultivées,cultivais,SAME_HEARD,Cultiver,Cultiver
+cultivées,cultivait,SAME_HEARD,Cultiver,cultiver
+cylindres,cylindrais,DIFFERENT,Cylinder,Cylinderait.
+cylindres,cylindrait,DIFFERENT,Cylinder,Cylinderait.
+demoiselles,damoiselles,DIFFERENT,De moisel.,Damoiselle
+deniers,damiers,DIFFERENT,De n'y.,Damier
+deniers,damiez,DIFFERENT,De n'y.,Damier
+descendants,descendent,DIFFERENT,descendant,descendre
+description,décryptions,DIFFERENT,description,Décryption
+dessein,descend,DIFFERENT,Dessent,Desson.
+dessein,descends,DIFFERENT,Dessent,Desson.
+devance,dévasai,DIFFERENT,"""Devance""",Dévasez !
+devance,dévase,DIFFERENT,"""Devance""",dévase
+devenez,devenais,DIFFERENT,Devenis !,devenez
+devenez,devenait,DIFFERENT,Devenis !,devenez
+devions,déviions,DIFFERENT,Devions !,dévillon
+devions,dévions,DIFFERENT,Devions !,dévions
+deçà,déca,DIFFERENT,de ça,D.K.
+deçà,décaA,DIFFERENT,de ça,DECA
+digérer,digère,DIFFERENT,Digérer,digère
+digérer,digérai,SAME_HEARD,Digérer,digérer
+diplomates,diplômantes,DIFFERENT,diplomate,diplomante
+diplomates,diplômanttes,DIFFERENT,diplomate,diplomante
+discernement,discernant,DIFFERENT,Dissernement,Discernant
+discernement,discernas,DIFFERENT,Dissernement,Disserna
+disciplinaire,disciplinerai,DIFFERENT,Disciplinaire,Disciplinerait
+disparaît,disparais,SAME_HEARD,disparaît,disparaît
+disposées,disposais,SAME_HEARD,Disposer,Disposer
+disposées,disposait,SAME_HEARD,Disposer,Disposer
+disputés,disputais,DIFFERENT,Disputer,Disputez !
+disputés,disputait,DIFFERENT,Disputer,Disputez !
+dissuader,dissuadai,SAME_HEARD,Dissuadé,Dissuadé
+dissuader,dissuadée,SAME_HEARD,Dissuadé,Dissuadé
+distant,dicta,DIFFERENT,Distant,dictat
+distant,dictame,DIFFERENT,Distant,dictame
+documentaire,documenterai,DIFFERENT,documentaire,documenter
+donnerais,donnerez,SAME_HEARD,Donnerez.,Donnerez.
+dormait,dormes,DIFFERENT,dormez,dorme
+dormait,dormez,SAME_HEARD,dormez,Dormez.
+dormant,dorment,DIFFERENT,Dormant,dorme
+drap,drad,DIFFERENT,- D'accord.,drade
+drap,drain,SAME_HEARD,- D'accord.,- D'accord.
+drop,drome,DIFFERENT,D'hop !,D'hommes
+drop,drone,DIFFERENT,D'hop !,drone
+débarquent,débarquant,DIFFERENT,débarque,Débarquant
+débarquent,débarquas,DIFFERENT,débarque,Débarca
+débouché,débuchai,DIFFERENT,déboucher,débuter
+débouché,débuche,DIFFERENT,déboucher,Debuts
+débutants,débouta,DIFFERENT,Débutant,Début A
+débutants,déboutant,DIFFERENT,Débutant,Déboutant
+découvert,décuvais,DIFFERENT,Découvert,décuvée
+découvert,décuvait,DIFFERENT,Découvert,décuvée
+découvrir,découvrît,DIFFERENT,Découvrir,Découvrie
+décrivant,décrivent,DIFFERENT,Décrivants,DÉCRIVE
+dédiées,dédiais,SAME_HEARD,dédié,dédié
+dédiées,dédiait,SAME_HEARD,dédié,dédié
+déduit,déduît,SAME_HEARD,déduis,déduis
+défie,défît,SAME_HEARD,défi,défi
+défie,déifiai,DIFFERENT,défi,Deifié
+dégagée,dégageai,SAME_HEARD,Dégagez.,Dégagez.
+dégagée,dégager,SAME_HEARD,Dégagez.,Dégagez.
+déguisement,déguisant,DIFFERENT,déguisement,déguisant
+déguisement,déguisas,DIFFERENT,déguisement,déguise à
+déguster,dégustai,SAME_HEARD,Dégustez !,Dégustez !
+déguster,dégustée,SAME_HEARD,Dégustez !,Dégustez !
+délibéré,délibère,DIFFERENT,Délibérée,délibère
+démenti,dattier,DIFFERENT,démenti,d'achat
+démenti,dentier,DIFFERENT,démenti,dentier
+démission,dénichions,DIFFERENT,démission,Dénition.
+démolir,démolît,DIFFERENT,démolir,démolie
+démunis,démunît,SAME_HEARD,démuni,démuni
+dénommé,daohm,DIFFERENT,dénommé,Dao Hashem
+dénonçant,dénonca,DIFFERENT,dénonçant,Denonça.
+dénonçant,dénoncant,SAME_HEARD,dénonçant,dénonçant
+dénouement,dénouant,DIFFERENT,Dénouement,Dénouant.
+dénouement,dénouas,DIFFERENT,Dénouement,Dénois
+dépendant,dépendent,DIFFERENT,dépendant,dépendre
+dépendra,dépeindra,SAME_HEARD,dépendra.,dépendra.
+dépendra,dépeindras,SAME_HEARD,dépendra.,dépendra.
+déployés,déployais,SAME_HEARD,déployez,Déployez.
+déployés,déployait,SAME_HEARD,déployez,Déployez.
+dépression,dépréciions,DIFFERENT,dépression,Dépréciation
+dépression,déprécions,SAME_HEARD,dépression,dépression
+déprimant,dépriment,DIFFERENT,Déprimant,déprime
+déprimant,déprimât,DIFFERENT,Déprimant,Déprima.
+dérangé,dérage,DIFFERENT,déranger,dérage
+dérangé,dérageai,DIFFERENT,déranger,déragé
+déroulent,déroulant,DIFFERENT,Des roules.,déroulant
+déroulent,déroulants,DIFFERENT,Des roules.,déroulant
+déserte,desserte,SAME_HEARD,Déserte,Déserte
+désole,dessolai,DIFFERENT,Désolée !,Désolé.
+désole,dessole,DIFFERENT,Désolée !,Dessol
+détachées,détachais,SAME_HEARD,Détaché,détaché
+détachées,détachait,SAME_HEARD,Détaché,détaché
+détection,détestions,DIFFERENT,Détection,détestions
+effondrer,effondrai,DIFFERENT,effondrez.,effondrait.
+effondrer,effondrée,DIFFERENT,effondrez.,effondrer
+embarras,embarrent,DIFFERENT,En bara.,En barre.
+embarras,embarrât,SAME_HEARD,En bara.,En bara.
+embrassé,abrasai,DIFFERENT,Embrasser,Abrazer
+embrassé,abrase,DIFFERENT,Embrasser,à bras
+encourageant,encouragaient,DIFFERENT,Encourage-en !,Encore à guerre.
+encourageant,encourageaient,DIFFERENT,Encourage-en !,Encouragez !
+enferme,affermai,DIFFERENT,Enferme.,Affermez.
+enferme,afferme,DIFFERENT,Enferme.,Afferme.
+enfermés,affermais,DIFFERENT,Enfermer,Affermez !
+enfermés,affermait,DIFFERENT,Enfermer,Affermez.
+enfiler,affilai,DIFFERENT,Enfilé,Affilée
+enfiler,affile,DIFFERENT,Enfilé,à fil
+engageant,engagaient,DIFFERENT,Engageant.,Engager
+engageant,engageaient,DIFFERENT,Engageant.,Engagez !
+engendrer,engendrai,DIFFERENT,engendré,engendrez.
+engendrer,engendrée,SAME_HEARD,engendré,engendré
+engueuler,engueulai,SAME_HEARD,Anglais,Anglais
+engueuler,engueulée,SAME_HEARD,Anglais,Anglais
+enlevés,enlevais,DIFFERENT,Enlevez.,en oeuvre
+enlevés,enlevait,DIFFERENT,Enlevez.,en oeuvre
+enregistrements,enregistrant,DIFFERENT,Enregistrement,enregistrant.
+enregistrements,enregistras,DIFFERENT,Enregistrement,Enregistre-à.
+entraînés,anthrènes,DIFFERENT,Entraîner,Entraîne.
+entraînés,entraînais,SAME_HEARD,Entraîner,Entraîner
+entrepôts,entrepont,DIFFERENT,Entrepôt,Entre ponts.
+entrepôts,entreponts,DIFFERENT,Entrepôt,Entre ponts.
+enveloppes,enveloppais,DIFFERENT,Enveloppe.,Enveloppez.
+enveloppes,enveloppait,DIFFERENT,Enveloppe.,Enveloppez.
+environnement,environnant,SAME_HEARD,Environnement,Environnement.
+environnement,environnants,SAME_HEARD,Environnement,Environnement.
+envoya,avoya,DIFFERENT,En voyant.,À vous et à la prochaine. Au revoir.
+envoya,avoyant,DIFFERENT,En voyant.,Au revoir.
+escrime,eccrine,DIFFERENT,Escrime,écrine
+escrime,écrin,DIFFERENT,Escrime,Écran
+espèrent,espéra,DIFFERENT,Espère !,Espérà !
+espèrent,espérant,DIFFERENT,Espère !,Espérons !
+essayais,essaimiez,DIFFERENT,Essayez.,Essayez-moi.
+essayais,essayes,DIFFERENT,Essayez.,Essaye !
+exagère,exagérai,DIFFERENT,Exagère,Exagérer
+exagère,exagérer,DIFFERENT,Exagère,Exagérer
+existence,existasse,DIFFERENT,Existence,Existas
+expliquerait,expliquerez,SAME_HEARD,Expliquez.,Expliquez.
+exploités,exploitais,SAME_HEARD,Exploitez !,Exploitez !
+exploités,exploitait,SAME_HEARD,Exploitez !,Exploitez !
+expérimentés,expérimentais,SAME_HEARD,expérimenter,expérimenter
+expérimentés,expérimentait,SAME_HEARD,expérimenter,expérimenter
+extension,extasiions,DIFFERENT,Extension,Extasillon
+extension,extasions,DIFFERENT,Extension,Extasion
+extrêmement,extras,DIFFERENT,extrêmement.,Extra.
+extrêmement,extrema,DIFFERENT,extrêmement.,extrema
+facettes,facettais,SAME_HEARD,Facette,Facette
+facettes,facettait,SAME_HEARD,Facette,Facette
+faciliter,facilitai,SAME_HEARD,Facilité,Facilité
+faciliter,facilitée,SAME_HEARD,Facilité,Facilité
+faiblement,faiblard,DIFFERENT,Féblement,Féblar
+faiblement,faiblards,DIFFERENT,Féblement,Féblar
+faisaient,fessaient,DIFFERENT,Fouser,Fessez !
+fallut,fallût,SAME_HEARD,Salut !,Salut !
+fallut,phallus,DIFFERENT,Salut !,Fallus
+faucon,focaux,DIFFERENT,Faucon,Foucault
+faucon,fonçons,DIFFERENT,Faucon,fonction
+financement,financent,DIFFERENT,financement,finance
+financement,finassa,DIFFERENT,financement,Finissa
+flacon,flamenco,DIFFERENT,Flacon,Flamenco
+flacon,flamencos,DIFFERENT,Flacon,Flamenco
+flancs,fla,DIFFERENT,Flan.,Fla.
+flancs,flac,DIFFERENT,Flan.,Flac.
+flots,fflops,DIFFERENT,Flo,F-flop
+flots,floc,DIFFERENT,Flo,Flock
+flottant,flottard,DIFFERENT,Flotant,Flotard
+flottant,flottards,DIFFERENT,Flotant,Flotard
+foires,foirais,DIFFERENT,Foir,foiré
+foires,foirait,DIFFERENT,Foir,foiré
+folies,foliées,SAME_HEARD,folie,folie
+folies,foliés,DIFFERENT,folie,Folier
+fonctionnaires,fonctionnerais,DIFFERENT,fonctionnaire,fonctionnerait.
+fonctionnaires,fonctionnerait,DIFFERENT,fonctionnaire,fonctionnerait.
+forçant,forca,DIFFERENT,forçant,4K
+forçant,forcant,SAME_HEARD,forçant,forçant
+fossile,faucille,DIFFERENT,fossile,Faussez !
+foutez,foutais,DIFFERENT,footé,footer
+foutez,foutait,SAME_HEARD,footé,footé
+fractures,fracturais,DIFFERENT,Fracture,Fracturer
+fractures,fracturait,DIFFERENT,Fracture,Fracturer
+franchise,francisai,DIFFERENT,franchise,Francis A.
+franchise,francise,DIFFERENT,franchise,Française
+frappent,frappant,DIFFERENT,Frappe !,Frappant.
+frappent,frappants,DIFFERENT,Frappe !,Frappant
+fraîchement,fraisa,DIFFERENT,Fréchement.,Fréza
+fraîchement,fraisant,DIFFERENT,Fréchement.,Fraisant
+frissons,frison,DIFFERENT,Frisson,Frison
+frissons,frisone,DIFFERENT,Frisson,Frisonne
+fusionner,fusionnai,SAME_HEARD,Fusionner,fusionner
+fusionner,fusionnée,SAME_HEARD,Fusionner,Fusionner
+fusées,fusais,SAME_HEARD,Fusée,Fusée
+fusées,fusait,SAME_HEARD,Fusée,Fusée
+gages,gagait,SAME_HEARD,Gage.,Gage
+gages,gagées,DIFFERENT,Gage.,Gagez !
+gagnait,gagnes,DIFFERENT,Génier,Gagne !
+gagnait,gagnez,DIFFERENT,Génier,Géni !
+gangs,gag,DIFFERENT,Donc.,Gahge !
+gangs,gags,DIFFERENT,Donc.,Yagé !
+gardait,gardes,DIFFERENT,Gardé !,Garda.
+gardait,gardez,DIFFERENT,Gardé !,Gardez.
+gardera,gardèrent,DIFFERENT,Gardera.,Gardaire
+gisement,gisant,DIFFERENT,Gisement,Gisant
+gisement,gisants,DIFFERENT,Gisement,J'ai zon.
+gland,glas,DIFFERENT,Blanc !,Blah !
+gland,glass,DIFFERENT,Blanc !,glass
+gore,gonorrhée,DIFFERENT,Daaah,Bonne oreille !
+gravement,gravant,DIFFERENT,Gravement.,Gravant !
+gravement,gravas,DIFFERENT,Gravement.,Grava !
+groupements,groupant,DIFFERENT,Groupe-moi.,Groupez-en.
+groupements,groupas,DIFFERENT,Groupe-moi.,Gros pas !
+grêle,graillai,DIFFERENT,Grêle !,Gah yeh !
+grêle,graille,DIFFERENT,Grêle !,Gai.
+guerriers,guéeriez,SAME_HEARD,guerrier,guerrier
+guerriers,guéries,DIFFERENT,guerrier,Dairy
+gueuler,gueulai,SAME_HEARD,Goûler,Goûler
+gueuler,gueulée,DIFFERENT,Goûler,gueuler
+gus,gour,DIFFERENT,Guss,Bourg.
+gus,gourd,DIFFERENT,Guss,Bourg.
+guéri,gerris,DIFFERENT,guéris,Gérisse
+guéri,guerrier,DIFFERENT,guéris,guerrier
+généralement,généralat,DIFFERENT,Généralement.,Général A
+généralement,généralats,DIFFERENT,Généralement.,Général à
+généraliser,généralisai,DIFFERENT,généralisé,généraliser
+généraliser,généralisée,SAME_HEARD,généralisé,généralisé
+génétique,gamétique,DIFFERENT,génétique,gamétique
+habillement,habilement,DIFFERENT,Abîment,Abilement
+habillement,habillant,DIFFERENT,Abîment,habillant
+habites,habitais,DIFFERENT,habite,Habiter
+habites,habitait,DIFFERENT,habite,Habiter
+hacker,aK,DIFFERENT,Ok.,A qu'est-ce que c'est que ça ?
+halal,hallal,DIFFERENT,Allale !,Alal
+hallucinant,hallucinent,DIFFERENT,hallucinant,hallucine
+hallucinant,hallucinât,DIFFERENT,hallucinant,hallucinat
+historiens,historiant,DIFFERENT,Historien,Historian
+historiens,historias,DIFFERENT,Historien,Historia
+homologues,homologuais,DIFFERENT,au moulage.,HOMOLOGUE
+homologues,homologuait,DIFFERENT,au moulage.,homologuer
+honoraire,honorerai,DIFFERENT,Honoraire,honorer
+honoraire,horaire,DIFFERENT,Honoraire,horaire
+hypothèque,hypothéquai,DIFFERENT,Hypothèque,hypothécais
+hypothèque,hypothéquer,DIFFERENT,Hypothèque,hypothéquée
+hystérique,ictérique,DIFFERENT,hysterique,Ictérique
+héberger,hébergée,SAME_HEARD,héberger,Héberger
+hétérogène,hétérogame,DIFFERENT,hétérogène,H-AX-A-T-G-T-E-AX-A-T-G-R-O-GAIM
+identifiant,identifient,DIFFERENT,Identifiant,Identifiez.
+identifiant,identifiât,DIFFERENT,Identifiant,Identifia
+identique,hydatique,DIFFERENT,identique.,Inattique
+illustrée,illustrai,SAME_HEARD,illustrer.,illustrer
+illustrée,illustrer,SAME_HEARD,illustrer.,illustrer.
+imaginaires,imaginerais,DIFFERENT,Imaginez-vous.,imaginerait
+imaginaires,imaginerait,DIFFERENT,Imaginez-vous.,imaginerait
+imaginais,imagines,DIFFERENT,Imaginez.,Imagine.
+imaginais,imaginez,SAME_HEARD,Imaginez.,Imaginez.
+impliquent,impliquant,DIFFERENT,implique,Implicant.
+impliquent,impliquas,DIFFERENT,implique,implica
+impliquées,impliquais,SAME_HEARD,impliqué,impliqué
+impliquées,impliquait,SAME_HEARD,impliqué,impliqué
+importance,importasse,DIFFERENT,Importance,Importasse
+impressionner,impressionnai,SAME_HEARD,Impressionné.,Impressionné.
+impressionner,impressionnée,SAME_HEARD,Impressionné.,Impressionné.
+inclusion,inclussions,SAME_HEARD,Inclusion,Inclusion
+indiquait,indicait,SAME_HEARD,indiquez,indiquez
+indiquait,indiques,DIFFERENT,indiquez,Indique
+individuelles,individueles,SAME_HEARD,individuelle,individuelle
+infliger,infligée,SAME_HEARD,Infligé,Infligé
+influence,influasse,SAME_HEARD,Influence,Influence
+informée,informai,SAME_HEARD,Informer,Informer
+informée,informer,SAME_HEARD,Informer,Informer
+ingérence,ingérasse,DIFFERENT,ingérence,Un gérasse.
+initialement,initialant,DIFFERENT,Initialement.,Initialen
+initialement,initialas,DIFFERENT,Initialement.,Initiala
+innovantes,innovanttes,SAME_HEARD,innovante,innovante
+innovantes,innovâtes,DIFFERENT,innovante,innovat
+innover,innovai,SAME_HEARD,Innover,Innover
+innover,innovée,SAME_HEARD,Innover,Innover
+insistance,insistasse,DIFFERENT,Insistance.,Insiste à ce.
+insistant,insistent,DIFFERENT,Insistant !,Insiste.
+insistant,insistât,DIFFERENT,Insistant !,Insista
+inspirent,inspirant,DIFFERENT,Inspire !,Inspirant.
+inspirent,inspirants,DIFFERENT,Inspire !,Inspirant.
+inspirées,inspirais,SAME_HEARD,Inspirez !,Inspirez !
+inspirées,inspirait,SAME_HEARD,Inspirez !,Inspirez !
+installés,installais,SAME_HEARD,Installez.,Installez.
+installés,installait,SAME_HEARD,Installez.,Installez.
+interpelle,interpelai,DIFFERENT,Interpell,Interpellez.
+interpelle,interpeler,DIFFERENT,Interpell,interpellère
+intimement,intimant,DIFFERENT,intimement,A t'imant.
+intimement,intimas,DIFFERENT,intimement,"""antima"""
+introduit,introduît,SAME_HEARD,Introduit.,Introduit.
+intégrées,intègres,DIFFERENT,intégrer,Intègre
+intégrées,intégrais,SAME_HEARD,intégrer,intégrer
+intéressées,intéressais,DIFFERENT,intéressé,intéresser
+intéressées,intéressait,DIFFERENT,intéressé,intéresser
+invalides,invalidais,DIFFERENT,Invalides.,Invalider
+invalides,invalidait,DIFFERENT,Invalides.,Invalider
+invoquer,invoquai,DIFFERENT,Envoquer,Invoquer
+invoquer,invoquée,SAME_HEARD,Envoquer,Envoquer
+ipod,ipomée,DIFFERENT,A hip-hop de,Ypomé
+ipod,ippon,DIFFERENT,A hip-hop de,et bonne !
+iraniens,iraniène,DIFFERENT,Iranien,Iranienne
+iras,ira,SAME_HEARD,Ira,Ira
+iras,yrad,DIFFERENT,Ira,Y grad.
+jetant,guetta,DIFFERENT,Je t'en.,Ghetto
+jetant,guettant,DIFFERENT,Je t'en.,Détends.
+jetez,gaietés,DIFFERENT,Jetez.,Getty
+jetez,gaîtés,DIFFERENT,Jetez.,Getty
+jetons,guettons,DIFFERENT,Je t'en.,Gétons
+jugeant,jugaient,DIFFERENT,Jujan,J'ai gais.
+jugeant,jugeaient,DIFFERENT,Jujan,Jugez.
+jugez,jugait,DIFFERENT,Jugez.,J'ai gais.
+jugez,jugées,SAME_HEARD,Jugez.,Jugez.
+juniors,zûnions,DIFFERENT,J'ignore.,Zidniu
+laisserait,laisserez,DIFFERENT,Laissez-vous.,Laissez-les.
+laisserait,lécherais,DIFFERENT,Laissez-vous.,L'échirer.
+lancement,lacement,DIFFERENT,Lancement,Lassement
+lancement,lacements,DIFFERENT,Lancement,Lassement
+lanceurs,laceur,DIFFERENT,Lancer,la sœur
+lanceurs,laceurs,DIFFERENT,Lancer,la sœur
+lançant,laca,DIFFERENT,L'Encent,Lacca
+lançant,lacant,DIFFERENT,L'Encent,Lacan
+larves,larvées,DIFFERENT,larve,Larvée
+larves,larvés,DIFFERENT,larve,Larvée
+lavé,lavai,DIFFERENT,la V,la ve
+lavé,lave,DIFFERENT,la V,"""love"""
+lentement,lamenta,DIFFERENT,lentement,La menta
+lentement,lamentant,DIFFERENT,lentement,La montant
+ligues,liges,DIFFERENT,League,Lige !
+ligues,liguais,DIFFERENT,League,Liguez.
+lima,liment,DIFFERENT,Lima,L'îme.
+lima,limât,SAME_HEARD,Lima,Lima
+louper,loupai,DIFFERENT,loupez,Loupe
+louper,loupée,SAME_HEARD,loupez,loupez
+lâcheté,lancette,DIFFERENT,L'acheter,l'ancette
+lèvent,leva,DIFFERENT,"""Lève""",Le va.
+lèvent,levain,DIFFERENT,"""Lève""",Le vin
+légitimement,légitimant,DIFFERENT,légitimement.,légitimant.
+légitimement,légitimas,DIFFERENT,légitimement.,légitima
+légèrement,léguera,DIFFERENT,légèrement.,Les gras
+légèrement,légueras,DIFFERENT,légèrement.,Les gras
+mafieux,maffieux,SAME_HEARD,Matthew,Matthew
+maigrir,maigrît,DIFFERENT,m'égrir,Mégrie
+maintenant,manta,DIFFERENT,M'attre non.,Manta
+maintenant,mantas,DIFFERENT,M'attre non.,Mentasse
+malien,maliène,DIFFERENT,Ma lien.,malienne
+mandataire,mandaterai,DIFFERENT,Mandatère,Mandatorais
+mangas,magana,DIFFERENT,Mongia,Maghiana
+mangas,maganai,DIFFERENT,Mongia,Magane.
+manège,manégeai,DIFFERENT,Manège,Manéger
+manège,manéger,DIFFERENT,Manège,Manéger
+marchandises,marchandisais,DIFFERENT,Marchandise,Marchandisez !
+marchandises,marchandisait,DIFFERENT,Marchandise,Marchandisez !
+marchera,marchèrent,DIFFERENT,Marchera,Marcher
+mariées,mariais,SAME_HEARD,marier,marier
+mariées,mariait,SAME_HEARD,marier,marier
+marraine,marrane,DIFFERENT,Marine,marron
+marraine,marrant,DIFFERENT,Marine,Maho !
+marrer,mare,DIFFERENT,marée,marre
+marrer,marrai,SAME_HEARD,marée,marée
+massacrer,massacrai,SAME_HEARD,Massacrer,Massacrer
+massacrer,massacrée,SAME_HEARD,Massacrer,Massacrer
+messie,messît,SAME_HEARD,Merci.,Merci.
+miam,mien,DIFFERENT,Miam,Mien.
+miam,miens,DIFFERENT,Miam,Mien.
+mie,mi,SAME_HEARD,MI,MI
+mie,mir,DIFFERENT,MI,Mire.
+militants,militent,DIFFERENT,militant,Milit
+militants,militât,DIFFERENT,militant,militaire
+milliards,millième,DIFFERENT,milliard,millième
+miser,miche,DIFFERENT,miser,Miche !
+miser,misai,DIFFERENT,miser,mise
+moches,mausers,DIFFERENT,mâche,Mozart
+modo,modaux,SAME_HEARD,Modo,Modo
+modo,mondons,DIFFERENT,Modo,Monde d'en.
+mouais,moues,DIFFERENT,Moé.,Mou !
+mouais,muais,DIFFERENT,Moé.,mué
+mourant,mourra,DIFFERENT,Mourron.,Mouha
+mourant,mourras,DIFFERENT,Mourron.,Moura
+mouvance,mouvasse,DIFFERENT,Mouvance,Mouvas
+munis,munît,SAME_HEARD,mini,mini
+mènera,menèrent,DIFFERENT,MENHA,Monair
+mécanicien,mécaniciène,DIFFERENT,mécanicien,mécanicienne
+méditer,méditai,SAME_HEARD,méditer,méditer
+méditer,méditée,SAME_HEARD,méditer,méditer
+médium,medium,DIFFERENT,Médiano,Médium
+médium,mediums,DIFFERENT,Médiano,médium
+ménagères,managerais,DIFFERENT,Ménagère,Managerai
+ménagères,managerait,DIFFERENT,Ménagère,Managere
+nantais,nattais,DIFFERENT,Notez.,Nathé
+nantais,nattait,DIFFERENT,Notez.,Nathé.
+neutraliser,neutralisai,SAME_HEARD,neutraliser.,neutraliser
+neutraliser,neutralisée,SAME_HEARD,neutraliser.,neutraliser
+normands,norment,DIFFERENT,Normand.,Norme.
+normands,normât,DIFFERENT,Normand.,Norma
+notera,notèrent,DIFFERENT,Noto ha.,Notaire
+noyé,noyai,DIFFERENT,Noyer,Noiré.
+noyé,noye,DIFFERENT,Noyer,Noir.
+nucléaire,nucléerai,DIFFERENT,nucléaire,nucléret
+négociant,négocient,DIFFERENT,négociant,négoci
+négociant,négociât,DIFFERENT,négociant,négocia
+obligent,obligant,DIFFERENT,oblige,Obligant.
+obligent,obligât,DIFFERENT,oblige,oblige à
+observées,observais,SAME_HEARD,Observez.,Observez.
+observées,observait,SAME_HEARD,Observez.,Observez.
+occupera,occupèrent,DIFFERENT,Occupera.,Occuper
+occurrence,occurrasse,DIFFERENT,Occurrence,au curat
+offrez,offrais,SAME_HEARD,Offrez.,Offrez.
+offrez,offrait,SAME_HEARD,Offrez.,Offrez.
+opter,optai,DIFFERENT,opté,opte
+opter,opté,SAME_HEARD,opté,opté
+originaire,originerai,DIFFERENT,Originaire,originerais
+originaux,originons,SAME_HEARD,originaux,Originaux.
+orne,ornai,DIFFERENT,Orne.,"Ah, né."
+orne,orné,DIFFERENT,Orne.,Ornée.
+oses,haussais,DIFFERENT,OUV,"""ose"""
+oses,haussait,DIFFERENT,OUV,Ose
+oubliant,oublient,DIFFERENT,Oubliant.,Oubliez.
+oubliant,oubliât,DIFFERENT,Oubliant.,Oubliez-vous.
+ouvres,ouvrais,DIFFERENT,Over.,Ouvrez.
+ouvres,ouvrait,DIFFERENT,Over.,Ouvrez.
+palmer,palmai,DIFFERENT,Palmeur,Palme
+palmer,palmée,DIFFERENT,Palmeur,Palme
+paramètre,paramétrai,DIFFERENT,paramètre,Paramétrer.
+paramètre,paramétrer,DIFFERENT,paramètre,Paramétrer.
+pardonnez,pardonnais,SAME_HEARD,pardonner,pardonner
+pardonnez,pardonnait,DIFFERENT,pardonner,Pardonnez.
+parenthèse,parenthésé,DIFFERENT,parenthèse,Paranthésie
+parenthèse,parenthésée,DIFFERENT,parenthèse,Paranthésie
+parfaites,parfaittes,SAME_HEARD,Parfait !,Parfait !
+parlementaire,parlementerai,DIFFERENT,parlementaire,Parlementer
+partagées,partagait,SAME_HEARD,Partager,Partager
+partagées,partageais,SAME_HEARD,Partager,Partager
+partisans,partissent,DIFFERENT,Partisant,Partis !
+paré,parai,DIFFERENT,Bye !,Bâhe !
+paré,pare,DIFFERENT,Bye !,Bar
+pascale,hpascal,DIFFERENT,Pascal,H pascal
+pascale,ppascal,DIFFERENT,Pascal,Pépascale
+passeront,pacserons,DIFFERENT,Passe-Rom,Paxérons
+passeront,pacseront,DIFFERENT,Passe-Rom,Paxérons
+patrouilles,patrouillais,DIFFERENT,Patrouille,Patrouiller
+patrouilles,patrouillait,DIFFERENT,Patrouille,Patrouiller
+pauses,pausais,DIFFERENT,Pause !,pose
+pauses,pausait,DIFFERENT,Pause !,posez
+peintures,peinturais,DIFFERENT,Pinture,Pinturet
+peintures,peinturait,DIFFERENT,Pinture,Pinturet
+peluche,pelouse,DIFFERENT,Valuch,pelouse
+penseurs,panseur,SAME_HEARD,penseur,penseur
+penseurs,panseurs,SAME_HEARD,penseur,penseur
+pentagone,patagon,DIFFERENT,Pantagone,Patagon
+pentagone,patagone,DIFFERENT,Pantagone,Patagon
+perdait,perdes,DIFFERENT,perdez,Perde.
+perdait,perdez,P_HEARD_AS_T,perdez,Perder
+perdants,perdent,DIFFERENT,Pardon.,Perde.
+permettait,permettes,DIFFERENT,Permettez.,Permette.
+permettait,permettez,SAME_HEARD,Permettez.,Permettez.
+persévérance,persévérasse,DIFFERENT,Persévérance,Perseverance
+pertinentes,pertinenttes,SAME_HEARD,pertinente,pertinente
+perçus,perçût,SAME_HEARD,Perçu,Perçu
+pharmaciens,pharmaciène,DIFFERENT,Pharmation,Pharmacienne
+pige,pigé,DIFFERENT,Pige !,PG
+pige,pigée,DIFFERENT,Pige !,PG
+piges,pigait,DIFFERENT,Piège !,Pi-gé
+piges,pigées,DIFFERENT,Piège !,PG
+pillage,pilage,DIFFERENT,pillage,pilage
+pilules,pilulais,DIFFERENT,pilule,pilulets
+pilules,pilulait,DIFFERENT,pilule,pilulets
+piment,pima,DIFFERENT,Pimo,Pima
+piment,pimant,SAME_HEARD,Pimo,Pimo
+polar,pollen,DIFFERENT,Polar,Polaine
+polar,pollens,DIFFERENT,Polar,Polaine
+polices,policées,DIFFERENT,Police Sous-titres réalisés par la communauté d'Amara.org,Policé
+polices,policés,DIFFERENT,Police Sous-titres réalisés par la communauté d'Amara.org,Policé
+polluants,polluent,DIFFERENT,Polluant,Pôle lui.
+polluants,polluât,DIFFERENT,Polluant,Paulua
+positionner,positionnai,SAME_HEARD,Positionner,Positionner
+positionner,positionnée,SAME_HEARD,Positionner,Positionner
+pratiquement,pratiquant,DIFFERENT,Pratiquement.,pratiquant
+pratiquement,pratiquants,DIFFERENT,Pratiquement.,Pratiquant
+principalement,principalat,DIFFERENT,principalement,principale hâte
+principalement,principalats,DIFFERENT,principalement,principale A.
+prions,priions,SAME_HEARD,Prions.,Prions.
+produites,produîtes,SAME_HEARD,Produite,Produite
+promouvoir,promouvant,DIFFERENT,Promouvoir.,Promouvant
+proposera,proposèrent,DIFFERENT,proposera.,Proposaires
+protection,protestions,DIFFERENT,Protection,Protestions
+protestants,protestent,DIFFERENT,protestant,protest
+protestants,protestât,DIFFERENT,protestant,protesta
+précisément,précisant,DIFFERENT,Précisément.,Précisant
+précisément,précisas,DIFFERENT,Précisément.,Précisa
+préoccuper,préoccupai,SAME_HEARD,préoccuper,préoccuper
+préoccuper,préoccupée,DIFFERENT,préoccuper,préoccupé
+préparait,prépares,DIFFERENT,Préparez.,Prépare.
+préparait,préparez,SAME_HEARD,Préparez.,Préparez.
+préserver,préservai,SAME_HEARD,préserver,préserver
+préserver,préservée,SAME_HEARD,préserver,préserver
+présidence,présidasse,DIFFERENT,présidence,Présidas
+président,présidant,SAME_HEARD,Président,Président
+président,présidas,DIFFERENT,Président,Présida
+présidée,présidai,DIFFERENT,présider,Président
+présidée,présider,SAME_HEARD,présider,présider
+prévoient,prévenant,DIFFERENT,prévoi,prévenant
+prévoient,prévenants,DIFFERENT,prévoi,Prévenant
+prêt,près,SAME_HEARD,Prêt !,Prêt !
+prêt,prés,SAME_HEARD,Prêt !,Prêt !
+puissance,puisasse,DIFFERENT,puissance,puis ass
+purs,pou,DIFFERENT,Pure.,Pou
+purs,poud,DIFFERENT,Pure.,Pune
+python,pitaud,DIFFERENT,piton,pito
+python,pitauds,DIFFERENT,piton,pito
+pénalités,pâlîtes,DIFFERENT,pénalité,Palit
+pénétré,pénètre,DIFFERENT,pénétrer,pénètre
+périodique,periodique,SAME_HEARD,périodique,périodique
+quartiers,cartiers,DIFFERENT,Cartier,quartier
+quartiers,cartiez,SAME_HEARD,Cartier,Cartier
+quasiment,cachiman,DIFFERENT,quasiment,Gashiman
+quasiment,cachimans,DIFFERENT,quasiment,Gachement
+querelles,querellais,DIFFERENT,Corel,Qu'est-ce qu'il y a ?
+querelles,querellait,DIFFERENT,Corel,Qu'est-ce qu'il y a ?
+questionner,questionnai,SAME_HEARD,Questionner,Questionner
+questionner,questionnée,SAME_HEARD,Questionner,Questionner
+quid,khi,DIFFERENT,Cuide.,qui ?
+quid,kir,DIFFERENT,Cuide.,Kier
+quittera,quittèrent,DIFFERENT,Quittorah,quitter
+quotidien,quotidiène,DIFFERENT,Quotidien,quotidienne
+québécois,québecois,SAME_HEARD,Québécois.,Québécois
+rabbin,rambinai,DIFFERENT,Rabat !,Rambiné
+rabbin,rambine,DIFFERENT,Rabat !,Rambine
+raie,r,DIFFERENT,Oui.,R
+raie,rai,SAME_HEARD,Oui.,oui
+ralentit,ralentît,SAME_HEARD,RALENTI,RALENTI
+ralliement,ralliant,DIFFERENT,Ralliement,Ralliant.
+ralliement,rallias,DIFFERENT,Ralliement,Ralia
+rangées,ragait,DIFFERENT,Ranger,Hague !
+rangées,rageais,DIFFERENT,Ranger,Rager
+rasoir,rassoie,DIFFERENT,rasoir,Rasseois.
+rasoir,rassoient,DIFFERENT,rasoir,Rasseois
+rassemblements,rassemblant,DIFFERENT,Rassemblement,rassemble-en
+rassemblements,rassemblas,DIFFERENT,Rassemblement,Rassemble-la.
+rattachement,ratassent,DIFFERENT,Rattachement,ratasse
+rattachement,rattachant,DIFFERENT,Rattachement,Rattachant
+ratés,rainâtes,DIFFERENT,raté,Renate
+ratés,ramenâtes,DIFFERENT,raté,Raminate
+rayonnement,rayonnant,DIFFERENT,Réunionnement,Réunion.
+rayonnement,rayonnants,DIFFERENT,Réunionnement,Réunion.
+rebondir,rebondît,DIFFERENT,rebondir,rebondi
+rebours,rebu,DIFFERENT,Rebours,Le bébé.
+rebours,rebue,DIFFERENT,Rebours,Robbie.
+recensement,recensant,DIFFERENT,RECENSEMENT,Recensez-vous.
+recensement,recensas,DIFFERENT,RECENSEMENT,Recends ça.
+recharger,rechargée,SAME_HEARD,Rechargez.,Rechargez.
+reconstruit,reconstruît,SAME_HEARD,reconstruis,reconstruis
+recrutement,recrutant,DIFFERENT,Recruitement,Recrutant
+recrutement,recrutas,DIFFERENT,Recruitement,Recruta
+recréer,recréai,SAME_HEARD,Recréer,Recréer.
+recréer,recréée,SAME_HEARD,Recréer,Recréer
+reflètent,refléta,DIFFERENT,reflet,refletà
+reflètent,reflétant,DIFFERENT,reflet,reflétant
+refroidir,refroidît,DIFFERENT,refroidir,refroidis
+regroupés,regroupais,DIFFERENT,regroupé,regrouper
+regroupés,regroupait,DIFFERENT,regroupé,regrouper
+rejoignent,rejoignant,DIFFERENT,rejoignez,Rejoignez-vous.
+reliées,railliez,DIFFERENT,Relier,railler
+reliées,reliais,SAME_HEARD,Relier,Relier
+remerciements,remerciant,DIFFERENT,Merci.,Remercions
+remerciements,remercias,DIFFERENT,Merci.,remercie
+remplaçant,remplaca,DIFFERENT,Remplaçant.,Remplace ça.
+remplaçant,remplacant,SAME_HEARD,Remplaçant.,Remplaçant
+remplissent,remplissant,DIFFERENT,Remplace.,Remplissant.
+remplissent,remplissement,DIFFERENT,Remplace.,remplissement
+remportant,rapporta,DIFFERENT,REMPORTANT,Rapporteur
+remportant,rapportant,DIFFERENT,REMPORTANT,rapportant
+renaissance,ramescence,DIFFERENT,Renaissance,Ramessance
+renforcer,renforcée,SAME_HEARD,renforcé,renforcé
+renom,rainons,DIFFERENT,Ah non.,Rénon.
+renom,rameau,DIFFERENT,Ah non.,Hamour
+renouvelle,renouvelai,DIFFERENT,renouvelle,Renouvez-les !
+renouvelle,renouveler,DIFFERENT,renouvelle,Renouvelez !
+renversement,renversant,DIFFERENT,RENVERSEMENT,renversant
+renversement,renversants,DIFFERENT,RENVERSEMENT,renversant
+repousser,repoussai,SAME_HEARD,Repousser.,repousser
+repousser,repoussée,SAME_HEARD,Repousser.,Repousser
+représentés,représentais,SAME_HEARD,Représentez.,représentez
+représentés,représentait,SAME_HEARD,Représentez.,représentez.
+respectés,respectais,SAME_HEARD,respectez,Respectez.
+respectés,respectait,SAME_HEARD,respectez,Respectez.
+restaurer,restaurai,SAME_HEARD,Restorez.,Restorez.
+restaurer,restaurée,SAME_HEARD,Restorez.,Restorez.
+retombées,retombais,SAME_HEARD,Retomber,retomber
+retombées,retombait,SAME_HEARD,Retomber,Retomber
+revente,revenante,DIFFERENT,Revente.,Revenante
+revente,revenantte,DIFFERENT,Revente.,Revenante
+revint,revînt,SAME_HEARD,Revain.,Revain.
+revêtement,revêtant,DIFFERENT,revêtement,Revetant.
+revêtement,revêtent,DIFFERENT,revêtement,revête
+riant,ria,DIFFERENT,rien.,"Ah, ya!"
+riant,rias,DIFFERENT,rien.,"Ah, ya !"
+ricains,ricana,DIFFERENT,Rican,Ricana
+ricains,ricanai,DIFFERENT,Rican,Riconnais.
+rivaliser,rivalisai,SAME_HEARD,Rivaliser,Rivaliser
+rivaliser,rivalisée,SAME_HEARD,Rivaliser,Rivaliser
+roberts,rhombes,DIFFERENT,Robert,"""home"""
+roberts,robais,DIFFERENT,Robert,obé
+rouleaux,roulons,DIFFERENT,Roulous !,Roulons !
+réagissent,réagissant,DIFFERENT,Réagisse !,réagissant
+rébellion,rebellions,DIFFERENT,Rébellion,Rebellion !
+réconcilier,réconciliai,DIFFERENT,Réconcilier,Réconcilié
+réconcilier,réconciliée,SAME_HEARD,Réconcilier,réconcilier
+récurrent,recourant,DIFFERENT,Récurant,Recourant
+récurrent,recourants,DIFFERENT,Récurant,Recourant
+réduisent,réduisant,DIFFERENT,réduise,réduisant
+réduisent,réduissent,SAME_HEARD,réduise,réduise
+réellement,railla,DIFFERENT,réellement,Raya
+réellement,raillant,DIFFERENT,réellement,rayons
+rémunéré,rémunère,DIFFERENT,Rémunéré,Rémunère
+répand,repars,DIFFERENT,Réponds.,Repars
+répand,repart,DIFFERENT,Réponds.,Repars.
+réparties,reparties,DIFFERENT,répartie,Repartis !
+réparties,repartiez,DIFFERENT,répartie,Repartir.
+répit,repic,DIFFERENT,répit,RAPIC
+répit,repics,DIFFERENT,répit,Repique
+répétées,répètes,DIFFERENT,répéter,répète
+répétées,répétais,DIFFERENT,répéter,répétez
+résidents,résidanat,DIFFERENT,Résident,Résidana
+résidents,résidanats,DIFFERENT,Résident,Résidana
+résine,raisin,DIFFERENT,résine,Résent
+résine,raisins,DIFFERENT,résine,Résent
+résistent,résistant,DIFFERENT,résiste,résistant
+résistent,résistants,DIFFERENT,résiste,résistant
+réussissent,réussissant,DIFFERENT,Réussis !,Réussissant !
+révisé,revissai,DIFFERENT,Réviser,revissez
+révisé,revisse,DIFFERENT,Réviser,Ravis !
+révolutionnaire,révolutionnerai,DIFFERENT,Révolutionnaire,Révolutionnerai
+sachent,censément,DIFFERENT,Sèche,Sensible.
+sachent,chassa,DIFFERENT,Sèche,Chassa
+sacrement,sacrant,DIFFERENT,Sacrement.,Sacran
+sacrement,sacras,DIFFERENT,Sacrement.,Sacra
+sahel,cenelle,DIFFERENT,C'est elle !,Sonnel
+sahel,chamaillai,DIFFERENT,C'est elle !,Chamayé
+saigne,ceigne,SAME_HEARD,Seigne,Seigne
+salir,châlit,DIFFERENT,salir,Chali
+salir,châlits,DIFFERENT,salir,Chali
+salopes,salopais,DIFFERENT,Salope,Saloper
+salopes,salopait,DIFFERENT,Salope,Saloper
+salué,chalut,SAME_HEARD,Salut !,Salut !
+salué,chaluts,SAME_HEARD,Salut !,Salut !
+saoul,semoule,DIFFERENT,Si,se moule
+sauvés,chauves,DIFFERENT,Sovez !,Chauve.
+sauvés,sauvais,DIFFERENT,Sovez !,Sove
+savourer,savourai,DIFFERENT,Savoiré,Savourait !
+savourer,savourée,SAME_HEARD,Savoiré,Savoiré
+scoop,sceau,DIFFERENT,Scope.,So.
+scoop,sceaux,DIFFERENT,Scope.,So.
+serra,cherra,DIFFERENT,Serra,Chérat
+serra,cherrant,DIFFERENT,Serra,Chéron
+servirait,servires,DIFFERENT,serviraient.,servir
+servirait,servirez,DIFFERENT,serviraient.,Serviré
+sieur,chieur,DIFFERENT,Sieur !,Chiaire.
+sieur,chieurs,DIFFERENT,Sieur !,Chiaire.
+signalement,signalant,DIFFERENT,Signalement,Signale-en.
+signalement,signalas,DIFFERENT,Signalement,Signale A
+signalés,signalais,SAME_HEARD,Signalez !,Signalez !
+signalés,signalait,SAME_HEARD,Signalez !,Signalez !
+signifiait,signifies,DIFFERENT,Synifier,Signifie
+signifiait,signifiez,DIFFERENT,Synifier,Signifie
+signifiant,signifient,DIFFERENT,Signifiant,Signifie
+signifiant,signifiât,DIFFERENT,Signifiant,"""Synifia"""
+sirènes,cirâmes,DIFFERENT,Sirene,SIRAM
+soda,chaudement,DIFFERENT,So da !,Chaudement.
+soda,sonda,DIFFERENT,So da !,Souda !
+soignée,soignai,DIFFERENT,Soignez !,S'il vous plaît.
+soignée,soigner,SAME_HEARD,Soignez !,Soignez !
+songer,sauge,DIFFERENT,son G,Soge !
+songer,songée,SAME_HEARD,son G,son G
+soucie,sushi,DIFFERENT,souci,Sushi
+soucie,sushis,DIFFERENT,souci,sushi
+soufre,souffre,DIFFERENT,Saufre.,Souffle.
+souliers,soûliez,DIFFERENT,soulier,"""soullier"""
+soulignant,soulignement,DIFFERENT,soulignant,soulignement
+soulignant,soulignements,DIFFERENT,soulignant,soulignement
+soumet,chûmes,DIFFERENT,Summe,Chume.
+soumet,sûmes,DIFFERENT,Summe,Sume
+souscrire,suscrirai,DIFFERENT,souscrire,Suscrirez.
+souscrire,suscrire,DIFFERENT,souscrire,Suscrire
+souscrit,souscrît,DIFFERENT,Souscrit.,sous-scri
+souscrit,sucrier,DIFFERENT,Souscrit.,Sucrier
+souterraine,chutera,DIFFERENT,Souterraine,Chutera
+souterraine,chuteras,DIFFERENT,Souterraine,Chutera
+stabiliser,stabilisai,SAME_HEARD,stabiliser,stabiliser
+stabiliser,stabilisée,SAME_HEARD,stabiliser,stabiliser
+strictes,stricttes,SAME_HEARD,strict,strict
+stupéfiants,stupéfient,DIFFERENT,Stupéfiant !,Stupéfie !
+stupéfiants,stupéfiât,DIFFERENT,Stupéfiant !,Stupéfia
+sui,shui,DIFFERENT,Suits.,Je suis.
+sui,soui,DIFFERENT,Suits.,Sui.
+suicidaire,suiciderai,DIFFERENT,Suicidaire,Suiciderait
+suicides,suicidais,DIFFERENT,Suicide,Suicider
+suicides,suicidait,DIFFERENT,Suicide,Suicider
+supporter,supportai,SAME_HEARD,supporter,Supporter
+supporter,supportée,SAME_HEARD,supporter,Supporter
+supposés,supposais,SAME_HEARD,supposer,supposer
+supposés,supposait,SAME_HEARD,supposer,supposer
+surveillance,surveillasse,DIFFERENT,Surveillance,Sur Veillasse
+surveillant,surveillent,DIFFERENT,Surveillon,Surveille.
+surveillant,surveillât,DIFFERENT,Surveillon,Sur Veillat
+survivants,survivent,DIFFERENT,survivants,Survive !
+sèvres,chèvres,DIFFERENT,C'est vrai.,Chèvre.
+sèvres,sevrais,SAME_HEARD,C'est vrai.,C'est vrai.
+sécurisée,sécurisai,SAME_HEARD,Sécuriser,Sécuriser
+sécurisée,sécuriser,SAME_HEARD,Sécuriser,Sécuriser
+séduisant,séduisent,DIFFERENT,C'est duisant.,séduise
+séduisant,séduissent,DIFFERENT,C'est duisant.,C'est duis.
+séquences,séquencées,DIFFERENT,Sequence.,Sequencer
+séquences,séquencés,DIFFERENT,Sequence.,Sequencer
+sûres,chourais,DIFFERENT,sûr.,Souhaï !
+sûres,chourait,DIFFERENT,sûr.,Shuhai
+taré,tarai,DIFFERENT,Da-hey!,D'accord.
+taré,tare,DIFFERENT,Da-hey!,D'Ar
+tarés,tanrec,DIFFERENT,Da hei !,Tant réc !
+tarés,tanrecs,DIFFERENT,Da hei !,Tant rèque !
+teintes,tantes,DIFFERENT,Tant,Tante
+teintes,teintais,DIFFERENT,Tant,Tanté
+tellement,tailla,DIFFERENT,Tellement.,Da ya !
+tellement,taillant,DIFFERENT,Tellement.,Taillant
+tempo,tampon,DIFFERENT,tempo,Tampon !
+tempo,tampons,DIFFERENT,tempo,Tompon !
+tendres,teindrais,DIFFERENT,Tandis.,Tandre !
+tendres,teindrait,DIFFERENT,Tandis.,D'en vrai.
+terminaux,terminons,SAME_HEARD,Terminons.,Terminons.
+tigres,tigrais,DIFFERENT,Jigga,T'inquiète !
+tigres,tigrait,DIFFERENT,Jigga,TIGRE
+tonton,totaux,DIFFERENT,tom-tom,Toto
+tonton,toto,DIFFERENT,tom-tom,Toto
+torche,torse,DIFFERENT,Torche.,Dorse.
+torche,torsse,DIFFERENT,Torche.,Dorse.
+touchées,touchais,DIFFERENT,Touchez !,Touche !
+touchées,touchait,DIFFERENT,Touchez !,Touche !
+tranchant,tracement,DIFFERENT,Tanchant,Trassement
+tranchant,tracements,DIFFERENT,Tanchant,Trassement
+transféré,transfère,DIFFERENT,Transférer,Transfaire
+transférés,transfères,DIFFERENT,Transférer,Transfaire
+transférés,transférais,SAME_HEARD,Transférer,Transférer
+transmises,transmisses,SAME_HEARD,transmise,Transmise
+trappe,trempai,DIFFERENT,Trap,Trompé !
+trappe,trempe,DIFFERENT,Trap,Trempe !
+traque,traçai,DIFFERENT,Track,tracé
+triangulaire,triangulerai,DIFFERENT,Triangulaire,Triangulerez
+trolls,trôlai,DIFFERENT,troll,trop l'air
+trolls,trôle,DIFFERENT,troll,Toll !
+trompent,trompant,DIFFERENT,Trompe !,trompant
+trompent,trompas,DIFFERENT,Trompe !,trompe-à
+trompette,trompetai,DIFFERENT,trompette,trompettez
+trompette,trompeter,DIFFERENT,trompette,trompettez
+trompée,trompai,DIFFERENT,tromper,trompé
+trompée,tromper,SAME_HEARD,tromper,tromper
+tronçon,tronquons,DIFFERENT,tronçon,Troncon !
+tronçon,troquons,DIFFERENT,tronçon,trop con
+trousse,trusse,DIFFERENT,trousse,Trus
+tuez,touais,DIFFERENT,Tu es.,Toi.
+tuez,touait,DIFFERENT,Tu es.,Toi.
+tunisiens,tunisiène,DIFFERENT,Tunisien,Tunisienne
+tuto,tûtons,DIFFERENT,du taux,Tu t'ont.
+tyran,thirame,DIFFERENT,Jérôme.,J'irai-m'en.
+tyran,tira,DIFFERENT,Jérôme.,J'y vais.
+vaillant,vaillent,DIFFERENT,Va-y-en !,Vai !
+vaillant,veilla,DIFFERENT,Va-y-en !,Veille à
+vallon,valons,SAME_HEARD,Valon,Valon
+vallon,voilons,DIFFERENT,Valon,Voilons !
+variantes,varianttes,SAME_HEARD,Variante,Variante
+variantes,variâtes,DIFFERENT,Variante,variate
+vendait,vendes,DIFFERENT,Vendée,Vende.
+vendait,vendez,SAME_HEARD,Vendée,Vendée
+vendant,vanda,DIFFERENT,Vendant,Venda
+vendant,vandas,DIFFERENT,Vendant,Venda
+vengeance,vengeasse,SAME_HEARD,Vengeance,Vengeance
+versements,versant,DIFFERENT,Versement,Versant
+versements,versants,DIFFERENT,Versement,Versant
+vibrer,vibrai,DIFFERENT,Vibrer,Vibré
+vibrer,vibrée,DIFFERENT,Vibrer,Vibrez.
+vices,visais,DIFFERENT,vis,viser
+vices,visait,DIFFERENT,vis,viser
+vidé,vidai,DIFFERENT,Vider,Vidé
+vidé,vide,DIFFERENT,Vider,vide
+vieillard,viella,DIFFERENT,vieillard,Vié là !
+vieillard,viellant,DIFFERENT,vieillard,Violent.
+vifs,vif,P_HEARD_AS_T,Vif !,Vive.
+vifs,viffe,SAME_HEARD,Vif !,Vif !
+vigilant,vigilent,DIFFERENT,Vigilant !,Vigile
+vigilant,vigilât,DIFFERENT,Vigilant !,Vigilà !
+villas,vilain,DIFFERENT,villa,Villain
+villas,vilaine,DIFFERENT,villa,Vilaine
+virement,vira,DIFFERENT,Virement.,Vira
+virement,virant,DIFFERENT,Virement.,Viran
+virée,virai,SAME_HEARD,virer,Virer
+virée,vire,DIFFERENT,virer,Vir.
+vitamines,vitaminais,SAME_HEARD,Vitamine,Vitamine
+vitamines,vitaminait,DIFFERENT,Vitamine,Vitaminer
+voué,vouai,DIFFERENT,V-O-U-I,vous et
+voué,voue,DIFFERENT,V-O-U-I,vous
+yacht,hiement,DIFFERENT,Yaut,"""Imo"""
+yacht,hiements,DIFFERENT,Yaut,imo
+zèle,gel,DIFFERENT,Zelle,gel
+zèle,gelai,DIFFERENT,Zelle,Je l'ai.
+éblouissant,éblouissement,DIFFERENT,éblouissant.,éblouissement
+éblouissant,éblouissements,DIFFERENT,éblouissant.,éblouissement
+échappement,échappant,DIFFERENT,Échappement,échappant
+échappement,échappas,DIFFERENT,Échappement,Et chapeau !
+éclaircir,éclaircît,DIFFERENT,éclaircir,éclairci
+éclairée,éclairai,SAME_HEARD,éclairer,éclairer
+éclairée,éclairer,SAME_HEARD,éclairer,éclairer
+écoulement,écoulant,DIFFERENT,écoulement,écoulant
+écoulement,écoulas,DIFFERENT,écoulement,Et coula !
+écouler,écoulai,SAME_HEARD,écouler,écouler
+écouler,écoulée,SAME_HEARD,écouler,écouler
+également,égalant,DIFFERENT,également,et galant.
+également,égalas,DIFFERENT,également,Et gala !
+égouts,aigu,DIFFERENT,et vous !,Aigu.
+égouts,aigus,DIFFERENT,et vous !,Aigu !
+élaborée,élaborai,DIFFERENT,Elaborer,élaborer
+élaborée,élaborer,SAME_HEARD,Elaborer,Elaborer
+éliminée,élimai,DIFFERENT,Eliminer,élime
+éliminée,élimer,DIFFERENT,Eliminer,élimé
+éliminés,élimais,DIFFERENT,Eliminer,élimé
+éliminés,élimait,DIFFERENT,Eliminer,élime
+éloignement,éloignant,DIFFERENT,Éloignement,Éloignant.
+éloignement,éloignas,DIFFERENT,Éloignement,éloigne à
+émise,anisai,DIFFERENT,et mise,à ni zé
+émise,anise,DIFFERENT,et mise,A Nice
+épanouissement,épanouissant,DIFFERENT,épanouissement,épanouissant.
+épanouissement,épanouissants,DIFFERENT,épanouissement,épanouissant
+épuisée,épuisai,SAME_HEARD,épuisé,épuisé
+épuisée,épuiser,SAME_HEARD,épuisé,épuisé
+équipements,équipant,DIFFERENT,Équipement,équipant
+équipements,équipas,DIFFERENT,Équipement,équipe à
+éradiquer,éradiquai,SAME_HEARD,éradiquer,éradiquer
+éradiquer,éradiquée,SAME_HEARD,éradiquer,éradiquer
+étendant,étendard,DIFFERENT,étendant.,Étant d'art.
+étendant,étendards,DIFFERENT,étendant.,étendard
+éthiques,étiques,SAME_HEARD,Éthique,Éthique
+étonnement,étonnant,DIFFERENT,Étonnement,Étonnant.
+étonnement,étonnants,DIFFERENT,Étonnement,Étonnant.
+étonnes,étonnais,DIFFERENT,étonne,Et on est
+étonnes,étonnait,DIFFERENT,étonne,Et on est
+évader,évadai,SAME_HEARD,évader,évader
+évader,évadée,SAME_HEARD,évader,évader
+évidement,évidant,DIFFERENT,Évidemment.,Évident.
+évidement,évidas,DIFFERENT,Évidemment.,Evida
+évidentes,évidenttes,DIFFERENT,Évidentes.,évidente
+évidentes,évidâtes,DIFFERENT,Évidentes.,Évidat
+évitera,évitèrent,DIFFERENT,Évitera.,Éviter
