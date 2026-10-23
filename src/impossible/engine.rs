@@ -61,6 +61,7 @@ pub fn attempt_allowed(used: u8) -> bool {
 fn accepted_json(lang: &str) -> Option<&'static str> {
     match lang {
         "en" => Some(include_str!("../../data/impossible/accepted/en.json")),
+        "es" => Some(include_str!("../../data/impossible/accepted/es.json")),
         _ => None,
     }
 }

@@ -1,0 +1,20 @@
+{
+ "lang": "ru",
+ "source": "reports/impossible-outside-twins-verdicts.csv (Eric's filled sheet, 2026-10-22)",
+ "rule": "verdict 'exclude' = a real rival spelling or word sounds the same to the voice, so the word cannot be spelled from audio alone (I1)",
+ "excluded": [
+  "босс",
+  "вали",
+  "верните",
+  "вернула",
+  "вернуться",
+  "курт",
+  "муз",
+  "поддержит",
+  "поттер",
+  "приходится",
+  "садится",
+  "согласится",
+  "хилл"
+ ]
+}
