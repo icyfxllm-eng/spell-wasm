@@ -10,7 +10,7 @@
 //   * BoardGame offers German its Impossible trap word, with a Shift to type it;
 //   * O1 "Use device keyboard": the device's keyboard types a right answer, Spell's
 //     keyboard steps away, and a whole word inserted at once is still refused.
-import { openApp, assert, assertEq, domSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, domSettled, openSettings } from '../harness.mjs';
 
 const ON = () => { localStorage.setItem('spell_flag_keyboard_core', 'on'); };
 const openMode = (page, id) => page.evaluate((id) => document.getElementById(id).click(), id);
@@ -158,6 +158,18 @@ export async function run(browser, base, suite) {
       await page.keyboard.press('Enter');
       await domSettled(page);
       assert(!/good/.test(await verdict(page)), `a word that arrived in one piece is not a spelling (${await verdict(page)})`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('spell-keyboard: O1 turning it on in Settings does not throw the keyboard over Settings', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: ON });
+    try {
+      await serve(page);
+      await openSettings(page);
+      assert(await page.$('#setScrim.show'), 'Settings is open');
+      await deviceOn(page);
+      const focused = await page.evaluate(() => document.activeElement?.id || '');
+      assert(focused !== 'answerDevice', 'the answer field stays unfocused while Settings is up');
     } finally { await ctx.close(); }
   });
 }

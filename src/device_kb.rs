@@ -107,9 +107,18 @@ pub fn sync(app: &App) {
     f.set_disabled(!live);
     // A newly live word takes the focus, so the keyboard is ready without a tap
     // where the platform allows it (iOS opens it only inside a user gesture).
+    // Never while a sheet or dialog is open: turning this setting on in Settings
+    // with a word live behind it threw the system keyboard up over Settings.
     if live && !WAS_LIVE.with(|w| w.replace(true)) {
-        let _ = f.focus();
+        if !overlay_open() {
+            let _ = f.focus();
+        }
     } else if !live {
         WAS_LIVE.with(|w| w.set(false));
     }
+}
+
+/// Is a sheet or dialog up over the play screen?
+fn overlay_open() -> bool {
+    dom::doc().query_selector(".scrim.show").ok().flatten().is_some()
 }
