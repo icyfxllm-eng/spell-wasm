@@ -31,8 +31,17 @@ export async function run(browser, base, suite) {
       const r = await labelled(page, 'kbLetters');
       assert(r.n >= 26, `the letters are shared keys (${r.n})`);
       assertEq(r.unlabelled.length, 0, `unlabelled keys: ${r.unlabelled.join(' | ')}`);
-      const faces = await page.$$eval('#kbLetters .skb-key[data-k]', (ks) => ks.map((k) => getComputedStyle(k).textTransform + ':' + k.textContent));
-      assert(faces.every((f) => !/[A-Z]/.test(f.split(':')[1]) && !f.startsWith('uppercase')), `labels show the case a key types (${faces.slice(0, 4)})`);
+      const lower = async (when) => {
+        const faces = await page.$$eval('#kbLetters .skb-key[data-k]', (ks) => ks.map((k) => getComputedStyle(k).textTransform + ':' + k.textContent));
+        assert(faces.every((f) => !/[A-Z]/.test(f.split(':')[1]) && !f.startsWith('uppercase')), `${when}: labels show the case a key types (${faces.slice(0, 4)})`);
+      };
+      await lower('before a word');
+      // Serving a word hides the (German-only) Shift; hiding it must not read as arming it.
+      await page.click('#orbWrap');
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      await domSettled(page);
+      assert(!(await page.$eval('#gameKeyboard', (k) => k.classList.contains('locked'))), 'the keys are live');
+      await lower('with a word live');
     } finally { await ctx.close(); }
   });
 

@@ -693,9 +693,12 @@ fn shift_key_class(class: &str, on: bool) {
         let _ = if on { el.class_list().add_1(class) } else { el.class_list().remove_1(class) };
     }
     // CC-SPELL-KEYBOARD K-D19: key labels show the case a key will type, so the
-    // keyboard itself knows when Shift is armed (its labels go uppercase).
-    if let Some(kb) = dom::doc().get_element_by_id("gameKeyboard") {
-        let _ = kb.class_list().toggle_with_force("shift-on", on);
+    // keyboard itself knows when Shift is ARMED (its labels go uppercase). Only the
+    // "on" class means armed; this same helper also hides and shows the key.
+    if class == "on" {
+        if let Some(kb) = dom::doc().get_element_by_id("gameKeyboard") {
+            let _ = kb.class_list().toggle_with_force("shift-on", on);
+        }
     }
 }
 
