@@ -630,3 +630,14 @@ fn russian_yo_and_ye_are_both_accepted() {
     assert!(!engine::grade("ru", "актор", "актер"), "only ё/е are folded");
     assert!(!engine::grade("de", "aktor", "actor"));
 }
+
+/// Eric 2026-10-22: Spanish second spellings the RAE accepts.
+#[test]
+fn spanish_second_spellings_are_accepted() {
+    assert!(engine::grade("es", "biquini", "bikini"));
+    assert!(engine::grade("es", "remplazado", "reemplazado"));
+    assert!(!engine::grade("es", "biquini", "bota"));
+    for w in ["bikini", "reemplazado"] {
+        assert!(pool("es").unwrap().words.iter().any(|x| x == w), "{w} must stay in the Spanish pool");
+    }
+}

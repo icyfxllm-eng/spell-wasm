@@ -1,0 +1,12 @@
+{
+ "lang": "es",
+ "note": "Second spellings both right (RAE accepts both). Eric 2026-10-22, outside-twin sweep. Key = pool word, value = also accepted.",
+ "accepted": {
+  "bikini": [
+   "biquini"
+  ],
+  "reemplazado": [
+   "remplazado"
+  ]
+ }
+}
