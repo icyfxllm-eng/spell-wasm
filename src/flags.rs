@@ -625,7 +625,8 @@ pub fn visual_orb() -> bool {
 /// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
 /// true no-op: each surface builds its keys exactly as before.
 pub fn keyboard_core() -> bool {
-    resolve(stored("keyboard_core").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 293, CC-SPELL-KEYBOARD Phase A device pass): on.
+    resolve(stored("keyboard_core").as_deref(), true)
 }
 
 pub fn is_on(name: &str) -> bool {
