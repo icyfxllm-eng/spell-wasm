@@ -1,0 +1,49 @@
+﻿lang,pool_word,twin,kind,heard_pool,heard_twin,proposed,your_verdict,reason,follow_up,note
+pl,bit,bid,sound-twin,Bit.,Bit.,exclude,keep,TWIN_NOT_A_WORD,,"final devoicing would merge them, but bid is not Polish"
+pl,blokowanie,blogowanie,sound-twin,Blokowanie.,Blokowanie.,exclude,keep,PHONEMIC_CONTRAST,,k vs g between vowels
+pl,budka,butka,sound-twin,Budka.,Budka.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,bus,buz,sound-twin,Bus.,Bus.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,che,he,sound-twin,Chę.,Chę.,exclude,exclude,PURITY_NOT_A_WORD,PURITY,che is not a Polish headword
+pl,chi,hi,sound-twin,"""hi""","""hi""",exclude,exclude,TRUE_HOMOPHONE,,ch = h; chi (Greek letter) vs hi (interjection)
+pl,dog,dok,sound-twin,Dok.,Dok.,exclude,exclude,TRUE_HOMOPHONE,,final devoicing; dog (breed) vs dok (dock)
+pl,ee,e,sound-twin,A.,A.,exclude,exclude,PURITY_NOT_A_WORD,PURITY,"hesitation sound, not a word"
+pl,ee,ę,sound-twin,A.,A.,exclude,exclude,PURITY_NOT_A_WORD,PURITY,"hesitation sound, not a word"
+pl,falę,fale,sound-twin,Fala.,Fala.,exclude,exclude,BORDERLINE,,word-final ę is usually said as e
+pl,flag,flak,sound-twin,Flak.,Flak.,exclude,exclude,TRUE_HOMOPHONE,,"final devoicing; flag = gen. pl. of flaga, flak = AA gun"
+pl,generalnej,generalniej,sound-twin,Generalnej.,Generalnej.,exclude,keep,PHONEMIC_CONTRAST,,n vs ń
+pl,głosujących,glosujących,sound-twin,Głosujących,Głosujących,exclude,keep,PHONEMIC_CONTRAST,,ł vs l (glosować is a real verb)
+pl,hale,chale,sound-twin,Chale.,Chale.,exclude,keep,TWIN_NOT_A_WORD,,confirm in census that chale is not a headword
+pl,hale,halle,sound-twin,Chale.,Chale.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,han,chan,sound-twin,Han.,Han.,exclude,exclude,TRUE_HOMOPHONE,PURITY,h = ch; confirm han is a headword (may be Han dynasty)
+pl,law,laf,sound-twin,Laugh.,Laugh.,exclude,keep,TWIN_NOT_A_WORD,AUDIO,law = gen. pl. of lawa; pool clip heard as English 'Laugh'
+pl,liberalnej,liberalniej,sound-twin,liberalnej.,liberalnej.,exclude,keep,PHONEMIC_CONTRAST,,n vs ń
+pl,mass,mas,sound-twin,Masz.,Masz.,exclude,exclude,PURITY_NOT_A_WORD,PURITY,English word in the Polish bank
+pl,mass,maź,sound-twin,Masz.,Masz.,exclude,exclude,PURITY_NOT_A_WORD,PURITY,English word in the Polish bank
+pl,monet,monnet,sound-twin,Monet.,Monet.,exclude,keep,TWIN_NOT_A_WORD,,monet = gen. pl. of moneta
+pl,msze,mszę,sound-twin,Mszę.,Muszę.,exclude,exclude,BORDERLINE,,word-final ę is usually said as e
+pl,osiągnęła,osiąknęła,sound-twin,Osiągnęła.,Osiągnęła.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,oz,os,sound-twin,Os.,Os.,exclude,exclude,TRUE_HOMOPHONE,,final devoicing; oz (esker) vs os (gen. pl. of osa)
+pl,pasów,passów,sound-twin,Pasów.,Pasów,exclude,keep,TWIN_NOT_A_WORD,,
+pl,piw,pif,sound-twin,PIEF,PIEF,exclude,keep,TWIN_NOT_A_WORD,,piw = gen. pl. of piwo
+pl,podejmowane,poodejmowane,sound-twin,Podejmowane.,Podejmowane.,exclude,keep,SYLLABLE_COUNT,,extra syllable (po-o-)
+pl,podejmują,poodejmują,sound-twin,Podejmują.,Podejmują.,exclude,keep,SYLLABLE_COUNT,,extra syllable (po-o-)
+pl,poród,porut,sound-twin,Porut.,Porut.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,posiadają,poosiadają,sound-twin,posiadają.,posiadają.,exclude,keep,SYLLABLE_COUNT,,extra syllable (po-o-)
+pl,posiadasz,poosiadasz,sound-twin,Posiadasz.,Posiadasz.,exclude,keep,SYLLABLE_COUNT,,extra syllable (po-o-)
+pl,posiadała,poosiadała,sound-twin,Posiadała.,posiadała.,exclude,keep,SYLLABLE_COUNT,,extra syllable (po-o-)
+pl,posiadały,poosiadały,sound-twin,posiadały.,posiadały.,exclude,keep,SYLLABLE_COUNT,,extra syllable (po-o-)
+pl,rejs,rejz,sound-twin,RACE,RACE,exclude,keep,TWIN_NOT_A_WORD,AUDIO,pool clip heard as English 'RACE'
+pl,rowery,rovery,sound-twin,Rowery.,Rowery.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,rowerów,roverów,sound-twin,Rowerów.,Rowe Rów.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,ruski,rózgi,sound-twin,Bruski,Bruski.,exclude,keep,PHONEMIC_CONTRAST,AUDIO,s vs zg; pool clip heard as 'Bruski'; colloquial word
+pl,rys,ryz,sound-twin,To jest.,To jest.,exclude,exclude,TRUE_HOMOPHONE,,final devoicing; ryz = gen. pl. of ryza (ream)
+pl,rzuci,żuci,sound-twin,Żuci.,Żuci.,exclude,exclude,TRUE_HOMOPHONE,,rz = ż; żuci is a real (rare) form of żuty
+pl,skale,skałę,sound-twin,Skale,Skale,exclude,keep,PHONEMIC_CONTRAST,,l vs ł
+pl,szczęście,szczęśćcie,sound-twin,Szczęście!,Szczęście!,exclude,keep,TWIN_NOT_A_WORD,,
+pl,tango,tanko,sound-twin,Tango.,Tango.,exclude,keep,TWIN_NOT_A_WORD,,
+pl,wierz,wiesz,sound-twin,Wiesz.,Wiesz.,exclude,exclude,TRUE_HOMOPHONE,,rz = sz at word end
+pl,wierz,wież,sound-twin,Wiesz.,Wiesz.,exclude,exclude,TRUE_HOMOPHONE,,rz = ż at word end
+pl,wiążą,wwiążą,sound-twin,wiążą.,Wiążą.,exclude,exclude,BORDERLINE,,initial ww double consonant only
+pl,łuk,luk,sound-twin,Look.,Look.,exclude,keep,PHONEMIC_CONTRAST,,ł vs l
+pl,łuk,ług,sound-twin,Look.,Look.,exclude,exclude,TRUE_HOMOPHONE,,final devoicing; ług = lye
+pl,żyd,żyt,sound-twin,Żyd.,Żyd.,exclude,exclude,TRUE_HOMOPHONE,,final devoicing; żyt = gen. pl. of żyto
