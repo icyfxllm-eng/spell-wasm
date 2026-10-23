@@ -354,7 +354,6 @@ fn note_climb(app: &App, correct: bool) {
 /// option later means deleting a branch rather than unpicking one.
 pub fn render_letters(app: &App, animate_all: bool) {
     reflect_play_direction(app);
-    crate::device_kb::sync(app);
     let value = app.borrow().answer.clone();
     if value.is_empty() {
         dom::set_html("letters", &format!("<span class=\"placeholder\">{}</span><span class=\"caret\"></span>", crate::i18n::t("ph.typeHeard")));
@@ -533,20 +532,6 @@ pub fn sync_keyboard(app: &App) {
     dom::toggle_class("gameKeyboard", "locked", !enabled);
     dom::toggle_class("gameKeyboard", "show-punct", punct);
     dom::toggle_class("spellbox", "focus", enabled);
-    crate::device_kb::sync(app);
-}
-
-/// CC-SPELL-KEYBOARD O1: the answer as the device keyboard's field holds it.
-/// Taken exactly as typed (I1); the field's own input events have already
-/// recorded each keystroke in the provenance ledger, so this does not touch it.
-pub fn device_set_answer(app: &App, text: &str) {
-    if !can_type(&app.borrow()) {
-        crate::device_kb::sync(app);
-        return;
-    }
-    crate::spell_aloud::note_manual_edit();
-    app.borrow_mut().answer = text.to_string();
-    render_letters(app, false);
 }
 
 /// Append one typed character (on-screen key or physical keydown). Single char

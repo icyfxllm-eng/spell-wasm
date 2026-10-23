@@ -1933,16 +1933,6 @@
   body.kb-core.big-text{--skb-key-h:56px}
   body.kb-core #gameKeyboard.shift-on .skb-key,body.kb-core #bgKeys.shift-on .skb-key{text-transform:uppercase}
   body.kb-core .skb-shift.btn-hide{display:none}
-  /* O1 "Use device keyboard": the answer box becomes a real field (invisible over
-     the letters, which still render the answer) and Spell's keyboard steps away.
-     Check stays. Spell Picture's own slot is untouched. */
-  .answer-device{display:none}
-  body.kb-core.device-kb .answer-device{display:block;position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;border:0;
-    background:transparent;color:transparent;caret-color:transparent;font-size:16px;opacity:0.01}
-  body.kb-core.device-kb #kbHome{display:none}
-  /* With no keyboard row to tuck into, Check sits under the answer box at full width
-     (the system keyboard has its own delete). */
-  body.kb-core.device-kb .stage > .action-row{margin-top:12px;padding-inline-end:0}
   body.kb-core .skb-shift.on{background:var(--amber);color:var(--palette-on-gold-text);border-color:var(--amber)}
   /* Every shared key that long-presses shows the alternates dot, not only the main keyboard's. */
   body.kb-core .skb-key.has-acc{position:relative}
@@ -3127,9 +3117,6 @@
     <div class="voice-note" id="voiceNote"></div>
     <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling" data-i18n-aria="label.yourSpelling">
       <div class="letters" id="letters"></div>
-      <!-- CC-SPELL-KEYBOARD O1: with "Use device keyboard" on, this real field over the answer
-           opens the system keyboard. Nothing corrects, predicts or capitalises (I1). -->
-      <input class="answer-device" id="answerDevice" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-label="Your spelling" data-i18n-aria="label.yourSpelling" tabindex="-1" />
     </div>
     <!-- CC-ZH-TONE F4 — one deliberate tap per tone, instead of a long-press
          diacritic picker that may not offer pinyin vowels at all. Mandarin
@@ -4594,9 +4581,6 @@
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /><button type="button" class="btn btn-icon btn-hide" id="kidGrownups" data-i18n="parent.title" style="flex:none;border-radius:12px">Ask a grown-up</button></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
-      <!-- CC-SPELL-KEYBOARD O1: the device's own keyboard, for anyone Spell's keyboard does not serve
-           (VoiceOver, Switch Control, a preferred layout). Offered only with keyboard.core. -->
-      <label class="set-row btn-hide" id="deviceKbRow"><span class="lbl2"><span data-i18n="settings.deviceKb">Use device keyboard</span><small data-i18n="settings.deviceKbSmall">Type answers on your device's own keyboard. Autocorrect stays off.</small></span><input type="checkbox" class="switch" id="deviceKbToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
       <label class="set-row" id="britishRow"><span class="lbl2"><span data-i18n="settings.british">British spellings</span><small data-i18n="settings.britishSmall">Show words like colour and centre the British way. Either spelling is always accepted.</small></span><input type="checkbox" class="switch" id="britishToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.realVoices">Real voices when available</span><small data-i18n="settings.realVoicesSmall">Hear a person say the word, where we have a checked recording</small></span><input type="checkbox" class="switch" id="realVoicesToggle" checked /></label>

@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "पेज का बैकग्राउंड रंग",
   "settings.bigText": "बड़ा टेक्स्ट",
   "settings.bigTextSmall": "इंटरफ़ेस का टेक्स्ट बड़ा करो (लगभग 1.5×)",
-  "settings.deviceKb": "डिवाइस का कीबोर्ड इस्तेमाल करें",
-  "settings.deviceKbSmall": "जवाब अपने डिवाइस के कीबोर्ड से टाइप करें। ऑटोकरेक्ट बंद ही रहता है।",
   "settings.done": "हो गया",
   "settings.extraAttempts": "ग़लती पर अतिरिक्त मौक़ा",
   "settings.extraAttemptsSmall": "शब्द चूकने पर दूसरी कोशिश",

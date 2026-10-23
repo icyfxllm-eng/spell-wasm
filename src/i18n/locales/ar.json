@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "لون خلفية الصفحة",
   "settings.bigText": "خط كبير",
   "settings.bigTextSmall": "تكبير نص الواجهة (نحو 1.5×)",
-  "settings.deviceKb": "استخدام لوحة مفاتيح الجهاز",
-  "settings.deviceKbSmall": "اكتب الإجابات بلوحة مفاتيح جهازك. يبقى التصحيح التلقائي متوقفًا.",
   "settings.done": "تم",
   "settings.extraAttempts": "محاولة إضافية عند الخطأ",
   "settings.extraAttemptsSmall": "فرصة ثانية عندما تخطئ كلمة",

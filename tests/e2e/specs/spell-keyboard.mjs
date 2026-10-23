@@ -7,10 +7,8 @@
 //   * the five Vietnamese tone keys are told apart by name;
 //   * labels are lowercase until Shift is armed (K-D19);
 //   * Bee, which had no long-press, now offers a language's alternates;
-//   * BoardGame offers German its Impossible trap word, with a Shift to type it;
-//   * O1 "Use device keyboard": the device's keyboard types a right answer, Spell's
-//     keyboard steps away, and a whole word inserted at once is still refused.
-import { openApp, assert, assertEq, domSettled, openSettings } from '../harness.mjs';
+//   * BoardGame offers German its Impossible trap word, with a Shift to type it.
+import { openApp, assert, assertEq, domSettled } from '../harness.mjs';
 
 const ON = () => { localStorage.setItem('spell_flag_keyboard_core', 'on'); };
 const openMode = (page, id) => page.evaluate((id) => document.getElementById(id).click(), id);
@@ -110,69 +108,6 @@ export async function run(browser, base, suite) {
         await page.click(`#bgKeys [data-k="u:${ch.toLowerCase()}"]`);
       }
       assertEq(await page.$eval('#bgField', (e) => e.textContent), word, 'the field holds the word, capitals and all');
-    } finally { await ctx.close(); }
-  });
-
-  const deviceOn = async (page) => {
-    await page.evaluate(() => {
-      const el = document.getElementById('deviceKbToggle');
-      el.checked = true;
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-    await domSettled(page);
-  };
-  const serve = async (page) => {
-    await page.click('#orbWrap');
-    await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
-    await domSettled(page);
-    return page.evaluate(() => window.__spelltest.currentWord());
-  };
-  const verdict = (page) => page.$eval('#feedback', (e) => e.className);
-
-  await suite.test('spell-keyboard: O1 the device keyboard types a right answer', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: ON });
-    try {
-      assert(!(await page.$('#deviceKbRow.btn-hide')), 'the setting is offered with keyboard.core');
-      await deviceOn(page);
-      assert(await page.evaluate(() => document.body.classList.contains('device-kb')), 'body carries device-kb');
-      assert(await page.$eval('#kbHome', (e) => getComputedStyle(e).display === 'none'), "Spell's keyboard steps away");
-      // Check normally tucks into the keyboard's bottom row; with no keyboard it sits under the answer box.
-      const [box, chk] = await page.evaluate(() => ['spellbox', 'checkBtn'].map((id) => document.getElementById(id).getBoundingClientRect().toJSON()));
-      assert(chk.top >= box.bottom - 0.5, `Check sits below the answer box, not under it (box ends ${box.bottom}, Check starts ${chk.top})`);
-      const word = await serve(page);
-      await page.focus('#answerDevice');
-      await page.keyboard.type(word.toLowerCase(), { delay: 15 });
-      assertEq(await page.$eval('#letters', (e) => e.textContent.replace(/\s/g, '')), word.toLowerCase(), 'the letters show what was typed');
-      await page.keyboard.press('Enter');
-      await page.waitForFunction(() => /good|bad/.test(document.getElementById('feedback').className), null, { timeout: 5000 });
-      assert(/good/.test(await verdict(page)), `typed on the device keyboard, graded right (${await verdict(page)})`);
-    } finally { await ctx.close(); }
-  });
-
-  await suite.test('spell-keyboard: O1 a whole word inserted at once is still refused', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: ON });
-    try {
-      await deviceOn(page);
-      const word = await serve(page);
-      await page.focus('#answerDevice');
-      // One insertion of the whole word: what dictation or paste looks like.
-      await page.keyboard.insertText(word.toLowerCase());
-      assertEq(await page.$eval('#letters', (e) => e.textContent.replace(/\s/g, '')), word.toLowerCase(), 'the word did reach the answer');
-      await page.keyboard.press('Enter');
-      await domSettled(page);
-      assert(!/good/.test(await verdict(page)), `a word that arrived in one piece is not a spelling (${await verdict(page)})`);
-    } finally { await ctx.close(); }
-  });
-
-  await suite.test('spell-keyboard: O1 turning it on in Settings does not throw the keyboard over Settings', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: ON });
-    try {
-      await serve(page);
-      await openSettings(page);
-      assert(await page.$('#setScrim.show'), 'Settings is open');
-      await deviceOn(page);
-      const focused = await page.evaluate(() => document.activeElement?.id || '');
-      assert(focused !== 'answerDevice', 'the answer field stays unfocused while Settings is up');
     } finally { await ctx.close(); }
   });
 }

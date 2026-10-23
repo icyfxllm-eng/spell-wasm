@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "Couleur de fond de la page",
   "settings.bigText": "Grand texte",
   "settings.bigTextSmall": "Agrandit le texte de l'interface (environ 1,5×)",
-  "settings.deviceKb": "Utiliser le clavier de l'appareil",
-  "settings.deviceKbSmall": "Tape tes réponses avec le clavier de ton appareil. La correction automatique reste désactivée.",
   "settings.done": "Terminé",
   "settings.extraAttempts": "Tentative supplémentaire en cas d’erreur",
   "settings.extraAttemptsSmall": "Un second essai quand vous manquez un mot",

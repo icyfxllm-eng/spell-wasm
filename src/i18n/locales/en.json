@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "Page background color",
   "settings.bigText": "Big text",
   "settings.bigTextSmall": "Enlarge the interface text (about 1.5×)",
-  "settings.deviceKb": "Use device keyboard",
-  "settings.deviceKbSmall": "Type answers on your device's own keyboard. Autocorrect stays off.",
   "settings.done": "Done",
   "settings.extraAttempts": "Extra attempt on misses",
   "settings.extraAttemptsSmall": "A second try when you miss a word",

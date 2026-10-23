@@ -78,7 +78,7 @@
 | ☑ | K-D1–K-D3, K-D16, K-D20, K-D21 (vi half), K-D22–K-D26, K-D28 | Remaining defaults. | **Sign.** K-D21's zh half follows K-Q3. |
 | ☑ | K-Q7 | The orb key is hidden where replay is spent; the existing Replay/Slow buttons are disabled. | **The orb key hides (KF8); the existing buttons stay disabled** as they are. No scope creep into them. |
 | ☑ | K-Q9 / K-D6 | Latin legends on non-Latin keys, varying by tier. | **Defer.** It's the only item that puts tier-dependent content on keys, so it sits closest to "the keyboard never helps". Revisit after native feedback (O2). |
-| ☑ | O1 | "Use device keyboard" as an accessibility setting. | **Sign the build default,** with autocorrect, autocapitalise and spellcheck off. It also covers the VoiceOver/Switch Control gap on long-press accents (K-R11). |
+| ☑ | O1 | "Use device keyboard" as an accessibility setting. | ~~Sign the build default, with autocorrect, autocapitalise and spellcheck off.~~ **REVERSED by Eric, 2026-10-22: no device keyboard.** "Players can just use the voice mode and cheese the game": the system keyboard brings dictation, predictions and text replacement into a spelling test, and no provenance guard can keep up with all of them. The setting was built (630bd277) and shipped in builds 292 and 293, then removed from main. The VoiceOver/Switch Control gap on long-press accents (K-R11) is still open and needs a different answer that stays on Spell's keyboard. |
 | ☑ | O2 | Gig B "layout feels natural" checklist row. | **Sign** (advisory only). |
 
 ---

@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "页面背景色",
   "settings.bigText": "大字体",
   "settings.bigTextSmall": "放大界面文字（约1.5倍）",
-  "settings.deviceKb": "使用设备键盘",
-  "settings.deviceKbSmall": "用设备自带的键盘输入答案。自动更正保持关闭。",
   "settings.done": "完成",
   "settings.extraAttempts": "答错时额外尝试",
   "settings.extraAttemptsSmall": "拼错单词时再试一次",

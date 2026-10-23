@@ -28,7 +28,6 @@ mod boardgame_grade; // CC-BOARD-GAME F3/D21 -- the local answer check
 #[cfg(not(feature = "web"))]
 mod boardgame_input; // CC-BOARD-GAME D20 -- answer keys and presses
 mod spellkb; // CC-SPELL-KEYBOARD -- the one shared keyboard: keys, mounting, long-press
-mod device_kb; // CC-SPELL-KEYBOARD O1 -- "Use device keyboard"
 #[cfg(not(feature = "web"))]
 mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank gate
 #[cfg(not(feature = "web"))]
@@ -428,7 +427,6 @@ fn wire(app: &App) {
     wire_versus(app);
     wire_age_gate(app);
     keyboard::setup(app);
-    device_kb::setup(app);
     climb::setup(app);
     // Online Spell Off (async 1v1) — no entry unless flag on + signed in + not kid.
     online_spelloff::setup(app);
@@ -892,16 +890,6 @@ fn wire_glow_and_settings(app: &App) {
             a.borrow_mut().big_text = v;
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
-        });
-    }
-    {
-        let a = app.clone();
-        dom::on::<web_sys::Event, _>("deviceKbToggle", "change", move |_| {
-            let v = dom::input("deviceKbToggle").checked();
-            a.borrow_mut().device_keyboard = v;
-            settings::save_prefs(&a.borrow());
-            settings::apply_settings(&a);
-            crate::device_kb::sync(&a);
         });
     }
     {

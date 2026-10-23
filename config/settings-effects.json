@@ -29,15 +29,6 @@
       "harness": "web"
     },
     {
-      "key": "deviceKbToggle",
-      "surface": "settings",
-      "state": "device_keyboard",
-      "effect": "CC-SPELL-KEYBOARD O1: body.device-kb (with keyboard.core); the answer box becomes a real field the device keyboard types into, Spell's keyboard (#kbHome) is hidden; the row is hidden without keyboard.core",
-      "test": "spell-keyboard: O1 the device keyboard types a right answer",
-      "suppressed_by": null,
-      "harness": "web"
-    },
-    {
       "key": "slowToggle",
       "surface": "settings",
       "state": "slow",

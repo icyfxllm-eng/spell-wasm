@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "Cor de fundo da página",
   "settings.bigText": "Texto grande",
   "settings.bigTextSmall": "Aumenta o texto da interface (cerca de 1,5×)",
-  "settings.deviceKb": "Usar o teclado do dispositivo",
-  "settings.deviceKbSmall": "Digite as respostas no teclado do seu dispositivo. A correção automática continua desativada.",
   "settings.done": "Concluído",
   "settings.extraAttempts": "Tentativa extra ao errar",
   "settings.extraAttemptsSmall": "Uma segunda chance quando você erra uma palavra",

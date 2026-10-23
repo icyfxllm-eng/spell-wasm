@@ -593,8 +593,6 @@
   "settings.backgroundSmall": "Цвет фона страницы",
   "settings.bigText": "Крупный текст",
   "settings.bigTextSmall": "Увеличить текст интерфейса (примерно 1,5×)",
-  "settings.deviceKb": "Клавиатура устройства",
-  "settings.deviceKbSmall": "Вводите ответы с клавиатуры своего устройства. Автокоррекция остаётся выключенной.",
   "settings.done": "Готово",
   "settings.extraAttempts": "Дополнительная попытка",
   "settings.extraAttemptsSmall": "Вторая попытка при ошибке",
