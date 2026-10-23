@@ -1,12 +1,12 @@
 {
  "lang": "pl",
  "source": "expert",
- "bankHash": "0x03384657A4B8A530",
- "expertRows": 2997,
+ "bankHash": "0x2052F7F0BDBC7B61",
+ "expertRows": 2994,
  "table": "exclusion_only",
  "removedPurity": 2,
  "removedSoundalike": 65,
- "removedReviewed": 16,
+ "removedReviewed": 13,
  "status": "pool",
  "reason": null,
  "words": [

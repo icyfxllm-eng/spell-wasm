@@ -1084,7 +1084,6 @@ dostępność
 drobny
 dzielnie
 dżungli
-ee
 ekipę
 farby
 felix
@@ -1373,7 +1372,6 @@ magazynów
 mającego
 mającym
 maska
-mass
 mechanik
 metalowe
 miałem
@@ -1563,7 +1561,6 @@ burdel
 carol
 cechuje
 ceremonia
-che
 chujowa
 ciut
 czekanie

@@ -1151,7 +1151,6 @@ livra
 manejo
 manualmente
 marinheiro
-mattos
 montando
 moradias
 motivações
@@ -1530,7 +1529,6 @@ levantado
 loureiro
 machine
 malandro
-manu
 márcio
 medina
 memes
@@ -1745,7 +1743,6 @@ lanchonete
 layout
 levantei
 locutor
-madagáscar
 mangas
 maringá
 metido
@@ -2282,7 +2279,6 @@ marítimo
 matias
 melhoras
 milena
-mimi
 mister
 modelagem
 moinhos

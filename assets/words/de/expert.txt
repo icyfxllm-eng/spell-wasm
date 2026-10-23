@@ -19,7 +19,6 @@ Krankenversicherung
 Kühlschrank
 Möglichkeit
 Nachbarschaft
-Nußknacker
 Persönlichkeit
 Pünktlichkeit
 Regenschirm
@@ -803,7 +802,6 @@ Tango
 tapfer
 tasten
 technisches
-Thun
 traurigen
 Turin
 unendliche
@@ -1147,7 +1145,6 @@ polnisch
 Popularität
 Populismus
 Prager
-Raphael
 raucht
 recherchieren
 Recklinghausen
@@ -1202,7 +1199,6 @@ vorzugehen
 Wahlergebnis
 warteten
 weide
-weissrussland
 werdende
 Wetzlar
 Widersprüche
@@ -1432,7 +1428,6 @@ Attraktivität
 auffällt
 aufrechterhalten
 Ausschlag
-aussenseiter
 auszusetzen
 Beantwortung
 beauftragten
@@ -2436,7 +2431,6 @@ sende
 sodann
 Sommerpause
 Sonnenlicht
-soooo
 sperrt
 sprachlich
 stecke
@@ -2464,7 +2458,6 @@ Vakuum
 Verachtung
 verdankt
 Vergewaltiger
-vergrösserung
 verlinkten
 Verordnungen
 verschlechtert
@@ -2592,7 +2585,6 @@ Inspektion
 Jordanien
 Jubiläums
 kapitalistischen
-Kathrin
 Katz
 Keil
 kippe

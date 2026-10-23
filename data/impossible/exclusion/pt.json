@@ -4,7 +4,7 @@
  "voice": "pt-BR-Neural2-B",
  "clipCacheVersion": "v4",
  "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
- "expertRows": 2991,
+ "expertRows": 2987,
  "rulesNet": [
   "acadêmicas",
   "acompanhadas",

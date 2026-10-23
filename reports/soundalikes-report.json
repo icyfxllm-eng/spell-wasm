@@ -19,7 +19,7 @@
    "voiceMatchesLayer1": true
   },
   "de": {
-   "bankRows": 6267,
+   "bankRows": 6259,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -85,7 +85,7 @@
    "voiceMatchesLayer1": true
   },
   "es": {
-   "bankRows": 6267,
+   "bankRows": 6266,
    "bonusEligibleBankWords": 9,
    "confirmedSets": 0,
    "generator": "build_collisions.key_es@1",
@@ -125,7 +125,7 @@
    "voiceMatchesLayer1": true
   },
   "fr": {
-   "bankRows": 6273,
+   "bankRows": 6272,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -193,7 +193,7 @@
    "voiceMatchesLayer1": true
   },
   "pl": {
-   "bankRows": 6213,
+   "bankRows": 6210,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -210,7 +210,7 @@
    "voiceMatchesLayer1": true
   },
   "pt": {
-   "bankRows": 6263,
+   "bankRows": 6259,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -227,7 +227,7 @@
    "voiceMatchesLayer1": true
   },
   "ru": {
-   "bankRows": 6832,
+   "bankRows": 6830,
    "bonusEligibleBankWords": 58,
    "confirmedSets": 2,
    "generator": "build_collisions.key_ru@1",

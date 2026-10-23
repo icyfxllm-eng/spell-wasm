@@ -4,7 +4,7 @@
  "voice": "fr-FR-Neural2-F",
  "clipCacheVersion": "v4",
  "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
- "expertRows": 2994,
+ "expertRows": 2993,
  "rulesNet": [
   "abandonne",
   "abandonner",

@@ -1,12 +1,12 @@
 {
  "lang": "es",
  "source": "expert",
- "bankHash": "0xAB13F0430C04CABE",
- "expertRows": 2999,
+ "bankHash": "0x338467808974F94A",
+ "expertRows": 2998,
  "table": "verified",
  "removedPurity": 1,
  "removedSoundalike": 3,
- "removedReviewed": 23,
+ "removedReviewed": 22,
  "status": "pool",
  "reason": null,
  "words": [

@@ -4,7 +4,7 @@
  "voice": "pl-PL-Wavenet-B",
  "clipCacheVersion": "v4",
  "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
- "expertRows": 2997,
+ "expertRows": 2994,
  "rulesNet": [
   "agencje",
   "agencję",

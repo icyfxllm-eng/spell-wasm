@@ -207,7 +207,15 @@ fn wordgrid_property_10k() {
 /// abbreviation of экземпляр, found by his same-sound review). One row out of
 /// ru Hard is a different pool, so these 500 seeds draw differently. Hold this
 /// pin back to the previous value if that quarantine is reversed.
-pub const GOLDEN: u64 = 0x6db4_6e8f_4975_88c3;
+///
+/// Re-pinned 2026-10-23, from 0x6db4_6e8f_4975_88c3, on Eric's outside-twin
+/// review: 19 Expert rows (es indice; ru поттер хилл; de Kathrin Raphael
+/// Nußknacker Thun aussenseiter soooo vergrösserung weissrussland; pl che ee
+/// mass; fr besson; pt madagáscar manu mattos mimi) quarantined through
+/// CC-BANK-PURITY as proper nouns, misspellings or non-words. Those rows left
+/// the banks, so these 500 seeds draw differently. Hold this pin back to the
+/// previous value if that quarantine is reversed.
+pub const GOLDEN: u64 = 0x9da6_33a5_1b27_9a4e;
 
 #[test]
 fn wordgrid_determinism() {
