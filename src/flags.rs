@@ -662,14 +662,16 @@ pub fn visual_haptics() -> bool {
 /// of emoji. **Default OFF** (V-D22), killable as `visual_icons`. Off: every
 /// icon slot shows the emoji it replaced, so the screen is as it was.
 pub fn visual_icons() -> bool {
-    resolve(stored("visual_icons").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 296, CC-VISUAL-ECLIPSE Phase D review): on.
+    resolve(stored("visual_icons").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.celebrate` (Phase D, F7): big and small
 /// celebrations on the V-D18 triggers. **Default OFF** (V-D22), killable as
 /// `visual_celebrate`. Off: no celebration; achievements keep today's toast.
 pub fn visual_celebrate() -> bool {
-    resolve(stored("visual_celebrate").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 296, CC-VISUAL-ECLIPSE Phase D review): on.
+    resolve(stored("visual_celebrate").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.cards` (Phase D, F11): the 1080x1350 result card
@@ -677,7 +679,8 @@ pub fn visual_celebrate() -> bool {
 /// Randospell. **Default OFF** (V-D22), killable as `visual_cards`. Off:
 /// sharing is exactly as it was.
 pub fn visual_cards() -> bool {
-    resolve(stored("visual_cards").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 296, CC-VISUAL-ECLIPSE Phase D review): on.
+    resolve(stored("visual_cards").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.themes` (Phase E, F9): the five themes, the
@@ -796,7 +799,8 @@ mod tests {
     #[test]
     fn visual_icons_ships_dark() {
         set_test_override(None);
-        assert!(!visual_icons() && !visual_celebrate() && !visual_cards(), "Phase D ships dark until a build turns it on (V-D22)");
+        // Release branch for build 296: the build turns them on (V-D22).
+        assert!(visual_icons() && visual_celebrate() && visual_cards(), "build 296 turns Phase D on");
         set_test_override(Some("on"));
         assert!(visual_icons() && visual_celebrate() && visual_cards());
         set_test_override(None);
