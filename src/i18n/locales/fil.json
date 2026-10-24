@@ -1,4 +1,12 @@
 {
+  "card.chain": "sunod-sunod na salita",
+  "card.bestChain": "pinakamahabang sunod-sunod",
+  "card.bestLine": "pinakamataas: {n}",
+  "card.tagline": "pakinggan · baybayin",
+  "card.practice": "mga unang salita sa {lang}",
+  "card.place": "puwesto",
+  "card.points": "puntos",
+  "card.score": "tama",
   "celebrate.newBest": "Bagong personal best: {n} sunod-sunod!",
   "celebrate.perfect": "Perpektong takbo: 10 sunod-sunod, walang mali!",
   "celebrate.rankUp": "Umakyat ka sa #{rank} sa The Climb!",

@@ -1,4 +1,12 @@
 {
+  "card.chain": "chaîne de mots",
+  "card.bestChain": "meilleure chaîne",
+  "card.bestLine": "record : {n}",
+  "card.tagline": "écoute · épelle",
+  "card.practice": "premiers mots en {lang}",
+  "card.place": "place",
+  "card.points": "points",
+  "card.score": "bonnes réponses",
   "celebrate.newBest": "Nouveau record perso : {n} d’affilée !",
   "celebrate.perfect": "Série parfaite : 10 d’affilée, sans faute !",
   "celebrate.rankUp": "Tu montes au n° {rank} sur The Climb !",

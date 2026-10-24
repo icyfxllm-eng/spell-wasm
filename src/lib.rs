@@ -127,6 +127,7 @@ mod notify;
 mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod result_card; // CC-VISUAL-ECLIPSE F11: 1080x1350 result cards (behind visual.cards)
 mod celebrate; // CC-VISUAL-ECLIPSE F7: celebration moments (behind visual.celebrate)
 mod icons; // CC-VISUAL-ECLIPSE F8: the drawn icon set (behind visual.icons)
 mod icons_data; // GENERATED -- scripts/icons-build.mjs

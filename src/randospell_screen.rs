@@ -1535,7 +1535,7 @@ fn store_result() {
 fn share_daily() {
     let text = with_ui(|u| {
         let acc = if u.s.rolls > 0 { u.s.correct * 100 / u.s.rolls } else { 0 };
-        i18n::tp(
+        let t = i18n::tp(
             "rs.dailyShare",
             &[
                 ("date", &u.date),
@@ -1546,7 +1546,8 @@ fn share_daily() {
                 ("acc", &acc.to_string()),
                 ("b", &u.s.largest_banked.to_string()),
             ],
-        )
+        );
+        (t, u.s.score)
     })
     .or_else(|| {
         // From the setup card: today's stored result for the selected tier.
@@ -1554,7 +1555,8 @@ fn share_daily() {
         let tier = TIER.with(Cell::get);
         let e = load_store().daily_entry(&crate::randospell::daily::key(&today(), &lang, tier)).cloned()?;
         let acc = if e.rolls > 0 { e.correct * 100 / e.rolls } else { 0 };
-        Some(i18n::tp(
+        let score = e.score;
+        Some((i18n::tp(
             "rs.dailyShare",
             &[
                 ("date", &today()),
@@ -1565,10 +1567,10 @@ fn share_daily() {
                 ("acc", &acc.to_string()),
                 ("b", &e.best_pot.to_string()),
             ],
-        ))
+        ), score))
     });
-    if let Some(t) = text {
-        crate::share::share_text(&t);
+    if let Some((t, score)) = text {
+        crate::share::share_card(crate::share::card("rs.name", score.to_string(), i18n::t("card.points"), None), t);
     }
 }
 

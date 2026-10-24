@@ -121,7 +121,8 @@ pub fn share_daily(correct: u32, total: u32, streak: u32) {
     } else {
         tp("share.daily", &[("c", &correct.to_string()), ("t", &total.to_string())])
     };
-    share_text(&text);
+    let line = (streak > 1).then(|| tp("daily.streakDays", &[("n", &streak.to_string())]));
+    share_card(card("widget.daily.name", format!("{correct}/{total}"), crate::i18n::t("card.score"), line), text);
 }
 
 /// Open the native share sheet with the player's current chain result.
@@ -137,11 +138,47 @@ pub fn share_practice(lang: &str) {
         .map(|(_, n, _, _)| *n)
         .unwrap_or(lang);
     let text = crate::i18n::tp("practice.shareText", &[("lang", name)]);
+    share_card(card("tools.practice.name", "20".into(), crate::i18n::tp("card.practice", &[("lang", name)]), None), text);
+}
+
+/// CC-VISUAL-ECLIPSE F11: share a result card. With visual.cards on and a
+/// native share sheet, the card image goes with the text; otherwise, the text
+/// alone, as before. Kid Mode never shares (share_image / share_text refuse).
+pub(crate) fn share_card(spec: crate::result_card::CardSpec, text: String) {
+    if crate::flags::visual_cards() {
+        if let (Some(fs), Some(share)) = (cap_plugin("Filesystem"), cap_share()) {
+            let seed = crate::result_card::seed_for(&spec.mode, &crate::daily::today());
+            if let Some(url) = crate::result_card::render_png(&spec, &crate::result_card::live_palette(), seed) {
+                if let Some(b64) = url.split(',').nth(1) {
+                    share_image(fs, share, text, b64.to_string());
+                    return;
+                }
+            }
+        }
+    }
     share_text(&text);
+}
+
+/// The card fields every caller fills the same way.
+pub(crate) fn card(mode_key: &str, hero: String, hero_label: String, line: Option<String>) -> crate::result_card::CardSpec {
+    crate::result_card::CardSpec {
+        mode: crate::i18n::t(mode_key),
+        hero,
+        hero_label,
+        line,
+        lang: crate::i18n::current(),
+        tagline: crate::i18n::t("card.tagline"),
+    }
 }
 
 pub fn share_result(streak: u32, best: u32) {
     let text = build_message(streak, best);
+    if crate::flags::visual_cards() {
+        let (hero, label) = if streak > 0 { (streak, "card.chain") } else { (best, "card.bestChain") };
+        let line = (streak > 0 && best > 0).then(|| crate::i18n::tp("card.bestLine", &[("n", &best.to_string())]));
+        share_card(card("top.spellIt", hero.to_string(), crate::i18n::t(label), line), text);
+        return;
+    }
 
     // Native app: render a card image, cache it, and share the file.
     if let (Some(fs), Some(share)) = (cap_plugin("Filesystem"), cap_share()) {

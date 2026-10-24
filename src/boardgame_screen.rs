@@ -1901,7 +1901,10 @@ fn share() {
         order.iter().position(|&s| !u.game.players[s as usize].seat.npc).map(|p| p + 1).unwrap_or(1)
     })
     .unwrap_or(1);
-    crate::share::share_text(&i18n::tp("bg.shareText", &[("n", &place.to_string())]));
+    crate::share::share_card(
+        crate::share::card("bg.name", format!("#{place}"), i18n::t("card.place"), None),
+        i18n::tp("bg.shareText", &[("n", &place.to_string())]),
+    );
 }
 
 // ---------------------------------------------------------------------- seam

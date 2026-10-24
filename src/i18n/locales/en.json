@@ -1,4 +1,12 @@
 {
+  "card.chain": "word chain",
+  "card.bestChain": "best chain",
+  "card.bestLine": "best: {n}",
+  "card.tagline": "hear it · spell it",
+  "card.practice": "first words in {lang}",
+  "card.place": "place",
+  "card.points": "points",
+  "card.score": "correct",
   "celebrate.newBest": "New personal best: {n} in a row!",
   "celebrate.perfect": "Perfect run: 10 in a row, no misses!",
   "celebrate.rankUp": "Up to #{rank} on The Climb!",

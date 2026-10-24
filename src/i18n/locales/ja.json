@@ -1,4 +1,12 @@
 {
+  "card.chain": "つづり連続",
+  "card.bestChain": "ベスト連続",
+  "card.bestLine": "ベスト：{n}",
+  "card.tagline": "聞いて・つづる",
+  "card.practice": "{lang}のはじめての単語",
+  "card.place": "位",
+  "card.points": "ポイント",
+  "card.score": "正解",
   "celebrate.newBest": "自己ベスト更新：{n}問連続！",
   "celebrate.perfect": "パーフェクト：10問連続、ミスなし！",
   "celebrate.rankUp": "The Climbで{rank}位に上がったよ！",

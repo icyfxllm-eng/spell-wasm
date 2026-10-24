@@ -270,7 +270,13 @@
     "settings.keyFeelSmall",
     "celebrate.newBest",
     "celebrate.perfect",
-    "celebrate.rankUp"
+    "celebrate.rankUp",
+    "card.chain",
+    "card.bestChain",
+    "card.bestLine",
+    "card.tagline",
+    "card.practice",
+    "card.score"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -549,7 +555,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -818,7 +830,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1087,7 +1105,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1356,7 +1380,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1625,7 +1655,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1894,7 +1930,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2163,7 +2205,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2432,7 +2480,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2701,7 +2755,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2970,7 +3030,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3239,7 +3305,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3508,7 +3580,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3777,7 +3855,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -4046,7 +4130,13 @@
       "settings.keyFeelSmall",
       "celebrate.newBest",
       "celebrate.perfect",
-      "celebrate.rankUp"
+      "celebrate.rankUp",
+      "card.chain",
+      "card.bestChain",
+      "card.bestLine",
+      "card.tagline",
+      "card.practice",
+      "card.score"
     ]
   }
 }

@@ -1,4 +1,12 @@
 {
+  "card.chain": "цепочка слов",
+  "card.bestChain": "лучшая цепочка",
+  "card.bestLine": "рекорд: {n}",
+  "card.tagline": "слушай · пиши",
+  "card.practice": "первые слова: {lang}",
+  "card.place": "место",
+  "card.points": "очки",
+  "card.score": "верно",
   "celebrate.newBest": "Новый личный рекорд: {n} подряд!",
   "celebrate.perfect": "Идеальная серия: 10 подряд без ошибок!",
   "celebrate.rankUp": "Ты поднялся на {rank}-е место в The Climb!",

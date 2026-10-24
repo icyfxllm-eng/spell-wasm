@@ -1,4 +1,12 @@
 {
+  "card.chain": "Wortkette",
+  "card.bestChain": "beste Kette",
+  "card.bestLine": "Bestwert: {n}",
+  "card.tagline": "hören · buchstabieren",
+  "card.practice": "erste Wörter auf {lang}",
+  "card.place": "Platz",
+  "card.points": "Punkte",
+  "card.score": "richtig",
   "celebrate.newBest": "Neue Bestleistung: {n} in Folge!",
   "celebrate.perfect": "Perfekte Runde: 10 in Folge, kein Fehler!",
   "celebrate.rankUp": "Hoch auf Platz {rank} bei The Climb!",

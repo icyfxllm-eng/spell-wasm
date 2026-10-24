@@ -644,6 +644,14 @@ pub fn visual_celebrate() -> bool {
     resolve(stored("visual_celebrate").as_deref(), false)
 }
 
+/// CC-VISUAL-ECLIPSE `visual.cards` (Phase D, F11): the 1080x1350 result card
+/// in the player's colours for the chain, Daily, Practice, Board Game and
+/// Randospell. **Default OFF** (V-D22), killable as `visual_cards`. Off:
+/// sharing is exactly as it was.
+pub fn visual_cards() -> bool {
+    resolve(stored("visual_cards").as_deref(), false)
+}
+
 /// CC-SPELL-KEYBOARD `keyboard.core` (Phase A: KF1, KF2, KF10): every on-screen
 /// key grid renders and dispatches through the one shared keyboard
 /// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
@@ -745,9 +753,9 @@ mod tests {
     #[test]
     fn visual_icons_ships_dark() {
         set_test_override(None);
-        assert!(!visual_icons() && !visual_celebrate(), "Phase D ships dark until a build turns it on (V-D22)");
+        assert!(!visual_icons() && !visual_celebrate() && !visual_cards(), "Phase D ships dark until a build turns it on (V-D22)");
         set_test_override(Some("on"));
-        assert!(visual_icons() && visual_celebrate());
+        assert!(visual_icons() && visual_celebrate() && visual_cards());
         set_test_override(None);
     }
 

@@ -1,4 +1,12 @@
 {
+  "card.chain": "łańcuch słów",
+  "card.bestChain": "najlepszy łańcuch",
+  "card.bestLine": "rekord: {n}",
+  "card.tagline": "posłuchaj · przeliteruj",
+  "card.practice": "pierwsze słowa: {lang}",
+  "card.place": "miejsce",
+  "card.points": "punkty",
+  "card.score": "poprawnie",
   "celebrate.newBest": "Nowy rekord: {n} z rzędu!",
   "celebrate.perfect": "Idealna seria: 10 z rzędu bez błędu!",
   "celebrate.rankUp": "Awans na {rank}. miejsce w The Climb!",

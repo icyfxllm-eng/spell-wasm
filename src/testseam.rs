@@ -93,6 +93,33 @@ pub fn install(app: &App) {
         });
         set(&obj, "celebrations", cb.into_js_value());
     }
+    {
+        // CC-VISUAL-ECLIPSE F11 / AT-26. Renders a card from a spec, palette and
+        // seed and returns the PNG data URL -- the renderer, not a share.
+        let cb = Closure::<dyn Fn(String) -> String>::new(|json: String| {
+            let v: serde_json::Value = serde_json::from_str(&json).unwrap_or_default();
+            let s = |k: &str| v.get(k).and_then(|x| x.as_str()).unwrap_or("").to_string();
+            let spec = crate::result_card::CardSpec {
+                mode: s("mode"),
+                hero: s("hero"),
+                hero_label: s("heroLabel"),
+                line: v.get("line").and_then(|x| x.as_str()).map(str::to_string),
+                lang: s("lang"),
+                tagline: s("tagline"),
+            };
+            let mut p = crate::result_card::live_palette();
+            if let Some(o) = v.get("palette") {
+                let g = |k: &str, d: &str| o.get(k).and_then(|x| x.as_str()).unwrap_or(d).to_string();
+                p.bg = g("bg", &p.bg);
+                p.orb = g("orb", &p.orb);
+                p.glow = g("glow", &p.glow);
+                p.accent = g("accent", &p.accent);
+            }
+            let seed = v.get("seed").and_then(|x| x.as_u64()).unwrap_or(1) as u32;
+            crate::result_card::render_png(&spec, &p, seed).unwrap_or_default()
+        });
+        set(&obj, "renderCard", cb.into_js_value());
+    }
     // Spell Picture keeps its own feed, so the base game's currentWord is
     // not the picture's. CC-FINALE Done #2 needs a picture played to
     // completion to reach the reveal at all. Absent on the site build with

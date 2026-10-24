@@ -1,4 +1,12 @@
 {
+  "card.chain": "chuỗi từ",
+  "card.bestChain": "chuỗi tốt nhất",
+  "card.bestLine": "kỷ lục: {n}",
+  "card.tagline": "nghe · đánh vần",
+  "card.practice": "những từ đầu tiên bằng {lang}",
+  "card.place": "hạng",
+  "card.points": "điểm",
+  "card.score": "đúng",
   "celebrate.newBest": "Kỷ lục mới: đúng {n} từ liên tiếp!",
   "celebrate.perfect": "Hoàn hảo: 10 từ liên tiếp, không sai từ nào!",
   "celebrate.rankUp": "Lên hạng {rank} ở The Climb!",

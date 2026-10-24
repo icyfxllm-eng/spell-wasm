@@ -1,4 +1,12 @@
 {
+  "card.chain": "단어 연속",
+  "card.bestChain": "최고 연속",
+  "card.bestLine": "최고: {n}",
+  "card.tagline": "듣고 · 철자 쓰기",
+  "card.practice": "{lang} 첫 단어들",
+  "card.place": "등",
+  "card.points": "점",
+  "card.score": "정답",
   "celebrate.newBest": "새 개인 최고 기록: 연속 {n}개!",
   "celebrate.perfect": "완벽한 판: 10개 연속, 실수 없이!",
   "celebrate.rankUp": "The Climb {rank}위로 올라갔어요!",

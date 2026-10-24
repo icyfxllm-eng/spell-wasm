@@ -1,4 +1,12 @@
 {
+  "card.chain": "连续拼对",
+  "card.bestChain": "最佳连续",
+  "card.bestLine": "最佳：{n}",
+  "card.tagline": "听 · 拼",
+  "card.practice": "{lang}的第一批单词",
+  "card.place": "名次",
+  "card.points": "分",
+  "card.score": "答对",
   "celebrate.newBest": "个人新纪录：连续 {n} 个！",
   "celebrate.perfect": "完美一轮：连续 10 个，零失误！",
   "celebrate.rankUp": "The Climb 排名升到第 {rank} 名！",

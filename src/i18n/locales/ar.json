@@ -1,4 +1,12 @@
 {
+  "card.chain": "سلسلة كلمات",
+  "card.bestChain": "أفضل سلسلة",
+  "card.bestLine": "الأفضل: {n}",
+  "card.tagline": "استمع · تهجَّ",
+  "card.practice": "أولى الكلمات في {lang}",
+  "card.place": "المركز",
+  "card.points": "نقاط",
+  "card.score": "صحيحة",
   "celebrate.newBest": "رقم قياسي شخصي جديد: {n} على التوالي!",
   "celebrate.perfect": "جولة مثالية: 10 على التوالي بلا أخطاء!",
   "celebrate.rankUp": "صعدت إلى المركز {rank} في The Climb!",

@@ -1,4 +1,12 @@
 {
+  "card.chain": "cadena de palabras",
+  "card.bestChain": "mejor cadena",
+  "card.bestLine": "mejor: {n}",
+  "card.tagline": "escúchala · deletréala",
+  "card.practice": "primeras palabras en {lang}",
+  "card.place": "puesto",
+  "card.points": "puntos",
+  "card.score": "aciertos",
   "celebrate.newBest": "¡Nuevo récord personal: {n} seguidas!",
   "celebrate.perfect": "¡Racha perfecta: 10 seguidas sin fallos!",
   "celebrate.rankUp": "¡Subes al n.º {rank} en The Climb!",

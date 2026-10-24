@@ -1,4 +1,12 @@
 {
+  "card.chain": "mfululizo wa maneno",
+  "card.bestChain": "mfululizo bora",
+  "card.bestLine": "bora: {n}",
+  "card.tagline": "sikiliza · tahajia",
+  "card.practice": "maneno ya kwanza kwa {lang}",
+  "card.place": "nafasi",
+  "card.points": "pointi",
+  "card.score": "sahihi",
   "celebrate.newBest": "Rekodi mpya binafsi: {n} mfululizo!",
   "celebrate.perfect": "Mzunguko kamili: 10 mfululizo bila kosa!",
   "celebrate.rankUp": "Umepanda hadi nafasi ya {rank} kwenye The Climb!",

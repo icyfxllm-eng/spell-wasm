@@ -1,4 +1,12 @@
 {
+  "card.chain": "शब्दों की लड़ी",
+  "card.bestChain": "सबसे लंबी लड़ी",
+  "card.bestLine": "सर्वश्रेष्ठ: {n}",
+  "card.tagline": "सुनो · वर्तनी लिखो",
+  "card.practice": "{lang} के पहले शब्द",
+  "card.place": "स्थान",
+  "card.points": "अंक",
+  "card.score": "सही",
   "celebrate.newBest": "नया निजी रिकॉर्ड: लगातार {n}!",
   "celebrate.perfect": "परफ़ेक्ट रन: लगातार 10, कोई ग़लती नहीं!",
   "celebrate.rankUp": "The Climb में {rank}वें स्थान पर पहुँचे!",
