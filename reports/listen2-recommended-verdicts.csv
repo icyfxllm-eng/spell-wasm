@@ -1,0 +1,27 @@
+﻿lang,word,verdict,other_spelling,confidence,listen_for_or_why
+es,ame,clear,,LISTEN,Both wrote 'Amén'. Is the stress on the A (AME) with no n at the end? Yes = clear. Hear 'aMÉN' = bad
+es,celo,clear,,high,"Large recogniser right. Onset spectrum looks like Spain 'th' (θ), not s; see note on the es sheet"
+es,curro,unsure,curo,LISTEN,Is the rr a clear roll (trill)? Yes = clear. A single tap = other spelling 'curo'
+ru,рей,bad,,LISTEN,Both recognisers heard only 'И'. Can you hear the р? No = bad. Rare word; dropping it costs little
+ru,як,clear,,high,Large recogniser right
+de,Blöcke,clear,,high,"Large recogniser right, umlaut included"
+ko,대교,unsure,대경,LISTEN,Both heard a -경 ending (대경 is a real word). Does it end on an open 요 with no ㅇ? Yes = clear
+ko,뜬,clear,,high,Large recogniser right
+ko,뽕,unsure,뿅,LISTEN,"Recognisers disagree on the vowel (뿅 / 뿡, both real). Is it a plain ㅗ? Yes = clear"
+ko,일전,clear,,high,Large recogniser right; the small one just wrote a number
+ko,죄악,unsure,최악,LISTEN,"BOTH heard aspirated ㅊ (최악 = 'worst', very common). Is there a puff of air on the first consonant? Yes = other spelling 최악"
+pl,law,clear,,LISTEN,"Recognisers drifted into English. Polish says it [laf] and no other Polish spelling fits. PURITY: confirm it's the lawa form and not the English word, given 'mass' was in this bank"
+pl,rejs,clear,,high,'Reis' is the correct sound [rɛjs]; the recogniser just used the wrong language
+pl,ruski,clear,,high,Large recogniser right; the content-policy note from the Polish sheet still stands
+fr,carreau,bad,,LISTEN,Both failed (whole sentence / 'Ciao'). Can you hear the k at the start? No = bad. Same lemma: carreaux sounds identical
+fr,drap,unsure,,LISTEN,"Large heard 'D'or'. Is the vowel a (dra), not o? Yes = clear. Same lemma: draps sounds identical"
+fr,piment,clear,,high,Large recogniser right. Same lemma: piments sounds identical
+fr,salué,unsure,,LISTEN,Recognisers heard 'Salut'. Is there an -ué glide at the end? Yes = clear. Same lemma: saluer/saluez/saluée/salués all sound identical
+fr,sèvres,clear,,high,Large recogniser right. Same lemma: sèvre sounds identical
+fr,terminaux,clear,,high,Large recogniser right
+pt,anais,clear,,high,Large recogniser right
+pt,hilário,clear,,high,Large recogniser right
+pt,magnífica,clear,,high,Large recogniser right
+pt,ouçam,clear,,high,Large recogniser right
+pt,signos,clear,,LISTEN,"Both heard 'siga-nos': Brazilian speech adds an i (sig-i-nos), which is normal. Is it one word, not a phrase? Yes = clear"
+pt,sê,other,cê,high,"No listening needed: 'cê' (the letter C, and short for você) is pronounced [se] in Brazilian Portuguese"
