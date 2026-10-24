@@ -399,10 +399,17 @@
       // every subscriber, so two live sets would double-deliver — drop the old one.
       if (letterCleanup) { try { letterCleanup(); } catch (e) {} }
       var handles = [];
+      // CC-ECLIPSE-HOTFIX F4: the on-screen capture readout. It stays null in
+      // every release build, because build-web.sh cuts the SPELL-DIAG region
+      // below; dev and test builds fill it in.
+      var diagBar = null;
       function cleanup() {
         handles.forEach(function (h) { try { h && h.remove && h.remove(); } catch (e) {} });
         handles = [];
         if (letterCleanup === cleanup) letterCleanup = null;
+        // The readout belongs to a live capture. Before this it was never
+        // re-hidden, so it rode along into every mode after the first mic use.
+        if (diagBar) diagBar.hide();
       }
       letterCleanup = cleanup;
       // addListener resolves to a handle; keep it so we can remove() on teardown.
@@ -414,53 +421,78 @@
           handles.push(pr);
         }
       }
+      function trail(kind, text) { if (diagBar) diagBar.trail(kind, text); }
       sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); trail('T', d && d.token); });
-      // What the RECOGNIZER actually returned, as a trail of partials, rendered
-      // from JS on the MAIN thread. The native diag line is assembled inside the
-      // audio tap callback, where reading the transcript would race the
-      // recognizer's own writes -- and where instrumentation has already stalled
-      // capture once (build 266). Behind the dev door, because a transcript is
-      // the player's speech (D9).
-      function trail(kind, text) {
-        if (!devDoorOpen()) return;
-        var t = window.__tokTrail || (window.__tokTrail = []);
-        // What the player SEES after this event. The question the trail has to
-        // answer is which event doubled a letter, and that is only visible by
-        // reading the box after each one.
-        var box = '';
-        try { box = (document.getElementById('spellbox') || {}).textContent || ''; } catch (e) {}
-        box = box.replace(/\s+/g, '');
-        var label = kind === 'BND' ? 'B' : kind + ':' + text;
-        var last = t[t.length - 1];
-        // Boundaries fire on a 1.4s timer and flooded all eight slots, pushing
-        // the partials -- the actual evidence -- off the end. Collapse a run.
-        if (kind === 'BND' && last && last.n && last.label === 'B' && last.box === box) {
-          last.n += 1;
-          render(t);
-          return;
-        }
-        t.push({ label: label, box: box, n: 1 });
-        if (t.length > 10) t.shift();
-        render(t);
-      }
-      function render(t) {
-        // Checked HERE as well as at every call site: this function paints the
-        // overlay, so the door belongs with the painting, not only with the
-        // callers who happen to remember.
-        if (!devDoorOpen()) return;
-        var el = document.getElementById('voiceSpellDiag');
-        if (!el) return;
-        el.hidden = false;
-        var parts = t.map(function (e) {
-          return e.label + (e.n > 1 ? 'x' + e.n : '') + '>' + (e.box || '-');
-        });
-        el.textContent = (window.__lastLetterDiag ? 'diag: ' + window.__lastLetterDiag + '\n' : '')
-          + parts.join('  ');
-      }
       function devDoorOpen() {
         try { return localStorage.getItem('spell_dev_entitlements') === 'on'; }
         catch (e) { return false; }
       }
+      /* SPELL-DIAG:BEGIN — dev and test builds only. scripts/build-web.sh cuts
+         this region from every release build, TestFlight and the App Store alike
+         (they are one binary), so no player build carries the readout or its
+         strings (CC-ECLIPSE-HOTFIX F4, D3, I7). */
+      diagBar = (function () {
+        // Default OFF, even in a dev build: its own switch in the dev menu,
+        // separate from test entitlements (I8).
+        function on() {
+          try { return localStorage.getItem('spell_diag_bar') === 'on'; }
+          catch (e) { return false; }
+        }
+        function el() { return document.getElementById('voiceSpellDiag'); }
+        // What the RECOGNIZER actually returned, as a trail of partials, rendered
+        // from JS on the MAIN thread. The native diag line is assembled inside the
+        // audio tap callback, where reading the transcript would race the
+        // recognizer's own writes -- and where instrumentation has already stalled
+        // capture once (build 266). Behind the dev door too, because a transcript
+        // is the player's speech (D9).
+        function trailOne(kind, text) {
+          if (!on() || !devDoorOpen()) return;
+          var t = window.__tokTrail || (window.__tokTrail = []);
+          // What the player SEES after this event. The question the trail has to
+          // answer is which event doubled a letter, and that is only visible by
+          // reading the box after each one.
+          var box = '';
+          try { box = (document.getElementById('spellbox') || {}).textContent || ''; } catch (e) {}
+          box = box.replace(/\s+/g, '');
+          var label = kind === 'BND' ? 'B' : kind + ':' + text;
+          var last = t[t.length - 1];
+          // Boundaries fire on a 1.4s timer and flooded all eight slots, pushing
+          // the partials -- the actual evidence -- off the end. Collapse a run.
+          if (kind === 'BND' && last && last.n && last.label === 'B' && last.box === box) {
+            last.n += 1;
+            render(t);
+            return;
+          }
+          t.push({ label: label, box: box, n: 1 });
+          if (t.length > 10) t.shift();
+          render(t);
+        }
+        function render(t) {
+          // Checked HERE as well as at every call site: this function paints the
+          // overlay, so the gate belongs with the painting, not only with the
+          // callers who happen to remember.
+          if (!on() || !devDoorOpen()) return;
+          var e = el();
+          if (!e) return;
+          e.hidden = false;
+          var parts = (t || []).map(function (x) {
+            return x.label + (x.n > 1 ? 'x' + x.n : '') + '>' + (x.box || '-');
+          });
+          e.textContent = (window.__lastLetterDiag ? 'diag: ' + window.__lastLetterDiag + '\n' : '')
+            + parts.join('  ');
+        }
+        return {
+          trail: trailOne,
+          line: function () { render(window.__tokTrail); },
+          // Mic stopped, errored or superseded: the readout goes with it.
+          hide: function () {
+            var e = el();
+            if (e) { e.hidden = true; e.textContent = ''; }
+            window.__tokTrail = [];
+          },
+        };
+      })();
+      /* SPELL-DIAG:END */
       // CC-SPELLIT-MIC-FIX: the VAD saw 0.35s of quiet after speech, so the
       // letter in flight is finished. Carries no payload — it is only a
       // boundary, and the accumulator needs nothing else.
@@ -480,29 +512,16 @@
         if (end) cleanup();
       });
       sub('letterError', function (d) { if (onError) onError((d && d.code) || 'AUDIO_ERROR'); cleanup(); });
-      // TEMP capture diagnostic: show the mic format + buffer count in the status line
-      // so an on-device "Listening but nothing captured" report is pinpointable without
-      // a debugger. Writes directly to the DOM (no Rust wiring).
+      // The capture diagnostic: mic format, rms, thresholds, buffer counts.
+      // Kept on window.__lastLetterDiag for the Settings readout and logged to
+      // the console in every build; painted on screen only by a dev build's
+      // readout, and only with its switch on (CC-ECLIPSE-HOTFIX F4). It shipped
+      // to every player's screen in 270, and in 298 it stayed up across modes.
       sub('letterDiag', function (d) {
         if (!(d && d.info)) return;
-        window.__lastLetterDiag = d.info;              // persisted for Settings readout
-        // BEHIND THE DEV DOOR. This readout is instrumentation: rms, thresholds,
-        // buffer counts. It was being painted over the app for EVERY player,
-        // because only the raw-transcript trail was gated and this line was not
-        // -- so it shipped to TestFlight in 270 and sat across the title
-        // whenever anyone used the mic. The value is kept on
-        // window.__lastLetterDiag either way, so the Settings readout and any
-        // later report still have it without it being on a player's screen.
-        if (!devDoorOpen()) return;
-        // Its OWN element: the player-facing status owns #voiceSpellStatus and
-        // was overwriting this the moment listening began.
-        var el = document.getElementById('voiceSpellDiag')
-              || document.getElementById('voiceSpellStatus');
-        if (el) {
-          el.hidden = false;
-          var t = window.__tokTrail;
-          if (t && t.length) { render(t); } else { el.textContent = 'diag: ' + d.info; }
-        }
+        window.__lastLetterDiag = d.info;
+        try { console.debug('[mic]', d.info); } catch (e) {}
+        if (diagBar) diagBar.line();
         if (window.__refreshNativeStatus) window.__refreshNativeStatus();
       });
       p.startLetterCapture({
@@ -513,10 +532,7 @@
         serverUrl: (opts && opts.serverUrl) || '',
         // CC-SPELLIT-MIC-FIX D9: the recognizer's raw text joins the diag line
         // only behind the dev door. Same key the rest of the dev door uses.
-        diag: (function () {
-          try { return localStorage.getItem('spell_dev_entitlements') === 'on'; }
-          catch (e) { return false; }
-        })(),
+        'diag': devDoorOpen(),
       }).catch(function (e) {
         if (onError) onError((e && e.message) || 'AUDIO_ERROR');
         cleanup();

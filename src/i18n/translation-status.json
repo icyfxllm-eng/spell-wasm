@@ -287,7 +287,8 @@
     "theme.unlock.chalkboard",
     "theme.unlock.typewriter",
     "theme.unlock.beestage",
-    "theme.unlocked"
+    "theme.unlocked",
+    "wordpic.surpriseShort"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -583,7 +584,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -869,7 +871,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1155,7 +1158,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1441,7 +1445,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1727,7 +1732,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -2013,7 +2019,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2299,7 +2306,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2585,7 +2593,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2871,7 +2880,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -3157,7 +3167,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3443,7 +3454,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3729,7 +3741,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -4015,7 +4028,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -4301,7 +4315,8 @@
       "theme.unlock.chalkboard",
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
-      "theme.unlocked"
+      "theme.unlocked",
+      "wordpic.surpriseShort"
     ]
   }
 }

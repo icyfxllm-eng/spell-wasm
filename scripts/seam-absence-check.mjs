@@ -11,7 +11,10 @@ import { dirname, join } from 'node:path';
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', process.argv[2] || 'dist');
 // CC-LEARNING-ENGINE-L0 R4 (acceptance 12): the dev-only learner inspector is
 // never in a player's build either. Its marker is the panel id it creates.
-const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_preview'];
+// CC-ECLIPSE-HOTFIX F4 (I7): nor is the mic diag readout, its switch, or its
+// 'diag: ' prefix. TestFlight and the App Store ship this same dist.
+const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_preview',
+  'voiceSpellDiag', 'devDiagBar', 'spell_diag_bar', 'diag: '];
 
 function walk(dir) {
   const out = [];

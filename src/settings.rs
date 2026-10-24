@@ -144,6 +144,18 @@ pub fn set_bg_color(app: &App, color: &str) {
     } else {
         dom::set_css_var("--ink-on-bg", best_contrast_ink(color));
     }
+    // CC-ECLIPSE-HOTFIX F1: the page's fade follows how light the PICKED page
+    // is, not the theme. A light pick on Eclipse faded toward black and went
+    // grey under the muted ink; a dark pick on Daybreak faded toward Daybreak's
+    // light second background. No pick leaves it to the theme.
+    if let Some(root) = dom::doc().document_element() {
+        if theme_default {
+            let _ = root.remove_attribute("data-page");
+        } else {
+            let light = best_contrast_ink(color) == DARK_INK;
+            let _ = root.set_attribute("data-page", if light { "light" } else { "dark" });
+        }
+    }
     // --muted-on-bg is derived from --ink-on-bg via CSS color-mix() (see
     // index.html), so it automatically stays legible relative to whichever
     // ink color was just picked, instead of a second independent guess.

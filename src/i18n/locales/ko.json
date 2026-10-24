@@ -847,6 +847,7 @@
   "wordpic.seeAll": "모두 보기 ({n})",
   "wordpic.shareText": "{pic} {lang}로 그림 하나를 통째로 썼어요 — 단어 {n}개!",
   "wordpic.surprise": "놀라게 해줘",
+  "wordpic.surpriseShort": "깜짝",
   "wp.folder.arabic": "아랍 문자",
   "wp.folder.cyrillic": "키릴 문자",
   "wp.folder.devanagari": "데바나가리",

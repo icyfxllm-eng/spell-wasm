@@ -55,6 +55,10 @@ import * as cardsSpec from './specs/cards.mjs';
 import * as themesSpec from './specs/themes.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
+import * as hotfixContrast from './specs/hotfix-contrast.mjs';
+import * as hotfixOverlap from './specs/hotfix-overlap.mjs';
+import * as hotfixGlow from './specs/hotfix-glow.mjs';
+import * as hotfixDiag from './specs/hotfix-diag.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
 import * as myWordsLists from './specs/mywords-lists.mjs';
 import * as spellDoku from './specs/spelldoku.mjs';
@@ -145,6 +149,10 @@ const SPECS = [
   ['celebrate', celebrateSpec],
   ['cards', cardsSpec],
   ['themes', themesSpec],
+  ['hotfix-contrast', hotfixContrast],
+  ['hotfix-overlap', hotfixOverlap],
+  ['hotfix-glow', hotfixGlow],
+  ['hotfix-diag', hotfixDiag],
   ['picker-continue', pickerContinue],
   ['finale-pixels', finalePixels],
   ['platform', platform],

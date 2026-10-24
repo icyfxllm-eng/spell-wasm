@@ -71,6 +71,10 @@ fi
 # scripts/build-notices.mjs, pinned against NOTICES.md by
 # scripts/notices-ship-check.mjs, which also fails if this copy is dropped.
 cp audio-native.js native-language-kit.js telemetry-schema.js manifest.json sw.js notices.html "$DIST/"
+# CC-ECLIPSE-HOTFIX F4 (D3, I7): the mic diag readout is cut from EVERY release
+# build. TestFlight and the App Store ship one binary, so there is no
+# store-only build to cut it from; dev and test builds keep it.
+python3 scripts/cut-diag.py "$DIST"
 cp -r icons "$DIST/icons"
 # Self-hosted web fonts (FIX 1): index.html references ./fonts/*.woff2 locally
 # instead of Google Fonts / jsdelivr, and sw.js precaches them. Must be copied

@@ -112,6 +112,15 @@
       "suppressed_by": null
     },
     {
+      "key": "devDiagBar",
+      "surface": "dev drawer",
+      "state": "(dev only)",
+      "effect": "shows the mic capture readout on the Spell screen during a capture; default off; dev and test builds only, cut from every release build (CC-ECLIPSE-HOTFIX F4)",
+      "test": "tests/e2e/specs/hotfix-diag.mjs",
+      "dev_only": true,
+      "suppressed_by": null
+    },
+    {
       "key": "toolSyllableToggle",
       "surface": "tools",
       "flag": "syllable",

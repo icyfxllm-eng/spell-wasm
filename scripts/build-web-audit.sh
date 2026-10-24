@@ -34,6 +34,8 @@ mkdir -p "$DIST"
 # scripts/build-notices.mjs, pinned against NOTICES.md by
 # scripts/notices-ship-check.mjs, which also fails if this copy is dropped.
 cp index.html audio-native.js native-language-kit.js telemetry-schema.js manifest.json sw.js notices.html "$DIST/"
+# CC-ECLIPSE-HOTFIX F4: no release build carries the mic diag readout.
+python3 scripts/cut-diag.py "$DIST"
 cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
 cp -r pkg-audit "$DIST/pkg"

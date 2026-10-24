@@ -98,6 +98,17 @@ pub fn wire(app: &App) {
         // Re-reflect the surfaces that consult entitlements live.
         crate::photo_list::reflect_visibility(&a_ent);
     });
+    // CC-ECLIPSE-HOTFIX F4: the mic readout's switch, default off. Release builds
+    // cut both the switch and the readout (scripts/cut-diag.py) and carry none of
+    // this code, so not even its storage key is in a player's binary (I7).
+    #[cfg(feature = "dev_preview")]
+    if dom::exists("devDiagBar") {
+        dom::input("devDiagBar").set_checked(crate::storage::get_raw("spell_diag_bar").as_deref() == Some("on"));
+        dom::on::<web_sys::Event, _>("devDiagBar", "change", |_| {
+            let on = dom::input("devDiagBar").checked();
+            crate::storage::set_raw("spell_diag_bar", if on { "on" } else { "off" });
+        });
+    }
     // CC-VISUAL-ECLIPSE A5: the AT-19 frame logger. The switch persists, so a
     // measurement started here survives a relaunch; restore() resumes it.
     crate::frame_log::restore();

@@ -28,6 +28,18 @@ const CEILING_FILE = join(ROOT, 'design/token-ratchet.json');
 // A colour literal. `&#123;` HTML entities and `#[cfg(...)]` attributes are
 // excluded by the lookbehind / the hex-only body.
 const COLOUR = /(?<![&\w])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])|\b(?:rgba?|hsla?)\(/g;
+// CC-ECLIPSE-HOTFIX I3: a named colour (color-named: never) and a hex baked into a
+// data URI (%23rrggbb) are raw colours too. Named colours are only looked for in
+// properties that paint, so an animation called "glow-red" is not one.
+const NAMED = new RegExp(String.raw`(?<![\w-])(?:${'aliceblue|antiquewhite|aqua|aquamarine|azure|beige|bisque|black|blanchedalmond|blue|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen|fuchsia|gainsboro|ghostwhite|gold|goldenrod|gray|green|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightslategrey|lightsteelblue|lightyellow|lime|limegreen|linen|magenta|maroon|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|navy|oldlace|olive|olivedrab|orange|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|purple|rebeccapurple|red|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|silver|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|teal|thistle|tomato|turquoise|violet|wheat|white|whitesmoke|yellow|yellowgreen'})(?![\w-])`, 'gi');
+const URL_HEX = /%23[0-9a-fA-F]{3,8}\b/g;
+const PAINTS = /^(?:color|background(?:-color|-image)?|fill|stroke|border(?:-[a-z-]+)?|outline(?:-color)?|box-shadow|text-shadow|caret-color|accent-color|stop-color|text-decoration(?:-color)?|column-rule(?:-color)?|filter|-webkit-text-fill-color|-webkit-text-stroke(?:-color)?)$/i;
+/** Raw colours in one declaration's value. */
+export function rawIn(prop, value) {
+  let n = (value.match(COLOUR) || []).length + (value.match(URL_HEX) || []).length;
+  if (PAINTS.test(prop.trim())) n += (value.match(NAMED) || []).length;
+  return n;
+}
 const DURATION_DECL = /(?:^|[;{\s])(?:transition|animation)(?:-duration|-delay)?\s*:\s*([^;}]*)/g;
 const DURATION = /(?<![\w.-])\d*\.?\d+m?s\b/g;
 const EXEMPT = /token-exempt:\s*[\w(]/;
@@ -46,8 +58,9 @@ export function scanCss(css, lineOffset = 0) {
   clean.forEach((l, i) => {
     if (CSS_BLOCK_BEGIN.test(lines[i])) inBlock = true;
     // Only declaration values can hold colours: text after a ':' up to ; or }.
-    const values = [...l.matchAll(/:([^;{}]*)/g)].map((m) => m[1]).join(' ');
-    const n = (values.match(COLOUR) || []).length;
+    // Each declaration on the line, as property and value. A selector such as
+    // a:hover has no value after it, so it never reaches rawIn.
+    const n = [...l.matchAll(/([\w-]+)\s*:([^;{}]*)/g)].reduce((t, m) => t + rawIn(m[1], m[2]), 0);
     if (n) {
       if (inBlock || EXEMPT.test(lines[i])) out.exempt += n;
       else out.raw.push({ line: i + 1 + lineOffset, text: lines[i].trim().slice(0, 100) });
@@ -65,8 +78,11 @@ export function scanMarkup(html, lineOffset = 0) {
   let inExempt = false;
   lines.forEach((l, i) => {
     if (/<!--\s*token-exempt:begin:\s*[\w(]/.test(l)) inExempt = true;
-    const attrs = [...l.matchAll(/\b(?:style|fill|stroke|stop-color|color|data-c|value)\s*=\s*"([^"]*)"/g)].map((m) => m[1]).join(' ');
-    const n = (attrs.match(COLOUR) || []).length;
+    const pairs = [...l.matchAll(/\b(style|fill|stroke|stop-color|color|data-c|value)\s*=\s*"([^"]*)"/g)];
+    const attrs = pairs.map((m) => m[2]).join(' ');
+    const n = pairs.reduce((t, m) => t + (m[1] === 'style'
+      ? [...m[2].matchAll(/([\w-]+)\s*:([^;]*)/g)].reduce((u, d) => u + rawIn(d[1], d[2]), 0)
+      : rawIn(['fill', 'stroke', 'stop-color', 'color'].includes(m[1]) ? m[1] : 'data', m[2])), 0);
     if (n) {
       if (inExempt || EXEMPT.test(l)) out.exempt += n;
       else out.raw.push({ line: i + 1 + lineOffset, text: l.trim().slice(0, 100) });
@@ -94,7 +110,8 @@ export function scanRust(src) {
     const skipping = skipDepth >= 0;
     if (!skipping) {
       const strings = [...code.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]).join(' ');
-      const n = (strings.match(COLOUR) || []).length;
+      const n = (strings.match(COLOUR) || []).length + (strings.match(URL_HEX) || []).length
+        + [...strings.matchAll(/([\w-]+)\s*:\s*([^;"]*)/g)].reduce((t, m) => t + (PAINTS.test(m[1]) ? (m[2].match(NAMED) || []).length : 0), 0);
       if (n) {
         if (EXEMPT.test(l)) out.exempt += n;
         else out.raw.push({ line: i + 1, text: l.trim().slice(0, 100) });
@@ -102,6 +119,24 @@ export function scanRust(src) {
     }
     depth += opens - closes;
     if (skipDepth >= 0 && depth <= skipDepth) skipDepth = -1;
+  });
+  return out;
+}
+
+/** JavaScript (I3): string literals of every quote style, outside // and block comments. */
+export function scanJs(src, lineOffset = 0) {
+  const out = { raw: [], exempt: 0, durations: 0 };
+  const code = src.replace(/\/\*[\s\S]*?\*\//g, blank);
+  code.split('\n').forEach((l, i) => {
+    const line = l.replace(/(^|[^:'"\\])\/\/.*$/, '$1');
+    const strings = [...line.matchAll(/'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g)].map((m) => m[1] ?? m[2] ?? m[3]).join(' ');
+    const n = (strings.match(COLOUR) || []).length + (strings.match(URL_HEX) || []).length
+      + [...strings.matchAll(/([\w-]+)\s*:\s*([^;'"`]*)/g)].reduce((t, m) => t + (PAINTS.test(m[1]) ? (m[2].match(NAMED) || []).length : 0), 0)
+      + [...line.matchAll(/\.(?:fillStyle|strokeStyle|color|background)\s*=\s*['"]([^'"]*)['"]/g)].reduce((t, m) => t + (m[1].match(NAMED) || []).length, 0);
+    if (n) {
+      if (EXEMPT.test(src.split('\n')[i] || '')) out.exempt += n;
+      else out.raw.push({ line: i + 1 + lineOffset, text: l.trim().slice(0, 100) });
+    }
   });
   return out;
 }
@@ -135,6 +170,15 @@ export function scanRepo(root = ROOT) {
     const r = a >= 0 ? scanCss(p.slice(a + 7, b), p.slice(0, a + 7).split('\n').length - 1) : { raw: [], exempt: 0, durations: 0 };
     files.push([`${page} <style>`, r]);
   }
+  // CC-ECLIPSE-HOTFIX I3: the shipped JS and index.html's inline scripts.
+  for (const js of ['audio-native.js', 'native-language-kit.js', 'telemetry-schema.js', 'sw.js', 'ocr-shim.js']) {
+    const r = scanJs(readFileSync(join(root, js), 'utf8'));
+    if (r.raw.length || r.exempt) files.push([js, r]);
+  }
+  for (const m of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)) {
+    const r = scanJs(m[1], html.slice(0, m.index).split('\n').length - 1);
+    if (r.raw.length || r.exempt) files.push(['index.html <script>', r]);
+  }
   for (const f of walk(join(root, 'src'), '.rs')) {
     const rel = relative(root, f);
     if (rel === 'src/tokens.rs') continue;
@@ -161,6 +205,17 @@ if (process.argv.includes('--selftest')) {
     ['a Rust comment is not', scanRust('// "#ffffff"\nfn f() {}').raw.length === 0],
     ['cfg(test) modules are skipped', scanRust('#[cfg(test)]\nmod tests {\n  fn t() { x("#fff"); }\n}\nfn g() { y("#000"); }').raw.length === 1],
     ['a Rust exempt line', scanRust('fn f() { x("#fff"); } // token-exempt: OCR').exempt === 1],
+    ['a named colour in a painting property is caught (I3)', scanCss('.a{background:color-mix(in srgb, var(--x) 20%, white)}').raw.length === 1],
+    ['a named word in a non-painting property is not', scanCss('.a{animation:glow-red 1s}').raw.length === 0],
+    ['transparent and currentColor are not colours', scanCss('.a{color:currentColor;background:transparent}').raw.length === 0],
+    ['a hex baked into a data URI is caught (I3)', scanCss(".a{background-image:url(\"data:image/svg+xml,%3Cpath stroke='%23968cb4'/%3E\")}").raw.length === 1],
+    ['a named colour in an inline style is caught', scanMarkup('<div style="color:white"></div>').raw.length === 1],
+    ['a named colour in Rust-built CSS is caught', scanRust('fn f() { x("color:white;padding:2px"); }').raw.length === 1],
+    ['a JS colour literal is caught (I3)', scanJs("ctx.fillStyle = '#fff';").raw.length === 1],
+    ['a JS named canvas colour is caught', scanJs("ctx.strokeStyle = 'white';").raw.length === 1],
+    ['a JS comment is not', scanJs("// was '#fff'\nlet a = 1;").raw.length === 0],
+    ['an English word in a JS string is not', scanJs("t('a white lie');").raw.length === 0],
+    ['an English word in a Rust string is not', scanRust('fn f() { t("Tap the red button"); }').raw.length === 0],
   ];
   let bad = 0;
   for (const [name, ok] of cases) { console.log(`  ${ok ? 'ok    ' : 'FAILED'} ${name}`); if (!ok) bad++; }

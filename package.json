@@ -2,7 +2,7 @@
   "name": "spell",
   "version": "1.0.0",
   "private": true,
-  "description": "Spell \u2014 hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
+  "description": "Spell — hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
   "scripts": {
     "i18n:check": "node scripts/i18n-check.mjs",
     "viewport:check": "node scripts/viewport-check.mjs",
@@ -41,6 +41,7 @@
     "@capacitor/share": "^8.0.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@capacitor/assets": "^3.0.5",
     "playwright": "^1.61.1"
   }
