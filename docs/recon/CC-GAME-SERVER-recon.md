@@ -93,6 +93,26 @@ one is a logic diff:
   English input where those two disagree. You must decide which one is "the"
   English grader.
 
+**Addendum (found while checking BoardGame): a pure grader already exists.**
+`boardgame_grade::grade(lang, kid, typed, entry, tier) -> bool`
+(`src/boardgame_grade.rs:25`). Its doc comment says it "mirrors the main game's
+local path" with "no server, no DOM, no clock". It is the closest thing to a
+shared grader, and using it from a server only needs a visibility change.
+
+It is **not** identical to the versus path, though:
+- It accepts every word's `impossible::engine::accepted_alternates`, and runs
+  the RU Impossible grader, in all modes. `submit_guess` does that only for
+  Impossible words.
+- It has no English backend call. It uses the local fold, the same choice
+  D-R1b recommends.
+- It takes no `spoken` reading for zh. It looks the sandhi entry up from the
+  bank entry instead.
+
+So the decision becomes: either promote `boardgame_grade::grade` to the one
+online grader for every mode, accepting those small differences from local
+Head-to-Head, or extract the exact `submit_guess` ladder. BoardGame and
+Randospell online (below) favour the first.
+
 **Minimal plan, if you approve a non-cfg diff:**
 1. Add a pure `grade::verdict(lang, typed, word, kid, GradeCtx { impossible, zh_spoken, tier })`
    holding the existing ladder verbatim, with English resolved locally by the
@@ -460,6 +480,36 @@ CC-GAME-SERVER's phases. It needs its own spec or amendment.
   `playerA/B` in responses for 2-seat matches.
 - **COPPA:** unchanged. It is still account-gated and adult-only, with no kids,
   so CC-SECURITY-BASELINE O2 doesn't block it the way it blocks kid rooms here.
+
+### Randospell and BoardGame online, up to 4 players (Eric 2026-10-24, "eventually")
+
+Eric's direction: both modes eventually get an invite option for up to 3 other
+people. That means rooms of 2-4, which is what O7's default already allows.
+These stay later amendments under G-D9 and use the `ModeRules` trait, so
+nothing changes in v1. They do shape how v1 should be built.
+
+| | BoardGame | Randospell |
+|---|---|---|
+| Engine | Seeded pure reducer: no DOM, clock or float, bit-identical on every target, and a test enforces it (`src/boardgame/mod.rs:1-21`). Built "for local and (later) online play". | Pure state in `src/randospell/`. Head-to-Head is Phase C. |
+| Seats today | `GameConfig::seats: Vec<Seat>`: 1 human + **1-3 NPCs** (`mod.rs:203-209`). That is already 4 seats. | **2 players, hard-coded**: the idle player lives in one `other: PlayerState` field and `pass_turn` swaps it (`mod.rs:32-41, 292`) |
+| Grader | Injected function pointer; the screen passes `boardgame_grade::grade` | The main game's path |
+| Work to reach 4 online humans | Small: turn `npc: bool` seats into human seats, fill empty seats with NPCs (CC-BOARD-GAME D11), and send actions through the room server | Larger: replace `other` with a seat list, generalise the miss bonus roll ("hands the other player ONE bonus roll") and decide how it works with 3+ players |
+| Shared dice/words | One RNG stream in state, so the server owns the seed and every client replays the same game | One dice stream and one word supply already shared between the two players |
+
+What this means for v1, if you agree:
+1. **Size rooms for 4 from day one.** `max_seats` belongs in `ModeRules`, not
+   the room layer. Online H2H sets it to 2, and later modes raise it with no
+   protocol change.
+2. **Use one grader everywhere online:** `boardgame_grade::grade` (see the R1
+   addendum). Then BoardGame's engine already calls exactly what the server
+   calls.
+3. **Turn-based protocol.** BoardGame, Randospell and local H2H are all
+   one-player-on-the-move turn games. That is another reason to pick D-R2 (a):
+   build `turn_start{seat}` / `submit` / `turn_result` once, and all three modes
+   use it.
+4. **Kid rooms.** Both modes have Spell Jr variants (the Jr die, Jr
+   BoardGame), so the G-D13 kid-safe rules apply unchanged, and kid play still
+   waits on CC-SECURITY-BASELINE O2.
 | D-X2 | TTS base = Mac mini over Tailscale (needs Tailscale on the Mac mini) | Yes; fix the spec text |
 | D-X3 | Release rule anchor (replace "build-56") | "Nothing on any `release/*` branch" |
 | D-X4 | Image delivery: GHCR (token) or local build on Rocky | Local build first; GHCR when moving to a VPS |
