@@ -112,7 +112,16 @@ const SCENES = {
   async 'wrong-diff'(browser, d) {
     const { ctx, page } = await open(browser, d);
     let w = await serve(page);
-    for (let i = 0; i < 12 && w.length < 6; i++) { await page.click('#giveupBtn').catch(() => {}); await page.waitForTimeout(400); w = await serve(page); } // sleep-ok: a scene, not a test
+    // A short word makes a thin diff: spell it right and take the next until one has six letters.
+    for (let i = 0; i < 15 && w.length < 6; i++) {
+      await type(page, w);
+      await page.click('#checkBtn');
+      await page.waitForFunction(() => /\bgood\b/.test(document.getElementById('feedback').className), null, { timeout: 8000 });
+      await page.click('#orbWrap');
+      await page.waitForFunction((prev) => { const c = window.__spelltest.currentWord(); return !!c && c !== prev; }, w, { timeout: 8000 });
+      w = await word(page);
+    }
+    if (w.length < 6) throw new Error(`wrong-diff: no word of six letters or more in 15 tries (last ${w})`);
     // A natural misspelling: two neighbouring letters swapped, one left out.
     const typed = w.slice(0, 2) + w[3] + w[2] + w.slice(4, -2) + w.slice(-1);
     await type(page, typed);
@@ -185,7 +194,9 @@ const SCENES = {
     await page.evaluate(() => document.getElementById('rsOpenBtn').click());
     await page.waitForTimeout(800);
     await page.evaluate(() => document.getElementById('rsStart').click());
-    await page.waitForTimeout(1800);
+    await page.waitForTimeout(800);
+    await page.evaluate(() => document.getElementById('rsOrb').click());
+    await page.waitForTimeout(3500);
     const png = await page.screenshot(); await ctx.close(); return png;
   },
 };
