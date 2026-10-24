@@ -92,7 +92,7 @@ export async function run(browser, base, suite) {
       await page.click('#bgOrb');
       await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
       assert(await page.evaluate(() => window.__spelltest.boardgameForce('trap:double')), 'a Double Expert trap staged');
-      assert(await page.$('#bgShift.btn-hide'), 'Shift stays hidden for an ordinary word');
+      assert(!(await page.$('#bgShift.btn-hide')), 'Shift shows for an ordinary German word too');
       const first = (await state()).word.split('|')[0].toLowerCase();
       for (const ch of first) await page.click(`#bgKeys [data-k="u:${ch}"]`);
       const before = await page.evaluate(() => window.__spelltest.boardgameState());

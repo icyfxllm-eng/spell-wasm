@@ -109,6 +109,59 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  await suite.test('Impossible Mix: a German word brings the German keyboard and its Shift', async () => {
+    // Eric 2026-10-24: playing Mix from English, a German word showed the English keyboard -- no
+    // Shift for its capital and no umlauts -- so a right spelling was unreachable.
+    const { ctx, page } = await open(browser, base, { ...ON, spell_flag_impossible_de: 'on', spell_dev_entitlements: 'on' });
+    page.on('dialog', (d) => d.accept()); // the Mix pre-run notice (M3)
+    try {
+      await page.click('#setupChip').catch(() => {});
+      await page.selectOption('#langSel', 'en');
+      await page.selectOption('#levelSel', 'impossible_mix');
+      await clickSettled(page, '#setupDone').catch(() => {});
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      let german = false;
+      for (let i = 0; i < 30 && !german; i++) {
+        const lang = await page.evaluate(() => window.__spelltest.currentLang());
+        const word = await page.evaluate(() => window.__spelltest.currentWord());
+        german = lang === 'de';
+        if (german) {
+          assert(await page.$('#kbShift:not(.btn-hide)'), 'a German Mix word shows the Shift key');
+          assert(await page.$('#gameKeyboard .kb-key[data-k="\u00fc"]'), 'a German Mix word shows the German keyboard (\u00fc)');
+          assert(await answerRight(page, word), `"${word}" typed exactly must be correct in Mix`);
+        } else {
+          assert(await page.$('#kbShift.btn-hide') || !(await page.$('#kbShift')), `no Shift for a ${lang} word`);
+        }
+        if (!german) {
+          // Only en and de are flagged on, so every other word is English.
+          await answerRight(page, word);
+          await page.click('#orbWrap');
+          await page.waitForFunction((w) => !!window.__spelltest.currentWord() && window.__spelltest.currentWord() !== w, word, { timeout: 5000 });
+        }
+      }
+      assert(german, 'no German word came up in 30 Mix words');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('German outside Impossible: the Shift key is there for every word', async () => {
+    const { ctx, page } = await open(browser, base, { spell_dev_entitlements: 'on' });
+    try {
+      await page.click('#setupChip').catch(() => {});
+      await page.selectOption('#langSel', 'de');
+      await clickSettled(page, '#setupDone').catch(() => {});
+      await page.click('#orbWrap').catch(() => {});
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      assert(await page.$('#kbShift:not(.btn-hide)'), 'Shift shows for an ordinary German word');
+      const word = await page.evaluate(() => window.__spelltest.currentWord());
+      await page.click('#kbShift');
+      await page.click(`#gameKeyboard .kb-key[data-k="${word[0].toLowerCase()}"]`);
+      await typeOnKeyboard(page, word.slice(1));
+      await page.click('#checkBtn');
+      await page.waitForFunction(() => /good|bad/.test(document.getElementById('feedback')?.className || ''), null, { timeout: 15000 });
+      assert(await page.$eval('#feedback', (e) => e.className.includes('good')), `"${word}" with a capital first letter is still correct (case folds outside Impossible)`);
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('F4: a signed kill file switches Mix off after it is cached; a tampered one does nothing', async () => {
     for (const [doc, killed] of [[KILL_DOC, true], [KILL_DOC.replace('impossible_mix', 'impossible_xx'), false]]) {
       const { ctx, page } = await open(browser, base, ON);

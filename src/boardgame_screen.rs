@@ -774,9 +774,10 @@ fn render() {
 
         // I11: the key grid exists on screen for a human's spelling only.
         dom::set_hidden("bgSpell", !spelling);
-        // The Shift shows only while a case-strict Impossible trap word is spelled.
+        // The Shift shows whenever a word is spelled (the grid carries one only for a language whose
+        // spelling has capitals). Only the Impossible trap grades case; the rest fold it.
         if dom::exists("bgShift") {
-            let need = spelling && g.pending.as_ref().is_some_and(|p| p.kind == SpellKind::Impossible);
+            let need = spelling;
             dom::toggle_class("bgShift", "btn-hide", !need);
             if !need {
                 set_shift(false);
@@ -1724,7 +1725,7 @@ fn key_tap(e: web_sys::MouseEvent) {
 
 /// One key press, from either keyboard path.
 fn press_key(k: &Key) {
-    // An armed Shift capitalises this letter, once (the Impossible trap word).
+    // An armed Shift capitalises this letter, once (a German grid).
     let upper;
     let k = match k {
         Key::Unit(u) if SHIFT.with(Cell::get) && u.chars().next().is_some_and(char::is_alphabetic) => {

@@ -232,6 +232,12 @@ fn layout_for(locale: &str) -> &'static Layout {
 fn keyboard_locale(app: &App) -> String {
     let s = app.borrow();
     if s.lang != MINE {
+        // Impossible Mix (and a Mix miss replayed from Misses) serves words in languages other than
+        // the study language: the keyboard follows the word, or a German word has no ä/ö/ü/ß and no
+        // Shift for its capitals.
+        if s.impossible_word && s.cur_lang != s.lang && crate::consts::is_builtin_lang(&s.cur_lang) {
+            return s.cur_lang.clone();
+        }
         return s.lang.clone();
     }
     // My Words: match the imported list's "Speak in" language so the right
@@ -259,6 +265,7 @@ fn is_combining(ch: char) -> bool {
 }
 
 pub fn setup(app: &App) {
+    BUILT_LOCALE.with(|b| *b.borrow_mut() = keyboard_locale(app));
     build_keys(app);
     wire_actions(app);
     wire_physical(app);
@@ -272,8 +279,22 @@ pub fn setup(app: &App) {
 /// (physical keyboard, long-press, paste guard) stay wired from `setup`.
 pub fn rebuild(app: &App) {
     close_popover();
+    BUILT_LOCALE.with(|b| *b.borrow_mut() = keyboard_locale(app));
     build_keys(app);
     game::sync_keyboard(app);
+}
+
+thread_local! {
+    /// The locale the keyboard on screen was built for.
+    static BUILT_LOCALE: RefCell<String> = const { RefCell::new(String::new()) };
+}
+
+/// Rebuild the keyboard if the word just served wants a different one (an Impossible Mix word in
+/// another language, or the first ordinary word after one). A no-op otherwise.
+pub fn follow_word(app: &App) {
+    if BUILT_LOCALE.with(|b| *b.borrow() != keyboard_locale(app)) {
+        rebuild(app);
+    }
 }
 
 fn key_button(ch: char, punct: bool, accents: &str) -> String {
@@ -323,8 +344,8 @@ fn build_keys(app: &App) {
     for (ri, letters) in layout.rows.iter().enumerate() {
         html.push_str("<div class=\"kb-row\">");
         if ri == last && locale == "de" {
-            // CC-IMPOSSIBLE-COMPLETE: German Impossible grades capitals. Hidden (inert) unless the
-            // word on screen needs one; see game::toggle_shift.
+            // German words can be typed with capitals in every mode. Hidden (inert) unless the
+            // word on screen is German; see game::toggle_shift.
             html.push_str("<button class=\"kb-key kb-shift btn-hide\" id=\"kbShift\" aria-label=\"shift\">\u{21e7}</button>");
         }
         for c in letters.chars() {
@@ -403,8 +424,8 @@ fn build_keys_shared(app: &App) {
             row
         })
         .collect();
-    // CC-IMPOSSIBLE-COMPLETE: German Impossible grades capitals. Hidden (inert)
-    // unless the word on screen needs one; see game::toggle_shift.
+    // German words can be typed with capitals in every mode. Hidden (inert)
+    // unless the word on screen is German; see game::toggle_shift.
     let shift = if locale == "de" {
         "<button type=\"button\" class=\"kb-key kb-shift btn-hide\" id=\"kbShift\" aria-label=\"shift\">\u{21e7}</button>"
     } else {
@@ -702,9 +723,9 @@ fn wire_physical(app: &App) {
             // for every language; apostrophe/hyphen for My Words / Filipino.
             if c.is_alphabetic() || c.is_ascii_digit() || c == '\'' || c == '-' {
                 e.prevent_default();
-                // Impossible German grades capitals, so a physical Shift keeps its capital there;
-                // everywhere else the key is lowercased exactly as before.
-                let lower = if e.shift_key() && game::impossible_case(&a) { c } else { c.to_lowercase().next().unwrap_or(c) };
+                // A German word keeps a physical Shift's capital (Impossible grades it; every other
+                // mode folds case); every other language lowercases the key exactly as before.
+                let lower = if e.shift_key() && game::word_takes_capitals(&a) { c } else { c.to_lowercase().next().unwrap_or(c) };
                 game::emit_key(&a, lower);
             }
         }
