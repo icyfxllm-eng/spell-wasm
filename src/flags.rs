@@ -687,14 +687,16 @@ pub fn visual_cards() -> bool {
 /// Appearance rows and the earned unlocks. **Default OFF** (V-D22), killable as
 /// `visual_themes`. Off: no data-theme, no rows; unlocks are still recorded.
 pub fn visual_themes() -> bool {
-    resolve(stored("visual_themes").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 298, CC-VISUAL-ECLIPSE Phase E review): on.
+    resolve(stored("visual_themes").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.accents` (Phase E, F10): the study language's
 /// accent on the language chip, progress fills and a light orb tint. **Default
 /// OFF** (V-D22), killable as `visual_accents`.
 pub fn visual_accents() -> bool {
-    resolve(stored("visual_accents").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 298, CC-VISUAL-ECLIPSE Phase E review): on.
+    resolve(stored("visual_accents").as_deref(), true)
 }
 
 pub fn is_on(name: &str) -> bool {
@@ -790,7 +792,8 @@ mod tests {
     #[test]
     fn visual_themes_and_accents_ship_dark() {
         set_test_override(None);
-        assert!(!visual_themes() && !visual_accents(), "Phase E ships dark until a build turns it on (V-D22)");
+        // Release branch for build 298: the build turns them on (V-D22).
+        assert!(visual_themes() && visual_accents(), "build 298 turns Phase E on");
         set_test_override(Some("on"));
         assert!(visual_themes() && visual_accents());
         set_test_override(None);
