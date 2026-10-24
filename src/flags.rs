@@ -637,6 +637,13 @@ pub fn visual_icons() -> bool {
     resolve(stored("visual_icons").as_deref(), false)
 }
 
+/// CC-VISUAL-ECLIPSE `visual.celebrate` (Phase D, F7): big and small
+/// celebrations on the V-D18 triggers. **Default OFF** (V-D22), killable as
+/// `visual_celebrate`. Off: no celebration; achievements keep today's toast.
+pub fn visual_celebrate() -> bool {
+    resolve(stored("visual_celebrate").as_deref(), false)
+}
+
 /// CC-SPELL-KEYBOARD `keyboard.core` (Phase A: KF1, KF2, KF10): every on-screen
 /// key grid renders and dispatches through the one shared keyboard
 /// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
@@ -738,9 +745,9 @@ mod tests {
     #[test]
     fn visual_icons_ships_dark() {
         set_test_override(None);
-        assert!(!visual_icons(), "Phase D icons ship dark until a build turns them on (V-D22)");
+        assert!(!visual_icons() && !visual_celebrate(), "Phase D ships dark until a build turns it on (V-D22)");
         set_test_override(Some("on"));
-        assert!(visual_icons());
+        assert!(visual_icons() && visual_celebrate());
         set_test_override(None);
     }
 

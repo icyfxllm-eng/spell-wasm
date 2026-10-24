@@ -85,6 +85,7 @@ features = [
   "DynamicsCompressorNode",
   "AudioDestinationNode", "OscillatorNode", "OscillatorType",
   "OfflineAudioContext", "BaseAudioContext", "AudioBuffer",
+  "AddEventListenerOptions",
 ]
 
 [profile.release]

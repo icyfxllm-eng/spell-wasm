@@ -267,7 +267,10 @@
     "settings.gameSoundsLevelSmall",
     "settings.hapticsSmall",
     "settings.keyFeel",
-    "settings.keyFeelSmall"
+    "settings.keyFeelSmall",
+    "celebrate.newBest",
+    "celebrate.perfect",
+    "celebrate.rankUp"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -543,7 +546,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -809,7 +815,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1075,7 +1084,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1341,7 +1353,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1607,7 +1622,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1873,7 +1891,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2139,7 +2160,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2405,7 +2429,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2671,7 +2698,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2937,7 +2967,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3203,7 +3236,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3469,7 +3505,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3735,7 +3774,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -4001,7 +4043,10 @@
       "settings.gameSoundsLevelSmall",
       "settings.hapticsSmall",
       "settings.keyFeel",
-      "settings.keyFeelSmall"
+      "settings.keyFeelSmall",
+      "celebrate.newBest",
+      "celebrate.perfect",
+      "celebrate.rankUp"
     ]
   }
 }

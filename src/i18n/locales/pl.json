@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Nowy rekord: {n} z rzędu!",
+  "celebrate.perfect": "Idealna seria: 10 z rzędu bez błędu!",
+  "celebrate.rankUp": "Awans na {rank}. miejsce w The Climb!",
   "acct.changeName": "Zmień nazwę",
   "acct.close": "Zamknij",
   "acct.deleteBtn": "Usuń moje konto",

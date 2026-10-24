@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "नया निजी रिकॉर्ड: लगातार {n}!",
+  "celebrate.perfect": "परफ़ेक्ट रन: लगातार 10, कोई ग़लती नहीं!",
+  "celebrate.rankUp": "The Climb में {rank}वें स्थान पर पहुँचे!",
   "acct.changeName": "यूज़रनेम बदलो",
   "acct.close": "बंद करो",
   "acct.deleteBtn": "मेरा खाता हटाओ",

@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Новый личный рекорд: {n} подряд!",
+  "celebrate.perfect": "Идеальная серия: 10 подряд без ошибок!",
+  "celebrate.rankUp": "Ты поднялся на {rank}-е место в The Climb!",
   "acct.changeName": "Обновить имя",
   "acct.close": "Закрыть",
   "acct.deleteBtn": "Удалить мой аккаунт",

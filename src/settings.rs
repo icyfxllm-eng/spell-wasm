@@ -317,6 +317,7 @@ pub fn apply_settings(app: &App) {
     let _ = body.class_list().toggle_with_force("visual-sound", crate::flags::visual_sound());
     let _ = body.class_list().toggle_with_force("visual-haptics", crate::flags::visual_haptics());
     let _ = body.class_list().toggle_with_force("visual-icons", crate::flags::visual_icons());
+    let _ = body.class_list().toggle_with_force("visual-celebrate", crate::flags::visual_celebrate());
     crate::haptics::configure(s.haptics_on, s.key_feel, s.kid);
     crate::sfx::configure(s.game_sounds, s.game_sound_level);
     dom::input("hapticsToggle").set_checked(s.haptics_on);

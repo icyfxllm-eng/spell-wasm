@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Rekodi mpya binafsi: {n} mfululizo!",
+  "celebrate.perfect": "Mzunguko kamili: 10 mfululizo bila kosa!",
+  "celebrate.rankUp": "Umepanda hadi nafasi ya {rank} kwenye The Climb!",
   "acct.changeName": "Sasisha jina",
   "acct.close": "Funga",
   "acct.deleteBtn": "Futa akaunti yangu",

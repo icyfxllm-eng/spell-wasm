@@ -82,6 +82,17 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> u32>::new(crate::haptics::fired);
         set(&obj, "hapticsFired", cb.into_js_value());
     }
+    {
+        // CC-VISUAL-ECLIPSE F7. Observation only: each celebration played,
+        // ["big"|"small", seconds], and how long a big one still holds.
+        let cb = Closure::<dyn Fn() -> js_sys::Array>::new(|| {
+            crate::celebrate::played()
+                .into_iter()
+                .map(|(s, t)| js_sys::Array::of2(&(if s == crate::celebrate::Size::Big { "big" } else { "small" }).into(), &t.into()))
+                .collect()
+        });
+        set(&obj, "celebrations", cb.into_js_value());
+    }
     // Spell Picture keeps its own feed, so the base game's currentWord is
     // not the picture's. CC-FINALE Done #2 needs a picture played to
     // completion to reach the reveal at all. Absent on the site build with

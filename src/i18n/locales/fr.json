@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Nouveau record perso : {n} d’affilée !",
+  "celebrate.perfect": "Série parfaite : 10 d’affilée, sans faute !",
+  "celebrate.rankUp": "Tu montes au n° {rank} sur The Climb !",
   "acct.changeName": "Mettre à jour le nom",
   "acct.close": "Fermer",
   "acct.deleteBtn": "Supprimer mon compte",

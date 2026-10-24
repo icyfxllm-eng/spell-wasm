@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Neue Bestleistung: {n} in Folge!",
+  "celebrate.perfect": "Perfekte Runde: 10 in Folge, kein Fehler!",
+  "celebrate.rankUp": "Hoch auf Platz {rank} bei The Climb!",
   "acct.changeName": "Benutzername ändern",
   "acct.close": "Schließen",
   "acct.deleteBtn": "Mein Konto löschen",

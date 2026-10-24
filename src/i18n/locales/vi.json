@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Kỷ lục mới: đúng {n} từ liên tiếp!",
+  "celebrate.perfect": "Hoàn hảo: 10 từ liên tiếp, không sai từ nào!",
+  "celebrate.rankUp": "Lên hạng {rank} ở The Climb!",
   "acct.changeName": "Cập nhật tên",
   "acct.close": "Đóng",
   "acct.deleteBtn": "Xóa tài khoản của tôi",

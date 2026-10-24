@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "새 개인 최고 기록: 연속 {n}개!",
+  "celebrate.perfect": "완벽한 판: 10개 연속, 실수 없이!",
+  "celebrate.rankUp": "The Climb {rank}위로 올라갔어요!",
   "acct.changeName": "이름 변경",
   "acct.close": "닫기",
   "acct.deleteBtn": "내 계정 삭제",

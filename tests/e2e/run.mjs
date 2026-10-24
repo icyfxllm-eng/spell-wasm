@@ -50,6 +50,7 @@ import * as orbStates from './specs/orb-states.mjs';
 import * as controlsColor from './specs/controls-color.mjs';
 import * as soundHaptics from './specs/sound-haptics.mjs';
 import * as iconsSpec from './specs/icons.mjs';
+import * as celebrateSpec from './specs/celebrate.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
@@ -139,6 +140,7 @@ const SPECS = [
   ['controls-color', controlsColor],
   ['sound-haptics', soundHaptics],
   ['icons', iconsSpec],
+  ['celebrate', celebrateSpec],
   ['picker-continue', pickerContinue],
   ['finale-pixels', finalePixels],
   ['platform', platform],

@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "Bagong personal best: {n} sunod-sunod!",
+  "celebrate.perfect": "Perpektong takbo: 10 sunod-sunod, walang mali!",
+  "celebrate.rankUp": "Umakyat ka sa #{rank} sa The Climb!",
   "acct.changeName": "I-update ang username",
   "acct.close": "Isara",
   "acct.deleteBtn": "Burahin ang account ko",

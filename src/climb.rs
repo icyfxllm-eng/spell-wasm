@@ -357,6 +357,8 @@ pub fn submit_run(difficulty: &str, chain: u32, duration_ms: f64) {
                 let rank = v.get("rank").and_then(|r| r.as_i64()).unwrap_or(0);
                 let dn = crate::i18n::t(&format!("level.{difficulty}"));
                 dom::show_toast(&crate::i18n::tp("toast.newRecord", &[("rank", &rank.to_string()), ("difficulty", &dn)]));
+                // CC-VISUAL-ECLIPSE F7 / E-Q9: a better rank than the stored one is a rank-up.
+                crate::celebrate::climb_rank(&difficulty, rank.max(0) as u32);
             }
         }
     });

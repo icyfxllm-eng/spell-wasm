@@ -2040,6 +2040,7 @@ pub fn next_word(app: &App) {
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
     crate::orb_view::idle();
+    crate::celebrate::word_active(true);
     dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
     // Voice spelling: any live capture session, its append-base, and its target
     // belong to the OLD word — stop and reset so the new word starts with a clean
@@ -2315,12 +2316,25 @@ fn pick_praise(app: &App) -> String {
 }
 
 fn bump_streak(app: &App) -> u32 {
-    let mut s = app.borrow_mut();
-    s.streak += 1;
-    if s.streak > s.best {
-        s.best = s.streak;
+    let (streak, prev_best, eligible) = {
+        let mut s = app.borrow_mut();
+        let prev_best = s.best;
+        s.streak += 1;
+        if s.streak > s.best {
+            s.best = s.streak;
+        }
+        // CC-VISUAL-ECLIPSE F7 (V-D18): perfect runs and personal bests count in
+        // Normal, Daily and Climb -- not in Spell Off or Misses.
+        (s.streak, prev_best, !s.versus.enabled && !s.review)
+    };
+    for t in crate::celebrate::on_streak(streak, prev_best, eligible) {
+        let msg = match t {
+            crate::celebrate::Trigger::PerfectRun => crate::i18n::t("celebrate.perfect"),
+            _ => crate::i18n::tp("celebrate.newBest", &[("n", &streak.to_string())]),
+        };
+        crate::celebrate::ask(t, msg);
     }
-    s.streak
+    streak
 }
 
 /// CC-ZH-TONE F5 — the teaching note, shown when a tier-1/2 answer passed via
@@ -2438,6 +2452,7 @@ fn on_correct(app: &App) {
         dom::set_text("bestNum", &app.borrow().best.to_string());
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
+        crate::celebrate::word_active(false);
         crate::sfx::verdict(true);
         spell_feedback(true);
         lift_letters(app);
@@ -2467,6 +2482,7 @@ fn on_correct(app: &App) {
         // it (0); the shield/attempt kept the run alive.
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
+        crate::celebrate::word_active(false);
         crate::sfx::verdict(true);
         spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
@@ -2621,6 +2637,7 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
 
     dom::add_class("orbWrap", "bad");
     crate::orb_view::verdict(false);
+    crate::celebrate::word_active(false);
     crate::sfx::verdict(false);
     spell_feedback(false);
     set_streak_tier(0);
@@ -3117,6 +3134,7 @@ fn record_first_miss(app: &App) {
 /// timer. Shared by the extra-attempt and shield-accept flows.
 fn grant_retry(app: &App, feedback_key: &str) {
     app.borrow_mut().answered = false;
+    crate::celebrate::word_active(true);
     crate::attempts::prepare_retry(&mut app.borrow_mut()); // input starts empty (A5)
     dom::set_disabled("checkBtn", false);
     dom::set_disabled("hintBtn", false);
@@ -3127,6 +3145,7 @@ fn grant_retry(app: &App, feedback_key: &str) {
     render_letters(app, false);
     dom::add_class("orbWrap", "bad");
     crate::orb_view::verdict(false);
+    crate::celebrate::word_active(false);
     crate::sfx::verdict(false);
     spell_feedback(false);
     set_streak_tier(0);
@@ -3774,6 +3793,7 @@ fn daily_answer(app: &App, correct: bool) {
         app.borrow_mut().daily.correct += 1;
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
+        crate::celebrate::word_active(false);
         crate::sfx::verdict(true);
         spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
@@ -3783,6 +3803,7 @@ fn daily_answer(app: &App, correct: bool) {
         crate::haptics::incorrect(kid);
         dom::add_class("orbWrap", "bad");
         crate::orb_view::verdict(false);
+        crate::celebrate::word_active(false);
         crate::sfx::verdict(false);
         spell_feedback(false);
         dom::set_text("orbGlyph", "\u{2717}");
@@ -3828,15 +3849,24 @@ fn daily_auto_advance(app: &App, at_idx: usize) {
 /// mid-typing, and the old word's letters then graded as a miss.
 fn schedule_auto_advance(app: &App) {
     let at_serial = app.borrow().word_serial;
-    schedule(app, CORRECT_DELAY_MS, move |app| {
-        let go = {
-            let s = app.borrow();
-            auto_advance_due(s.word_serial, at_serial, s.answered)
-        };
-        if go {
-            next_word(app);
-        }
-    });
+    schedule(app, CORRECT_DELAY_MS, move |app| advance_when_clear(app, at_serial));
+}
+
+/// CC-VISUAL-ECLIPSE F7: a big celebration holds the next word until it ends or
+/// is tapped away, so no celebration ever overlaps an active word.
+fn advance_when_clear(app: &App, at_serial: u64) {
+    let wait = crate::celebrate::remaining_ms();
+    if wait > 0.0 {
+        schedule(app, wait as i32 + 60, move |app| advance_when_clear(app, at_serial));
+        return;
+    }
+    let go = {
+        let s = app.borrow();
+        auto_advance_due(s.word_serial, at_serial, s.answered)
+    };
+    if go {
+        next_word(app);
+    }
 }
 
 /// Pure so the rule can be tested without a DOM: advance only the serve the
@@ -3865,6 +3895,14 @@ fn render_daily_bar(app: &App) {
 }
 
 fn show_daily_result(app: &App, correct: u32, total: u32, streak: u32, best: u32) {
+    // CC-VISUAL-ECLIPSE F7: the result screen is a gap, so these play now.
+    crate::celebrate::word_active(false);
+    if let Some(t) = crate::celebrate::streak_tier(streak) {
+        crate::celebrate::ask(t, crate::i18n::tp("daily.streakDays", &[("n", &streak.to_string())]));
+    }
+    if total >= crate::celebrate::PERFECT_RUN && correct == total {
+        crate::celebrate::ask(crate::celebrate::Trigger::PerfectRun, crate::i18n::t("celebrate.perfect"));
+    }
     dom::set_text("dailyResScore", &format!("{correct}/{total}"));
     dom::set_html("dailyResStreak", &crate::icons::label("flame", &crate::i18n::tp("daily.streakDays", &[("n", &streak.to_string())])));
     dom::set_text("dailyResBest", &crate::i18n::tp("daily.bestStreak", &[("n", &best.to_string())]));
@@ -4269,6 +4307,7 @@ fn versus_on_correct(app: &App) {
 
     dom::add_class("orbWrap", "good");
     crate::orb_view::verdict(true);
+    crate::celebrate::word_active(false);
     crate::sfx::verdict(true);
     spell_feedback(true);
     // Head-to-head warmth rides the active player's current chain.

@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "个人新纪录：连续 {n} 个！",
+  "celebrate.perfect": "完美一轮：连续 10 个，零失误！",
+  "celebrate.rankUp": "The Climb 排名升到第 {rank} 名！",
   "acct.changeName": "更新用户名",
   "acct.close": "关闭",
   "acct.deleteBtn": "删除我的账号",

@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "رقم قياسي شخصي جديد: {n} على التوالي!",
+  "celebrate.perfect": "جولة مثالية: 10 على التوالي بلا أخطاء!",
+  "celebrate.rankUp": "صعدت إلى المركز {rank} في The Climb!",
   "acct.changeName": "تحديث اسم المستخدم",
   "acct.close": "إغلاق",
   "acct.deleteBtn": "احذف حسابي",

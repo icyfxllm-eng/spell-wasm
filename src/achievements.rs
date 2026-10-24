@@ -27,7 +27,14 @@ pub fn unlock(state: &mut AppState, id: &str) {
     save(state);
     render(state);
     if let Some(a) = ACHIEVEMENTS.iter().find(|a| a.id == id) {
-        dom::show_toast(&crate::i18n::t(&format!("ach.{}.nm", a.id)));
+        let name = crate::i18n::t(&format!("ach.{}.nm", a.id));
+        // CC-VISUAL-ECLIPSE F7: with celebrations on, an achievement is a small
+        // celebration (flare + toast); off, today's toast.
+        if crate::flags::visual_celebrate() {
+            crate::celebrate::ask(crate::celebrate::Trigger::Achievement, name);
+        } else {
+            dom::show_toast(&name);
+        }
         crate::sfx::unlock();
     }
 }

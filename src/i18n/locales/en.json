@@ -1,4 +1,7 @@
 {
+  "celebrate.newBest": "New personal best: {n} in a row!",
+  "celebrate.perfect": "Perfect run: 10 in a row, no misses!",
+  "celebrate.rankUp": "Up to #{rank} on The Climb!",
   "acct.changeName": "Update username",
   "acct.close": "Close",
   "acct.deleteBtn": "Delete my account",
