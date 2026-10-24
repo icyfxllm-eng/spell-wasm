@@ -429,7 +429,7 @@ fn submit(app: &App) {
         // move on in the same tick, and render_round clears #beeSpelling, so the
         // shown word was never on screen: hold it for KID_REVEAL_MS first.
         dom::set_text("beeSpelling", target_word);
-        haptics::key_tap();
+        haptics::tap();
         HOLD.with(|c| c.set(true));
         let epoch = EPOCH.with(Cell::get);
         let a = app.clone();
@@ -450,7 +450,7 @@ fn submit(app: &App) {
     } else {
         // D4: the bell, then the spelling shown plainly, then the placement.
         crate::audio_boost::chime();
-        haptics::key_tap();
+        haptics::tap();
         dom::set_text("beeSpelling", target_word);
         finish(Some(ROUND.with(Cell::get)));
     }

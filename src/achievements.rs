@@ -28,6 +28,7 @@ pub fn unlock(state: &mut AppState, id: &str) {
     render(state);
     if let Some(a) = ACHIEVEMENTS.iter().find(|a| a.id == id) {
         dom::show_toast(&crate::i18n::t(&format!("ach.{}.nm", a.id)));
+        crate::sfx::unlock();
     }
 }
 

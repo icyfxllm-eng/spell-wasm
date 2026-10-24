@@ -328,17 +328,17 @@ fn submit() {
     if USED.with(|u| u.borrow().iter().any(|w| shown(w) == word)) {
         flash("dup");
         dom::set_text("cnStatus", &i18n::t("chains.dup"));
-        haptics::key_tap();
+        haptics::tap();
     } else if !crate::word_index::is_valid(&lang, &word) {
         flash("miss");
         dom::set_text("cnStatus", &i18n::t("chains.invalid"));
-        haptics::key_tap();
+        haptics::tap();
     } else if chains::head(&lang, &word).as_deref() != Some(hook.as_str()) {
         // Right word, wrong hook. Named separately so the player learns the
         // rule rather than concluding the word was rejected.
         flash("miss");
         dom::set_text("cnStatus", &i18n::t("chains.nolink"));
-        haptics::key_tap();
+        haptics::tap();
     } else {
         let next = chains::hook(&lang, &word);
         match next {
@@ -377,7 +377,7 @@ fn pass() {
             PASSES.with(|c| c.set(c.get() + 1));
             accept(&lang, w, h);
             dom::set_text("cnStatus", &i18n::t("chains.passed"));
-            haptics::key_tap();
+            haptics::tap();
             CURRENT.with(|c| c.borrow_mut().clear());
             render_all();
             check_exit(&lang);

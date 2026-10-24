@@ -615,6 +615,21 @@ pub fn visual_orb() -> bool {
     resolve(stored("visual_orb").as_deref(), false)
 }
 
+/// CC-VISUAL-ECLIPSE `visual.sound` (Phase C, F5): the synthesized game sounds
+/// and the Game sounds setting. **Default OFF** (V-D22), killable as
+/// `visual_sound`. Off: no sound plays and the Settings rows stay hidden.
+pub fn visual_sound() -> bool {
+    resolve(stored("visual_sound").as_deref(), false)
+}
+
+/// CC-VISUAL-ECLIPSE `visual.haptics` (Phase C, F6): the signed haptic table
+/// (V-D17), the Haptics and Key feel toggles, and the 2-per-word cap. **Default
+/// OFF** (V-D22), killable as `visual_haptics`. Off: today's mapping, no cap,
+/// no toggles.
+pub fn visual_haptics() -> bool {
+    resolve(stored("visual_haptics").as_deref(), false)
+}
+
 /// CC-SPELL-KEYBOARD `keyboard.core` (Phase A: KF1, KF2, KF10): every on-screen
 /// key grid renders and dispatches through the one shared keyboard
 /// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
@@ -711,6 +726,15 @@ mod tests {
                     "{} is in the registry but is_on has no arm for it, so it falls through to \
                      `_ => false` and is on paper only", m.id);
         }
+    }
+
+    #[test]
+    fn visual_sound_and_haptics_ship_dark() {
+        set_test_override(None);
+        assert!(!visual_sound() && !visual_haptics(), "Phase C ships dark until a build turns it on (V-D22)");
+        set_test_override(Some("on"));
+        assert!(visual_sound() && visual_haptics());
+        set_test_override(None);
     }
 
     #[test]

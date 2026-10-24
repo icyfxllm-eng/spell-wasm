@@ -360,7 +360,7 @@ fn judge_cell() {
                 hear();
             }
             Step::WordEnded { expected, .. } => {
-                haptics::incorrect(false);
+                haptics::wrong();
                 dom::set_text("qbdFeed", &i18n::tp("qbd.itWas", &[("c", expected)]));
                 hear();
             }

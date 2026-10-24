@@ -242,6 +242,8 @@ pub fn play_word_with(
     PLAY_START.with(|c| *c.borrow_mut() = Some((crate::telemetry::now_ms(), lang.to_string())));
     crate::frame_log::mark(crate::frame_log::Moment::Speaking);
     crate::orb_view::requested();
+    // CC-VISUAL-ECLIPSE F6: a new word opens a new 2-haptic budget; a replay does not.
+    crate::haptics::word_started(&format!("{lang}|{word}"));
     let mut order = source_order();
     if lang == crate::consts::ZH {
         order.retain(|s| *s != Source::NativeTts);
@@ -321,6 +323,7 @@ fn play_pack(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn 
             Some(src) => {
                 if let Ok(audio) = HtmlAudioElement::new_with_src(&src) {
                     crate::orb_view::watch_element(&audio, &src);
+                    crate::sfx::watch_voice(&audio);
                     audio.set_playback_rate(rate);
                     if audio.play().is_ok() {
                         set_source("pack");
@@ -356,6 +359,7 @@ fn play_human(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn
     }
     audio_boost::wire(&audio);
     crate::orb_view::watch_element(&audio, &src);
+    crate::sfx::watch_voice(&audio);
     let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("preservesPitch"), &JsValue::TRUE);
     let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("webkitPreservesPitch"), &JsValue::TRUE);
     audio.set_playback_rate(crate::human_audio::playback_rate(variant, rate));
@@ -418,6 +422,7 @@ fn play_server_cache(word: &str, py: Option<&str>, variant: &str, rate: f64, lan
                 } else {
                     set_source("server-cache");
                     crate::orb_view::native_started(&native_audio::asset_id(&word, &variant, &lang), rate);
+                    crate::sfx::voice_started_native(rate);
                 }
             });
             return;
@@ -450,6 +455,7 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
         if crate::speech_out::available() {
             let eff_rate = if variant == "slow" { rate.min(0.7) } else { rate };
             crate::orb_view::untracked_started();
+            crate::sfx::voice_started();
             // zh-ok(audio): play_word_with drops Source::NativeTts from zh's order, so a zh
             // word never reaches this source.
             crate::speech_out::speak(word, eff_rate as f32, lang);
@@ -479,9 +485,11 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
         match native_lang::speak(&word, &voice, eff_rate) {
             Some(promise) => {
                 crate::orb_view::untracked_started();
+                crate::sfx::voice_started();
                 let spoke = JsFuture::from(promise).await.is_ok();
                 // The device voice resolves when it has FINISHED speaking.
                 crate::orb_view::untracked_ended();
+                crate::sfx::voice_ended();
                 if spoke {
                     set_source("native-tts");
                 } else {
@@ -536,6 +544,7 @@ fn play_word_html(word: &str, py: Option<&str>, variant: &str, rate: f64, lang: 
         audio_boost::wire(&a);
         // CC-VISUAL-ECLIPSE F3: the orb listens to this element (observe only).
         crate::orb_view::watch_element(&a, &url);
+        crate::sfx::watch_voice(&a);
         a
     };
     audio.set_playback_rate(rate);

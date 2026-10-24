@@ -24,6 +24,12 @@ thread_local! {
     static PENDING_GAIN: RefCell<f32> = RefCell::new(DEFAULT_GAIN);
 }
 
+/// The one shared AudioContext, for the game sounds (CC-VISUAL-ECLIPSE F5:
+/// one audio module owns it). Created on first use, like the word path's.
+pub fn context() -> Option<AudioContext> {
+    ensure_ctx().map(|(ctx, _)| ctx)
+}
+
 pub fn clamp_gain(value: f32) -> f32 {
     value.clamp(MIN_GAIN, MAX_GAIN)
 }

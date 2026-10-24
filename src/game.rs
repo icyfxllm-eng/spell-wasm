@@ -2435,6 +2435,7 @@ fn on_correct(app: &App) {
         dom::set_text("bestNum", &app.borrow().best.to_string());
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
+        crate::sfx::verdict(true);
         spell_feedback(true);
         lift_letters(app);
         set_streak_tier(streak);
@@ -2463,6 +2464,7 @@ fn on_correct(app: &App) {
         // it (0); the shield/attempt kept the run alive.
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
+        crate::sfx::verdict(true);
         spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
         dom::set_text("feedback", &pick_praise(app));
@@ -2615,6 +2617,7 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
 
     dom::add_class("orbWrap", "bad");
     crate::orb_view::verdict(false);
+    crate::sfx::verdict(false);
     spell_feedback(false);
     set_streak_tier(0);
     dom::set_text("orbGlyph", glyph);
@@ -2663,11 +2666,13 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
         );
         dom::el("feedback").set_class_name(feedback_class);
         wire_syllable_replay(app, sylls);
-    } else if let Some(rows) = diff_reveal(app, outcome, &cur_lang, &reveal, &typed) {
+    } else if let Some((in_box, line)) = diff_reveal(app, outcome, &cur_lang, &reveal, &typed) {
         // CC-VISUAL-ECLIPSE F4: "You wrote" / "Correct", the letters marked.
         // Before the cursive branch on purpose: its marks are inline text
-        // decorations, so an Arabic word still joins.
-        dom::set_html("feedback", &rows);
+        // decorations, so an Arabic word still joins. The attempt is marked in
+        // the answer box itself, so the screen keeps its height (AT-4).
+        dom::set_html("letters", &in_box);
+        dom::set_html("feedback", &line);
         dom::el("feedback").set_class_name(feedback_class);
     } else if joins_for(&app.borrow(), &cur_lang) && !typed.is_empty() {
         // Cursive study language, and the player actually typed: per-akshara
@@ -2735,7 +2740,7 @@ fn feedback_mode(s: &AppState) -> (&'static str, Option<&'static str>) {
 /// with an attempt, only where the mode's policy allows a diff, and never for
 /// the reveals that already teach something of their own: Mandarin's
 /// per-syllable tone verdict and Russian's stress mark.
-fn diff_reveal(app: &App, outcome: Outcome, cur_lang: &str, reveal: &str, typed: &str) -> Option<String> {
+fn diff_reveal(app: &App, outcome: Outcome, cur_lang: &str, reveal: &str, typed: &str) -> Option<(String, String)> {
     if !crate::flags::visual_feedback() || outcome != Outcome::Misspelled || cur_lang == crate::consts::ZH {
         return None;
     }
@@ -2748,7 +2753,7 @@ fn diff_reveal(app: &App, outcome: Outcome, cur_lang: &str, reveal: &str, typed:
     if !crate::answer_reveal::may_show(&policy, typed) {
         return None;
     }
-    Some(crate::answer_reveal::rows_html(
+    Some(crate::answer_reveal::boxed(
         &shown_form(cur_lang, reveal),
         typed,
         cur_lang,
@@ -3115,6 +3120,7 @@ fn grant_retry(app: &App, feedback_key: &str) {
     render_letters(app, false);
     dom::add_class("orbWrap", "bad");
     crate::orb_view::verdict(false);
+    crate::sfx::verdict(false);
     spell_feedback(false);
     set_streak_tier(0);
     dom::set_text("orbGlyph", "\u{2717}");
@@ -3761,6 +3767,7 @@ fn daily_answer(app: &App, correct: bool) {
         app.borrow_mut().daily.correct += 1;
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
+        crate::sfx::verdict(true);
         spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
         dom::set_text("feedback", &crate::i18n::t(&format!("praise.{}", rand_index(8) + 1)));
@@ -3769,6 +3776,7 @@ fn daily_answer(app: &App, correct: bool) {
         crate::haptics::incorrect(kid);
         dom::add_class("orbWrap", "bad");
         crate::orb_view::verdict(false);
+        crate::sfx::verdict(false);
         spell_feedback(false);
         dom::set_text("orbGlyph", "\u{2717}");
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&shown_form(&cur_lang, &word))));
@@ -4251,6 +4259,7 @@ fn versus_on_correct(app: &App) {
 
     dom::add_class("orbWrap", "good");
     crate::orb_view::verdict(true);
+    crate::sfx::verdict(true);
     spell_feedback(true);
     // Head-to-head warmth rides the active player's current chain.
     set_streak_tier(app.borrow().versus.active_player().current);

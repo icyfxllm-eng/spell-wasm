@@ -61,6 +61,38 @@ pub fn rows_html(target: &str, attempt: &str, lang: &str, you_label: &str, ok_la
     )
 }
 
+/// The play screen's layout (AT-4): the answer box already shows what the
+/// player typed, so the attempt's marks go there, captioned "You wrote", and the
+/// result line carries the Correct row alone -- the same height as the reveal
+/// it replaces. Returns (answer box, result line).
+pub fn boxed(target: &str, attempt: &str, lang: &str, you_label: &str, ok_label: &str) -> (String, String) {
+    let cells = display_diff(target, attempt);
+    let (mut you, mut ok) = (String::new(), String::new());
+    for c in &cells {
+        if let Some(a) = &c.attempt {
+            you.push_str(&mark(c.op, a, true));
+        }
+        if let Some(t) = &c.target {
+            ok.push_str(&mark(c.op, t, false));
+        }
+    }
+    let dir = crate::consts::dir_attr(lang);
+    let lang_e = escape_html(lang);
+    let boxed = format!(
+        "<span class=\"rd-caption\" aria-hidden=\"true\">{you_l}</span>\
+         <bdi class=\"ltr rd-word reveal-attempt\" lang=\"{lang_e}\" dir=\"{dir}\" aria-label=\"{aria}\">{you}</bdi>",
+        you_l = escape_html(you_label),
+        aria = escape_html(&format!("{you_label}: {}", attempt.trim())),
+    );
+    let line = format!(
+        "<span class=\"reveal-diff\"><span class=\"rd-row rd-ok\" dir=\"{dir}\" role=\"group\" aria-label=\"{aria}\">\
+         <bdi class=\"rd-label\">{ok_l}</bdi> <bdi class=\"rd-word reveal\" lang=\"{lang_e}\" dir=\"{dir}\">{ok}</bdi></span></span>",
+        ok_l = escape_html(ok_label),
+        aria = escape_html(&format!("{ok_label}: {target}")),
+    );
+    (boxed, line)
+}
+
 /// One letter in one row. A letter that is the same in both is bare text, so
 /// a fully right stretch is one run with nothing around it.
 fn mark(op: Op, letter: &str, attempt_row: bool) -> String {
@@ -105,6 +137,17 @@ mod tests {
         assert!(h.contains("<u class=\"rd-missing\">a</u>"), "{h}");
         let h = rows_html("cat", "cot", "en", "You wrote", "Correct");
         assert_eq!(h.matches("<mark class=\"rd-sub\">").count(), 2, "highlighted on both rows");
+    }
+
+    #[test]
+    fn boxed_puts_the_attempt_in_the_box_and_only_correct_on_the_line() {
+        let (b, l) = boxed("cat", "cats", "en", "You wrote", "Correct");
+        assert!(b.contains("rd-caption") && b.contains("<s class=\"rd-extra\">s</s>"), "{b}");
+        assert!(!l.contains("You wrote") && l.contains("Correct") && l.matches("rd-row").count() == 1, "{l}");
+        let (b, _) = boxed("كتاب", "كتب", "ar", "You wrote", "Correct");
+        assert!(b.contains("lang=\"ar\" dir=\"rtl\""), "{b}");
+        let (b, _) = boxed("cat", "<b>", "en", "Y", "C");
+        assert!(!b.contains("<b>"), "{b}");
     }
 
     #[test]

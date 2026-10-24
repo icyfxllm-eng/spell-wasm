@@ -260,7 +260,14 @@
     "aria.btnBlue",
     "aria.btnViolet",
     "aria.btnRose",
-    "aria.btnCustom"
+    "aria.btnCustom",
+    "settings.gameSounds",
+    "settings.gameSoundsSmall",
+    "settings.gameSoundsLevel",
+    "settings.gameSoundsLevelSmall",
+    "settings.hapticsSmall",
+    "settings.keyFeel",
+    "settings.keyFeelSmall"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -529,7 +536,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -788,7 +802,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1047,7 +1068,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1306,7 +1334,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1565,7 +1600,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1824,7 +1866,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2083,7 +2132,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2342,7 +2398,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2601,7 +2664,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -2860,7 +2930,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3119,7 +3196,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3378,7 +3462,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3637,7 +3728,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -3896,7 +3994,14 @@
       "aria.btnBlue",
       "aria.btnViolet",
       "aria.btnRose",
-      "aria.btnCustom"
+      "aria.btnCustom",
+      "settings.gameSounds",
+      "settings.gameSoundsSmall",
+      "settings.gameSoundsLevel",
+      "settings.gameSoundsLevelSmall",
+      "settings.hapticsSmall",
+      "settings.keyFeel",
+      "settings.keyFeelSmall"
     ]
   }
 }

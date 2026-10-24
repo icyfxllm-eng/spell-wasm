@@ -343,7 +343,7 @@ fn submit() {
         // Grey shake. No penalty — the player already earned this one.
         flash("dup");
         dom::set_text("fgStatus", &i18n::t("forge.dup"));
-        haptics::key_tap();
+        haptics::tap();
     } else if playable {
         let (pangram, gained) = PUZZLE.with(|p| {
             p.borrow().as_ref().map_or((false, 0), |p| {
@@ -363,7 +363,7 @@ fn submit() {
         if pangram {
             haptics::correct();
         } else {
-            haptics::key_tap();
+            haptics::tap();
         }
         render_found();
         render_rank();
@@ -371,7 +371,7 @@ fn submit() {
         // Soft bounce. Not red, not a buzz, not a score change.
         flash("miss");
         dom::set_text("fgStatus", &i18n::t("forge.invalid"));
-        haptics::key_tap();
+        haptics::tap();
     }
 
     CURRENT.with(|c| c.borrow_mut().clear());

@@ -2451,7 +2451,7 @@ fn on_typed(app: &App) {
         // At expert the wrong letters STAY — erase-to-recover means the
         // player backspaces them out; the viable-again branch below lifts
         // the charge the moment they have.
-        haptics::key_tap();
+        haptics::tap();
         // A miss never replays the word at tiers where Replay is gated
         // away (feature 5: at expert the word plays once, full stop).
         if audio_gate(&tier).0 {
@@ -2513,7 +2513,7 @@ fn place(app: &App, word: &str) {
     PLACED.with(|c| c.set(placed));
     // CC-LEARNING-ENGINE: a landed word is a validated typed success.
     crate::learner::note_attempt(&lang, word, true, crate::learner::Channel::Typed);
-    haptics::key_tap();
+    haptics::tap();
     let words = s.run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
     render_canvas(p, &lang, &words);
     reflect_count(p);

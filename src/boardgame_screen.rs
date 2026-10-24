@@ -1419,7 +1419,7 @@ fn anim_step(token: u32) {
             crate::frame_log::mark(crate::frame_log::Moment::BoardgameHop);
             if !reduce_motion() {
                 anim_counter("data-ticks");
-                haptics::key_tap();
+                haptics::hop();
             }
             hop_ms
         }
@@ -1635,7 +1635,7 @@ fn orb() {
                 return;
             }
             let walk = after_apply(true);
-            haptics::key_tap();
+            haptics::tap();
             after_roll(walk);
         }
         Phase::AwaitSpelling => {
@@ -1690,7 +1690,7 @@ fn stretch_tap(e: web_sys::MouseEvent) {
     if !ok {
         return;
     }
-    haptics::key_tap();
+    haptics::tap();
     start_spelling();
 }
 

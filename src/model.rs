@@ -12,6 +12,16 @@ pub struct Prefs {
     pub controls_color: Option<String>,
     #[serde(rename = "buttonColor", default)]
     pub button_color: Option<String>,
+    /// CC-VISUAL-ECLIPSE F6: the Haptics and Key feel toggles (default on).
+    #[serde(default)]
+    pub haptics: Option<bool>,
+    #[serde(rename = "keyFeel", default)]
+    pub key_feel: Option<bool>,
+    /// CC-VISUAL-ECLIPSE F5: Game sounds, on at 40% (off in Education Edition).
+    #[serde(rename = "gameSounds", default)]
+    pub game_sounds: Option<bool>,
+    #[serde(rename = "gameSoundLevel", default)]
+    pub game_sound_level: Option<f32>,
     #[serde(rename = "lastLang")]
     pub last_lang: Option<String>,
     pub kid: bool,
@@ -230,6 +240,10 @@ pub struct AppState {
     pub controls_color: String,
     /// Primary buttons (Settings > Buttons). Empty = follow the accent.
     pub button_color: String,
+    pub haptics_on: bool,
+    pub key_feel: bool,
+    pub game_sounds: bool,
+    pub game_sound_level: f32,
     pub last_lang: Option<String>,
     pub kid: bool,
     /// True when a stored "kid" age-gate verdict locks the app in Kid Mode;
@@ -316,6 +330,10 @@ impl Default for AppState {
             orb_color: crate::tokens::COLOR_ORB_CORE.value.into(),
             controls_color: crate::tokens::COLOR_CONTROLS.value.into(),
             button_color: String::new(),
+            haptics_on: true,
+            key_feel: true,
+            game_sounds: crate::sfx::default_on(cfg!(feature = "education")),
+            game_sound_level: crate::sfx::DEFAULT_LEVEL,
             last_lang: None,
             kid: false,
             age_locked: false,

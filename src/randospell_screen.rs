@@ -1171,7 +1171,7 @@ fn listen() {
 
 /// The die has landed: shake, number, glow, haptic.
 fn land_die(len: usize, doubles: bool) {
-    haptics::key_tap();
+    haptics::tap();
     // F1: the orb shakes as the number lands; reduce-motion removes it in CSS.
     dom::add_class("rsOrb", "shake");
     dom::after_ms(450, || dom::remove_class("rsOrb", "shake"));
@@ -1353,7 +1353,7 @@ fn resolve(typed: Option<String>) {
     }
     if out.as_ref().is_some_and(|o| o.retry) {
         // F7: a first miss replays the word and the child tries once more.
-        haptics::incorrect(true);
+        haptics::wrong();
         with_ui(|u| {
             u.spelling = true;
             u.typed.clear();
@@ -1387,7 +1387,7 @@ fn resolve(typed: Option<String>) {
             let pts = out.as_ref().map_or(0, |o| o.points);
             dom::set_text("rsFeed", &i18n::tp("rs.jrRight", &[("n", &pts.to_string())]));
         } else {
-            haptics::incorrect(true);
+            haptics::wrong();
             dom::set_text("rsFeed", &i18n::tp("rs.jrWord", &[("word", crate::boardgame_grade::citation(&word))]));
         }
     } else if correct {
@@ -1395,7 +1395,7 @@ fn resolve(typed: Option<String>) {
         let pts = out.as_ref().map_or(0, |o| o.points);
         dom::set_text("rsFeed", &i18n::tp("rs.plus", &[("n", &pts.to_string())]));
     } else {
-        haptics::incorrect(false);
+        haptics::wrong();
         dom::set_text("rsFeed", &i18n::tp("rs.word", &[("word", crate::boardgame_grade::citation(&word))]));
     }
     if let Some(n) = stolen {

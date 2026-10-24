@@ -71,6 +71,17 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> u32>::new(crate::orb_view::refused);
         set(&obj, "orbRefused", cb.into_js_value());
     }
+    {
+        // CC-VISUAL-ECLIPSE Phase C. Observation only: sounds played and
+        // dropped, and haptics fired (counted before the web no-op).
+        let cb = Closure::<dyn Fn() -> js_sys::Array>::new(|| {
+            let (p, d) = crate::sfx::counts();
+            js_sys::Array::of2(&p.into(), &d.into())
+        });
+        set(&obj, "sfxCounts", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> u32>::new(crate::haptics::fired);
+        set(&obj, "hapticsFired", cb.into_js_value());
+    }
     // Spell Picture keeps its own feed, so the base game's currentWord is
     // not the picture's. CC-FINALE Done #2 needs a picture played to
     // completion to reach the reveal at all. Absent on the site build with

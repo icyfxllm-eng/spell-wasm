@@ -1641,7 +1641,7 @@ fn duel_check() {
     .flatten();
     match r {
         Some(true) => haptics::correct(),
-        Some(false) => haptics::incorrect(false),
+        Some(false) => haptics::wrong(),
         None => return,
     }
     duel_after_action();

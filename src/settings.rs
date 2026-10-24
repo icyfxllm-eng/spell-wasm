@@ -13,6 +13,10 @@ pub fn load_prefs(state: &mut AppState) {
     state.orb_color = p.orb_color.unwrap_or_else(|| crate::tokens::COLOR_ORB_CORE.value.to_string());
     state.controls_color = p.controls_color.unwrap_or_else(|| crate::tokens::COLOR_CONTROLS.value.to_string());
     state.button_color = p.button_color.unwrap_or_default();
+    state.haptics_on = p.haptics.unwrap_or(true);
+    state.key_feel = p.key_feel.unwrap_or(true);
+    state.game_sounds = p.game_sounds.unwrap_or_else(|| crate::sfx::default_on(cfg!(feature = "education")));
+    state.game_sound_level = p.game_sound_level.unwrap_or(crate::sfx::DEFAULT_LEVEL).clamp(0.0, 1.0);
     state.last_lang = p.last_lang;
     state.kid = p.kid;
     state.readable = p.readable;
@@ -44,6 +48,10 @@ pub fn save_prefs(state: &AppState) {
         orb_color: Some(state.orb_color.clone()),
         controls_color: Some(state.controls_color.clone()),
         button_color: Some(state.button_color.clone()),
+        haptics: Some(state.haptics_on),
+        key_feel: Some(state.key_feel),
+        game_sounds: Some(state.game_sounds),
+        game_sound_level: Some(state.game_sound_level),
         last_lang: Some(state.lang.clone()),
         kid: state.kid,
         readable: state.readable,
@@ -304,6 +312,16 @@ pub fn apply_settings(app: &App) {
     // CC-VISUAL-ECLIPSE Phase B: the same, for F4 feedback and the F3 orb.
     let _ = body.class_list().toggle_with_force("visual-feedback", crate::flags::visual_feedback());
     let _ = body.class_list().toggle_with_force("visual-orb", crate::flags::visual_orb());
+    // CC-VISUAL-ECLIPSE Phase C: the Game sounds and Haptics rows show only with
+    // their flags on, and the two modules read the player's choices from here.
+    let _ = body.class_list().toggle_with_force("visual-sound", crate::flags::visual_sound());
+    let _ = body.class_list().toggle_with_force("visual-haptics", crate::flags::visual_haptics());
+    crate::haptics::configure(s.haptics_on, s.key_feel, s.kid);
+    crate::sfx::configure(s.game_sounds, s.game_sound_level);
+    dom::input("hapticsToggle").set_checked(s.haptics_on);
+    dom::input("keyFeelToggle").set_checked(s.key_feel);
+    dom::input("gameSoundsToggle").set_checked(s.game_sounds);
+    dom::input("gameSoundsLevel").set_value(&s.game_sound_level.to_string());
     // CC-SPELL-KEYBOARD Phase A: the shared keyboard's styles key off this class.
     let _ = body.class_list().toggle_with_force("kb-core", crate::flags::keyboard_core());
     dom::input("kidToggle").set_checked(s.kid);

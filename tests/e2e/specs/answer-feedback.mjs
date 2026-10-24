@@ -54,18 +54,19 @@ export async function run(browser, base, suite) {
       await answer(page, typed);
       const r = await page.evaluate(() => {
         const rows = [...document.querySelectorAll('#feedback .rd-row')];
+        const caption = document.querySelector('#letters .rd-caption')?.textContent;
         const text = (sel) => document.querySelector(sel)?.textContent;
         return {
           rows: rows.length,
-          you: text('#feedback .rd-you .reveal'),
+          you: text('#letters .reveal-attempt'),
           ok: text('#feedback .rd-ok .reveal'),
-          extra: [...document.querySelectorAll('#feedback .rd-you s.rd-extra')].map((e) => e.textContent),
-          labels: rows.map((r) => r.querySelector('.rd-label').textContent),
+          extra: [...document.querySelectorAll('#letters .reveal-attempt s.rd-extra')].map((e) => e.textContent),
+          labels: [caption, ...rows.map((r) => r.querySelector('.rd-label').textContent)],
           orb: getComputedStyle(document.querySelector('#orbWrap .orb')).animationName,
-          wordColour: getComputedStyle(document.querySelector('#feedback .rd-you .reveal')).color,
+          wordColour: getComputedStyle(document.querySelector('#letters .reveal-attempt')).color,
         };
       });
-      assert(r.rows === 2, `${r.rows} rows`);
+      assert(r.rows === 1, `${r.rows} rows on the result line (the attempt lives in the answer box)`);
       assert(r.labels[0] === 'You wrote' && r.labels[1] === 'Correct', `labels ${r.labels}`);
       assert(r.you === typed, `the attempt row reads "${r.you}", typed "${typed}"`);
       assert(r.ok.toLowerCase() === word.toLowerCase(), `the correct row reads "${r.ok}", the word is "${word}"`);

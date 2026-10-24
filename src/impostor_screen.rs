@@ -221,7 +221,7 @@ fn tap(app: &App, e: &web_sys::MouseEvent) {
         if let Some(right) = dom::doc().query_selector(&format!("[data-i=\"{}\"]", r.correct)).ok().flatten() {
             let _ = right.class_list().add_1("right");
         }
-        haptics::key_tap();
+        haptics::tap();
         render_streak();
         reveal_why(&r, i);
         REVEALING.with(|c| c.set(true));

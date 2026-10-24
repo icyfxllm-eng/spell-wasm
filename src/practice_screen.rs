@@ -240,7 +240,7 @@ fn choice_pick(app: &App, which: usize) {
         practice::save(&lang, &p);
     }
     dom::remove_class("prChoice", "show");
-    haptics::key_tap();
+    haptics::tap();
     after_choice(app, c, pos, &lang);
 }
 
@@ -346,7 +346,7 @@ fn micro_tap(app: &App, e: &web_sys::MouseEvent) {
         if let Some(i) = mi.needed.iter().position(|n| *n == text) {
             mi.needed.remove(i);
             el.class_list().add_1("good").ok();
-            haptics::key_tap();
+            haptics::tap();
             if mi.needed.is_empty() { Some(true) } else { None }
         } else {
             mi.misses += 1;
@@ -571,7 +571,7 @@ fn tile_tap(app: &App, e: &web_sys::MouseEvent) {
         // D2 ghost-trace: each matched unit solidifies with a haptic tick.
         TILES.with(|t| t.borrow_mut()[i].1 = true);
         FILLED.with(|c| c.set(c.get() + 1));
-        haptics::key_tap();
+        haptics::tap();
         render_tray();
         let ph = phase_now();
         render_slots(&lang, ph);
@@ -586,7 +586,7 @@ fn tile_tap(app: &App, e: &web_sys::MouseEvent) {
         after(380, move || {
             el2.class_list().remove_1("wiggle").ok();
         });
-        haptics::key_tap();
+        haptics::tap();
         replay(app);
     }
 }
@@ -686,7 +686,7 @@ fn on_typed(app: &App) {
         inp.set_value(&good);
         dom::add_class("prSlots", "pulse");
         after(400, || dom::remove_class("prSlots", "pulse"));
-        haptics::key_tap();
+        haptics::tap();
         replay(app);
     }
     FILLED.with(|c| c.set(ok.min(word.chars().count())));
@@ -806,7 +806,7 @@ fn word_done(app: &App) {
     let mut p = practice::load(&lang);
     p.pos = pos;
     practice::save(&lang, &p);
-    haptics::key_tap();
+    haptics::tap();
     coach(app, CoachSlot::Done);
     render_all(app);
     if pos == practice::FIRST_CONTACT {

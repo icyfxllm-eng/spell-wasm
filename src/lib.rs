@@ -127,6 +127,7 @@ mod notify;
 mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod sfx; // CC-VISUAL-ECLIPSE F5: synthesized game sounds, voice first (behind visual.sound)
 mod orb; // CC-VISUAL-ECLIPSE F3: orb states, transition table and speech envelope (pure)
 mod orb_view; // CC-VISUAL-ECLIPSE F3: applies the orb to #orbWrap behind visual.orb
 mod answer_reveal; // CC-VISUAL-ECLIPSE F4: the You wrote / Correct rows (behind visual.feedback)
@@ -382,6 +383,7 @@ pub fn start() -> Result<(), JsValue> {
     // CC-VISUAL-ECLIPSE F3: the orb's starting state and rest listeners, only
     // with visual.orb on (a no-op otherwise).
     orb_view::init();
+    sfx::install_taps();
 
     // Observation-only E2E test seam — dev builds only (`--features testseam`);
     // stripped from production (proven by scripts/seam-absence-check.mjs).
@@ -958,6 +960,32 @@ fn wire_glow_and_settings(app: &App) {
         dom::on::<web_sys::Event, _>("volumeSlider", "input", move |_| {
             let v: f32 = dom::input("volumeSlider").value().parse().unwrap_or(1.0);
             settings::set_volume(&a, v);
+        });
+    }
+    // CC-VISUAL-ECLIPSE Phase C: Game sounds and Haptics.
+    for (id, field) in [("gameSoundsToggle", 0u8), ("hapticsToggle", 1), ("keyFeelToggle", 2)] {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>(id, "change", move |_| {
+            let v = dom::input(id).checked();
+            {
+                let mut s = a.borrow_mut();
+                match field {
+                    0 => s.game_sounds = v,
+                    1 => s.haptics_on = v,
+                    _ => s.key_feel = v,
+                }
+            }
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("gameSoundsLevel", "input", move |_| {
+            let v: f32 = dom::input("gameSoundsLevel").value().parse().unwrap_or(crate::sfx::DEFAULT_LEVEL);
+            a.borrow_mut().game_sound_level = v.clamp(0.0, 1.0);
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
         });
     }
     dom::on_click("setDone", || dom::remove_class("setScrim", "show"));

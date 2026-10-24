@@ -446,7 +446,7 @@ fn tap(app: &App, idx: usize) {
             }
         }
         dom::add_class("dmOrb", "good");
-        haptics::key_tap();
+        haptics::correct();
         if late {
             dom::set_text("dmStatus", &i18n::t("defmatch.caught"));
         }

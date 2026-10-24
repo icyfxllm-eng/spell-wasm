@@ -2148,10 +2148,14 @@
   body.visual-feedback .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, var(--amber-soft) 0%, var(--warn) 42%, color-mix(in srgb,var(--warn) 55%,var(--bg)) 100%);box-shadow:0 0 0 1px var(--warn-glow), 0 0 40px 4px var(--warn-glow);animation:orbDim var(--motion-anim-wrong-hold) ease}
   body.visual-feedback .orb-wrap.bad .orb-glyph{color:var(--orb-text)}
   @keyframes orbDim{0%,100%{filter:brightness(1)}35%{filter:brightness(.62)}}
-  .reveal-diff{display:block}
-  .rd-row{display:block;text-align:start;line-height:1.5}
+  /* Inline, like the one-line reveal it replaces, so it costs no extra height (AT-4). */
+  .reveal-diff{display:inline}
+  .rd-row{display:inline}
   .rd-label{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:normal;color:var(--muted-on-bg);margin-inline-end:.35em}
   .feedback .rd-you .reveal{color:var(--warn)}
+  /* The attempt, marked inside the answer box; its caption takes no height. */
+  #letters .ltr.reveal-attempt{color:var(--warn);text-shadow:0 0 7px var(--warn-glow)}
+  .rd-caption{position:absolute;top:5px;inset-inline-start:12px;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:normal;color:var(--muted);pointer-events:none}
   .feedback .rd-ok .reveal{color:var(--ink-on-bg)}
   .rd-word mark.rd-sub{background:color-mix(in srgb,var(--warn) 34%,transparent);color:inherit}
   .rd-word s.rd-extra{text-decoration:line-through 2px var(--warn)}
@@ -2777,6 +2781,8 @@
   .imp-lang{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
   .imp-lang select{padding:7px 26px 7px 10px;font-size:16px}
   .imp-count{font-family:var(--mono);font-size:12px;color:var(--amber-soft)}
+  body:not(.visual-sound) .set-row.snd-only,
+  body:not(.visual-haptics) .set-row.hap-only{display:none}
   .set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:start;padding:13px 0;border-top:1px solid var(--alpha-white-05)}
   .set-row:first-of-type{border-top:none}
   .set-row .lbl2{display:flex;flex-direction:column;font-size:14px;font-weight:600;color:var(--ink)}
@@ -4628,6 +4634,14 @@
         <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
         <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" data-i18n-aria="settings.volume" />
       </div>
+      <!-- CC-VISUAL-ECLIPSE Phase C: shown only with visual.sound / visual.haptics on. -->
+      <label class="set-row snd-only"><span class="lbl2"><span data-i18n="settings.gameSounds">Game sounds</span><small data-i18n="settings.gameSoundsSmall">Taps and chimes, never over the spoken word</small></span><input type="checkbox" class="switch" id="gameSoundsToggle" /></label>
+      <div class="set-row snd-only">
+        <span class="lbl2"><span data-i18n="settings.gameSoundsLevel">Game sounds level</span><small data-i18n="settings.gameSoundsLevelSmall">Separate from the voice volume</small></span>
+        <input type="range" id="gameSoundsLevel" min="0" max="1" step="0.1" value="0.4" aria-label="Game sounds level" data-i18n-aria="settings.gameSoundsLevel" />
+      </div>
+      <label class="set-row hap-only"><span class="lbl2"><span data-i18n="settings.haptics">Haptics</span><small data-i18n="settings.hapticsSmall">A tap for right answers, a gentle double tap for wrong ones</small></span><input type="checkbox" class="switch" id="hapticsToggle" /></label>
+      <label class="set-row hap-only"><span class="lbl2"><span data-i18n="settings.keyFeel">Key feel</span><small data-i18n="settings.keyFeelSmall">A light tick on every key you press</small></span><input type="checkbox" class="switch" id="keyFeelToggle" /></label>
       <div class="set-row">
         <span class="lbl2"><span data-i18n="settings.background">Background</span><small data-i18n="settings.backgroundSmall">Page background color</small></span>
         <!-- token-exempt:begin: the colours a player can pick; data-c is the stored value and input[type=color] needs a literal -->

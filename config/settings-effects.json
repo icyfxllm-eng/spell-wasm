@@ -213,6 +213,42 @@
       "test": "settings_effect_tone5",
       "suppressed_by": "hidden for non-Mandarin and at expert tier (the row is absent, not disabled)",
       "harness": "web"
+    },
+    {
+      "key": "gameSoundsToggle",
+      "surface": "settings",
+      "state": "game_sounds",
+      "effect": "sfx plays the verdict sound on an answer only when on (seam sfxCounts)",
+      "test": "settings_effect_game_sounds",
+      "suppressed_by": "visual.sound off (the row is not shown)",
+      "harness": "web"
+    },
+    {
+      "key": "gameSoundsLevel",
+      "surface": "settings",
+      "state": "game_sound_level",
+      "effect": "the game sounds' own gain node; 0 plays nothing; the voice volume slider does not move it (AT-16)",
+      "test": "settings_effect_game_sounds_level",
+      "suppressed_by": "visual.sound off (the row is not shown)",
+      "harness": "web"
+    },
+    {
+      "key": "hapticsToggle",
+      "surface": "settings",
+      "state": "haptics_on",
+      "effect": "answer haptics fire only when on (seam hapticsFired; a no-op on the web, counted before the plugin)",
+      "test": "settings_effect_haptics",
+      "suppressed_by": "visual.haptics off (the row is not shown)",
+      "harness": "web"
+    },
+    {
+      "key": "keyFeelToggle",
+      "surface": "settings",
+      "state": "key_feel",
+      "effect": "keystroke haptics fire only when on, and are exempt from the 2-per-word cap",
+      "test": "settings_effect_key_feel",
+      "suppressed_by": "visual.haptics off (the row is not shown)",
+      "harness": "web"
     }
   ],
   "_cut_note": "AUDITPASS F7: toolGhostToggle and toolSayItToggle were removed with Spell Racing and Say It. A control that no longer renders owes no effect test — the manifest shrinks with the UI, which is the `manifest subset of rendered` law doing its job rather than leaving a ghost entry behind."
