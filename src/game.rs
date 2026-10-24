@@ -650,15 +650,17 @@ thread_local! {
     static SHIFT: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
 }
 
-/// Does the word on screen need capitals typed (Impossible in a case-strict language)?
-pub fn impossible_case(app: &App) -> bool {
-    let s = app.borrow();
-    s.impossible_word && crate::impossible::engine::needs_shift(&s.cur_lang)
+/// Can the word on screen be typed with capitals? True for every word in a language whose
+/// spelling carries case (German), in every mode (Eric 2026-10-24: "just in case a word needs
+/// it"). Only Impossible grades the capitals; everywhere else the answer is case-folded, so a
+/// capital typed there is harmless.
+pub fn word_takes_capitals(app: &App) -> bool {
+    crate::impossible::engine::needs_shift(&app.borrow().cur_lang)
 }
 
 /// The on-screen Shift key. One-shot: it capitalises the next letter and clears itself.
 pub fn toggle_shift(app: &App) {
-    if !impossible_case(app) {
+    if !word_takes_capitals(app) {
         return;
     }
     let on = !SHIFT.with(|s| s.get());
@@ -672,7 +674,8 @@ fn clear_shift() {
 }
 
 /// The Shift key is built only into the German keyboard, so it is looked up, never assumed
-/// (dom::el panics on a missing id).
+/// (dom::el panics on a missing id). An Impossible Mix German word switches the keyboard to
+/// German first (keyboard::follow_word), so the key is there whenever the word needs it.
 fn shift_key_class(class: &str, on: bool) {
     if let Some(el) = dom::doc().get_element_by_id("kbShift") {
         let _ = if on { el.class_list().add_1(class) } else { el.class_list().remove_1(class) };
@@ -691,8 +694,8 @@ fn shift_key_class(class: &str, on: bool) {
 /// composes jamo into syllables (crate::hangul); everything else appends.
 pub fn emit_key(app: &App, ch: char) {
     crate::frame_log::mark(crate::frame_log::Moment::Typing);
-    // Impossible German: an armed Shift capitalises this letter, once.
-    let ch = if SHIFT.with(|s| s.get()) && impossible_case(app) && ch.is_alphabetic() {
+    // German: an armed Shift capitalises this letter, once.
+    let ch = if SHIFT.with(|s| s.get()) && word_takes_capitals(app) && ch.is_alphabetic() {
         clear_shift();
         ch.to_uppercase().next().unwrap_or(ch)
     } else {
@@ -2070,8 +2073,10 @@ pub fn next_word(app: &App) {
     dom::set_disabled("defBtn", !has_defs);
     dom::set_disabled("sentenceBtn", !has_sentence);
     dom::set_text("hintLine", "");
+    // An Impossible Mix word brings its own language's keyboard (letters, alternates, Shift).
+    crate::keyboard::follow_word(app);
     clear_shift();
-    shift_key_class("btn-hide", !impossible_case(app)); // the Shift key exists only where capitals are graded
+    shift_key_class("btn-hide", !word_takes_capitals(app)); // every German word, in every mode
     {
         // F5: no hints at Impossible. The buttons are hidden and disabled, not just inert.
         let imp = app.borrow().impossible_word;
