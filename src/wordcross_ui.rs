@@ -345,25 +345,7 @@ fn render() {
         // own: a row is ~44 px, and a crossword on a small phone does not have
         // it to spare (the grid, the clue list and the keyboard ran 205 px past
         // an iPhone SE). Same fix SpellDoku had on 2026-09-21.
-        if crate::flags::keyboard_core() {
-            render_keys_shared(&g.lang);
-        } else {
-            let mut lines: Vec<String> = crate::wordsearch_ui::layout(&g.lang)
-                .into_iter()
-                .map(|row| {
-                    row.iter()
-                        .map(|k| format!("<button type=\"button\" class=\"kb-key\" data-xw-key=\"{0}\">{0}</button>", dom::escape_html(k)))
-                        .collect::<String>()
-                })
-                .collect();
-            const BACK: &str = "<button type=\"button\" class=\"kb-key wide\" data-xw-back>\u{232B}</button>";
-            match lines.last_mut() {
-                Some(last) => last.push_str(BACK),
-                None => lines.push(BACK.to_string()),
-            }
-            let keys: String = lines.into_iter().map(|l| format!("<div class=\"sd-row\">{l}</div>")).collect();
-            dom::set_html("xwKeys", &keys);
-        }
+        render_keys_shared(&g.lang);
 
         match &g.phase {
             Phase::Keystone { typed, .. } => dom::set_text("xwTyped", typed),
@@ -418,7 +400,7 @@ fn say(i: usize) {
     render();
 }
 
-/// CC-SPELL-KEYBOARD (`keyboard.core`): the crossword's rows drawn through the
+/// CC-SPELL-KEYBOARD: the crossword's rows drawn through the
 /// shared keyboard; Backspace rides the last row and keeps its own wiring on
 /// #xwScreen. A key press reaches `type_key`, as a tap always did.
 fn render_keys_shared(lang: &str) {
@@ -682,10 +664,8 @@ pub fn wire(app: &App) {
                 }
             });
             render();
-        } else if let Some(k) = el.get_attribute("data-xw-key") {
-            if !crate::spellkb::is_shared_key(&el) {
-                type_key(&k);
-            }
+        } else if el.get_attribute("data-xw-key").is_some() {
+            // A letter key: the shared keyboard has typed it already (type_key).
         } else if el.get_attribute("data-xw-back").is_some() {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {

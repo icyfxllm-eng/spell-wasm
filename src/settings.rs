@@ -37,6 +37,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.kid = p.kid;
     state.readable = p.readable;
     state.big_text = p.big_text;
+    state.accent_keys = p.accent_keys;
     state.slow = p.slow;
     state.real_voices_off = p.real_voices_off;
     // 0.55, not 0.7 (Eric, 2026-08-06). The Aug 6 audit read Slower
@@ -72,6 +73,7 @@ pub fn save_prefs(state: &AppState) {
         kid: state.kid,
         readable: state.readable,
         big_text: state.big_text,
+        accent_keys: state.accent_keys,
         slow: state.slow,
         real_voices_off: state.real_voices_off,
         volume: Some(state.volume),
@@ -363,6 +365,9 @@ pub fn apply_settings(app: &App) {
     crate::i18n::update_tagline();
     let _ = body.class_list().toggle_with_force("readable", s.readable);
     let _ = body.class_list().toggle_with_force("big-text", s.big_text);
+    // K-R11: keyboards drawn from now on lay alternates out as keys (the main
+    // keyboard is rebuilt by the switch's own handler).
+    crate::spellkb::set_accent_keys(s.accent_keys);
     // CC-VISUAL-ECLIPSE A3: per-script typography rides on one body class, so the
     // flag being off is a true no-op for the stylesheet.
     let _ = body.class_list().toggle_with_force("visual-type", crate::flags::visual_type());
@@ -388,8 +393,6 @@ pub fn apply_settings(app: &App) {
     dom::input("keyFeelToggle").set_checked(s.key_feel);
     dom::input("gameSoundsToggle").set_checked(s.game_sounds);
     dom::input("gameSoundsLevel").set_value(&s.game_sound_level.to_string());
-    // CC-SPELL-KEYBOARD Phase A: the shared keyboard's styles key off this class.
-    let _ = body.class_list().toggle_with_force("kb-core", crate::flags::keyboard_core());
     dom::input("kidToggle").set_checked(s.kid);
     // CC-ONBOARD-JR F5: a locked Spell Jr player (under-13 verdict) gets no
     // switch at all. The only way out is a grown-up, so the row offers exactly
@@ -403,6 +406,7 @@ pub fn apply_settings(app: &App) {
     dom::toggle_class("extraAttemptsRow", "btn-hide", !crate::flags::attempts_shields());
     dom::input("readToggle").set_checked(s.readable);
     dom::input("bigTextToggle").set_checked(s.big_text);
+    dom::input("accentKeysToggle").set_checked(s.accent_keys);
     dom::input("slowToggle").set_checked(s.slow);
     dom::input("britishToggle").set_checked(crate::variants::prefers_british());
     // CC-HUMAN-AUDIO F6: the switch and the router read one value.

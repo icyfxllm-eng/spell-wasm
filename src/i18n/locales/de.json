@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Hintergrundfarbe der Seite",
   "settings.bigText": "Großer Text",
   "settings.bigTextSmall": "Vergrößert den Oberflächentext (etwa 1,5×)",
+  "settings.accentKeys": "Akzente als Tasten zeigen",
+  "settings.accentKeysSmall": "Buchstaben mit Akzent bekommen eigene Tasten statt langem Drücken.",
   "settings.done": "Fertig",
   "settings.extraAttempts": "Zusätzlicher Versuch bei Fehlern",
   "settings.extraAttemptsSmall": "Ein zweiter Versuch, wenn du ein Wort verfehlst",

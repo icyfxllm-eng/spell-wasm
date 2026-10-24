@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "पेज का बैकग्राउंड रंग",
   "settings.bigText": "बड़ा टेक्स्ट",
   "settings.bigTextSmall": "इंटरफ़ेस का टेक्स्ट बड़ा करो (लगभग 1.5×)",
+  "settings.accentKeys": "विशेष अक्षरों को कुंजियों के रूप में दिखाएँ",
+  "settings.accentKeysSmall": "विशेष अक्षरों की अपनी कुंजियाँ होती हैं, देर तक दबाने की ज़रूरत नहीं।",
   "settings.done": "हो गया",
   "settings.extraAttempts": "ग़लती पर अतिरिक्त मौक़ा",
   "settings.extraAttemptsSmall": "शब्द चूकने पर दूसरी कोशिश",

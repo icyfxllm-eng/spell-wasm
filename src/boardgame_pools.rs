@@ -142,12 +142,11 @@ pub fn supply(lang: &str, v: Variant, ledger: &Ledger, day: u32, seed: u64) -> R
 /// CC-IMPOSSIBLE-COMPLETE F8: give the trap its Impossible pool when the language has one.
 ///
 /// The pool is the language's Impossible pool only when the Impossible registry says it is
-/// available (flags, entitlement, floor, profile), and never for Spell Jr. A language that grades
-/// case strictly stays out unless the screen's keyboard has a Shift: the legacy grid has none, so a
-/// capitalised word could not be typed; the shared keyboard (`keyboard.core`, CC-SPELL-KEYBOARD
-/// K-D18, resolving L-D4) does. An empty pool keeps the Double Expert trap exactly as it was (D-C14).
+/// available (flags, entitlement, floor, profile), and never for Spell Jr. A case-strict language
+/// (German) is in too: the shared keyboard gives its grid a Shift (CC-SPELL-KEYBOARD K-D18,
+/// resolving L-D4). An empty pool keeps the Double Expert trap exactly as it was (D-C14).
 pub fn with_impossible(mut pools: TierPools, lang: &str, v: Variant) -> TierPools {
-    if !v.cfg().has_traps() || v == Variant::Jr || !trap_typeable(lang) {
+    if !v.cfg().has_traps() || v == Variant::Jr {
         return pools;
     }
     use crate::impossible::{lang_availability, pool, with_live_inputs, Availability};
@@ -155,12 +154,6 @@ pub fn with_impossible(mut pools: TierPools, lang: &str, v: Variant) -> TierPool
         pools.impossible = pool(lang).map(|p| p.words.clone()).unwrap_or_default();
     }
     pools
-}
-
-/// Can this screen's keyboard type `lang`'s Impossible words? Only a case-strict
-/// language needs more than letters: a Shift, which only the shared keyboard has.
-pub fn trap_typeable(lang: &str) -> bool {
-    !crate::impossible::engine::needs_shift(lang) || crate::flags::keyboard_core()
 }
 
 /// D19: write the game's drawn words to the ledger, once, for a finished or an

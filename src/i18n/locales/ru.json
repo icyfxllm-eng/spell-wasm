@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Цвет фона страницы",
   "settings.bigText": "Крупный текст",
   "settings.bigTextSmall": "Увеличить текст интерфейса (примерно 1,5×)",
+  "settings.accentKeys": "Буквы с диакритикой — отдельными клавишами",
+  "settings.accentKeysSmall": "Такие буквы получают свои клавиши, без долгого нажатия.",
   "settings.done": "Готово",
   "settings.extraAttempts": "Дополнительная попытка",
   "settings.extraAttemptsSmall": "Вторая попытка при ошибке",

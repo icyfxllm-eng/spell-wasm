@@ -1625,27 +1625,12 @@ fn npc_meets_the_impossible_trap_with_one_draw() {
     assert!(s.drawn.len() <= before + 1 + 1, "no second trap word was drawn");
 }
 
-/// CC-SPELL-KEYBOARD K-D18 / L-D4: German's Impossible words need a capital, so
-/// they reach this screen only when its keyboard has a Shift, which the shared
-/// keyboard (`keyboard.core`) gives it. Letters-only languages are typeable either way.
+/// Spell Jr never gets the trap. (German is no longer kept out: the shared keyboard gives its
+/// grid a Shift, CC-SPELL-KEYBOARD K-D18.)
 #[test]
-fn a_case_strict_trap_needs_the_shared_keyboards_shift() {
-    crate::flags::set_test_override(Some("off"));
-    assert!(!crate::boardgame_pools::trap_typeable("de"));
-    crate::flags::set_test_override(Some("on"));
-    assert!(crate::boardgame_pools::trap_typeable("de"));
-    crate::flags::set_test_override(Some("off"));
-    assert!(crate::boardgame_pools::trap_typeable("en"));
-    crate::flags::set_test_override(None);
-}
-
-/// Spell Jr never gets the trap, and a case-strict language stays out (this screen has no Shift key).
-#[test]
-fn jr_and_case_strict_languages_never_get_an_impossible_pool() {
+fn jr_never_gets_an_impossible_pool() {
     let base = pools_for(Variant::Jr);
     assert!(crate::boardgame_pools::with_impossible(base, "en", Variant::Jr).impossible.is_empty());
-    let base = pools_for(Variant::Full);
-    assert!(crate::boardgame_pools::with_impossible(base, "de", Variant::Full).impossible.is_empty());
     // The Jr generator never names Trap at all: no Jr board holds a trap tile.
     let s = new_game(3, GameConfig::pass_and_play(Variant::Jr, 2, "en", true, exact), jr_pools()).unwrap();
     assert!(s.board.traps.iter().all(Option::is_none));

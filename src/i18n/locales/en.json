@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Page background color",
   "settings.bigText": "Big text",
   "settings.bigTextSmall": "Enlarge the interface text (about 1.5×)",
+  "settings.accentKeys": "Show accents as keys",
+  "settings.accentKeysSmall": "Accented letters get keys of their own, instead of a long press.",
   "settings.done": "Done",
   "settings.extraAttempts": "Extra attempt on misses",
   "settings.extraAttemptsSmall": "A second try when you miss a word",

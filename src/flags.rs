@@ -666,14 +666,6 @@ pub fn visual_accents() -> bool {
     resolve(stored("visual_accents").as_deref(), false)
 }
 
-/// CC-SPELL-KEYBOARD `keyboard.core` (Phase A: KF1, KF2, KF10): every on-screen
-/// key grid renders and dispatches through the one shared keyboard
-/// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
-/// true no-op: each surface builds its keys exactly as before.
-pub fn keyboard_core() -> bool {
-    resolve(stored("keyboard_core").as_deref(), false)
-}
-
 pub fn is_on(name: &str) -> bool {
     match name {
         // The `core` surfaces have no flag because there is nothing to flip:

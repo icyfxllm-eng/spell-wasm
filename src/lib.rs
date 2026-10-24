@@ -909,6 +909,17 @@ fn wire_glow_and_settings(app: &App) {
         });
     }
     {
+        // CC-SPELL-KEYBOARD K-R11: "Show accents as keys".
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("accentKeysToggle", "change", move |_| {
+            let v = dom::input("accentKeysToggle").checked();
+            a.borrow_mut().accent_keys = v;
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+            crate::keyboard::rebuild(&a);
+        });
+    }
+    {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("slowToggle", "change", move |_| {
             let v = dom::input("slowToggle").checked();

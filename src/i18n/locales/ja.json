@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "ページの背景色",
   "settings.bigText": "大きな文字",
   "settings.bigTextSmall": "画面の文字を拡大（約1.5倍）",
+  "settings.accentKeys": "長押しの文字をキーで表示",
+  "settings.accentKeysSmall": "濁音や小さい文字に専用のキーが付き、長押しせずに入力できます。",
   "settings.done": "完了",
   "settings.extraAttempts": "ミス時に追加の挑戦",
   "settings.extraAttemptsSmall": "単語を間違えたときにもう一度挑戦",

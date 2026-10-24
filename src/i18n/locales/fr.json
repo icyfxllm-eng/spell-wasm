@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Couleur de fond de la page",
   "settings.bigText": "Grand texte",
   "settings.bigTextSmall": "Agrandit le texte de l'interface (environ 1,5×)",
+  "settings.accentKeys": "Afficher les accents en touches",
+  "settings.accentKeysSmall": "Les lettres accentuées ont leur propre touche, sans appui long.",
   "settings.done": "Terminé",
   "settings.extraAttempts": "Tentative supplémentaire en cas d’erreur",
   "settings.extraAttemptsSmall": "Un second essai quand vous manquez un mot",

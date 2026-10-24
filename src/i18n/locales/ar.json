@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "لون خلفية الصفحة",
   "settings.bigText": "خط كبير",
   "settings.bigTextSmall": "تكبير نص الواجهة (نحو 1.5×)",
+  "settings.accentKeys": "إظهار الحروف المميّزة كمفاتيح",
+  "settings.accentKeysSmall": "تحصل الحروف ذات العلامات على مفاتيح خاصة بدلًا من الضغط المطوّل.",
   "settings.done": "تم",
   "settings.extraAttempts": "محاولة إضافية عند الخطأ",
   "settings.extraAttemptsSmall": "فرصة ثانية عندما تخطئ كلمة",

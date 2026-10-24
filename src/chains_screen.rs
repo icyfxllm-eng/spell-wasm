@@ -90,7 +90,6 @@ pub fn wire(app: &App) {
     let a = app.clone();
     dom::on_click("cnReplay", move || open(&a));
     // One delegated listener: the key grid is rebuilt on every language change.
-    dom::on::<web_sys::MouseEvent, _>("cnKeys", "click", tap);
 }
 
 thread_local! {
@@ -209,47 +208,14 @@ fn render_score() {
 }
 
 fn render_keys(lang: &str) {
-    if crate::flags::keyboard_core() {
-        use crate::spellkb::{Attr, Edges, Surface};
-        let s = Surface { host: "cnKeys", row_class: "cn-row", key_class: "cn-key", attr: Attr::Raw("data-k"), long_press: true };
-        crate::spellkb::mount(s, &crate::keyboard::shared_rows(lang), Edges::default(), press_key);
-        return;
-    }
-    let mut html = String::new();
-    for row in crate::keyboard::unit_rows(lang) {
-        html.push_str("<div class=\"cn-row\">");
-        for c in row.chars() {
-            html.push_str(&format!(
-                "<button type=\"button\" class=\"cn-key\" data-k=\"{0}\">{0}</button>",
-                dom::escape_html(&c.to_string())
-            ));
-        }
-        html.push_str("</div>");
-    }
-    dom::set_html("cnKeys", &html);
+    use crate::spellkb::{Attr, Edges, Surface};
+    let s = Surface { host: "cnKeys", row_class: "cn-row", key_class: "cn-key", attr: Attr::Raw("data-k"), long_press: true };
+    crate::spellkb::mount(s, &crate::keyboard::shared_rows(lang), Edges::default(), press_key);
 }
 
 // ------------------------------------------------------------------ input
 
-fn tap(e: web_sys::MouseEvent) {
-    if crate::flags::keyboard_core() {
-        return; // the shared keyboard routes presses to press_key
-    }
-    if OVER.with(Cell::get) {
-        return;
-    }
-    let Some(el) = e
-        .target()
-        .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
-        .and_then(|t| t.closest("[data-k]").ok().flatten())
-    else {
-        return;
-    };
-    let Some(k) = el.get_attribute("data-k") else { return };
-    type_unit(&k);
-}
-
-/// CC-SPELL-KEYBOARD (`keyboard.core`): a press from the shared keyboard.
+/// CC-SPELL-KEYBOARD: a press from the shared keyboard.
 fn press_key(k: &crate::spellkb::Key) {
     use crate::spellkb::Key;
     if OVER.with(Cell::get) {

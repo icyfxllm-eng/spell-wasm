@@ -1068,6 +1068,8 @@
   .bg-podium{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}
   .bg-pod{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:var(--lift-1);font-size:.95rem}
   .bg-pod b{margin-inline-start:auto;font-variant-numeric:tabular-nums}
+  /* CC-SPELL-KEYBOARD K-D19: an armed Shift shows capitals on the board's keys too. */
+  #bgKeys.shift-on .skb-key{text-transform:uppercase}
   /* BOARDGAME:END */
 
   /* RANDOSPELL:BEGIN CC-RANDOSPELL v1 -- stripped from the site build (O3) */
@@ -2016,21 +2018,21 @@
   body.kid .kb-key,body.kid .kb-back,body.kid .kb-submit,
   body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px}
   body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
-  /* CC-SPELL-KEYBOARD (keyboard.core): the one shared keyboard. K-D17 key
+  /* CC-SPELL-KEYBOARD: the one shared keyboard. K-D17 key
      heights are FLOORS (standard 44, Spell Jr 52, Big Text 56): a grid already
      taller keeps its height (the main keyboard 46/56, the app-only
      mode grids 46). Spelluzzle stays at 40 (Eric, 2026-10-22): at 44 its Duel table no
      longer fits 375x667. K-D19 labels show the case a key
      types: lowercase, uppercase only while Shift is armed. */
-  body.kb-core{--skb-key-h:44px}
-  body.kb-core.kid{--skb-key-h:52px}
-  body.kb-core.big-text{--skb-key-h:56px}
-  body.kb-core #gameKeyboard.shift-on .skb-key,body.kb-core #bgKeys.shift-on .skb-key{text-transform:uppercase}
-  body.kb-core .skb-shift.btn-hide{display:none}
-  body.kb-core .skb-shift.on{background:var(--amber);color:var(--palette-on-gold-text);border-color:var(--amber)}
+  body{--skb-key-h:44px}
+  body.kid{--skb-key-h:52px}
+  body.big-text{--skb-key-h:56px}
+  #gameKeyboard.shift-on .skb-key{text-transform:uppercase}
+  .skb-shift.btn-hide{display:none}
+  .skb-shift.on{background:var(--amber);color:var(--palette-on-gold-text);border-color:var(--amber)}
   /* Every shared key that long-presses shows the alternates dot, not only the main keyboard's. */
-  body.kb-core .skb-key.has-acc{position:relative}
-  body.kb-core .skb-key.has-acc::after{content:"";position:absolute;top:4px;inset-inline-end:5px;width:4px;height:4px;border-radius:50%;
+  .skb-key.has-acc{position:relative}
+  .skb-key.has-acc::after{content:"";position:absolute;top:4px;inset-inline-end:5px;width:4px;height:4px;border-radius:50%;
     background:var(--muted);opacity:.55}
 
   .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
@@ -4797,6 +4799,8 @@
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /><button type="button" class="btn btn-icon btn-hide" id="kidGrownups" data-i18n="parent.title" style="flex:none;border-radius:12px">Ask a grown-up</button></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
+      <!-- CC-SPELL-KEYBOARD K-R11: for players who cannot long-press (VoiceOver, Switch Control). -->
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.accentKeys">Show accents as keys</span><small data-i18n="settings.accentKeysSmall">Accented letters get keys of their own, instead of a long press.</small></span><input type="checkbox" class="switch" id="accentKeysToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
       <label class="set-row" id="britishRow"><span class="lbl2"><span data-i18n="settings.british">British spellings</span><small data-i18n="settings.britishSmall">Show words like colour and centre the British way. Either spelling is always accepted.</small></span><input type="checkbox" class="switch" id="britishToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.realVoices">Real voices when available</span><small data-i18n="settings.realVoicesSmall">Hear a person say the word, where we have a checked recording</small></span><input type="checkbox" class="switch" id="realVoicesToggle" checked /></label>

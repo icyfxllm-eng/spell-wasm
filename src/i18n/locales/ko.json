@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "페이지 배경 색",
   "settings.bigText": "큰 글자",
   "settings.bigTextSmall": "인터페이스 글자를 확대(약 1.5×)",
+  "settings.accentKeys": "길게 누르는 글자를 키로 표시",
+  "settings.accentKeysSmall": "된소리 등 길게 눌러야 하는 글자에 별도 키를 둡니다.",
   "settings.done": "완료",
   "settings.extraAttempts": "틀렸을 때 추가 시도",
   "settings.extraAttemptsSmall": "단어를 틀리면 한 번 더 시도",

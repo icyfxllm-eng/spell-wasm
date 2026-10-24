@@ -29,6 +29,15 @@
       "harness": "web"
     },
     {
+      "key": "accentKeysToggle",
+      "surface": "settings",
+      "state": "accent_keys",
+      "effect": "CC-SPELL-KEYBOARD K-R11: every long-press alternate gets a key of its own in a row at the top of the keyboard (main game, Spell Picture, Bee, Word Chains); nothing long-presses",
+      "test": "spell-keyboard: K-R11 Show accents as keys",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
       "key": "slowToggle",
       "surface": "settings",
       "state": "slow",

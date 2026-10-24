@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Rangi ya mandhari ya ukurasa",
   "settings.bigText": "Maandishi makubwa",
   "settings.bigTextSmall": "Kuza maandishi ya programu (takriban 1.5×)",
+  "settings.accentKeys": "Onyesha herufi zenye alama kama vitufe",
+  "settings.accentKeysSmall": "Herufi zenye alama zinapata vitufe vyake, bila kubonyeza kwa muda mrefu.",
   "settings.done": "Imekamilika",
   "settings.extraAttempts": "Jaribio la ziada kwenye makosa",
   "settings.extraAttemptsSmall": "Nafasi ya pili unapokosea neno",

@@ -1,16 +1,16 @@
-// spell-keyboard.spec — CC-SPELL-KEYBOARD Phase A, with keyboard.core ON.
+// spell-keyboard.spec — CC-SPELL-KEYBOARD Phase A: the one shared keyboard.
 //
-// The rest of the suite proves the shared keyboard changes nothing a test can
-// see (run it with SPELL_FLAGS=keyboard_core=on). This spec checks what the
-// shared keyboard ADDS:
+// The rest of the suite proves every surface still types as it did. This spec
+// checks what the shared keyboard ADDS:
 //   * every key on every surface is drawn by it and has a VoiceOver label (KF10);
 //   * the five Vietnamese tone keys are told apart by name;
 //   * labels are lowercase until Shift is armed (K-D19);
 //   * Bee, which had no long-press, now offers a language's alternates;
-//   * BoardGame offers German its Impossible trap word, with a Shift to type it.
+//   * BoardGame offers German its Impossible trap word, with a Shift to type it;
+//   * K-R11 "Show accents as keys": alternates get keys of their own, for players
+//     who cannot long-press (VoiceOver, Switch Control).
 import { openApp, assert, assertEq, domSettled } from '../harness.mjs';
 
-const ON = () => { localStorage.setItem('spell_flag_keyboard_core', 'on'); };
 const openMode = (page, id) => page.evaluate((id) => document.getElementById(id).click(), id);
 
 /** Every key in `host` is a shared key with a non-empty label. */
@@ -23,9 +23,8 @@ async function labelled(page, host) {
 
 export async function run(browser, base, suite) {
   await suite.test('spell-keyboard: the main keyboard is the shared one, labelled, lowercase', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: ON });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      assert(await page.evaluate(() => document.body.classList.contains('kb-core')), 'body carries kb-core');
       const r = await labelled(page, 'kbLetters');
       assert(r.n >= 26, `the letters are shared keys (${r.n})`);
       assertEq(r.unlabelled.length, 0, `unlabelled keys: ${r.unlabelled.join(' | ')}`);
@@ -44,7 +43,7 @@ export async function run(browser, base, suite) {
   });
 
   await suite.test('spell-keyboard: the five Vietnamese tone keys are named apart', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'vi', init: ON });
+    const { ctx, page } = await openApp(browser, base, { lang: 'vi' });
     try {
       const names = await page.$$eval('#kbToneRow .skb-key', (ks) => ks.map((k) => k.getAttribute('aria-label')));
       assertEq(names.length, 5, 'five tone keys');
@@ -54,7 +53,7 @@ export async function run(browser, base, suite) {
   });
 
   await suite.test('spell-keyboard: Bee draws shared keys and offers alternates', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'es', init: ON });
+    const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
       await openMode(page, 'beeOpen');
       await page.waitForSelector('#bee.show', { timeout: 5000 });
@@ -71,7 +70,7 @@ export async function run(browser, base, suite) {
   await suite.test('spell-keyboard: a German Impossible trap word in BoardGame is typed with Shift', async () => {
     const FLAGS = () => {
       for (const [k, v] of Object.entries({
-        spell_flag_keyboard_core: 'on', spell_flag_boardgame: 'on', spell_flag_boardStretch: 'off',
+        spell_flag_boardgame: 'on', spell_flag_boardStretch: 'off',
         spell_flag_impossible: 'on', spell_flag_impossible_de: 'on', spell_dev_entitlements: 'on',
       })) localStorage.setItem(k, v);
     };
@@ -108,6 +107,31 @@ export async function run(browser, base, suite) {
         await page.click(`#bgKeys [data-k="u:${ch.toLowerCase()}"]`);
       }
       assertEq(await page.$eval('#bgField', (e) => e.textContent), word, 'the field holds the word, capitals and all');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('spell-keyboard: K-R11 Show accents as keys', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'es' });
+    try {
+      assert(await page.$('#kbLetters .skb-key[data-k="a"][data-acc]'), 'off: á is a long-press on a');
+      assert(!(await page.$('#kbLetters .skb-key[data-k="á"]')), 'off: á has no key of its own');
+      await page.evaluate(() => {
+        const el = document.getElementById('accentKeysToggle');
+        el.checked = true;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      await domSettled(page);
+      assert(await page.$('#kbLetters .skb-key[data-k="á"]'), 'on: á has a key of its own');
+      assert(!(await page.$('#kbLetters [data-acc]')), 'on: nothing long-presses');
+      assertEq(await page.$$eval('#kbLetters .skb-key[data-k="ñ"]', (ks) => ks.length), 1, 'ñ is already a key, so it is not repeated');
+      const label = await page.$eval('#kbLetters .skb-key[data-k="á"]', (k) => k.getAttribute('aria-label'));
+      assertEq(label, 'á', 'the new key has a VoiceOver label');
+      // It types, like any key.
+      await page.click('#orbWrap');
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      await domSettled(page);
+      await page.click('#kbLetters .skb-key[data-k="á"]');
+      assert((await page.$eval('#letters', (e) => e.textContent)).includes('á'), 'tapping the á key types á');
     } finally { await ctx.close(); }
   });
 }

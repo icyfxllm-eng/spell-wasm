@@ -11,8 +11,7 @@
 //! surface does with a key stays the surface's business (its `sink`); what
 //! varies between surfaces today — which rows, whether keys long-press, which
 //! attribute tags a key for its tests and styles — is a [`Surface`] setting,
-//! never a branch in here. Behind `keyboard.core` (default off); off, nothing in
-//! this module runs.
+//! never a branch in here.
 //!
 //! The two rules that come before everything else hold by construction:
 //! nothing here sees the target word (I2, the keyboard never helps), and a key
@@ -149,7 +148,7 @@ pub fn tone_name(m: char) -> &'static str {
 // ---------- surfaces ----------
 
 /// How a surface's keys are tagged. Each surface keeps the attribute its tests
-/// and styles already select on, so turning `keyboard.core` on changes how keys
+/// and styles already select on, so moving onto the shared keyboard changed how keys
 /// are built and pressed, not what anything outside the keyboard can see.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Attr {
@@ -223,9 +222,6 @@ pub struct Cap {
 impl Cap {
     pub fn key(key: Key) -> Cap {
         Cap { key, accents: String::new(), class: "" }
-    }
-    pub fn unit(c: char) -> Cap {
-        Cap::key(Key::Unit(c.to_string()))
     }
 }
 
@@ -306,6 +302,13 @@ thread_local! {
 /// every re-render: the host's listener is installed once and the latest sink
 /// is the one a press reaches.
 pub fn mount(s: Surface, rows: &[Vec<Cap>], edges: Edges, sink: impl Fn(&Key) + 'static) {
+    let laid_out;
+    let rows = if s.long_press && ACCENT_KEYS.with(std::cell::Cell::get) {
+        laid_out = accent_rows(rows);
+        &laid_out[..]
+    } else {
+        rows
+    };
     dom::set_html(s.host, &markup(&s, rows, edges));
     MOUNTED.with(|m| {
         m.borrow_mut().insert(s.host, Mounted { surface: s, sink: Rc::new(sink) });
@@ -325,6 +328,39 @@ pub fn mount(s: Surface, rows: &[Vec<Cap>], edges: Edges, sink: impl Fn(&Key) + 
     wire_long_press();
 }
 
+thread_local! {
+    /// K-R11 "Show accents as keys" (Settings): alternates get keys of their own.
+    static ACCENT_KEYS: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+}
+
+/// Turn "Show accents as keys" on or off; keyboards drawn after this follow it.
+pub fn set_accent_keys(on: bool) {
+    ACCENT_KEYS.with(|c| c.set(on));
+}
+
+/// K-R11: the same keys with every long-press alternate given a key of its own,
+/// for players who cannot long-press (VoiceOver, Switch Control, motor access).
+/// The alternates go in a row (or rows) at the TOP, like a number row, so the
+/// bottom row keeps its controls (Shift, Delete, Lock It In) where they were.
+/// An alternate already on a row is not repeated, and no key long-presses any
+/// more. Stays on Spell's keyboard: nothing here opens the system keyboard.
+pub fn accent_rows(rows: &[Vec<Cap>]) -> Vec<Vec<Cap>> {
+    let on_rows: Vec<String> = rows.iter().flatten().filter_map(|c| if let Key::Unit(u) = &c.key { Some(u.clone()) } else { None }).collect();
+    let mut extra: Vec<Cap> = Vec::new();
+    for cap in rows.iter().flatten() {
+        for a in cap.accents.chars() {
+            let u = a.to_string();
+            if !on_rows.contains(&u) && !extra.iter().any(|e| e.key == Key::Unit(u.clone())) {
+                extra.push(Cap { key: Key::Unit(u), accents: String::new(), class: "skb-alt" });
+            }
+        }
+    }
+    let width = rows.iter().map(Vec::len).max().unwrap_or(10).max(8);
+    let mut out: Vec<Vec<Cap>> = extra.chunks(width).map(<[Cap]>::to_vec).collect();
+    out.extend(rows.iter().map(|r| r.iter().map(|c| Cap { accents: String::new(), ..c.clone() }).collect()));
+    out
+}
+
 fn sink_for(host: &str) -> Option<(Surface, Sink)> {
     MOUNTED.with(|m| m.borrow().get(host).map(|x| (x.surface, x.sink.clone())))
 }
@@ -341,17 +377,11 @@ fn wire_host(host: &'static str) {
         let Some(k) = key.get_attribute(s.attr.name()).and_then(|v| s.attr.parse(&v)) else { return };
         // The click keeps bubbling, exactly as before: a screen may do other work
         // on any tap (Spelluzzle settles its decode ripple). A surface's own key
-        // handler steps aside for shared keys instead (`is_shared_key`).
+        // handler leaves letter keys alone, so a press is typed once.
         sink(&k);
     });
     let _ = el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref());
     cb.forget();
-}
-
-/// True when `el` is a key the shared keyboard already handled. A surface's own
-/// delegated key handler asks this and steps aside, so a press is typed once.
-pub fn is_shared_key(el: &web_sys::Element) -> bool {
-    el.class_list().contains("skb-key")
 }
 
 // ---------- long-press ----------
@@ -518,7 +548,8 @@ fn commit() {
     sink(&Key::Unit(c.to_string()));
 }
 
-fn close_popover() {
+/// Close the alternates popover if it is open (a keyboard rebuild does).
+pub fn close_popover() {
     HOLD.with(|h| h.borrow_mut().open = false);
     if let Some(pop) = dom::doc().get_element_by_id("skbPop") {
         let _ = pop.set_attribute("class", "kb-popover skb-popover");
@@ -563,7 +594,7 @@ mod tests {
 
     #[test]
     fn markup_carries_the_surface_classes_and_long_press_only_where_asked() {
-        let rows = vec![vec![Cap { key: Key::Unit("e".into()), accents: "éè".into(), class: "" }, Cap::unit('q')]];
+        let rows = vec![vec![Cap { key: Key::Unit("e".into()), accents: "éè".into(), class: "" }, Cap::key(Key::Unit("q".into()))]];
         let h = markup(&S, &rows, Edges { lead: "<i id=\"shift\"></i>", tail: "<button id=\"del\"></button>" });
         assert!(h.contains("class=\"skb-row bee-row\""));
         assert!(h.contains("skb-key bee-key has-acc"));
@@ -575,6 +606,18 @@ mod tests {
         assert!(!markup(&no_lp, &rows, Edges::default()).contains("data-acc"), "a surface without long-press draws no alternates");
         let flat = Surface { row_class: "", ..S };
         assert!(markup(&flat, &rows, Edges::default()).starts_with("<button"), "no row class: keys go straight into the host");
+    }
+
+    #[test]
+    fn accents_as_keys_gives_every_alternate_a_key_once_at_the_top() {
+        let e = |c: char, acc: &str| Cap { key: Key::Unit(c.to_string()), accents: acc.to_string(), class: "" };
+        let rows = vec![vec![e('e', "éè"), e('a', "á")], vec![e('n', "ñ"), e('ñ', "")]];
+        let out = accent_rows(&rows);
+        let units = |r: &Vec<Cap>| r.iter().map(|c| c.key.face()).collect::<Vec<_>>().join("");
+        assert_eq!(units(&out[0]), "éèá", "one row of alternates, in layout order, ñ not repeated");
+        assert_eq!(out.len(), 3, "the alternates row, then the original rows");
+        assert!(out.iter().flatten().all(|c| c.accents.is_empty()), "nothing long-presses any more");
+        assert_eq!(units(&out[2]), "nñ", "the bottom row is untouched, so its controls stay put");
     }
 
     #[test]

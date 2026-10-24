@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "页面背景色",
   "settings.bigText": "大字体",
   "settings.bigTextSmall": "放大界面文字（约1.5倍）",
+  "settings.accentKeys": "把长按字母显示为按键",
+  "settings.accentKeysSmall": "需要长按才能输入的字母（如 ü）有自己的按键。",
   "settings.done": "完成",
   "settings.extraAttempts": "答错时额外尝试",
   "settings.extraAttemptsSmall": "拼错单词时再试一次",

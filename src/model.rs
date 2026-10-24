@@ -28,6 +28,9 @@ pub struct Prefs {
     pub readable: bool,
     #[serde(rename = "bigText", default)]
     pub big_text: bool,
+    /// CC-SPELL-KEYBOARD K-R11: long-press alternates get keys of their own. Absent = off.
+    #[serde(rename = "accentKeys", default)]
+    pub accent_keys: bool,
     pub slow: bool,
     /// CC-HUMAN-AUDIO F6/D4 — "Real voices when available", stored inverted so
     /// that absent (a fresh install, or prefs from an older build) means ON.
@@ -252,6 +255,8 @@ pub struct AppState {
     pub age_locked: bool,
     pub readable: bool,
     pub big_text: bool,
+    /// CC-SPELL-KEYBOARD K-R11 — see `Prefs::accent_keys`.
+    pub accent_keys: bool,
     pub slow: bool,
     /// CC-HUMAN-AUDIO F6 — see `Prefs::real_voices_off`.
     pub real_voices_off: bool,
@@ -339,6 +344,7 @@ impl Default for AppState {
             age_locked: false,
             readable: false,
             big_text: false,
+            accent_keys: false,
             slow: false,
             real_voices_off: false,
             volume: 1.0,

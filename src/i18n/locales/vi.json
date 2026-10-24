@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Màu nền trang",
   "settings.bigText": "Chữ lớn",
   "settings.bigTextSmall": "Phóng to chữ giao diện (khoảng 1,5×)",
+  "settings.accentKeys": "Hiện chữ có dấu thành phím riêng",
+  "settings.accentKeysSmall": "Chữ có dấu có phím riêng, không cần nhấn giữ.",
   "settings.done": "Xong",
   "settings.extraAttempts": "Thêm lượt thử khi sai",
   "settings.extraAttemptsSmall": "Một lần thử nữa khi bạn sai một từ",

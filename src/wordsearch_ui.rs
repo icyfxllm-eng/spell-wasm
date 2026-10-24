@@ -102,7 +102,7 @@ fn picked_tier(kid: bool, lang: &str) -> Tier {
         .unwrap_or(Tier::Jr)
 }
 
-/// One key typed into the lock-in answer, from either keyboard path.
+/// One key typed into the lock-in answer.
 fn ws_type(k: &str) {
     GAME.with(|c| {
         if let Some(Game { phase: Phase::LockIn { typed, .. }, .. }) = c.borrow_mut().as_mut() {
@@ -114,7 +114,7 @@ fn ws_type(k: &str) {
     render();
 }
 
-/// CC-SPELL-KEYBOARD (`keyboard.core`): the lock-in rows drawn through the
+/// CC-SPELL-KEYBOARD: the lock-in rows drawn through the
 /// shared keyboard; Backspace and Lock It In ride the last row and keep their
 /// own wiring on #wsScreen.
 fn render_keys_shared(lang: &str) {
@@ -368,31 +368,7 @@ fn render() {
                 // claiming one of their own -- the same ~44 px that SpellDoku
                 // and Spell Cross got back, and the reason this screen now fits
                 // an iPhone SE.
-                if crate::flags::keyboard_core() {
-                    render_keys_shared(&g.lang);
-                } else {
-                    let mut lines: Vec<String> = layout(&g.lang)
-                        .into_iter()
-                        .map(|row| {
-                            row.iter()
-                                .map(|c| {
-                                    format!(
-                                        "<button type=\"button\" class=\"kb-key\" data-ws-key=\"{0}\">{0}</button>",
-                                        dom::escape_html(c)
-                                    )
-                                })
-                                .collect::<String>()
-                        })
-                        .collect();
-                    const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-ws-back>\u{232B}</button>\
-                                          <button type=\"button\" class=\"kb-key wide go\" data-ws-go>\u{2713}</button>";
-                    match lines.last_mut() {
-                        Some(last) => last.push_str(COMMIT),
-                        None => lines.push(COMMIT.to_string()),
-                    }
-                    let k: String = lines.into_iter().map(|l| format!("<div class=\"sd-row\">{l}</div>")).collect();
-                    dom::set_html("wsKeys", &k);
-                }
+                render_keys_shared(&g.lang);
             }
             Phase::Done { stars } => {
                 let s: String = (0..STARS).map(|i| if i < *stars { '\u{2605}' } else { '\u{2606}' }).collect();
@@ -780,10 +756,8 @@ pub fn wire(app: &App) {
             play(i, false);
         } else if let Some(i) = el.get_attribute("data-ws-slow").and_then(|v| v.parse::<usize>().ok()) {
             play(i, true);
-        } else if let Some(k) = el.get_attribute("data-ws-key") {
-            if !crate::spellkb::is_shared_key(&el) {
-                ws_type(&k);
-            }
+        } else if el.get_attribute("data-ws-key").is_some() {
+            // A letter key: the shared keyboard has typed it already (ws_type).
         } else if el.get_attribute("data-ws-back").is_some() {
             GAME.with(|c| {
                 if let Some(Game { phase: Phase::LockIn { typed, .. }, .. }) = c.borrow_mut().as_mut() {

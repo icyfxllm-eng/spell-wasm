@@ -17,7 +17,6 @@ export const THEMES = ['eclipse', 'daybreak'];
 export const SHIPPED_FLAGS = [
   'visual_type', 'visual_feedback', 'visual_orb', 'visual_sound', 'visual_haptics',
   'visual_icons', 'visual_celebrate', 'visual_cards', 'visual_themes', 'visual_accents',
-  'keyboard_core',
 ];
 
 /** The registry rows the drawer can open in this build. */

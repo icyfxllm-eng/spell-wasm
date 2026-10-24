@@ -619,6 +619,8 @@
   "settings.backgroundSmall": "Kolor tła strony",
   "settings.bigText": "Duży tekst",
   "settings.bigTextSmall": "Powiększa tekst interfejsu (około 1,5×)",
+  "settings.accentKeys": "Pokaż znaki diakrytyczne jako klawisze",
+  "settings.accentKeysSmall": "Litery ze znakami mają własne klawisze zamiast długiego przytrzymania.",
   "settings.done": "Gotowe",
   "settings.extraAttempts": "Dodatkowa próba po pomyłce",
   "settings.extraAttemptsSmall": "Druga próba, gdy pomylisz słowo",

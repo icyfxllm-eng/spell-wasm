@@ -951,7 +951,7 @@ fn speak(word: &str, lang: &str) {
 
 // ------------------------------------------------------------------ render
 
-/// CC-SPELL-KEYBOARD (`keyboard.core`): the same letter rows and delete key
+/// CC-SPELL-KEYBOARD: the same letter rows and delete key
 /// drawn through the shared keyboard. Units only, as before (this board types
 /// no tones or kana marks).
 fn render_keys_shared() {
@@ -967,37 +967,7 @@ fn render_keys_shared() {
 }
 
 fn render_keys() {
-    if crate::flags::keyboard_core() {
-        render_keys_shared();
-        return;
-    }
-    let html: String = with_ui(|u| {
-        u.keys
-            .iter()
-            .map(|row| {
-                let keys: String = row
-                    .iter()
-                    .filter(|k| matches!(k, Key::Unit(_)))
-                    .map(|k| format!("<button type=\"button\" class=\"sz-key\" data-k=\"{}\">{}</button>", dom::escape_html(&k.data()), dom::escape_html(&k.face())))
-                    .collect();
-                format!("<div class=\"sz-krow\">{keys}</div>")
-            })
-            .collect::<Vec<String>>()
-            .into_iter()
-            .enumerate()
-            .map(|(i, row)| {
-                // The delete key lives at the end of the last letter row, so the keyboard stays three rows tall.
-                if i + 1 == u.keys.len() {
-                    let del = format!("<button type=\"button\" class=\"sz-key sz-del\" data-del=\"1\" aria-label=\"{}\">\u{232b}</button>", dom::escape_html(&tr("aria.backspace", &[])));
-                    row.replacen("</div>", &format!("{del}</div>"), 1)
-                } else {
-                    row
-                }
-            })
-            .collect()
-    })
-    .unwrap_or_default();
-    dom::set_html("szKbKeys", &html);
+    render_keys_shared();
 }
 
 fn render() {
@@ -1275,7 +1245,7 @@ fn board_tap(e: web_sys::MouseEvent) {
 
 fn key_tap(e: web_sys::MouseEvent) {
     if e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest(".skb-key").ok().flatten()).is_some() {
-        return; // typed already by the shared keyboard (keyboard.core)
+        return; // typed already by the shared keyboard
     }
     if with_ui(|u| u.duel.is_some()).unwrap_or(false) {
         duel_key(e);
@@ -1283,15 +1253,10 @@ fn key_tap(e: web_sys::MouseEvent) {
     }
     if e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-del]").ok().flatten()).is_some() {
         delete();
-        return;
     }
-    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-k]").ok().flatten()) else { return };
-    let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
-    let Some(c) = u.chars().next() else { return };
-    unit_key(c);
 }
 
-/// CC-SPELL-KEYBOARD (`keyboard.core`): a press from the shared keyboard. Delete
+/// CC-SPELL-KEYBOARD: a press from the shared keyboard. Delete
 /// is not a key there; its click still reaches `key_tap` through `#szKb`.
 fn shared_key(k: &Key) {
     let Key::Unit(u) = k else { return };
@@ -1304,7 +1269,7 @@ fn shared_key(k: &Key) {
     }
 }
 
-/// One letter, outside a Duel, from either keyboard path.
+/// One letter, outside a Duel.
 fn unit_key(c: char) {
     haptics::key_tap();
     // F16: with a rune held, the next key is its pencil mark and nothing else.
@@ -1589,25 +1554,21 @@ fn duel_act(act: &str) {
     }
 }
 
+/// Delete in a Duel takes back the last letter of the draft (letters arrive through `shared_key`).
 fn duel_key(e: web_sys::MouseEvent) {
     let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
-    haptics::key_tap();
     if t.closest("[data-del]").ok().flatten().is_some() {
+        haptics::key_tap();
         with_ui(|u| {
             if let Some(du) = u.duel.as_mut() {
                 du.draft.pop();
             }
         });
         duel_render();
-        return;
     }
-    let Some(el) = t.closest("[data-k]").ok().flatten() else { return };
-    let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
-    let Some(c) = u.chars().next() else { return };
-    duel_unit(c);
 }
 
-/// A letter typed into the Duel draft, from either keyboard path.
+/// A letter typed into the Duel draft.
 fn duel_unit(c: char) {
     with_ui(|ui| {
         if let Some(du) = ui.duel.as_mut() {

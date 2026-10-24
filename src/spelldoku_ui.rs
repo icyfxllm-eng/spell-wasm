@@ -658,7 +658,7 @@ fn layout(lang: &str) -> (Vec<Vec<String>>, Vec<String>) {
 }
 
 /// The Vietnamese tone row: the five marks, entered after the syllable.
-/// One key typed into the answer, from either keyboard path.
+/// One key typed into the answer.
 fn sd_type(k: &str) {
     GAME.with(|c| {
         if let Some(g) = c.borrow_mut().as_mut() {
@@ -673,7 +673,7 @@ fn sd_type(k: &str) {
     render();
 }
 
-/// CC-SPELL-KEYBOARD (`keyboard.core`): the same rows (letters, the flattened
+/// CC-SPELL-KEYBOARD: the same rows (letters, the flattened
 /// extras, the vi tone marks) drawn through the shared keyboard, with Backspace
 /// and Lock It In riding the last row as before. Those two keep their own
 /// wiring on #sdScreen; a key press reaches `sd_type`.
@@ -925,65 +925,14 @@ fn render() {
             g.typed.clone()
         };
         dom::set_text("sdTyped", &typed);
-        let shared = crate::flags::keyboard_core() && !g.pencil_mode;
-        let keys = if shared {
-            String::new()
-        } else if g.pencil_mode {
+        if g.pencil_mode {
             // F1: pencil marks are digits and never open the keyboard.
-            (1..=n as u8)
+            let pens = (1..=n as u8)
                 .map(|v| format!("<button type=\"button\" class=\"kb-key\" data-sd-pen=\"{v}\">{}</button>", dom::escape_html(&cell_label(g, v))))
-                .collect::<String>()
+                .collect::<String>();
+            dom::set_html("sdKeys", &pens);
         } else {
-            let mut k = String::new();
-            let (rows, extras) = layout(&g.board.lang);
-            let key = |c: &str| {
-                format!(
-                    "<button type=\"button\" class=\"kb-key\" data-sd-key=\"{0}\">{0}</button>",
-                    dom::escape_html(c)
-                )
-            };
-            // Every row this language types: its letters, then its extras, then
-            // Vietnamese tone marks. Backspace and Lock It In ride along on the
-            // LAST of them rather than claiming a row of their own -- a row is
-            // ~52 px, which a 9x9 board on a small phone does not have to spare
-            // (the geometry census measured a 263 px overrun). This is also how
-            // a phone keyboard normally places its backspace.
-            let mut lines: Vec<String> = rows
-                .iter()
-                .chain(std::iter::once(&extras))
-                .filter(|r| !r.is_empty())
-                .map(|row| row.iter().map(|c| key(c)).collect::<String>())
-                .collect();
-            if g.board.lang == "vi" {
-                lines.push(
-                    VI_TONE_KEYS
-                        .iter()
-                        .map(|t| {
-                            format!(
-                                "<button type=\"button\" class=\"kb-key\" data-sd-key=\"{0}\" aria-label=\"tone mark\">a{0}</button>",
-                                t
-                            )
-                        })
-                        .collect::<String>(),
-                );
-            }
-            const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-sd-back>\u{232B}</button>\
-                                  <button type=\"button\" class=\"kb-key wide go\" data-sd-go>\u{2713}</button>";
-            match lines.last_mut() {
-                Some(last) => last.push_str(COMMIT),
-                None => lines.push(COMMIT.to_string()),
-            }
-            for line in lines {
-                k.push_str("<div class=\"sd-row\">");
-                k.push_str(&line);
-                k.push_str("</div>");
-            }
-            k
-        };
-        if shared {
             render_keys_shared(&g.board.lang);
-        } else {
-            dom::set_html("sdKeys", &keys);
         }
         let _ = dom::el("sdPencil").set_attribute("aria-pressed", if g.pencil_mode { "true" } else { "false" });
         // D2: Check Board exists on Hard and Expert, three times.
@@ -1537,10 +1486,8 @@ pub fn wire(app: &App) {
                 }
             });
             render();
-        } else if let Some(k) = el.get_attribute("data-sd-key") {
-            if !crate::spellkb::is_shared_key(&el) {
-                sd_type(&k);
-            }
+        } else if el.get_attribute("data-sd-key").is_some() {
+            // A letter key: the shared keyboard has typed it already (sd_type).
         } else if let Some(v) = el.get_attribute("data-sd-tier").and_then(|v| v.parse::<u8>().ok()) {
             tier_digit(v);
         } else if el.get_attribute("data-sd-back").is_some() {

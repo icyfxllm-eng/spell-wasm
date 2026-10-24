@@ -190,7 +190,6 @@ pub fn wire(app: &App) {
     // A tap anywhere on the table finishes an NPC run at once (board game D10).
     dom::on::<web_sys::MouseEvent, _>("rsTable", "click", |_| skip_npc());
     dom::on::<web_sys::MouseEvent, _>("rsTiers", "click", tier_tap);
-    dom::on::<web_sys::MouseEvent, _>("rsKeys", "click", key_tap);
 }
 
 pub fn open(app: &App) {
@@ -722,7 +721,7 @@ fn spell_panel(on: bool) {
     }
 }
 
-/// CC-SPELL-KEYBOARD (`keyboard.core`): the same rows drawn and pressed through
+/// CC-SPELL-KEYBOARD: the same rows drawn and pressed through
 /// the shared keyboard. No long-press: this grid reaches accents, kana marks and
 /// tones through its own extra rows (BoardGame D20/D29), kept as they are.
 fn render_keys_shared() {
@@ -739,31 +738,7 @@ fn render_keys_shared() {
 }
 
 fn render_keys() {
-    if crate::flags::keyboard_core() {
-        render_keys_shared();
-        return;
-    }
-    let html: String = with_ui(|u| {
-        u.keys
-            .iter()
-            .map(|row| {
-                let keys: String = row
-                    .iter()
-                    .map(|k| {
-                        format!(
-                            "<button type=\"button\" class=\"rs-key{}\" data-k=\"{}\">{}</button>",
-                            if matches!(k, Key::Mod(_)) { " mod" } else { "" },
-                            dom::escape_html(&k.data()),
-                            dom::escape_html(&k.face())
-                        )
-                    })
-                    .collect();
-                format!("<div class=\"rs-row\">{keys}</div>")
-            })
-            .collect()
-    })
-    .unwrap_or_default();
-    dom::set_html("rsKeys", &html);
+    render_keys_shared();
 }
 
 fn render_hud() {
@@ -1276,18 +1251,7 @@ fn orb() {
     begin_word(&r);
 }
 
-fn key_tap(e: web_sys::MouseEvent) {
-    if crate::flags::keyboard_core() {
-        return; // the shared keyboard routes presses to press_key
-    }
-    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-k]").ok().flatten()) else {
-        return;
-    };
-    let Some(k) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
-    press_key(&k);
-}
-
-/// One key press, from either keyboard path.
+/// One key press.
 fn press_key(k: &Key) {
     with_ui(|u| {
         if u.spelling {

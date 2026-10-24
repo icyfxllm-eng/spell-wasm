@@ -166,7 +166,7 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
   // default, which leaves the kill switch unknown so the app sends nothing.
   // telemetry.spec passes its own handler to capture and answer.
   await ctx.route('**/telemetry/**', telemetry || ((r) => r.fulfill({ status: 404, body: '' })));
-  // SPELL_FLAGS="keyboard_core=on,other=off" runs the WHOLE suite with those
+  // SPELL_FLAGS="visual_orb=on,other=off" runs the WHOLE suite with those
   // flags set, so a shipped-dark feature can be checked against every existing
   // spec before it is turned on. A spec that sets a flag itself still wins.
   const forced = (process.env.SPELL_FLAGS || '').split(',').map((p) => p.trim().split('=')).filter(([k, v]) => k && v);
