@@ -49,7 +49,7 @@ fn lists() -> &'static HashMap<&'static str, HashSet<String>> {
         // `archive/wordlists/kid-exclude/`). CC-BANK-PURITY F7: every language in
         // `consts::BUILTIN_LANGS` has a list and is registered here; a missing file
         // is a build failure (`include_str!`), and a test below walks the registry.
-        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "fil", "ru", "ar", "hi", "sw"]
+        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "fil", "ru", "ar", "hi", "sw", "fa"]
     })
 }
 

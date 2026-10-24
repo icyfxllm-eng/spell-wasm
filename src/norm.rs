@@ -95,20 +95,34 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
 }
 
 /// Strict (non-Kid) answer equality for a known language: [`fold_strict`], plus
-/// the per-language grading key where one exists. Today that is Vietnamese only:
-/// both tone-placement conventions grade as the same answer
-/// ([`crate::viet::answer_key`], signing sheet K-Q2). The key is an extra way to
-/// match, never a replacement, so no answer that matched before can stop matching.
+/// the per-language grading key where one exists. Vietnamese: both
+/// tone-placement conventions grade as the same answer
+/// ([`crate::viet::answer_key`], signing sheet K-Q2). Persian: Arabic yeh/kaf,
+/// presentation forms and a plain ا for آ grade as the Persian spelling
+/// ([`crate::fa_canon::match_key`], CC-PERSIAN-FOUNDATION F1/F2). A key is an
+/// extra way to match, never a replacement, so no answer that matched before can
+/// stop matching.
 pub fn same_answer(lang: &str, typed: &str, word: &str) -> bool {
-    fold_strict(typed) == fold_strict(word)
-        || (lang == crate::consts::VI && crate::viet::answer_key(typed) == crate::viet::answer_key(word))
+    fold_strict(typed) == fold_strict(word) || language_key_matches(lang, typed, word)
+}
+
+fn language_key_matches(lang: &str, typed: &str, word: &str) -> bool {
+    match lang {
+        crate::consts::VI => crate::viet::answer_key(typed) == crate::viet::answer_key(word),
+        crate::consts::FA => crate::fa_canon::match_key(typed) == crate::fa_canon::match_key(word),
+        _ => false,
+    }
 }
 
 /// [`answer_matches`] for a known language. Prefer this wherever the language is
 /// in hand, so a per-language grading key is never skipped by one surface.
 pub fn answer_matches_in(lang: &str, typed: &str, word: &str, kid: bool) -> bool {
     if kid {
+        // Persian's key is orthography, not accent leniency, so Kid Mode needs it
+        // too: an Arabic yeh from the system keyboard is no more a misspelling
+        // for a child than for an adult.
         fold_lenient(typed) == fold_lenient(word)
+            || (lang == crate::consts::FA && language_key_matches(lang, typed, word))
     } else {
         same_answer(lang, typed, word)
     }
@@ -147,6 +161,27 @@ fn trim_edge_punct(tok: &str) -> &str {
 mod tests {
     use super::*;
     use unicode_normalization::UnicodeNormalization;
+
+    /// CC-PERSIAN-FOUNDATION F1/F2 reach the verdict: the canonicalizer is the
+    /// comparison for Persian, in both Kid Mode and normal play.
+    #[test]
+    fn fa_grades_through_the_canonicalizer() {
+        for kid in [false, true] {
+            // Arabic yeh and kaf from a system keyboard spell the Persian word.
+            assert!(answer_matches_in("fa", "\u{643}\u{62a}\u{627}\u{628}", "\u{6a9}\u{62a}\u{627}\u{628}", kid), "ARABIC kaf: كتاب");
+            assert!(answer_matches_in("fa", "\u{645}\u{64a}\u{632}", "\u{645}\u{6cc}\u{632}", kid), "ARABIC yeh: ميز");
+            // ZWNJ is never required, and typing it is never wrong.
+            let stored = "\u{6a9}\u{62a}\u{627}\u{628}\u{200c}\u{647}\u{627}";
+            assert!(answer_matches_in("fa", "\u{6a9}\u{62a}\u{627}\u{628}\u{647}\u{627}", stored, kid));
+            assert!(answer_matches_in("fa", stored, stored, kid));
+            // A plain alef for alef-madda is forgiven (Eric, 2026-08-09).
+            assert!(answer_matches_in("fa", "\u{627}\u{628}", "\u{622}\u{628}", kid), "اب for آب");
+            // A different letter is still wrong: س for ص is the game.
+            assert!(!answer_matches_in("fa", "\u{633}\u{628}\u{631}", "\u{635}\u{628}\u{631}", kid), "سبر is not صبر");
+        }
+        // The key belongs to Persian alone: Arabic keeps its own ي/ی distinction.
+        assert!(!answer_matches_in("ar", "\u{645}\u{6cc}\u{632}", "\u{645}\u{64a}\u{632}", false));
+    }
 
     #[test]
     fn vi_accepts_both_tone_placements_and_nothing_looser() {
@@ -460,6 +495,11 @@ mod tests {
     /// that exists today, it can only accept a correct spelling that used to be
     /// refused. This test is that premise, checked against the shipping banks
     /// rather than assumed.
+    ///
+    /// Persian is the one deliberate exception, and only for ZWNJ: its bank
+    /// stores the ZWNJ that correct orthography needs (CC-PERSIAN-FOUNDATION D2)
+    /// and F2 rules that the comparison ignores it. So for fa the count skips
+    /// ZWNJ, and every OTHER silent mark is still held to the premise.
     #[test]
     fn no_shipping_answer_depends_on_a_silent_mark() {
         for (code, _, _, _) in crate::consts::BUILTIN_LANGS {
@@ -469,10 +509,11 @@ mod tests {
                     // split, because none is needed. Nothing here grades -- it
                     // counts characters -- and checking both halves is the
                     // stronger claim anyway.
+                    let orthographic_zwnj = |c: &char| code == crate::consts::FA && *c == '\u{200C}';
                     assert_eq!(
                         fold_strict(w).chars().count(),
                         w.nfc().collect::<String>().to_lowercase()
-                            .chars().filter(|c| !c.is_whitespace()).count(),
+                            .chars().filter(|c| !c.is_whitespace() && !orthographic_zwnj(c)).count(),
                         "locale {code}: {w:?} loses a character to the silent-mark fold",
                     );
                 }

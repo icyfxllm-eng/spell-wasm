@@ -91,7 +91,7 @@ mod dom;
 pub mod editor;
 mod enrich;
 pub mod entitlements;
-mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; fa not yet in the registry)
+mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; Persian answer grading)
 mod flags;
 mod telemetry; // CC-TELEMETRY-FOUNDATION v1.1 (F1 crash reporting)
 mod game;

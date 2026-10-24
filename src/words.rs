@@ -13,7 +13,7 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 18] = [
+pub const LANGUAGES: [(&str, LangInfo); 19] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
@@ -22,8 +22,8 @@ pub const LANGUAGES: [(&str, LangInfo); 18] = [
     ("pl", LangInfo { name: "Polski", code: "pl-PL" }),
     // CC-LINEUP-SWAP D3 variants: Russian standard ru-RU; Modern Standard Arabic.
     // Audio is direction-agnostic, so Arabic carries a voice here even though the
-    // rtl_required gate keeps it off every playable surface. (Persian and Urdu were
-    // cut — CC-MASTER-PARITY Phase A.)
+    // rtl_required gate keeps it off every playable surface. (Urdu was cut —
+    // CC-MASTER-PARITY Phase A; Persian is back, 2026-10-24.)
     ("ru", LangInfo { name: "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", code: "ru-RU" }),
     ("ar", LangInfo { name: "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", code: "ar-SA" }),
     // CC-MASTER-PARITY Track S: Swahili. sw-TZ (Tanzania) — spoken via Azure
@@ -33,6 +33,9 @@ pub const LANGUAGES: [(&str, LangInfo); 18] = [
     ("sw", LangInfo { name: "Kiswahili", code: "sw-TZ" }),
     // Hindi (Devanagari) — promoted to production 2026-07-25 (Eric's ruling).
     ("hi", LangInfo { name: "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", code: "hi-IN" }),
+    // Persian (Iranian, fa-IR) — reinstated 2026-10-24 (Eric). Spoken via Azure;
+    // the backend keys on the 2-letter "fa", as it does for "sw".
+    ("fa", LangInfo { name: "\u{641}\u{627}\u{631}\u{633}\u{6cc}", code: "fa-IR" }),
     // New languages with their own keyboard + backend voice (My Words matches).
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
@@ -6380,7 +6383,7 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{AR, DE, ES, FIL, FR, HI, JA, KO, PL, PT, RU, SW, VI, ZH};
+    use crate::consts::{AR, DE, ES, FA, FIL, FR, HI, JA, KO, PL, PT, RU, SW, VI, ZH};
     match lang {
         // Russian shipped a real production bank (CC-MASTER-PARITY Track R):
         // Leipzig CC BY, frequency-ranked, length-tiered, gated by build-wordlists.
@@ -6391,11 +6394,9 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         // keyboard-reachability gated). No registered language is contentless
         // anymore — the serves-its-OWN-bank test below is the fallthrough tripwire.
         AR => simple_tier(AR_EASY, AR_MEDIUM, AR_HARD, AR_EXPERT, tier),
-        // Persian. Unreachable until fa enters the registry — that reverses
-        // CC-MASTER-PARITY Phase A and is Eric's call — but wired the same way
-        // the fa keyboard is, so the bank is serveable the moment it lands
-        // rather than needing a second pass to remember this arm exists.
-        "fa" => simple_tier(FA_EASY, FA_MEDIUM, FA_HARD, FA_EXPERT, tier),
+        // Persian, reinstated 2026-10-24 (Eric): the CC-PERSIAN-FOUNDATION F4
+        // bank, tiered by orthographic depth (build-fa-bank.py).
+        FA => simple_tier(FA_EASY, FA_MEDIUM, FA_HARD, FA_EXPERT, tier),
         HI => simple_tier(HI_EASY, HI_MEDIUM, HI_HARD, HI_EXPERT, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),

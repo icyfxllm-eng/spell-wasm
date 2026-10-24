@@ -78,6 +78,7 @@ fn source(lang: &str) -> Option<&'static str> {
         "ar" => include_str!("../assets/words/ar/soundalikes.json"),
         "sw" => include_str!("../assets/words/sw/soundalikes.json"),
         "hi" => include_str!("../assets/words/hi/soundalikes.json"),
+        "fa" => include_str!("../assets/words/fa/soundalikes.json"),
         _ => return None,
     })
 }

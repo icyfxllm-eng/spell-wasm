@@ -41,7 +41,7 @@ pub const ZH: &str = "zh";
 /// current audit round — left-to-right, so nothing gates it but its content.
 pub const RU: &str = "ru";
 /// CC-LINEUP-SWAP: Modern Standard Arabic (D3). RTL — see [`RTL_SUPPORTED`].
-/// The sole RTL language after Persian and Urdu were cut (CC-MASTER-PARITY Phase A).
+/// Persian and Urdu were cut beside it (CC-MASTER-PARITY Phase A); Persian is back.
 pub const AR: &str = "ar";
 /// CC-MASTER-PARITY Track S: Swahili (Kiswahili, sw-TZ). Latin script, LTR —
 /// renders with no special machinery. Real Leipzig CC BY bank.
@@ -50,6 +50,11 @@ pub const SW: &str = "sw";
 /// PROMOTED to the production registry as the 15th language by Eric's ruling
 /// (2026-07-25) with a full Leipzig-Wikipedia bank (build-hi-bank.py).
 pub const HI: &str = "hi";
+/// Iranian Persian (fa-IR, not Dari). RTL, Arabic script. Cut by CC-MASTER-PARITY
+/// Phase A, REINSTATED as the 16th language by Eric's ruling (2026-10-24) so the
+/// TestFlight auditors can play it. Bank, keyboard and canonicalizer are
+/// CC-PERSIAN-FOUNDATION F1/F2/F4 (2026-08-09).
+pub const FA: &str = "fa";
 
 /// Built-in word-source languages: (lang code, display name). Adding a language
 /// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
@@ -170,7 +175,7 @@ use Direction::{Ltr, Rtl};
 ///   Rtl and does not join. This decides whether the answer surface may split a
 ///   word into per-letter elements.
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
-const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
+const LANGS_BASE: [(&str, &str, LangStatus, Direction); 16] = [
     (EN, "English", Active, Ltr),
     (ES, "Espa\u{f1}ol", Active, Ltr),
     (FR, "Fran\u{e7}ais", Active, Ltr),
@@ -186,9 +191,10 @@ const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
     (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
     (SW, "Kiswahili", Active, Ltr),
     (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", Active, Ltr),
+    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", Active, Rtl),
 ];
 
-/// THE registry. All fifteen are Active: the APP ships every language.
+/// THE registry. All sixteen are Active: the APP ships every language.
 ///
 /// The web is a different question and it is answered in exactly one place,
 /// [`is_active_lang`], via the `web` cargo feature -- not by a second
@@ -204,7 +210,7 @@ const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
 /// testing and Eric wants testers on every language -- but the native-audit
 /// sign-offs those languages still lack are tracked in CC-LEARNING-ENGINE D2
 /// and are not satisfied by this line.
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = LANGS_BASE;
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 16] = LANGS_BASE;
 
 /// THE direction accessor (CC-RTL D3). The play surface sets `dir` from this and
 /// from nothing else. An unknown language reads left-to-right — the safe default,
@@ -267,7 +273,7 @@ pub fn rtl_blocked(lang: &str) -> bool {
 /// rather than keeping a parallel copy. Adding a language whose script shapes
 /// means adding it HERE, once.
 pub fn script_joins(lang: &str) -> bool {
-    matches!(lang, AR | HI)
+    matches!(lang, AR | FA | HI)
 }
 
 /// CC-DEF-MATCH per-language activation (Invariant 7/8: THE registry flag, no
@@ -281,8 +287,12 @@ pub fn script_joins(lang: &str) -> bool {
 /// easy+medium (12 langs all four tiers; ar easy-hard; ja easy-medium — the
 /// screen steps DOWN to the deepest clearing tier at open). Per-tier floors
 /// stay enforced at pool-fetch time; this flag is per-language reachability.
+///
+/// Persian is the one exception: it has no definition pool (backend/def_pools/
+/// has no fa.json), and CC-PERSIAN-FOUNDATION F4 launches its definitions dark
+/// until the fa auditor pair's audit ingests. The tile reads "coming soon".
 pub fn def_match(lang: &str) -> bool {
-    is_builtin_lang(lang)
+    is_builtin_lang(lang) && lang != FA
 }
 
 /// CC-PRACTICE D7 — per-language availability (registry-derived, no other
@@ -299,8 +309,11 @@ pub fn server_stt(lang: &str) -> bool {
     is_builtin_lang(lang)
 }
 
+/// Persian is the one exception: it has no drafted curriculum (config/practice/
+/// has no fa.json) since its reinstatement on 2026-10-24, so the tile reads
+/// "coming soon" rather than opening onto nothing.
 pub fn practice(lang: &str) -> bool {
-    is_builtin_lang(lang)
+    is_builtin_lang(lang) && lang != FA
 }
 
 /// A language's availability status (ComingSoon for anything not in the registry).
@@ -523,7 +536,7 @@ mod registry_tests {
         // ...and the OTHER fourteen are still registered, so they render as
         // coming-soon tiles rather than vanishing. The site should say the
         // languages exist; it just does not play them.
-        assert_eq!(BUILTIN_LANGS.len(), 15, "the registry itself is unchanged on web");
+        assert_eq!(BUILTIN_LANGS.len(), 16, "the registry itself is unchanged on web");
     }
 
     /// CC-LINEUP-SWAP: the registry snapshot. Pinning the exact lineup means a
@@ -531,23 +544,25 @@ mod registry_tests {
     /// deliberately.
     #[test]
     fn registry_is_the_swapped_lineup_of_14() {
-        // 15 since Hindi's promotion (2026-07-25): the swapped 14 plus hi. The
-        // registry is now IDENTICAL in every build config.
+        // 15 since Hindi's promotion (2026-07-25): the swapped 14 plus hi; 16
+        // since Persian's reinstatement (Eric, 2026-10-24). The registry is
+        // IDENTICAL in every build config.
         let codes: Vec<&str> = LANGS_BASE.iter().map(|(c, _, _, _)| *c).collect();
-        assert_eq!(codes.len(), 15, "the swapped 14 plus Hindi (promoted 2026-07-25)");
+        assert_eq!(codes.len(), 16, "the swapped 14 plus Hindi plus Persian");
         assert_eq!(
             codes,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi"],
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi", "fa"],
         );
         // The cut four (CC-LINEUP-SWAP F1), plus Thai (5fc69ff), Turkish
-        // (CC-HINDI-PHASE0 D1 — permanently; Hindi replaces it), and Persian/Urdu
-        // (CC-MASTER-PARITY Phase A).
-        for gone in ["no", "nb", "sv", "nl", "it", "th", "tr", "fa", "ur"] {
+        // (CC-HINDI-PHASE0 D1 — permanently; Hindi replaces it), and Urdu
+        // (CC-MASTER-PARITY Phase A). Persian was cut with Urdu and is back.
+        for gone in ["no", "nb", "sv", "nl", "it", "th", "tr", "ur"] {
             assert!(!codes.contains(&gone), "{gone} is cut from the registry");
         }
         // One registry, every build config (the audit-only Hindi split is gone).
-        assert_eq!(BUILTIN_LANGS.len(), 15);
+        assert_eq!(BUILTIN_LANGS.len(), 16);
         assert_eq!(BUILTIN_LANGS[14].0, "hi", "Hindi is the 15th entry everywhere");
+        assert_eq!(BUILTIN_LANGS[15].0, "fa", "Persian is the 16th entry everywhere");
     }
 
     /// CC-PHOTO-IMPORT Phase 0 — the OCR-support snapshot, pinned to the G-B
@@ -562,6 +577,7 @@ mod registry_tests {
             ("ja", Native), ("fil", EnglishFallback), ("zh", Native),
             ("ru", Native), ("ar", Native), ("sw", EnglishFallback),
             ("hi", Unsupported), // Devanagari: no Vision model (G-B measurement)
+            ("fa", Unsupported), // never measured; fails closed until it is
         ];
         for (code, want) in expected {
             assert_eq!(ocr_support(code), want, "{code} OCR class drifted from the G-B measurement");
@@ -589,7 +605,7 @@ mod registry_tests {
     #[test]
     fn practice_open_to_all_registered_languages() {
         for (code, _, _, _) in LANGS_BASE.iter() {
-            assert!(practice(code), "{code} practice must be open");
+            assert_eq!(practice(code), *code != FA, "{code}: practice open everywhere but fa (no curriculum)");
         }
         assert!(!practice("xx"));
     }
@@ -603,7 +619,7 @@ mod registry_tests {
         // FULL ACTIVATION (2026-07-27): every registered language's pool
         // clears the floor in >=2 tiers; per-tier floors enforced at fetch.
         for (code, _, _, _) in LANGS_BASE.iter() {
-            assert!(def_match(code), "{code} pool cleared the floor at full activation");
+            assert_eq!(def_match(code), *code != FA, "{code}: every pool cleared the floor; fa has none and stays dark");
         }
         assert!(!def_match("xx"), "unregistered languages never activate");
     }
@@ -615,7 +631,7 @@ mod registry_tests {
     #[test]
     fn rtl_languages_are_registered_but_hard_gated() {
         let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, d)| *d == Rtl).map(|(c, _, _, _)| *c).collect();
-        assert_eq!(rtl, vec!["ar"], "exactly the one RTL language carries the flag");
+        assert_eq!(rtl, vec!["ar", "fa"], "exactly the two RTL languages carry the flag");
         assert!(RTL_SUPPORTED, "RTL support ON (Arabic ungated 2026-07-25)");
         for code in rtl {
             assert!(rtl_required(code), "{code} is rtl_required (drives dir/joins)");
@@ -655,7 +671,7 @@ mod registry_tests {
     fn every_language_declares_whether_its_script_shapes() {
         let joins: Vec<&str> =
             BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).filter(|c| script_joins(c)).collect();
-        assert_eq!(joins, vec!["ar", "hi"], "Arabic joins; Devanagari conjoins");
+        assert_eq!(joins, vec!["ar", "hi", "fa"], "Arabic and Persian join; Devanagari conjoins");
 
         // Nothing else may take the joined path — splitting is harmless for
         // them and the `pop` animation depends on it.
@@ -685,7 +701,7 @@ mod registry_tests {
     /// on Latin is visible instantly; a missing one on Arabic is not.
     #[test]
     fn direction_comes_from_the_registry() {
-        for lang in ["ar"] {
+        for lang in ["ar", "fa"] {
             assert_eq!(direction(lang), Rtl, "{lang} reads right-to-left");
             assert_eq!(dir_attr(lang), "rtl");
         }
