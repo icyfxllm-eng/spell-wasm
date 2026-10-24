@@ -624,7 +624,8 @@ pub fn visual_orb() -> bool {
 /// and the Game sounds setting. **Default OFF** (V-D22), killable as
 /// `visual_sound`. Off: no sound plays and the Settings rows stay hidden.
 pub fn visual_sound() -> bool {
-    resolve(stored("visual_sound").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 295, CC-VISUAL-ECLIPSE Phase C review): on.
+    resolve(stored("visual_sound").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.haptics` (Phase C, F6): the signed haptic table
@@ -632,7 +633,8 @@ pub fn visual_sound() -> bool {
 /// OFF** (V-D22), killable as `visual_haptics`. Off: today's mapping, no cap,
 /// no toggles.
 pub fn visual_haptics() -> bool {
-    resolve(stored("visual_haptics").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 295, CC-VISUAL-ECLIPSE Phase C review): on.
+    resolve(stored("visual_haptics").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.icons` (Phase D, F8): the drawn icon set in place
@@ -791,7 +793,8 @@ mod tests {
     #[test]
     fn visual_sound_and_haptics_ship_dark() {
         set_test_override(None);
-        assert!(!visual_sound() && !visual_haptics(), "Phase C ships dark until a build turns it on (V-D22)");
+        // Release branch for build 295: the build turns them on (V-D22).
+        assert!(visual_sound() && visual_haptics(), "build 295 turns visual.sound and visual.haptics on");
         set_test_override(Some("on"));
         assert!(visual_sound() && visual_haptics());
         set_test_override(None);
