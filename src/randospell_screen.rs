@@ -733,7 +733,7 @@ fn render_keys_shared() {
             .collect()
     })
     .unwrap_or_default();
-    let s = Surface { host: "rsKeys", row_class: "rs-row", key_class: "rs-key", attr: Attr::Prefixed("data-k"), long_press: false };
+    let s = Surface { host: "rsKeys", row_class: "rs-row", key_class: "rs-key", attr: Attr::Prefixed("data-k"), long_press: false, field: "rsField" };
     crate::spellkb::mount(s, &rows, Edges::default(), press_key);
 }
 
@@ -1294,6 +1294,7 @@ fn resolve(typed: Option<String>) {
         let tier = crate::boardgame::Tier::ALL[tier.min(3)];
         crate::boardgame_grade::grade(&lang, kid, t, &word, tier)
     });
+    crate::keyboard_moments::react_for("randospell", "rsKeys", correct, typed.as_deref().unwrap_or(""), 0);
     let out = with_ui(|u| {
         u.spelling = false;
         u.typed.clear();

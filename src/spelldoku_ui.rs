@@ -691,7 +691,7 @@ fn render_keys_shared(lang: &str) {
     }
     const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-sd-back>\u{232B}</button>\
                           <button type=\"button\" class=\"kb-key wide go\" data-sd-go>\u{2713}</button>";
-    let s = Surface { host: "sdKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-sd-key"), long_press: false };
+    let s = Surface { host: "sdKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-sd-key"), long_press: false, field: "sdTyped" };
     crate::spellkb::mount(s, &caps, Edges { lead: "", tail: COMMIT }, |k| match k {
         Key::Unit(u) => sd_type(u),
         Key::Tone(t) => sd_type(&t.to_string()),
@@ -1136,6 +1136,9 @@ fn speak_prompt_at(variant: &str) {
 }
 
 fn submit_typed() {
+    // CC-SPELL-KEYBOARD K-D23: SpellDoku holds a logic error back for Check Board
+    // (Hard, Expert), so its keyboard only ever pulses "submitted".
+    crate::keyboard_moments::submitted("sdKeys");
     // v1.3 F2: in Tier Mode the typed word is judged against the word THIS cell
     // was served, and the digit is the one whose badge the player tapped. A
     // misspelling draws a new word of the same tier and never fills the cell (F4).

@@ -1553,7 +1553,7 @@ fn render_keys_shared() {
     } else {
         ""
     };
-    let s = Surface { host: "bgKeys", row_class: "bg-row", key_class: "bg-key", attr: Attr::Prefixed("data-k"), long_press: false };
+    let s = Surface { host: "bgKeys", row_class: "bg-row", key_class: "bg-key", attr: Attr::Prefixed("data-k"), long_press: false, field: "bgField" };
     crate::spellkb::mount(s, &rows, Edges { lead: shift, tail: "" }, press_key);
     set_shift(false);
     if !shift.is_empty() {
@@ -1736,6 +1736,7 @@ fn submit() {
     let Some((before_seat, kid)) = with_ui(|u| (u.game.current_seat(), u.kid)) else {
         return;
     };
+    let answer = typed.clone();
     let ok = with_ui(|u| boardgame::apply(&mut u.game, Action::SubmitSpelling(typed)).is_ok()).unwrap_or(false);
     if !ok {
         return;
@@ -1751,6 +1752,7 @@ fn submit() {
         (m, !u.pass)
     })
     .unwrap_or((None, true));
+    crate::keyboard_moments::react_for("boardgame", "bgKeys", missed_word.is_none(), &answer, 0);
     if missed_word.is_some() {
         haptics::incorrect(kid);
         if solo {

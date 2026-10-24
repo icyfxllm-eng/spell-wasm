@@ -2263,11 +2263,34 @@ pub fn submit_guess(app: &App) {
     // CC-IOS-SURFACES (BD-1): the widget snapshot follows meaningful state
     // (streak / daily-done movement). One-way write; a no-op off-app.
     crate::widgets::write_snapshot(&app.borrow());
+    let voided = round_voided(app);
     if correct {
         on_correct(app);
     } else {
         on_wrong(app);
     }
+    if !voided {
+        keyboard_reacts(app, correct, &typed);
+    }
+}
+
+/// CC-SPELL-KEYBOARD Phase C: the keyboard's own reaction to this verdict (KF6,
+/// KF7), gated by the same feedback policy as the reveal (I7). After the verdict's
+/// own bookkeeping, so the streak it warms to is the new one.
+fn keyboard_reacts(app: &App, correct: bool, typed: &str) {
+    let (verdict, streak) = {
+        let s = app.borrow();
+        let (mode, level) = feedback_mode(&s);
+        (crate::modes::feedback_policy(mode, level).verdict, s.streak)
+    };
+    crate::keyboard_moments::react(crate::keyboard_moments::Outcome {
+        host: "kbLetters",
+        verdict,
+        correct,
+        answer: typed,
+        streak,
+        in_duel: false,
+    });
 }
 
 /// English words get double-checked against the backend's /api/check; if
@@ -2304,10 +2327,14 @@ async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
         // network hop later — recorded with the same channel.
         crate::learner::note_attempt(crate::consts::EN, &word, correct, crate::learner::Channel::Typed);
     }
+    let voided = round_voided(&app);
     if correct {
         on_correct(&app);
     } else {
         on_wrong(&app);
+    }
+    if !voided {
+        keyboard_reacts(&app, correct, &typed);
     }
 }
 

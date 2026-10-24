@@ -219,7 +219,7 @@ fn render_word() {
 
 fn render_keys(lang: &str) {
     use crate::spellkb::{Attr, Edges, Surface};
-    let s = Surface { host: "beeKeys", row_class: "bee-row", key_class: "bee-key", attr: Attr::Raw("data-k"), long_press: true };
+    let s = Surface { host: "beeKeys", row_class: "bee-row", key_class: "bee-key", attr: Attr::Raw("data-k"), long_press: true, field: "beeWord" };
     crate::spellkb::mount(s, &crate::keyboard::shared_rows(lang), Edges::default(), press_key);
 }
 
@@ -375,6 +375,7 @@ fn submit(app: &App) {
     } else {
         crate::norm::same_answer(&lang, &typed, target_word)
     };
+    crate::keyboard_moments::react_for("bee_sim", "beeKeys", correct, &typed, 0);
 
     if correct {
         if !ASKED.with(Cell::get) {

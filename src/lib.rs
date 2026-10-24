@@ -28,6 +28,7 @@ mod boardgame_grade; // CC-BOARD-GAME F3/D21 -- the local answer check
 #[cfg(not(feature = "web"))]
 mod boardgame_input; // CC-BOARD-GAME D20 -- answer keys and presses
 mod spellkb; // CC-SPELL-KEYBOARD -- the one shared keyboard: keys, mounting, long-press
+mod keyboard_moments; // CC-SPELL-KEYBOARD Phase C -- letter flight, constellation, reactions
 #[cfg(not(feature = "web"))]
 mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank gate
 #[cfg(not(feature = "web"))]

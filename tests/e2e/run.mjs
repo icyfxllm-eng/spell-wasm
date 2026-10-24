@@ -32,6 +32,7 @@ import * as drawerClose from './specs/drawer-close.mjs';
 import * as economics from './specs/economics.mjs';
 import * as wordpicViTone from './specs/wordpic-vi-tone.mjs';
 import * as spellKeyboard from './specs/spell-keyboard.mjs';
+import * as keyboardMoments from './specs/keyboard-moments.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
 import * as audioGate from './specs/audio-gate.mjs';
 import * as humanAudio from './specs/human-audio.mjs';
@@ -129,6 +130,7 @@ const SPECS = [
   ['economics', economics],
   ['wordpic-vi-tone', wordpicViTone],
   ['spell-keyboard', spellKeyboard],
+  ['keyboard-moments', keyboardMoments],
   ['audio-gate', audioGate],
   ['human-audio', humanAudio],
   ['finale-relaunch', finaleRelaunch],

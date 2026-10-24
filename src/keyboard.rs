@@ -322,7 +322,7 @@ fn build_keys(app: &App) {
     } else {
         ""
     };
-    let letters = Surface { host: "kbLetters", row_class: "kb-row", key_class: "kb-key", attr: Attr::Raw("data-k"), long_press: true };
+    let letters = Surface { host: "kbLetters", row_class: "kb-row", key_class: "kb-key", attr: Attr::Raw("data-k"), long_press: true, field: "spellbox" };
     let a = app.clone();
     crate::spellkb::mount(letters, &rows, Edges { lead: shift, tail: "" }, move |k| {
         if let Key::Unit(u) = k {
@@ -343,7 +343,7 @@ fn build_keys(app: &App) {
     // The Vietnamese tone row, now with a name per tone (KF10).
     if locale == "vi" {
         let tones: Vec<Cap> = crate::viet::TONE_MARKS.iter().map(|&m| Cap::key(Key::Tone(m))).collect();
-        let row = Surface { host: "kbToneRow", row_class: "", key_class: "kb-key kb-tone", attr: Attr::ToneHex("data-tone"), long_press: false };
+        let row = Surface { host: "kbToneRow", row_class: "", key_class: "kb-key kb-tone", attr: Attr::ToneHex("data-tone"), long_press: false, field: "" };
         let a = app.clone();
         crate::spellkb::mount(row, &[tones], Edges::default(), move |k| {
             if let Key::Tone(m) = k {

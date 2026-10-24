@@ -962,7 +962,7 @@ fn render_keys_shared() {
     .unwrap_or_default();
     // The delete key lives at the end of the last letter row, so the keyboard stays three rows tall.
     let del = format!("<button type=\"button\" class=\"sz-key sz-del\" data-del=\"1\" aria-label=\"{}\">\u{232b}</button>", dom::escape_html(&tr("aria.backspace", &[])));
-    let s = Surface { host: "szKbKeys", row_class: "sz-krow", key_class: "sz-key", attr: Attr::Prefixed("data-k"), long_press: false };
+    let s = Surface { host: "szKbKeys", row_class: "sz-krow", key_class: "sz-key", attr: Attr::Prefixed("data-k"), long_press: false, field: "" };
     crate::spellkb::mount(s, &rows, Edges { lead: "", tail: &del }, shared_key);
 }
 
@@ -1324,6 +1324,8 @@ fn delete() {
 }
 
 fn on_commit(o: Outcome) {
+    // I6/K-D23: a solo board shows no verdict for a commit, so the keyboard only pulses.
+    crate::keyboard_moments::submitted("szKbKeys");
     // F4: neutral for a clean commit, close for a new clash, success for a solved board; never a miss.
     if feedback::State::from(o) == feedback::State::Success {
         haptics::correct();
@@ -1598,14 +1600,25 @@ fn duel_check() {
         du.draft.clear();
         // D23: the verdict, every turn.
         du.note = if out.correct { format!("\u{2713} +{}", out.points) } else { "\u{2717}".to_string() };
-        Some(out.correct)
+        Some((out.correct, typed.iter().collect::<String>()))
     })
     .flatten();
-    match r {
-        Some(true) => { haptics::correct(); crate::themes::note_correct(); }
-        Some(false) => haptics::wrong(),
-        None => return,
+    let Some((correct, typed)) = r else { return };
+    if correct {
+        haptics::correct();
+        crate::themes::note_correct();
+    } else {
+        haptics::wrong();
     }
+    // D23: in a Duel the verdict is shown, so the keyboard may react to it.
+    crate::keyboard_moments::react(crate::keyboard_moments::Outcome {
+        host: "szKbKeys",
+        verdict: crate::modes::feedback_policy("spelluzzle", None).verdict,
+        correct,
+        answer: &typed,
+        streak: 0,
+        in_duel: true,
+    });
     duel_after_action();
 }
 

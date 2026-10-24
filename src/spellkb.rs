@@ -207,6 +207,9 @@ pub struct Surface {
     pub attr: Attr,
     /// Whether keys carrying alternates open the long-press popover.
     pub long_press: bool,
+    /// The answer element a typed letter flies into (KF5); "" where the answer
+    /// is a board of cells rather than one field.
+    pub field: &'static str,
 }
 
 /// One keycap.
@@ -361,6 +364,11 @@ pub fn accent_rows(rows: &[Vec<Cap>]) -> Vec<Vec<Cap>> {
     out
 }
 
+/// How `host`'s keys are tagged (the constellation finds them by it).
+pub fn attr_of(host: &str) -> Option<Attr> {
+    MOUNTED.with(|m| m.borrow().get(host).map(|x| x.surface.attr))
+}
+
 fn sink_for(host: &str) -> Option<(Surface, Sink)> {
     MOUNTED.with(|m| m.borrow().get(host).map(|x| (x.surface, x.sink.clone())))
 }
@@ -379,6 +387,7 @@ fn wire_host(host: &'static str) {
         // on any tap (Spelluzzle settles its decode ripple). A surface's own key
         // handler leaves letter keys alone, so a press is typed once.
         sink(&k);
+        crate::keyboard_moments::flight(&key, s.field, None);
     });
     let _ = el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref());
     cb.forget();
@@ -533,9 +542,9 @@ fn update_selection(client_x: f64) {
 }
 
 fn commit() {
-    let (open, ch, host) = HOLD.with(|h| {
+    let (open, ch, host, anchor) = HOLD.with(|h| {
         let h = h.borrow();
-        (h.open, h.options.get(h.sel).copied(), h.host)
+        (h.open, h.options.get(h.sel).copied(), h.host, h.anchor.clone())
     });
     cancel_timer();
     if !open {
@@ -543,9 +552,12 @@ fn commit() {
     }
     close_popover();
     let (Some(c), Some(host)) = (ch, host) else { return };
-    let Some((_, sink)) = sink_for(host) else { return };
+    let Some((s, sink)) = sink_for(host) else { return };
     HOLD.with(|h| h.borrow_mut().suppress_click = true);
     sink(&Key::Unit(c.to_string()));
+    if let Some(a) = anchor {
+        crate::keyboard_moments::flight(&a, s.field, Some(&c.to_string()));
+    }
 }
 
 /// Close the alternates popover if it is open (a keyboard rebuild does).
@@ -560,7 +572,7 @@ pub fn close_popover() {
 mod tests {
     use super::*;
 
-    const S: Surface = Surface { host: "x", row_class: "bee-row", key_class: "bee-key", attr: Attr::Raw("data-k"), long_press: true };
+    const S: Surface = Surface { host: "x", row_class: "bee-row", key_class: "bee-key", attr: Attr::Raw("data-k"), long_press: true, field: "" };
 
     #[test]
     fn attributes_round_trip_in_every_form() {

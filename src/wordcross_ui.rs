@@ -407,7 +407,7 @@ fn render_keys_shared(lang: &str) {
     use crate::spellkb::{Attr, Cap, Edges, Key, Surface};
     let caps: Vec<Vec<Cap>> = crate::wordsearch_ui::layout(lang).into_iter().map(|r| r.into_iter().map(|c| Cap::key(Key::Unit(c))).collect()).collect();
     const BACK: &str = "<button type=\"button\" class=\"kb-key wide\" data-xw-back>\u{232B}</button>";
-    let s = Surface { host: "xwKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-xw-key"), long_press: false };
+    let s = Surface { host: "xwKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-xw-key"), long_press: false, field: "" };
     crate::spellkb::mount(s, &caps, Edges { lead: "", tail: BACK }, |k| {
         if let Key::Unit(u) = k {
             type_key(u);
@@ -462,6 +462,7 @@ fn check_word(i: usize, typed: &str, want: &str) {
         let mut gb = c.borrow_mut();
         let Some(g) = gb.as_mut() else { return };
         let correct = crate::norm::answer_matches(typed, want, false);
+        crate::keyboard_moments::react_for("spell_cross", "xwKeys", correct, typed, 0);
         let cells = word_cells(g, i);
         if correct {
             g.solved[i] = true;
@@ -530,6 +531,7 @@ fn submit_keystone() {
             return;
         }
         let correct = crate::norm::answer_matches(typed, &word, false);
+        crate::keyboard_moments::react_for("spell_cross", "xwKeys", correct, typed, 0);
         crate::learner::note_built(&g.lang, lock_in_attempt(&g.lang, &word, typed, correct, crate::learner::day_now()));
         if !correct {
             *missed = true;

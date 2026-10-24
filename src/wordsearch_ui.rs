@@ -122,7 +122,7 @@ fn render_keys_shared(lang: &str) {
     let caps: Vec<Vec<Cap>> = layout(lang).into_iter().map(|r| r.into_iter().map(|c| Cap::key(Key::Unit(c))).collect()).collect();
     const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-ws-back>\u{232B}</button>\
                           <button type=\"button\" class=\"kb-key wide go\" data-ws-go>\u{2713}</button>";
-    let s = Surface { host: "wsKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-ws-key"), long_press: false };
+    let s = Surface { host: "wsKeys", row_class: "sd-row", key_class: "kb-key", attr: Attr::Raw("data-ws-key"), long_press: false, field: "wsTyped" };
     crate::spellkb::mount(s, &caps, Edges { lead: "", tail: COMMIT }, |k| {
         if let Key::Unit(u) = k {
             ws_type(u);
@@ -508,6 +508,7 @@ fn submit_lock_in() {
         let correct = crate::norm::answer_matches_in(&lang, typed, &word, kid)
             || (crate::homophones::accepts(&lang, &word, typed)
                 && crate::norm::fold_strict(typed) != crate::norm::fold_strict(&word));
+        crate::keyboard_moments::react_for("spell_search", "wsKeys", correct, typed, 0);
         crate::learner::note_built(&lang, lock_in_attempt(&lang, &word, typed, correct, crate::learner::day_now()));
         if correct {
             note(&t("ws.right"));

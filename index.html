@@ -388,6 +388,12 @@
     --motion-anim-orb-inhale:900ms;
     --motion-anim-letter-lift-budget:120ms;
     --motion-anim-caret-blink:1050ms;
+    --motion-anim-key-flight:120ms;
+    --motion-anim-key-wave:280ms;
+    --motion-anim-key-wave-step:20ms;
+    --motion-anim-key-dim:320ms;
+    --motion-anim-key-pulse:320ms;
+    --motion-anim-constellation:1200ms;
     --motion-mode-defmatch-orb-glow:300ms;
     --motion-mode-defmatch-pulse:500ms;
     --motion-mode-defmatch-sway:2600ms;
@@ -2027,6 +2033,33 @@
   body{--skb-key-h:44px}
   body.kid{--skb-key-h:52px}
   body.big-text{--skb-key-h:56px}
+  /* CC-SPELL-KEYBOARD Phase C (KF5-KF7): the keyboard's moments, each behind its
+     own flag (keyboard.flight / .constellation / .react). Durations are motion
+     tokens; under Reduce Motion only colour and opacity change (I6). */
+  .skb-ghost{position:fixed;z-index:80;pointer-events:none;display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--amber);animation:skb-fly var(--motion-anim-key-flight) ease-out forwards}
+  @keyframes skb-fly{to{transform:translate(var(--dx),var(--dy)) scale(.55);opacity:0}}
+  .skb-wave .skb-key{animation:skb-wave var(--motion-anim-key-wave) ease-out both;
+    animation-delay:calc(var(--skb-ring,0) * var(--motion-anim-key-wave-step))}
+  @keyframes skb-wave{40%{transform:translateY(-3px);border-color:var(--success);box-shadow:0 0 12px var(--success-glow)}}
+  @keyframes skb-wave-still{40%{border-color:var(--success);box-shadow:0 0 12px var(--success-glow)}}
+  .skb-dim .skb-key{animation:skb-dim var(--motion-anim-key-dim) ease-out}
+  @keyframes skb-dim{40%{opacity:.6;border-color:var(--warn);box-shadow:0 0 10px var(--warn-glow)}}
+  .skb-pulse .skb-key{animation:skb-pulse var(--motion-anim-key-pulse) ease-out}
+  @keyframes skb-pulse{40%{border-color:var(--muted);opacity:.8}}
+  [data-skb-warm="1"] .skb-key{border-color:var(--glow-streak-1)}
+  [data-skb-warm="2"] .skb-key{border-color:var(--glow-streak-2)}
+  [data-skb-warm="3"] .skb-key{border-color:var(--glow-streak-3)}
+  .skb-constellation{position:fixed;inset:0;width:100%;height:100%;z-index:79;
+    animation:skb-stars var(--motion-anim-constellation) ease-in forwards}
+  .skb-constellation polyline{fill:none;stroke:var(--amber);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+  .skb-constellation circle{fill:var(--amber)}
+  .skb-constellation circle.ring{fill:none;stroke:var(--amber);stroke-width:1.5}
+  @keyframes skb-stars{0%{opacity:0}15%{opacity:1}70%{opacity:1}100%{opacity:0}}
+  @media (prefers-reduced-motion: reduce){
+    .skb-ghost{animation:none;display:none}
+    .skb-wave .skb-key{animation-name:skb-wave-still}
+  }
   #gameKeyboard.shift-on .skb-key{text-transform:uppercase}
   .skb-shift.btn-hide{display:none}
   .skb-shift.on{background:var(--amber);color:var(--palette-on-gold-text);border-color:var(--amber)}

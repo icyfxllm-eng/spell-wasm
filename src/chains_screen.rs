@@ -209,7 +209,7 @@ fn render_score() {
 
 fn render_keys(lang: &str) {
     use crate::spellkb::{Attr, Edges, Surface};
-    let s = Surface { host: "cnKeys", row_class: "cn-row", key_class: "cn-key", attr: Attr::Raw("data-k"), long_press: true };
+    let s = Surface { host: "cnKeys", row_class: "cn-row", key_class: "cn-key", attr: Attr::Raw("data-k"), long_press: true, field: "cnWord" };
     crate::spellkb::mount(s, &crate::keyboard::shared_rows(lang), Edges::default(), press_key);
 }
 
@@ -299,13 +299,16 @@ fn submit() {
         flash("miss");
         dom::set_text("cnStatus", &i18n::t("chains.invalid"));
         haptics::tap();
+        crate::keyboard_moments::react_for("word_chains", "cnKeys", false, &word, 0);
     } else if chains::head(&lang, &word).as_deref() != Some(hook.as_str()) {
         // Right word, wrong hook. Named separately so the player learns the
         // rule rather than concluding the word was rejected.
         flash("miss");
         dom::set_text("cnStatus", &i18n::t("chains.nolink"));
         haptics::tap();
+        crate::keyboard_moments::react_for("word_chains", "cnKeys", false, &word, 0);
     } else {
+        crate::keyboard_moments::react_for("word_chains", "cnKeys", true, &word, 0);
         let next = chains::hook(&lang, &word);
         match next {
             Some(h) => {

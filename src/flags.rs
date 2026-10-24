@@ -615,6 +615,27 @@ pub fn visual_orb() -> bool {
     resolve(stored("visual_orb").as_deref(), false)
 }
 
+/// CC-SPELL-KEYBOARD `keyboard.flight` (Phase C, KF5): a typed letter's ghost
+/// rises from its key into the answer. **Default OFF** (K-D28), killable as
+/// `keyboard_flight`.
+pub fn keyboard_flight() -> bool {
+    resolve(stored("keyboard_flight").as_deref(), false)
+}
+
+/// CC-SPELL-KEYBOARD `keyboard.constellation` (Phase C, KF6): after a correct
+/// answer its keys light as stars joined in typing order. **Default OFF**
+/// (K-D28), killable as `keyboard_constellation`.
+pub fn keyboard_constellation() -> bool {
+    resolve(stored("keyboard_constellation").as_deref(), false)
+}
+
+/// CC-SPELL-KEYBOARD `keyboard.react` (Phase C, KF7): the keyboard reacts to a
+/// verdict (wave, amber dim, streak warmth; a neutral pulse where the mode
+/// shows none). **Default OFF** (K-D28), killable as `keyboard_react`.
+pub fn keyboard_react() -> bool {
+    resolve(stored("keyboard_react").as_deref(), false)
+}
+
 /// CC-VISUAL-ECLIPSE `visual.sound` (Phase C, F5): the synthesized game sounds
 /// and the Game sounds setting. **Default OFF** (V-D22), killable as
 /// `visual_sound`. Off: no sound plays and the Settings rows stay hidden.
