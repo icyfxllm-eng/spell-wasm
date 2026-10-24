@@ -427,7 +427,39 @@ You need to pick between:
 | D-R10 | Secure storage: (a) plugin / (b) extend NativeLanguageKitPlugin / (c) localStorage | (b) |
 | D-R11 | New strings: machine-draft + `needs_audit`, or wait for humans? | Machine-draft, matching precedent |
 | D-X1 | Spell Off: replace, coexist, or retire? | **Eric 2026-10-24: Spell Off is kept, "with multiplayer option."** Not retired, not replaced. Open: what "multiplayer option" means (see D-X1a) |
-| D-X1a | Does "multiplayer option" mean (i) Spell Off stays async and real-time Online H2H sits beside it as another option, or (ii) Spell Off itself gains more than 2 players? | Pending Eric |
+| D-X1a | Does "multiplayer option" mean (i) Spell Off stays async and real-time Online H2H sits beside it as another option, or (ii) Spell Off itself gains more than 2 players? | **Eric 2026-10-24: (ii), Spell Off itself gets a 3+ player option.** See "Spell Off multiplayer" below |
+
+### Spell Off multiplayer (D-X1a), what it touches
+
+This is Flask work on the Mac mini, not the Rust room server, so it is outside
+CC-GAME-SERVER's phases. It needs its own spec or amendment.
+
+- **The schema is two-seat by construction.** `matches` has `player_a`/`player_b`,
+  `score_a/b`, `correct_a/b`, `elapsed_a/b` and `winner IN ('a','b','tie')`
+  (`backend/db.py:130-148`). N players needs a `match_players(code, user_id,
+  seat, score, correct, elapsed, submitted_at)` table, and the migration runs on
+  the live `climb.db`. That is a schema bump with ship-order risk, and that
+  memory rule says to hold it until the order is planned.
+- **Joining:** `join_match` refuses once `player_b` is set (`matches.py:146`).
+  N players needs a seat cap, a "host starts / room closes" rule, and a
+  decision on whether late joiners can still play after someone has submitted.
+- **Winner rule:** today it is more correct, with ties broken by faster elapsed
+  (`matches.py:220`). For N players that becomes a ranking, and ties among
+  3+ need a rule.
+- **Score trust:** results are client-submitted and trusted (`matches.py:17`).
+  With two friends that is tolerable. With a group, one forged score decides
+  the whole table. The seed is already server-side, so re-deriving the words
+  and checking the submitted answers server-side is the natural fix. That
+  check needs a shared grader too, so it ties back to D-R1a.
+- **Client:** `MatchInfo` in `src/online_spelloff.rs` hard-codes
+  `you: "a"|"b"` and `submittedA/B`. It needs a players list and a results
+  table UI, and its new strings go through the hand-translation work in
+  D-R11.
+- **Compatibility:** `online_spelloff` defaults off on main. If no shipped
+  build turned it on, the API can change shape freely. If one did, keep
+  `playerA/B` in responses for 2-seat matches.
+- **COPPA:** unchanged. It is still account-gated and adult-only, with no kids,
+  so CC-SECURITY-BASELINE O2 doesn't block it the way it blocks kid rooms here.
 | D-X2 | TTS base = Mac mini over Tailscale (needs Tailscale on the Mac mini) | Yes; fix the spec text |
 | D-X3 | Release rule anchor (replace "build-56") | "Nothing on any `release/*` branch" |
 | D-X4 | Image delivery: GHCR (token) or local build on Rocky | Local build first; GHCR when moving to a VPS |
