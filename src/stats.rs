@@ -18,6 +18,8 @@ pub fn record(state: &mut AppState, lang: &str, tier: &str, correct: bool) {
     t.seen += 1;
     if correct {
         t.correct += 1;
+        // CC-VISUAL-ECLIPSE F9: the Hard+ count the reset button cannot wipe.
+        crate::themes::note_tier_correct(tier);
     }
     save(state);
     render(state);

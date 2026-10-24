@@ -14,7 +14,7 @@ pub const ICONS: &[(&str, &str)] = &[
     ("crossword", "✚"),
     ("detective", "🕵"),
     ("die", "🎲"),
-    ("flag", "🏁"),
+    ("finish", "🏁"),
     ("flame", "🔥"),
     ("gear", "⚙"),
     ("ghost", "👻"),

@@ -276,7 +276,18 @@
     "card.bestLine",
     "card.tagline",
     "card.practice",
-    "card.score"
+    "card.score",
+    "theme.title",
+    "theme.titleSmall",
+    "theme.systemSmall",
+    "theme.daybreak",
+    "theme.chalkboard",
+    "theme.typewriter",
+    "theme.beestage",
+    "theme.unlock.chalkboard",
+    "theme.unlock.typewriter",
+    "theme.unlock.beestage",
+    "theme.unlocked"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -561,7 +572,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -836,7 +858,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1111,7 +1144,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1386,7 +1430,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1661,7 +1716,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -1936,7 +2002,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2211,7 +2288,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2486,7 +2574,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2761,7 +2860,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -3036,7 +3146,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3311,7 +3432,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3586,7 +3718,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -3861,7 +4004,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -4136,7 +4290,18 @@
       "card.bestLine",
       "card.tagline",
       "card.practice",
-      "card.score"
+      "card.score",
+      "theme.title",
+      "theme.titleSmall",
+      "theme.systemSmall",
+      "theme.daybreak",
+      "theme.chalkboard",
+      "theme.typewriter",
+      "theme.beestage",
+      "theme.unlock.chalkboard",
+      "theme.unlock.typewriter",
+      "theme.unlock.beestage",
+      "theme.unlocked"
     ]
   }
 }

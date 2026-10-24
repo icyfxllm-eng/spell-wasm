@@ -90,6 +90,14 @@ pub fn canvas(id: &str) -> web_sys::HtmlCanvasElement {
         .unwrap_or_else(|_| panic!("#{id} is not a canvas"))
 }
 
+/// Drop an inline custom property from the root, so the stylesheet (a theme)
+/// decides it again.
+pub fn remove_css_var(name: &str) {
+    if let Some(de) = doc().document_element().and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
+        let _ = de.style().remove_property(name);
+    }
+}
+
 pub fn set_css_var(name: &str, value: &str) {
     if let Some(de) = doc().document_element().and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
         let _ = de.style().set_property(name, value);

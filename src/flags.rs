@@ -652,6 +652,20 @@ pub fn visual_cards() -> bool {
     resolve(stored("visual_cards").as_deref(), false)
 }
 
+/// CC-VISUAL-ECLIPSE `visual.themes` (Phase E, F9): the five themes, the
+/// Appearance rows and the earned unlocks. **Default OFF** (V-D22), killable as
+/// `visual_themes`. Off: no data-theme, no rows; unlocks are still recorded.
+pub fn visual_themes() -> bool {
+    resolve(stored("visual_themes").as_deref(), false)
+}
+
+/// CC-VISUAL-ECLIPSE `visual.accents` (Phase E, F10): the study language's
+/// accent on the language chip, progress fills and a light orb tint. **Default
+/// OFF** (V-D22), killable as `visual_accents`.
+pub fn visual_accents() -> bool {
+    resolve(stored("visual_accents").as_deref(), false)
+}
+
 /// CC-SPELL-KEYBOARD `keyboard.core` (Phase A: KF1, KF2, KF10): every on-screen
 /// key grid renders and dispatches through the one shared keyboard
 /// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
@@ -748,6 +762,15 @@ mod tests {
                     "{} is in the registry but is_on has no arm for it, so it falls through to \
                      `_ => false` and is on paper only", m.id);
         }
+    }
+
+    #[test]
+    fn visual_themes_and_accents_ship_dark() {
+        set_test_override(None);
+        assert!(!visual_themes() && !visual_accents(), "Phase E ships dark until a build turns it on (V-D22)");
+        set_test_override(Some("on"));
+        assert!(visual_themes() && visual_accents());
+        set_test_override(None);
     }
 
     #[test]

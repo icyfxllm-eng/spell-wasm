@@ -110,7 +110,12 @@ fn sync_swatches(container_id: &str, selector: &str, color: &str) {
 
 pub fn set_glow(app: &App, color: &str) {
     app.borrow_mut().glow = color.to_string();
-    dom::set_css_var("--glow", color);
+    // CC-VISUAL-ECLIPSE F9: the default leaves the colour to the theme.
+    if color.eq_ignore_ascii_case(crate::tokens::COLOR_GLOW.value) {
+        dom::remove_css_var("--glow");
+    } else {
+        dom::set_css_var("--glow", color);
+    }
     dom::input("glowColor").set_value(color);
     sync_swatches("glowPick", ".swatch[data-c]", color);
     save_prefs(&app.borrow());
@@ -118,7 +123,14 @@ pub fn set_glow(app: &App, color: &str) {
 
 pub fn set_bg_color(app: &App, color: &str) {
     app.borrow_mut().bg_color = color.to_string();
-    dom::set_css_var("--bg-color", color);
+    // CC-VISUAL-ECLIPSE F9: the default leaves the background, and the ink on
+    // it, to the theme (Daybreak and Typewriter are light).
+    let theme_default = color.eq_ignore_ascii_case(crate::tokens::COLOR_BG_USER.value);
+    if theme_default {
+        dom::remove_css_var("--bg-color");
+    } else {
+        dom::set_css_var("--bg-color", color);
+    }
     // Text that sits directly on the page background (not inside a
     // --panel/--panel-2 card, which stays a fixed color regardless of this
     // choice) needs to flip to whichever of light/dark ink actually
@@ -127,7 +139,11 @@ pub fn set_bg_color(app: &App, color: &str) {
     // enough, since saturated hues (a medium blue, say) can *look*
     // reasonably bright while still contributing little to perceived
     // luminance, making light text the wrong call despite "looking dark".
-    dom::set_css_var("--ink-on-bg", best_contrast_ink(color));
+    if theme_default {
+        dom::remove_css_var("--ink-on-bg");
+    } else {
+        dom::set_css_var("--ink-on-bg", best_contrast_ink(color));
+    }
     // --muted-on-bg is derived from --ink-on-bg via CSS color-mix() (see
     // index.html), so it automatically stays legible relative to whichever
     // ink color was just picked, instead of a second independent guess.
@@ -197,8 +213,13 @@ fn contrasting_text(hex: &str) -> &'static str {
 
 pub fn set_orb_color(app: &App, color: &str) {
     app.borrow_mut().orb_color = color.to_string();
-    dom::set_css_var("--orb-color", color);
-    dom::set_css_var("--orb-text", contrasting_text(color));
+    if color.eq_ignore_ascii_case(crate::tokens::COLOR_ORB_CORE.value) {
+        dom::remove_css_var("--orb-color");
+        dom::remove_css_var("--orb-text");
+    } else {
+        dom::set_css_var("--orb-color", color);
+        dom::set_css_var("--orb-text", contrasting_text(color));
+    }
     dom::input("orbColorInput").set_value(color);
     sync_swatches("orbPick", ".theme-swatch[data-c]", color);
     save_prefs(&app.borrow());
@@ -211,7 +232,11 @@ pub fn set_orb_color(app: &App, color: &str) {
 pub fn set_controls_color(app: &App, color: &str) {
     build_controls_swatches();
     app.borrow_mut().controls_color = color.to_string();
-    dom::set_css_var("--controls-color", color);
+    if color.eq_ignore_ascii_case(crate::tokens::COLOR_CONTROLS.value) {
+        dom::remove_css_var("--controls-color");
+    } else {
+        dom::set_css_var("--controls-color", color);
+    }
     dom::input("ctlColorInput").set_value(color);
     sync_swatches("ctlPick", ".theme-swatch[data-c]", color);
     save_prefs(&app.borrow());
@@ -260,8 +285,10 @@ pub fn set_button_color(app: &App, color: &str) {
     build_button_swatches();
     app.borrow_mut().button_color = color.to_string();
     if color.is_empty() {
-        dom::set_css_var("--button-color", "var(--amber)");
-        dom::set_css_var("--button-ink", "var(--palette-on-gold-text)");
+        // No pick: the stylesheet decides (the accent, or the theme's own
+        // button colour and ink -- Typewriter's are red with light text).
+        dom::remove_css_var("--button-color");
+        dom::remove_css_var("--button-ink");
     } else {
         dom::set_css_var("--button-color", color);
         dom::set_css_var("--button-ink", best_contrast_ink(color));
@@ -318,6 +345,13 @@ pub fn apply_settings(app: &App) {
     let _ = body.class_list().toggle_with_force("visual-haptics", crate::flags::visual_haptics());
     let _ = body.class_list().toggle_with_force("visual-icons", crate::flags::visual_icons());
     let _ = body.class_list().toggle_with_force("visual-celebrate", crate::flags::visual_celebrate());
+    // CC-VISUAL-ECLIPSE Phase E: themes and the study language's accent.
+    let _ = body.class_list().toggle_with_force("visual-themes", crate::flags::visual_themes());
+    let _ = body.class_list().toggle_with_force("visual-accents", crate::flags::visual_accents());
+    if let Some(root) = dom::doc().document_element() {
+        let _ = root.set_attribute("data-study", &s.lang);
+    }
+    crate::themes::apply();
     crate::haptics::configure(s.haptics_on, s.key_feel, s.kid);
     crate::sfx::configure(s.game_sounds, s.game_sound_level);
     dom::input("hapticsToggle").set_checked(s.haptics_on);

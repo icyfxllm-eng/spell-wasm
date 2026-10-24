@@ -30,6 +30,13 @@ const themes = {
   ja: { ...base, ...block(':root[data-lang="ja"]') },
   zh: { ...base, ...block(':root[data-lang="zh"]') },
 };
+// CC-VISUAL-ECLIPSE F9 (AT-21): every theme, standard and Jr (body.kid), on
+// top of the base tokens. Eclipse is the base itself.
+for (const t of ['eclipse', 'daybreak', 'chalkboard', 'typewriter', 'beestage']) {
+  const std = { ...base, ...block(`:root[data-theme="${t}"]`) };
+  if (t !== 'eclipse') themes[t] = std;
+  themes[`${t}-jr`] = { ...std, ...block(`:root[data-theme="${t}"] body.kid`) };
+}
 
 // Resolve var(--x) chains to a concrete color; return null for color-mix/rgba
 // (glows/shadows — not checked as text/bg here).
@@ -39,7 +46,16 @@ function resolve(map, val, depth = 0) {
   const v = val.match(/^var\((--[\w-]+)\)$/);
   if (v) return resolve(map, map[v[1]], depth + 1);
   if (/^#([0-9a-f]{6})$/i.test(val)) return val;
-  return null; // rgba(), color-mix(), etc. — out of scope for text/bg contrast
+  // color-mix(in srgb, A p%, B): the mixed panels the themes rely on.
+  const mix = val && val.match(/^color-mix\(in srgb,\s*(.+?)\s+(\d+(?:\.\d+)?)%,\s*(.+)\)$/);
+  if (mix) {
+    const a = resolve(map, mix[1].trim(), depth + 1), b = resolve(map, mix[3].trim(), depth + 1);
+    if (!a || !b) return null;
+    const w = parseFloat(mix[2]) / 100;
+    const ch = (h, i) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+    return '#' + [0, 1, 2].map((i) => Math.round(ch(a, i) * w + ch(b, i) * (1 - w)).toString(16).padStart(2, '0')).join('');
+  }
+  return null; // rgba() etc. — out of scope for text/bg contrast
 }
 function lum(hex) {
   const n = parseInt(hex.slice(1), 16);
@@ -64,7 +80,17 @@ const PAIRS = [
   ['--amber', '--panel', 3.0, 'ui'],       // focus ring / button border (per-theme accent)
   ['--success', '--panel-2', 3.0, 'ui'],   // correct border on the spell box
   ['--warn', '--panel-2', 3.0, 'ui'],      // wrong border on the spell box
+  // CC-VISUAL-ECLIPSE F9: what every theme must also carry.
+  ['--muted', '--panel', 4.5, 'text'],     // secondary labels
+  ['--ink', '--panel-raised', 4.5, 'text'],// the menu, setup bar, answer box
+  ['--button-ink', '--button-color', 4.5, 'text'], // Check spelling, Done
 ];
+// AT-24: a language accent may be a text colour only where it passes. If any
+// rule colours text with one, every accent must reach 4.5:1 on the panel.
+const css = html.replace(/<!-- tokens:begin[\s\S]*?tokens:end -->/, '');
+if (/[^-]color:\s*var\(--lang-accent/.test(css)) {
+  for (const k of Object.keys(base).filter((n) => n.startsWith('--lang-accent-'))) PAIRS.push([k, '--panel', 4.5, 'text']);
+}
 
 let failed = false;
 for (const [theme, map] of Object.entries(themes)) {
@@ -76,7 +102,7 @@ for (const [theme, map] of Object.entries(themes)) {
     const ok = r >= min;
     if (!ok) failed = true;
     const tag = ok ? 'ok ' : 'FAIL';
-    console.log(`[${tag}] ${theme.padEnd(7)} ${fg}(${cf}) on ${bg}(${cb}) = ${r.toFixed(2)}:1 (${kind} ≥ ${min})`);
+    console.log(`[${tag}] ${theme.padEnd(14)} ${fg}(${cf}) on ${bg}(${cb}) = ${r.toFixed(2)}:1 (${kind} ≥ ${min})`);
   }
 }
 if (failed) {

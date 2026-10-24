@@ -202,6 +202,7 @@ fn tap(app: &App, e: &web_sys::MouseEvent) {
         RIGHT.with(|c| c.set(c.get() + 1));
         let _ = el.class_list().add_1("right");
         haptics::correct();
+        crate::themes::note_correct();
         render_streak();
         // advance() re-renders the cards, so advancing in the same tick meant the
         // green "right" card was never on screen. Hold it first.

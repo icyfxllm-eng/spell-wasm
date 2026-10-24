@@ -127,6 +127,7 @@ mod notify;
 mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod themes; // CC-VISUAL-ECLIPSE F9: earnable themes (behind visual.themes)
 mod result_card; // CC-VISUAL-ECLIPSE F11: 1080x1350 result cards (behind visual.cards)
 mod celebrate; // CC-VISUAL-ECLIPSE F7: celebration moments (behind visual.celebrate)
 mod icons; // CC-VISUAL-ECLIPSE F8: the drawn icon set (behind visual.icons)
@@ -388,6 +389,10 @@ pub fn start() -> Result<(), JsValue> {
     // with visual.orb on (a no-op otherwise).
     orb_view::init();
     sfx::install_taps();
+    // CC-VISUAL-ECLIPSE F9: grant what is already earned, draw the theme.
+    themes::init(&app.borrow());
+    themes::render_picker();
+    themes::wire_picker();
 
     // Observation-only E2E test seam — dev builds only (`--features testseam`);
     // stripped from production (proven by scripts/seam-absence-check.mjs).

@@ -347,12 +347,14 @@ fn submit() {
                 flash("good");
                 dom::set_text("cnStatus", "");
                 haptics::correct();
+                crate::themes::note_correct();
             }
             None => {
                 // A ja ん-ending: a legal move the player chose, which ends the
                 // run. It still counts — the word joins the chain first.
                 accept(&lang, word, String::new());
                 haptics::correct();
+                crate::themes::note_correct();
                 finish(&i18n::t("chains.ended.n"));
             }
         }

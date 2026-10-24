@@ -1362,6 +1362,7 @@ fn on_commit(o: Outcome) {
     // F4: neutral for a clean commit, close for a new clash, success for a solved board; never a miss.
     if feedback::State::from(o) == feedback::State::Success {
         haptics::correct();
+        crate::themes::note_correct();
         let finale = with_ui(|u| {
             if u.finished {
                 return None;
@@ -1640,7 +1641,7 @@ fn duel_check() {
     })
     .flatten();
     match r {
-        Some(true) => haptics::correct(),
+        Some(true) => { haptics::correct(); crate::themes::note_correct(); }
         Some(false) => haptics::wrong(),
         None => return,
     }

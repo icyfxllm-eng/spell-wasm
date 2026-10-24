@@ -352,10 +352,12 @@ fn judge_cell() {
         match &step {
             Step::CellRight { .. } => {
                 haptics::correct();
+                crate::themes::note_correct();
                 dom::set_text("qbdFeed", "");
             }
             Step::WordDone { .. } => {
                 haptics::correct();
+                crate::themes::note_correct();
                 dom::set_text("qbdFeed", "");
                 hear();
             }

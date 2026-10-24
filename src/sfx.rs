@@ -26,6 +26,8 @@ pub enum Sound {
     Wrong,
     Milestone,
     Unlock,
+    /// The Typewriter theme's key sound (F9): a dry click and a soft thunk.
+    Keystrike,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -69,6 +71,7 @@ pub fn notes(s: Sound) -> Vec<Note> {
         Sound::Wrong => vec![n(2, 0.0, 0.14, 0.26, Triangle), n(0, 0.12, 0.18, 0.24, Triangle)],
         Sound::Milestone => vec![n(5, 0.0, 0.4, 0.16, Sine), n(7, 0.0, 0.4, 0.14, Sine), n(8, 0.0, 0.4, 0.14, Sine), n(10, 0.0, 0.4, 0.1, Sine)],
         Sound::Unlock => vec![n(8, 0.0, 0.15, 0.22, Triangle), n(10, 0.08, 0.15, 0.22, Triangle), n(12, 0.16, 0.15, 0.22, Triangle)],
+        Sound::Keystrike => vec![n(17, 0.0, 0.025, 0.14, Triangle), n(0, 0.0, 0.04, 0.12, Sine)],
     }
 }
 
@@ -245,6 +248,13 @@ pub fn tap() {
     play(Sound::Tap);
 }
 
+/// A keystroke, heard only in the Typewriter theme (F9).
+pub fn keystrike() {
+    if crate::flags::visual_themes() && crate::themes::current() == crate::themes::Theme::Typewriter {
+        play(Sound::Keystrike);
+    }
+}
+
 /// The tap sound on the chrome a player presses to go somewhere: the menu
 /// button, the setup bar, and every primary button except Check spelling
 /// (whose press is answered by the verdict sound instead). One delegated
@@ -364,7 +374,7 @@ mod tests {
 
     #[test]
     fn every_sound_is_400_ms_or_less() {
-        for s in [Sound::Tap, Sound::Correct(0), Sound::Correct(8), Sound::Wrong, Sound::Milestone, Sound::Unlock] {
+        for s in [Sound::Tap, Sound::Correct(0), Sound::Correct(8), Sound::Wrong, Sound::Milestone, Sound::Unlock, Sound::Keystrike] {
             assert!(length(s) <= 0.4 + 1e-9, "{s:?} lasts {}", length(s));
         }
     }
@@ -372,7 +382,7 @@ mod tests {
     #[test]
     fn every_note_is_in_c_major_pentatonic() {
         let pcs = [0, 2, 4, 7, 9];
-        for s in [Sound::Tap, Sound::Correct(3), Sound::Correct(8), Sound::Wrong, Sound::Milestone, Sound::Unlock] {
+        for s in [Sound::Tap, Sound::Correct(3), Sound::Correct(8), Sound::Wrong, Sound::Milestone, Sound::Unlock, Sound::Keystrike] {
             for n in notes(s) {
                 let semis = (12.0 * (n.freq / 261.63).log2()).round() as i32;
                 assert!(pcs.contains(&semis.rem_euclid(12)), "{s:?} has {} Hz", n.freq);

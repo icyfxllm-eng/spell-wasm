@@ -428,6 +428,10 @@ fn reflect_play_direction(app: &App) {
         let el = dom::el(id);
         dom::set_lang_dir(&el, &code);
     }
+    // CC-VISUAL-ECLIPSE F10: the room's accent follows the word on screen.
+    if let Some(root) = dom::doc().document_element() {
+        let _ = root.set_attribute("data-study", &code);
+    }
 }
 
 /// Today's markup, unchanged: one element per character so each can `pop`.
@@ -2392,6 +2396,7 @@ fn on_correct(app: &App) {
         return;
     }
     crate::haptics::correct();
+    crate::themes::note_correct();
     let (cur_lang, cur_tier, word) = {
         let s = app.borrow();
         (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
@@ -3750,7 +3755,10 @@ fn finish_daily(app: &App) {
         let lang = app.borrow().daily.locale.clone();
         crate::daily::record_imp_result(&lang, &date, correct)
     } else {
-        crate::daily::record_result(&date, correct)
+        let r = crate::daily::record_result(&date, correct);
+        // CC-VISUAL-ECLIPSE F9: the Daily streak may have earned Chalkboard.
+        crate::themes::note_daily_streak();
+        r
     };
     {
         let mut s = app.borrow_mut();
@@ -3795,6 +3803,7 @@ fn daily_answer(app: &App, correct: bool) {
     };
     if correct {
         crate::haptics::correct();
+        crate::themes::note_correct();
         app.borrow_mut().daily.correct += 1;
         dom::add_class("orbWrap", "good");
         crate::orb_view::verdict(true);
@@ -4300,6 +4309,7 @@ fn begin_versus_turn(app: &App) {
 /// achievement machinery.
 fn versus_on_correct(app: &App) {
     crate::haptics::correct();
+    crate::themes::note_correct();
     // Head-to-head writes NOTHING to persistent stats (accuracy, achievements,
     // leaderboard, misses, word stats) — an abandoned or finished match never
     // pollutes solo progress. Only the in-memory versus scoreboard updates.

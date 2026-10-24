@@ -1384,6 +1384,7 @@ fn resolve(typed: Option<String>) {
         // Spell Jr: every line is encouraging, and a miss never shows a loss.
         if correct {
             haptics::correct();
+            crate::themes::note_correct();
             let pts = out.as_ref().map_or(0, |o| o.points);
             dom::set_text("rsFeed", &i18n::tp("rs.jrRight", &[("n", &pts.to_string())]));
         } else {
@@ -1392,6 +1393,7 @@ fn resolve(typed: Option<String>) {
         }
     } else if correct {
         haptics::correct();
+        crate::themes::note_correct();
         let pts = out.as_ref().map_or(0, |o| o.points);
         dom::set_text("rsFeed", &i18n::tp("rs.plus", &[("n", &pts.to_string())]));
     } else {
@@ -1453,6 +1455,7 @@ fn bank_it() {
     let b = with_ui(|u| u.s.bank()).flatten();
     let Some(b) = b else { return };
     haptics::correct();
+    crate::themes::note_correct();
     fx_burst(crate::randospell_fx::Burst::Stream);
     with_ui(|u| u.stones.clear());
     decision(false);

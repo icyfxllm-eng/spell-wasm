@@ -362,6 +362,7 @@ fn submit() {
         );
         if pangram {
             haptics::correct();
+            crate::themes::note_correct();
         } else {
             haptics::tap();
         }

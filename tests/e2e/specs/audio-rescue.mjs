@@ -55,7 +55,9 @@ export async function run(browser, base, suite) {
       // The typed answer renders per character into #letters, and an empty box
       // shows its placeholder -- so I11's claim is not "the box is blank", it
       // is "the word is not in it and it cannot be sent".
-      const box = await page.$eval('#letters', (e) => e.textContent);
+      // The typed letters only: the placeholder ("type what you heard") is not
+      // the answer, and a served word like "what" or "hear" sat inside it.
+      const box = await page.$$eval('#letters .ltr', (ls) => ls.map((l) => l.textContent).join(''));
       assert(!box.includes(word), `the revealed word is never placed in the answer box (I11) -- box held ${JSON.stringify(box)}`);
       assert(await page.$eval('#checkBtn', (e) => e.disabled), 'it cannot be submitted');
       // A-13: byte-identical state.

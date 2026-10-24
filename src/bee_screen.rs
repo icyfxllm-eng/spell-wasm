@@ -416,6 +416,7 @@ fn submit(app: &App) {
             CLEAN.with(|c| c.set(c.get() + 1));
         }
         haptics::correct();
+        crate::themes::note_correct();
         let n = ROUND.with(Cell::get) + 1;
         let have = WORDS.with(|w| w.borrow().len()) as u32;
         if n > have || n > MAX_ROUNDS {

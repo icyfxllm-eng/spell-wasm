@@ -1126,6 +1126,7 @@ pub fn wire_picker_inputs(app: &App) {
                         render_picker_body(&a);
                     }
                     crate::haptics::correct();
+                    crate::themes::note_correct();
                     FAV_SUPPRESS.with(|c| c.set(true));
                 }
             }

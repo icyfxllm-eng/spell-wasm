@@ -198,9 +198,12 @@ pub fn correct() {
     fire(Kind::Correct);
 }
 
-/// A keystroke on an on-screen keyboard (the Key feel class).
+/// A keystroke on an on-screen keyboard (the Key feel class). Every keyboard
+/// already calls this on a keystroke, so the Typewriter theme's key sound rides
+/// on it too (it plays only in that theme, with Game sounds on).
 pub fn key_tap() {
     fire(Kind::Key);
+    crate::sfx::keystrike();
 }
 
 /// Any other confirming tick (a duplicate, an accepted find, a tile landing).

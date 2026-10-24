@@ -436,7 +436,9 @@ export async function run(browser, base, suite) {
     // spell_tel_perf_v1 is the shared audio path's anonymous latency counter: api::play_word
     // writes it for every mode that speaks a word, and Randospell's own code never touches it
     // (the screen's telemetry test bans it). Anything else changing is a failure.
-    const allowed = new Set(['spell_randospell_v1', 'spell_wordgrid_seen_v1', 'spell_tel_perf_v1']);
+    // spell_themes_v1: CC-VISUAL-ECLIPSE F9's all-modes correct counter (E-Q8 signed it:
+    // every mode's correct answers count toward the earned themes).
+    const allowed = new Set(['spell_randospell_v1', 'spell_wordgrid_seen_v1', 'spell_tel_perf_v1', 'spell_themes_v1']);
     try {
       const before = await dump();
       const play = async (mode, seed) => {

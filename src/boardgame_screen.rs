@@ -1789,6 +1789,7 @@ fn submit() {
         }
     } else {
         haptics::correct();
+        crate::themes::note_correct();
     }
     // Still the same human and a new word owed (a trap's spelling): keep going.
     let spelling_again = with_ui(|u| u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() && u.game.current_seat() == before_seat).unwrap_or(false);
