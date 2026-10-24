@@ -485,7 +485,8 @@ mod tests {
     #[test]
     fn every_language_curriculum_parses() {
         let none = Progress::default();
-        for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
+        // Every language Practice opens for (consts::practice: all but fa).
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter().filter(|(c, ..)| crate::consts::practice(c)) {
             let c = curriculum(code).unwrap_or_else(|| panic!("{code}: curriculum missing/unparsed"));
             assert_eq!(c.words.len(), FIRST_CONTACT, "{code}");
             assert_eq!(c.difficult.len(), DIFFICULT, "{code}");
@@ -578,7 +579,7 @@ mod tests {
             }
             m
         }
-        for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter().filter(|(c, ..)| crate::consts::practice(c)) {
             let c = curriculum(code).unwrap();
             let mut sample: Vec<String> =
                 c.words.iter().chain(c.difficult.iter()).cloned().collect();

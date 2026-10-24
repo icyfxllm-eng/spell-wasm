@@ -80,6 +80,7 @@ fn source(lang: &str) -> Option<&'static str> {
         "ar" => include_str!("../assets/impossible/impossible_pool.ar.json"),
         "sw" => include_str!("../assets/impossible/impossible_pool.sw.json"),
         "hi" => include_str!("../assets/impossible/impossible_pool.hi.json"),
+        "fa" => include_str!("../assets/impossible/impossible_pool.fa.json"),
         _ => return None,
     })
 }

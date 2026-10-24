@@ -1,0 +1,37 @@
+# Kid Mode exclusion list — fa
+# Words filtered from the served pools when Kid Mode is on (the "friendly words"
+# promise): alcohol, weapons, death-related, and adult-context terms. One word
+# per line (case/accent-insensitive match, lenient fold). Extends the global
+# profanity filter — this is the age-appropriateness layer on top.
+# ⚠ AUDITOR-EXTENSIBLE: native reviewers should add culture-specific terms above the marker line.
+#
+# Hand seed (2026-10-24, Persian reinstatement): fa has no profanity list and no
+# gloss table, so tools/bank/seed_kid_lists.py has nothing to seed from. These are
+# the bank rows that translate the English Jr list's concepts (death, kill, blood,
+# grave, corpse, wine/alcohol, gun, bomb, bullet, knife, sword, tobacco, drugs,
+# sex). Over-exclusion is acceptable (کشته, ترور); NOT native-reviewed.
+مرگ
+مرده
+کشتن
+کشته
+کشتار
+جسد
+قبر
+اعدام
+خودکشی
+خون
+خونین
+شراب
+الکل
+الکلی
+مشروب
+تفنگ
+بمب
+گلوله
+چاقو
+شمشیر
+ترور
+مخدر
+سیگار
+جنسی
+برهنه

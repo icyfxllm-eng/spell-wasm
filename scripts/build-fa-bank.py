@@ -131,6 +131,8 @@ def main(apply=False):
             continue
         if any(c not in reach and c != ZWNJ for c in w):
             continue                      # unreachable on the fa keyboard
+        if w.startswith(ZWNJ) or w.endswith(ZWNJ) or ZWNJ * 2 in w:
+            continue                      # a ZWNJ joins nothing at a word's edge (شده‌ was one)
         if w in STOP or w in seen:
             continue
         seen.add(w)

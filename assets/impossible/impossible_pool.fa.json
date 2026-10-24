@@ -1,0 +1,13 @@
+{
+ "lang": "fa",
+ "source": "expert",
+ "bankHash": "0xA0E8797CFB9A18FC",
+ "expertRows": 3749,
+ "table": "missing",
+ "removedPurity": 0,
+ "removedSoundalike": 0,
+ "removedReviewed": 0,
+ "status": "locked",
+ "reason": "table-missing",
+ "words": []
+}

@@ -3,7 +3,7 @@ Spell Game Backend — Flask + Google Cloud Text-to-Speech (+ Azure Speech)
 
 Auth:
   GOOGLE_TTS_API_KEY   — required; Google TTS for most languages.
-  AZURE_SPEECH_KEY     — optional; Azure Speech for AZURE_VOICES langs (Swahili).
+  AZURE_SPEECH_KEY     — optional; Azure Speech for AZURE_VOICES langs (Swahili, Persian).
   AZURE_SPEECH_REGION  — optional; the Azure region, e.g. "eastus".
 
 Local (PyCharm): set these in your Run Configuration.
@@ -103,8 +103,15 @@ LANG_VOICES = {
 # To switch variant/voice, change the entry below. Requires AZURE_SPEECH_KEY +
 # AZURE_SPEECH_REGION (see below); if unset, a Swahili request 502s (caught,
 # logged) rather than mispronouncing in English.
+#
+# fa (Iranian Persian) — reinstated 2026-10-24 (Eric). Google has no fa-IR voice;
+# Azure has two, fa-IR-DilaraNeural (F) and fa-IR-FaridNeural (M).
+# CC-PERSIAN-FOUNDATION D6 ships both, player-selectable; until that picker
+# exists (F3), Dilara speaks every word. fa is in VOICE_IN_KEY from its first
+# clip, so adding Farid later can never serve one voice's cache as the other's.
 AZURE_VOICES = {
     "sw": ("sw-TZ", "sw-TZ-RehemaNeural"),
+    "fa": ("fa-IR", "fa-IR-DilaraNeural"),
 }
 DEFAULT_LANG = "en"
 
@@ -192,7 +199,10 @@ CACHE_VERSION = "v4"
 # synthesizes. That is the point -- it is what makes the switch atomic per
 # word instead of a mix -- but it means the switch is not free: those clips
 # must be warmed before players meet them (F4 step 5).
-VOICE_IN_KEY = {"en", "de", "ru", "ko"}
+#
+# fa joined on 2026-10-24 with no cache to orphan: it is keyed on its voice from
+# the start because CC-PERSIAN-FOUNDATION F3 ships a second fa voice.
+VOICE_IN_KEY = {"en", "de", "ru", "ko", "fa"}
 
 DICTIONARY_API = "https://api.dictionaryapi.dev/api/v2/entries/en/{}"
 
@@ -270,13 +280,23 @@ def _is_word_char(ch: str) -> bool:
 # any tier (checked 2026-10-19), so no other language is allowed one.
 SPACED_LANGS = frozenset({"vi"})
 
+# CC-PERSIAN-FOUNDATION F2: the Persian bank stores the zero-width non-joiner
+# (U+200C) inside words -- می‌شود, کتاب‌ها -- because that is correct Persian
+# orthography. It is category Cf, so the letters-and-marks rule refuses it, and
+# 717 bank words would have 400'd into silence. Allowed for fa alone, and only
+# BETWEEN letters: a leading, trailing or doubled ZWNJ is still refused.
+ZWNJ = "\u200c"
+ZWNJ_LANGS = frozenset({"fa"})
 
-def validate_word(word: str, allow_inner_space: bool = False):
+
+def validate_word(word: str, allow_inner_space: bool = False, allow_zwnj: bool = False):
     """Normalize and validate a word. Returns cleaned word or None.
 
     allow_inner_space (speak endpoint, SPACED_LANGS only): single U+0020 between letters is part of the
     answer and is kept; the text is normalised to NFC; a double space is refused. Leading and trailing
-    spaces are trimmed exactly as they always were, for every language."""
+    spaces are trimmed exactly as they always were, for every language.
+
+    allow_zwnj (speak endpoint, ZWNJ_LANGS only): a single U+200C between letters is kept."""
     word = word.lower().strip()
     if allow_inner_space:
         word = unicodedata.normalize("NFC", word)
@@ -288,7 +308,9 @@ def validate_word(word: str, allow_inner_space: bool = False):
     # whitespace, digits, and punctuation that could inject arbitrary text into
     # TTS (protecting both your quota and the cache), while accepting every
     # supported script.
-    if not all(_is_word_char(ch) or (allow_inner_space and ch == " ") for ch in word):
+    if not all(_is_word_char(ch) or (allow_inner_space and ch == " ") or (allow_zwnj and ch == ZWNJ) for ch in word):
+        return None
+    if allow_zwnj and (word.startswith(ZWNJ) or word.endswith(ZWNJ) or ZWNJ * 2 in word):
         return None
     return word
 
@@ -720,7 +742,9 @@ def _speak(meta):
     lang = request.args.get("lang", DEFAULT_LANG)
     if lang not in LANG_VOICES and lang not in AZURE_VOICES:
         lang = DEFAULT_LANG
-    word = validate_word(request.args.get("word", ""), allow_inner_space=lang in SPACED_LANGS)
+    word = validate_word(
+        request.args.get("word", ""), allow_inner_space=lang in SPACED_LANGS, allow_zwnj=lang in ZWNJ_LANGS
+    )
     if word is None:
         return jsonify({"error": "invalid word"}), 400
     variant = "slow" if request.args.get("variant") == "slow" else "normal"

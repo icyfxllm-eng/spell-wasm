@@ -107,6 +107,23 @@
    "voice": "es-ES-Neural2-G",
    "voiceMatchesLayer1": true
   },
+  "fa": {
+   "bankRows": 8339,
+   "bonusEligibleBankWords": 0,
+   "confirmedSets": 0,
+   "generator": null,
+   "impossibleFilterRemoves": 0,
+   "impossibleFilterRemovesExpert": 0,
+   "loopbackFlags": 0,
+   "proof": {
+    "ran": false,
+    "reason": "no spoken-key generator for this language yet; cannot be proved safe"
+   },
+   "sets": {},
+   "status": "missing",
+   "voice": "fa-IR-DilaraNeural",
+   "voiceMatchesLayer1": true
+  },
   "fil": {
    "bankRows": 4035,
    "bonusEligibleBankWords": 0,

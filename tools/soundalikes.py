@@ -22,7 +22,7 @@ import unicodedata
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 # The registry's fifteen languages (src/consts.rs LANGS_BASE). Every one gets a
 # table file, so "checked and empty" and "never built" are told apart (I4).
-LANGS = ("en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi")
+LANGS = ("en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi", "fa")
 STATUSES = ("verified", "none-by-construction", "missing")
 KINDS = ("true", "accent")
 

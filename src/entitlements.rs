@@ -519,16 +519,18 @@ mod tests {
         // unmapped, like India". Both countries now grant nothing — TR because
         // its language left the lineup, IN because Hindi has not entered it.
         assert!(regional_grants_for_country("TR").is_empty(), "D1: Turkey is unmapped");
-        // CC-MASTER-PARITY Phase A: Persian and Urdu are cut, so their sole home
-        // countries (Iran, Pakistan) are now unmapped like Turkey.
-        assert!(regional_grants_for_country("IR").is_empty(), "Phase A: Iran is unmapped (fa cut)");
+        // CC-MASTER-PARITY Phase A cut Persian and Urdu; Persian is back (Eric,
+        // 2026-10-24), so Iran grants fa again. Pakistan stays unmapped (ur cut).
+        // Iran is reachable only via the web CF-IPCountry path -- there is no
+        // Iranian App Store for the storefront path to see.
+        assert_eq!(regional_grants_for_country("IR"), vec!["fa"], "Iran grants Persian");
         assert!(regional_grants_for_country("PK").is_empty(), "Phase A: Pakistan is unmapped (ur cut)");
         // Hindi entered the lineup 2026-07-25 (Eric's ruling; supersedes the
         // old D6 "India grants nothing"): India and Fiji now grant hi.
         assert_eq!(regional_grants_for_country("IN"), vec!["hi"], "India grants Hindi");
         assert_eq!(regional_grants_for_country("FJ"), vec!["hi"], "Fiji grants Hindi");
         // No cut language has a home country left anywhere in the map.
-        for country in ["IT", "NL", "NO", "SE", "SM", "TR", "IR", "PK"] {
+        for country in ["IT", "NL", "NO", "SE", "SM", "TR", "PK"] {
             assert!(
                 regional_grants_for_country(country).is_empty(),
                 "{country} was a home country for a cut language",

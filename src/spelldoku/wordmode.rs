@@ -113,6 +113,7 @@ fn keyboard(lang: &str) -> &'static HashSet<char> {
         "sw" => include_str!("../../assets/keyboards/sw.json"),
         "ar" => include_str!("../../assets/keyboards/ar.json"),
         "hi" => include_str!("../../assets/keyboards/hi.json"),
+        "fa" => include_str!("../../assets/keyboards/fa.json"),
         _ => include_str!("../../assets/keyboards/en.json"),
     };
     let v: serde_json::Value = serde_json::from_str(raw).unwrap_or_default();

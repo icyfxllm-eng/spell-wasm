@@ -15,10 +15,8 @@
 //! request text, cache keys, search, My Words import, photo/OCR import.
 //! Nothing else may hand-roll an `if lang == "fa"` fixup.
 
-// Nothing calls this yet: `fa` is not in the registry, and putting it there
-// reverses CC-MASTER-PARITY Phase A, which is Eric's decision and not a side
-// effect of landing a canonicalizer. The module is exercised by its own tests
-// meanwhile. Delete this allow the moment a consumer is wired.
+// Answer grading consumes `match_key` (norm::same_answer). The ingestion-side
+// helpers are used by the bank build and this module's own tests, not at runtime.
 #![allow(dead_code)]
 
 use unicode_normalization::UnicodeNormalization;
