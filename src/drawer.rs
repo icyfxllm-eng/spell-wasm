@@ -218,17 +218,17 @@ pub fn account(signed_in: bool, jr: bool, name: Option<String>) -> Account {
 /// the cut-over would strand app settings entirely, which is why F5 could not
 /// wait for Phase D the way the phase table implies.
 pub fn help_rows() -> Vec<(&'static str, &'static str, &'static str)> {
-    let mut v = vec![("settings.title", "\u{2699}", "setBtn")];
+    let mut v = vec![("settings.title", "gear", "setBtn")];
     // CC-HUB-DEADROWS F2 — Spell It's help, in the one place Eric wants it.
     // Absent rather than a placeholder where the markup is stripped, which is
     // this function's own rule for Credits. The label is the guide's existing
     // "How this works", already translated in all fifteen languages: a help row
     // is not worth a new string in fifteen locales that no speaker has read.
     if dom::doc().get_element_by_id("spellItGuideAgain").is_some() {
-        v.push(("spellit.guide.again", "\u{1F3A4}", "spellItGuideAgain"));
+        v.push(("spellit.guide.again", "mic", "spellItGuideAgain"));
     }
     if dom::doc().get_element_by_id("creditsBtn").is_some() {
-        v.push(("credits.title", "\u{1F399}", "creditsBtn"));
+        v.push(("credits.title", "mic", "creditsBtn"));
     }
     v
 }
@@ -416,9 +416,9 @@ fn row_html_with_badge(id: &str, icon: &str, name: &str, badge: Option<&str>, ta
          style=\"height:{1}px;min-height:{1}px;max-height:{1}px;\
          display:flex;align-items:center;gap:10px;width:100%;\
          padding:0 14px;margin:0 0 2px;text-align:start\">\
-         <span class=\"nav-ico\" aria-hidden=\"true\">{2}</span>\
+         <span class=\"nav-ico\">{2}</span>\
          <span class=\"nav-name\">{3}</span>{4}</button>",
-        dom::escape_html(id), ROW_PX, dom::escape_html(icon), dom::escape_html(name), badge_html,
+        dom::escape_html(id), ROW_PX, crate::icons::html(icon), dom::escape_html(name), badge_html,
         target_attr(target),
     )
 }
@@ -441,12 +441,12 @@ fn body(sections: &[Section]) -> String {
                  style=\"height:{1}px;min-height:{1}px;max-height:{1}px;\
                  display:flex;align-items:center;gap:10px;width:100%;\
                  padding:0 14px;margin:0 0 2px;text-align:start\">\
-                 <span class=\"nav-ico\" aria-hidden=\"true\">{2}</span>\
+                 <span class=\"nav-ico\">{2}</span>\
                  <span class=\"nav-name\">{3}</span></button>",
                 dom::escape_html(&r.id),
                 ROW_PX,
-                dom::escape_html(&r.icon),
-                dom::escape_html(dedupe_icon(&r.icon, &t(&r.name_key))),
+                crate::icons::html(&r.icon),
+                dom::escape_html(dedupe_icon(crate::icons::emoji(&r.icon), &t(&r.name_key))),
                 target_attr(r.target.as_deref()),
             ));
         }
@@ -634,7 +634,7 @@ fn render(app: &App) {
     if let Some((key, _)) = acct.action {
         // Same dedupe as a mode row: top.signIn already carries its own glyph.
         let label = t(key);
-        h.push_str(&row_html("acct", "\u{1F464}", dedupe_icon("\u{1F464}", &label), acct.action.map(|(_, el)| el)));
+        h.push_str(&row_html("acct", "person", dedupe_icon(crate::icons::emoji("person"), &label), acct.action.map(|(_, el)| el)));
     }
     h.push_str(&body(&play));
     // I3 wants absent, never greyed; I8 forbids the drawer any learner read.
@@ -656,7 +656,7 @@ fn render(app: &App) {
         ));
         for r in &yours {
             let name = t(&r.name_key);
-            let label = dedupe_icon(&r.icon, &name);
+            let label = dedupe_icon(crate::icons::emoji(&r.icon), &name);
             // F3/I-N5: one count, and the drawer does not compute it. The
             // retired chip is still rendered by game::refresh_mode_buttons, so
             // reading its badge is reading the same number the same store
@@ -674,7 +674,7 @@ fn render(app: &App) {
         ));
         for (key, icon, element) in &help {
             let label = t(key);
-            h.push_str(&row_html(&format!("help_{key}"), icon, dedupe_icon(icon, &label), Some(element)));
+            h.push_str(&row_html(&format!("help_{key}"), icon, dedupe_icon(crate::icons::emoji(icon), &label), Some(element)));
         }
     }
     // I5/F1: the last row has to clear the footer, so the scroll content ends

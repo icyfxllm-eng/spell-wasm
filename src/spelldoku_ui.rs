@@ -508,7 +508,7 @@ fn symbol_button(g: &Game, v: u8, base: &str, aria: &str, ruled: u16) -> String 
         cls.join(" "),
         if aria.is_empty() { String::new() } else { format!(" aria-label=\"{}\"", dom::escape_html(aria)) },
         dom::escape_html(&cell_label(g, v)),
-        if g.picked == Some(v) { " \u{25B6}" } else { "" },
+        if g.picked == Some(v) { format!(" {}", crate::icons::html("play")) } else { String::new() },
     )
 }
 
@@ -881,8 +881,9 @@ fn render() {
                     // hear that word again.
                     if g.prompt.is_some() && g.prompt_digit == v {
                         format!(
-                            "<button type=\"button\" class=\"sd-replay\" data-sd-replay aria-label=\"{}\">\u{25B6}</button>",
-                            dom::escape_html(&t("sd.sayAria"))
+                            "<button type=\"button\" class=\"sd-replay\" data-sd-replay aria-label=\"{}\">{}</button>",
+                            dom::escape_html(&t("sd.sayAria")),
+                            crate::icons::html("play")
                         )
                     } else {
                         String::new()

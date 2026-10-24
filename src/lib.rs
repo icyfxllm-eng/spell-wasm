@@ -127,6 +127,8 @@ mod notify;
 mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod icons; // CC-VISUAL-ECLIPSE F8: the drawn icon set (behind visual.icons)
+mod icons_data; // GENERATED -- scripts/icons-build.mjs
 mod sfx; // CC-VISUAL-ECLIPSE F5: synthesized game sounds, voice first (behind visual.sound)
 mod orb; // CC-VISUAL-ECLIPSE F3: orb states, transition table and speech envelope (pure)
 mod orb_view; // CC-VISUAL-ECLIPSE F3: applies the orb to #orbWrap behind visual.orb

@@ -941,6 +941,7 @@ pub fn build_source_options(app: &App) {
         opts.push_str(&format!("<option value=\"{}\">{}</option>", code, name));
     }
     if !s.custom.words.is_empty() {
+        // icon-exempt: an <option> can hold text only, so no drawn icon fits here.
         opts.push_str(&format!("<option value=\"{}\">My Words \u{270f}</option>", MINE));
     }
     dom::set_html("langSel", &opts);
@@ -1102,6 +1103,7 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
             // Beloved words (no_equivalent / usage_gem gems) get a subtle sparkle,
             // at most once per session.
             let sparkle = if ins.is_beloved() && !BELOVED_SHOWN.with(|c| c.replace(true)) {
+                // icon-exempt: a flourish on a word's own insight (word content, F8.4).
                 " \u{2728}"
             } else {
                 ""
@@ -1141,8 +1143,9 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
         }
         if !example.is_empty() {
             html.push_str(&format!(
-                "<span class=\"m-ex\">\u{201c}{}\u{201d} <button class=\"m-spk\" id=\"spkEx\">\u{1f50a} sentence</button></span>",
-                dom::escape_html(&example)
+                "<span class=\"m-ex\">\u{201c}{}\u{201d} <button class=\"m-spk\" id=\"spkEx\">{} sentence</button></span>",
+                dom::escape_html(&example),
+                crate::icons::html("speaker")
             ));
         }
         dom::set_html("meaning", &html);
@@ -2560,6 +2563,7 @@ impl Outcome {
         match self {
             Outcome::Correct | Outcome::OtherSense => "\u{2713}",
             Outcome::Misspelled => "\u{2717}",
+            // icon-exempt: the text fallback; finalize draws icons::html("timer") over it.
             Outcome::TimedOut => "\u{23f1}",
             Outcome::GaveUp | Outcome::Voided => "\u{2013}",
         }
@@ -2621,6 +2625,9 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
     spell_feedback(false);
     set_streak_tier(0);
     dom::set_text("orbGlyph", glyph);
+    if outcome == Outcome::TimedOut {
+        dom::set_html("orbGlyph", &crate::icons::html("timer"));
+    }
     // Mandarin reveals the pinyin answer + the hanzi it stands for.
     let reveal = if cur_lang == crate::consts::ZH {
         let hanzi = app.borrow().spoken.clone();
@@ -2660,8 +2667,8 @@ fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
         dom::set_html(
             "feedback",
             &format!(
-                "{}<span class=\"reveal syllabified\">{}</span> <button type=\"button\" class=\"syl-slow\" id=\"sylSlowBtn\" aria-label=\"{}\">\u{1f50a} {}</button>",
-                prefix, spans, label, label
+                "{}<span class=\"reveal syllabified\">{}</span> <button type=\"button\" class=\"syl-slow\" id=\"sylSlowBtn\" aria-label=\"{}\">{} {}</button>",
+                prefix, spans, label, crate::icons::html("speaker"), label
             ),
         );
         dom::el("feedback").set_class_name(feedback_class);
@@ -3842,13 +3849,16 @@ fn render_daily_bar(app: &App) {
     let s = app.borrow();
     let n = s.daily.words.len();
     let i = s.daily.idx.min(n);
-    let progress = crate::i18n::tp("daily.progress", &[("i", &i.to_string()), ("n", &n.to_string()), ("c", &s.daily.correct.to_string())]);
+    let progress = crate::icons::label(
+        "calendar-star",
+        &crate::i18n::tp("daily.progress", &[("i", &i.to_string()), ("n", &n.to_string()), ("c", &s.daily.correct.to_string())]),
+    );
     // Expert finale: the last two words (idx 8-9 of the 10-word arc) get a "peak"
     // badge — the visual beat that the hard part has begun.
     let is_finale = !s.kid && s.daily.idx >= crate::daily::FINALE_START && s.daily.idx < n;
     dom::toggle_class("dailyBar", "finale", is_finale);
     if is_finale {
-        dom::set_html("dailyBar", &format!("{}<span class=\"daily-finale\">{}</span>", progress, crate::i18n::t("daily.finale")));
+        dom::set_html("dailyBar", &format!("{}<span class=\"daily-finale\">{}</span>", progress, crate::icons::label("flame", &crate::i18n::t("daily.finale"))));
     } else {
         dom::set_html("dailyBar", &progress);
     }
@@ -3856,7 +3866,7 @@ fn render_daily_bar(app: &App) {
 
 fn show_daily_result(app: &App, correct: u32, total: u32, streak: u32, best: u32) {
     dom::set_text("dailyResScore", &format!("{correct}/{total}"));
-    dom::set_text("dailyResStreak", &crate::i18n::tp("daily.streakDays", &[("n", &streak.to_string())]));
+    dom::set_html("dailyResStreak", &crate::icons::label("flame", &crate::i18n::tp("daily.streakDays", &[("n", &streak.to_string())])));
     dom::set_text("dailyResBest", &crate::i18n::tp("daily.bestStreak", &[("n", &best.to_string())]));
     // Occasionally (~1 in 3, seeded by date+language so it's stable per day and
     // non-repeating) surface a proverb in the session's language beneath the
@@ -3904,13 +3914,13 @@ pub fn refresh_daily_btn(app: &App) {
     let active = app.borrow().daily.active;
     let done = daily_done_now(app);
     let label = if active {
-        crate::i18n::t("daily.exit")
+        dom::escape_html(&crate::i18n::t("daily.exit"))
     } else if done {
-        format!("\u{1F5D3} {} \u{2713}", crate::i18n::t("daily.title"))
+        format!("{} \u{2713}", crate::icons::label("calendar-star", &crate::i18n::t("daily.title")))
     } else {
-        format!("\u{1F5D3} {}", crate::i18n::t("daily.title"))
+        crate::icons::label("calendar-star", &crate::i18n::t("daily.title"))
     };
-    dom::set_text("dailyBtn", &label);
+    dom::set_html("dailyBtn", &label);
     dom::toggle_class("dailyBtn", "on", active);
     dom::toggle_class("dailyBtn", "done", done && !active);
 }

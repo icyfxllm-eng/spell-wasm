@@ -261,7 +261,7 @@ fn update_pace(streak: u32, elapsed_ms: f64) {
     } else {
         crate::i18n::t("ghost.even")
     };
-    dom::set_text("ghostPace", &text);
+    dom::set_html("ghostPace", &crate::icons::label("ghost", &text));
     dom::toggle_class("ghostPace", "ahead", delta > 0);
     dom::toggle_class("ghostPace", "behind", delta < 0);
     dom::toggle_class("ghostPace", "btn-hide", false);

@@ -195,6 +195,7 @@ fn render_extras(app: &App) {
     }
     if let Some((a, b)) = crate::translate::home_pair() {
         html.push_str(&format!(
+            // icon-exempt: an arrow between two words of a pair, typography not an icon.
             "<div class=\"tr-pair\">{} {} \u{2194} {}</div>",
             dom::escape_html(&t("tr.homePair")),
             dom::escape_html(&a),

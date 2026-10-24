@@ -75,11 +75,11 @@ fn reflect_speed(kid: bool) {
     let effective = speed_setting().unwrap_or_else(|| (if kid { "relaxed" } else { "standard" }).to_string());
     let shown = if reduce_motion() { "relaxed" } else { effective.as_str() };
     let icon = match shown {
-        "relaxed" => "🐢",
-        "swift" => "🐇",
-        _ => "▶️",
+        "relaxed" => "turtle",
+        "swift" => "rabbit",
+        _ => "play",
     };
-    dom::set_text("dmSpeed", icon);
+    dom::set_html("dmSpeed", &crate::icons::html(icon));
 }
 
 thread_local! {
@@ -614,7 +614,7 @@ fn advance(app: &App) {
 
 fn render_streak() {
     let n = STREAK.with(Cell::get);
-    dom::set_text("dmStreak", &if n > 0 { format!("🔥 {n}") } else { String::new() });
+    dom::set_html("dmStreak", &if n > 0 { crate::icons::label("flame", &n.to_string()) } else { String::new() });
     // Feature 5: escalating orb glow at 3 / 5 / 10.
     for (t, cls) in [(3, "heat3"), (5, "heat5"), (10, "heat10")] {
         dom::toggle_class("dmOrb", cls, n >= t);

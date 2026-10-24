@@ -155,12 +155,13 @@ fn render_round(app: &App) {
 
 fn render_streak() {
     let n = STREAK.with(Cell::get);
-    let flair = FLAIR.iter().rev().find(|t| n >= **t).map(|t| match t {
-        20 => "\u{1F525}\u{1F525}\u{1F525}",
-        10 => "\u{1F525}\u{1F525}",
-        _ => "\u{1F525}",
+    let flames = FLAIR.iter().rev().find(|t| n >= **t).map(|t| match t {
+        20 => 3,
+        10 => 2,
+        _ => 1,
     });
-    dom::set_text("impStreak", &format!("{}{}", n, flair.unwrap_or("")));
+    let flair = crate::icons::html("flame").repeat(flames.unwrap_or(0));
+    dom::set_html("impStreak", &format!("{}{}", n, flair));
 }
 
 /// F1: replay is free and unlimited — the word is the prompt, so hearing it

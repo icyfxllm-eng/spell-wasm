@@ -630,6 +630,13 @@ pub fn visual_haptics() -> bool {
     resolve(stored("visual_haptics").as_deref(), false)
 }
 
+/// CC-VISUAL-ECLIPSE `visual.icons` (Phase D, F8): the drawn icon set in place
+/// of emoji. **Default OFF** (V-D22), killable as `visual_icons`. Off: every
+/// icon slot shows the emoji it replaced, so the screen is as it was.
+pub fn visual_icons() -> bool {
+    resolve(stored("visual_icons").as_deref(), false)
+}
+
 /// CC-SPELL-KEYBOARD `keyboard.core` (Phase A: KF1, KF2, KF10): every on-screen
 /// key grid renders and dispatches through the one shared keyboard
 /// (`spellkb`). **Default OFF** (K-D28), killable as `keyboard_core`. Off is a
@@ -726,6 +733,15 @@ mod tests {
                     "{} is in the registry but is_on has no arm for it, so it falls through to \
                      `_ => false` and is on paper only", m.id);
         }
+    }
+
+    #[test]
+    fn visual_icons_ships_dark() {
+        set_test_override(None);
+        assert!(!visual_icons(), "Phase D icons ship dark until a build turns them on (V-D22)");
+        set_test_override(Some("on"));
+        assert!(visual_icons());
+        set_test_override(None);
     }
 
     #[test]

@@ -31,7 +31,7 @@
       "group": "spell_it",
       "nameKey": "tools.practice.name",
       "descKey": "tools.practice.desc",
-      "icon": "🌱",
+      "icon": "sprout",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -58,7 +58,7 @@
       "group": "unlisted",
       "nameKey": "tools.racing.name",
       "descKey": "tools.racing.desc",
-      "icon": "👻",
+      "icon": "ghost",
       "status": "hidden",
       "kidSafe": true,
       "platforms": [
@@ -86,7 +86,7 @@
       "group": "unlisted",
       "nameKey": "tools.syllable.name",
       "descKey": "tools.syllable.desc",
-      "icon": "🔉",
+      "icon": "syllables",
       "status": "hidden",
       "kidSafe": true,
       "platforms": [
@@ -115,7 +115,7 @@
       "group": "your_words",
       "nameKey": "tools.photo.name",
       "descKey": "tools.photo.desc",
-      "icon": "📷",
+      "icon": "camera",
       "status": "live",
       "kidSafe": false,
       "platforms": [
@@ -141,7 +141,7 @@
       "group": "unlisted",
       "nameKey": "tools.spellaloud.name",
       "descKey": "tools.spellaloud.desc",
-      "icon": "🗣",
+      "icon": "mic",
       "status": "hidden",
       "kidSafe": true,
       "platforms": [
@@ -167,7 +167,7 @@
       "group": "unlisted",
       "nameKey": "tools.stories.name",
       "descKey": "tools.stories.desc",
-      "icon": "📖",
+      "icon": "book",
       "status": "hidden",
       "kidSafe": false,
       "platforms": [
@@ -201,7 +201,7 @@
       },
       "nameKey": "tools.spelloff.name",
       "descKey": "tools.spelloff.desc",
-      "icon": "⚔️",
+      "icon": "swords",
       "status": "hidden",
       "kidSafe": false,
       "platforms": [
@@ -228,7 +228,7 @@
       "group": "meaning",
       "nameKey": "tools.defmatch.name",
       "descKey": "tools.defmatch.desc",
-      "icon": "🎴",
+      "icon": "cards",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -255,7 +255,7 @@
       "group": "word_puzzles",
       "nameKey": "tools.forge.name",
       "descKey": "tools.forge.desc",
-      "icon": "🔨",
+      "icon": "hammer",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -281,7 +281,7 @@
       "group": "word_puzzles",
       "nameKey": "tools.chains.name",
       "descKey": "tools.chains.desc",
-      "icon": "🔗",
+      "icon": "link",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -306,7 +306,7 @@
       "group": "meaning",
       "nameKey": "tools.impostor.name",
       "descKey": "tools.impostor.desc",
-      "icon": "🕵",
+      "icon": "detective",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -332,7 +332,7 @@
       "group": "spell_it",
       "nameKey": "tools.bee.name",
       "descKey": "tools.bee.desc",
-      "icon": "🐝",
+      "icon": "bee",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -358,7 +358,7 @@
       "group": "meaning",
       "nameKey": "tools.wordpic.name",
       "descKey": "tools.wordpic.desc",
-      "icon": "🖼️",
+      "icon": "picture",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -388,7 +388,7 @@
       },
       "nameKey": "top.myWords",
       "descKey": "top.myWords",
-      "icon": "＋",
+      "icon": "plus",
       "status": "core",
       "kidSafe": true,
       "platforms": [
@@ -418,7 +418,7 @@
       },
       "nameKey": "top.misses",
       "descKey": "top.misses",
-      "icon": "↻",
+      "icon": "refresh",
       "status": "core",
       "kidSafe": true,
       "platforms": [
@@ -449,7 +449,7 @@
       "group": "your_words",
       "nameKey": "reports.name",
       "descKey": "reports.desc",
-      "icon": "🗺️",
+      "icon": "map",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -475,7 +475,7 @@
       "group": "your_words",
       "nameKey": "cal.name",
       "descKey": "cal.desc",
-      "icon": "🗓️",
+      "icon": "calendar",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -501,7 +501,7 @@
       "group": "your_words",
       "nameKey": "tr.name",
       "descKey": "tr.desc",
-      "icon": "🌐",
+      "icon": "globe",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -527,7 +527,7 @@
       "group": "word_puzzles",
       "nameKey": "sd.name",
       "descKey": "sd.desc",
-      "icon": "🔢",
+      "icon": "grid",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -553,7 +553,7 @@
       "group": "word_puzzles",
       "nameKey": "ws.name",
       "descKey": "ws.desc",
-      "icon": "🔎",
+      "icon": "magnifier",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -579,7 +579,7 @@
       "group": "word_puzzles",
       "nameKey": "xw.name",
       "descKey": "xw.desc",
-      "icon": "✚",
+      "icon": "crossword",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -605,7 +605,7 @@
       "group": "word_puzzles",
       "nameKey": "spz.name",
       "descKey": "spz.tagline",
-      "icon": "🗝️",
+      "icon": "key",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -633,7 +633,7 @@
       "group": "spell_it",
       "nameKey": "bg.name",
       "descKey": "bg.desc",
-      "icon": "♟️",
+      "icon": "pawn",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -658,7 +658,7 @@
       "group": "spell_it",
       "nameKey": "rs.name",
       "descKey": "rs.desc",
-      "icon": "🎲",
+      "icon": "die",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -687,7 +687,7 @@
       "group": "spell_it",
       "nameKey": "qbd.name",
       "descKey": "qbd.desc",
-      "icon": "✍️",
+      "icon": "handwriting",
       "status": "live",
       "kidSafe": false,
       "platforms": [
@@ -716,7 +716,7 @@
       "group": "unlisted",
       "nameKey": "top.spellIt",
       "descKey": "share.tagline",
-      "icon": "🔊",
+      "icon": "speaker",
       "status": "core",
       "kidSafe": true,
       "platforms": [
@@ -752,7 +752,7 @@
       "$hubTileNote": "D1 SIGNED (Eric, 2026-09-02): out of the home row. The MODE is untouched -- Climb stays a LEVEL_OPTS entry and is selectable from the setup chip; shields, leaderboard and scoring are unchanged. The climbBtn element STAYS IN THE DOM, hidden: it owns the leaderboard scrim handler (climb.rs open_leaderboard) and ghost.rs reaches the board by synthesising a click on it, so deleting the markup would break a second feature. Suppressed, not removed.",
       "nameKey": "top.theClimb",
       "descKey": "level.climb.desc",
-      "icon": "🏔",
+      "icon": "mountain",
       "status": "core",
       "kidSafe": true,
       "platforms": [
@@ -788,7 +788,7 @@
       },
       "nameKey": "widget.daily.name",
       "descKey": "widget.daily.desc",
-      "icon": "🗓",
+      "icon": "calendar-star",
       "status": "core",
       "kidSafe": true,
       "platforms": [
@@ -824,7 +824,7 @@
       },
       "nameKey": "top.headToHead",
       "descKey": "vs.blurb",
-      "icon": "⚡",
+      "icon": "bolt",
       "status": "core",
       "kidSafe": true,
       "platforms": [

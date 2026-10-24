@@ -31,8 +31,9 @@ fn render(app: &crate::App) {
     let mut html = String::new();
     for word in crate::learner_query::LearnerQuery::at_risk_set(&crate::learner_query::live(&s), crate::learner_query::DEVICE, &lang, 1.5) {
         html.push_str(&format!(
-            "<div class=\"rep-row door\" data-door=\"rematch\"><span>{}</span><span>\u{25B6}</span></div>",
-            crate::dom::escape_html(&word)
+            "<div class=\"rep-row door\" data-door=\"rematch\"><span>{}</span><span>{}</span></div>",
+            crate::dom::escape_html(&word),
+            crate::icons::html("play")
         ));
     }
     if html.is_empty() {
@@ -43,8 +44,9 @@ fn render(app: &crate::App) {
     let mut html = String::new();
     for r in crate::reports::redemptions(&lang).iter().rev().take(8) {
         html.push_str(&format!(
-            "<div class=\"rep-row\"><span>{}</span><span>\u{2B50}</span></div>",
-            crate::dom::escape_html(&r.word)
+            "<div class=\"rep-row\"><span>{}</span><span>{}</span></div>",
+            crate::dom::escape_html(&r.word),
+            crate::icons::html("star")
         ));
     }
     if html.is_empty() {

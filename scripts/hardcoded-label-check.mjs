@@ -57,7 +57,7 @@ const AWAITING_AUDIT = [
 // 2026-10-11, asked directly: both stay English in every locale.
 //   "vs"          reads as a symbol rather than a word in most of the
 //                 fifteen, and the Spell Off screen around it is keyed.
-//   "🏔 The Climb"  a feature name, treated as a proper noun — the rest of
+//   "The Climb"   a feature name, treated as a proper noun — the rest of
 //                 the Climb copy (climb.*, fd.nameTitle, ghost.screen.*)
 //                 is keyed and translated around it.
 // They live here rather than in AWAITING_AUDIT so the difference between
@@ -65,7 +65,8 @@ const AWAITING_AUDIT = [
 // here needs a decision, not a shrug.
 const ENGLISH_BY_DECISION = [
   'vs',
-  '🏔 The Climb',
+  // (Its mountain moved into an icon slot in CC-VISUAL-ECLIPSE F8.)
+  'The Climb',
 ];
 
 // Ids the Rust side writes through a VARIABLE rather than a literal, so the

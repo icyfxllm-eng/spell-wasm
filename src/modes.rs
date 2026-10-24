@@ -842,6 +842,14 @@ mod web_wall_tests {
 mod feedback_policy_tests {
     use super::*;
 
+    // CC-VISUAL-ECLIPSE F8 / AT-20: every mode names an icon from the set.
+    #[test]
+    fn every_mode_names_an_icon_from_the_set() {
+        for m in all() {
+            assert!(crate::icons::exists(&m.icon), "{} has icon {:?}, not in design/icons", m.id, m.icon);
+        }
+    }
+
     #[test]
     fn every_mode_has_a_policy_and_an_input() {
         // Parsing is the real gate (the fields have no serde default); this names it.

@@ -19,6 +19,7 @@ pub const COLOR_SURFACE: Token = Token { css: "--panel", value: "#221d36" };
 pub const COLOR_SURFACE_2: Token = Token { css: "--panel-2", value: "#1b1730" };
 pub const COLOR_EDGE: Token = Token { css: "--edge", value: "#322a4f" };
 pub const COLOR_CONTROLS: Token = Token { css: "--controls-color", value: "#7a66c2" };
+pub const COLOR_ICON_STROKE: Token = Token { css: "--icon-stroke", value: "1.75" };
 pub const COLOR_BUTTON: Token = Token { css: "--button-color", value: "var(--amber)" };
 pub const COLOR_BUTTON_INK: Token = Token { css: "--button-ink", value: "var(--palette-on-gold-text)" };
 pub const COLOR_BUTTON_SWATCH_AMBER: Token = Token { css: "--color-button-swatch-amber", value: "#ffb14d" };

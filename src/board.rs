@@ -42,7 +42,7 @@ pub fn render(state: &AppState) {
                 if i == 0 { "top" } else { "" },
                 i + 1,
                 escape_html(if e.name.is_empty() { "anon" } else { &e.name }),
-                if e.timed { "\u{23f1} " } else { "" },
+                if e.timed { format!("{} ", crate::icons::html("timer")) } else { String::new() },
                 escape_html(&name_for(state, &e.lang)),
                 escape_html(&e.level),
                 e.streak

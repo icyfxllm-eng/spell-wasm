@@ -135,6 +135,7 @@
     --panel-2:#1b1730;
     --edge:#322a4f;
     --controls-color:#7a66c2;
+    --icon-stroke:1.75;
     --button-color:var(--amber);
     --button-ink:var(--palette-on-gold-text);
     --color-button-swatch-amber:#ffb14d;
@@ -2783,6 +2784,12 @@
   .imp-count{font-family:var(--mono);font-size:12px;color:var(--amber-soft)}
   body:not(.visual-sound) .set-row.snd-only,
   body:not(.visual-haptics) .set-row.hap-only{display:none}
+  /* CC-VISUAL-ECLIPSE F8: an icon slot holds the drawn icon and the emoji it
+     replaced; visual.icons (body.visual-icons) picks which shows. */
+  .icon{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:var(--icon-stroke);stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none;overflow:visible}
+  .icon-slot{display:inline-flex;align-items:center}
+  body:not(.visual-icons) .icon-slot .icon,
+  body.visual-icons .icon-slot .ic-emoji{display:none}
   .set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:start;padding:13px 0;border-top:1px solid var(--alpha-white-05)}
   .set-row:first-of-type{border-top:none}
   .set-row .lbl2{display:flex;flex-direction:column;font-size:14px;font-weight:600;color:var(--ink)}
@@ -2960,6 +2967,56 @@
 </style>
 </head>
 <body>
+<!-- icons:begin: GENERATED from design/icons by scripts/icons-build.mjs. Never edit by hand. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<symbol id="i-bee" viewBox="0 0 24 24"><ellipse cx="11.6" cy="15.4" rx="6" ry="4"/><path d="M10 11.6v7.6M13.4 11.6v7.6M17.6 15.4h2.6"/><ellipse cx="9.6" cy="7.2" rx="2" ry="2.8" transform="rotate(-22 9.6 7.2)"/><ellipse cx="14" cy="7.2" rx="2" ry="2.8" transform="rotate(22 14 7.2)"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.4 2.8 5.6 13.6h5.9L10.6 21.2l7.8-10.8h-5.9z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6.4C10 4.9 7 4.4 3.8 4.9v14.2c3.2-.5 6.2 0 8.2 1.5 2-1.5 5-2 8.2-1.5V4.9C17 4.4 14 4.9 12 6.4z"/><path d="M12 6.4v14.2"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 17.2h5.6M10.2 20.5h3.6"/><path d="M8.3 13.8A5.6 5.6 0 1 1 15.7 13.8c-.8.8-1.2 1.8-1.2 3.4h-5c0-1.6-.4-2.6-1.2-3.4z"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.2"/><path d="M4 9.8h16M8.5 3.2v3.6M15.5 3.2v3.6"/><path d="M8.3 13.4h.01M12 13.4h.01M15.7 13.4h.01M8.3 16.8h.01M12 16.8h.01"/></symbol>
+<symbol id="i-calendar-star" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.2"/><path d="M4 9.8h16M8.5 3.2v3.6M15.5 3.2v3.6"/><path d="M12.00 11.60 L12.88 13.79 L15.23 13.95 L13.43 15.46 L14.00 17.75 L12.00 16.50 L10.00 17.75 L10.57 15.46 L8.77 13.95 L11.12 13.79z"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M3.8 8.2h3.4L8.8 6h6.4l1.6 2.2h3.4v11H3.8z"/><circle cx="12" cy="13.5" r="3.4"/></symbol>
+<symbol id="i-cards" viewBox="0 0 24 24"><rect x="3.6" y="6.4" width="9.6" height="13.6" rx="1.8" transform="rotate(-9 8.4 13.2)"/><rect x="10.8" y="4" width="9.6" height="13.6" rx="1.8" transform="rotate(9 15.6 10.8)"/></symbol>
+<symbol id="i-celebrate" viewBox="0 0 24 24"><path d="M4 20.2 8.5 9.1l6.4 6.4z"/><path d="M13.8 3.6v2.2M18.8 5.2l-1.6 1.6M20.4 10.2h-2.2M11.6 8.8l1.2-1.2M16 13.4l1.6-.6"/></symbol>
+<symbol id="i-crossword" viewBox="0 0 24 24"><path d="M3.8 4h15.6v5.2H3.8zM9 4v5.2M14.2 4v5.2"/><path d="M9 9.2h5.2v10.4H9zM9 14.4h5.2"/><path d="M14.2 14.4h5.2v5.2h-5.2"/></symbol>
+<symbol id="i-detective" viewBox="0 0 24 24"><path d="M4.5 10.8h15"/><path d="M7.4 10.8l1.3-5.6h6.6l1.3 5.6"/><circle cx="8.8" cy="15.6" r="2.4"/><circle cx="15.2" cy="15.6" r="2.4"/><path d="M11.2 15.6h1.6"/></symbol>
+<symbol id="i-die" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="3.2"/><path d="M8.8 8.8h.01M15.2 8.8h.01M12 12h.01M8.8 15.2h.01M15.2 15.2h.01"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.2 21V3.6"/><path d="M5.2 4.4h12.6l-2.6 4 2.6 4H5.2"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 21c-3.6 0-6-2.4-6-5.6 0-3.4 2.4-5 3.6-8.4.8 1.8 1.8 2.8 2.9 3.2.2-2.8 1.3-5 3.3-6.7.2 3.8 2.2 5.3 2.2 8.9C18 18.6 15.6 21 12 21z"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><path d="M18.53 11.07 L20.56 11.19 L20.56 12.81 L18.53 12.93 L17.28 15.96 L18.63 17.48 L17.48 18.63 L15.96 17.28 L12.93 18.53 L12.81 20.56 L11.19 20.56 L11.07 18.53 L8.04 17.28 L6.52 18.63 L5.37 17.48 L6.72 15.96 L5.47 12.93 L3.44 12.81 L3.44 11.19 L5.47 11.07 L6.72 8.04 L5.37 6.52 L6.52 5.37 L8.04 6.72 L11.07 5.47 L11.19 3.44 L12.81 3.44 L12.93 5.47 L15.96 6.72 L17.48 5.37 L18.63 6.52 L17.28 8.04z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+<symbol id="i-ghost" viewBox="0 0 24 24"><path d="M6 20.2V11a6 6 0 0 1 12 0v9.2l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4z"/><path d="M10 11h.01M14 11h.01"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.4 2.3 3.6 5.3 3.6 8.6s-1.2 6.3-3.6 8.6c-2.4-2.3-3.6-5.3-3.6-8.6S9.6 5.7 12 3.4z"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.2"/><path d="M9.3 4v16M14.7 4v16M4 9.3h16M4 14.7h16"/></symbol>
+<symbol id="i-hammer" viewBox="0 0 24 24"><path d="M13.6 4.2l6.2 6.2-2.6 2.6L11 6.8z"/><path d="M12.6 9.6 4.4 17.8a1.5 1.5 0 0 0 2.1 2.1l8.2-8.2"/></symbol>
+<symbol id="i-handwriting" viewBox="0 0 24 24"><path d="M15.6 3.8l3.6 3.6-8.9 8.9-4.3.7.7-4.3z"/><path d="M13.6 5.8l3.6 3.6"/><path d="M4 20.5c1.6-1.4 2.8.9 4.4-.2s2.5-.9 3.6.3"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3.9"/><path d="M11.9 12h8.4M17 12v3M20.3 12v2.4"/></symbol>
+<symbol id="i-letters" viewBox="0 0 24 24"><path d="M3.4 18.2 7.8 6l4.4 12.2M5 14.2h5.6"/><circle cx="17" cy="15.6" r="2.6"/><path d="M19.6 13v5.2"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+<symbol id="i-magnifier" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.2"/><path d="M15.2 15.2 20.2 20.2"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M3.5 6.6l5-2 7 2.6 5-2v13l-5 2-7-2.6-5 2z"/><path d="M8.5 4.6v13M15.5 7.2v13"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3.4" width="6" height="10.4" rx="3"/><path d="M6 11.2a6 6 0 0 0 12 0M12 17.2v3.4M9 20.6h6"/></symbol>
+<symbol id="i-mountain" viewBox="0 0 24 24"><path d="M2.8 19.5 9.3 8l3.6 6.2 2.2-3.4 6.1 8.7z"/><path d="M7.4 11.4l1.9 1.3 1.9-1.2"/></symbol>
+<symbol id="i-pawn" viewBox="0 0 24 24"><circle cx="12" cy="6.4" r="2.6"/><path d="M9.6 10.4h4.8l-.8 4.6h-3.2z"/><path d="M8.2 19h7.6l-1.1-4H9.3z"/><path d="M6.4 20.6h11.2"/></symbol>
+<symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8.4" r="3.9"/><path d="M4.8 20.2c.8-3.9 3.7-5.7 7.2-5.7s6.4 1.8 7.2 5.7"/></symbol>
+<symbol id="i-picture" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.2"/><circle cx="9" cy="10" r="1.7"/><path d="M4 17.3l5-4.6 3.6 3 2.9-2.4 4.5 4"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.4v13.2l10.6-6.6z"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-rabbit" viewBox="0 0 24 24"><path d="M9.2 9.6C8.2 6.1 8.3 3.6 9.7 3.6S11.3 6 11.1 9.2"/><path d="M12.9 9.2c-.2-3.2.4-5.6 1.8-5.6s1.5 2.5.5 6"/><path d="M6.6 16.8a5.4 5.4 0 0 1 10.8 0c0 2.1-1.4 3.2-3 3.2H9.6c-1.6 0-3-1.1-3-3.2z"/><path d="M10 15h.01M14 15h.01"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.6 4.4v3.8h-3.8"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3.8M8 7.6l4-3.8 4 3.8"/><path d="M6.2 11v9.2h11.6V11"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.4l7 2.6v5.6c0 4.4-3 7.9-7 9.4-4-1.5-7-5-7-9.4V6z"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M6 4v16M12 4v16M18 4v16"/><path d="M3.8 14.5h4.4M9.8 8.5h4.4M15.8 16h4.4"/></symbol>
+<symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 9.3a3.8 3.8 0 0 1 0 5.4"/><path d="M18 6.8a7.3 7.3 0 0 1 0 10.4"/></symbol>
+<symbol id="i-speech" viewBox="0 0 24 24"><path d="M6.5 4.5h11a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H10.4l-4.1 3.4v-3.4h.2a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 20.5v-8.3"/><path d="M12 12.4c0-3.9 2.9-6.2 7-6.2 0 3.9-2.9 6.2-7 6.2z"/><path d="M12 14.6c0-3-2.4-5-5.9-5 0 3 2.4 5 5.9 5z"/><path d="M7.5 20.5h9"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12.00 3.80 L14.17 9.41 L20.18 9.74 L15.52 13.54 L17.05 19.36 L12.00 16.10 L6.95 19.36 L8.48 13.54 L3.82 9.74 L9.83 9.41z"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8.8h15M15.6 5.3 19 8.8l-3.4 3.4"/><path d="M20 15.2H5M8.4 11.8 5 15.2l3.4 3.5"/></symbol>
+<symbol id="i-swords" viewBox="0 0 24 24"><path d="M4.5 4.5 15 15M12.6 17.4l4.8-4.8M16.2 16.2l3.3 3.3"/><path d="M19.5 4.5 9 15M6.6 12.6l4.8 4.8M7.8 16.2l-3.3 3.3"/></symbol>
+<symbol id="i-syllables" viewBox="0 0 24 24"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 10h.01M15.5 14h.01M18.5 8h.01M18.5 12h.01M18.5 16h.01"/></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.2" r="7.4"/><path d="M12 13.2V9.4M9.8 2.8h4.4M18.4 6.6l1.6-1.6"/></symbol>
+<symbol id="i-turtle" viewBox="0 0 24 24"><path d="M3.6 16.4c0-4.6 3.5-8.2 7.9-8.2s7.9 3.6 7.9 8.2z"/><path d="M8 16.4l1.6-4.2h3.8l1.6 4.2M9.6 12.2l1.9-3.6 1.9 3.6"/><path d="M19.2 14.6c.4-1.5 1.4-2.2 2.4-1.8.6.9.1 2.2-1.6 2.6"/><path d="M6.6 16.4v2.4M16.4 16.4v2.4"/></symbol>
+</svg>
+<!-- icons:end -->
 
   <div class="topbar">
     <div class="brand">
@@ -2982,8 +3039,8 @@
                stays authoritative and the drawer never reads the learner
                store itself (I8). -->
           <button class="data-chip misses-chip retired" id="missesBtn"></button>
-          <button class="meta-icon retired" id="accountBtn" aria-label="Sign in" data-i18n-aria="aria.signIn">👤</button>
-          <button class="meta-icon retired" id="setBtn" aria-label="Settings" data-i18n-aria="settings.title">⚙</button>
+          <button class="meta-icon retired" id="accountBtn" aria-label="Sign in" data-i18n-aria="aria.signIn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-person"/></svg><span class="ic-emoji">👤</span></span></button>
+          <button class="meta-icon retired" id="setBtn" aria-label="Settings" data-i18n-aria="settings.title"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg><span class="ic-emoji">⚙</span></span></button>
         </div>
       </div>
       <div class="tag" id="brandTag">hear it · spell it · keep the chain</div>
@@ -3023,7 +3080,7 @@
       <!-- F1 photo-to-word-list. Hidden by default (btn-hide); Rust reveals it
            only when the feature flag is on AND the native VisionKit recognizer is
            supported AND not in Kid Mode (photo_list::reflect_visibility). -->
-      <button class="data-chip btn-hide" id="photoBtn" data-i18n="photo.button">📷 From a photo</button>
+      <button class="data-chip btn-hide" id="photoBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-camera"/></svg><span class="ic-emoji">📷</span></span> <span data-i18n="photo.button">From a photo</span></button>
     </div>
     <!-- CC-HUB-NAV v1.3.1 F2 — the quick-play row. Retired, not deleted, and
          that is not timidity: every button here is the element a drawer row
@@ -3037,9 +3094,9 @@
            (the shared mode-name string stays icon-free for prose reuse); climbBtn
            uses top.theClimb (emoji in string); dailyBtn text is set by
            game::refresh_daily_btn. All three render as icon + label cards. -->
-      <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
-      <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
-      <button class="launch" id="dailyBtn">🗓 Daily</button>
+      <button class="launch" id="vsBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-bolt"/></svg><span class="ic-emoji">⚡</span></span> <span data-i18n="top.headToHead">Spell Off</span></button>
+      <button class="launch" id="climbBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mountain"/></svg><span class="ic-emoji">🏔</span></span> <span data-i18n="top.theClimb">The Climb</span></button>
+      <button class="launch" id="dailyBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-calendar-star"/></svg><span class="ic-emoji">🗓</span></span> Daily</button>
       <!-- SPELL-PICTURE:BEGIN F6 home tile. The whole region is cut
            from the site build (scripts/build-web.sh), sentinels and
            all — I1 says the site carries no picture markup, and the
@@ -3054,20 +3111,20 @@
            Daily all keep their positions. Label reuses tools.wordpic.name
            rather than minting a sixteenth string that would owe fourteen
            more unaudited translations. -->
-      <button class="launch" id="wordPicTile"><span aria-hidden="true">🖼</span> <span data-i18n="tools.wordpic.name">Spell Picture</span></button>
+      <button class="launch" id="wordPicTile"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-picture"/></svg><span class="ic-emoji">🖼️</span></span> <span data-i18n="tools.wordpic.name">Spell Picture</span></button>
       <!-- SPELL-PICTURE:END -->
       <!-- Spell It Out Loud'''s front door. Stays btn-hide until the feature
            flag is on AND the native speech bridge is present
            (spell_aloud::reflect_tile). -->
-      <button class="launch btn-hide" id="spellItBtn">🎤 <span data-i18n="top.spellIt">Spell It</span></button>
+      <button class="launch btn-hide" id="spellItBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mic"/></svg><span class="ic-emoji">🗣</span></span> <span data-i18n="top.spellIt">Spell It</span></button>
       <!-- Online Spell Off (async 1v1). Hidden by default (btn-hide): shown by
            online_spelloff::reflect_gate only when the feature flag is ON, the
            player is signed in, and it isn't Kid Mode (COPPA — accounts only). -->
-      <button class="launch btn-hide" id="soBtn" data-i18n="so.entry">🌍 Challenge a friend</button>
+      <button class="launch btn-hide" id="soBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-globe"/></svg><span class="ic-emoji">🌐</span></span> <span data-i18n="so.entry">Challenge a friend</span></button>
     </div>
     <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup" data-i18n-aria="aria.roundSetup">
       <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
-      <span class="setup-chip-chev" aria-hidden="true">⚙</span>
+      <span class="setup-chip-chev"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg><span class="ic-emoji">⚙</span></span></span>
     </button>
 
     <!-- Coming-soon panel: shown (via body.coming-soon) when the selected study
@@ -3105,7 +3162,7 @@
                until the feature flag is on AND the language's voiceSpell config is
                true AND the on-device recognizer supports the locale (spell_aloud::
                reflect). Tapping speaks letter names into the field; never submits. -->
-          <button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span aria-hidden="true">🎤</span></button>
+          <button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mic"/></svg><span class="ic-emoji">🗣</span></span></button>
         </span>
         <!-- token-exempt:begin: the colours a player can pick; data-c is the stored value and input[type=color] needs a literal -->
         <span class="glow-pick" id="glowPick">
@@ -3220,8 +3277,8 @@
 
     <div class="minor-row">
       <button class="ghost" id="hintBtn" data-i18n="btn.hint" disabled>Hint</button>
-      <button class="ghost" id="defBtn" data-i18n="btn.definition" disabled title="Shows a masked definition — helps tell apart tricky homonyms">📖 Definition</button>
-      <button class="ghost" id="sentenceBtn" data-i18n="btn.sentence" disabled title="Hear (and see a masked version of) the word used in a sentence">💬 Sentence</button>
+      <button class="ghost" id="defBtn" disabled title="Shows a masked definition — helps tell apart tricky homonyms"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg><span class="ic-emoji">📖</span></span> <span data-i18n="btn.definition">Definition</span></button>
+      <button class="ghost" id="sentenceBtn" disabled title="Hear (and see a masked version of) the word used in a sentence"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speech"/></svg><span class="ic-emoji">💬</span></span> <span data-i18n="btn.sentence">Sentence</span></button>
       <button class="ghost danger" id="giveupBtn" data-i18n="btn.giveUp" disabled>Give up</button>
       <!-- CC-AUDIO-CLARITY F6a: the rescue for a player who cannot hear the
            word. Enabled once audio has played for the current word. -->
@@ -3244,7 +3301,7 @@
     <!-- CC-ATTEMPTS-SHIELDS Feature 2 HUD: current shield count during a Climb
          run. Language-neutral icon + count; hidden unless the run holds/earns
          shields. Shown from Rust (game::update_shield_hud). -->
-    <div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic" aria-hidden="true">🛡</span><span id="shieldCount">0</span></div>
+    <div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg><span class="ic-emoji">🛡</span></span></span><span id="shieldCount">0</span></div>
     <div class="tries-line" id="triesLine" aria-hidden="true"></div>
     <button class="ghost btn-hide" id="undoImportBtn" data-i18n="import.undo" style="margin:4px auto 0">Undo import</button>
     <button class="ghost btn-hide" id="openSavedList" data-i18n="lists.open" style="margin:4px auto 0">Open</button>
@@ -3261,7 +3318,7 @@
        best run exists for the language. Augments the chain bar without obscuring
        it; stays hidden otherwise (and entirely when the feature flag is off). -->
   <div class="ghost-pace btn-hide" id="ghostPace" aria-live="polite"></div>
-  <button class="pill share-cta btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain">↗ <span data-i18n="share.button">Share your chain</span></button>
+  <button class="pill share-cta btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-share"/></svg><span class="ic-emoji">↗</span></span> <span data-i18n="share.button">Share your chain</span></button>
 
   <section class="card stats">
     <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
@@ -3347,7 +3404,7 @@
   <div class="scrim" id="ghostScreen">
     <div class="modal">
       <button class="ghost hub-close" id="ghostClose" data-i18n="aria.close">Close</button>
-      <h3><span aria-hidden="true">👻</span> <span id="ghostTitle"></span></h3>
+      <h3><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-ghost"/></svg><span class="ic-emoji">👻</span></span> <span id="ghostTitle"></span></h3>
       <p id="ghostDesc"></p>
       <div class="ghost-stat" id="ghostStat"></div>
       <button class="btn btn-check" id="ghostStart" style="width:100%"></button>
@@ -3364,7 +3421,7 @@
   <div class="scrim" id="spellRacing">
     <div class="modal wide">
       <button class="ghost hub-close" id="srClose" data-i18n="aria.close">Close</button>
-      <h3><span aria-hidden="true">🏁</span> <span id="srTitle"></span></h3>
+      <h3><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-flag"/></svg><span class="ic-emoji">🏁</span></span> <span id="srTitle"></span></h3>
       <p class="sr-label" id="srCircuitLabel"></p>
       <div class="sr-circuits" id="srCircuits"></div>
       <p class="sr-label" id="srOpponentLabel"></p>
@@ -3454,8 +3511,8 @@
     <div class="pr-tray" id="prTray"></div>
     <input class="pr-input btn-hide" id="prInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
     <div class="pr-row">
-      <button class="btn btn-check pr-replay" id="prReplay" data-i18n="practice.replay">🔊 Hear it again</button>
-      <button class="btn btn-check pr-hintbtn" id="prHintBtn">💡 <span data-i18n="practice.hint">Hint</span></button>
+      <button class="btn btn-check pr-replay" id="prReplay"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span> <span data-i18n="practice.replay">Hear it again</span></button>
+      <button class="btn btn-check pr-hintbtn" id="prHintBtn"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-bulb"/></svg><span class="ic-emoji">💡</span></span> <span data-i18n="practice.hint">Hint</span></button>
     </div>
     <!-- D8 choice beat: a two-word pick from the same trap class. -->
     <div class="pr-card" id="prChoice"><div class="modal" style="text-align:center">
@@ -3467,20 +3524,20 @@
     <div class="pr-card" id="prMicro"><div class="modal" style="text-align:center">
       <p id="prMicroPrompt"></p>
       <div class="pr-micro-opts" id="prMicroOpts"></div>
-      <button class="btn btn-check btn-hide" id="prMicroPlay" style="width:100%;margin-top:8px">🔊</button>
+      <button class="btn btn-check btn-hide" id="prMicroPlay" style="width:100%;margin-top:8px"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span></button>
     </div></div>
     <div class="pr-card" id="prIntro"><div class="modal">
       <p id="prIntroText"></p>
       <button class="btn btn-check" id="prIntroOk" data-i18n="practice.gotIt" style="width:100%">Got it</button>
     </div></div>
     <div class="pr-card" id="prCeremony"><div class="modal" style="text-align:center">
-      <h3 data-i18n="practice.ceremonyTitle">🎉 First 20 done!</h3>
+      <h3><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-celebrate"/></svg><span class="ic-emoji">🎉</span></span> <span data-i18n="practice.ceremonyTitle">First 20 done!</span></h3>
       <p data-i18n="practice.ceremonyBody">You just spelled your first 20 words. Ready for 5 tricky ones?</p>
       <button class="btn btn-check" id="prShare" data-i18n="share.button" style="width:100%;margin-bottom:8px">Share</button>
       <button class="btn btn-check" id="prCeremonyGo" data-i18n="practice.ceremonyGo" style="width:100%">Take the victory lap</button>
     </div></div>
     <div class="pr-card" id="prNext"><div class="modal" style="text-align:center">
-      <h3 data-i18n="practice.nextTitle">⭐ You did it!</h3>
+      <h3><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-star"/></svg><span class="ic-emoji">⭐</span></span> <span data-i18n="practice.nextTitle">You did it!</span></h3>
       <p data-i18n="practice.nextBody">What's next?</p>
       <button class="btn btn-check" id="prNextReplay" data-i18n="practice.nextReplay" style="width:100%;margin-bottom:8px">Replay the tricky five</button>
       <button class="btn btn-check" id="prNextDaily" data-i18n="daily.title" style="width:100%;margin-bottom:8px">Daily</button>
@@ -3504,7 +3561,7 @@
       <button class="ghost mode-exit" id="wpPickerExit" data-i18n="aria.exit">Exit</button>
       <div class="wp-title" data-i18n="tools.wordpic.name">Spell Picture</div>
       <button class="ghost" id="wpGalleryBtn" data-i18n="finale.gallery">Gallery</button>
-      <button class="btn btn-check" id="wpSurprise" data-i18n="wordpic.surprise">🎲</button>
+      <button class="btn btn-check" id="wpSurprise"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-die"/></svg><span class="ic-emoji">🎲</span></span> <span data-i18n="wordpic.surprise">Surprise me</span></button>
     </div>
     <!-- CC-PICKER-SEARCH Feature 1: pinned, live-filtering, on-device only. -->
     <div class="wp-searchrow"><input id="wpSearch" type="search" autocomplete="off"
@@ -3544,7 +3601,7 @@
       <button class="ghost mode-exit" id="wpExit" data-i18n="aria.exit">Exit</button>
       <div class="wp-title" id="wpPlayTitle"></div>
       <div class="wp-count" id="wpCount"></div>
-      <button class="ghost btn-hide" id="wpZoom" aria-label="Zoom" data-i18n-aria="aria.zoom">🔍</button>
+      <button class="ghost btn-hide" id="wpZoom" aria-label="Zoom" data-i18n-aria="aria.zoom"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-magnifier"/></svg><span class="ic-emoji">🔎</span></span></button>
       <button class="ghost" id="wpRestart">↺</button>
     </div>
     <div class="wp-stage" id="wpStage"></div>
@@ -3552,7 +3609,7 @@
     <div class="wp-status" id="wpStatus"></div>
     <div class="wp-row">
       <input class="wp-input" id="wpInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-      <button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay" data-i18n-aria="btn.replay">🔊</button>
+      <button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay" data-i18n-aria="btn.replay"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span></button>
       <button class="ghost" id="wpCantHear" data-i18n="btn.cantHear">Can't hear it</button>
     </div>
     <!-- CC-AUDIO-CLARITY F6a: the word again, slowly, whatever the subject. -->
@@ -3581,7 +3638,7 @@
          just made this and gets to look at it for as long as they like. A
          tap anywhere during the build skips to the rest state. -->
     <div class="wp-reveal" id="wpReveal" role="dialog" aria-modal="true" aria-labelledby="wpRevealTitle">
-      <h2 class="sr-only" id="wpRevealTitle" data-i18n="wordpic.doneTitle">🖼️ Your picture!</h2>
+      <h2 class="sr-only" id="wpRevealTitle" data-i18n="wordpic.doneTitle">Your picture!</h2>
       <div class="wp-reveal-stage" id="wpRevealStage"></div>
       <p class="wp-reveal-note" id="wpRevealNote" role="status"></p>
       <div class="wp-reveal-acts">
@@ -3667,7 +3724,7 @@
   <div class="imp-screen" id="impostor">
     <div class="imp-top">
       <button class="ghost mode-exit" id="impExit" data-i18n="aria.exit">Exit</button>
-      <button type="button" class="imp-orb" id="impOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
+      <button type="button" class="imp-orb" id="impOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span></button>
       <span class="imp-streak" id="impStreak" aria-live="polite">0</span>
       <span class="imp-prog" id="impProgress"></span>
     </div>
@@ -3967,9 +4024,9 @@
   <div class="dm-screen" id="defMatch">
     <div class="dm-top">
       <button class="ghost mode-exit" id="dmExit" data-i18n="aria.exit">Exit</button>
-      <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
+      <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span></button>
       <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
-      <button type="button" class="ghost mode-btn" id="dmSpeed" aria-label="Card speed" data-i18n-aria="aria.cardSpeed" style="margin-inline-start:auto">🐢</button>
+      <button type="button" class="ghost mode-btn" id="dmSpeed" aria-label="Card speed" data-i18n-aria="aria.cardSpeed" style="margin-inline-start:auto"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-turtle"/></svg><span class="ic-emoji">🐢</span></span></button>
     </div>
     <div class="dm-status" id="dmStatus" aria-live="polite"></div>
     <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->
@@ -3996,8 +4053,8 @@
   <div class="scrim" id="photoSrcScrim">
     <div class="modal">
       <h3 data-i18n="photo.srcTitle">Add words from…</h3>
-      <button class="btn btn-check" id="photoSrcCamera" data-i18n="photo.takePhoto" style="width:100%;margin-bottom:8px">📸 Take a photo</button>
-      <button class="btn btn-check" id="photoSrcLibrary" data-i18n="photo.fromLibrary" style="width:100%">🖼 Choose from Photos</button>
+      <button class="btn btn-check" id="photoSrcCamera" style="width:100%;margin-bottom:8px"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-camera"/></svg><span class="ic-emoji">📷</span></span> <span data-i18n="photo.takePhoto">Take a photo</span></button>
+      <button class="btn btn-check" id="photoSrcLibrary" style="width:100%"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-picture"/></svg><span class="ic-emoji">🖼️</span></span> <span data-i18n="photo.fromLibrary">Choose from Photos</span></button>
       <div class="row" style="margin-top:8px">
         <button class="ghost" id="photoSrcCancel" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
       </div>
@@ -4162,7 +4219,7 @@
        screen it can outlive. -->
   <div class="scrim" id="spellItGuide">
     <div class="modal">
-      <h3><span aria-hidden="true">🎤</span> <span data-i18n="top.spellIt">Spell It</span></h3>
+      <h3><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mic"/></svg><span class="ic-emoji">🗣</span></span> <span data-i18n="top.spellIt">Spell It</span></h3>
       <ol class="sig-steps">
         <li data-i18n="spellit.guide.hear">Tap the orb to hear your word.</li>
         <li data-i18n="voiceSpell.listening">Listening… say the letters</li>
@@ -4240,7 +4297,7 @@
        language-neutral. -->
   <div class="scrim" id="shieldScrim">
     <div class="modal">
-      <div class="score-pop" aria-hidden="true">🛡</div>
+      <div class="score-pop" aria-hidden="true"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg><span class="ic-emoji">🛡</span></span></div>
       <h3 data-i18n="shield.promptTitle">Use a shield?</h3>
       <p data-i18n="shield.promptBody">Spend one shield to try this word again and keep your run going.</p>
       <p class="daily-best"><span data-i18n="shield.held">Shields held</span>: <b id="shieldPromptCount">0</b></p>
@@ -4265,7 +4322,7 @@
            accountBtn and climbBtn on the same Kid-Mode rule, so the entrance
            inherits the gating it had. Label reuses top.theClimb rather than
            minting a string that would owe fourteen unaudited translations. -->
-      <button class="ghost" id="acctClimb" data-i18n="top.theClimb" style="width:100%;margin-bottom:10px">🏔 The Climb</button>
+      <button class="ghost" id="acctClimb" style="width:100%;margin-bottom:10px"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mountain"/></svg><span class="ic-emoji">🏔</span></span> <span data-i18n="top.theClimb">The Climb</span></button>
       <input id="acctNewUsername" type="text" maxlength="16" placeholder="new username" data-i18n-ph="ph.newUsername" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
       <button class="btn btn-icon" id="acctChangeName" data-i18n="acct.changeName" style="width:100%;border-radius:12px">Update username</button>
       <div class="dob-err" id="acctErr"></div>
@@ -4295,7 +4352,7 @@
   <!-- The Climb: leaderboard modal -->
   <div class="scrim" id="climbScrim">
     <div class="modal wide">
-      <h3>🏔 The Climb</h3>
+      <h3><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mountain"/></svg><span class="ic-emoji">🏔</span></span> <span>The Climb</span></h3>
       <div class="climb-tabs">
         <button class="pill climb-tab on" id="climbTab-medium" data-i18n="level.medium">Medium</button>
         <button class="pill climb-tab" id="climbTab-hard" data-i18n="level.hard">Hard</button>
@@ -4313,14 +4370,14 @@
        is a pure relocation — behaviour is unchanged. -->
   <div class="scrim" id="setupScrim">
     <div class="modal setup-card">
-      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🌐</span>
+      <label class="setup-field"><span class="setup-field-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-globe"/></svg><span class="ic-emoji">🌐</span></span></span>
         <select id="langSel" aria-label="Word source" data-i18n-aria="aria.wordSource"></select></label>
-      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
+      <label class="setup-field"><span class="setup-field-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-sliders"/></svg><span class="ic-emoji">🎚</span></span></span>
         <select id="levelSel" aria-label="Difficulty" data-i18n-aria="aria.difficulty"></select></label>
       <!-- Per-difficulty explanation, filled by game::update_setup_chip from
            level.<v>.desc for whatever level is selected. -->
       <small class="setup-field-desc" id="levelDesc" aria-live="polite"></small>
-      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
+      <label class="setup-field"><span class="setup-field-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-timer"/></svg><span class="ic-emoji">⏱</span></span></span>
         <select id="modeSel" aria-label="Timer" data-i18n-aria="aria.timer">
           <option value="off" data-i18n="mode.untimed">Untimed</option>
           <option value="on" data-i18n="mode.timed">Quick Spell</option>
@@ -4361,7 +4418,7 @@
         </div>
         <div class="tr-card-body">
           <input class="tr-word tr-input" id="trSrcInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Type a word" data-i18n-ph="tr.search" />
-          <button type="button" class="tr-audio" id="trSrcAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear">🔊</button>
+          <button type="button" class="tr-audio" id="trSrcAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span></button>
         </div>
         <div class="tr-sub" id="trSrcSub" aria-live="polite"></div>
       </section>
@@ -4373,7 +4430,7 @@
         </div>
         <div class="tr-card-body">
           <div class="tr-word" id="trTgtWord"></div>
-          <button type="button" class="tr-audio" id="trTgtAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear">🔊</button>
+          <button type="button" class="tr-audio" id="trTgtAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg><span class="ic-emoji">🔊</span></span></button>
         </div>
         <div class="tr-sub" id="trTgtSub" aria-live="polite">
           <span class="tr-translit" id="trTgtTranslit"></span>
@@ -4477,7 +4534,7 @@
       <div id="wsLock" class="ws-lock btn-hide">
         <h3 data-i18n="ws.lockTitle">Lock it in</h3>
         <div class="sd-actions">
-          <button class="btn btn-check" id="wsLockPlay" aria-label="Play" data-i18n-aria="aria.play">▶</button>
+          <button class="btn btn-check" id="wsLockPlay" aria-label="Play" data-i18n-aria="aria.play"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-play"/></svg><span class="ic-emoji">▶</span></span></button>
           <span id="wsLockCount"></span>
         </div>
         <div class="sd-typed" id="wsTyped" dir="auto" aria-live="polite"></div>
@@ -4520,7 +4577,7 @@
       <div id="xwKey" class="ws-lock btn-hide">
         <h3 data-i18n="xw.keystoneTitle">The hidden word</h3>
         <div class="sd-actions">
-          <button class="btn btn-check" id="xwKeyPlay" aria-label="Play" data-i18n-aria="aria.play">▶</button>
+          <button class="btn btn-check" id="xwKeyPlay" aria-label="Play" data-i18n-aria="aria.play"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-play"/></svg><span class="ic-emoji">▶</span></span></button>
           <button class="ghost" id="xwKeyGo">✓</button>
         </div>
         <div class="sd-typed" id="xwTyped" dir="auto" aria-live="polite"></div>
@@ -4612,12 +4669,12 @@
            re-runs each tool's reflect when its switch flips. -->
       <div class="tools-hub" id="toolsHub">
         <div class="tools-head"><span class="tools-title" data-i18n="tools.title">Tools &amp; Features</span><small class="tools-sub" data-i18n="tools.subtitle">Turn features on or off — all in one place.</small></div>
-        <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
-        <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
-        <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
-        <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>
-        <label class="set-row tool-row" id="toolSpelloffRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🌍</span> <span data-i18n="tools.spelloff.name">Online Spell-Off</span></span><small data-i18n="tools.spelloff.desc">Challenge a friend, one word at a time.</small><small class="tool-avail" id="toolSpelloffHint"></small></span><input type="checkbox" class="switch" id="toolSpelloffToggle" /></label>
-        <label class="set-row tool-row" id="toolShieldsRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🛡</span> <span data-i18n="tools.shields.name">Shields &amp; extra attempts</span></span><small data-i18n="tools.shields.desc">A second try when you miss a word.</small><small class="tool-avail" id="toolShieldsHint"></small></span><input type="checkbox" class="switch" id="toolShieldsToggle" /></label>
+        <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-letters"/></svg><span class="ic-emoji">🔤</span></span></span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
+        <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-camera"/></svg><span class="ic-emoji">📷</span></span></span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
+        <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-mic"/></svg><span class="ic-emoji">🗣</span></span></span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
+        <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg><span class="ic-emoji">📖</span></span></span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>
+        <label class="set-row tool-row" id="toolSpelloffRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-globe"/></svg><span class="ic-emoji">🌐</span></span></span> <span data-i18n="tools.spelloff.name">Online Spell-Off</span></span><small data-i18n="tools.spelloff.desc">Challenge a friend, one word at a time.</small><small class="tool-avail" id="toolSpelloffHint"></small></span><input type="checkbox" class="switch" id="toolSpelloffToggle" /></label>
+        <label class="set-row tool-row" id="toolShieldsRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg><span class="ic-emoji">🛡</span></span></span> <span data-i18n="tools.shields.name">Shields &amp; extra attempts</span></span><small data-i18n="tools.shields.desc">A second try when you miss a word.</small><small class="tool-avail" id="toolShieldsHint"></small></span><input type="checkbox" class="switch" id="toolShieldsToggle" /></label>
       </div>
 
       <div class="set-row" id="nativeStatusRow"><span class="lbl2"><span>Native status (debug)</span><small id="nativeStatus" style="word-break:break-word;opacity:.75">checking…</small></span></div>

@@ -327,8 +327,9 @@ fn render() {
                 dom::escape_html(&t("ws.play").replace("{n}", &(i + 1).to_string())),
                 if slow {
                     format!(
-                        "<button type=\"button\" class=\"ws-slow\" data-ws-slow=\"{i}\" aria-label=\"{}\">\u{1F422}</button>",
-                        dom::escape_html(&t("ws.slow"))
+                        "<button type=\"button\" class=\"ws-slow\" data-ws-slow=\"{i}\" aria-label=\"{}\">{}</button>",
+                        dom::escape_html(&t("ws.slow")),
+                        crate::icons::html("turtle")
                     )
                 } else {
                     String::new()

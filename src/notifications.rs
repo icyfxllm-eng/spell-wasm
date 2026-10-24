@@ -135,6 +135,7 @@ pub fn apply(enabled: bool, time: &str) {
 
     let notif = Object::new();
     set(&notif, "id", &JsValue::from_f64(NOTIF_ID as f64));
+    // icon-exempt: a system notification title, drawn by the OS, not the app.
     set(&notif, "title", &JsValue::from_str("Time to spell \u{2728}"));
     set(&notif, "body", &JsValue::from_str("Your daily words are waiting \u{2014} keep the chain going."));
     set(&notif, "schedule", &schedule);

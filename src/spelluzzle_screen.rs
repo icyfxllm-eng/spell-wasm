@@ -420,7 +420,7 @@ fn render_setup() {
     };
     dom::set_html("szOpp", &oh);
     let n = streak_now(kid);
-    dom::set_text("szStreak", &if n > 0 { tr("daily.streakDays", &[("n", &n.to_string())]) } else { String::new() });
+    dom::set_html("szStreak", &if n > 0 { crate::icons::label("flame", &tr("daily.streakDays", &[("n", &n.to_string())])) } else { String::new() });
 }
 
 fn type_tap(e: web_sys::MouseEvent) {
