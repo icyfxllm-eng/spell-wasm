@@ -3,7 +3,7 @@
 //
 // One pick tints the menu button, the setup bar, the answer box and Delete
 // (their panel and edge are mixed from --controls-color). The default is
-// build 289's look; a pick survives a reload; the text on those panels stays
+// Eclipse's neutral ramp (CC-ECLIPSE-HOTFIX S1: neutral default, picks still tint); a pick survives a reload; the text on those panels stays
 // light, so it stays readable whatever the pick.
 import { openApp, assert } from '../harness.mjs';
 
@@ -24,13 +24,13 @@ const rgb = (v) => (v.match(/[\d.]+/g) || []).slice(0, 3).map(Number).map((n) =>
 const near = (a, b, tol = 3) => rgb(a).every((x, i) => Math.abs(x - b[i]) <= tol);
 
 export async function run(browser, base, suite) {
-  await suite.test('Controls colour: the default is build 289\'s violet', async () => {
+  await suite.test('Controls colour: the default is the neutral ramp (raised panel #1C1C1F)', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       const r = await look(page);
-      // 70% #7a66c2 over #14111f = (91, 76, 145); 25% = (46, 38, 72).
-      assert(near(r.box, [91, 76, 145]), `answer box edge ${r.box}`);
-      assert(near(r.boxBg, [46, 38, 72]), `answer box panel ${r.boxBg}`);
+      // 70% #52525b over #0a0a0b = (60, 60, 67); 25% = (28, 28, 31), F5's #1C1C1F.
+      assert(near(r.box, [60, 60, 67]), `answer box edge ${r.box}`);
+      assert(near(r.boxBg, [28, 28, 31]), `answer box panel ${r.boxBg}`);
       assert(r.box === r.chip && r.chip === r.del, `the controls disagree: ${JSON.stringify(r)}`);
     } finally { await ctx.close(); }
   });
@@ -43,8 +43,8 @@ export async function run(browser, base, suite) {
       // an oklab() blend. Wait for the transition to land.
       await page.waitForFunction(() => !/oklab/.test(getComputedStyle(document.getElementById('spellbox')).borderTopColor), null, { timeout: 3000 });
       const r = await look(page);
-      // 70% teal #2fae95 over #14111f = (39, 127, 114).
-      assert(near(r.box, [39, 127, 114]), `answer box edge after teal ${r.box}`);
+      // 70% teal #2fae95 over #0a0a0b = (36, 125, 108).
+      assert(near(r.box, [36, 125, 108]), `answer box edge after teal ${r.box}`);
       for (const k of ['chip', 'del', 'burger']) if (r[k]) assert(r[k] === r.box, `${k} did not follow: ${r[k]} vs ${r.box}`);
       assert(await page.evaluate(() => document.querySelector('#ctlPick .theme-swatch[data-c="#2fae95"]').classList.contains('active')), 'the teal swatch is not marked active');
       await page.reload({ waitUntil: 'load' });

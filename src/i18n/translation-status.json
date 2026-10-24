@@ -288,7 +288,9 @@
     "theme.unlock.typewriter",
     "theme.unlock.beestage",
     "theme.unlocked",
-    "wordpic.surpriseShort"
+    "wordpic.surpriseShort",
+    "aria.ctlNeutral",
+    "aria.bgBlack"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -585,7 +587,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -872,7 +876,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1159,7 +1165,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1446,7 +1454,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -1733,7 +1743,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -2020,7 +2032,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -2307,7 +2321,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -2594,7 +2610,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -2881,7 +2899,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -3168,7 +3188,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -3455,7 +3477,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -3742,7 +3766,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -4029,7 +4055,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -4316,7 +4344,9 @@
       "theme.unlock.typewriter",
       "theme.unlock.beestage",
       "theme.unlocked",
-      "wordpic.surpriseShort"
+      "wordpic.surpriseShort",
+      "aria.ctlNeutral",
+      "aria.bgBlack"
     ]
   }
 }

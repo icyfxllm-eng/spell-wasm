@@ -6,12 +6,28 @@ use crate::model::{AppState, Prefs, PREFS_KEY};
 use crate::storage;
 use crate::App;
 
+/// CC-ECLIPSE-HOTFIX F5: the pre-hotfix Eclipse defaults. save_prefs stores the
+/// current colour whether or not the player ever chose one, so every existing
+/// player has these saved; read as picks they would keep the violet the hotfix
+/// retires. A stored value equal to the old default is the default. (The
+/// violet Controls swatch moved one step, to #7b67c3, so a real violet pick
+/// stays a pick; the violet Background swatch became the near-black, S2.)
+const LEGACY_BG_DEFAULT: &str = crate::tokens::COLOR_LEGACY_BG_DEFAULT.value;
+const LEGACY_CONTROLS_DEFAULT: &str = crate::tokens::COLOR_LEGACY_CONTROLS_DEFAULT.value;
+
+fn migrate_default(stored: Option<String>, legacy: &str, default: &str) -> String {
+    match stored {
+        Some(c) if !c.eq_ignore_ascii_case(legacy) => c,
+        _ => default.to_string(),
+    }
+}
+
 pub fn load_prefs(state: &mut AppState) {
     let p: Prefs = storage::get_json(PREFS_KEY).unwrap_or_default();
     state.glow = p.glow.unwrap_or_else(|| crate::tokens::COLOR_GLOW.value.to_string());
-    state.bg_color = p.bg_color.unwrap_or_else(|| crate::tokens::COLOR_BG_USER.value.to_string());
+    state.bg_color = migrate_default(p.bg_color, LEGACY_BG_DEFAULT, crate::tokens::COLOR_BG_USER.value);
     state.orb_color = p.orb_color.unwrap_or_else(|| crate::tokens::COLOR_ORB_CORE.value.to_string());
-    state.controls_color = p.controls_color.unwrap_or_else(|| crate::tokens::COLOR_CONTROLS.value.to_string());
+    state.controls_color = migrate_default(p.controls_color, LEGACY_CONTROLS_DEFAULT, crate::tokens::COLOR_CONTROLS.value);
     state.button_color = p.button_color.unwrap_or_default();
     state.haptics_on = p.haptics.unwrap_or(true);
     state.key_feel = p.key_feel.unwrap_or(true);
@@ -156,6 +172,7 @@ pub fn set_bg_color(app: &App, color: &str) {
             let _ = root.set_attribute("data-page", if light { "light" } else { "dark" });
         }
     }
+    crate::themes::sync_theme_color();
     // --muted-on-bg is derived from --ink-on-bg via CSS color-mix() (see
     // index.html), so it automatically stays legible relative to whichever
     // ink color was just picked, instead of a second independent guess.
@@ -257,7 +274,8 @@ pub fn set_controls_color(app: &App, color: &str) {
 /// The Controls swatches, from the tokens (so no colour literal lives in the
 /// page). Built once, ahead of the custom picker; `data-i18n-aria` lets a
 /// language switch relabel them like every other swatch.
-const CONTROLS_SWATCHES: [(crate::tokens::Token, &str); 5] = [
+const CONTROLS_SWATCHES: [(crate::tokens::Token, &str); 6] = [
+    (crate::tokens::COLOR_CONTROLS_SWATCH_NEUTRAL, "aria.ctlNeutral"),
     (crate::tokens::COLOR_CONTROLS_SWATCH_VIOLET, "aria.ctlViolet"),
     (crate::tokens::COLOR_CONTROLS_SWATCH_BLUE, "aria.ctlBlue"),
     (crate::tokens::COLOR_CONTROLS_SWATCH_TEAL, "aria.ctlTeal"),
@@ -477,5 +495,35 @@ mod tests {
             !(chosen.extra_attempts || (st.kid && !chosen.extra_attempts_seen)),
             "a parent turning the second try off is obeyed in Spell Jr"
         );
+    }
+}
+
+#[cfg(test)]
+mod hotfix_f5_tests {
+    use super::*;
+
+    #[test]
+    fn a_stored_pre_hotfix_default_reads_as_the_new_default() {
+        // Every existing player has the old violet defaults saved (save_prefs
+        // writes the colour whether or not it was chosen).
+        assert_eq!(migrate_default(Some("#1c1830".into()), LEGACY_BG_DEFAULT, crate::tokens::COLOR_BG_USER.value), "#0a0a0b");
+        assert_eq!(migrate_default(Some("#7A66C2".into()), LEGACY_CONTROLS_DEFAULT, crate::tokens::COLOR_CONTROLS.value), "#52525b");
+        assert_eq!(migrate_default(None, LEGACY_BG_DEFAULT, crate::tokens::COLOR_BG_USER.value), "#0a0a0b");
+    }
+
+    #[test]
+    fn a_real_pick_is_kept() {
+        assert_eq!(migrate_default(Some("#151d2e".into()), LEGACY_BG_DEFAULT, crate::tokens::COLOR_BG_USER.value), "#151d2e");
+        // The violet Controls swatch moved one step so a violet pick survives.
+        let violet = crate::tokens::COLOR_CONTROLS_SWATCH_VIOLET.value;
+        assert!(!violet.eq_ignore_ascii_case(LEGACY_CONTROLS_DEFAULT), "the violet swatch must differ from the legacy default");
+        assert_eq!(migrate_default(Some(violet.into()), LEGACY_CONTROLS_DEFAULT, crate::tokens::COLOR_CONTROLS.value), violet);
+    }
+
+    #[test]
+    fn the_new_defaults_are_the_neutral_ramp() {
+        assert_eq!(crate::tokens::COLOR_BG.value, "#0a0a0b", "D4: signed");
+        assert_eq!(crate::tokens::COLOR_BG_USER.value, crate::tokens::COLOR_BG.value, "S2: both to #0A0A0B");
+        assert_eq!(crate::tokens::COLOR_CONTROLS_SWATCH_NEUTRAL.value, crate::tokens::COLOR_CONTROLS.value, "the first Controls swatch is the default");
     }
 }

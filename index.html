@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <title>Spell — a spelling game you play with your ears</title>
 <link rel="manifest" href="./manifest.json" />
-<meta name="theme-color" content="#1c1830" />
+<meta name="theme-color" content="#0a0a0b" />
 <link rel="apple-touch-icon" href="./icons/icon-192.png" />
 <link rel="icon" href="./icons/icon-192.png" />
 <script>
@@ -129,12 +129,12 @@
      Edit the JSON and run `node scripts/tokens-build.mjs --write`; never edit this block by hand. */
   :root{
     --ui-chrome:#7aa2ff;
-    --bg:#14111f;
-    --bg2:#1c1830;
-    --panel:#221d36;
-    --panel-2:#1b1730;
-    --edge:#322a4f;
-    --controls-color:#7a66c2;
+    --bg:#0a0a0b;
+    --bg2:#0f0f10;
+    --panel:#141416;
+    --panel-2:#111113;
+    --edge:#2c2c31;
+    --controls-color:#52525b;
     --icon-stroke:1.75;
     --button-color:var(--amber);
     --button-ink:var(--palette-on-gold-text);
@@ -143,7 +143,8 @@
     --color-button-swatch-blue:#6f9bff;
     --color-button-swatch-violet:#a98bff;
     --color-button-swatch-rose:#ff7a9a;
-    --color-controls-swatch-violet:#7a66c2;
+    --color-controls-swatch-neutral:#52525b;
+    --color-controls-swatch-violet:#7b67c3;
     --color-controls-swatch-blue:#4f7fe0;
     --color-controls-swatch-teal:#2fae95;
     --color-controls-swatch-amber:#e0952f;
@@ -174,7 +175,7 @@
     --teal:#46d6b8;
     --coral:#ff6b7a;
     --glow:#ffb14d;
-    --bg-color:#1c1830;
+    --bg-color:#0a0a0b;
     --orb-color:#ffb14d;
     --orb-text:#2a1a06;
     --color-orb-text-dark:#2a1a06;
@@ -194,6 +195,8 @@
     --color-black:#000;
     --color-text-on-light:#191527;
     --lang-accent:var(--lang-accent-en);
+    --legacy-bg-default:#1c1830;
+    --legacy-controls-default:#7a66c2;
     --palette-game-gold:#f2c14e;
     --palette-mode-screen-bg:#0e1420;
     --palette-on-gold-text:#36210a;
@@ -328,7 +331,7 @@
     --chrome-swatch-amber:#ffb14d;
     --chrome-orb-bad-light:#ffd2d8;
     --chrome-swatch-yellow:#ffe14d;
-    --chrome-scrim:rgba(10,8,18,.72);
+    --chrome-scrim:rgba(10,10,11,.72);
     --chrome-orb-good-rim:rgba(180,255,235,.4);
     --chrome-flag-tint:rgba(224,86,79,.09);
     --chrome-orb-bad-glow:rgba(255,107,122,.45);
@@ -458,7 +461,7 @@
   :root[data-theme="chalkboard"]{--bg:#16291f;--bg2:#1e3a2d;--panel:#244436;--panel-2:#1d382c;--edge:#3e6a57;--ink:#f3f0e4;--muted:#bccbb9;--muted-2:#9fb39e;--ink-on-bg:#f3f0e4;--bg-color:#1e3a2d;--amber:#f2e49b;--amber-soft:#f7eec4;--glow:#f2e49b;--controls-color:#6faa8f;--orb-color:#f2e49b}
   :root[data-theme="typewriter"]{--bg:#f1e9d6;--bg2:#ece2ca;--panel:#fbf6ea;--panel-2:#f5eedc;--edge:#d4c6a2;--ink:#1f1b15;--muted:#544c3d;--muted-2:#6a604c;--ink-on-bg:#1f1b15;--bg-color:#f1e9d6;--amber:#9b2f2f;--amber-soft:#7a2424;--glow:#b8483a;--controls-color:#8c7a58;--button-color:#9b2f2f;--button-ink:#fbf6ea;--orb-color:#c9a76a;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4}
   :root[data-theme="beestage"]{--bg:#160f0a;--bg2:#21160e;--panel:#2c1e13;--panel-2:#251910;--edge:#5c4026;--ink:#f7efe2;--muted:#cdb99d;--muted-2:#ad9a80;--ink-on-bg:#f7efe2;--bg-color:#21160e;--amber:#f2c14e;--amber-soft:#f8dc96;--glow:#f2c14e;--controls-color:#a8763f;--orb-color:#f2c14e}
-  :root[data-theme="eclipse"] body.kid{--glow:#ffc35a;--amber-soft:#ffe2b0;--controls-color:#9a84ec}
+  :root[data-theme="eclipse"] body.kid{--glow:#ffc35a;--amber-soft:#ffe2b0;--controls-color:#74747e}
   :root[data-theme="daybreak"] body.kid{--glow:#ff9f2a;--controls-color:#a08ef0}
   :root[data-theme="chalkboard"] body.kid{--glow:#fff0a8;--controls-color:#82c4a5}
   :root[data-theme="typewriter"] body.kid{--glow:#d0533f;--controls-color:#a8925f}
@@ -1850,13 +1853,16 @@
   body.visual-orb #orbWrap[data-orb="speaking"] .ring{animation:none;opacity:calc(var(--orb-env,0) * .85);transform:scale(calc(.86 + var(--orb-env,0) * .3))}
   body.visual-orb #orbWrap[data-orb="speaking"] .ring:nth-child(4){opacity:calc(var(--orb-env,0) * .55);transform:scale(calc(.92 + var(--orb-env,0) * .4))}
   body.visual-orb #orbWrap[data-orb="speaking"] .ring:nth-child(5){opacity:calc(var(--orb-env,0) * .3);transform:scale(calc(.98 + var(--orb-env,0) * .5))}
-  body.visual-orb #orbWrap .orb::after{content:"";position:absolute;inset-inline:12%;inset-block-end:-20%;height:32%;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent);filter:blur(6px);opacity:0;transition:opacity var(--motion-duration-slow) ease;pointer-events:none}
+  /* CC-ECLIPSE-HOTFIX F3 (D2): the orb is the voice and the glow is the player's;
+     they don't mix. Its underglow and its milestone halo read the orb's own
+     colour, never --glow. */
+  body.visual-orb #orbWrap .orb::after{content:"";position:absolute;inset-inline:12%;inset-block-end:-20%;height:32%;border-radius:50%;background:radial-gradient(closest-side,var(--orb-color),transparent);filter:blur(6px);opacity:0;transition:opacity var(--motion-duration-slow) ease;pointer-events:none}
   body.visual-orb #orbWrap[data-orb="awaiting"] .orb::after{opacity:.6}
   body.visual-orb #orbWrap[data-orb="correct"] .orb{animation:orbFlare var(--motion-anim-orb-flare) ease-out}
   @keyframes orbFlare{0%{transform:scale(1);filter:brightness(1)}35%{transform:scale(1.08);filter:brightness(1.45)}100%{transform:scale(1);filter:brightness(1)}}
   @keyframes orbFlareFade{0%,100%{filter:brightness(1)}35%{filter:brightness(1.45)}}
   body.visual-orb #orbWrap[data-orb="wrong"] .orb{animation:orbDim var(--motion-anim-wrong-hold) ease}
-  body.visual-orb #orbWrap[data-orb="milestone"] .orb{background:radial-gradient(circle at 50% 50%, var(--bg) 0 60%, var(--orb-color) 64%, color-mix(in srgb,var(--orb-color) 40%,transparent) 100%);box-shadow:0 0 0 1px var(--amber-soft), 0 0 64px 16px var(--glow);animation:orbTotality var(--motion-anim-orb-breathe) ease-in-out infinite;color:var(--ink);--ink-on-bg:var(--ink);--muted-on-bg:var(--muted);--control-border-on-bg:var(--control-border)}
+  body.visual-orb #orbWrap[data-orb="milestone"] .orb{background:radial-gradient(circle at 50% 50%, var(--bg) 0 60%, var(--orb-color) 64%, color-mix(in srgb,var(--orb-color) 40%,transparent) 100%);box-shadow:0 0 0 1px var(--amber-soft), 0 0 64px 16px var(--orb-color);animation:orbTotality var(--motion-anim-orb-breathe) ease-in-out infinite;color:var(--ink);--ink-on-bg:var(--ink);--muted-on-bg:var(--muted);--control-border-on-bg:var(--control-border)}
   body.visual-orb #orbWrap[data-orb="milestone"] .orb-glyph{color:var(--amber-soft)}
   body.visual-orb #orbWrap[data-orb="milestone"] .ring{animation:none;opacity:.5}
   @keyframes orbTotality{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
@@ -4850,7 +4856,7 @@
         <span class="lbl2"><span data-i18n="settings.background">Background</span><small data-i18n="settings.backgroundSmall">Page background color</small></span>
         <!-- token-exempt:begin: the colours a player can pick; data-c is the stored value and input[type=color] needs a literal -->
         <span class="theme-pick" id="bgPick">
-          <button class="theme-swatch" style="--s:#1c1830" data-c="#1c1830" aria-label="Violet background" data-i18n-aria="aria.bgViolet"></button>
+          <button class="theme-swatch" style="--s:#0a0a0b" data-c="#0a0a0b" aria-label="Black background" data-i18n-aria="aria.bgBlack"></button>
           <button class="theme-swatch" style="--s:#151d2e" data-c="#151d2e" aria-label="Navy background" data-i18n-aria="aria.bgNavy"></button>
           <button class="theme-swatch" style="--s:#132018" data-c="#132018" aria-label="Forest background" data-i18n-aria="aria.bgForest"></button>
           <button class="theme-swatch" style="--s:#241318" data-c="#241318" aria-label="Maroon background" data-i18n-aria="aria.bgMaroon"></button>

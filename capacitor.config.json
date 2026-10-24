@@ -1,5 +1,8 @@
 {
   "appId": "net.spellgame.app",
   "appName": "Spell",
-  "webDir": "dist"
+  "webDir": "dist",
+  "ios": {
+    "backgroundColor": "#0A0A0B"
+  }
 }

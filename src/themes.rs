@@ -262,6 +262,7 @@ pub fn apply() {
     let Some(root) = web_sys::window().and_then(|w| w.document()).and_then(|d| d.document_element()) else { return };
     if !on() {
         let _ = root.remove_attribute("data-theme");
+        sync_theme_color();
         return;
     }
     let _ = root.set_attribute("data-theme", current().id());
@@ -269,6 +270,22 @@ pub fn apply() {
     // Latin; Vietnamese stacks marks it does not draw, so it is not "latin" here.
     let latin = matches!(crate::i18n::current().as_str(), "en" | "es" | "fr" | "de" | "pt" | "pl" | "fil" | "sw");
     let _ = root.set_attribute("data-script", if latin { "latin" } else { "other" });
+    sync_theme_color();
+}
+
+/// CC-ECLIPSE-HOTFIX F5/I10: the browser's theme-color (the status bar and the
+/// overscroll on the web) is the page's actual ground, so it follows the theme
+/// and a Background pick instead of staying Eclipse's old violet.
+pub fn sync_theme_color() {
+    let Some(win) = web_sys::window() else { return };
+    let Some(doc) = win.document() else { return };
+    let (Some(root), Ok(Some(meta))) = (doc.document_element(), doc.query_selector("meta[name=theme-color]")) else { return };
+    let Ok(Some(cs)) = win.get_computed_style(&root) else { return };
+    let bg = cs.get_property_value("--bg-color").unwrap_or_default();
+    let bg = bg.trim();
+    if !bg.is_empty() {
+        let _ = meta.set_attribute("content", bg);
+    }
 }
 
 /// The player picked a choice in Settings.
