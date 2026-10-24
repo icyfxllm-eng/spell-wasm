@@ -162,6 +162,31 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  await suite.test('Mix: the keyboard follows each word into its own language', async () => {
+    const { ctx, page } = await open(browser, base,
+      { ...ON, spell_flag_impossible_es: 'on', spell_flag_impossible_ru: 'on', spell_dev_entitlements: 'on' });
+    page.on('dialog', (d) => d.accept()); // the one-time Mix notice
+    try {
+      await page.click('#setupChip').catch(() => {});
+      await page.selectOption('#levelSel', 'impossible_mix');
+      await clickSettled(page, '#setupDone').catch(() => {});
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      const seen = new Set();
+      for (let i = 0; i < 20 && seen.size < 2; i++) {
+        const [word, lang] = await page.evaluate(() => [window.__spelltest.currentWord(), window.__spelltest.currentLang()]);
+        seen.add(lang);
+        const keys = new Set(await page.$$eval('#kbLetters [data-k]', (ks) => ks.map((k) => k.getAttribute('data-k'))));
+        const base = (c) => c.normalize('NFD')[0]; // an accented letter lives on its base key's long-press
+        const missing = [...word.toLowerCase()].filter((c) => !keys.has(c) && !keys.has(base(c)));
+        assert(missing.length === 0, `${lang} word "${word}" is not typeable on the keyboard shown (missing ${missing.join('')})`);
+        await page.click('#giveupBtn');
+        await page.click('#orbWrap');
+        await page.waitForFunction((w) => window.__spelltest.currentWord() && window.__spelltest.currentWord() !== w, word, { timeout: 5000 });
+      }
+      assert(seen.size === 2, `Mix served only ${[...seen]} in 20 words`);
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('F4: a signed kill file switches Mix off after it is cached; a tampered one does nothing', async () => {
     for (const [doc, killed] of [[KILL_DOC, true], [KILL_DOC.replace('impossible_mix', 'impossible_xx'), false]]) {
       const { ctx, page } = await open(browser, base, ON);
