@@ -132,6 +132,10 @@ platform :ios do
 
   desc "Submit the latest build to App Store review (metadata/screenshots already uploaded)"
   lane :submit_review do
+    # CC-VISUAL-ECLIPSE F12 / AT-28: the screenshots must match this build.
+    # Run from the release branch the submitted build was cut from; it fails if
+    # a scene shows a feature whose flag is off here, or a shot maps to no scene.
+    sh("cd .. && node scripts/store-assets-check.mjs")
     deliver(
       skip_binary_upload: true,
       skip_metadata: true,
@@ -151,6 +155,10 @@ platform :ios do
 
   desc "Upload localized metadata + screenshots and submit the latest build for review"
   lane :submit_localized do
+    # CC-VISUAL-ECLIPSE F12 / AT-28: the screenshots must match this build.
+    # Run from the release branch the submitted build was cut from; it fails if
+    # a scene shows a feature whose flag is off here, or a shot maps to no scene.
+    sh("cd .. && node scripts/store-assets-check.mjs")
     deliver(
       skip_binary_upload: true,
       skip_metadata: false,

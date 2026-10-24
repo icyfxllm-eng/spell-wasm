@@ -1,0 +1,14 @@
+{
+  "$doc": "CC-VISUAL-ECLIPSE F12: the App Store screenshot scenes, in listing order. Each names the flags its look depends on. scripts/store-assets-check.mjs (AT-28) fails the submission lane if any of those flags is off in the tree being submitted, if an uploaded screenshot maps to no scene, or if a scene is missing a screenshot. Files are <device>-<n>-<id>.png in fastlane/screenshots/en-US.",
+  "devices": ["iphone69", "ipad13"],
+  "scenes": [
+    { "id": "orb-speaking", "what": "The orb's corona following the spoken word on the play screen", "flags": ["visual_orb", "visual_icons", "visual_type"] },
+    { "id": "wrong-diff", "what": "A miss: the attempt marked in the answer box, the correct spelling under it, in amber", "flags": ["visual_feedback", "visual_icons", "visual_type"] },
+    { "id": "celebration", "what": "A perfect run: the orb in totality with sparks", "flags": ["visual_celebrate", "visual_orb", "visual_icons"] },
+    { "id": "hub-icons", "what": "The menu: the modes with their drawn icons", "flags": ["visual_icons"] },
+    { "id": "multi-script", "what": "Four languages, four scripts: Korean, Arabic, Hindi, Vietnamese", "flags": ["visual_type", "visual_icons"] },
+    { "id": "themes", "what": "The earnable themes, Daybreak to Spelling Bee Stage", "flags": ["visual_themes", "visual_icons"] },
+    { "id": "boardgame", "what": "Board Game", "flags": ["boardgame", "visual_icons"] },
+    { "id": "randospell", "what": "Randospell", "flags": ["randospell", "visual_icons"] }
+  ]
+}
