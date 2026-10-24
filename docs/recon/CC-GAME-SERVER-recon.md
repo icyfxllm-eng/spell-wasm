@@ -426,7 +426,8 @@ You need to pick between:
 | D-R3 | Kill-flag refresh on entering the online screen (client change) | Yes, or A13.3 can't pass |
 | D-R10 | Secure storage: (a) plugin / (b) extend NativeLanguageKitPlugin / (c) localStorage | (b) |
 | D-R11 | New strings: machine-draft + `needs_audit`, or wait for humans? | Machine-draft, matching precedent |
-| D-X1 | Spell Off: replace, coexist, or retire? | Your call: a strategy question |
+| D-X1 | Spell Off: replace, coexist, or retire? | **Eric 2026-10-24: Spell Off is kept, "with multiplayer option."** Not retired, not replaced. Open: what "multiplayer option" means (see D-X1a) |
+| D-X1a | Does "multiplayer option" mean (i) Spell Off stays async and real-time Online H2H sits beside it as another option, or (ii) Spell Off itself gains more than 2 players? | Pending Eric |
 | D-X2 | TTS base = Mac mini over Tailscale (needs Tailscale on the Mac mini) | Yes; fix the spec text |
 | D-X3 | Release rule anchor (replace "build-56") | "Nothing on any `release/*` branch" |
 | D-X4 | Image delivery: GHCR (token) or local build on Rocky | Local build first; GHCR when moving to a VPS |
