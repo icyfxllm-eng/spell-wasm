@@ -13,6 +13,33 @@ node scripts/serve-audit.mjs         # serves it behind a password; prints URL +
 cloudflared tunnel --url http://localhost:8140      # (or: ngrok http 8140)
 ```
 
+### One build per language (the normal way to hand out audits)
+
+Each native speaker gets a build locked to their own language: it opens in that
+language, every other language shows "coming soon", and the banner reads
+`… · FR ONLY`. Their flags and feedback cannot land on a language they were not
+asked to judge.
+
+```sh
+bash scripts/build-audit-all.sh              # every non-English language -> dist-audit-<lang>/
+bash scripts/build-audit-all.sh fr de        # or just some
+AUDIT_LANG=fr AUDIT_PORT=8141 node scripts/serve-audit.mjs   # one server per auditor
+cloudflared tunnel --url http://localhost:8141
+```
+
+The language list comes from the registry (`consts::LANGS_BASE`), so a newly
+registered language gets a build with no script edit. The lock is
+`consts::audit_lang()`, read from `AUDIT_LANG` at compile time and only under
+`audit_preview`: a production build ignores the variable. Give each language its
+own port; each server run prints its own password.
+
+The audit page talks to the backend through its own server: the build sets
+`SPELL_API_BASE` to the page's origin and `serve-audit.mjs` forwards `/api` and
+`/packs` to spellgame.net, whose CORS would refuse a tunnel origin. Telemetry is
+dropped, so audit sessions stay out of production numbers. Signed-in features
+(Climb, online play) do not work in an audit build; nothing an auditor reviews
+needs them.
+
 Send the auditor the tunnel URL **and** the password. The password stops the
 unverified build being stumbled on; the tunnel gives them HTTPS. Stop the server
 (Ctrl-C) when done — don't leave it exposed.

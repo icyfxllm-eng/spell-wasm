@@ -60,8 +60,8 @@ tests/e2e/TEST-REPORT.md
 tools/*/out/
 
 # Audit-edition build artifacts (scripts/build-web-audit.sh)
-dist-audit/
-pkg-audit/
+dist-audit*/
+pkg-audit*/
 
 # CC-LEARNING-ENGINE-L0 R4: the local dev build that carries the learner
 # inspector (scripts/build-web-dev.sh). Never shipped.

@@ -343,6 +343,23 @@ pub fn ocr_support(lang: &str) -> OcrSupport {
     }
 }
 
+/// The one language a per-language audit build is locked to, or None.
+///
+/// Set at build time by `AUDIT_LANG=<code> bash scripts/build-web-audit.sh`, so a
+/// native speaker's build plays THEIR language and nothing else: their flags and
+/// feedback cannot land on a language they were not asked to judge. Read only
+/// under `audit_preview`, so a production build ignores the variable entirely,
+/// even if it happens to be set in the shell.
+pub fn audit_lang() -> Option<&'static str> {
+    if !cfg!(feature = "audit_preview") {
+        return None;
+    }
+    match option_env!("AUDIT_LANG") {
+        Some(l) if !l.is_empty() => Some(l),
+        _ => None,
+    }
+}
+
 /// True only for languages playable right now (passed audit). Gating for study
 /// languages; `uiLang` / interface localization is unaffected.
 ///
@@ -359,6 +376,9 @@ pub fn is_active_lang(lang: &str) -> bool {
     // is no `if (isWeb)` anywhere else to drift out of sync with this one.
     if cfg!(feature = "web") && lang != EN {
         return false;
+    }
+    if let Some(only) = audit_lang() {
+        return lang == only && is_builtin_lang(lang);
     }
     if lang_status(lang) == Active {
         return true;

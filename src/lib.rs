@@ -280,6 +280,11 @@ pub fn start() -> Result<(), JsValue> {
         Some(l) if consts::is_builtin_lang(&l) => l,
         _ => i18n::device_lang().unwrap_or_else(|| EN.to_string()),
     };
+    // A per-language audit build opens in the language under review, whatever
+    // the device language or an earlier session saved.
+    if let Some(l) = consts::audit_lang() {
+        state.lang = l.to_string();
+    }
     state.cur_lang = state.lang.clone();
 
     // Age gate: a stored "kid" verdict (under the cutoff) locks Kid Mode on

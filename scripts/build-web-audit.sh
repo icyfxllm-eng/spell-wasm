@@ -10,23 +10,33 @@
 # languages stay gated, and the draft banks are not compiled in. This script also
 # stamps a persistent "UNVERIFIED PREVIEW" banner into the page so no one mistakes
 # an audit build for the real app.
+#
+# Per-language: AUDIT_LANG=fr bash scripts/build-web-audit.sh builds dist-audit-fr/,
+# locked to that one language (consts::audit_lang) and opening in it, so a native
+# speaker reviews only their own. scripts/build-audit-all.sh builds every
+# non-English language this way. Without AUDIT_LANG it builds the shared
+# dist-audit/ with every language unlocked, as before.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
-DIST="$ROOT/dist-audit"
+AUDIT_LANG="${AUDIT_LANG:-}"
+export AUDIT_LANG
+SUFFIX="${AUDIT_LANG:+-$AUDIT_LANG}"
+DIST="$ROOT/dist-audit$SUFFIX"
+PKG="$ROOT/pkg-audit$SUFFIX"
 
 echo "==> regenerate draft banks -> src/word_data_audit.rs"
 python3 scripts/build-draft-wordbanks.py
 
-echo "==> cargo build (release, wasm32, --features audit_preview)"
+echo "==> cargo build (release, wasm32, --features audit_preview, AUDIT_LANG=${AUDIT_LANG:-all})"
 cargo build --release --target wasm32-unknown-unknown --features audit_preview
 
 echo "==> wasm-bindgen -> pkg-audit/"
 wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
-  --out-dir "$ROOT/pkg-audit" --target web --no-typescript
+  --out-dir "$PKG" --target web --no-typescript
 
-echo "==> assembling dist-audit/"
+echo "==> assembling $(basename "$DIST")/"
 rm -rf "$DIST"
 mkdir -p "$DIST"
 # notices.html is the ONE attribution page a player can reach: NOTICES.md
@@ -38,24 +48,45 @@ cp index.html audio-native.js native-language-kit.js telemetry-schema.js manifes
 python3 scripts/cut-diag.py "$DIST"
 cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
-cp -r pkg-audit "$DIST/pkg"
+cp -r "$PKG" "$DIST/pkg"
 
-# Stamp the banner: a fixed, unmissable strip + a <title> marker. Injected here (not
-# in index.html) so it exists ONLY in the audit bundle, never in the shipped page.
-echo "==> stamping UNVERIFIED PREVIEW banner"
+# Point the backend at the audit page's own origin. spellgame.net's CORS allows
+# only its own origins, so a page on a tunnel URL could fetch no voice, definition
+# or pack; scripts/serve-audit.mjs forwards /api and /packs there instead, and
+# drops /telemetry so audit sessions never land in production telemetry.
+echo "==> pointing SPELL_API_BASE at the audit server"
 python3 - "$DIST/index.html" <<'PY'
 import sys
 p = sys.argv[1]
 html = open(p, encoding="utf-8").read()
+old = 'window.SPELL_API_BASE = "https://spellgame.net";'
+if html.count(old) != 1:
+    sys.exit("SPELL_API_BASE line not found exactly once in index.html")
+open(p, "w", encoding="utf-8").write(html.replace(old, "window.SPELL_API_BASE = location.origin;"))
+PY
+
+# Stamp the banner: a fixed, unmissable strip + a <title> marker. Injected here (not
+# in index.html) so it exists ONLY in the audit bundle, never in the shipped page.
+echo "==> stamping UNVERIFIED PREVIEW banner"
+python3 - "$DIST/index.html" "$AUDIT_LANG" <<'PY'
+import sys
+p, lang = sys.argv[1], sys.argv[2]
+html = open(p, encoding="utf-8").read()
+tag = f" · {lang.upper()} ONLY" if lang else ""
 banner = (
   '<style>#auditPreviewBanner{position:fixed;top:0;left:0;right:0;z-index:99999;'
   'background:#b03a5b;color:#fff;font:600 12px/1.4 -apple-system,system-ui,sans-serif;'
   'text-align:center;padding:5px 10px;letter-spacing:.02em}'
   'body{padding-top:26px!important}</style>'
-  '<div id="auditPreviewBanner">AUDIT PREVIEW · UNVERIFIED DRAFT CONTENT · NOT FOR RELEASE</div>'
+  '<div id="auditPreviewBanner">AUDIT PREVIEW · UNVERIFIED DRAFT CONTENT · NOT FOR RELEASE' + tag + '</div>'
 )
-html = html.replace("<body>", "<body>" + banner, 1) if "<body>" in html else banner + html
-html = html.replace("<title>", "<title>[AUDIT] ", 1)
+# The REAL tag, at the start of its line: index.html mentions "<body>" inside a
+# CSS comment, and a plain replace injected the banner mid-stylesheet.
+import re
+html, n = re.subn(r"^<body>", lambda m: "<body>" + banner, html, count=1, flags=re.M)
+if n != 1:
+    sys.exit("no <body> tag at the start of a line in index.html")
+html = html.replace("<title>", f"<title>[AUDIT{' ' + lang if lang else ''}] ", 1)
 open(p, "w", encoding="utf-8").write(html)
 print("   banner + title marker stamped")
 PY
@@ -119,9 +150,10 @@ widget = r'''<style>
   render();
 })();
 </script>'''
-html = html.replace("</body>", widget + "</body>", 1) if "</body>" in html else html + widget
+i = html.rfind("</body>")
+html = html[:i] + widget + html[i:] if i >= 0 else html + widget
 open(p, "w", encoding="utf-8").write(html)
 print("   flag widget stamped")
 PY
 
-echo "==> dist-audit/ ready — UNVERIFIED PREVIEW, do not distribute as release"
+echo "==> $(basename "$DIST")/ ready — UNVERIFIED PREVIEW, do not distribute as release"
