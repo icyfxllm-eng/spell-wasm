@@ -32,7 +32,7 @@ jobs:
       - name: Tests (A1–A11, A6.1 native half, Phase B)
         run: cargo test -p spell-server --all-features
       - name: Clippy
-        run: cargo clippy --no-deps -p spell-server -p grader-parity --all-targets --all-features -- -D warnings
+        run: cargo clippy --no-deps -p spell-server -p grader-parity -p botload --all-targets --all-features -- -D warnings
       - name: A6.1 WASM half
         run: |
           cargo install wasm-bindgen-cli --version 0.2.126 --locked

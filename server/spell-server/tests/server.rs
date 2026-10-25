@@ -434,6 +434,7 @@ async fn a11_1_the_public_route_table_is_exactly_four_paths() {
         "/admin/drain",
         "/admin/snapshot",
         "/admin/revoke/x",
+        "/admin/test-sessions",
         "/v1",
         "/v1/session/x",
         "/v2/ws",
@@ -454,6 +455,12 @@ async fn a11_1_the_public_route_table_is_exactly_four_paths() {
     assert_eq!(c.post(format!("http://{}/v1/session", srv.admin)).send().await.unwrap().status(), 404);
     let snap = c.post(format!("http://{}/admin/snapshot", srv.admin)).send().await.unwrap();
     assert_eq!(snap.status(), 200);
+    // F16's batch mint exists on the admin listener only.
+    let ts = c.post(format!("http://{}/admin/test-sessions?n=3", srv.admin)).send().await.unwrap();
+    assert_eq!(ts.status(), 200);
+    let v: serde_json::Value = serde_json::from_str(&ts.text().await.unwrap()).unwrap();
+    assert_eq!(v["sessions"].as_array().unwrap().len(), 3);
+    assert_eq!(c.post(format!("http://{}/admin/test-sessions?n=5000", srv.admin)).send().await.unwrap().status(), 400);
     // readyz is false here: the test TTS base is unreachable.
     assert_eq!(c.get(format!("http://{}/admin/readyz", srv.admin)).send().await.unwrap().status(), 503);
 }

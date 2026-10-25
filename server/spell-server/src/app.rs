@@ -320,8 +320,49 @@ async fn stats(State(app): State<Arc<AppState>>) -> Response {
         "handling_us_p50": p50,
         "handling_us_p95": p95,
         "draining": app.hub.draining(),
+        // F16 soak: memory and descriptors (Linux /proc; null elsewhere).
+        "rss_bytes": proc_rss_bytes(),
+        "open_fds": proc_open_fds(),
     }))
     .into_response()
+}
+
+/// Resident memory of this process, from /proc (Linux only).
+fn proc_rss_bytes() -> Option<u64> {
+    let status = std::fs::read_to_string("/proc/self/status").ok()?;
+    let kb: u64 = status.lines().find(|l| l.starts_with("VmRSS:"))?.split_whitespace().nth(1)?.parse().ok()?;
+    Some(kb * 1024)
+}
+
+/// Open file descriptors of this process, from /proc (Linux only).
+fn proc_open_fds() -> Option<u64> {
+    Some(std::fs::read_dir("/proc/self/fd").ok()?.count() as u64)
+}
+
+#[derive(serde::Deserialize)]
+struct TestSessions {
+    n: usize,
+}
+
+/// F16 only: mint `n` sessions at once for the load bots, which all share one
+/// IP and would otherwise hit the 5-per-hour mint limit. Admin listener only
+/// (loopback, tailnet SSH); never reachable through the tunnel. The tokens are
+/// stored hashed like any other (§9).
+async fn test_sessions(State(app): State<Arc<AppState>>, axum::extract::Query(q): axum::extract::Query<TestSessions>) -> Response {
+    if q.n == 0 || q.n > 1000 {
+        return (StatusCode::BAD_REQUEST, "n must be 1..=1000").into_response();
+    }
+    let mut out = Vec::with_capacity(q.n);
+    for _ in 0..q.n {
+        match app.store.mint() {
+            Ok((player_id, token)) => out.push(json!({ "player_id": player_id, "token": token })),
+            Err(_) => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        }
+    }
+    tracing::info!(event = "test_sessions_minted", count = q.n);
+    let mut r = Json(json!({ "sessions": out })).into_response();
+    r.headers_mut().insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
+    r
 }
 
 async fn readyz(State(app): State<Arc<AppState>>) -> Response {
@@ -371,6 +412,7 @@ pub fn admin_router(app: Arc<AppState>) -> Router {
         .route("/admin/drain", post(drain))
         .route("/admin/snapshot", post(snapshot))
         .route("/admin/revoke/{player_id}", post(revoke))
+        .route("/admin/test-sessions", post(test_sessions))
         .fallback(|| async { not_found() })
         .method_not_allowed_fallback(|| async { not_found() })
         .with_state(app)
