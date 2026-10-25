@@ -1,0 +1,79 @@
+# CC-GAME-SERVER — the room server's gates (Phase A–D acceptance that can run
+# in CI). The host checks (verify-host.sh) and the load/soak/chaos runs
+# (Phase E) need the real Rocky box and are not here.
+name: game-server
+
+on:
+  push:
+    paths:
+      - "server/**"
+      - "src/native_api.rs"
+      - "src/boardgame_grade.rs"
+      - "src/online_*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "deny.toml"
+      - ".github/workflows/game-server.yml"
+  pull_request:
+    paths:
+      - "server/**"
+      - "src/native_api.rs"
+      - "Cargo.lock"
+
+jobs:
+  server:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy
+      - name: Tests (A1–A11, A6.1 native half, Phase B)
+        run: cargo test -p spell-server --all-features
+      - name: Clippy
+        run: cargo clippy --no-deps -p spell-server -p grader-parity --all-targets --all-features -- -D warnings
+      - name: A6.1 WASM half
+        run: |
+          cargo install wasm-bindgen-cli --version 0.2.126 --locked
+          CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runner \
+            cargo test -p grader-parity --target wasm32-unknown-unknown
+      - name: A6.2 core diff stays cfg/visibility/pub use
+        run: node scripts/game-server-core-diff-check.mjs --selftest
+      - name: A14.8 cargo deny
+        uses: EmbarkStudios/cargo-deny-action@v2
+
+  deploy-kit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: A14.5 / A15.1 shellcheck
+        run: shellcheck server/deploy/*.sh
+      - name: A14.6, A15.2, F14 static checks
+        run: |
+          node server/deploy/check-deploy.mjs --selftest
+          node server/deploy/check-deploy.mjs
+      - name: A14.1 podman build
+        run: podman build -f server/deploy/Containerfile -t localhost/spellgame-server:ci .
+      - name: A14.2 the image runs as a non-root user
+        run: |
+          user="$(podman image inspect --format '{{.Config.User}}' localhost/spellgame-server:ci)"
+          echo "user=${user}"
+          test -n "${user}" && test "${user}" != "root" && test "${user}" != "0"
+      - name: A14.3 there is no shell in the image
+        run: |
+          if podman run --rm --entrypoint sh localhost/spellgame-server:ci -c true; then
+            echo "a shell ran"; exit 1
+          fi
+      - name: A14.4 quadlet dry run
+        run: |
+          mkdir -p ~/.config/containers/systemd
+          sed "s|<DIGEST>|$(printf 'a%.0s' $(seq 64))|; s|<MAC_MINI_TAILNET_IP>|100.64.0.2|" \
+            server/deploy/spellgame.container > ~/.config/containers/systemd/spellgame.container
+          /usr/libexec/podman/quadlet -dryrun -user
+      - name: A14.7 gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

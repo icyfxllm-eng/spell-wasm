@@ -1,0 +1,48 @@
+# CC-GAME-SERVER F14 — the room server, as a rootless Podman Quadlet unit.
+#
+# Install (HOST-RUNBOOK.md step 12), as user spellsrv:
+#   ~/.config/containers/systemd/spellgame.container
+# deploy.sh fills in the image digest; nothing else here changes per deploy.
+#
+# No secrets live in this file (A14.7). SPELL_TTS_BASE is a tailnet address,
+# not a credential.
+
+[Unit]
+Description=Spell online room server (CC-GAME-SERVER)
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+# Pinned by digest: deploy.sh replaces <DIGEST> with the image just built.
+Image=localhost/spellgame-server@sha256:<DIGEST>
+ContainerName=spellgame
+# G-D1: published on host LOOPBACK ONLY. cloudflared (on the host) reaches
+# 8080; 8081 is reached over SSH on the tailnet and never by the tunnel.
+PublishPort=127.0.0.1:8080:8080
+PublishPort=127.0.0.1:8081:8081
+Volume=spell-data:/data:Z
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=all
+PodmanArgs=--memory=1g --pids-limit=256
+# The container listens on all of ITS interfaces so the publish can reach it;
+# the two PublishPort lines above are what keep it off the network
+# (check-unit.mjs refuses this unit if either is not 127.0.0.1).
+Environment=SPELL_PUBLISHED_LOOPBACK_ONLY=true
+Environment=SPELL_TRUST_PROXY=true
+Environment=SPELL_TTS_BASE=http://<MAC_MINI_TAILNET_IP>:8000
+Environment=SPELL_ALLOWED_ORIGINS=capacitor://localhost
+Environment=SPELL_MAX_CONNS=2000
+Environment=SPELL_PROTOCOL_MIN=1
+Environment=SPELL_DRAIN_SECS=900
+Environment=SPELL_LOG=info
+# G-D16: never auto-update; a deploy drains first.
+
+[Service]
+Restart=always
+RestartSec=2
+# SPELL_DRAIN_SECS (900) plus a minute for the last close frames.
+TimeoutStopSec=960
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,11 @@
+# CC-GAME-SERVER F14 — nightly at 04:17, and on the next boot if the box was
+# off then. Install as spellsrv: ~/.config/systemd/user/spell-backup.timer
+[Unit]
+Description=Spell room server: nightly backup
+
+[Timer]
+OnCalendar=*-*-* 04:17:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

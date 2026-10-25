@@ -17,6 +17,12 @@ async fn main() {
         .with_env_filter(tracing_subscriber::EnvFilter::new(&cfg.log))
         .with_current_span(false)
         .init();
+    if cfg.published_loopback_only {
+        tracing::warn!(
+            event = "published_loopback_only",
+            code = "listening on all container interfaces; the host must publish 127.0.0.1 only"
+        );
+    }
     let store = match Store::open(&cfg.db_path, Default::default()) {
         Ok(s) => s,
         Err(e) => {

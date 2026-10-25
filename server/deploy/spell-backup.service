@@ -1,0 +1,9 @@
+# CC-GAME-SERVER F14 — one backup run (spell-backup.timer starts it).
+# Install as spellsrv: ~/.config/systemd/user/spell-backup.service
+[Unit]
+Description=Spell room server: back up the players database (restic)
+After=spellgame.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/spell-wasm/server/deploy/backup.sh

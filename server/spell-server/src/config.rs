@@ -15,6 +15,12 @@ pub struct Config {
     pub protocol_min: u32,
     pub drain: Duration,
     pub log: String,
+    /// Phase D (pending Eric's call): set ONLY by the Quadlet unit, which
+    /// publishes both ports on host 127.0.0.1. Inside its own network
+    /// namespace the container must listen on all interfaces for a published
+    /// port to reach it, so the loopback guarantee moves to the host's publish
+    /// line; `server/deploy/check-unit.mjs` and verify-host.sh H5 prove it there.
+    pub published_loopback_only: bool,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -90,16 +96,20 @@ impl Config {
             protocol_min: number("SPELL_PROTOCOL_MIN", 1)? as u32,
             drain: Duration::from_secs(number("SPELL_DRAIN_SECS", 900)?),
             log: get("SPELL_LOG").unwrap_or_else(|| "info".into()),
+            published_loopback_only: boolean("SPELL_PUBLISHED_LOOPBACK_ONLY", false)?,
         };
         cfg.validate()?;
         Ok(cfg)
     }
 
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.trust_proxy && !self.bind_public.ip().is_loopback() {
+        // A4.2 holds by default. The one exception is explicit, and only for
+        // a container whose host publishes the ports on loopback.
+        let guarded = self.published_loopback_only;
+        if self.trust_proxy && !self.bind_public.ip().is_loopback() && !guarded {
             return Err(ConfigError::TrustProxyOnPublicBind(self.bind_public));
         }
-        if !self.bind_admin.ip().is_loopback() {
+        if !self.bind_admin.ip().is_loopback() && !guarded {
             return Err(ConfigError::AdminNotLoopback(self.bind_admin));
         }
         if self.protocol_min > crate::protocol::PROTOCOL_CURRENT {
@@ -121,6 +131,7 @@ impl Config {
             protocol_min: 1,
             drain: Duration::from_secs(900),
             log: "info".into(),
+            published_loopback_only: false,
         }
     }
 }
@@ -160,6 +171,21 @@ mod tests {
             ("SPELL_TRUST_PROXY", "false")
         ])
         .is_ok());
+    }
+
+    #[test]
+    fn the_container_exception_is_explicit_and_off_by_default() {
+        let e = with(&[("SPELL_TTS_BASE", "http://x"), ("SPELL_BIND_PUBLIC", "0.0.0.0:8080"), ("SPELL_BIND_ADMIN", "0.0.0.0:8081")])
+            .unwrap_err();
+        assert!(matches!(e, ConfigError::TrustProxyOnPublicBind(_)), "A4.2 still refuses without the opt-in");
+        let c = with(&[
+            ("SPELL_TTS_BASE", "http://x"),
+            ("SPELL_BIND_PUBLIC", "0.0.0.0:8080"),
+            ("SPELL_BIND_ADMIN", "0.0.0.0:8081"),
+            ("SPELL_PUBLISHED_LOOPBACK_ONLY", "true"),
+        ])
+        .unwrap();
+        assert!(c.published_loopback_only && c.trust_proxy);
     }
 
     #[test]

@@ -1,0 +1,29 @@
+# CC-GAME-SERVER F14 — the room server image.
+#
+# Stage 1 builds spell-server from the workspace (it compiles the app's own
+# grader natively, so the whole crate tree is copied). Stage 2 is distroless
+# and non-root: no shell, no package manager, nothing to log in to (A14.2,
+# A14.3).
+#
+#   podman build -f server/deploy/Containerfile -t localhost/spellgame-server:<tag> .
+#
+# Built locally on the host (D-X4); a registry comes with the VPS move.
+
+FROM docker.io/library/rust:1-bookworm AS build
+WORKDIR /src
+COPY . .
+# --locked: the image builds exactly the versions the repository tested.
+RUN cargo build --release --locked -p spell-server \
+ && strip target/release/spell-server
+
+FROM gcr.io/distroless/cc-debian12:nonroot
+COPY --from=build /src/target/release/spell-server /spell-server
+# Inside the container's own network namespace the listeners take all
+# interfaces; the host publishes them on 127.0.0.1 only (spellgame.container),
+# which is where the "loopback only" guarantee lives (see SPELL_PUBLISH_GUARD).
+ENV SPELL_BIND_PUBLIC=0.0.0.0:8080 \
+    SPELL_BIND_ADMIN=0.0.0.0:8081 \
+    SPELL_DB_PATH=/data/spell.db
+EXPOSE 8080 8081
+USER nonroot
+ENTRYPOINT ["/spell-server"]
