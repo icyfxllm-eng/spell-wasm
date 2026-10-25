@@ -83,12 +83,15 @@ src/native_api.rs  + pub use of tier_time, CORRECT_DELAY_MS, the three above,
    - `word_result.word` is the bank entry, so Mandarin arrives as
      `pinyin|hanzi`. Phase C splits it the way the app does.
    - The A1.1 golden changed by exactly one added line.
-5. **An idle player at turn start has no limit.** The spec's 120 s rule
-   covers an idle *word*. A player who never taps the orb to begin their turn
-   holds the match until someone leaves or the 3-hour room lifetime ends.
-   **Do you want a turn-start idle limit too** (for example 120 s, then the
-   turn counts as a miss)? It would be a new online-only rule, so I haven't
-   added it.
+5. **Turn-start idle limit (Eric 2026-10-24: "Yes, add a 120 s turn-start
+   idle limit (the turn counts as a miss)").** A player who never taps the orb
+   to begin their turn now loses that turn after 120 s, in timed and untimed
+   rooms alike.
+   - No word was served, so only `turn_end` goes out, never a `word_result`.
+   - A player who drops off at turn start waits on the 60 s seat hold instead,
+     and comes back to a fresh 120 s.
+   - Tests: `a_turn_nobody_starts_is_a_miss_after_120_s_in_timed_and_untimed_rooms`,
+     `a_dropped_player_at_turn_start_waits_on_the_seat_hold_and_returns_to_a_fresh_limit`.
 6. **Kid names are machine-drafted in all 15 UI locales.** They handle
    gender agreement (Abeja Roja / Libro Rojo, Rote Biene / Rotes Buch), the
    Filipino linker and Swahili noun-class connectors.
@@ -123,5 +126,4 @@ Phase C is the iOS client:
 - F2 client side: the Keychain methods on `NativeLanguageKitPlugin`.
 - F9 client side: `play_ticket`.
 
-I'd like your answer on finding 5 first, though nothing in Phase C depends on
-it.
+

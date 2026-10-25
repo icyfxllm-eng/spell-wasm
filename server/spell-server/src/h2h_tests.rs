@@ -333,8 +333,8 @@ fn rows_16_17_a_miss_hands_over_after_1300_ms_and_the_turn_waits_for_the_tap() {
     assert!(s.advance(Duration::from_millis(1299)).is_empty());
     let ev = s.advance(Duration::from_millis(1));
     assert!(has(&ev, |m| matches!(m, ServerMsg::TurnStart { seat: 1, .. })));
-    // Row 17: no word until seat 1 taps, however long it takes.
-    assert!(s.advance(Duration::from_secs(600)).is_empty());
+    // Row 17: no word until seat 1 taps.
+    assert!(s.advance(Duration::from_secs(60)).is_empty());
     assert!(s.live_entry().is_none());
     let ev = s.next(1);
     assert!(has(&ev, |m| matches!(m, ServerMsg::WordStart { seat: 1, .. })));
@@ -645,4 +645,34 @@ fn the_snapshot_never_holds_the_word() {
     let snap = s.m.snapshot().to_string();
     assert!(!snap.contains(&format!("\"{entry}\"")), "{snap}");
     assert!(snap.contains("\"live\""));
+}
+
+#[test]
+fn a_turn_nobody_starts_is_a_miss_after_120_s_in_timed_and_untimed_rooms() {
+    for timed in [false, true] {
+        let r = if timed { req("en", TierMode::Fixed, Some("easy"), true) } else { climb("en") };
+        let mut s = Sim::new(r, 40, false);
+        s.start();
+        assert!(s.advance(TURN_START_IDLE - Duration::from_millis(1)).is_empty(), "timed={timed}");
+        let ev = s.advance(Duration::from_millis(1));
+        assert!(has(&ev, |m| matches!(m, ServerMsg::TurnEnd { seat: 0 })), "timed={timed}");
+        assert!(!has(&ev, |m| matches!(m, ServerMsg::WordResult { .. })), "no word was served");
+        assert_eq!(s.m.versus.p1.turns_left, 2, "the turn is spent");
+        let ev = s.advance(MISS_DELAY);
+        assert!(has(&ev, |m| matches!(m, ServerMsg::TurnStart { seat: 1, .. })));
+    }
+}
+
+#[test]
+fn a_dropped_player_at_turn_start_waits_on_the_seat_hold_and_returns_to_a_fresh_limit() {
+    let mut s = Sim::new(climb("en"), 41, false);
+    s.start();
+    s.connected[0] = false;
+    let ev = s.m.on_disconnect(0, false, &ctx!(s));
+    assert!(ev.is_empty());
+    assert!(s.advance(Duration::from_secs(300)).is_empty(), "no idle miss while away");
+    s.connected[0] = true;
+    s.m.on_reconnect(0, &ctx!(s));
+    assert!(s.advance(TURN_START_IDLE - Duration::from_millis(1)).is_empty());
+    assert!(has(&s.advance(Duration::from_millis(1)), |m| matches!(m, ServerMsg::TurnEnd { seat: 0 })));
 }

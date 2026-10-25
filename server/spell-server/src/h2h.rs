@@ -17,7 +17,7 @@
 //! | 14 no length, no slots | `word_start` carries neither |
 //! | 15 correct → next word after 2200 ms, no definition | `AfterCorrect` |
 //! | 16 miss → next turn after 1300 ms | `AfterMiss` |
-//! | 17 a turn starts on the orb tap | `AwaitNext` + `on_next` |
+//! | 17 a turn starts on the orb tap | `AwaitNext` + `on_next` (online: 120 s, then the turn is a miss) |
 
 use std::collections::HashSet;
 use std::time::Duration;
@@ -33,6 +33,9 @@ use crate::store::random_bytes;
 
 /// §F5: an untimed word with no answer for this long is a miss.
 pub const UNTIMED_IDLE: Duration = Duration::from_secs(120);
+/// Eric 2026-10-24: a turn whose player never taps for a word is a miss after
+/// this long, timed room or not. Online only; local players share one phone.
+pub const TURN_START_IDLE: Duration = Duration::from_secs(120);
 /// Local: `schedule(app, 1300, ..)` after a miss (game.rs:4349-4351).
 pub const MISS_DELAY: Duration = Duration::from_millis(1300);
 /// F9: three consecutive paused words end the match.
@@ -56,7 +59,7 @@ struct Word {
 #[derive(Clone, Debug)]
 enum Phase {
     Idle,
-    AwaitNext { seat: u8 },
+    AwaitNext { seat: u8, idle_at: Option<Instant> },
     Fetching { seat: u8, word: Word, since: Instant },
     Live { seat: u8, word: Word, started: Instant, limit: Option<Duration>, idle_at: Option<Instant> },
     AfterCorrect { seat: u8, at: Instant },
@@ -242,10 +245,10 @@ impl H2h {
         ev
     }
 
-    fn begin_turn(&mut self) -> Vec<Event> {
+    fn begin_turn(&mut self, now: Instant) -> Vec<Event> {
         self.turn_no += 1;
         let seat = self.active_seat();
-        self.phase = Phase::AwaitNext { seat };
+        self.phase = Phase::AwaitNext { seat, idle_at: Some(now + TURN_START_IDLE) };
         vec![Event::all(ServerMsg::TurnStart {
             seat,
             turn_no: self.turn_no,
@@ -267,7 +270,15 @@ impl H2h {
         vec![Event::seat(seat, ServerMsg::error("not_your_turn"))]
     }
 
-    fn audio_failed(&mut self, seat: u8, word: Word) -> Vec<Event> {
+    /// The turn-start idle limit ran out: the turn ends as a miss, with no
+    /// word served (so there is no `word_result`, only `turn_end`).
+    fn idle_turn(&mut self, seat: u8, now: Instant) -> Vec<Event> {
+        self.versus.end_turn();
+        self.phase = Phase::AfterMiss { at: now + self.after_miss };
+        vec![Event::all(ServerMsg::TurnEnd { seat })]
+    }
+
+    fn audio_failed(&mut self, seat: u8, word: Word, now: Instant) -> Vec<Event> {
         self.pauses += 1;
         let mut ev = vec![
             Event::ExpireAudio { tickets: Self::tickets(&word) },
@@ -280,7 +291,7 @@ impl H2h {
         } else {
             // The word is void, as the app's "can't hear it" round: no score
             // moves, and the same player taps for a fresh word.
-            self.phase = Phase::AwaitNext { seat };
+            self.phase = Phase::AwaitNext { seat, idle_at: Some(now + TURN_START_IDLE) };
         }
         ev
     }
@@ -309,12 +320,12 @@ impl ModeRules for H2h {
         // Rules-table row 4: Kid Mode plays 2 turns each, else 3.
         let turns = if self.kid { 2 } else { 3 };
         self.versus = Versus::start("P1".into(), "P2".into(), turns);
-        self.begin_turn()
+        self.begin_turn(ctx.now)
     }
 
     fn on_next(&mut self, seat: u8, ctx: &Ctx) -> Vec<Event> {
         match self.phase {
-            Phase::AwaitNext { seat: s } if s == seat => self.start_word(seat, ctx.now),
+            Phase::AwaitNext { seat: s, .. } if s == seat => self.start_word(seat, ctx.now),
             _ if seat != self.active_seat() => Self::not_your_turn(seat),
             _ => vec![Event::seat(seat, ServerMsg::error("word_live"))],
         }
@@ -368,7 +379,7 @@ impl ModeRules for H2h {
         }
         let word = word.clone();
         if !ok {
-            return self.audio_failed(seat, word);
+            return self.audio_failed(seat, word, ctx.now);
         }
         self.pauses = 0;
         let limit = self.req.timed.then(|| Duration::from_secs(core::tier_time(&word.tier) as u64));
@@ -396,14 +407,15 @@ impl ModeRules for H2h {
                 }
             }
             Phase::Fetching { seat, word, since } if ctx.now.duration_since(since) >= FETCH_TIMEOUT => {
-                self.audio_failed(seat, word)
+                self.audio_failed(seat, word, ctx.now)
             }
+            Phase::AwaitNext { seat, idle_at: Some(t) } if ctx.now >= t => self.idle_turn(seat, ctx.now),
             Phase::AfterCorrect { seat, at } if ctx.now >= at => self.start_word(seat, ctx.now),
             Phase::AfterMiss { at } if ctx.now >= at => {
                 if self.versus.over {
                     self.finish()
                 } else {
-                    self.begin_turn()
+                    self.begin_turn(ctx.now)
                 }
             }
             _ => Vec::new(),
@@ -411,6 +423,14 @@ impl ModeRules for H2h {
     }
 
     fn on_disconnect(&mut self, seat: u8, released: bool, ctx: &Ctx) -> Vec<Event> {
+        // Waiting at turn start: a dropped player waits on the seat hold, not
+        // the idle limit (the room ends the match if the seat is released).
+        if let Phase::AwaitNext { seat: s, ref mut idle_at } = self.phase {
+            if s == seat && !released {
+                *idle_at = None;
+            }
+            return Vec::new();
+        }
         let Phase::Live { seat: s, ref word, ref mut idle_at, .. } = self.phase else { return Vec::new() };
         if s != seat {
             return Vec::new();
@@ -428,6 +448,11 @@ impl ModeRules for H2h {
     }
 
     fn on_reconnect(&mut self, seat: u8, ctx: &Ctx) -> Vec<Event> {
+        if let Phase::AwaitNext { seat: s, ref mut idle_at } = self.phase {
+            if s == seat {
+                *idle_at = Some(ctx.now + TURN_START_IDLE);
+            }
+        }
         if let Phase::Live { seat: s, ref mut idle_at, .. } = self.phase {
             if s == seat && !self.req.timed {
                 *idle_at = Some(ctx.now + UNTIMED_IDLE);
@@ -445,6 +470,7 @@ impl ModeRules for H2h {
             }
             Phase::Fetching { since, .. } => Some(*since + FETCH_TIMEOUT),
             Phase::AfterCorrect { at, .. } | Phase::AfterMiss { at } => Some(*at),
+            Phase::AwaitNext { idle_at, .. } => *idle_at,
             _ => None,
         }
     }
