@@ -84,3 +84,25 @@ Also:
 Phase E (load, soak and chaos through the real tunnel) needs the runbook done
 on Rocky. When it is, `verify-host.sh` tells me which H-checks are still
 missing.
+
+## CI, first run (f5c331df)
+
+- `deploy-kit` job: **all green.** A14.1 podman build, A14.2 non-root user,
+  A14.3 no shell, A14.4 quadlet dry run, A14.5/A15.1 shellcheck, A14.7
+  gitleaks, and the static checks.
+- `server` job: green apart from **A14.8 cargo-deny**, which failed only on
+  the workspace's own crates.
+  - The unpublished app crate and `scanlock` declare no license, and the
+    `scanlock` path dependency counted as a wildcard because neither crate is
+    marked unpublished.
+  - Advisories and sources passed.
+- Fix:
+  - `publish = false` on `spell_wasm` and `scanlock`, and
+    `[licenses.private] ignore = true`.
+  - The one line in the core `Cargo.toml` is packaging metadata, so
+    `game-server-core-diff-check` now accepts `publish = false` (with the
+    reason in its header). Dependency trees are unchanged.
+- A6.2 note: the check is meant per phase, against the commit before that
+  phase. It passes for Phase A (113606b9), Phase B (99caa9b2) and this change
+  (f5c331df). Phase C's client wiring isn't core logic the server needs, so it
+  isn't part of the A6.2 measure.

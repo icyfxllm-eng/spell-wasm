@@ -36,6 +36,10 @@ allow = [
   "0BSD",
 ]
 
+# The workspace's own crates are never published; they carry no license field.
+[licenses.private]
+ignore = true
+
 [[licenses.clarify]]
 # ring's license file combines ISC, MIT and OpenSSL-style terms.
 crate = "ring"

@@ -2,6 +2,7 @@
 name = "scanlock"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 # CC-WORDPICTURE-SCANLOCK v8 — the scan is the only geometry. Pure crate,
 # zero dependencies: the typesetter chooses the word and the size, never

@@ -15,7 +15,8 @@
 //     cfg_attr replaced (e.g. `#[wasm_bindgen(start)]`)
 //   - `pub mod native_api;` and `pub use ...;`
 //   - a visibility change: `- fn x` paired with `+ pub fn x` / `+ pub(crate) fn x`
-//   - root Cargo.toml: the workspace `members` line, `native = []`, comments
+//   - root Cargo.toml: the workspace `members` line, `native = []`,
+//     `publish = false` (packaging metadata for cargo-deny), comments
 // And src/native_api.rs, whatever the base, may hold only comments and
 // `pub use` lines (it must never grow a body).
 //
@@ -33,7 +34,7 @@ const isReexport = (l) => /^\s*pub (mod native_api;|use [^;]+;)\s*(\/\/.*)?$/.te
 // `pub fn x` / `pub(crate) fn x` / `fn x` all reduce to `fn x`.
 const unVis = (l) => l.trim().replace(/^pub(\((crate|super)\))? /, '');
 const isCargoAllowed = (l) =>
-  /^\s*(#.*)?$/.test(l) || /^members = \[.*\]$/.test(l.trim()) || /^native = \[\]$/.test(l.trim());
+  /^\s*(#.*)?$/.test(l) || /^members = \[.*\]$/.test(l.trim()) || /^native = \[\]$/.test(l.trim()) || /^publish = false$/.test(l.trim());
 
 /** Classifies one file's -/+ lines; returns the offending lines. */
 export function offending(file, removed, added) {

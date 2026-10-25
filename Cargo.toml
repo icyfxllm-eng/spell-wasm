@@ -5,6 +5,8 @@ members = [".", "tracer-core", "scanlock", "tonal", "server/spell-server", "serv
 name = "spell_wasm"
 version = "0.1.0"
 edition = "2021"
+# Never published to crates.io (cargo-deny treats unpublished crates as private).
+publish = false
 
 [lib]
 # rlib in addition to cdylib so integration tests (tests/*.rs) can link the core
