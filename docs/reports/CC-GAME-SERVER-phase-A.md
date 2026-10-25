@@ -98,8 +98,8 @@ src/native_api.rs  (new) comments + 16 `pub use` lines, no bodies
    TestFlight). Recon R5/R8's "ar is RTL-blocked" is now stale, and spec
    A8.3's example (`lang:"ar"` → `lang_unavailable`) is wrong. Phase B will
    test A8.3 with any language where `is_active_lang` is false instead.
-   - Online will offer ar and fa exactly as local Head-to-Head does. If that
-     isn't wanted for online yet, say so before Phase B.
+   - Online will offer ar and fa exactly as local Head-to-Head does.
+     **Eric 2026-10-24: "Arabic and Persian online is fine, same as local."**
 2. **A real, small online-vs-solo difference (O11, as signed).** Solo English
    sends exact-match answers to Flask, which compares `lower().strip()`, so
    "c at" for "cat" is wrong in solo. The shared grader's fold drops
