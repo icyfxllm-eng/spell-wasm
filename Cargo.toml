@@ -89,6 +89,10 @@ features = [
   "AudioDestinationNode", "OscillatorNode", "OscillatorType",
   "OfflineAudioContext", "BaseAudioContext", "AudioBuffer",
   "AddEventListenerOptions", "CanvasGradient",
+  # CC-GAME-SERVER Phase C: the online room socket, and ticket audio on the web
+  # build (an audio element cannot send the Authorization header, so the clip
+  # is fetched and played from a blob URL).
+  "WebSocket", "MessageEvent", "CloseEvent", "Blob", "Url",
 ]
 
 [profile.release]

@@ -121,6 +121,14 @@ mod photo_import;
 mod photo_list;
 mod norm;
 mod online_spelloff;
+#[cfg(not(feature = "web"))]
+mod online_audio; // CC-GAME-SERVER F9 (client): ticket audio
+#[cfg(not(feature = "web"))]
+mod online_model; // CC-GAME-SERVER F12/F13: the online client's pure state
+#[cfg(not(feature = "web"))]
+mod online_net; // CC-GAME-SERVER F2/F5: session token, room socket, reconnect
+#[cfg(not(feature = "web"))]
+mod online_screen; // CC-GAME-SERVER F12/F13/F10: the online screen
 mod pinyin;
 mod tone_drill;
 mod zh_sandhi; // GENERATED — tools/build-zh-sandhi.py (CC-ZH-TONE F5) // CC-ZH-TONE F3 — tone misses study separately (Invariant 6)
@@ -449,6 +457,8 @@ fn wire(app: &App) {
     climb::setup(app);
     // Online Spell Off (async 1v1) — no entry unless flag on + signed in + not kid.
     online_spelloff::setup(app);
+    #[cfg(not(feature = "web"))]
+    online_screen::setup(app);
     // "Spell It Out Loud" — voice spelling INPUT. Wires nothing unless the flag
     // is on (ships dark, Invariant I6); the mic is hidden until config voiceSpell
     // + on-device availability both hold (Invariant I3).

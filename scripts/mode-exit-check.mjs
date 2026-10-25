@@ -39,6 +39,11 @@ const PANELS = {
   rsHand: ['src/randospell_screen.rs', 'rsHandExit'],
   qbdOver: ['src/quickbee_draw_screen.rs', 'qbdOverExit'],
   dmRecap: ['src/defmatch_screen.rs', 'dmRecapClose'],
+  // CC-GAME-SERVER: the online screen's end and dead-end panels
+  olResult: ['src/online_screen.rs', 'olResultExit'],
+  olResting: ['src/online_screen.rs', 'olRestingExit'],
+  olUpdate: ['src/online_screen.rs', 'olUpdateExit'],
+  olEnded: ['src/online_screen.rs', 'olEndedExit'],
 };
 
 /** The balanced <div> block beginning at the panel's own tag. */

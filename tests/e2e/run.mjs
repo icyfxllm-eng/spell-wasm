@@ -92,6 +92,7 @@ import * as inspector from './specs/inspector.mjs';
 import * as audioRescue from './specs/audio-rescue.mjs';
 import * as pickQueue from './specs/pick-queue.mjs';
 import * as pickQueueHelp from './specs/pick-queue-help.mjs';
+import * as online from './specs/online.mjs';
 
 const SPECS = [
   ['drawer', drawerNav, placement, learnerSurfaces, learnerReset],
@@ -161,6 +162,8 @@ const SPECS = [
   ['picture-wall', pictureWall],
   ['boardgame-wall', boardgameWall],
   ['gallery', gallery],
+  // CC-GAME-SERVER Phase C: needs `cargo build -p spell-server --features test-modes`.
+  ['online', online],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

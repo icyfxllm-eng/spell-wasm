@@ -358,6 +358,28 @@ pub fn online_spelloff() -> bool {
     resolve(stored("online_spelloff").as_deref(), false)
 }
 
+/// CC-GAME-SERVER G-D7: real-time Online Head-to-Head (src/online_*.rs, the
+/// room server in server/spell-server). **Default OFF**, and only a build turns
+/// it on; the signed kill file can force it off. Deliberately NOT a Tools-hub
+/// row: that row writes a local "on", which would defeat build-on-only.
+pub fn online_enabled() -> bool {
+    resolve(stored("online_enabled").as_deref(), false)
+}
+
+/// The build's own `online_enabled`, BEFORE the kill file. F13: a remotely
+/// killed build still shows the entry, and the entry opens the "resting"
+/// card; only a build with the flag off hides it. Online code only.
+pub fn online_enabled_built() -> bool {
+    resolve(crate::storage::get_raw("spell_flag_online_enabled").as_deref(), false)
+}
+
+/// G-D7 / F10: online play for a kid profile. Default OFF, and it also needs
+/// `online_enabled` plus a parent's "Play online with family" setting. Stays off
+/// until CC-SECURITY-BASELINE O2 is resolved by counsel.
+pub fn online_kids() -> bool {
+    resolve(stored("online_kids").as_deref(), false)
+}
+
 /// Feature "Spell It Out Loud" — voice spelling INPUT (a mic beside the answer
 /// field; the player speaks letter names "C… A… T" and the parser produces the
 /// same string a keyboard would). **Default ON for the v2 TestFlight QA pass**

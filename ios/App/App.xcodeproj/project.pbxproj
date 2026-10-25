@@ -19,6 +19,7 @@
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		5B1DBD1000000000000000EA /* SpellWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A1 /* SpellWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5B1DBD1000000000000000F4 /* NativeLanguageKitPlugin+Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */; };
+		5B1DBD10000000000000A002 /* NativeLanguageKitPlugin+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD10000000000000A001 /* NativeLanguageKitPlugin+Keychain.swift */; };
 		5B1DBD1000000000000000F5 /* SpellIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F2 /* SpellIntents.swift */; };
 		5B1DBD1000000000000000F7 /* NativeLanguageKitPlugin+Packs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F6 /* NativeLanguageKitPlugin+Packs.swift */; };
 		5B1DBD1000000000000000F9 /* NativeLanguageKitPlugin+FamilyVoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F8 /* NativeLanguageKitPlugin+FamilyVoices.swift */; };
@@ -78,6 +79,7 @@
 		5B1DBD1000000000000000A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B1DBD1000000000000000A9 /* SpellWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpellWidgets.entitlements; sourceTree = "<group>"; };
 		5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+Widgets.swift"; sourceTree = "<group>"; };
+		5B1DBD10000000000000A001 /* NativeLanguageKitPlugin+Keychain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+Keychain.swift"; sourceTree = "<group>"; };
 		5B1DBD1000000000000000F2 /* SpellIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpellIntents.swift; sourceTree = "<group>"; };
 		5B1DBD1000000000000000F3 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		5B1DBD1000000000000000F6 /* NativeLanguageKitPlugin+Packs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+Packs.swift"; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */,
 				A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */,
 				5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */,
+				5B1DBD10000000000000A001 /* NativeLanguageKitPlugin+Keychain.swift */,
 				5B1DBD1000000000000000F6 /* NativeLanguageKitPlugin+Packs.swift */,
 				5B1DBD100000000000000400 /* NativeLanguageKitPlugin+Ink.swift */,
 				5B1DBD1000000000000000F8 /* NativeLanguageKitPlugin+FamilyVoices.swift */,
@@ -329,6 +332,7 @@
 				39B22D60CA7B1F84A7ACDB33 /* NativeLanguageKitPlugin+PhotoList.swift in Sources */,
 				A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */,
 				5B1DBD1000000000000000F4 /* NativeLanguageKitPlugin+Widgets.swift in Sources */,
+				5B1DBD10000000000000A002 /* NativeLanguageKitPlugin+Keychain.swift in Sources */,
 				5B1DBD1000000000000000F7 /* NativeLanguageKitPlugin+Packs.swift in Sources */,
 				5B1DBD100000000000000300 /* NativeLanguageKitPlugin+Ink.swift in Sources */,
 				5B1DBD1000000000000000F9 /* NativeLanguageKitPlugin+FamilyVoices.swift in Sources */,

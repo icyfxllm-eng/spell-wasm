@@ -132,7 +132,10 @@
 
   // Ensure the clip for assetId is on disk; return its file:// URI. Downloads
   // from `url` (the backend /api/speak endpoint) only on a cache miss.
-  function ensureCached(assetId, url) {
+  // `opts.headers` (optional) rides on that fetch: online ticket audio
+  // (CC-GAME-SERVER F9) needs `Authorization: Bearer`. Absent, the fetch is
+  // exactly what it was.
+  function ensureCached(assetId, url, opts) {
     if (cachingInFlight.has(assetId)) return cachingInFlight.get(assetId);
     var P = plugins();
     if (!P) return Promise.reject(new Error("native audio unavailable"));
@@ -145,7 +148,7 @@
       })
       .catch(function () {
         // Miss (stat rejects if absent): fetch and write it.
-        return fetch(url)
+        return (opts && opts.headers ? fetch(url, { headers: opts.headers }) : fetch(url))
           .then(function (res) {
             if (!res.ok) throw new Error("HTTP " + res.status + " fetching audio");
             return res.arrayBuffer();
@@ -189,10 +192,10 @@
   }
 
   // Ensure the clip is preloaded into the native player from its on-disk file.
-  function ensurePreloaded(assetId, url) {
+  function ensurePreloaded(assetId, url, opts) {
     if (preloaded.has(assetId)) { touchLru(assetId); return Promise.resolve(); }
     if (preloadInFlight.has(assetId)) return preloadInFlight.get(assetId);
-    var p = ensureCached(assetId, url)
+    var p = ensureCached(assetId, url, opts)
       .then(function (fileUri) {
         var P = plugins();
         if (!P) throw new Error("native audio unavailable");
@@ -211,7 +214,7 @@
 
     // Play a word clip natively. Downloads+caches on first use, preloads, then
     // plays — stopping whatever was playing first. Rejects on any failure.
-    playWord: function (assetId, url) {
+    playWord: function (assetId, url, opts) {
       var P = plugins();
       if (!P) return Promise.reject(new Error("native audio unavailable"));
       var stopPrev = current && current !== assetId
@@ -222,7 +225,7 @@
       // It is awaited only so the category is set first when it can be.
       return ensureSession(P).catch(function () {})
         .then(function () { return stopPrev; })
-        .then(function () { return ensurePreloaded(assetId, url); })
+        .then(function () { return ensurePreloaded(assetId, url, opts); })
         .then(function () {
           current = assetId;
           return P.NativeAudio.play({ assetId: assetId, time: 0 });

@@ -267,6 +267,33 @@
       "test": "settings_effect_key_feel",
       "suppressed_by": "visual.haptics off (the row is not shown)",
       "harness": "web"
+    },
+    {
+      "key": "olTimed",
+      "surface": "online",
+      "state": "create_room.timed",
+      "effect": "the room's words carry a server deadline (tier_time per word, judged on the server clock); word_start.deadline_ms is set and the countdown bar shows",
+      "test": "settings_effect_online_timed",
+      "harness": "web",
+      "suppressed_by": "Kid Mode: a kid cannot host (O3), so the create half of the online entry, with this switch, is not rendered"
+    },
+    {
+      "key": "olApprove",
+      "surface": "online",
+      "state": "create_room.approve_joins",
+      "effect": "an adult room asks the host to let each joiner in (join_pending / join_request), as kid-safe rooms always do",
+      "test": "settings_effect_online_approve",
+      "harness": "web",
+      "suppressed_by": "Kid Mode: a kid cannot host (O3), so the create half of the online entry, with this switch, is not rendered"
+    },
+    {
+      "key": "olFamily",
+      "surface": "settings",
+      "state": "spell_online_family_v1",
+      "effect": "a kid profile gets the Play online entry (with online_enabled and online_kids on); every change asks a grown-up first through the parent gate",
+      "test": "settings_effect_online_family",
+      "suppressed_by": "rendered only for a kid while online_kids and online_enabled are on",
+      "harness": "web"
     }
   ],
   "_cut_note": "AUDITPASS F7: toolGhostToggle and toolSayItToggle were removed with Spell Racing and Say It. A control that no longer renders owes no effect test — the manifest shrinks with the UI, which is the `manifest subset of rendered` law doing its job rather than leaving a ghost entry behind."

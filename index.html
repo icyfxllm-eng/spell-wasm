@@ -2310,6 +2310,51 @@
   /* head-to-head scoreboard */
   .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
   .vs-bar.btn-hide{display:none}
+  /* CC-GAME-SERVER: the online screen (its own surface; borrows vs-bar, orb-wrap/orb) */
+  .ol-screen{position:fixed;inset:0;z-index:60;background:var(--bg,var(--palette-mode-screen-bg));color:var(--ink);display:none;flex-direction:column;align-items:center;gap:10px;overflow:auto;padding:max(12px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+  .ol-screen.show{display:flex}
+  .ol-hud{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between}
+  .ol-panel{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:stretch;gap:10px}
+  .ol-panel[hidden],.ol-drain[hidden],.ol-reconnect[hidden],.ol-timer[hidden],.ol-tag[hidden]{display:none}
+  .ol-box{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
+  .ol-box h3{margin:0}
+  .ol-field{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}
+  .ol-field input,.ol-field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:10px;padding:8px}
+  .ol-check{display:flex;align-items:center;gap:8px}
+  .ol-code{font-family:var(--mono);font-size:24px;letter-spacing:.3em;text-transform:uppercase;text-align:center;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:10px;padding:8px}
+  .ol-hint,.ol-err{min-height:1.2em;color:var(--coral);font-size:14px}
+  .ol-drain{width:100%;max-width:600px;text-align:center;background:var(--panel);border:1px solid var(--amber);border-radius:12px;padding:8px;color:var(--amber-soft)}
+  .ol-codebox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+  .ol-roomcode{font-family:var(--mono);font-size:28px;letter-spacing:.25em}
+  .ol-tag{font-size:12px;border:1px solid var(--edge);border-radius:999px;padding:1px 8px;margin-inline-start:6px;color:var(--muted)}
+  .ol-tag.kid{border-color:var(--amber);color:var(--amber-soft)}
+  .ol-tag.off{opacity:.7}
+  .ol-players,.ol-requests,.ol-standings{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .ol-player,.ol-knock{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ol-knock span:first-child{flex:1}
+  .ol-note{color:var(--muted);text-align:center;min-height:1.2em}
+  .ol-match{align-items:center}
+  .ol-orb{border:0;background:none;padding:0;width:180px;height:180px;margin:6px 0}
+  .ol-orb .orb{width:120px;height:120px}
+  .ol-orb-glyph{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;color:var(--color-white);text-shadow:0 1px 3px color-mix(in srgb,var(--color-black) 50%,transparent);pointer-events:none;padding:30px;text-align:center}
+  .ol-orb:not(.ready):not(.live){opacity:.55}
+  .ol-status{min-height:1.4em;text-align:center;margin:0}
+  .ol-timer{width:100%;max-width:400px;height:6px;border-radius:3px;background:var(--lift-1);overflow:hidden}
+  .ol-timer-fill{height:100%;width:100%;background:var(--amber);transform-origin:left}
+  .ol-timer-fill.run{animation-name:olTimer;animation-timing-function:linear;animation-fill-mode:forwards}
+  @keyframes olTimer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+  @media (prefers-reduced-motion:reduce){.ol-timer-fill.run{animation:none}}
+  .ol-letters{min-height:44px;display:flex;justify-content:center;flex-wrap:wrap;gap:2px;font-size:28px;font-family:var(--mono)}
+  .ol-letters .placeholder{color:var(--muted);font-size:16px;font-family:inherit}
+  .ol-keys{width:100%;display:flex;flex-direction:column;gap:6px}
+  .ol-keys.locked{opacity:.45;pointer-events:none}
+  .ol-row{display:flex;justify-content:center;gap:4px}
+  .ol-key{min-width:28px;min-height:40px;flex:1;max-width:44px;border-radius:8px;border:1px solid var(--edge);background:var(--panel);color:var(--ink);font:inherit;font-size:18px}
+  .ol-emotes{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  .ol-emote{font-size:22px;border:1px solid var(--edge);background:var(--panel);border-radius:12px;padding:4px 8px}
+  .ol-emote-show{min-height:1.6em;font-size:18px;opacity:0;transition:opacity var(--motion-duration-base) ease}
+  .ol-emote-show.pop{opacity:1}
+  .ol-reconnect{position:fixed;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 80%,transparent);z-index:61;font-size:18px;text-align:center;padding:16px}
   .daily-bar{width:100%;max-width:600px;margin:0 auto 10px;text-align:center;font-family:var(--display);
     font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--amber-soft);
     background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 14px}
@@ -4344,7 +4389,115 @@
         <button class="btn btn-icon" id="vsCancel" data-i18n="vs.cancel" style="flex:1;border-radius:12px">Cancel</button>
         <button class="btn btn-check" id="vsStart" data-i18n="vs.start">Start match</button>
       </div>
+      <!-- CC-GAME-SERVER F12: shown only when online_screen::entry_visible() -->
+      <button class="btn" id="vsOnline" data-i18n="ol.playOnline" hidden>Play online</button>
     </div>
+  </div>
+
+  <!-- CC-GAME-SERVER F12/F13: Online Head-to-Head, its own screen (online_screen.rs) -->
+  <div class="ol-screen" id="olScreen" role="dialog" aria-modal="true" aria-labelledby="olTitle">
+    <div class="ol-hud">
+      <h2 id="olTitle" data-i18n="ol.title">Play online</h2>
+      <button type="button" class="ghost mode-exit" id="olExit" data-i18n="aria.exit">Exit</button>
+    </div>
+    <div class="ol-drain" id="olDrain" role="status" hidden></div>
+
+    <div class="ol-panel" id="olEntry">
+      <label class="ol-field" id="olNameRow"><span data-i18n="ol.name">Your name</span>
+        <input id="olName" type="text" maxlength="14" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" /></label>
+      <div class="ol-box" id="olCreateBox">
+        <h3 data-i18n="ol.create">Start a room</h3>
+        <label class="ol-field"><span data-i18n="ol.lang">Language</span><select id="olLang"></select></label>
+        <label class="ol-field"><span data-i18n="ol.level">Words</span>
+          <select id="olTierMode"><option value="climb" data-i18n="ol.tierClimb">Get harder as you go</option><option value="fixed" data-i18n="ol.tierFixed">One level</option></select></label>
+        <label class="ol-field"><span data-i18n="ol.levelPick">Level</span>
+          <select id="olTier"><option value="easy" data-i18n="level.easy">Easy</option><option value="medium" data-i18n="level.medium">Medium</option><option value="hard" data-i18n="level.hard">Hard</option><option value="expert" data-i18n="level.expert">Expert</option></select></label>
+        <label class="ol-check"><input type="checkbox" id="olTimed" /> <span data-i18n="ol.timed">Timer</span></label>
+        <label class="ol-check"><input type="checkbox" id="olApprove" /> <span data-i18n="ol.approve">I let people in</span></label>
+        <button class="btn btn-check" id="olCreate" data-i18n="ol.createBtn">Create room</button>
+      </div>
+      <div class="ol-box">
+        <h3 data-i18n="ol.join">Join a room</h3>
+        <input id="olCode" class="ol-code" type="text" maxlength="6" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="ACDEFG" data-i18n-aria="ol.codePh" aria-label="Room code" />
+        <div class="ol-hint" id="olCodeHint" aria-live="polite"></div>
+        <button class="btn btn-check" id="olJoin" data-i18n="ol.joinBtn">Join</button>
+      </div>
+      <div class="ol-err" id="olEntryErr" role="alert"></div>
+    </div>
+
+    <div class="ol-panel" id="olConnecting" hidden><p data-i18n="ol.connecting">Connecting…</p></div>
+
+    <div class="ol-panel" id="olPending" hidden>
+      <p data-i18n="ol.pending">Waiting for the host to let you in…</p>
+      <button class="btn" id="olPendingCancel" data-i18n="ol.cancel">Cancel</button>
+    </div>
+
+    <div class="ol-panel" id="olLobby" hidden>
+      <div class="ol-codebox"><span data-i18n="ol.roomCode">Room code</span> <b id="olRoomCode" class="ol-roomcode"></b>
+        <span class="ol-tag kid" id="olKidBadge" data-i18n="ol.kidSafe" hidden>Kid-safe room</span></div>
+      <button class="btn" id="olShare" data-i18n="ol.share">Share code</button>
+      <ul class="ol-players" id="olPlayers"></ul>
+      <ul class="ol-requests" id="olRequests"></ul>
+      <p class="ol-note" id="olLobbyNote" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn" id="olLeave" data-i18n="ol.leave">Leave</button>
+        <button class="btn btn-check" id="olStart" data-i18n="ol.start">Start match</button>
+      </div>
+    </div>
+
+    <div class="ol-panel ol-match" id="olMatch" hidden>
+      <div class="vs-bar ol-bar">
+        <div class="vs-side" id="olP1"><div class="vs-name" id="olP1Name"></div><div class="vs-cur" id="olP1Cur">0</div><div class="vs-best"><span data-i18n="chains.best">best</span> <b id="olP1Best">0</b></div></div>
+        <div class="vs-mid"><span class="vs-vs">vs</span></div>
+        <div class="vs-side" id="olP2"><div class="vs-name" id="olP2Name"></div><div class="vs-cur" id="olP2Cur">0</div><div class="vs-best"><span data-i18n="chains.best">best</span> <b id="olP2Best">0</b></div></div>
+      </div>
+      <div class="ol-timer" id="olTimer" hidden><div class="ol-timer-fill" id="olTimerFill"></div></div>
+      <button type="button" class="orb-wrap ol-orb" id="olOrb"><div class="orb"></div><span class="ol-orb-glyph" id="olOrbGlyph"></span></button>
+      <p class="ol-status" id="olStatus" aria-live="polite"></p>
+      <div class="row ol-replays">
+        <button class="btn btn-icon" id="olReplay" data-i18n="ol.replay">Hear again</button>
+        <button class="btn btn-icon" id="olSlow" data-i18n="ol.slow">Slower</button>
+      </div>
+      <div class="ol-letters" id="olLetters" aria-live="polite"></div>
+      <div class="ol-keys" id="olKeys"></div>
+      <div class="row">
+        <button class="btn btn-icon" id="olDel" data-i18n="ol.delete">Delete</button>
+        <button class="btn btn-check" id="olCheck" data-i18n="ol.check">Check</button>
+      </div>
+      <div class="ol-emotes" id="olEmotes" role="group" data-i18n-aria="ol.emotes" aria-label="Emotes"></div>
+      <div class="ol-emote-show" id="olEmoteShow" aria-live="polite"></div>
+    </div>
+
+    <div class="ol-panel" id="olResult" hidden>
+      <h3 id="olResultTitle"></h3>
+      <ul class="ol-standings" id="olResultRows"></ul>
+      <p class="ol-note" id="olResultNote"></p>
+      <div class="row">
+        <button class="btn" id="olResultExit" data-i18n="aria.exit">Exit</button>
+        <button class="btn btn-check" id="olRematch" data-i18n="ol.rematch">Rematch</button>
+      </div>
+    </div>
+
+    <div class="ol-panel" id="olResting" hidden>
+      <p data-i18n="ol.resting">Online play is resting — local Head-to-Head still works.</p>
+      <button class="btn" id="olRestingExit" data-i18n="aria.exit">Exit</button>
+    </div>
+
+    <div class="ol-panel" id="olUpdate" hidden>
+      <p data-i18n="ol.update">Update Spell to play online.</p>
+      <button class="btn btn-check" id="olUpdateBtn" data-i18n="ol.updateBtn">Open the App Store</button>
+      <button class="btn" id="olUpdateExit" data-i18n="aria.exit">Exit</button>
+    </div>
+
+    <div class="ol-panel" id="olEnded" hidden>
+      <p id="olEndedMsg"></p>
+      <div class="row">
+        <button class="btn" id="olEndedExit" data-i18n="aria.exit">Exit</button>
+        <button class="btn btn-check" id="olEndedBack" data-i18n="ol.back">OK</button>
+      </div>
+    </div>
+
+    <div class="ol-reconnect" id="olReconnect" role="alert" hidden><p id="olReconnectText"></p></div>
   </div>
 
   <!-- head-to-head result modal -->
@@ -4803,6 +4956,8 @@
            when there is no account to delete (climb::reflect_auth). -->
       <div class="set-row btn-hide" id="setAccountRow"><span class="lbl2"><span data-i18n="acct.title">Your account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span><button class="ghost" id="setAccountBtn" data-i18n="acct.deleteLabel" style="flex:none;border-radius:12px">Delete account</button></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /><button type="button" class="btn btn-icon btn-hide" id="kidGrownups" data-i18n="parent.title" style="flex:none;border-radius:12px">Ask a grown-up</button></label>
+      <!-- CC-GAME-SERVER F10: parent-gated, shown only for a kid while online.kids is on -->
+      <label class="set-row" id="olFamilyRow" hidden><span class="lbl2"><span data-i18n="ol.family">Play online with family</span><small data-i18n="ol.familySmall">A grown-up says yes first</small></span><input type="checkbox" class="switch" id="olFamily" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
       <!-- CC-SPELL-KEYBOARD K-R11: for players who cannot long-press (VoiceOver, Switch Control). -->

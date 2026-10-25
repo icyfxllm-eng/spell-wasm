@@ -31,6 +31,12 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // the Spotlight donor. Without these rows the bridge has no route
         // and the JS call rejects like the plugin is absent.
         CAPPluginMethod(name: "writeWidgetSnapshot", returnType: CAPPluginReturnPromise),
+        // CC-GAME-SERVER G-D11: the online session token lives in the Keychain
+        // (NativeLanguageKitPlugin+Keychain.swift). Without these rows the JS
+        // call rejects and the token would have nowhere safe to live.
+        CAPPluginMethod(name: "keychainGet", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "keychainSet", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "keychainDelete", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "donateSpotlight", returnType: CAPPluginReturnPromise),
         // CC-OFFLINE-PACKS (BD-2): per-file fetch/verify, atomic activate,
         // storage states, and the pack-first audio src resolver.
