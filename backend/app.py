@@ -358,8 +358,14 @@ def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str 
     # holds ~90k clips across fifteen languages, and keying every one on its
     # voice would invalidate the lot to change one. A language joins the set
     # when its voice is switched, and from then on its switches are clean.
+    #
+    # The voice comes from whichever table synthesizes the language. Reading
+    # LANG_VOICES alone keyed Azure-routed fa on the ENGLISH voice name
+    # (2026-10-24), so a second fa voice would have been served the first one's
+    # clips -- the exact mix this key exists to prevent.
     if lang in VOICE_IN_KEY and not key_override:
-        key = f"{key}|voice:{LANG_VOICES.get(lang, (LANGUAGE_CODE, VOICE_NAME))[1]}"
+        voice = (AZURE_VOICES.get(lang) or LANG_VOICES.get(lang) or (LANGUAGE_CODE, VOICE_NAME))[1]
+        key = f"{key}|voice:{voice}"
     digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 

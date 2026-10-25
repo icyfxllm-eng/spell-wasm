@@ -34,6 +34,15 @@ class PersianSpeak(unittest.TestCase):
         self.assertNotIn("fa", app_module.LANG_VOICES)
         self.assertIn("fa", app_module.VOICE_IN_KEY)
 
+    def test_the_cache_key_carries_the_fa_voice_not_the_english_one(self):
+        import hashlib
+        word = "\u06a9\u062a\u0627\u0628"
+        want = hashlib.md5(f"fa:{word}|voice:fa-IR-DilaraNeural".encode()).hexdigest()
+        self.assertIn(want, app_module.cache_path_for(word, "normal", "fa"))
+        # Google-routed languages keep their keys: English's clips must not move.
+        en = hashlib.md5(f"cat|voice:{app_module.LANG_VOICES['en'][1]}".encode()).hexdigest()
+        self.assertIn(en, app_module.cache_path_for("cat", "normal", "en"))
+
     def test_every_bank_word_validates_unchanged(self):
         words = fa_bank()
         self.assertGreater(len(words), 8000)
