@@ -309,6 +309,23 @@
       "sha256": [
         "81685696fa538b710deafe4c1620fb25d1a1cafca8970fda4f52ded5b628557a"
       ]
+    },
+    {
+      "id": "kaikki-persian",
+      "langs": [
+        "fa"
+      ],
+      "kind": "wiktionary-extract",
+      "licence": "CC BY-SA",
+      "url": [
+        "https://kaikki.org/dictionary/Persian/kaikki.org-dictionary-Persian.jsonl"
+      ],
+      "cache": [
+        "fa/kaikki-persian.jsonl"
+      ],
+      "sha256": [
+        "c5fda57f5593fc256570a5e146c4ac5b6b239906aae781eca1d02b2022a03482"
+      ]
     }
   ],
   "bank_source": {
@@ -325,6 +342,7 @@
     "ru": "ru_RU",
     "ar": "ar",
     "hi": "hi_IN",
-    "sw": "sw_TZ"
+    "sw": "sw_TZ",
+    "fa": "kaikki-persian"
   }
 }
