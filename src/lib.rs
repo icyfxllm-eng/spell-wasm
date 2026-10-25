@@ -25,6 +25,8 @@ mod bee; // CC-BEE-SIM F2/F3 (bee engine + contestant table)
 mod boardgame; // CC-BOARD-GAME v1.1 F1 -- the pure engine (app only, I13)
 #[cfg(not(feature = "web"))]
 mod boardgame_grade; // CC-BOARD-GAME F3/D21 -- the local answer check
+#[cfg(feature = "native")]
+pub mod native_api; // CC-GAME-SERVER F6 -- re-exports for the native room server
 #[cfg(not(feature = "web"))]
 mod boardgame_input; // CC-BOARD-GAME D20 -- answer keys and presses
 mod spellkb; // CC-SPELL-KEYBOARD -- the one shared keyboard: keys, mounting, long-press
@@ -240,7 +242,7 @@ use model::AppState;
 
 pub type App = Rc<RefCell<AppState>>;
 
-#[wasm_bindgen(start)]
+#[cfg_attr(not(feature = "native"), wasm_bindgen(start))]
 pub fn start() -> Result<(), JsValue> {
     // Console output as before, plus one F1 `wasm_panic` record per panic site.
     telemetry::install_panic_hook();

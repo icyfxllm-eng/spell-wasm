@@ -1,0 +1,30 @@
+# client -> server
+{"body":{"app_build":"300","display_name":"Mom","platform":"ios","profile_kind":"adult","protocol":1,"resume":{"last_seq":7,"room":"ACDEFG"},"token":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","ui_lang":"en"},"cid":"00000000-0000-4000-8000-000000000001","t":"hello","v":1}
+{"body":{"approve_joins":false,"lang":"en","mode":"h2h","tier":"medium","tier_mode":"fixed","timed":true},"cid":"00000000-0000-4000-8000-000000000001","t":"create_room","v":1}
+{"body":{"code":"ACDEFG"},"cid":"00000000-0000-4000-8000-000000000001","t":"join_room","v":1}
+{"body":{"request_id":1},"cid":"00000000-0000-4000-8000-000000000001","t":"approve_join","v":1}
+{"body":{"request_id":2},"cid":"00000000-0000-4000-8000-000000000001","t":"deny_join","v":1}
+{"body":{},"cid":"00000000-0000-4000-8000-000000000001","t":"leave","v":1}
+{"body":{},"cid":"00000000-0000-4000-8000-000000000001","t":"start_match","v":1}
+{"body":{},"cid":"00000000-0000-4000-8000-000000000001","t":"next_word","v":1}
+{"body":{"typed":"cat"},"cid":"00000000-0000-4000-8000-000000000001","t":"submit","v":1}
+{"body":{"variant":"slow"},"cid":"00000000-0000-4000-8000-000000000001","t":"replay_audio","v":1}
+{"body":{"id":3},"cid":"00000000-0000-4000-8000-000000000001","t":"emote","v":1}
+# server -> client
+{"body":{"player_id":"00112233445566778899aabbccddeeff","protocol":1},"seq":1,"t":"welcome","v":1}
+{"body":{"current":1,"min":1},"seq":2,"t":"update_required","v":1}
+{"body":{"approve_joins":true,"code":"ACDEFG","kid_safe":true,"lang":"en","max_seats":2,"mode":"h2h","mode_state":null,"phase":"lobby","seats":[{"connected":true,"host":true,"kind":"adult","name":"Mom","seat":0}],"tier_mode":"climb","timed":false},"seq":3,"t":"room_state","v":1}
+{"body":{"kind":"kid","name":"Teal Bee 07","request_id":1},"seq":4,"t":"join_request","v":1}
+{"body":{"code":"ACDEFG","request_id":1},"seq":5,"t":"join_pending","v":1}
+{"body":{"code":"ACDEFG","seat":1},"seq":6,"t":"joined","v":1}
+{"body":{"reason":"expired"},"seq":7,"t":"denied","v":1}
+{"body":{"seat":0,"turn_no":1,"turns_left":3},"seq":8,"t":"turn_start","v":1}
+{"body":{"audio_ticket":"0123456789abcdef0123456789abcdef","deadline_ms":12000,"seat":0,"tier":"easy","word_no":1},"seq":9,"t":"word_start","v":1}
+{"body":{"reason":"audio_unavailable"},"seq":10,"t":"word_paused","v":1}
+{"body":{"best":1,"chain":1,"correct":true,"seat":0,"word":"cat"},"seq":11,"t":"word_result","v":1}
+{"body":{"seat":0},"seq":12,"t":"turn_end","v":1}
+{"body":{"standings":[{"best":4,"seat":0},{"best":2,"seat":1}],"winner_seat":0},"seq":13,"t":"match_result","v":1}
+{"body":{"reason":"server_update"},"seq":14,"t":"match_ended","v":1}
+{"body":{"deadline_unix_ms":1800000000000},"seq":15,"t":"server_draining","v":1}
+{"body":{"id":3,"seat":1},"seq":16,"t":"emote","v":1}
+{"body":{"code":"unknown_type"},"seq":17,"t":"error","v":1}

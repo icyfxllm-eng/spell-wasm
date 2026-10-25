@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "tracer-core", "scanlock", "tonal"]
+members = [".", "tracer-core", "scanlock", "tonal", "server/spell-server", "server/grader-parity"]
 
 [package]
 name = "spell_wasm"
@@ -46,6 +46,9 @@ audit_preview = []
 # free English experience, the app is where every language lives. Off by
 # default so `npm run build` still produces the APP artifact.
 web = []
+# CC-GAME-SERVER F6: exposes `native_api` (re-exports only) so the room server can
+# call the same grader natively, and drops the wasm start export for the parity build.
+native = []
 
 [dependencies]
 scanlock = { path = "scanlock" }

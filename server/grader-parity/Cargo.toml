@@ -1,0 +1,17 @@
+[package]
+name = "grader-parity"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "CC-GAME-SERVER A6.1: one deterministic grading fixture, run natively and as WASM"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+spell_wasm = { path = "../..", features = ["native"] }
+sha2 = "0.10"
+unicode-normalization = "0.1"
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = "=0.3.76"
