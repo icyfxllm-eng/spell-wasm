@@ -1,6 +1,6 @@
 # CC-GAME-SERVER v1.1 — Online play: room server, Online Head-to-Head, home-host kit
 
-**Status: AWAITING SIGNATURE (§12).** Phase 0 Recon is done
+**Status: SIGNED 2026-10-24 (§12).** Phase 0 Recon is done
 (`docs/recon/CC-GAME-SERVER-recon.md`). v1.1 folds in every recon decision,
 each using CC's recommendation as Eric instructed on 2026-10-24. Phases A–E
 start only after §12 is signed.
@@ -986,39 +986,39 @@ Eric's go/no-go (§10) is separate and comes after.
 
 Eric initials each decision or writes a change.
 
-- [ ] G-D1 zero inbound ports / tunnel / Tailscale admin
-- [ ] G-D2 authoritative Rust server; grader = `boardgame_grade::grade`, native
-- [ ] G-D3 private invite-code rooms only
-- [ ] G-D4 no free text except profanity-checked adult names; preset emotes; generated kid names
-- [ ] G-D5 in-memory rooms; restart ends matches without penalty
-- [ ] G-D6 rootless Podman + Quadlet, SELinux enforcing
-- [ ] G-D7 build-on / remote-kill-only flags, both default off, no Tools-hub row
-- [ ] G-D8 containerized, env-configured, VPS-portable
-- [ ] G-D9 Online Head-to-Head only in v1, local rules verbatim; turn-based `ModeRules`
-- [ ] G-D10 online writes nothing to existing progress stores
-- [ ] G-D11 anonymous hashed tokens; iOS Keychain via `NativeLanguageKitPlugin`
-- [ ] G-D12 audio tickets, no word text before resolve
-- [ ] G-D13 kid-safe rooms (approval, Kid lists, Spell Jr ceiling, kid can't host, 2 turns)
-- [ ] G-D14 no definitions online in v1
-- [ ] G-D15 JSON protocol with version window
-- [ ] G-D16 drain deploys, no auto-update
-- [ ] G-D17 server-clock deadlines for timed rooms, RTT grace capped at 300 ms, no speed score
-- [ ] G-D18 Spell Off kept; its 3+ player option goes in CC-SPELLOFF-MULTI
-- [ ] G-D19 rooms sized by `ModeRules::max_seats`, up to 4 supported
-- [ ] G-D20 online v1 is iOS only
-- [ ] §3 allowed core edits: visibility + cfg + `native` feature / `pub use` only
+- [x] G-D1 zero inbound ports / tunnel / Tailscale admin
+- [x] G-D2 authoritative Rust server; grader = `boardgame_grade::grade`, native
+- [x] G-D3 private invite-code rooms only
+- [x] G-D4 no free text except profanity-checked adult names; preset emotes; generated kid names
+- [x] G-D5 in-memory rooms; restart ends matches without penalty
+- [x] G-D6 rootless Podman + Quadlet, SELinux enforcing
+- [x] G-D7 build-on / remote-kill-only flags, both default off, no Tools-hub row
+- [x] G-D8 containerized, env-configured, VPS-portable
+- [x] G-D9 Online Head-to-Head only in v1, local rules verbatim; turn-based `ModeRules`
+- [x] G-D10 online writes nothing to existing progress stores
+- [x] G-D11 anonymous hashed tokens; iOS Keychain via `NativeLanguageKitPlugin`
+- [x] G-D12 audio tickets, no word text before resolve
+- [x] G-D13 kid-safe rooms (approval, Kid lists, Spell Jr ceiling, kid can't host, 2 turns)
+- [x] G-D14 no definitions online in v1
+- [x] G-D15 JSON protocol with version window
+- [x] G-D16 drain deploys, no auto-update
+- [x] G-D17 server-clock deadlines for timed rooms, RTT grace capped at 300 ms, no speed score
+- [x] G-D18 Spell Off kept; its 3+ player option goes in CC-SPELLOFF-MULTI
+- [x] G-D19 rooms sized by `ModeRules::max_seats`, up to 4 supported
+- [x] G-D20 online v1 is iOS only
+- [x] §3 allowed core edits: visibility + cfg + `native` feature / `pub use` only
 - Open (initial to accept the v1.1 answer):
-  - O1 ___
-  - O2 ___
-  - O3 ___
-  - O4 ___ (monitor: ______)
-  - O5 ___ (B2 / R2: ______)
-  - O6 ___
-  - O7 ___
-  - O8 ___
-  - O9 ___
-  - O10 ___
-  - O11 ___
-  - O12 ___
+  - O1 accepted (v1.1 answer)
+  - O2 accepted (v1.1 answer)
+  - O3 accepted (v1.1 answer)
+  - O4 deferred: Eric picks the monitor before go/no-go §10.5
+  - O5 deferred: Eric picks B2 or R2 before the backup timer (F15 step 13)
+  - O6 accepted (v1.1 answer)
+  - O7 accepted (v1.1 answer)
+  - O8 accepted (v1.1 answer)
+  - O9 accepted (v1.1 answer)
+  - O10 accepted (v1.1 answer)
+  - O11 accepted (v1.1 answer)
+  - O12 accepted (v1.1 answer)
 
-Signed: ________ Date: ________
+Signed: Eric, in chat ("I sign v1.1 as written: all decisions and O1-O12 accepted. O4 and O5 I'll pick later.") Date: 2026-10-24
