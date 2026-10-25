@@ -191,10 +191,14 @@ const LANGS_BASE: [(&str, &str, LangStatus, Direction); 16] = [
     (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
     (SW, "Kiswahili", Active, Ltr),
     (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", Active, Ltr),
-    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", Active, Rtl),
+    // ComingSoon by Eric's ruling (2026-10-25): "keep persian non visable from the app until its
+    // ready" -- a coming-soon tile, not playable in the app, until its audio is warmed and its audit
+    // is done. audit_preview still unlocks it, so dist-audit-fa keeps working for the auditors.
+    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, Rtl),
 ];
 
-/// THE registry. All sixteen are Active: the APP ships every language.
+/// THE registry. Fifteen are Active: the APP ships every language but Persian, which is
+/// ComingSoon (a teaser tile) until it is ready.
 ///
 /// The web is a different question and it is answered in exactly one place,
 /// [`is_active_lang`], via the `web` cargo feature -- not by a second
@@ -510,16 +514,20 @@ mod registry_tests {
     #[cfg(not(feature = "web"))]
     #[test]
     fn every_registered_language_is_active_in_the_app() {
-        // The app ships every language (Eric, 2026-07-31). The web does not,
-        // and that is asserted separately below under the `web` feature --
-        // deliberately two tests, because one test that changes its
+        // The app ships every language (Eric, 2026-07-31) except the ones the
+        // registry marks ComingSoon: today that is Persian alone (Eric,
+        // 2026-10-25, "non visable from the app until its ready"). The web
+        // does not, and that is asserted separately below under the `web`
+        // feature -- deliberately two tests, because one test that changes its
         // expectation based on cfg proves whichever config you happened to run.
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
             .filter(|(c, _, _, _)| is_active_lang(c))
             .map(|(c, _, _, _)| *c)
             .collect();
-        assert_eq!(active.len(), BUILTIN_LANGS.len(), "the app gates no language");
+        let gated: Vec<&str> = BUILTIN_LANGS.iter().filter(|(c, _, _, _)| !is_active_lang(c)).map(|(c, _, _, _)| *c).collect();
+        assert_eq!(gated, vec!["fa"], "the app gates exactly Persian, which is ComingSoon");
+        assert_eq!(lang_status(FA), ComingSoon);
         assert!(active.contains(&"en"));
     }
 
@@ -641,8 +649,10 @@ mod registry_tests {
             // 2026-07-25 and ships every language to TestFlight) and inactive
             // on web like everything but English -- so assert the gate this
             // test is about, and let the platform tests own the other.
-            assert_eq!(is_active_lang(code), !cfg!(feature = "web"),
-                       "{code}: render gate open, platform decides the rest");
+            // Persian is ComingSoon in the registry (2026-10-25), so its render
+            // gate being open does not make it playable; that is the status's job.
+            assert_eq!(is_active_lang(code), !cfg!(feature = "web") && lang_status(code) == Active,
+                       "{code}: render gate open, platform and status decide the rest");
         }
         // Russian is an LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");
