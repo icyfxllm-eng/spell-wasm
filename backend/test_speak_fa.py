@@ -37,7 +37,9 @@ class PersianSpeak(unittest.TestCase):
     def test_every_bank_word_validates_unchanged(self):
         words = fa_bank()
         self.assertGreater(len(words), 8000)
-        self.assertGreater(sum(ZWNJ in w for w in words), 500, "the bank does carry ZWNJ words")
+        # 322 in the 2026-10-24 Wiktionary-lemma bank (717 before, mostly inflected plurals): enough
+        # that a server refusing ZWNJ would silence hundreds of words.
+        self.assertGreater(sum(ZWNJ in w for w in words), 200, "the bank does carry ZWNJ words")
         for w in words:
             self.assertEqual(app_module.validate_word(w, allow_zwnj=True), w, repr(w))
 

@@ -2,6 +2,7 @@
 """CC-BANK-PURITY F2 — write config/bank-purity-sources.json and assets/words/purity/<lang>.tsv.
 
     python3 tools/bank/gen_ledger.py reports/bank-purity-rows-after.csv
+    python3 tools/bank/gen_ledger.py <csv> --only fa       # rewrite only the named languages' ledgers
 
 The argument is an F1 run over the swept bank.  Verdicts (closed set): dictionary, exception, pending.
 Every row F1 passes is `dictionary`; `not_in_reference_dictionary` and `linker_attached_form` rows
@@ -51,6 +52,9 @@ reg = reg if os.path.exists(regp) else {"_comment": "CC-BANK-PURITY F2. Referenc
 if not os.path.exists(regp):
     open(regp, "w", encoding="utf-8").write(json.dumps(reg, ensure_ascii=False, indent=2) + "\n")
 
+# --only: the F1 run (argv[1]) covers just these languages, so only their ledgers may be rewritten -- a
+# language missing from the run would otherwise have its `pending` rows rewritten as `dictionary`.
+ONLY = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else ALL
 pending = {(r["lang"], r["word"]) for r in csv.DictReader(open(sys.argv[1], encoding="utf-8"))
            if r["class"] in ("not_in_reference_dictionary", "linker_attached_form")}
 other = [r for r in csv.DictReader(open(sys.argv[1], encoding="utf-8")) if r["class"] not in ("", "not_in_reference_dictionary", "linker_attached_form")]
@@ -58,7 +62,7 @@ if other:
     sys.exit(f"{len(other)} rows still carry a quarantine/fix class; run phase_a.py first: {other[:3]}")
 th = {(a, b): c for a, b, c in re.findall(r'\("(\w+)", "(\w+)", (0x[0-9A-F]+)\)', open(f"{ROOT}/src/word_data.rs", encoding="utf-8").read())}
 os.makedirs(f"{ROOT}/assets/words/purity", exist_ok=True)
-for l in ALL:
+for l in ONLY:
     if l == "vi":
         continue
     sid = reg["bank_source"][l]
@@ -75,4 +79,4 @@ for l in ALL:
     for t, w in load_bank(l):
         out.append(prev.get(w) or f"{w}\t{'pending' if (l, w) in pending else 'dictionary'}\t{sid}")
     open(f"{ROOT}/assets/words/purity/{l}.tsv", "w", encoding="utf-8").write("\n".join(out) + "\n")
-print("ledger written:", {l: sum(1 for x in open(f'{ROOT}/assets/words/purity/{l}.tsv', encoding='utf-8') if x[0] != '#') for l in ALL})
+print("ledger written:", {l: sum(1 for x in open(f'{ROOT}/assets/words/purity/{l}.tsv', encoding='utf-8') if x[0] != '#') for l in ONLY})

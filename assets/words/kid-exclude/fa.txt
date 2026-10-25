@@ -10,6 +10,9 @@
 # the bank rows that translate the English Jr list's concepts (death, kill, blood,
 # grave, corpse, wine/alcohol, gun, bomb, bullet, knife, sword, tobacco, drugs,
 # sex). Over-exclusion is acceptable (کشته, ترور); NOT native-reviewed.
+# 2026-10-24 bank rebuild (Wiktionary lemmas): 19 more rows the same concepts
+# reach (weapon, murder, gamble, opium/heroin, whisky/vodka/beer, coffin,
+# skull, dagger, pistol, cemetery, sex, assault, machine gun, grenade).
 مرگ
 مرده
 کشتن
@@ -35,3 +38,22 @@
 سیگار
 جنسی
 برهنه
+سلاح
+قتل
+قاتل
+مست
+قمار
+تریاک
+هروئین
+ویسکی
+ودکا
+آبجو
+تابوت
+جمجمه
+خنجر
+تپانچه
+سکس
+تجاوز
+قبرستان
+مسلسل
+نارنجک

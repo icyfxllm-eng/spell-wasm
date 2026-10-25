@@ -27,12 +27,12 @@ REPO = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
 from census_c6 import fold_lenient, load   # same fold as src/norm.rs
 
-LANGS = "en es fr de pt pl ko ja fil zh ru ar hi sw".split()
+LANGS = "en es fr de pt pl ko ja fil zh ru ar hi sw fa".split()
 TIERS = "easy medium hard expert".split()
 VERDICTS = ("dictionary", "exception", "pending")
 # every script that writes assets/words/<lang>/<tier>.txt in order to GROW a bank must call purity_admit
 BANK_WRITERS = ["scripts/build-bigbank.py", "scripts/build-hi-bank.py", "scripts/build-zh-bank.py",
-                "scripts/grow-basic-nouns.py", "scripts/build-draft-banks.py"]
+                "scripts/grow-basic-nouns.py", "scripts/build-draft-banks.py", "scripts/build-fa-bank.py"]
 
 def lines(path):
     if not os.path.exists(path):

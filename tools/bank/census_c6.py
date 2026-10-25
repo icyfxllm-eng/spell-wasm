@@ -7,7 +7,7 @@ Read-only. Mirrors src/norm.rs fold_lenient; whole-word match, zh on the hanzi h
 import csv, os, re, sys, unicodedata
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
-LANGS = "en es fr de pt pl ko ja fil zh ru ar hi sw".split()
+LANGS = "en es fr de pt pl ko ja fil zh ru ar hi sw fa".split()
 TIERS = "easy medium hard expert".split()
 SILENT = set(range(0x064B, 0x0660)) | {0x0670, 0x0640, 0x200C}
 

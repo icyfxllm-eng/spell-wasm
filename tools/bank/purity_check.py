@@ -17,7 +17,7 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 MAIN = os.path.expanduser("~/repos/spell-wasm")            # shared corpus cache lives here
 CACHES = [c for c in (os.environ.get("PURITY_CACHE"),) if c] + [os.path.join(ROOT, ".corpus-cache"), os.path.join(MAIN, ".corpus-cache")]
 HUNSPELL = "/opt/homebrew/bin/hunspell"
-ALL = "en es fr de pt pl ko ja fil zh ru ar hi sw".split()
+ALL = "en es fr de pt pl ko ja fil zh ru ar hi sw fa".split()
 TIERS = "easy medium hard expert".split()
 
 DICT = {  # registry key -> hunspell dictionary base (no extension)
@@ -439,11 +439,53 @@ def classify_fil(rows):
         res[w] = (n, "") if n else ("not_in_reference_dictionary", "")
     return res
 
+# ---------------------------------------------------------------- Persian
+def fa_canon():
+    """The F1 canonicalizer, from the one Python copy of it (scripts/build-fa-bank.py, parity-pinned to
+    src/fa_canon.rs). Wiktionary spells some headwords with Arabic yeh/kaf or harakat; the bank never does."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("build_fa_bank", os.path.join(ROOT, "scripts", "build-fa-bank.py"))
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    return m.canon
+
+def load_kaikki_fa():
+    """(headwords, names): every non-name Persian Wiktionary headword and listed form, and the words
+    Wiktionary has ONLY as a name (a word that is also a noun or adjective, like آرام, is a headword)."""
+    import json
+    canon = fa_canon()
+    heads, names = set(), set()
+    for l in open(find("fa/kaikki-persian.jsonl"), encoding="utf-8"):
+        d = json.loads(l)
+        w = canon(d.get("word", ""))
+        if not w or " " in w:
+            continue
+        if d.get("pos") == "name":
+            names.add(w); continue
+        heads.add(w)
+        for f in d.get("forms", []):
+            fw = canon(f.get("form", ""))
+            if fw and " " not in fw:
+                heads.add(fw)
+    return heads, names - heads
+
+def classify_fa(rows):
+    heads, names = load_kaikki_fa()
+    res = {}
+    for w in sorted({w for _, w in rows}):
+        if w in heads:
+            res[w] = ("pass", "")
+        elif w in names:
+            res[w] = ("proper_noun", "")
+        else:
+            res[w] = ("not_in_reference_dictionary", "")
+    return res
+
 # ---------------------------------------------------------------- driver
 def classify(lang, rows):
     return {
         "ko": lambda: classify_ko(rows), "ja": lambda: classify_ja(rows), "zh": lambda: classify_zh(rows),
         "hi": lambda: classify_hi(rows), "ar": lambda: classify_ar(rows), "fil": lambda: classify_fil(rows),
+        "fa": lambda: classify_fa(rows),
     }.get(lang, lambda: classify_hunspell(lang, rows))()
 
 def overrides(lang):

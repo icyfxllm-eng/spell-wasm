@@ -19,7 +19,7 @@ CC-SENSE-CUE v1.1 F8. Regenerate with `python3 tools/soundalikes_report.py`.
 | ar | missing | yes | - | 6,279 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | sw | missing | yes | - | 2,818 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | hi | missing | yes | - | 2,095 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| fa | missing | yes | - | 8,339 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| fa | missing | yes | - | 8,340 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | en+retier | verified | yes | build_collisions.key_en@1+retier | 4,367 | 273 | 28 | 19 | 39 | 305 | 335 | pass |
 
 Status stays `missing` for every language until the F5 voice loopback has run (Phase B). `none-by-construction` is granted only by the proof test with a spoken-key generator; no language has one yet beyond en, es and ru, whose banks do contain sound-alikes.

@@ -20,7 +20,7 @@ import os, sys, unicodedata
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 REPO = os.path.dirname(os.path.dirname(HERE))
-LANGS = "en es fr de pt pl ko ja fil zh ru ar hi sw".split()
+LANGS = "en es fr de pt pl ko ja fil zh ru ar hi sw fa".split()
 
 def _ledger_words(lang):
     p = f"{REPO}/assets/words/purity/{lang}.tsv"

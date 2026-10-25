@@ -9,8 +9,10 @@ is what tiers here.
 
 Pipeline, in order:
 
-  1. Leipzig pes_wikipedia_2021_100K (CC BY 4.0). Note `pes`, not `fas` — the
-     Wikipedia corpus is filed under Western Farsi and fas_wikipedia 404s.
+  1. Leipzig pes_wikipedia_2021_1M (CC BY 4.0) for frequency. Note `pes`, not
+     `fas` — the Wikipedia corpus is filed under Western Farsi and
+     fas_wikipedia 404s. 1M since 2026-10-24: the 100K sample ranked too few
+     real words to fill the tiers from dictionary headwords alone.
   2. canon() — the F1 table. Mirrors src/fa_canon.rs; the two are pinned
      against each other by fa_canon::tests::python_parity, fed by the fixture
      this script emits. Measured recovery on this corpus is small (~0.8%),
@@ -20,10 +22,24 @@ Pipeline, in order:
   4. Stopword filter. Function words are not spelling content; nothing in the
      generic pipeline filters them, which is why German easy shipped full of
      aber/dann/als. Persian gets an explicit list rather than the same hole.
-  5. Frequency-rank, take the useful head, then tier by depth within it.
-     Rarity is the dominant difficulty signal AND suppresses the proper-noun
-     tail; depth grades within it. Sorting by depth FIRST fills the middle
-     tiers with rare zero-trap words, which is worse than useless.
+  5. ADMISSION (2026-10-24, Eric: "rebuild the Persian bank from
+     dictionary-confirmed words"). A row must be a Persian Wiktionary LEMMA
+     (kaikki-persian: noun, adjective, adverb or verb, not a form-of entry),
+     seen at least FREQ_FLOOR times. The 100K-frequency bank this replaces was
+     4,763 non-headwords out of 8,339 -- inflections (آمده‌اند), fragments (اش)
+     and 605 Wiktionary names (آلاباما) -- while استفاده, صورت and ثبت, the
+     trap-letter words Persian dictation is about, were missing. A word
+     Wiktionary has as a name AND a lemma (آرام, آرزو) is a word. Then
+     tools/bank/purity_admit.py (F1, the same reference) before anything is
+     written.
+  6. Frequency-rank, take the head, then tier by ONE difficulty score:
+     rarity (rank / head size, 0..1) plus TRAP_WEIGHT per trap set. The old
+     sort -- depth first, frequency second -- did exactly what this note
+     used to warn against: it filled Medium and Hard with rare zero-trap words
+     (دنبلان, باریم) and sent the commonest trap words (استفاده, صورت, ثبت)
+     to Expert. 0.25 was chosen 2026-10-24 by measuring 0.15/0.25/0.4: it is
+     the one where mean rank AND mean traps both rise tier by tier and common
+     trap words sit in Medium/Hard.
 
 Tier sizes respect the generator's ceiling, max(840, poolFloor*1.25) with ar's
 floors per D3 — 840/1250/2500/3750. Caseless script, so residual proper nouns
@@ -33,12 +49,15 @@ import json, os, sys, tarfile, unicodedata as ud, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, ".corpus-cache")
-CORPUS = "pes_wikipedia_2021_100K"
+CORPUS = "pes_wikipedia_2021_1M"
+WIKT = os.path.join(CACHE, "fa", "kaikki-persian.jsonl")   # config/bank-purity-sources.json: kaikki-persian
+FREQ_FLOOR = 3        # seen at least this often in the 1M corpus
+TRAP_WEIGHT = 0.25    # one trap set weighs a quarter of the whole frequency range
 OUT = os.path.join(ROOT, "assets", "words", "fa")
 FIXTURE = os.path.join(ROOT, "tests", "fixtures", "fa-canon-parity.json")
 
 TIERS = [("easy", 840), ("medium", 1250), ("hard", 2500), ("expert", 3750)]
-HEAD = 15000          # the useful vocabulary; beyond this is long-tail noise
+HEAD = sum(n for _, n in TIERS)   # every admitted row is a headword, so the head IS the bank
 
 # CC-PERSIAN-FOUNDATION F5 — the five homophone-letter sets. Membership count
 # is the difficulty axis.
@@ -117,8 +136,26 @@ def corpus_rows():
     return rows
 
 
+def wiktionary_lemmas():
+    """Persian Wiktionary lemmas (noun/adj/adv/verb, not form-of), canonicalized."""
+    if not os.path.exists(WIKT):
+        sys.exit(f"missing {WIKT}: run python3 tools/bank/fetch_sources.py")
+    out = set()
+    for line in open(WIKT, encoding="utf-8"):
+        d = json.loads(line)
+        if d.get("pos") not in ("noun", "adj", "adv", "verb"):
+            continue
+        if any("form_of" in s or "alt_of" in s for s in d.get("senses", [])):
+            continue
+        w = canon(d.get("word", ""))
+        if w and " " not in w:
+            out.add(w)
+    return out
+
+
 def main(apply=False):
     reach = reachable()
+    lemmas = wiktionary_lemmas()
     rows = corpus_rows()
     seen, pool, recovered = set(), [], 0
     for raw, f in rows:
@@ -133,7 +170,7 @@ def main(apply=False):
             continue                      # unreachable on the fa keyboard
         if w.startswith(ZWNJ) or w.endswith(ZWNJ) or ZWNJ * 2 in w:
             continue                      # a ZWNJ joins nothing at a word's edge (شده‌ was one)
-        if w in STOP or w in seen:
+        if w in STOP or w in seen or f < FREQ_FLOOR or w not in lemmas:
             continue
         seen.add(w)
         pool.append((w, f))
@@ -141,10 +178,22 @@ def main(apply=False):
             recovered += 1
 
     print(f"  corpus rows            {len(rows)}")
-    print(f"  legal + reachable      {len(pool)}   (canon recovered {recovered})")
+    print(f"  Wiktionary lemmas      {len(lemmas)}")
+    print(f"  admitted (lemma, f>={FREQ_FLOOR}, legal, reachable)  {len(pool)}   (canon recovered {recovered})")
 
-    head = pool[:HEAD]
-    head.sort(key=lambda x: (depth(x[0]), -x[1]))
+    sys.path.insert(0, os.path.join(ROOT, "tools", "bank"))
+    from purity_admit import admit
+    ok_words, rejected = admit("fa", [w for w, _ in pool])
+    if rejected:
+        print(f"  purity_admit rejected  {len(rejected)}")
+    ok_set = set(ok_words)
+    pool = [(w, f) for w, f in pool if w in ok_set]
+    if len(pool) < HEAD:
+        sys.exit(f"ABORT: {len(pool)} admitted rows cannot fill the {HEAD}-row tiers")
+
+    head = pool[:HEAD]                       # pool is frequency-descending
+    head = [w for _, w in sorted((i / HEAD + TRAP_WEIGHT * depth(w), w) for i, (w, _) in enumerate(head))]
+    head = [(w, 0) for w in head]
     banks, i, prev, ok = {}, 0, -1.0, True
     for name, n in TIERS:
         ws = [w for w, _ in head[i:i + n]]; i += n
