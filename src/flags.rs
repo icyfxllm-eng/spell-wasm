@@ -624,21 +624,24 @@ pub fn visual_orb() -> bool {
 /// rises from its key into the answer. **Default OFF** (K-D28), killable as
 /// `keyboard_flight`.
 pub fn keyboard_flight() -> bool {
-    resolve(stored("keyboard_flight").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 302, CC-SPELL-KEYBOARD Phase C review): on.
+    resolve(stored("keyboard_flight").as_deref(), true)
 }
 
 /// CC-SPELL-KEYBOARD `keyboard.constellation` (Phase C, KF6): after a correct
 /// answer its keys light as stars joined in typing order. **Default OFF**
 /// (K-D28), killable as `keyboard_constellation`.
 pub fn keyboard_constellation() -> bool {
-    resolve(stored("keyboard_constellation").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 302, CC-SPELL-KEYBOARD Phase C review): on.
+    resolve(stored("keyboard_constellation").as_deref(), true)
 }
 
 /// CC-SPELL-KEYBOARD `keyboard.react` (Phase C, KF7): the keyboard reacts to a
 /// verdict (wave, amber dim, streak warmth; a neutral pulse where the mode
 /// shows none). **Default OFF** (K-D28), killable as `keyboard_react`.
 pub fn keyboard_react() -> bool {
-    resolve(stored("keyboard_react").as_deref(), false)
+    // RELEASE BRANCH ONLY (build 302, CC-SPELL-KEYBOARD Phase C review): on.
+    resolve(stored("keyboard_react").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.sound` (Phase C, F5): the synthesized game sounds
