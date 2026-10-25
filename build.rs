@@ -16,11 +16,16 @@ use std::{env, fs, path::Path};
 /// Keys belonging to the mode. Everything under `wordpic.` / `finale.`, plus
 /// its hub-tile entries, which live under the `tools.` namespace.
 fn is_picture_key(k: &str) -> bool {
-    k.starts_with("wordpic.") || k.starts_with("finale.") || k.starts_with("tools.wordpic.") || is_boardgame_key(k) || is_spelluzzle_key(k) || is_randospell_key(k) || is_quickbee_draw_key(k)
+    k.starts_with("wordpic.") || k.starts_with("finale.") || k.starts_with("tools.wordpic.") || is_boardgame_key(k) || is_spelluzzle_key(k) || is_randospell_key(k) || is_quickbee_draw_key(k) || is_online_key(k)
 }
 
 /// CC-BOARD-GAME I13: every string of the app-only Board Game mode lives under
 /// `bg.`, so the site build can drop them by prefix, exactly as above.
+/// CC-GAME-SERVER O1: online play is app only, so the site carries none of its strings.
+fn is_online_key(k: &str) -> bool {
+    k.starts_with("ol.")
+}
+
 fn is_boardgame_key(k: &str) -> bool {
     k.starts_with("bg.")
 }

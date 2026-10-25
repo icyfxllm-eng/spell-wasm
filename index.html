@@ -2310,7 +2310,7 @@
   /* head-to-head scoreboard */
   .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
   .vs-bar.btn-hide{display:none}
-  /* CC-GAME-SERVER: the online screen (its own surface; borrows vs-bar, orb-wrap/orb) */
+  /* ONLINE:BEGIN CC-GAME-SERVER: the online screen (its own surface; borrows vs-bar, orb-wrap/orb) */
   .ol-screen{position:fixed;inset:0;z-index:60;background:var(--bg,var(--palette-mode-screen-bg));color:var(--ink);display:none;flex-direction:column;align-items:center;gap:10px;overflow:auto;padding:max(12px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
   .ol-screen.show{display:flex}
   .ol-hud{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between}
@@ -2326,6 +2326,10 @@
   .ol-drain{width:100%;max-width:600px;text-align:center;background:var(--panel);border:1px solid var(--amber);border-radius:12px;padding:8px;color:var(--amber-soft)}
   .ol-codebox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
   .ol-roomcode{font-family:var(--mono);font-size:28px;letter-spacing:.25em}
+  /* Room codes are Latin, but the field sits in a localized page: joining scripts never take tracking. */
+  .ol-code:lang(ar), .ol-code:lang(fa), .ol-code:lang(ur), .ol-code:lang(hi),
+  .ol-roomcode:lang(ar), .ol-roomcode:lang(fa), .ol-roomcode:lang(ur), .ol-roomcode:lang(hi)
+  {letter-spacing:normal}
   .ol-tag{font-size:12px;border:1px solid var(--edge);border-radius:999px;padding:1px 8px;margin-inline-start:6px;color:var(--muted)}
   .ol-tag.kid{border-color:var(--amber);color:var(--amber-soft)}
   .ol-tag.off{opacity:.7}
@@ -2355,6 +2359,7 @@
   .ol-emote-show{min-height:1.6em;font-size:18px;opacity:0;transition:opacity var(--motion-duration-base) ease}
   .ol-emote-show.pop{opacity:1}
   .ol-reconnect{position:fixed;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 80%,transparent);z-index:61;font-size:18px;text-align:center;padding:16px}
+  /* ONLINE:END */
   .daily-bar{width:100%;max-width:600px;margin:0 auto 10px;text-align:center;font-family:var(--display);
     font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--amber-soft);
     background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 14px}
@@ -4389,12 +4394,13 @@
         <button class="btn btn-icon" id="vsCancel" data-i18n="vs.cancel" style="flex:1;border-radius:12px">Cancel</button>
         <button class="btn btn-check" id="vsStart" data-i18n="vs.start">Start match</button>
       </div>
-      <!-- CC-GAME-SERVER F12: shown only when online_screen::entry_visible() -->
+      <!-- ONLINE:BEGIN CC-GAME-SERVER F12: shown only when online_screen::entry_visible() -->
       <button class="btn" id="vsOnline" data-i18n="ol.playOnline" hidden>Play online</button>
+      <!-- ONLINE:END -->
     </div>
   </div>
 
-  <!-- CC-GAME-SERVER F12/F13: Online Head-to-Head, its own screen (online_screen.rs) -->
+  <!-- ONLINE:BEGIN CC-GAME-SERVER F12/F13: Online Head-to-Head, its own screen (online_screen.rs); app only (O1) -->
   <div class="ol-screen" id="olScreen" role="dialog" aria-modal="true" aria-labelledby="olTitle">
     <div class="ol-hud">
       <h2 id="olTitle" data-i18n="ol.title">Play online</h2>
@@ -4499,6 +4505,7 @@
 
     <div class="ol-reconnect" id="olReconnect" role="alert" hidden><p id="olReconnectText"></p></div>
   </div>
+  <!-- ONLINE:END -->
 
   <!-- head-to-head result modal -->
   <div class="scrim" id="vsResultScrim">
@@ -4956,8 +4963,9 @@
            when there is no account to delete (climb::reflect_auth). -->
       <div class="set-row btn-hide" id="setAccountRow"><span class="lbl2"><span data-i18n="acct.title">Your account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span><button class="ghost" id="setAccountBtn" data-i18n="acct.deleteLabel" style="flex:none;border-radius:12px">Delete account</button></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /><button type="button" class="btn btn-icon btn-hide" id="kidGrownups" data-i18n="parent.title" style="flex:none;border-radius:12px">Ask a grown-up</button></label>
-      <!-- CC-GAME-SERVER F10: parent-gated, shown only for a kid while online.kids is on -->
+      <!-- ONLINE:BEGIN CC-GAME-SERVER F10: parent-gated, shown only for a kid while online.kids is on -->
       <label class="set-row" id="olFamilyRow" hidden><span class="lbl2"><span data-i18n="ol.family">Play online with family</span><small data-i18n="ol.familySmall">A grown-up says yes first</small></span><input type="checkbox" class="switch" id="olFamily" /></label>
+      <!-- ONLINE:END -->
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
       <!-- CC-SPELL-KEYBOARD K-R11: for players who cannot long-press (VoiceOver, Switch Control). -->

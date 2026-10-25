@@ -56,7 +56,10 @@ for pair in (("<!-- SPELL-PICTURE:BEGIN", "<!-- SPELL-PICTURE:END -->"),
              ("<!-- QUICKBEEDRAW:BEGIN", "<!-- QUICKBEEDRAW:END -->"),
              ("/* QUICKBEEDRAW:BEGIN", "/* QUICKBEEDRAW:END */"),
              # CC-PICK-QUEUE O-F: app only; the site build carries none of it.
-             ("/* PICKQUEUE:BEGIN", "/* PICKQUEUE:END */")):
+             ("/* PICKQUEUE:BEGIN", "/* PICKQUEUE:END */"),
+             # CC-GAME-SERVER O1: online play is app only.
+             ("<!-- ONLINE:BEGIN", "<!-- ONLINE:END -->"),
+             ("/* ONLINE:BEGIN", "/* ONLINE:END */")):
     while pair[0] in src:
         a = src.index(pair[0]); b = src.index(pair[1], a) + len(pair[1])
         src = src[:a] + src[b:]
