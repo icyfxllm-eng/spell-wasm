@@ -70,7 +70,7 @@ pub enum TierMode {
     Fixed,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Variant {
     Normal,
@@ -278,11 +278,14 @@ pub enum ServerMsg {
     ServerDraining { deadline_unix_ms: u64 },
     /// An emote relayed to the room (`emote{seat,id}`); preset ids only.
     Emote { seat: u8, id: u8 },
+    /// The ticket for a `replay_audio{variant}` (F9): the same ticket for the
+    /// same variant, never the word.
+    Audio { variant: Variant, audio_ticket: String },
     Error { code: String },
 }
 
 impl ServerMsg {
-    pub const TYPES: [&'static str; 17] = [
+    pub const TYPES: [&'static str; 18] = [
         "welcome",
         "update_required",
         "room_state",
@@ -299,6 +302,7 @@ impl ServerMsg {
         "match_ended",
         "server_draining",
         "emote",
+        "audio",
         "error",
     ];
 
@@ -487,6 +491,7 @@ pub mod samples {
             ServerMsg::MatchEnded { reason: "server_update".into() },
             ServerMsg::ServerDraining { deadline_unix_ms: 1_800_000_000_000 },
             ServerMsg::Emote { seat: 1, id: 3 },
+            ServerMsg::Audio { variant: Variant::Slow, audio_ticket: "fedcba9876543210fedcba9876543210".into() },
             ServerMsg::error("unknown_type"),
         ]
     }

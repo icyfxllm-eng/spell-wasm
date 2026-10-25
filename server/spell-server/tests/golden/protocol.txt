@@ -27,4 +27,5 @@
 {"body":{"reason":"server_update"},"seq":14,"t":"match_ended","v":1}
 {"body":{"deadline_unix_ms":1800000000000},"seq":15,"t":"server_draining","v":1}
 {"body":{"id":3,"seat":1},"seq":16,"t":"emote","v":1}
-{"body":{"code":"unknown_type"},"seq":17,"t":"error","v":1}
+{"body":{"audio_ticket":"fedcba9876543210fedcba9876543210","variant":"slow"},"seq":17,"t":"audio","v":1}
+{"body":{"code":"unknown_type"},"seq":18,"t":"error","v":1}

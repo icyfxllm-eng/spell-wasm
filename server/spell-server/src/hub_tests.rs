@@ -305,11 +305,11 @@ async fn only_the_host_starts_and_needs_two_players() {
 }
 
 #[tokio::test(start_paused = true)]
-async fn h2h_is_not_available_until_phase_b_and_unknown_languages_refuse() {
+async fn unknown_modes_languages_and_tiers_refuse() {
     let hub = Hub::new();
     let mut a = connect(&hub, "a", ProfileKind::Adult, 1);
-    send(&hub, &a, ClientMsg::CreateRoom(room_req("h2h")));
-    assert_eq!(errors(&take(&mut a)), vec!["mode_unavailable"]);
+    send(&hub, &a, ClientMsg::CreateRoom(room_req("chess")));
+    assert_eq!(errors(&take(&mut a)), vec!["unknown_mode"]);
     let mut req = room_req("test");
     req.lang = "xx".into();
     send(&hub, &a, ClientMsg::CreateRoom(req));
@@ -482,4 +482,171 @@ async fn a_newer_connection_replaces_the_old_one() {
     assert!(closed);
     hub.detach("a", 1, Instant::now());
     assert!(hub.is_connected("a"), "the stale connection's detach is ignored");
+}
+
+// ---------------------------------------------------------------- Online Head-to-Head in the room (F5, F10)
+
+fn h2h_req(timed: bool) -> CreateRoom {
+    CreateRoom {
+        mode: "h2h".into(),
+        lang: "en".into(),
+        tier_mode: if timed { TierMode::Fixed } else { TierMode::Climb },
+        tier: timed.then(|| "easy".into()),
+        timed,
+        approve_joins: false,
+    }
+}
+
+async fn h2h_started(hub: &Hub, timed: bool) -> (P, P, String) {
+    let mut a = connect(hub, "a", ProfileKind::Adult, 1);
+    let mut b = connect(hub, "b", ProfileKind::Adult, 2);
+    send(hub, &a, ClientMsg::CreateRoom(h2h_req(timed)));
+    let code = take(&mut a)
+        .into_iter()
+        .find_map(|o| match o.msg {
+            ServerMsg::Joined { code, .. } => Some(code),
+            _ => None,
+        })
+        .unwrap();
+    join(hub, &mut b, &code);
+    send(hub, &a, ClientMsg::StartMatch {});
+    take(&mut a);
+    take(&mut b);
+    (a, b, code)
+}
+
+/// Advances in 250 ms steps, ticking like the background task does.
+async fn run_for(hub: &Hub, d: Duration) {
+    let steps = d.as_millis().div_ceil(250) as u32;
+    for _ in 0..steps {
+        tokio::time::advance(Duration::from_millis(250)).await;
+        hub.tick(Instant::now());
+    }
+}
+
+#[tokio::test(start_paused = true)]
+async fn a5_5_an_idle_untimed_word_is_a_miss_after_120_s_and_the_turn_passes() {
+    let hub = Hub::new();
+    let (a, mut b, _code) = h2h_started(&hub, false).await;
+    send(&hub, &a, ClientMsg::NextWord {});
+    assert!(take(&mut b).iter().any(|o| matches!(o.msg, ServerMsg::WordStart { seat: 0, .. })));
+    run_for(&hub, Duration::from_secs(119)).await;
+    assert!(!take(&mut b).iter().any(|o| matches!(o.msg, ServerMsg::WordResult { .. })));
+    run_for(&hub, Duration::from_secs(2)).await;
+    run_for(&hub, Duration::from_millis(1500)).await;
+    let got = take(&mut b);
+    assert!(got.iter().any(|o| matches!(o.msg, ServerMsg::WordResult { seat: 0, correct: false, .. })));
+    assert!(got.iter().any(|o| matches!(o.msg, ServerMsg::TurnStart { seat: 1, .. })), "the turn passes");
+}
+
+#[tokio::test(start_paused = true)]
+async fn a5_2_an_active_seat_gone_61_s_in_an_untimed_room_misses_and_releases() {
+    let hub = Hub::new();
+    let (a, mut b, code) = h2h_started(&hub, false).await;
+    send(&hub, &a, ClientMsg::NextWord {});
+    hub.detach("a", a.sess.conn_id, Instant::now());
+    take(&mut b);
+    // The idle rule waits for the seat hold instead: still nothing at 59 s,
+    // and nothing even past 120 s of the word if the seat were still held.
+    run_for(&hub, Duration::from_secs(59)).await;
+    assert!(!take(&mut b).iter().any(|o| matches!(o.msg, ServerMsg::WordResult { .. })));
+    run_for(&hub, Duration::from_secs(2)).await;
+    let got = take(&mut b);
+    assert!(got.iter().any(|o| matches!(o.msg, ServerMsg::WordResult { seat: 0, correct: false, .. })));
+    assert!(got.iter().any(|o| matches!(&o.msg, ServerMsg::MatchEnded { reason } if reason == "player_left")));
+    assert_eq!(hub.seat_of("a"), None);
+    assert_eq!(hub.room_state(&code).unwrap().phase, "lobby");
+}
+
+#[tokio::test(start_paused = true)]
+async fn a_timed_deadline_keeps_running_while_the_active_seat_is_away() {
+    let hub = Hub::new();
+    let (a, mut b, _code) = h2h_started(&hub, true).await;
+    send(&hub, &a, ClientMsg::NextWord {});
+    hub.detach("a", a.sess.conn_id, Instant::now());
+    take(&mut b);
+    run_for(&hub, Duration::from_millis(12_500)).await;
+    let got = take(&mut b);
+    assert!(got.iter().any(|o| matches!(o.msg, ServerMsg::WordResult { seat: 0, correct: false, .. })), "timed out while away");
+    assert!(hub.seat_of("a").is_some(), "the seat is still held");
+}
+
+#[tokio::test(start_paused = true)]
+async fn coming_back_restarts_the_idle_clock() {
+    let hub = Hub::new();
+    let (a, mut b, code) = h2h_started(&hub, false).await;
+    send(&hub, &a, ClientMsg::NextWord {});
+    hub.detach("a", a.sess.conn_id, Instant::now());
+    run_for(&hub, Duration::from_secs(50)).await;
+    let _a2 = connect_resume(&hub, "a", ProfileKind::Adult, 7, Some((code, 0)));
+    take(&mut b);
+    run_for(&hub, Duration::from_secs(110)).await;
+    assert!(!take(&mut b).iter().any(|o| matches!(o.msg, ServerMsg::WordResult { .. })), "a fresh 120 s after return");
+    run_for(&hub, Duration::from_secs(11)).await;
+    assert!(take(&mut b).iter().any(|o| matches!(o.msg, ServerMsg::WordResult { correct: false, .. })));
+}
+
+#[tokio::test(start_paused = true)]
+async fn tickets_are_room_bound_and_expire_60_s_after_the_word_resolves() {
+    let hub = Hub::new();
+    let (a, mut b, _code) = h2h_started(&hub, false).await;
+    let _outsider = connect(&hub, "z", ProfileKind::Adult, 9);
+    send(&hub, &a, ClientMsg::NextWord {});
+    let ticket = take(&mut b)
+        .into_iter()
+        .find_map(|o| match o.msg {
+            ServerMsg::WordStart { audio_ticket, .. } => Some(audio_ticket),
+            _ => None,
+        })
+        .unwrap();
+    assert_eq!(ticket.len(), 32, "128-bit hex");
+    let now = Instant::now();
+    assert!(hub.audio_lookup(&ticket, "a", now).is_some());
+    assert!(hub.audio_lookup(&ticket, "b", now).is_some(), "the watcher may hear it too");
+    assert!(hub.audio_lookup(&ticket, "z", now).is_none(), "not a member");
+    assert!(hub.audio_lookup("00000000000000000000000000000000", "a", now).is_none());
+    send(&hub, &a, ClientMsg::Submit { typed: "zzzzqqq".into() });
+    run_for(&hub, Duration::from_secs(59)).await;
+    assert!(hub.audio_lookup(&ticket, "a", Instant::now()).is_some(), "valid until resolve + 60 s");
+    run_for(&hub, Duration::from_secs(2)).await;
+    assert!(hub.audio_lookup(&ticket, "a", Instant::now()).is_none());
+}
+
+#[tokio::test(start_paused = true)]
+async fn a_kid_safe_h2h_room_plays_two_turns_each() {
+    let hub = Hub::new();
+    let mut a = connect(&hub, "a", ProfileKind::Adult, 1);
+    send(&hub, &a, ClientMsg::CreateRoom(h2h_req(false)));
+    let code = take(&mut a)
+        .into_iter()
+        .find_map(|o| match o.msg {
+            ServerMsg::Joined { code, .. } => Some(code),
+            _ => None,
+        })
+        .unwrap();
+    let mut k = connect(&hub, "k", ProfileKind::Kid, 2);
+    join(&hub, &mut k, &code);
+    let id = pending_id(&take(&mut a)).unwrap();
+    send(&hub, &a, ClientMsg::ApproveJoin { request_id: id });
+    send(&hub, &a, ClientMsg::StartMatch {});
+    assert!(take(&mut k).iter().any(|o| matches!(o.msg, ServerMsg::TurnStart { turns_left: 2, .. })));
+}
+
+#[tokio::test(start_paused = true)]
+async fn rtt_samples_become_capped_grace() {
+    let hub = Hub::new();
+    let (_a, _b, code) = h2h_started(&hub, true).await;
+    for r in [40, 50, 900, 60, 45] {
+        hub.note_rtt("a", r);
+    }
+    {
+        let s = hub.state.lock().unwrap();
+        let room = &s.rooms[&code];
+        assert_eq!(room.seats[&0].grace(), Duration::from_millis(25), "median 50 / 2");
+    }
+    for r in [900, 900, 900, 900, 900] {
+        hub.note_rtt("a", r);
+    }
+    let s = hub.state.lock().unwrap();
+    assert_eq!(s.rooms[&code].seats[&0].grace(), GRACE_CAP, "capped at 300 ms");
 }

@@ -21,10 +21,11 @@ use axum::{Json, Router};
 use serde_json::json;
 use tokio::time::Instant;
 
+use crate::audio::{AudioService, AudioSource, HttpSource};
 use crate::config::Config;
 use crate::hub::Hub;
 use crate::limits::truncate_ip;
-use crate::store::Store;
+use crate::store::{Auth, Store};
 
 pub const HEALTH_CACHE: Duration = Duration::from_secs(30);
 
@@ -69,6 +70,7 @@ pub struct AppState {
     pub cfg: Config,
     pub store: Store,
     pub hub: Hub,
+    pub audio: AudioService,
     pub timing: Timing,
     pub conns: AtomicUsize,
     pub next_conn: AtomicU64,
@@ -80,11 +82,18 @@ pub struct AppState {
 }
 
 impl AppState {
+    /// Production: clips come from `SPELL_TTS_BASE`.
     pub fn new(cfg: Config, store: Store) -> Arc<AppState> {
+        let source = Arc::new(HttpSource::new(&cfg.tts_base));
+        AppState::with_audio(cfg, store, source)
+    }
+
+    pub fn with_audio(cfg: Config, store: Store, source: Arc<dyn AudioSource>) -> Arc<AppState> {
         Arc::new(AppState {
             cfg,
             store,
             hub: Hub::new(),
+            audio: AudioService::new(source),
             timing: Timing::default(),
             conns: AtomicUsize::new(0),
             next_conn: AtomicU64::new(1),
@@ -253,7 +262,7 @@ async fn ws(
 
 async fn audio(
     State(app): State<Arc<AppState>>,
-    Path(_ticket): Path<String>,
+    Path(ticket): Path<String>,
     method: Method,
     headers: HeaderMap,
 ) -> Response {
@@ -261,9 +270,27 @@ async fn audio(
     if method == Method::OPTIONS {
         return preflight(origin);
     }
-    // Phase B fills tickets. Until then no ticket exists, and an unknown
-    // ticket is 404, never 403 (A9.2).
-    with_cors(not_found(), origin)
+    // A9.2: no token, a stranger's token, an unknown or expired ticket are
+    // all the same 404 -- never a 403 that would confirm the ticket exists.
+    let token = headers
+        .get(header::AUTHORIZATION)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.strip_prefix("Bearer "));
+    let Some(token) = token else { return with_cors(not_found(), origin) };
+    let Ok(Auth::Ok { player_id }) = app.store.authenticate(token) else { return with_cors(not_found(), origin) };
+    let Some(key) = app.hub.audio_lookup(&ticket, &player_id, Instant::now()) else {
+        return with_cors(not_found(), origin);
+    };
+    match app.audio.get(&key).await {
+        Ok(bytes) => {
+            let mut r = (*bytes).clone().into_response();
+            let h = r.headers_mut();
+            h.insert(header::CONTENT_TYPE, HeaderValue::from_static("audio/mpeg"));
+            h.insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
+            with_cors(r, origin)
+        }
+        Err(_) => with_cors(StatusCode::SERVICE_UNAVAILABLE.into_response(), origin),
+    }
 }
 
 pub fn public_router(app: Arc<AppState>) -> Router {

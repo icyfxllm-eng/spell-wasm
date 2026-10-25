@@ -31,6 +31,8 @@ proptest = "1"
 tokio = { version = "1.54.1", features = ["macros", "rt-multi-thread", "test-util"] }
 tokio-tungstenite = "0.30.0"
 grader-parity = { path = "../grader-parity" }
+md-5 = "0.10"
+unicode-normalization = "0.1"
 
 [features]
 # Registers the trivial "test"/"test4" modes so integration tests can drive the

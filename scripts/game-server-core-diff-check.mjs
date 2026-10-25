@@ -30,6 +30,8 @@ const CORE_PATHS = ['src', 'build.rs', 'Cargo.toml'];
 const isComment = (l) => /^\s*(\/\/.*)?$/.test(l);
 const isCfg = (l) => /^\s*#\[cfg(_attr)?\(.*\)\]\s*(\/\/.*)?$/.test(l);
 const isReexport = (l) => /^\s*pub (mod native_api;|use [^;]+;)\s*(\/\/.*)?$/.test(l);
+// `pub fn x` / `pub(crate) fn x` / `fn x` all reduce to `fn x`.
+const unVis = (l) => l.trim().replace(/^pub(\((crate|super)\))? /, '');
 const isCargoAllowed = (l) =>
   /^\s*(#.*)?$/.test(l) || /^members = \[.*\]$/.test(l.trim()) || /^native = \[\]$/.test(l.trim());
 
@@ -38,21 +40,22 @@ export function offending(file, removed, added) {
   const bad = [];
   const cargo = file === 'Cargo.toml';
   const addedSet = new Set(added.map((l) => l.trim()));
+  const addedUnVis = new Set(added.map(unVis));
   const addedCfgAttr = added.filter((l) => /#\[cfg_attr\(/.test(l)).join('\n');
   for (const l of removed) {
     const t = l.trim();
     if (cargo ? isCargoAllowed(l) : isComment(l) || isCfg(l)) continue;
-    if (addedSet.has(`pub ${t}`) || addedSet.has(`pub(crate) ${t}`)) continue; // visibility widened
+    if (addedUnVis.has(unVis(l)) && !addedSet.has(t)) continue; // only the visibility changed
     const attr = t.match(/^#\[(.*)\]$/);
     if (attr && addedCfgAttr.includes(attr[1])) continue; // attribute moved under cfg_attr
     bad.push(`- ${l}`);
   }
+  const removedUnVis = new Set(removed.map(unVis));
   const removedSet = new Set(removed.map((l) => l.trim()));
   for (const l of added) {
     const t = l.trim();
     if (cargo ? isCargoAllowed(l) : isComment(l) || isCfg(l) || isReexport(l)) continue;
-    const vis = t.match(/^pub(\(crate\))? (.*)$/);
-    if (vis && removedSet.has(vis[2])) continue;
+    if (removedUnVis.has(unVis(l)) && !removedSet.has(t)) continue; // only the visibility changed
     bad.push(`+ ${l}`);
   }
   return bad;
@@ -109,6 +112,8 @@ function selftest() {
     ['src/lib.rs', [], ['#[cfg(feature = "native")]', 'pub mod native_api; // re-exports'], 0],
     ['src/words.rs', ['fn tier_for(lang: &str) -> u8 {'], ['pub fn tier_for(lang: &str) -> u8 {'], 0],
     ['src/words.rs', ['fn tier_for(lang: &str) -> u8 {'], ['pub fn tier_for(lang: &str) -> u16 {'], 2],
+    ['src/game.rs', ['pub(crate) fn voice(a: &str) {'], ['pub fn voice(a: &str) {'], 0],
+    ['src/game.rs', ['pub(crate) fn voice(a: &str) {'], ['pub fn voice(a: &str, b: u8) {'], 2],
     ['src/game.rs', ['    if a > b {'], ['    if a >= b {'], 2],
     ['src/game.rs', [], ['    let x = 1;'], 1],
     ['Cargo.toml', ['members = ["."]'], ['members = [".", "server/spell-server"]', 'native = []', '# why'], 0],

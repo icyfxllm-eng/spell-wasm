@@ -212,7 +212,7 @@ fn effective_tier(s: &AppState) -> String {
 /// which refuses Hard and Expert: the old clamp here capped Kid Mode at HARD
 /// while every companion mode capped it at Medium, and the selector offered
 /// Expert on top of that (inventory §2).
-fn clamp_base_tier(kid: bool, tier: String) -> String {
+pub fn clamp_base_tier(kid: bool, tier: String) -> String {
     match crate::experience::of_kid(kid) {
         crate::experience::Experience::Standard => tier,
         exp => crate::experience::serve_tier(exp, "standard", &tier).to_string(),
@@ -265,7 +265,7 @@ fn racing_allowed(kid: bool) -> bool {
     !crate::experience::allowed_tiers(crate::experience::of_kid(kid), "ghost_racing").is_empty()
 }
 
-fn tier_for_streak(streak: u32) -> &'static str {
+pub fn tier_for_streak(streak: u32) -> &'static str {
     if streak < 3 {
         "easy"
     } else if streak < 7 {
@@ -1275,7 +1275,7 @@ pub(crate) fn warm_target(lang: &str, entry: &str) -> Option<(String, Option<Str
 ///
 /// A Mandarin entry with no readable pinyin returns None for the reading, and
 /// the caller must not request audio at all — Invariant 4: no polyphone guess.
-pub(crate) fn voice_target(lang: &str, word: &str, spoken: &str) -> (String, Option<String>) {
+pub fn voice_target(lang: &str, word: &str, spoken: &str) -> (String, Option<String>) {
     let text = if spoken.is_empty() { word.to_string() } else { spoken.to_string() };
     if lang != crate::consts::ZH {
         return (text, None);

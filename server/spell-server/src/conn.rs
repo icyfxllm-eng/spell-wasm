@@ -78,9 +78,14 @@ pub async fn run(mut ws: WebSocket, app: Arc<AppState>, ip: IpAddr) {
         }
     };
     drop(hello.token);
+    // ---- UI language: one the app ships (kid names are localized by it)
+    if !names::ui_supported(&hello.ui_lang) {
+        send(&mut ws, &ServerMsg::error("bad_ui_lang")).await;
+        return close_with(&mut ws, close::NAME, "unsupported ui_lang").await;
+    }
     // ---- name (G-D4; A10.3: a kid's display_name is ignored)
     let name = match hello.profile_kind {
-        ProfileKind::Kid => names::kid(),
+        ProfileKind::Kid => names::kid(&hello.ui_lang),
         ProfileKind::Adult => match names::adult(hello.display_name.as_deref().unwrap_or("")) {
             Ok(n) => n,
             Err(_) => {
@@ -99,8 +104,10 @@ pub async fn run(mut ws: WebSocket, app: Arc<AppState>, ip: IpAddr) {
     // ---- main loop
     let mut bucket = Bucket::new(Instant::now());
     let mut bad: Window<()> = Window::new(BAD_FRAMES_WINDOW);
-    let mut ping = interval_at(Instant::now() + PING_EVERY, PING_EVERY);
-    let mut last_pong = Instant::now();
+    // The first ping goes out at once so a seat has an RTT before its first word.
+    let born = Instant::now();
+    let mut ping = interval_at(born, PING_EVERY);
+    let mut last_pong = born;
     let reason: &str = loop {
         tokio::select! {
             incoming = ws.next() => {
@@ -138,7 +145,17 @@ pub async fn run(mut ws: WebSocket, app: Arc<AppState>, ip: IpAddr) {
                         close_with(&mut ws, close::UNSUPPORTED_DATA, "text only").await;
                         break "binary";
                     }
-                    Some(Ok(Message::Pong(_))) => last_pong = now,
+                    Some(Ok(Message::Pong(p))) => {
+                        last_pong = now;
+                        // G-D17: the payload is our send time, ms since `born`.
+                        if let Ok(b) = <[u8; 8]>::try_from(p.as_ref()) {
+                            let sent = u64::from_be_bytes(b);
+                            let elapsed = now.duration_since(born).as_millis() as u64;
+                            if let Some(rtt) = elapsed.checked_sub(sent) {
+                                app.hub.note_rtt(&player, rtt.min(60_000) as u32);
+                            }
+                        }
+                    }
                     Some(Ok(Message::Ping(_))) => last_pong = now,
                     Some(Ok(Message::Close(_))) | None | Some(Err(_)) => break "closed",
                 }
@@ -162,7 +179,8 @@ pub async fn run(mut ws: WebSocket, app: Arc<AppState>, ip: IpAddr) {
                     close_with(&mut ws, close::IDLE, "no pong").await;
                     break "no_pong";
                 }
-                if ws.send(Message::Ping(Vec::new().into())).await.is_err() {
+                let stamp = Instant::now().duration_since(born).as_millis() as u64;
+                if ws.send(Message::Ping(stamp.to_be_bytes().to_vec().into())).await.is_err() {
                     break "send_failed";
                 }
             }

@@ -2,12 +2,16 @@
 //!
 //! Phase A: protocol (F1), sessions (F2), rooms and knock-to-join (F3), abuse
 //! limits (F4), reconnect and resume (F5), the shared grader (F6), and the
-//! health/admin/log surface (F11). Online Head-to-Head itself is Phase B.
+//! health/admin/log surface (F11).
+//! Phase B: Online Head-to-Head (F7), word selection (F8), audio tickets (F9)
+//! and the server half of the kid-safety layer (F10).
 
 pub mod app;
+pub mod audio;
 pub mod config;
 pub mod conn;
 pub mod grader;
+pub mod h2h;
 pub mod hub;
 pub mod limits;
 pub mod mode;
@@ -28,6 +32,9 @@ pub async fn serve(
     let admin = tokio::net::TcpListener::bind(app.cfg.bind_admin).await?;
     let addrs = (public.local_addr()?, admin.local_addr()?);
     app::spawn_background(app.clone());
+    let (audio_tx, audio_rx) = tokio::sync::mpsc::unbounded_channel();
+    app.hub.set_audio_worker(audio_tx);
+    audio::spawn_worker(app.clone(), audio_rx);
     let pub_svc = app::public_router(app.clone()).into_make_service_with_connect_info::<SocketAddr>();
     let adm_svc = app::admin_router(app.clone()).into_make_service_with_connect_info::<SocketAddr>();
     let a1 = app.clone();

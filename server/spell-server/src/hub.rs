@@ -21,7 +21,7 @@ use tokio::time::Instant;
 use uuid::Uuid;
 
 use crate::limits::Limits;
-use crate::mode::{self, Audience, Ctx, Event, MakeError, ModeRules};
+use crate::mode::{self, AudioKey, Audience, Ctx, Event, MakeError, ModeRules};
 use crate::protocol::{
     encode_server, ClientMsg, CreateRoom, Inbound, ProfileKind, RoomState, SeatView, ServerMsg, TierMode,
 };
@@ -35,6 +35,40 @@ pub const SEAT_HOLD: Duration = Duration::from_secs(60);
 pub const EMPTY_TTL: Duration = Duration::from_secs(600);
 pub const ROOM_LIFETIME: Duration = Duration::from_secs(3 * 3600);
 pub const EMOTES: u8 = 8;
+
+/// The room facts a mode may read, owned so `Ctx` can borrow them.
+struct CtxData {
+    seats: Vec<u8>,
+    kid_safe: bool,
+    grace: [Duration; 4],
+    connected: [bool; 4],
+}
+
+impl CtxData {
+    fn ctx(&self, now: Instant) -> Ctx<'_> {
+        Ctx { now, seats: &self.seats, kid_safe: self.kid_safe, grace: self.grace, connected: self.connected }
+    }
+}
+
+/// G-D17: RTT compensation is half the median of the last five samples,
+/// capped at 300 ms.
+pub const GRACE_CAP: Duration = Duration::from_millis(300);
+pub const TICKET_AFTER_RESOLVE: Duration = Duration::from_secs(60);
+
+/// An audio fetch the worker should run, then report with `audio_done`.
+#[derive(Debug, Clone)]
+pub struct AudioJob {
+    pub code: String,
+    pub ticket: String,
+    pub key: AudioKey,
+}
+
+struct Ticket {
+    room: String,
+    key: AudioKey,
+    /// Set when the word resolves: valid until then + 60 s (F9).
+    expires: Option<Instant>,
+}
 
 /// What a connection task receives.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -89,6 +123,19 @@ struct Member {
     connected: bool,
     dropped_at: Option<Instant>,
     outbox: Outbox,
+    rtts: VecDeque<u32>,
+}
+
+impl Member {
+    fn grace(&self) -> Duration {
+        if self.rtts.is_empty() {
+            return Duration::ZERO;
+        }
+        let mut v: Vec<u32> = self.rtts.iter().copied().collect();
+        v.sort_unstable();
+        let median = if v.len() % 2 == 1 { v[v.len() / 2] as f64 } else { (v[v.len() / 2 - 1] + v[v.len() / 2]) as f64 / 2.0 };
+        Duration::from_micros((median * 500.0) as u64).min(GRACE_CAP)
+    }
 }
 
 struct Pending {
@@ -162,6 +209,10 @@ struct State {
     draining: Option<u64>,
     next_id: u64,
     order: u64,
+    tickets: HashMap<String, Ticket>,
+    audio_tx: Option<UnboundedSender<AudioJob>>,
+    /// Fetches with no worker attached (room-layer tests): reported ready.
+    immediate: Vec<(String, String)>,
 }
 
 /// Counters for `/admin/stats`.
@@ -249,31 +300,68 @@ impl State {
     /// Delivers mode events; `Over` returns the room to its lobby.
     fn deliver(&mut self, code: &str, events: Vec<Event>) {
         let mut over = false;
-        let State { live, rooms, .. } = self;
-        let Some(room) = rooms.get_mut(code) else { return };
         for ev in events {
             match ev {
-                Event::Send { to: Audience::All, msg } => {
-                    for m in room.seats.values_mut() {
-                        Self::to_member(live, m, &msg);
+                Event::Send { to, msg } => {
+                    let State { live, rooms, .. } = &mut *self;
+                    let Some(room) = rooms.get_mut(code) else { return };
+                    for (seat, m) in room.seats.iter_mut() {
+                        if to == Audience::All || to == Audience::Seat(*seat) {
+                            Self::to_member(live, m, &msg);
+                        }
                     }
                 }
-                Event::Send { to: Audience::Seat(s), msg } => {
-                    if let Some(m) = room.seats.get_mut(&s) {
-                        Self::to_member(live, m, &msg);
+                Event::FetchAudio { ticket, key } => {
+                    self.tickets.insert(ticket.clone(), Ticket { room: code.to_string(), key: key.clone(), expires: None });
+                    match &self.audio_tx {
+                        Some(tx) => {
+                            let _ = tx.send(AudioJob { code: code.to_string(), ticket, key });
+                        }
+                        None => self.immediate.push((code.to_string(), ticket)),
+                    }
+                }
+                Event::ExpireAudio { tickets } => {
+                    let until = Instant::now() + TICKET_AFTER_RESOLVE;
+                    for t in tickets {
+                        if let Some(x) = self.tickets.get_mut(&t) {
+                            x.expires = Some(until);
+                        }
                     }
                 }
                 Event::Over => over = true,
             }
         }
         if over {
-            room.cids.clear();
+            if let Some(room) = self.rooms.get_mut(code) {
+                room.cids.clear();
+            }
             self.send_room_state(code);
+        }
+        // Room-layer tests run without an audio worker: report those fetches ready.
+        while let Some((c, t)) = self.immediate.pop() {
+            self.audio_result(&c, &t, true, Instant::now());
         }
     }
 
-    fn ctx_parts(room: &Room) -> (Vec<u8>, bool) {
-        (room.occupied(), room.kid_safe)
+    fn audio_result(&mut self, code: &str, ticket: &str, ok: bool, now: Instant) {
+        let Some(room) = self.rooms.get_mut(code) else { return };
+        let cd = Self::ctx_parts(room);
+        let ev = room.mode.on_audio(ticket, ok, &cd.ctx(now));
+        self.deliver(code, ev);
+    }
+
+    fn ctx_parts(room: &Room) -> CtxData {
+        let mut grace = [Duration::ZERO; 4];
+        let mut connected = [false; 4];
+        for (seat, m) in &room.seats {
+            if let Some(g) = grace.get_mut(*seat as usize) {
+                *g = m.grace();
+            }
+            if let Some(c) = connected.get_mut(*seat as usize) {
+                *c = m.connected;
+            }
+        }
+        CtxData { seats: room.occupied(), kid_safe: room.kid_safe, grace, connected }
     }
 
     /// Ends a running match with a reason (no penalty anywhere, G-D5).
@@ -292,6 +380,7 @@ impl State {
 
     fn close_room(&mut self, code: &str, reason: &str) {
         let Some(mut room) = self.rooms.remove(code) else { return };
+        self.tickets.retain(|_, t| t.room != code);
         room.mode.abort();
         let msg = ServerMsg::MatchEnded { reason: reason.into() };
         for m in room.seats.values_mut() {
@@ -311,8 +400,8 @@ impl State {
         let Some(seat) = room.seat_of(player) else { return };
         room.seats.remove(&seat);
         self.room_of.remove(player);
-        let (seats, kid_safe) = Self::ctx_parts(room);
-        let ev = room.mode.on_disconnect(seat, true, &Ctx { now, seats: &seats, kid_safe });
+        let cd = Self::ctx_parts(room);
+        let ev = room.mode.on_disconnect(seat, true, &cd.ctx(now));
         if room.seats.is_empty() {
             room.empty_since = Some(now);
         }
@@ -420,9 +509,12 @@ impl Hub {
                 let _ = tx.send(Out::Frame(frame));
             }
         }
-        drop(s);
+        let room = s.rooms.get_mut(&code).unwrap();
+        let cd = State::ctx_parts(room);
+        let ev = room.mode.on_reconnect(seat, &cd.ctx(Instant::now()));
+        s.deliver(&code, ev);
         // Others see the seat reconnect.
-        self.state.lock().unwrap().send_room_state(&code);
+        s.send_room_state(&code);
     }
 
     /// The connection ended. The seat (if any) is held for `SEAT_HOLD`.
@@ -443,8 +535,8 @@ impl Hub {
         let m = room.seats.get_mut(&seat).unwrap();
         m.connected = false;
         m.dropped_at = Some(now);
-        let (seats, kid_safe) = State::ctx_parts(room);
-        let ev = room.mode.on_disconnect(seat, false, &Ctx { now, seats: &seats, kid_safe });
+        let cd = State::ctx_parts(room);
+        let ev = room.mode.on_disconnect(seat, false, &cd.ctx(now));
         s.deliver(&code, ev);
         s.send_room_state(&code);
     }
@@ -491,8 +583,8 @@ impl Hub {
                     return s.direct(p, &ServerMsg::error("no_match"));
                 }
                 let seat = room.seat_of(p).unwrap();
-                let (seats, kid_safe) = State::ctx_parts(room);
-                let ctx = Ctx { now, seats: &seats, kid_safe };
+                let cd = State::ctx_parts(room);
+                let ctx = cd.ctx(now);
                 let ev = match msg {
                     ClientMsg::NextWord {} => room.mode.on_next(seat, &ctx),
                     ClientMsg::ReplayAudio { variant } => room.mode.on_replay(seat, variant, &ctx),
@@ -555,6 +647,7 @@ impl Hub {
                 connected: true,
                 dropped_at: None,
                 outbox: Outbox::new(),
+                rtts: VecDeque::new(),
             },
         );
         s.rooms.insert(
@@ -637,6 +730,7 @@ impl Hub {
             connected,
             dropped_at: if connected { None } else { Some(_now) },
             outbox: Outbox::new(),
+            rtts: VecDeque::new(),
         };
         State::to_member(live, &mut m, &ServerMsg::Joined { code: code.into(), seat });
         room.seats.insert(seat, m);
@@ -696,8 +790,8 @@ impl Hub {
             return s.direct(p, &ServerMsg::error("seat_disconnected"));
         }
         room.cids.clear();
-        let (seats, kid_safe) = State::ctx_parts(room);
-        let ev = room.mode.on_start(&Ctx { now, seats: &seats, kid_safe });
+        let cd = State::ctx_parts(room);
+        let ev = room.mode.on_start(&cd.ctx(now));
         tracing::info!(event = "match_started", player_id = p);
         s.send_room_state(&code);
         s.deliver(&code, ev);
@@ -746,11 +840,12 @@ impl Hub {
             }
             // Mode deadlines.
             if room.mode.running() && room.mode.next_deadline().is_some_and(|d| d <= now) {
-                let (seats, kid_safe) = State::ctx_parts(room);
-                let ev = room.mode.on_timer(&Ctx { now, seats: &seats, kid_safe });
+                let cd = State::ctx_parts(room);
+                let ev = room.mode.on_timer(&cd.ctx(now));
                 s.deliver(&code, ev);
             }
         }
+        s.tickets.retain(|_, t| t.expires.is_none_or(|e| now < e));
         s.limits.gc(now);
     }
 
@@ -789,6 +884,40 @@ impl Hub {
     /// Admin revocation: drop that player's live connection now (A2.3).
     pub fn kick(&self, player: &str, code: u16, why: &'static str) {
         self.state.lock().unwrap().close_conn(player, code, why);
+    }
+
+    /// Wires the audio worker (F9). Without one, fetches report ready at once.
+    pub fn set_audio_worker(&self, tx: UnboundedSender<AudioJob>) {
+        self.state.lock().unwrap().audio_tx = Some(tx);
+    }
+
+    /// The audio worker finished a job.
+    pub fn audio_done(&self, code: &str, ticket: &str, ok: bool, now: Instant) {
+        self.state.lock().unwrap().audio_result(code, ticket, ok, now);
+    }
+
+    /// F9 / A9.2: the audio a ticket names, only for a member of its room and
+    /// only while the ticket lives. Anything else is `None` (served as 404).
+    pub fn audio_lookup(&self, ticket: &str, player: &str, now: Instant) -> Option<AudioKey> {
+        let s = self.state.lock().unwrap();
+        let t = s.tickets.get(ticket)?;
+        if t.expires.is_some_and(|e| now >= e) {
+            return None;
+        }
+        (s.room_of.get(player) == Some(&t.room)).then(|| t.key.clone())
+    }
+
+    /// A ping round trip for this player's seat (G-D17).
+    pub fn note_rtt(&self, player: &str, rtt_ms: u32) {
+        let mut s = self.state.lock().unwrap();
+        let Some(code) = s.room_of.get(player).cloned() else { return };
+        let Some(room) = s.rooms.get_mut(&code) else { return };
+        let Some(seat) = room.seat_of(player) else { return };
+        let m = room.seats.get_mut(&seat).unwrap();
+        if m.rtts.len() == 5 {
+            m.rtts.pop_front();
+        }
+        m.rtts.push_back(rtt_ms);
     }
 
     /// A2.4: session mints share the hub's limiter.

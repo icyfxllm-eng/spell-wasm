@@ -4,10 +4,23 @@
 //! knows a rule of any game: it forwards `next_word`/`submit`/`replay_audio`
 //! and timer ticks here and delivers whatever events come back.
 
+use std::time::Duration;
+
 use serde_json::Value;
 use tokio::time::Instant;
 
 use crate::protocol::{CreateRoom, ServerMsg, Variant};
+
+/// What the server asks the TTS backend for (F9). Never sent to a client.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub struct AudioKey {
+    pub lang: String,
+    /// The text the backend voices (the hanzi for Mandarin).
+    pub text: String,
+    /// Mandarin's forced reading (`py`), as the app sends it.
+    pub py: Option<String>,
+    pub variant: Variant,
+}
 
 /// Who an event goes to.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -19,6 +32,11 @@ pub enum Audience {
 #[derive(Clone, Debug, PartialEq)]
 pub enum Event {
     Send { to: Audience, msg: ServerMsg },
+    /// Register an opaque ticket for this audio and fetch it now; the result
+    /// comes back through `ModeRules::on_audio`.
+    FetchAudio { ticket: String, key: AudioKey },
+    /// These tickets' word has resolved: they stay valid 60 s more (F9).
+    ExpireAudio { tickets: Vec<String> },
     /// The match is over (normally or not); the room returns to its lobby.
     Over,
 }
@@ -38,6 +56,16 @@ pub struct Ctx<'a> {
     /// Occupied seats, ascending.
     pub seats: &'a [u8],
     pub kid_safe: bool,
+    /// G-D17: per-seat deadline grace, `min(median_rtt_last5 / 2, 300 ms)`.
+    pub grace: [Duration; 4],
+    /// Which seats are connected right now.
+    pub connected: [bool; 4],
+}
+
+impl Ctx<'_> {
+    pub fn grace_for(&self, seat: u8) -> Duration {
+        self.grace.get(seat as usize).copied().unwrap_or_default()
+    }
 }
 
 pub trait ModeRules: Send {
@@ -55,6 +83,15 @@ pub trait ModeRules: Send {
     fn on_timer(&mut self, ctx: &Ctx) -> Vec<Event>;
     /// A seat dropped (`released == false`, seat still held) or was released.
     fn on_disconnect(&mut self, seat: u8, released: bool, ctx: &Ctx) -> Vec<Event>;
+    /// A held seat came back.
+    fn on_reconnect(&mut self, _seat: u8, _ctx: &Ctx) -> Vec<Event> {
+        Vec::new()
+    }
+    /// A `FetchAudio` finished: the clip is cached (`ok`) or the TTS retries
+    /// are spent.
+    fn on_audio(&mut self, _ticket: &str, _ok: bool, _ctx: &Ctx) -> Vec<Event> {
+        Vec::new()
+    }
     fn next_deadline(&self) -> Option<Instant>;
     /// The mode's part of a `room_state` snapshot (F5 resume).
     fn snapshot(&self) -> Value;
@@ -64,15 +101,17 @@ pub trait ModeRules: Send {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum MakeError {
-    /// The mode exists in the spec but not in this build yet (Phase B adds h2h).
+    /// The mode exists in the spec but not in this build yet.
     Unavailable,
     Unknown,
 }
 
-/// The mode registry. Online Head-to-Head arrives in Phase B.
+/// The mode registry.
 pub fn make(req: &CreateRoom) -> Result<Box<dyn ModeRules>, MakeError> {
     match req.mode.as_str() {
-        "h2h" => Err(MakeError::Unavailable),
+        "h2h" => Ok(Box::new(crate::h2h::H2h::new(req))),
+        #[cfg(any(test, feature = "test-modes"))]
+        "h2h_fast" => Ok(Box::new(crate::h2h::H2h::fast(req))),
         #[cfg(any(test, feature = "test-modes"))]
         "test" => Ok(Box::new(test_mode::TestMode::new(2))),
         #[cfg(any(test, feature = "test-modes"))]

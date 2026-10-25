@@ -18,3 +18,10 @@ pub use crate::norm::{answer_matches_in, fold_strict};
 pub use crate::pinyin::{grade_sandhi_aware, tier_accepts_surface, ToneMode};
 pub use crate::variants::accepts as variant_accepts;
 pub use crate::zh_sandhi::lookup as sandhi_lookup;
+
+// Phase B: Online Head-to-Head wraps the local rules verbatim (F7) and serves
+// words through the same banks, gates and voice targets (F8, F9).
+pub use crate::consts::{tier_time, CORRECT_DELAY_MS};
+pub use crate::game::{clamp_base_tier, tier_for_streak, voice_target};
+pub use crate::kid_filter::kid_allowed;
+pub use crate::versus::{Side, Versus};
