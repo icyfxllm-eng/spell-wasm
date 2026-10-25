@@ -34,14 +34,22 @@ if (existsSync(LOCALES)) {
     // under another key (a shared phrase such as "not available in this
     // language yet") cannot prove a leak, so only values unique to the mode
     // are scanned. The KEYS are scanned regardless, below.
-    const shared = new Set(Object.entries(t).filter(([k]) => !k.startsWith("bg.")).map(([, v]) => String(v).trim()));
+    //
+    // "Ships" is literal: only keys build.rs keeps in the site build count, so
+    // a phrase shared with another app-only mode is still scanned. And a value
+    // that sits INSIDE a site string (bg.trap.impossible "Impossible word" in
+    // level.impossible_mix.desc "Impossible words from every language...")
+    // would match a clean build every time, so it cannot prove a leak either.
+    const APP_ONLY = ["bg.", "rs.", "qbd.", "spz.", "wordpic.", "finale.", "tools.wordpic."];
+    const shared = Object.entries(t).filter(([k]) => !APP_ONLY.some((p) => k.startsWith(p))).map(([, v]) => String(v).trim());
     for (const [k, v] of Object.entries(t)) {
       if (!k.startsWith("bg.")) continue;
       const s = String(v).trim();
-      if (shared.has(s)) continue;
       // Short values collide with ordinary copy; the long ones are what leaks.
       if (s.length < 14) continue;
-      add(`${f} ${k}`, new RegExp(s.slice(0, 40).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"));
+      const probe = s.slice(0, 40);
+      if (shared.some((x) => x.includes(probe))) continue;
+      add(`${f} ${k}`, new RegExp(probe.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"));
     }
   }
 }

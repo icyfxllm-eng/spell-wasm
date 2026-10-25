@@ -59,7 +59,7 @@ export function validate(tokens) {
 // (scripts/build-web.sh). Their tokens are named after them, so each mode's
 // tokens go in their own :root block inside that mode's sentinels -- a token
 // called --mode-boardgame-* on the site is a Board Game string on the site.
-export const WALLED = { boardgame: 'BOARDGAME', randospell: 'RANDOSPELL', spelluzzle: 'SPELLUZZLE', quickbee: 'QUICKBEEDRAW' };
+export const WALLED = { boardgame: 'BOARDGAME', randospell: 'RANDOSPELL', spelluzzle: 'SPELLUZZLE', quickbee: 'QUICKBEEDRAW', wordpic: 'SPELL-PICTURE' };
 export const wallOf = (path) => {
   const m = path.match(/^(?:motion\.)?mode\.([a-z]+)\./);
   return m && WALLED[m[1]] ? WALLED[m[1]] : null;

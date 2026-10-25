@@ -42,7 +42,11 @@ pub enum Moment {
     Speaking,
     Typing,
     Result,
+    /// App only (CC-BOARD-GAME I13): the site build carries no Board Game.
+    #[cfg(not(feature = "web"))]
     BoardgameHop,
+    /// App only (CC-RANDOSPELL O3), likewise.
+    #[cfg(not(feature = "web"))]
     RandospellRoll,
     /// Marked by F7 (Phase D) when celebrations exist; nothing marks it yet.
     #[allow(dead_code)]
@@ -55,7 +59,9 @@ impl Moment {
             Moment::Speaking => "speaking",
             Moment::Typing => "typing",
             Moment::Result => "result",
+            #[cfg(not(feature = "web"))]
             Moment::BoardgameHop => "boardgame hop",
+            #[cfg(not(feature = "web"))]
             Moment::RandospellRoll => "randospell roll",
             Moment::Celebration => "celebration",
         }
@@ -65,7 +71,9 @@ impl Moment {
             Moment::Speaking => 2000.0,
             Moment::Typing => 500.0,
             Moment::Result => 1500.0,
+            #[cfg(not(feature = "web"))]
             Moment::BoardgameHop => 1200.0,
+            #[cfg(not(feature = "web"))]
             Moment::RandospellRoll => 2000.0,
             Moment::Celebration => 2500.0,
         }
