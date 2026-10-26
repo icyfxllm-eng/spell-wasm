@@ -1,6 +1,7 @@
 # CC-LEARNING-ENGINE-L0 — Change Request CR-1: attempt instant, outcome class, mode tag, seen set
 
-**Status:** DRAFT for Eric. Nothing is built.
+**Status:** DECISIONS SIGNED. L-D1 to L-D6 were signed as recommended (Eric, 2026-10-26: "1-6 Recommended"). Nothing is built yet.
+**Amends CC-GUARDIAN-REPORT v1:** "close" comes out of G-D16 (L-D2). A14 now reads "top-up never includes a word seen since CR-1 or still in any learner store" (L-D4). The GUARDIAN-REPORT file itself is not in the repo yet.
 **Raised by:** CC-GUARDIAN-REPORT v1 §0 C2 (HALT), 2026-10-26. That file says field gaps go to L0, never to it.
 **Amends:** L0 R1 (`LearnerQuery`, additive only) and the stored `Attempt` record in `src/learner.rs`.
 **Carries forward unchanged:** CC-LEARNING-ENGINE D5 (zero telemetry), D7, and L0 I1–I8.
@@ -143,9 +144,9 @@ So there is no ship-order hazard. The cost is that a downgrade followed by an up
 
 ---
 
-## Decisions for Eric
+## Decisions (signed as recommended, Eric 2026-10-26)
 
-| # | Decision | Recommendation |
+| # | Decision | Signed |
 |---|---|---|
 | **L-D1** | Store `ts` at all? It adds a per-attempt timeline for a child, on device only (I1). | **Yes, whole seconds.** GUARDIAN F1 can't exist without it. |
 | **L-D2** | GUARDIAN G-D16 excludes "close" outcomes, and no close class exists. | **Drop "close" from G-D16.** It's satisfied vacuously. Kid-lenient matches stay `Correct`. Alternative: add a `Lenient` class, which means plumbing a second result out of `answer_matches_in`. |
