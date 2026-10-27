@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Braucht zwei Sprachen mit Unmöglich",
   "impossible.lock.pool_below_floor": "Noch nicht genug Wörter",
   "impossible.lock.no_exclusion_gate": "In dieser Sprache noch nicht bereit",
-  "impossible.lock.no_drawn_entry": "Kommt mit Handschrifteingabe"
+  "impossible.lock.no_drawn_entry": "Kommt mit Handschrifteingabe",
+  "rshare.name": "Fortschrittsbericht",
+  "rshare.desc": "Eine Woche Wörter zum Teilen",
+  "rshare.title": "Fortschritt beim Buchstabieren",
+  "rshare.partial": "Diese Woche bisher",
+  "rshare.lastWeek": "Letzte Woche",
+  "rshare.mastered": "Gemeistert ({n})",
+  "rshare.workingOn": "Wird geübt ({n})",
+  "rshare.new": "Neu diese Woche ({n})",
+  "rshare.empty": "Diese Woche noch nicht geübt.",
+  "rshare.share": "Teilen",
+  "rshare.week": "{start} – {end}"
 }

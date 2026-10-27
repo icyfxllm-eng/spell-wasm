@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Wymaga dwóch języków na poziomie Niemożliwy",
   "impossible.lock.pool_below_floor": "Za mało słów",
   "impossible.lock.no_exclusion_gate": "Jeszcze niegotowe w tym języku",
-  "impossible.lock.no_drawn_entry": "Wkrótce z wpisywaniem odręcznym"
+  "impossible.lock.no_drawn_entry": "Wkrótce z wpisywaniem odręcznym",
+  "rshare.name": "Raport postępów",
+  "rshare.desc": "Tydzień słów do udostępnienia",
+  "rshare.title": "Postępy w pisowni",
+  "rshare.partial": "Ten tydzień do tej pory",
+  "rshare.lastWeek": "Zeszły tydzień",
+  "rshare.mastered": "Opanowane ({n})",
+  "rshare.workingOn": "W trakcie nauki ({n})",
+  "rshare.new": "Nowe w tym tygodniu ({n})",
+  "rshare.empty": "W tym tygodniu jeszcze bez ćwiczeń.",
+  "rshare.share": "Udostępnij",
+  "rshare.week": "{start} – {end}"
 }

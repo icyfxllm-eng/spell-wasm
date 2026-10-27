@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Needs two Impossible languages",
   "impossible.lock.pool_below_floor": "Not enough words yet",
   "impossible.lock.no_exclusion_gate": "Not ready in this language yet",
-  "impossible.lock.no_drawn_entry": "Coming with drawn entry"
+  "impossible.lock.no_drawn_entry": "Coming with drawn entry",
+  "rshare.name": "Progress report",
+  "rshare.desc": "A week of words to share",
+  "rshare.title": "Spelling progress",
+  "rshare.partial": "This week so far",
+  "rshare.lastWeek": "Last week",
+  "rshare.mastered": "Mastered ({n})",
+  "rshare.workingOn": "Working on ({n})",
+  "rshare.new": "New this week ({n})",
+  "rshare.empty": "No practice this week yet.",
+  "rshare.share": "Share",
+  "rshare.week": "{start} – {end}"
 }

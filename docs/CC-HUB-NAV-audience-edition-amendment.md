@@ -107,7 +107,8 @@ GUARDIAN-REPORT F4 needs a drawer row that is **absent**, not locked, in three c
 
 **F3:**
 - `modes::GATED_ROUTES` (empty), `RouteVerdict` and the pure `gated_route` are new.
-- The hash router consults them before its ordinary routes. A Refuse is consumed silently; an Open goes through `parent_gate_then` to the row's `launch_for` target.
+- The hash router consults them before its ordinary routes. A Refuse is consumed silently; an Open clicks the row's `launch_for` target.
+- **Changed with REPORTS-SHARE (2026-10-27):** the first gated row's launcher owns the parent gate, so the drawer and the link pass the same gate once, rather than twice on a deep link. `ae1_tests::every_gated_routes_launcher_opens_the_parent_gate_first` holds every gated launcher to opening the gate before it renders or shares anything.
 - The query string is ignored when matching, so `#guardian-report?week=…` matches its route.
 - **Not done:** the iOS `AppDelegate` change to forward the query. Nothing needs it until GUARDIAN-REPORT F7, and the native side wants checking with whichever session owns it.
 

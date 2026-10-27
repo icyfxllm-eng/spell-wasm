@@ -165,6 +165,8 @@ mod credits; // CC-HUMAN-AUDIO F7 — generated attribution screen
 mod human_audio; // CC-HUMAN-AUDIO F5/F6 — bundled verified recordings
 mod packs;
 mod reports;
+mod reports_share; // CC-REPORTS-SHARE v1: the pure parent-report composer
+mod reports_share_ui;
 mod reports_ui;
 mod guardian_dash;
 mod family_voices;
@@ -360,7 +362,8 @@ pub fn start() -> Result<(), JsValue> {
         let route = move || {
             let hash = dom::window().location().hash().unwrap_or_default();
             // CC-HUB-NAV AE-1 F3: a gated route opens only if the drawer would
-            // show its row right now, and then only behind the adult gate.
+            // show its row right now. Its launcher owns the adult gate, so the
+            // drawer and the link pass the SAME gate, once (ae1_tests holds it).
             let catalog = || modes::catalog(&modes::all(), &play_hub::ctx(&a)).into_iter().map(|m| m.id).collect();
             match modes::gated_route(&hash, modes::GATED_ROUTES, catalog) {
                 modes::RouteVerdict::NotGated => {}
@@ -371,7 +374,7 @@ pub fn start() -> Result<(), JsValue> {
                 modes::RouteVerdict::Open(id) => {
                     let _ = dom::window().location().set_hash("");
                     if let Some(el) = play_hub::launch_for(id) {
-                        parent_gate_then(Box::new(move || dom::click(el)));
+                        dom::click(el);
                     }
                     return;
                 }
@@ -438,6 +441,7 @@ fn wire(app: &App) {
     wire_orb_and_answer(app);
     game::wire_placement(app);
     reports_ui::wire(&app);
+    reports_share_ui::wire(&app);
     guardian_dash::wire(&app);
     family_voices::wire(&app);
     yearbook_ui::wire(&app);

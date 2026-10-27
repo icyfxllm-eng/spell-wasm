@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Requer dois idiomas em Impossível",
   "impossible.lock.pool_below_floor": "Ainda não há palavras suficientes",
   "impossible.lock.no_exclusion_gate": "Ainda não está pronto neste idioma",
-  "impossible.lock.no_drawn_entry": "Em breve, com escrita à mão"
+  "impossible.lock.no_drawn_entry": "Em breve, com escrita à mão",
+  "rshare.name": "Relatório de progresso",
+  "rshare.desc": "Uma semana de palavras para compartilhar",
+  "rshare.title": "Progresso na ortografia",
+  "rshare.partial": "Esta semana até agora",
+  "rshare.lastWeek": "Semana passada",
+  "rshare.mastered": "Dominadas ({n})",
+  "rshare.workingOn": "Praticando ({n})",
+  "rshare.new": "Novas esta semana ({n})",
+  "rshare.empty": "Ainda sem prática esta semana.",
+  "rshare.share": "Compartilhar",
+  "rshare.week": "{start} – {end}"
 }

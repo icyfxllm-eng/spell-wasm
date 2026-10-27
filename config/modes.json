@@ -471,6 +471,34 @@
       "$feedbackNote": "a dashboard; no answers"
     },
     {
+      "id": "progress_report",
+      "group": "your_words",
+      "nameKey": "rshare.name",
+      "descKey": "rshare.desc",
+      "icon": "share",
+      "status": "live",
+      "kidSafe": false,
+      "adultOnly": true,
+      "editions": ["consumer"],
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": "progress_reports",
+      "languages": null,
+      "$note": "CC-REPORTS-SHARE v1 F6 (D-R4, D-R10): the parent progress report. Adult-only (absent for Spell Jr and unknown age, CC-HUB-NAV AE-1), rides SpellGame Complete via progress_reports (absent, not locked), consumer edition only, app only. The launcher opens the parent gate before anything renders.",
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden",
+      "input": "tap",
+      "feedback": {
+        "verdict": "none",
+        "revealCorrect": false,
+        "diff": false,
+        "lengthBeforeAnswer": false
+      },
+      "$feedbackNote": "a report; no answers"
+    },
+    {
       "id": "calendar",
       "group": "your_words",
       "nameKey": "cal.name",

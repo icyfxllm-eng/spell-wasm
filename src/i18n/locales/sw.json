@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Inahitaji lugha mbili za Haiwezekani",
   "impossible.lock.pool_below_floor": "Maneno bado hayatoshi",
   "impossible.lock.no_exclusion_gate": "Bado haijawa tayari kwa lugha hii",
-  "impossible.lock.no_drawn_entry": "Inakuja na uandishi kwa mkono"
+  "impossible.lock.no_drawn_entry": "Inakuja na uandishi kwa mkono",
+  "rshare.name": "Ripoti ya maendeleo",
+  "rshare.desc": "Wiki ya maneno ya kushiriki",
+  "rshare.title": "Maendeleo ya tahajia",
+  "rshare.partial": "Wiki hii hadi sasa",
+  "rshare.lastWeek": "Wiki iliyopita",
+  "rshare.mastered": "Yamefahamika ({n})",
+  "rshare.workingOn": "Yanafanyiwa mazoezi ({n})",
+  "rshare.new": "Mapya wiki hii ({n})",
+  "rshare.empty": "Hakuna mazoezi wiki hii hadi sasa.",
+  "rshare.share": "Shiriki",
+  "rshare.week": "{start} – {end}"
 }

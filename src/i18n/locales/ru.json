@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Нужны два языка уровня «Невозможный»",
   "impossible.lock.pool_below_floor": "Пока недостаточно слов",
   "impossible.lock.no_exclusion_gate": "На этом языке пока не готово",
-  "impossible.lock.no_drawn_entry": "Скоро: рукописный ввод"
+  "impossible.lock.no_drawn_entry": "Скоро: рукописный ввод",
+  "rshare.name": "Отчёт об успехах",
+  "rshare.desc": "Неделя слов, чтобы поделиться",
+  "rshare.title": "Успехи в правописании",
+  "rshare.partial": "Эта неделя на сегодня",
+  "rshare.lastWeek": "Прошлая неделя",
+  "rshare.mastered": "Освоено ({n})",
+  "rshare.workingOn": "В работе ({n})",
+  "rshare.new": "Новое на этой неделе ({n})",
+  "rshare.empty": "На этой неделе ещё не было занятий.",
+  "rshare.share": "Поделиться",
+  "rshare.week": "{start} – {end}"
 }

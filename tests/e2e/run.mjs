@@ -86,6 +86,7 @@ import * as settingsEffects from './specs/settings-effects.mjs';
 import * as telemetry from './specs/telemetry.mjs';
 import * as statsSheet from './specs/stats-sheet.mjs';
 import * as learnerSurfaces from './specs/learner-surfaces.mjs';
+import * as progressReport from './specs/progress-report.mjs';
 import * as learnerReset from './specs/learner-reset.mjs';
 import * as reviewQueue from './specs/review-queue.mjs';
 import * as inspector from './specs/inspector.mjs';
@@ -94,7 +95,7 @@ import * as pickQueue from './specs/pick-queue.mjs';
 import * as pickQueueHelp from './specs/pick-queue-help.mjs';
 
 const SPECS = [
-  ['drawer', drawerNav, placement, learnerSurfaces, learnerReset],
+  ['drawer', drawerNav, placement, learnerSurfaces, learnerReset, progressReport],
   ['stats-sheet', statsSheet],
   ['review-queue', reviewQueue],
   ['inspector', inspector],

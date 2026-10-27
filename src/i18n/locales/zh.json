@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "需要两种不可能语言",
   "impossible.lock.pool_below_floor": "单词数量还不够",
   "impossible.lock.no_exclusion_gate": "该语言暂未就绪",
-  "impossible.lock.no_drawn_entry": "手写输入即将推出"
+  "impossible.lock.no_drawn_entry": "手写输入即将推出",
+  "rshare.name": "学习报告",
+  "rshare.desc": "可分享的一周单词",
+  "rshare.title": "拼写进度",
+  "rshare.partial": "本周至今",
+  "rshare.lastWeek": "上周",
+  "rshare.mastered": "已掌握 ({n})",
+  "rshare.workingOn": "练习中 ({n})",
+  "rshare.new": "本周新词 ({n})",
+  "rshare.empty": "本周还没有练习。",
+  "rshare.share": "分享",
+  "rshare.week": "{start} – {end}"
 }

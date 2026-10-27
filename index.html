@@ -1608,6 +1608,8 @@
 .rep-row{display:flex;justify-content:space-between;align-items:center;padding:9px 4px;border-bottom:1px solid var(--alpha-gray128-2)}
 .rep-row.door{cursor:pointer}.rep-pips{letter-spacing:3px}.rep-head{margin:14px 0 4px;font-weight:600;opacity:.75}
 .rep-empty{opacity:.6;padding:8px 4px}.rep-modal{max-height:80vh;overflow-y:auto}
+.rshare-tabs{display:flex;gap:8px;margin:8px 0}.rshare-tabs .ghost{flex:1}.rshare-tabs .on{font-weight:700}
+.rshare-body{white-space:pre-wrap;text-align:start;line-height:1.5;padding:8px 4px}
 .pack-row{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
   .pk-state{color:var(--muted);font-size:13px}
   .wp-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:2px 2px 8px;grid-column:1/-1}
@@ -2868,6 +2870,10 @@
   .modal p{color:var(--muted);font-size:13.5px;margin-bottom:18px;line-height:1.5}
   .modal .score-pop{color:var(--amber);font-family:var(--display);font-weight:800;font-size:46px;line-height:1;margin:4px 0 14px}
   .modal input[type=text]{width:100%;background:var(--panel-2);border:1.5px solid var(--control-border);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--mono);font-size:16px;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+  /* The parent gate's answer is a tel input, which no rule above reached: it
+     drew the browser's white field under the theme's inherited ink, 1.18:1 on
+     eclipse. Same field as the text input, minus the uppercase. */
+  .modal input[type=tel]{width:100%;background:var(--panel-2);border:1.5px solid var(--control-border);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--mono);font-size:16px;text-align:center;margin-bottom:14px}
   .modal input:focus{outline:none;border-color:var(--amber)}
   .modal .row{display:flex;gap:10px}
   .demo-note{margin-top:14px;color:var(--muted);font-size:10.5px;line-height:1.5}
@@ -4578,6 +4584,8 @@
 
   <!-- CC-REPORTS Quest Log (kid tab): app-shell only, every row a door. -->
   <button id="repOpenBtn" hidden aria-hidden="true"></button>
+  <!-- CC-REPORTS-SHARE F6: the parent report's launcher (it opens the parent gate first). -->
+  <button id="rshareOpenBtn" hidden aria-hidden="true"></button>
   <button id="calOpenBtn" hidden aria-hidden="true"></button>
   <button id="trOpenBtn" hidden aria-hidden="true"></button>
   <!-- CC-TRANSLATE-SCREEN F1 — the two-card spine. A SCREEN, not a scrim: title,
@@ -4813,6 +4821,17 @@
       <div class="rep-head" data-i18n="reports.redemption">Redemption List</div>
       <div id="repRedeemed"></div>
       <button class="btn btn-check" id="repDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
+  <!-- CC-REPORTS-SHARE F5: the parent progress report. Adult-gated, app-only,
+       plain text that leaves only through the OS share sheet. -->
+  <div class="scrim" id="rshareScrim">
+    <div class="modal rep-modal">
+      <h3 data-i18n="rshare.name">Progress report</h3>
+      <div class="rshare-tabs"><button class="ghost" id="rshareLast" data-i18n="rshare.lastWeek">Last week</button><button class="ghost" id="rshareNow" data-i18n="rshare.partial">This week so far</button></div>
+      <div id="rshareBody" class="rshare-body"></div>
+      <button class="btn btn-check" id="rshareShare" data-i18n="rshare.share" style="width:100%;margin-top:12px">Share</button>
+      <button class="ghost" id="rshareDone" data-i18n="settings.done" style="width:100%;margin-top:8px">Done</button>
     </div>
   </div>
   <div class="scrim" id="setScrim">

@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Cần hai ngôn ngữ Bất khả thi",
   "impossible.lock.pool_below_floor": "Chưa đủ từ",
   "impossible.lock.no_exclusion_gate": "Ngôn ngữ này chưa sẵn sàng",
-  "impossible.lock.no_drawn_entry": "Sắp có chế độ viết tay"
+  "impossible.lock.no_drawn_entry": "Sắp có chế độ viết tay",
+  "rshare.name": "Báo cáo tiến bộ",
+  "rshare.desc": "Một tuần từ vựng để chia sẻ",
+  "rshare.title": "Tiến bộ chính tả",
+  "rshare.partial": "Tuần này đến nay",
+  "rshare.lastWeek": "Tuần trước",
+  "rshare.mastered": "Đã thành thạo ({n})",
+  "rshare.workingOn": "Đang luyện ({n})",
+  "rshare.new": "Mới tuần này ({n})",
+  "rshare.empty": "Tuần này chưa luyện tập.",
+  "rshare.share": "Chia sẻ",
+  "rshare.week": "{start} – {end}"
 }

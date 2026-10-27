@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Nécessite deux langues en Extrême",
   "impossible.lock.pool_below_floor": "Pas encore assez de mots",
   "impossible.lock.no_exclusion_gate": "Pas encore prêt dans cette langue",
-  "impossible.lock.no_drawn_entry": "Bientôt avec la saisie manuscrite"
+  "impossible.lock.no_drawn_entry": "Bientôt avec la saisie manuscrite",
+  "rshare.name": "Rapport de progrès",
+  "rshare.desc": "Une semaine de mots à partager",
+  "rshare.title": "Progrès en orthographe",
+  "rshare.partial": "Cette semaine jusqu'ici",
+  "rshare.lastWeek": "La semaine dernière",
+  "rshare.mastered": "Maîtrisés ({n})",
+  "rshare.workingOn": "En cours ({n})",
+  "rshare.new": "Nouveaux cette semaine ({n})",
+  "rshare.empty": "Pas encore d'entraînement cette semaine.",
+  "rshare.share": "Partager",
+  "rshare.week": "{start} – {end}"
 }

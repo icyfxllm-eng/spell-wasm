@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "Kailangan ng dalawang wika sa Imposible",
   "impossible.lock.pool_below_floor": "Kulang pa ang mga salita",
   "impossible.lock.no_exclusion_gate": "Hindi pa handa sa wikang ito",
-  "impossible.lock.no_drawn_entry": "Darating kasama ang pagsulat gamit ang kamay"
+  "impossible.lock.no_drawn_entry": "Darating kasama ang pagsulat gamit ang kamay",
+  "rshare.name": "Ulat ng pag-unlad",
+  "rshare.desc": "Isang linggo ng mga salitang maibabahagi",
+  "rshare.title": "Pag-unlad sa pagbaybay",
+  "rshare.partial": "Ngayong linggo sa ngayon",
+  "rshare.lastWeek": "Nakaraang linggo",
+  "rshare.mastered": "Kabisado na ({n})",
+  "rshare.workingOn": "Pinag-aaralan ({n})",
+  "rshare.new": "Bago ngayong linggo ({n})",
+  "rshare.empty": "Wala pang pagsasanay ngayong linggo.",
+  "rshare.share": "Ibahagi",
+  "rshare.week": "{start} – {end}"
 }

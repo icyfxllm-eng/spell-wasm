@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "불가능 언어가 2개 필요해요",
   "impossible.lock.pool_below_floor": "아직 단어가 부족해요",
   "impossible.lock.no_exclusion_gate": "이 언어는 아직 준비 중이에요",
-  "impossible.lock.no_drawn_entry": "손글씨 입력과 함께 출시 예정"
+  "impossible.lock.no_drawn_entry": "손글씨 입력과 함께 출시 예정",
+  "rshare.name": "학습 보고서",
+  "rshare.desc": "공유할 일주일의 단어",
+  "rshare.title": "철자 학습 현황",
+  "rshare.partial": "이번 주 지금까지",
+  "rshare.lastWeek": "지난주",
+  "rshare.mastered": "익힌 단어 ({n})",
+  "rshare.workingOn": "연습 중 ({n})",
+  "rshare.new": "이번 주 새 단어 ({n})",
+  "rshare.empty": "이번 주에는 아직 연습하지 않았어요.",
+  "rshare.share": "공유",
+  "rshare.week": "{start} – {end}"
 }

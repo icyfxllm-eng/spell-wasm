@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "दो असंभव भाषाएँ चाहिए",
   "impossible.lock.pool_below_floor": "अभी पर्याप्त शब्द नहीं हैं",
   "impossible.lock.no_exclusion_gate": "इस भाषा में अभी तैयार नहीं है",
-  "impossible.lock.no_drawn_entry": "हस्तलेखन इनपुट के साथ जल्द आ रहा है"
+  "impossible.lock.no_drawn_entry": "हस्तलेखन इनपुट के साथ जल्द आ रहा है",
+  "rshare.name": "प्रगति रिपोर्ट",
+  "rshare.desc": "साझा करने के लिए एक हफ़्ते के शब्द",
+  "rshare.title": "वर्तनी में प्रगति",
+  "rshare.partial": "इस हफ़्ते अब तक",
+  "rshare.lastWeek": "पिछला हफ़्ता",
+  "rshare.mastered": "सीख लिए ({n})",
+  "rshare.workingOn": "अभ्यास जारी ({n})",
+  "rshare.new": "इस हफ़्ते नए ({n})",
+  "rshare.empty": "इस हफ़्ते अभी कोई अभ्यास नहीं।",
+  "rshare.share": "साझा करें",
+  "rshare.week": "{start} – {end}"
 }

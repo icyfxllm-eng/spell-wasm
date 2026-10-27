@@ -1175,5 +1175,16 @@
   "impossible.lock.needs_two_languages": "يحتاج إلى لغتين في وضع المستحيل",
   "impossible.lock.pool_below_floor": "لا توجد كلمات كافية بعد",
   "impossible.lock.no_exclusion_gate": "غير جاهز بهذه اللغة بعد",
-  "impossible.lock.no_drawn_entry": "قريبًا مع الإدخال بالكتابة اليدوية"
+  "impossible.lock.no_drawn_entry": "قريبًا مع الإدخال بالكتابة اليدوية",
+  "rshare.name": "تقرير التقدم",
+  "rshare.desc": "أسبوع من الكلمات للمشاركة",
+  "rshare.title": "التقدم في الإملاء",
+  "rshare.partial": "هذا الأسبوع حتى الآن",
+  "rshare.lastWeek": "الأسبوع الماضي",
+  "rshare.mastered": "أتقنها ({n})",
+  "rshare.workingOn": "قيد التدرّب ({n})",
+  "rshare.new": "جديدة هذا الأسبوع ({n})",
+  "rshare.empty": "لا تدريب هذا الأسبوع بعد.",
+  "rshare.share": "مشاركة",
+  "rshare.week": "{start} – {end}"
 }
