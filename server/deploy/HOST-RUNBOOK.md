@@ -8,8 +8,19 @@ Conventions:
 - Every line in a command block is a command you can copy as-is. A
   `# as your admin user (eric):` or `# as spellsrv (sudo -iu spellsrv):` line
   says who runs the lines below it. Pasting a `#` line does nothing.
-  `machinectl shell spellsrv@` also works for spellsrv, and gives it a proper
-  user session.
+- **Check the prompt.** `sudo` commands run at `eric@spellbox`; spellsrv's
+  never use sudo (spellsrv is not in sudoers, by design) and run at
+  `spellsrv@spellbox`. Everything that touches the server (podman, build.sh,
+  deploy.sh, `systemctl --user`) must run as spellsrv: run as eric, it
+  starts a second copy under eric that systemd and verify-host know nothing
+  about.
+- **Becoming spellsrv:** `sudo -iu spellsrv`, then, before any
+  `systemctl --user`:
+  `export XDG_RUNTIME_DIR=/run/user/$(id -u)`. `sudo -iu` leaves that
+  variable out, and without it `systemctl --user` cannot reach spellsrv's
+  systemd.
+- **Reading spellsrv's logs:** spellsrv can't read the journal; as eric,
+  `sudo journalctl _UID=$(id -u spellsrv) --no-pager | tail -40`.
 - `<LIKE_THIS>` is a value you fill in. None of them belong in git.
 - The Rocky box also hosts the Trundlo Bluetooth tests. Nothing here touches
   Bluetooth, but step 8 closes every inbound port except ssh on the tailnet.
