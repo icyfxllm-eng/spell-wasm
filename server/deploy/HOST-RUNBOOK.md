@@ -133,7 +133,9 @@ Check: `systemd-analyze cat-config systemd/journald.conf | grep MaxRetentionSec`
 A **new** tunnel for Rocky. Leave `spellgame-mac` alone.
 ```
 # as your admin user (eric):
-sudo dnf install -y cloudflared          # from Cloudflare's repo
+curl -fsSL https://pkg.cloudflare.com/cloudflared.repo | sudo tee /etc/yum.repos.d/cloudflared.repo
+sudo dnf install -y cloudflared
+cloudflared --version
 cloudflared tunnel login
 cloudflared tunnel create spellgame-rocky        # prints <TUNNEL_ID>, writes the credentials JSON
 cloudflared tunnel route dns spellgame-rocky play.spellgame.net
