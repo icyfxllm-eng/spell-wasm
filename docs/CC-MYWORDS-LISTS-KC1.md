@@ -1,6 +1,6 @@
 # CC-MYWORDS-LISTS — Amendment KC-1: keyed create (idempotent Add)
 
-**Status:** DRAFT for Eric, 2026-10-26. Nothing is built.
+**Status:** DECISIONS SIGNED. D-KC1 to D-KC4 were signed as recommended (Eric, 2026-10-26: "I like the recommendations"). Under D-KC4, KC-O1 is now in scope as its own small change, to land before GUARDIAN-REPORT Phase C. Nothing is built yet.
 **Raised by:** CC-GUARDIAN-REPORT v1 §0 C6 (HALT on the idempotency key). Base: origin/main `8a33d1a6`.
 **Amends:** §3 Data model, plus one new function in `src/word_lists.rs`. No existing function changes behaviour.
 **Carries forward unchanged:** I1–I7, D1 (today's-list default), F2 naming, F5 soft delete and the 30-day purge.
@@ -92,9 +92,9 @@ pub fn create_keyed(lists: &mut Lists, key: &str, name: &str, source: ListSource
 7. **Pins:** `VERSION == 1`, and the `ListSource` variant set is exactly {Photo, Translate, Manual, Migrated} (KC-I4).
 8. **Entries, unchanged:** after two Adds of the same words, the list holds each (NFC text, language) once (GUARDIAN A17, A19), through the existing `add_entries`.
 
-## Decisions for Eric
+## Decisions (signed as recommended, Eric 2026-10-26)
 
-| # | Decision | Recommendation |
+| # | Decision | Signed |
 |---|---|---|
 | **D-KC1** | How a list is identified | **An optional `key` field.** Matching by name breaks on localization, renames and the player's own lists. |
 | **D-KC2** | Add after the parent trashed the week's list | **Make a fresh list.** The delete is respected, and the trashed one stays restorable. |
