@@ -27,6 +27,7 @@
 //! L0's status here would have got the wrong answer.
 
 use std::cell::RefCell;
+use std::collections::BTreeSet;
 
 /// Whose learner data. C4: the device is profile 0 until multi-profile.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -99,6 +100,25 @@ pub struct AttemptView {
     pub correct: bool,
 }
 
+/// One logged attempt with the L0 CR-1 fields. They are None (and
+/// `impossible` false) on entries written before CR-1 or rewritten by an
+/// older build: a reader treats those as unknown, never as a guess.
+#[cfg_attr(not(test), allow(dead_code))]
+#[derive(Clone, Debug, PartialEq)]
+pub struct AttemptDetail {
+    pub word: String,
+    /// `word_id0`, the I4 identity.
+    pub word_id: String,
+    pub day: u32,
+    /// Whole UTC seconds.
+    pub ts: Option<u64>,
+    pub outcome: Option<crate::learner::OutcomeClass>,
+    pub channel: crate::learner::Channel,
+    /// A `config/modes.json` id.
+    pub mode: Option<String>,
+    pub impossible: bool,
+}
+
 #[cfg_attr(not(test), allow(dead_code))] // frozen surface: the R4 inspector and later phases call these
 /// A queued word with when it comes back (R4's inspector shows these).
 #[derive(Clone, Debug, PartialEq)]
@@ -145,6 +165,26 @@ pub trait LearnerQuery {
     /// freeze for R4's inspector; adding a method is allowed, changing one is
     /// a stop-and-ask).
     fn review_schedule(&self, p: ProfileId, lang: &str, limit: usize) -> Vec<Scheduled>;
+    /// L0 CR-1 (additive after the freeze): logged attempts with instant,
+    /// outcome class and mode, oldest first.
+    fn attempt_detail_log(&self, p: ProfileId, lang: &str) -> Vec<AttemptDetail>;
+    /// L0 CR-1: every `word_id0` this profile has a logged attempt on
+    /// (L-D3), backfilled from the stores before CR-1 kept one (L-D4).
+    fn seen_set(&self, p: ProfileId, lang: &str) -> BTreeSet<String>;
+}
+
+/// The CR-1 view of one stored attempt.
+fn detail_of(lang: &str, a: &crate::learner::Attempt) -> AttemptDetail {
+    AttemptDetail {
+        word: a.word.clone(),
+        word_id: crate::word_id::word_id0(lang, &a.word),
+        day: a.day,
+        ts: a.ts,
+        outcome: a.outcome,
+        channel: a.channel,
+        mode: a.mode.clone(),
+        impossible: a.impossible,
+    }
 }
 
 // ------------------------------------------------------------ serve reasons
@@ -263,6 +303,14 @@ impl LearnerQuery for Live<'_> {
         v.truncate(limit);
         v
     }
+    fn attempt_detail_log(&self, _p: ProfileId, lang: &str) -> Vec<AttemptDetail> {
+        crate::learner::load_for(lang).log.iter().map(|a| detail_of(lang, a)).collect()
+    }
+    fn seen_set(&self, _p: ProfileId, lang: &str) -> BTreeSet<String> {
+        crate::learner::seen_stored(lang).unwrap_or_else(|| {
+            crate::learner::seen_backfill(lang, &crate::learner::load_for(lang).log, self.misses, &crate::reports::redemptions(lang))
+        })
+    }
     fn placement_status(&self, _p: ProfileId, lang: &str) -> PlacementStatus {
         match crate::learner::load_for(lang).placed {
             None => PlacementStatus::NotOffered,
@@ -310,6 +358,8 @@ pub struct Fake {
     pub attempts: Vec<AttemptView>,
     pub placement: Option<PlacementStatus>,
     pub schedule: Vec<Scheduled>,
+    pub details: Vec<AttemptDetail>,
+    pub seen: BTreeSet<String>,
 }
 
 #[cfg_attr(not(test), allow(dead_code))]
@@ -341,6 +391,20 @@ impl Fake {
                 Scheduled { word: "receive".into(), due_ms: 0.0, in_days: -2, misses: 3, reps: 2, lapses: 1, on_fsrs: true },
                 Scheduled { word: "knight".into(), due_ms: 86_400_000.0, in_days: 1, misses: 1, reps: 0, lapses: 0, on_fsrs: false },
             ],
+            details: {
+                use crate::learner::{Channel, OutcomeClass};
+                let d = |word: &str, day: u32, ts: Option<u64>, outcome: Option<OutcomeClass>, mode: Option<&str>, impossible: bool| AttemptDetail {
+                    word: word.into(), word_id: format!("en::{word}"), day, ts, outcome,
+                    channel: Channel::Typed, mode: mode.map(Into::into), impossible,
+                };
+                vec![
+                    // Written before CR-1: every CR-1 field unknown.
+                    d("receive", 20400, None, None, None, false),
+                    d("rabbit", 20400, Some(20400 * 86_400 + 61_200), Some(OutcomeClass::Correct), Some("standard"), false),
+                    d("knight", 20401, Some(20401 * 86_400 + 3_600), Some(OutcomeClass::Misspelled), Some("climb"), true),
+                ]
+            },
+            seen: ["en::knight", "en::rabbit", "en::receive"].into_iter().map(String::from).collect(),
         }
     }
 }
@@ -369,6 +433,12 @@ impl LearnerQuery for Fake {
     }
     fn placement_status(&self, _p: ProfileId, _lang: &str) -> PlacementStatus {
         self.placement.unwrap_or(PlacementStatus::NotOffered)
+    }
+    fn attempt_detail_log(&self, _p: ProfileId, _lang: &str) -> Vec<AttemptDetail> {
+        self.details.clone()
+    }
+    fn seen_set(&self, _p: ProfileId, _lang: &str) -> BTreeSet<String> {
+        self.seen.clone()
     }
     fn review_schedule(&self, _p: ProfileId, _lang: &str, limit: usize) -> Vec<Scheduled> {
         self.schedule.iter().take(limit).cloned().collect()
@@ -495,6 +565,10 @@ mod tests {
         st.record(crate::learner::Attempt {
             day: 10, word: "knight".into(), skills: vec!["silent_letters".into()],
             correct: false, channel: crate::learner::Channel::Typed, typed: Some("nite".into()),
+            ts: None,
+            outcome: None,
+            mode: None,
+            impossible: false,
         });
         let s = &st.skills[0];
         let v = skills_of(&st, 30);

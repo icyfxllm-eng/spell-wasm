@@ -410,6 +410,8 @@ mod tests {
         // learner-model state never leaves the device (L0 I1/I2).
         "learner", "mastery", "fsrs", "bkt", "skill", "stability", "difficulty",
         "lapse", "reps", "due", "review", "placement",
+        // L0 CR-1 (signed 2026-10-26): the seen set is learner data too.
+        "seen",
     ];
 
     /// The name half of the lint, split out so a planted field can be tested.
@@ -556,7 +558,9 @@ mod tests {
     /// L0 acceptance 8: a learner field planted in the schema must fail.
     #[test]
     fn schema_lint_rejects_a_planted_learner_field() {
-        for planted in ["mastery", "skill_mastery", "fsrs_due_day", "bkt_prior", "review_lapses", "placement_done", "learner_state"] {
+        for planted in ["mastery", "skill_mastery", "fsrs_due_day", "bkt_prior", "review_lapses", "placement_done", "learner_state",
+            // L0 CR-1 CR-I3: the attempt instant, class and seen set.
+            "attempt_ts", "attempt_outcome", "seen_words", "learner_seen", "seen_set"] {
             assert!(forbidden_in(planted).is_some(), "the lint let a learner field through: {planted}");
         }
         // No current field trips the new terms (checked again on every run).

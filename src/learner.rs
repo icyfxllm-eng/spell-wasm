@@ -34,6 +34,11 @@ use serde::{Deserialize, Serialize};
 
 /// v2 (2026-09-18): same shape as v1; the v1→v2 migration resets every
 /// reviewed skill's FSRS difficulty (see `migrate`).
+///
+/// L0 CR-1 (2026-10-26) added optional `Attempt` fields WITHOUT a bump, on
+/// purpose: a v3 makes an older build load `Loaded::Newer` — an empty learner
+/// it never writes back — while optional fields at v2 read cleanly both ways.
+/// An older build that saves drops them, so readers treat `None` as unknown.
 pub const SCHEMA_VERSION: u32 = 2;
 /// The attempt log is a ring: enough history for diagnosis surfaces,
 /// bounded so the state stays kilobytes forever (the contract's own
@@ -88,6 +93,102 @@ pub struct Attempt {
     /// raw material. Additive with a default, so no migration.
     #[serde(default)]
     pub typed: Option<String>,
+    /// L0 CR-1: when, in whole UTC seconds. `day` stays the FSRS clock and is
+    /// always `ts / 86_400` (CR-I2). None on entries written before CR-1 or
+    /// rewritten by an older build.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ts: Option<u64>,
+    /// L0 CR-1: the graded class. `correct` stays for BKT/FSRS and always
+    /// equals `outcome.is_correct()` (CR-I1).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub outcome: Option<OutcomeClass>,
+    /// L0 CR-1: the `config/modes.json` id of the surface that logged it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mode: Option<String>,
+    /// L0 CR-1: the word was served at Impossible rules (a level, not a mode).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub impossible: bool,
+}
+
+/// L0 CR-1: an attempt's graded class, closed. `game::Outcome` minus
+/// `Voided` (a void records nothing), plus `Trap` (a Spell Search decoy pick).
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum OutcomeClass {
+    Correct,
+    OtherSense,
+    Misspelled,
+    TimedOut,
+    GaveUp,
+    Trap,
+}
+
+impl OutcomeClass {
+    pub const ALL: [OutcomeClass; 6] = [
+        OutcomeClass::Correct,
+        OutcomeClass::OtherSense,
+        OutcomeClass::Misspelled,
+        OutcomeClass::TimedOut,
+        OutcomeClass::GaveUp,
+        OutcomeClass::Trap,
+    ];
+
+    pub fn is_correct(self) -> bool {
+        matches!(self, OutcomeClass::Correct | OutcomeClass::OtherSense)
+    }
+
+    /// The class for a plain verdict, where nothing finer is known.
+    pub fn of(correct: bool) -> Self {
+        if correct { OutcomeClass::Correct } else { OutcomeClass::Misspelled }
+    }
+}
+
+/// L0 CR-1: what a write site knows about an attempt beyond the verdict.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Tag {
+    pub outcome: OutcomeClass,
+    /// A `config/modes.json` id; `mode_ids_exist_in_the_registry` holds it.
+    pub mode: &'static str,
+    pub impossible: bool,
+}
+
+impl Attempt {
+    /// Stamp the CR-1 fields. `day` is rederived from `ts`, so CR-I2 holds by
+    /// construction; the caller's verdict must already agree with the class.
+    pub fn stamped(mut self, ts: u64, tag: Tag) -> Attempt {
+        debug_assert_eq!(self.correct, tag.outcome.is_correct(), "CR-I1: {:?} vs correct={}", tag.outcome, self.correct);
+        self.day = (ts / 86_400) as u32;
+        self.ts = Some(ts);
+        self.outcome = Some(tag.outcome);
+        self.mode = Some(tag.mode.to_string());
+        self.impossible = tag.impossible;
+        self
+    }
+}
+
+/// Stamp now with the class the attempt's own verdict and channel imply: a
+/// trap pick is `Trap`, otherwise `Correct` or `Misspelled`. For modes that
+/// know nothing finer.
+pub fn stamp_now(a: Attempt, mode: &'static str) -> Attempt {
+    let outcome = if a.channel == Channel::Trap { OutcomeClass::Trap } else { OutcomeClass::of(a.correct) };
+    a.stamped(now_s(), Tag { outcome, mode, impossible: false })
+}
+
+/// Every mode id a write site may log (L0 CR-1 P3). Acceptance 5 checks each
+/// against `config/modes.json`.
+pub mod mode_id {
+    pub const STANDARD: &str = "standard";
+    pub const CLIMB: &str = "climb";
+    pub const DAILY: &str = "daily";
+    pub const VERSUS: &str = "versus";
+    pub const MISSES: &str = "misses";
+    pub const WORD_PICTURE: &str = "word_picture";
+    pub const SPELL_SEARCH: &str = "spell_search";
+    pub const SPELL_CROSS: &str = "spell_cross";
+    pub const ONLINE_SPELLOFF: &str = "online_spelloff";
+    pub const GHOST_RACING: &str = "ghost_racing";
+    pub const ALL: [&str; 10] =
+        [STANDARD, CLIMB, DAILY, VERSUS, MISSES, WORD_PICTURE, SPELL_SEARCH, SPELL_CROSS, ONLINE_SPELLOFF, GHOST_RACING];
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -487,10 +588,69 @@ fn today_day() -> u32 {
     (js_sys::Date::now() / 86_400_000.0) as u32
 }
 
+/// L0 CR-1 L-D1 (signed): the attempt instant, whole UTC seconds. Seconds,
+/// not ms — enough to bucket a week, and the coarser timeline of a child's
+/// play is the smaller footprint.
+pub fn now_s() -> u64 {
+    (js_sys::Date::now() / 1000.0) as u64
+}
+
 const STORE_PREFIX: &str = "spell_learner_";
 /// Where unreadable bytes go before anything overwrites them (census C10).
 /// Same prefix, so every audit that polices `spell_learner_` covers it too.
 const BACKUP_SUFFIX: &str = "_unreadable";
+/// L0 CR-1 P4: the per-language seen set, `word_id0` strings. Its own key, so
+/// an older build that rewrites `LearnerState` cannot drop it; same prefix,
+/// so the same audits cover it.
+const SEEN_SUFFIX: &str = "_seen";
+
+fn seen_key(lang: &str) -> String {
+    format!("{}{SEEN_SUFFIX}", store_key(lang))
+}
+
+/// Every key the learner keeps for a language. `reset` removes all of them
+/// (CR-I5), and the test holds that list against every suffix declared here.
+fn keys_for(lang: &str) -> [String; 3] {
+    let key = store_key(lang);
+    [format!("{key}{BACKUP_SUFFIX}"), seen_key(lang), key]
+}
+
+/// L-D3/L-D4 (signed): the seen set before CR-1 kept one is what the stores
+/// still remember — the log ring, the misses queue and redemptions. Words
+/// played earlier and held nowhere are lost, and read as unseen.
+pub fn seen_backfill<'a>(
+    lang: &str,
+    log: impl IntoIterator<Item = &'a Attempt>,
+    misses: &[crate::model::MissEntry],
+    redeemed: &[crate::reports::Redemption],
+) -> std::collections::BTreeSet<String> {
+    let id = |w: &str| crate::word_id::word_id0(lang, w);
+    log.into_iter()
+        .map(|a| id(&a.word))
+        .chain(misses.iter().filter(|m| m.lang == lang).map(|m| id(&m.word)))
+        .chain(redeemed.iter().filter(|r| r.lang == lang).map(|r| id(&r.word)))
+        .collect()
+}
+
+/// The stored seen set, or None before the first CR-1 write. Read by
+/// `LearnerQuery::seen_set` only.
+pub(crate) fn seen_stored(lang: &str) -> Option<std::collections::BTreeSet<String>> {
+    crate::storage::get_json(&seen_key(lang))
+}
+
+/// Add one word to the seen set, backfilling on the first write.
+fn note_seen(lang: &str, st: &LearnerState, word: &str, writable: bool) {
+    if !writable {
+        return;
+    }
+    let mut seen = seen_stored(lang).unwrap_or_else(|| {
+        let misses: Vec<crate::model::MissEntry> = crate::storage::get_json(crate::model::MISS_KEY).unwrap_or_default();
+        seen_backfill(lang, &st.log, &misses, &crate::reports::redemptions(lang))
+    });
+    if seen.insert(crate::word_id::word_id0(lang, word)) {
+        crate::storage::set_json(&seen_key(lang), &seen);
+    }
+}
 
 // ------------------------------------------- C10: a failed load never wipes
 //
@@ -587,13 +747,13 @@ fn save(lang: &str, st: &LearnerState, writable: bool) {
 }
 
 /// Progress-reset for one language (CC-LEARNING-ENGINE Done #8, D5): the
-/// learner state AND its C10 backup go, so nothing learned about this
+/// learner state, its C10 backup AND its CR-1 seen set go, so nothing learned about this
 /// language survives a reset. Other languages are untouched. Placement is
 /// offered again, which is right after a reset.
 pub fn reset(lang: &str) {
-    let key = store_key(lang);
-    crate::storage::remove(&key);
-    crate::storage::remove(&format!("{key}{BACKUP_SUFFIX}"));
+    for key in keys_for(lang) {
+        crate::storage::remove(&key);
+    }
 }
 
 /// The one gameplay door: load-or-new, record, save. Every submit path
@@ -601,26 +761,28 @@ pub fn reset(lang: &str) {
 /// `record()`, not in callers remembering to skip it. Storage failures
 /// degrade to a fresh profile rather than a crash: the learner is an
 /// observer of the game, never a gate on it.
-pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
-    note_attempt_typed(lang, word, correct, channel, None)
+pub fn note_attempt(lang: &str, word: &str, channel: Channel, tag: Tag) {
+    note_attempt_typed(lang, word, channel, None, tag)
 }
 
 /// CC-REPORTS: the submit path passes the raw attempt on MISSES so the
 /// grapheme diagnosis has its material. Correct answers pass None — the
-/// log never stores what didn't diverge.
-pub fn note_attempt_typed(lang: &str, word: &str, correct: bool, channel: Channel, typed: Option<&str>) {
-    let (mut st, writable) = open(lang);
-    st.record(attempt(lang, word, correct, channel, typed, today_day()));
-    save(lang, &st, writable);
+/// log never stores what didn't diverge. L0 CR-1: the verdict is the tag's
+/// class, so `correct` and `outcome` cannot disagree.
+pub fn note_attempt_typed(lang: &str, word: &str, channel: Channel, typed: Option<&str>, tag: Tag) {
+    note_built(lang, attempt(lang, word, tag.outcome.is_correct(), channel, typed, 0).stamped(now_s(), tag));
 }
 
 /// Record an attempt another mode built with `attempt` (CC-WORDGRID F-X6):
 /// the same door as every base-game answer, C10's `open` and `save`
 /// included, so an unreadable store is never overwritten from here either.
+/// Callers stamp it first (`Attempt::stamped`, L0 CR-1).
 pub fn note_built(lang: &str, a: Attempt) {
     let (mut st, writable) = open(lang);
+    let word = a.word.clone();
     st.record(a);
     save(lang, &st, writable);
+    note_seen(lang, &st, &word, writable);
 }
 
 /// Today's day index, as the log stores it.
@@ -639,6 +801,10 @@ pub fn attempt(lang: &str, word: &str, correct: bool, channel: Channel, typed: O
         correct,
         channel,
         typed: if correct { None } else { typed.map(|t| t.to_string()) },
+        ts: None,
+        outcome: None,
+        mode: None,
+        impossible: false,
     }
 }
 
@@ -868,6 +1034,10 @@ pub fn apply_placement(state: &mut LearnerState, lang: &str, word: &str, correct
         correct,
         channel: Channel::Typed,
         typed: None,
+        ts: None,
+        outcome: None,
+        mode: None,
+        impossible: false,
     });
 }
 
@@ -877,9 +1047,16 @@ pub fn apply_placement(state: &mut LearnerState, lang: &str, word: &str, correct
 /// construction and by test.
 pub fn note_placement(lang: &str, word: &str, correct: bool) {
     let (mut st, writable) = open(lang);
-    let day = today_day();
-    apply_placement(&mut st, lang, word, correct, day);
+    let ts = now_s();
+    apply_placement(&mut st, lang, word, correct, (ts / 86_400) as u32);
+    // L0 CR-1: placement is the base game's probe, so it logs as `standard`
+    // (acceptance 5 admits registry ids only, and placement has none).
+    if let Some(a) = st.log.pop_back() {
+        let tag = Tag { outcome: OutcomeClass::of(correct), mode: mode_id::STANDARD, impossible: false };
+        st.log.push_back(a.stamped(ts, tag));
+    }
     save(lang, &st, writable);
+    note_seen(lang, &st, word, writable);
 }
 
 pub fn finish_placement(lang: &str, took: bool) {
@@ -1087,6 +1264,10 @@ mod tests {
             skills: vec!["silent_letters".into(), "unstressed_vowel_ambiguity".into()],
             correct: true,
             channel: Channel::Typed, typed: None,
+            ts: None,
+            outcome: None,
+            mode: None,
+            impossible: false,
         });
         assert_eq!(st.skills.len(), 2);
         assert!(st.skills.iter().all(|s| s.mastery > BKT_PRIOR));
@@ -1104,6 +1285,10 @@ mod tests {
             skills: vec!["silent_letters".into()],
             correct: false,
             channel: Channel::Speech, typed: None,
+            ts: None,
+            outcome: None,
+            mode: None,
+            impossible: false,
         });
         assert!(st.skills.is_empty(), "speech must not touch skill state");
         assert_eq!(st.log.len(), 1, "...but the log keeps the evidence");
@@ -1120,6 +1305,10 @@ mod tests {
                 correct: i % 3 != 0,
                 channel: Channel::Typed,
                 typed: None,
+                ts: None,
+                outcome: None,
+                mode: None,
+                impossible: false,
             });
         }
         assert_eq!(st.log.len(), LOG_CAP);
@@ -1145,6 +1334,10 @@ mod tests {
                     correct: (i * 7 + 3) % 5 != 0,
                     channel: if i % 11 == 0 { Channel::Speech } else { Channel::Typed },
                     typed: None,
+                    ts: None,
+                    outcome: None,
+                    mode: None,
+                    impossible: false,
                 });
             }
             serde_json::to_string(&st).unwrap()
@@ -1162,6 +1355,10 @@ mod tests {
                 skills: vec![id.into()],
                 correct: true,
                 channel: Channel::Typed, typed: None,
+                ts: None,
+                outcome: None,
+                mode: None,
+                impossible: false,
             });
         }
         let due = st.due_skills(30);
@@ -1270,6 +1467,10 @@ mod tests {
             skills: vec!["loanword_spelling".into()],
             correct: false,
             channel: Channel::Typed, typed: None,
+            ts: None,
+            outcome: None,
+            mode: None,
+            impossible: false,
         });
         let json = serde_json::to_string(&st).unwrap();
         assert_eq!(load_state(&json).unwrap(), st);
@@ -1319,6 +1520,10 @@ mod bridge_tests {
                 skills: hazards("en", w),
                 correct: ok,
                 channel: Channel::Typed, typed: None,
+                ts: None,
+                outcome: None,
+                mode: None,
+                impossible: false,
             });
         }
         assert!(!st.skills.is_empty(), "typed attempts grew skills");
@@ -1329,6 +1534,10 @@ mod bridge_tests {
             skills: hazards("en", "wrong"),
             correct: false,
             channel: Channel::Speech, typed: None,
+            ts: None,
+            outcome: None,
+            mode: None,
+            impossible: false,
         });
         assert_eq!(st.skills, before, "speech never moves a spelling skill");
         assert_eq!(st.log.len(), 4, "but it IS logged");
@@ -1511,6 +1720,10 @@ mod placement_tests {
             skills: hazards("en", "knee"),
             correct: true,
             channel: Channel::Typed, typed: None,
+            ts: None,
+            outcome: None,
+            mode: None,
+            impossible: false,
         });
         let s = st.skills.iter().find(|s| s.id == "silent_letters").unwrap();
         assert_eq!(s.mastery, bkt_update(BKT_PRIOR, true), "first update starts from the default prior");
@@ -1592,7 +1805,7 @@ mod guardian_tests {
         st.skills.push(skill("silent_letters", 0.2, 5, 3));
         st.skills.push(skill("doubled_consonant", 0.6, 2, 3)); // 18 days overdue at day 20
         for i in 0..6 {
-            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed, typed: None });
+            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed, typed: None, ts: None, outcome: None, mode: None, impossible: false });
         }
         let r = guardian_report(&st, 20);
         assert_eq!(r.attempts, 6);
@@ -1609,7 +1822,7 @@ mod guardian_tests {
         st.skills.push(skill("silent_letters", 0.92, 30, 5));
         st.skills.push(skill("loanword_spelling", 0.85, 28, 4));
         for i in 0..10 {
-            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed, typed: None });
+            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed, typed: None, ts: None, outcome: None, mode: None, impossible: false });
         }
         let r = guardian_report(&st, 25);
         assert_eq!(r.correct, 10);
@@ -1641,3 +1854,161 @@ mod placement_f0 {
     }
 }
 
+
+#[cfg(test)]
+mod cr1_tests {
+    //! L0 CR-1 acceptance (docs/CC-LEARNING-ENGINE-L0-CR1.md). Host tests have
+    //! no localStorage, so storage claims are held structurally here; what
+    //! needs a real store is the e2e's job.
+    use super::*;
+
+    /// A log entry exactly as a pre-CR-1 build serialises it.
+    const PRE_CR1: &str = r#"{"version":2,"lang":"en","skills":[{"id":"silent_letters","mastery":0.18,"fsrs":{"stability":0.5,"difficulty":7.2,"due_day":20401,"reps":1,"lapses":1}}],"log":[{"day":20400,"word":"knight","skills":["silent_letters"],"correct":false,"channel":"typed","typed":"nite"},{"day":20400,"word":"rabbit","skills":[],"correct":true,"channel":"typed"}],"placed":true}"#;
+
+    /// The `Attempt` and `LearnerState` shapes an older build compiled.
+    #[derive(Serialize, Deserialize)]
+    struct OldAttempt {
+        day: u32,
+        word: String,
+        skills: Vec<String>,
+        correct: bool,
+        channel: Channel,
+        #[serde(default)]
+        typed: Option<String>,
+    }
+    #[derive(Serialize, Deserialize)]
+    struct OldState {
+        version: u32,
+        lang: String,
+        skills: Vec<SkillState>,
+        log: VecDeque<OldAttempt>,
+        placed: Option<bool>,
+    }
+
+    fn stamped_state() -> LearnerState {
+        let mut st = LearnerState::new("en");
+        let tag = Tag { outcome: OutcomeClass::OtherSense, mode: mode_id::CLIMB, impossible: true };
+        st.record(attempt("en", "pair", true, Channel::Typed, Some("pear"), 0).stamped(20400 * 86_400 + 5, tag));
+        st
+    }
+
+    /// Acceptance 1: a pre-CR-1 v2 store loads with every new field unknown.
+    #[test]
+    fn a_pre_cr1_store_loads_with_every_new_field_none() {
+        let st = load_state(PRE_CR1).expect("pre-CR-1 v2 must load");
+        assert_eq!(st.log.len(), 2);
+        for a in &st.log {
+            assert_eq!((a.ts, a.outcome, a.mode.as_deref(), a.impossible), (None, None, None, false), "{}", a.word);
+        }
+        assert_eq!(st.log[0].typed.as_deref(), Some("nite"));
+    }
+
+    /// Acceptance 2: an older build reads CR-1 bytes, saves, and the reload
+    /// is a plain v2 store with the fields gone and nothing panicking. The
+    /// seen set lives under its own key, which the old shape never names.
+    #[test]
+    fn an_older_build_round_trip_strips_the_fields_and_spares_the_seen_set() {
+        let json = serde_json::to_string(&stamped_state()).unwrap();
+        let old: OldState = serde_json::from_str(&json).expect("an older build must read CR-1 bytes");
+        let rewritten = serde_json::to_string(&old).unwrap();
+        let back = load_state(&rewritten).expect("and its rewrite must still load");
+        assert_eq!((back.log[0].ts, back.log[0].outcome), (None, None));
+        assert!(back.log[0].correct, "the verdict survives the trip");
+        assert!(!rewritten.contains("_seen") && !json.contains("_seen"));
+        assert_ne!(seen_key("en"), store_key("en"));
+    }
+
+    /// Acceptance 3, the log side: CR-I1 holds for every class, CR-I2 for the
+    /// stamp, and the classes serialise under stable names.
+    #[test]
+    fn every_class_agrees_with_its_verdict_and_round_trips() {
+        for c in OutcomeClass::ALL {
+            let tag = Tag { outcome: c, mode: mode_id::STANDARD, impossible: false };
+            let a = attempt("en", "cat", c.is_correct(), Channel::Typed, Some("kat"), 0).stamped(1_761_436_799, tag);
+            assert_eq!(a.correct, c.is_correct(), "CR-I1 {c:?}");
+            assert_eq!(a.day as u64, a.ts.unwrap() / 86_400, "CR-I2");
+            let j = serde_json::to_string(&c).unwrap();
+            assert_eq!(serde_json::from_str::<OutcomeClass>(&j).unwrap(), c);
+        }
+        assert_eq!(serde_json::to_string(&OutcomeClass::OtherSense).unwrap(), "\"other_sense\"");
+        assert!(OutcomeClass::OtherSense.is_correct() && !OutcomeClass::Trap.is_correct());
+    }
+
+    #[test]
+    fn stamp_now_reads_a_trap_pick_as_trap() {
+        // stamp_now needs a clock, so check the class it would choose.
+        let trap = attempt("en", "receive", false, Channel::Trap, Some("recieve"), 0);
+        let class = if trap.channel == Channel::Trap { OutcomeClass::Trap } else { OutcomeClass::of(trap.correct) };
+        assert_eq!(class, OutcomeClass::Trap);
+        assert_eq!(trap.stamped(1, Tag { outcome: class, mode: mode_id::SPELL_SEARCH, impossible: false }).outcome, Some(OutcomeClass::Trap));
+    }
+
+    /// An attempt with no CR-1 fields writes the bytes it always did.
+    #[test]
+    fn an_unstamped_attempt_serialises_exactly_as_before() {
+        let st = load_state(PRE_CR1).unwrap();
+        let j = serde_json::to_string(&st.log[1]).unwrap();
+        assert_eq!(j, r#"{"day":20400,"word":"rabbit","skills":[],"correct":true,"channel":"typed","typed":null}"#);
+    }
+
+    /// Acceptance 5: every mode id a write site may log is a registry id.
+    #[test]
+    fn mode_ids_exist_in_the_registry() {
+        let reg: serde_json::Value = serde_json::from_str(include_str!("../config/modes.json")).unwrap();
+        let ids: Vec<&str> = reg["modes"].as_array().unwrap().iter().filter_map(|m| m["id"].as_str()).collect();
+        for id in mode_id::ALL {
+            assert!(ids.contains(&id), "{id} is not in config/modes.json");
+        }
+        // And every write site names a declared id, never a literal.
+        for (file, src) in [
+            ("game.rs", include_str!("game.rs")),
+            ("wordpic_screen.rs", include_str!("wordpic_screen.rs")),
+            ("wordsearch_ui.rs", include_str!("wordsearch_ui.rs")),
+            ("wordcross_ui.rs", include_str!("wordcross_ui.rs")),
+        ] {
+            let tags = src.matches("learner::Tag {").count() + src.matches(" Tag {").count();
+            let literal = src.lines().find(|l| l.trim_start().starts_with("mode: \"") || l.contains(", mode: \""));
+            assert!(tags > 0 || file == "wordcross_ui.rs", "{file} stamps no Tag");
+            assert!(literal.is_none(), "{file} logs a mode literal: {literal:?}");
+        }
+    }
+
+    /// Acceptance 6: the backfill is the union of log, misses and
+    /// redemptions, for this language only, keyed on word_id0.
+    #[test]
+    fn the_seen_backfill_is_the_union_of_the_three_stores() {
+        let st = load_state(PRE_CR1).unwrap();
+        let miss = |w: &str, l: &str| crate::model::MissEntry {
+            word: w.into(), lang: l.into(), tier: "easy".into(), misses: 1, box_: 0, due: 0.0, ts: 0.0, review: None,
+        };
+        let red = |w: &str, l: &str| crate::reports::Redemption { word: w.into(), lang: l.into(), misses: 2, mastered_ts: 0.0 };
+        let got = seen_backfill("en", &st.log, &[miss("Rhythm", "en"), miss("ritmo", "es")], &[red("knight", "en"), red("because", "en")]);
+        let want: std::collections::BTreeSet<String> =
+            ["en::because", "en::knight", "en::rabbit", "en::rhythm"].into_iter().map(String::from).collect();
+        assert_eq!(got, want);
+    }
+
+    /// Acceptance 7 (CR-I5): reset removes every key the learner declares,
+    /// the seen set included.
+    #[test]
+    fn reset_clears_every_learner_key_for_the_language() {
+        let keys = keys_for("en");
+        assert!(keys.contains(&store_key("en")) && keys.contains(&seen_key("en")) && keys.contains(&format!("{}{BACKUP_SUFFIX}", store_key("en"))));
+        let src = include_str!("learner.rs");
+        let suffixes = src.lines().filter(|l| l.starts_with("const ") && l.contains("_SUFFIX: &str")).count();
+        assert_eq!(keys.len(), suffixes + 1, "a new learner key suffix must join keys_for");
+        let reset = &src[src.find("pub fn reset(lang: &str) {").unwrap()..];
+        assert!(reset[..reset.find("\n}\n").unwrap()].contains("keys_for(lang)"));
+    }
+
+    /// Acceptance 9: no schema bump, and an older build reads CR-1 state as
+    /// Stored, never Newer (the downgrade-looks-empty hazard).
+    #[test]
+    fn cr1_state_is_still_v2_and_older_builds_read_it_as_stored() {
+        assert_eq!(SCHEMA_VERSION, 2, "CR-1 rides v2: a bump is a stop-and-ask");
+        let json = serde_json::to_string(&stamped_state()).unwrap();
+        assert!(matches!(resolve_load(Some(&json), "en"), Loaded::Stored(_)));
+        let old: OldState = serde_json::from_str(&json).unwrap();
+        assert!(old.version <= SCHEMA_VERSION, "an older v2 build would see Newer");
+    }
+}

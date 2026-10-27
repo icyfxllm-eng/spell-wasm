@@ -1,6 +1,6 @@
 # CC-LEARNING-ENGINE-L0 — Change Request CR-1: attempt instant, outcome class, mode tag, seen set
 
-**Status:** DECISIONS SIGNED. L-D1 to L-D6 were signed as recommended (Eric, 2026-10-26: "1-6 Recommended"). Nothing is built yet.
+**Status:** DECISIONS SIGNED. L-D1 to L-D6 were signed as recommended (Eric, 2026-10-26: "1-6 Recommended"). **BUILT 2026-10-26** (see "As built" below). No schema bump was needed.
 **Amends CC-GUARDIAN-REPORT v1:** "close" comes out of G-D16 (L-D2). A14 now reads "top-up never includes a word seen since CR-1 or still in any learner store" (L-D4). The GUARDIAN-REPORT file itself is not in the repo yet.
 **Raised by:** CC-GUARDIAN-REPORT v1 §0 C2 (HALT), 2026-10-26. That file says field gaps go to L0, never to it.
 **Amends:** L0 R1 (`LearnerQuery`, additive only) and the stored `Attempt` record in `src/learner.rs`.
@@ -154,6 +154,30 @@ So there is no ship-order hazard. The cost is that a downgrade followed by an up
 | **L-D4** | Backfill is lossy for words seen before CR-1 and outside the 512-entry ring. GUARDIAN A14 ("top-up never includes a seen word") can't be fully true for long-time players. | **Accept, and amend A14** to "seen since CR-1 or still in any learner store". The alternative is no top-up until a profile has 4 weeks of CR-1 history. |
 | **L-D5** | `LOG_CAP` stays 512 per language. A heavy week, or C10's 4-week dry run, can outrun it. | **Keep 512.** GUARDIAN shows only what's present and needs no new label. Raising the cap is its own reviewed change. |
 | **L-D6** | Does this ride L0 or wait for Phase 3? | **Ride now.** It's independent of the simulator and doesn't touch FSRS or BKT. |
+
+## As built (2026-10-26)
+
+**Where it is:**
+- `src/learner.rs` adds `Attempt.{ts, outcome, mode, impossible}`, `OutcomeClass`, `Tag`, `Attempt::stamped`, `stamp_now`, `mode_id`, `now_s`, the seen set (`seen_backfill`, `seen_stored`, `note_seen`) and `keys_for`. `reset` now loops over `keys_for`.
+- `src/learner_query.rs` adds `AttemptDetail`, `attempt_detail_log` and `seen_set`, on both `Live` and `Fake`.
+- `src/game.rs` adds `tag_for` / `learner_tag` and `Outcome::learner_class`.
+- The other write sites are in `wordpic_screen.rs`, `wordsearch_ui.rs` and `wordcross_ui.rs`.
+
+**Where the build differs from the draft:**
+- **Seen key:** it is `spell_learner_<lang>_seen`, not `spell_learner_seen_<lang>`. It follows the `_unreadable` backup's suffix pattern, so the part after the prefix can never read as a language code.
+- **Placement mode:** placement logs as `standard`, not `placement`. Acceptance 5 admits registry ids only, and placement has none.
+- **Two extra mode ids:** `online_spelloff` and `ghost_racing`. Both ride the Daily's word flow (`daily.spelloff` / `daily.racing`).
+- **Impossible Daily:** an attempt is flagged `impossible` when `daily.impossible` is set, as well as on `impossible_word`.
+- **Spell Search:** a homophone lock-in logs `OtherSense`.
+- **Spell Cross and trap picks:** these use `stamp_now`, which gives `Trap`, `Correct` or `Misspelled`.
+- **TimedOut and GaveUp:** these classes exist, but no write site logs them today. Timeouts and give-ups never reached the learner log before CR-1 either.
+- **Telemetry lint (CR-I3):** gains the term `seen`. The planted list adds `seen_set`, because the other planted names already trip `word`, `learner` and `attempt`. A mutation run confirmed that each term is load-bearing.
+
+**Tests:**
+- `learner::cr1_tests` covers acceptance 1, 2, 3 (log side), 5, 6, 7 and 9.
+- `game::learner_tag_tests` covers acceptance 3 (source side) and 4.
+- `telemetry::schema` covers acceptance 8.
+- **Not covered here:** host tests have no localStorage, so the seen-set write and the reset removal are held structurally (keys and source scan). A real-store check is e2e work and is not done yet.
 
 ## Non-goals
 
