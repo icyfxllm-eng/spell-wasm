@@ -36,6 +36,8 @@ const POLICY = /^(hidden|ungated|variant:[a-z][a-z0-9-]*|ceiling:(easy|medium|ha
 const JUNIOR_MAX = 'medium';
 const PLATFORMS = new Set(['web', 'ios']);
 const LEVELS = new Set(['none', 'preview', 'full']);
+// CC-HUB-NAV AE-1 F2: the editions a row may ship in.
+const EDITIONS = new Set(['consumer', 'education']);
 const PREMIUM = new Set(['photo_ocr', 'multiple_profiles', 'progress_reports', 'custom_lists_unlimited']);
 // CC-HUB-DEADROWS F4 — the groups that render as drawer rows. An icon only has
 // to be unique among rows a player can see side by side.
@@ -124,6 +126,18 @@ function validate(reg, { locale, flags, launch } = {}) {
       problems.push(`${at}: languages must be null or an array`);
     }
 
+    // CC-HUB-NAV AE-1 F1: an adult-only row must also be hidden from Spell Jr
+    // in the fields Jr reads, so the two can never disagree permissively.
+    if (m.adultOnly !== undefined && typeof m.adultOnly !== 'boolean') problems.push(`${at}: adultOnly must be a boolean`);
+    if (m.adultOnly === true && (m.kidSafe !== false || m.juniorPolicy !== 'hidden')) {
+      problems.push(`${at}: adultOnly needs kidSafe false and juniorPolicy hidden, got kidSafe ${JSON.stringify(m.kidSafe)}, juniorPolicy ${JSON.stringify(m.juniorPolicy)}`);
+    }
+    // AE-1 F2: editions, when present, is a non-empty array of known editions.
+    if (m.editions !== undefined && m.editions !== null) {
+      if (!Array.isArray(m.editions) || m.editions.length === 0) problems.push(`${at}: editions must be a non-empty array when present`);
+      else for (const e of m.editions) if (!EDITIONS.has(e)) problems.push(`${at}: unknown edition ${JSON.stringify(e)}`);
+    }
+
     // Cross-check: the copy must already exist (F2 — no new auditable content).
     if (locale) {
       for (const k of ['nameKey', 'descKey']) {
@@ -207,6 +221,11 @@ if (process.argv.includes('--selftest')) {
     ['diff without reveal', (m) => { m.feedback.revealCorrect = false; m.feedback.diff = true; }],
     ['bad lengthBeforeAnswer', (m) => { m.feedback.lengthBeforeAnswer = 'maybe'; }],
     ['unknown feedback level', (m) => { m.feedbackLevels = { nightmare: { lengthBeforeAnswer: false } }; }],
+    ['non-boolean adultOnly', (m) => { m.adultOnly = 'yes'; }],
+    ['adultOnly but kid-safe', (m) => { m.adultOnly = true; }],
+    ['adultOnly but not hidden from junior', (m) => { m.adultOnly = true; m.kidSafe = false; }],
+    ['unknown edition', (m) => { m.editions = ['enterprise']; }],
+    ['empty editions', (m) => { m.editions = []; }],
   ];
   const missed = [];
   for (const [name, mutate] of cases) {
@@ -232,6 +251,10 @@ if (process.argv.includes('--selftest')) {
   // Unlisted modes never sit side by side, so they may share freely.
   const unlisted = pair('\u{1F41D}', '\u{1F41D}').map((m) => ({ ...m, group: 'unlisted' }));
   if (shared(unlisted)) missed.push('unlisted modes wrongly held to the icon rule');
+
+  // AE-1: a well-formed adult-only, consumer-only row must pass.
+  const adult = { ...base(), adultOnly: true, kidSafe: false, juniorPolicy: 'hidden', editions: ['consumer'] };
+  if (validate({ modes: [adult] }, { locale, flags }).length) missed.push('valid adult-only consumer row wrongly rejected');
 
   // ...and a well-formed entry must PASS, or the checker is just noisy.
   const cleanOk = validate({ modes: [base()] }, { locale, flags }).length === 0;

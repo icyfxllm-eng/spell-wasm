@@ -47,6 +47,18 @@ const NEEDLES = [
   'upgrade.',
 ];
 
+// CC-HUB-NAV AE-1 A4: a registry row whose `editions` excludes "education" is
+// stripped by build.rs before it is compiled in, so its registry entry cannot
+// appear in the artifact. The staged JSON keeps the file's formatting, so the
+// entry's own `"id": "<id>"` line is the needle.
+export function excludedIdNeedles(registry) {
+  return (registry.modes || [])
+    .filter((m) => Array.isArray(m.editions) && !m.editions.includes('education'))
+    .map((m) => `"id": "${m.id}"`);
+}
+const REGISTRY = JSON.parse(readFileSync(join(ROOT, 'config/modes.json'), 'utf8'));
+NEEDLES.push(...excludedIdNeedles(REGISTRY));
+
 const SKIP_EXT = /\.(map|md|txt|png|jpg|jpeg|svg|webp|woff2?|ttf|mp3|wav)$/i;
 
 function walk(dir, out = []) {
@@ -79,6 +91,9 @@ if (process.argv.includes('--selftest')) {
     writeFileSync(join(tmp, 'app.js'), `const x = "${needle}";`);
     if (scan(tmp).length === 0) missed.push(needle);
   }
+  // AE-1: an excluded registry row is caught by its id line; an unexcluded one is not a needle.
+  const fake = excludedIdNeedles({ modes: [{ id: 'adult_row', editions: ['consumer'] }, { id: 'kept', editions: ['education'] }, { id: 'plain' }] });
+  if (fake.length !== 1 || fake[0] !== '"id": "adult_row"') missed.push('excluded-row needle');
   writeFileSync(join(tmp, 'app.js'), 'const x = "nothing to see";');
   const clean = scan(tmp).length === 0;
   if (missed.length || !clean) {

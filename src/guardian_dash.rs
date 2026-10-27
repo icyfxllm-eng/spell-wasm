@@ -1,13 +1,8 @@
-//! BD-3 CC-GUARDIAN-DASH core surface. App-shell-only; view-only (no share
-//! affordance in this wave); every read goes through ReportsQuery or the
-//! learner's own report. The gate is a fresh worded-math challenge per
-//! open — passing it never touches the agegate verdict.
-
-use std::cell::Cell;
-
-thread_local! {
-    static GATE_ANSWER: Cell<i32> = const { Cell::new(-1) };
-}
+//! BD-3 CC-GUARDIAN-DASH core surface. App-shell-only; every read goes through
+//! ReportsQuery or the learner's own report. The gate is the app's one parent
+//! gate (`parent_gate_then`, CC-HUB-NAV AE-1 F4): a fresh worded-math challenge
+//! per open, and a pass with an action set runs that action only — it never
+//! touches the agegate verdict.
 
 fn t(k: &str) -> String {
     crate::i18n::t(k)
@@ -94,7 +89,6 @@ fn render_body(app: &crate::App) {
     crate::family_voices::fill_dash_section();
     crate::yearbook_ui::fill_dash_section(app);
     crate::dom::remove_class("gdashBody", "btn-hide");
-    crate::dom::add_class("gdashGate", "btn-hide");
 }
 
 /// Read-and-cheer only (CAL feature 7 / I7): the goal renders read-only
@@ -207,17 +201,14 @@ pub fn wire(app: &crate::App) {
     if !crate::dom::exists("gdash") {
         return;
     }
-    crate::dom::on_click("gdashOpen", || {
-        let (q, ans) = crate::agegate::parent_problem();
-        GATE_ANSWER.with(|c| c.set(ans));
-        crate::dom::set_text("gdashQ", &q);
-        crate::dom::input("gdashAnswer").set_value("");
-        crate::dom::set_text("gdashErr", "");
-        crate::dom::add_class("gdashBody", "btn-hide");
-        crate::dom::remove_class("gdashGate", "btn-hide");
-        crate::dom::input("gdashAnswer").focus().ok();
-    });
-    let a = app.clone();
+    {
+        let a = app.clone();
+        crate::dom::on_click("gdashOpen", move || {
+            crate::dom::add_class("gdashBody", "btn-hide");
+            let a = a.clone();
+            crate::parent_gate_then(Box::new(move || render_body(&a)));
+        });
+    }
     {
         let a = app.clone();
         crate::dom::on::<web_sys::MouseEvent, _>("gdashBody", "click", move |e| {
@@ -252,12 +243,4 @@ pub fn wire(app: &crate::App) {
             }
         });
     }
-    crate::dom::on_click("gdashGo", move || {
-        let given: i32 = crate::dom::input("gdashAnswer").value().trim().parse().unwrap_or(-1);
-        if given == GATE_ANSWER.with(|c| c.get()) && given >= 0 {
-            render_body(&a);
-        } else {
-            crate::dom::set_text("gdashErr", &crate::i18n::t("gdash.wrong"));
-        }
-    });
 }

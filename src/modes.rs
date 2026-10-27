@@ -95,6 +95,16 @@ pub struct Mode {
     /// Per-level overrides (Impossible is a level of the base game, not a mode).
     #[serde(rename = "feedbackLevels", default)]
     pub feedback_levels: std::collections::BTreeMap<String, FeedbackOverride>,
+    /// CC-HUB-NAV AE-1 F1: the row exists for a KNOWN Standard player only.
+    /// Junior and Unknown age both lose it -- absent, not locked. Opt-in, so a
+    /// row without the field behaves exactly as before (AE-I4).
+    #[serde(rename = "adultOnly", default)]
+    pub adult_only: bool,
+    /// CC-HUB-NAV AE-1 F2: the editions that ship this row ("consumer",
+    /// "education"); None means both. Enforced at BUILD time: `build.rs`
+    /// strips the row from the Education registry, so it is never parsed here.
+    #[serde(default)]
+    pub editions: Option<Vec<String>>,
 }
 
 /// How a mode's answers are entered.
@@ -294,6 +304,10 @@ pub fn all() -> Vec<Mode> {
 pub struct HubCtx {
     /// Little Speller / Kid Mode.
     pub kid: bool,
+    /// CC-HUB-NAV AE-1: who is playing, with "not yet known" as its own answer
+    /// (`experience::audience`). Only `adultOnly` rows read it; every older
+    /// clause still reads `kid`.
+    pub audience: crate::experience::Audience,
     /// The native iOS bridge is present (mirrors how tools_hub decides `Avail::Native`).
     pub native: bool,
     /// The study language in play.
@@ -356,6 +370,11 @@ fn permitted(m: &Mode, ctx: &HubCtx, surface: Surface) -> bool {
     if ctx.kid && (!m.kid_safe || m.junior_policy == "hidden") {
         return false;
     }
+    // AE-1 (AE-I1): an adult-only row exists for a known Standard player only.
+    // Unknown age is the stricter answer (experience::audience), so it hides too.
+    if m.adult_only && ctx.audience != crate::experience::Audience::Standard {
+        return false;
+    }
     // A mode that cannot run on this platform does not tile.
     let platform = if ctx.native { "ios" } else { "web" };
     if !m.platforms.iter().any(|p| p == platform) {
@@ -387,6 +406,38 @@ pub fn visible(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
     modes.iter().filter(|m| permitted(m, ctx, Surface::HubTiles)).cloned().collect()
 }
 
+/// CC-HUB-NAV AE-1 F3: deep-link routes that open a gated row, as (route hash,
+/// registry id). A route opens only when the drawer would show its row in the
+/// same context, so a link can never reach what the menu hides (AE-I3). Empty
+/// until a gated row ships; GUARDIAN-REPORT F4 adds the first.
+pub const GATED_ROUTES: &[(&str, &str)] = &[];
+
+/// What the router does with a hash.
+#[derive(Debug, PartialEq, Eq)]
+pub enum RouteVerdict<'a> {
+    /// Not a gated route: the ordinary router handles it.
+    NotGated,
+    /// Open this registry row (behind the adult gate, which the caller runs).
+    Open(&'a str),
+    /// The row is absent here: consume the link silently, so a child learns
+    /// nothing about what is behind it.
+    Refuse,
+}
+
+/// AE-I3, pure. `catalog_ids` is only computed for a gated hash. A query
+/// (`#guardian-report?week=...`) does not change which route it is.
+pub fn gated_route<'a>(hash: &str, table: &[(&str, &'a str)], catalog_ids: impl FnOnce() -> Vec<String>) -> RouteVerdict<'a> {
+    let route = hash.split('?').next().unwrap_or(hash);
+    let Some((_, id)) = table.iter().find(|(h, _)| *h == route) else {
+        return RouteVerdict::NotGated;
+    };
+    if catalog_ids().iter().any(|c| c == id) {
+        RouteVerdict::Open(id)
+    } else {
+        RouteVerdict::Refuse
+    }
+}
+
 /// As [`visible`], for the drawer: the same gate, plus the `core` surfaces.
 pub fn catalog(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
     modes.iter().filter(|m| permitted(m, ctx, Surface::Catalog)).cloned().collect()
@@ -406,6 +457,7 @@ mod tests {
     fn ctx() -> HubCtx {
         HubCtx {
             kid: false,
+            audience: crate::experience::Audience::Standard,
             native: true,
             lang: "en".to_string(),
             level: AccessLevel::Full,
@@ -455,7 +507,7 @@ mod tests {
         let all = all();
         for kid in [false, true] {
             for native in [false, true] {
-                let c = HubCtx { kid, native, lang: "en".into(), level: AccessLevel::Full, premium: vec!["photo_ocr".into()], enabled: ids(&all) };
+                let c = HubCtx { kid, audience: crate::experience::audience(kid, true), native, lang: "en".into(), level: AccessLevel::Full, premium: vec!["photo_ocr".into()], enabled: ids(&all) };
                 assert!(!ids(&visible(&all, &c)).contains(&"word_stories".to_string()), "word_stories must never tile");
             }
         }
@@ -895,5 +947,238 @@ mod feedback_policy_tests {
         assert_eq!(LengthRaw::Flag(false).resolve(), Length::Hidden);
         assert_eq!(LengthRaw::Word("on_request".into()).resolve(), Length::OnRequest);
         assert_eq!(LengthRaw::Word("maybe".into()).resolve(), Length::Hidden);
+    }
+}
+
+// CC-HUB-NAV AE-1 A3 (AE-I4): the menu every existing context sees, pinned
+// from the tree BEFORE AE-1 landed. App registry only: the web build strips
+// app-only rows, which is its own truth with its own test.
+#[cfg(all(test, not(feature = "web"), not(feature = "education")))]
+mod ae1_golden {
+    use super::*;
+
+    const GOLDEN: &str = "tests/fixtures/hub-catalog-golden.txt";
+
+    /// (label, kid, audience). Unknown plays as standard behind the scrim.
+    const WHO: [(&str, bool); 3] = [("junior", true), ("standard", false), ("unknown", false)];
+
+    fn mk(who: &str, kid: bool, native: bool, level: AccessLevel, premium: &[&str]) -> HubCtx {
+        HubCtx {
+            kid,
+            audience: crate::experience::audience(kid, who != "unknown"),
+            native,
+            lang: "en".to_string(),
+            level,
+            premium: premium.iter().map(|p| p.to_string()).collect(),
+            enabled: all().iter().map(|m| m.id.clone()).collect(),
+        }
+    }
+
+    pub(super) fn grid() -> String {
+        let all = all();
+        let mut out = String::new();
+        for (who, kid) in WHO {
+            for native in [false, true] {
+                for (lname, level) in [("preview", AccessLevel::Preview), ("full", AccessLevel::Full)] {
+                    for (pname, premium) in [("none", &[][..]), ("all", &["photo_ocr", "multiple_profiles", "progress_reports", "custom_lists_unlimited"][..])] {
+                        let c = mk(who, kid, native, level, premium);
+                        let ids = |v: Vec<Mode>| v.iter().map(|m| m.id.as_str()).collect::<Vec<_>>().join(",");
+                        out.push_str(&format!(
+                            "{who} native={native} level={lname} premium={pname}\n  hub: {}\n  catalog: {}\n",
+                            ids(visible(&all, &c)),
+                            ids(catalog(&all, &c)),
+                        ));
+                    }
+                }
+            }
+        }
+        out
+    }
+
+    #[test]
+    fn existing_contexts_see_the_menu_they_saw_before_ae1() {
+        let want_path = format!("{}/{GOLDEN}", env!("CARGO_MANIFEST_DIR"));
+        let got = grid();
+        if std::env::var("HUB_GOLDEN_BLESS").is_ok() {
+            std::fs::write(&want_path, &got).unwrap();
+        }
+        let want = std::fs::read_to_string(&want_path).unwrap_or_default();
+        assert_eq!(got, want, "{GOLDEN} differs: an existing row changed visibility");
+    }
+}
+
+// CC-HUB-NAV AE-1 F2 / A4: the strips build.rs runs, held on the real registry.
+#[cfg(test)]
+mod ae1_strip_tests {
+    use crate::modes_strip::{keeps_in_education, keeps_on_web, strip_modes};
+
+    const REAL: &str = include_str!("../config/modes.json");
+
+    fn ids(json: &str) -> Vec<String> {
+        let v: serde_json::Value = serde_json::from_str(json).expect("a staged registry must parse");
+        v["modes"].as_array().unwrap().iter().map(|m| m["id"].as_str().unwrap().to_string()).collect()
+    }
+
+    fn rows_where(pred: impl Fn(&serde_json::Value) -> bool) -> Vec<String> {
+        let v: serde_json::Value = serde_json::from_str(REAL).unwrap();
+        v["modes"].as_array().unwrap().iter().filter(|m| pred(m)).map(|m| m["id"].as_str().unwrap().to_string()).collect()
+    }
+
+    fn lists(m: &serde_json::Value, field: &str, value: &str) -> Option<bool> {
+        m[field].as_array().map(|a| a.iter().any(|x| x == value))
+    }
+
+    /// The web strip moved files, not behaviour: it keeps exactly the rows
+    /// that list "web".
+    #[test]
+    fn the_web_strip_keeps_exactly_the_web_rows() {
+        let want = rows_where(|m| lists(m, "platforms", "web").unwrap_or(true));
+        assert_eq!(ids(&strip_modes(REAL, keeps_on_web)), want);
+    }
+
+    /// A4: the Education strip keeps exactly the rows that ship there.
+    #[test]
+    fn the_education_strip_keeps_exactly_the_education_rows() {
+        let want = rows_where(|m| lists(m, "editions", "education").unwrap_or(true));
+        assert_eq!(ids(&strip_modes(REAL, keeps_in_education)), want);
+    }
+
+    #[test]
+    fn a_consumer_only_row_is_deleted_from_education_and_the_rest_survive() {
+        let reg = r#"{
+  "modes": [
+    { "id": "both", "platforms": ["ios", "web"] },
+    { "id": "consumer_only", "platforms": ["ios"], "editions": ["consumer"] },
+    { "id": "named_both", "platforms": ["ios"], "editions": ["consumer", "education"] }
+  ]
+}"#;
+        assert_eq!(ids(&strip_modes(reg, keeps_in_education)), ["both", "named_both"]);
+        assert_eq!(ids(&strip_modes(reg, keeps_on_web)), ["both"]);
+        // The two strips compose, as the Education site build runs them.
+        assert_eq!(ids(&strip_modes(&strip_modes(reg, keeps_on_web), keeps_in_education)), ["both"]);
+    }
+
+    /// In an actual Education build the bundled registry holds no excluded row.
+    #[cfg(feature = "education")]
+    #[test]
+    fn the_bundled_education_registry_has_no_consumer_only_row() {
+        for m in super::all() {
+            if let Some(e) = &m.editions {
+                assert!(e.iter().any(|x| x == "education"), "{} ships in Education but excludes it", m.id);
+            }
+        }
+    }
+}
+
+// CC-HUB-NAV AE-1 A1, A5, A6.
+#[cfg(test)]
+mod ae1_tests {
+    use super::*;
+    use crate::experience::Audience;
+
+    /// A real registry row, made adult-only the way modes-check insists.
+    fn adult_row() -> Mode {
+        let mut m = all().into_iter().find(|m| m.status == Status::Live).expect("a live row");
+        m.id = "adult_fixture".into();
+        m.adult_only = true;
+        m.kid_safe = false;
+        m.junior_policy = "hidden".into();
+        m
+    }
+
+    fn ctx(audience: Audience) -> HubCtx {
+        HubCtx {
+            kid: audience == Audience::Junior,
+            audience,
+            native: true,
+            lang: "en".into(),
+            level: AccessLevel::Full,
+            premium: vec!["photo_ocr".into(), "progress_reports".into()],
+            enabled: vec!["adult_fixture".into()],
+        }
+    }
+
+    /// A1 (AE-I1): Junior and Unknown lose an adult-only row on every surface;
+    /// a known Standard player keeps it. Unknown hides it even with `kid` false.
+    #[test]
+    fn an_adult_only_row_exists_for_a_known_standard_player_only() {
+        let rows = vec![adult_row()];
+        for (who, shown) in [(Audience::Junior, false), (Audience::Unknown, false), (Audience::Standard, true)] {
+            let c = ctx(who);
+            assert_eq!(!catalog(&rows, &c).is_empty(), shown, "catalog for {who:?}");
+            assert_eq!(!visible(&rows, &c).is_empty(), shown, "hub tiles for {who:?}");
+        }
+        assert!(!ctx(Audience::Unknown).kid, "the fixture must prove Unknown hides without kid");
+    }
+
+    /// The live context really is three-way: an unanswered gate is Unknown.
+    #[test]
+    fn the_live_ctx_asks_the_three_way_resolver() {
+        let src = include_str!("play_hub.rs");
+        assert!(src.contains("audience: crate::experience::audience(kid, crate::agegate::stored().is_some())"));
+    }
+
+    const TABLE: &[(&str, &str)] = &[("#adult-fixture", "adult_fixture")];
+
+    fn catalog_ids(who: Audience) -> Vec<String> {
+        catalog(&[adult_row()], &ctx(who)).into_iter().map(|m| m.id).collect()
+    }
+
+    /// A5's logic (AE-I3): a gated route opens only where the drawer shows
+    /// its row; elsewhere it is refused, query or not.
+    #[test]
+    fn a_gated_route_follows_its_rows_visibility() {
+        assert_eq!(gated_route("#adult-fixture", TABLE, || catalog_ids(Audience::Standard)), RouteVerdict::Open("adult_fixture"));
+        assert_eq!(gated_route("#adult-fixture?week=2026-10-19", TABLE, || catalog_ids(Audience::Standard)), RouteVerdict::Open("adult_fixture"));
+        for who in [Audience::Junior, Audience::Unknown] {
+            assert_eq!(gated_route("#adult-fixture?week=2026-10-19", TABLE, || catalog_ids(who)), RouteVerdict::Refuse, "{who:?}");
+        }
+        // An ordinary hash is not this table's business, and costs no catalog.
+        assert_eq!(gated_route("#daily", TABLE, || panic!("catalog computed for an ungated hash")), RouteVerdict::NotGated);
+    }
+
+    /// Every gated route names a registry row that is adult-only, and has a
+    /// launcher, so Open always has somewhere to go behind the gate.
+    #[test]
+    fn every_gated_route_opens_an_adult_only_row_with_a_launcher() {
+        let all = all();
+        for (hash, id) in GATED_ROUTES {
+            let m = all.iter().find(|m| m.id == *id).unwrap_or_else(|| panic!("{hash} names no registry row {id}"));
+            assert!(m.adult_only, "{hash} opens {id}, which is not adultOnly");
+            assert!(crate::play_hub::launch_for(id).is_some(), "{hash} opens {id}, which has no launcher");
+        }
+    }
+
+    /// A5's wiring: the router consults the table BEFORE its ordinary routes,
+    /// and an Open goes through the parent gate.
+    #[test]
+    fn the_router_checks_gated_routes_first_and_gates_an_open() {
+        let src = include_str!("lib.rs");
+        let gated = src.find("modes::gated_route(&hash, modes::GATED_ROUTES").expect("the router must consult GATED_ROUTES");
+        let plain = src.find("\"#daily\" => dom::click(\"dailyBtn\")").expect("the ordinary router moved");
+        assert!(gated < plain, "gated routes must be checked before the ordinary ones");
+        let open = &src[gated..plain];
+        assert!(open.contains("RouteVerdict::Open(id)") && open.contains("parent_gate_then("), "an Open must pass the parent gate");
+    }
+
+    /// A6 (AE-I5): one adult gate. The challenge is generated in one place,
+    /// and the dashboard reaches it through `parent_gate_then`.
+    #[test]
+    fn there_is_one_adult_gate() {
+        let callers: Vec<&str> = [
+            ("lib.rs", include_str!("lib.rs")),
+            ("guardian_dash.rs", include_str!("guardian_dash.rs")),
+            ("credits.rs", include_str!("credits.rs")),
+            ("lists_screen.rs", include_str!("lists_screen.rs")),
+            ("online_screen.rs", include_str!("online_screen.rs")),
+        ]
+        .into_iter()
+        .filter(|(_, s)| s.contains("parent_problem()"))
+        .map(|(f, _)| f)
+        .collect();
+        assert_eq!(callers, ["lib.rs"]);
+        let dash = include_str!("guardian_dash.rs");
+        assert!(dash.contains("parent_gate_then("), "the dashboard must use the shared gate");
+        assert!(!dash.contains("GATE_ANSWER"), "the dashboard's own gate is back");
     }
 }
