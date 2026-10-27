@@ -1,6 +1,6 @@
 # CC-REPORTS-SHARE v1 — Parent report composer, closed lexicon, pull-only share
 
-**Status:** DRAFT for Eric, 2026-10-26. Nothing is built.
+**Status:** DECISIONS SIGNED. D-R1, D-R4 and D-R6 to D-R10 were signed as recommended (Eric, 2026-10-26: "I like the recs they seem reasonable", then "record D-AE1 to D-AE4 and D-R1, D-R4, D-R6 to D-R10 as signed as recommended"). Nothing is built yet.
 **Why it exists:** CC-GUARDIAN-REPORT v1, CC-SNAP-ROADMAP and CC-CONTRIBUTE all cite this file, and until now it existed nowhere (see `docs/CC-REPORTS-SHARE-gap-note.md`). This v1 is written to the shape those files already assume. It is small on purpose, because most of what it needs is already built.
 **Base:** origin/main `5ffeb19d`.
 **Depends on:**
@@ -103,9 +103,9 @@ pub fn render_text(r: &Report) -> String;        // pure, closed lexicon only
 
 ---
 
-## Decisions
+## Decisions (signed as recommended, Eric 2026-10-26)
 
-| # | Decision | Recommendation |
+| # | Decision | Signed |
 |---|---|---|
 | **D-R1** | Delivery | **Pull only via the OS share sheet.** No push, email, SMS or server. The rest of the tree already practises this. |
 | **D-R4** | Entitlement | **It rides SpellGame Complete** (`progress_reports`) and is absent, not locked, without it. |

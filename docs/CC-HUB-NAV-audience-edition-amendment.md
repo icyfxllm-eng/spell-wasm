@@ -1,9 +1,10 @@
 # CC-HUB-NAV — Amendment AE-1: adult-only rows, edition rows, gated deep links
 
-**Status:** DRAFT for Eric, 2026-10-26. Nothing is built.
+**Status:** DECISIONS SIGNED. D-AE1 to D-AE4 were signed as recommended (Eric, 2026-10-26: "I like the recs they seem reasonable", then "record D-AE1 to D-AE4 and D-R1, D-R4, D-R6 to D-R10 as signed as recommended"). Nothing is built yet.
 **Raised by:** CC-GUARDIAN-REPORT v1 §0 C3 (HALT). Base: origin/main `5ffeb19d`.
 **Amends:** the CC-HUB-NAV row registry (`config/modes.json`, `src/modes.rs`), `build.rs`'s registry staging, and the hash router (`src/lib.rs:363`).
 **Consumes as-is:** CC-ONBOARD-JR's `experience::audience()`. The resolver doesn't change.
+**Amends CC-GUARDIAN-REPORT v1 (D-AE4):** F7's deep link is `spellgame://guardian-report?week=<monday>`, not `spell://`. The GUARDIAN-REPORT file is not in the repo yet.
 **Out of scope:** any change to how existing rows behave. Every new field is opt-in.
 
 ---
@@ -80,9 +81,9 @@ GUARDIAN-REPORT F4 needs a drawer row that is **absent**, not locked, in three c
 5. **Deep link:** under Junior and under Unknown, `#guardian-report` is consumed, nothing renders, and no gate opens. Under Standard, the gate opens first. This is e2e, through `__spelltest`.
 6. **One gate:** a source scan finds `parent_problem()` called only from `lib.rs`, and DASH reaches it through `parent_gate_then`.
 
-## Decisions for Eric
+## Decisions (signed as recommended, Eric 2026-10-26)
 
-| # | Decision | Recommendation |
+| # | Decision | Signed |
 |---|---|---|
 | **D-AE1** | How unknown-age rows are hidden | **An opt-in `adultOnly` field** that hides for Junior and Unknown. The alternative, treating Unknown as Jr in every row, changes every kid-gated row at once. |
 | **D-AE2** | How rows are kept out of Education | **Strip at build time,** following the `web` precedent. The alternative is an `edition` field on `HubCtx` checked at runtime. |
