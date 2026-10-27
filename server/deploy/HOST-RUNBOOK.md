@@ -64,6 +64,14 @@ sudo systemctl enable --now dnf-automatic.timer
 Check: `systemctl is-active dnf-automatic.timer` and `grep upgrade_type /etc/dnf/automatic.conf`. **H7**
 
 ## 6. Tailscale, on Rocky **and on the Mac mini**
+
+**Eric 2026-10-26: word audio comes from the public site for now.** The unit
+uses `SPELL_TTS_BASE=https://spellgame.net` (option A), which needs no
+Tailscale on the Mac mini; the backend there listens on its own loopback and
+is reached through its existing tunnel. The tailnet route below (option B,
+the signed D-X2 plan) stays available. Switching is one line in the unit
+plus a restart. Tailscale on Rocky is still needed for admin SSH.
+
 Rocky:
 ```
 # as your admin user (eric):
@@ -155,7 +163,8 @@ cd ~/spell-wasm && git pull
 server/deploy/build.sh                      # prints sha256:<hex>
 mkdir -p ~/.config/containers/systemd
 cp server/deploy/spellgame.container ~/.config/containers/systemd/
-sed -i 's|<MAC_MINI_TAILNET_IP>|100.x.y.z|' ~/.config/containers/systemd/spellgame.container
+sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=https://spellgame.net|' ~/.config/containers/systemd/spellgame.container
+# (option B instead: Environment=SPELL_TTS_BASE=http://<MAC_MINI_TAILNET_IP>:8000)
 /usr/libexec/podman/quadlet -dryrun -user    # must print the generated unit, no errors (A14.4)
 server/deploy/deploy.sh sha256:<hex>
 ```
