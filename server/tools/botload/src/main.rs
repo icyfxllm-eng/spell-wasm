@@ -1,7 +1,7 @@
 //! CC-GAME-SERVER F16 — load, soak and chaos bots for the room server.
 //!
 //!   botload run --target https://play.spellgame.net --admin http://127.0.0.1:8081 --profile load
-//!   botload tts-stub --listen 127.0.0.1:9090
+//!   botload tts-stub --listen 127.0.0.1:9190
 //!
 //! Each room is two bots on two real sockets, driven by one task. The task
 //! keeps its OWN scoreboard: the app's `versus::Versus`, fed the verdicts the
@@ -651,10 +651,10 @@ async fn main() {
         Some("run") => run(opts(&args)).await,
         Some("tts-stub") => {
             let listen = args.iter().position(|a| a == "--listen").and_then(|i| args.get(i + 1)).cloned();
-            tts_stub(listen.as_deref().unwrap_or("127.0.0.1:9090")).await
+            tts_stub(listen.as_deref().unwrap_or("127.0.0.1:9190")).await
         }
         _ => {
-            eprintln!("usage: botload run --target URL --admin URL --profile smoke|load|soak|chaos [--rooms N --minutes M --lang en --right 0.8 --drop-frac 0.1]\n       botload tts-stub --listen 127.0.0.1:9090");
+            eprintln!("usage: botload run --target URL --admin URL --profile smoke|load|soak|chaos [--rooms N --minutes M --lang en --right 0.8 --drop-frac 0.1]\n       botload tts-stub --listen 127.0.0.1:9190");
             2
         }
     };

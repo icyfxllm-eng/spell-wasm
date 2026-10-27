@@ -24,12 +24,13 @@ The load runs must not use the Mac mini or Google: the stub answers every
 word instantly. The container reaches the host through
 `host.containers.internal`.
 ```
-spellsrv$ ~/spell-wasm/target/release/botload tts-stub --listen 0.0.0.0:9090 &
-spellsrv$ sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=http://host.containers.internal:9090|' ~/.config/containers/systemd/spellgame.container
+spellsrv$ ~/spell-wasm/target/release/botload tts-stub --listen 0.0.0.0:9190 &
+spellsrv$ sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=http://host.containers.internal:9190|' ~/.config/containers/systemd/spellgame.container
 spellsrv$ systemctl --user daemon-reload && systemctl --user restart spellgame.service
 spellsrv$ curl -s http://127.0.0.1:8081/admin/readyz        # "tts": true
 ```
-firewalld's public zone has no 9090, so the stub can't be reached from
+Port 9190, not 9090: Rocky's Cockpit console listens on 9090 by default.
+firewalld's public zone has no 9190, so the stub can't be reached from
 outside. `verify-host.sh` H5 shows it as an extra listener until step 6.
 
 ## 3. A16.1 — load (400 connections, 200 rooms, 10 min)
