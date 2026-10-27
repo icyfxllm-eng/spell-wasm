@@ -639,7 +639,7 @@ async fn tts_stub(listen: &str) -> i32 {
             return 2;
         }
     };
-    println!("botload tts-stub: listening on {listen} (point SPELL_TTS_BASE at http://{listen})");
+    println!("botload tts-stub: listening on {listen}. The server in its container reaches it as SPELL_TTS_BASE=http://host.containers.internal:{port}", port = listen.rsplit(':').next().unwrap_or("9190"));
     let _ = axum::serve(l, app).await;
     0
 }
