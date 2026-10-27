@@ -464,7 +464,7 @@ fn select(cells: Vec<usize>) {
                     g.traps += 1;
                     let (d, ti) = &g.puzzle.decoys[j];
                     let target = &g.puzzle.targets[*ti].word;
-                    crate::learner::note_built(&g.lang, trap_attempt(&g.lang, target, &d.word, crate::learner::day_now()));
+                    crate::learner::note_built(&g.lang, crate::learner::stamp_now(trap_attempt(&g.lang, target, &d.word, crate::learner::day_now()), crate::learner::mode_id::SPELL_SEARCH));
                 }
             }
             Hit::Miss => {}
@@ -505,11 +505,16 @@ fn submit_lock_in() {
         let word = g.puzzle.targets[order[*at]].word.clone();
         // F-S4: graded as the base game grades, and recorded through the same
         // door on the typed channel (F-X6).
-        let correct = crate::norm::answer_matches_in(&lang, typed, &word, kid)
-            || (crate::homophones::accepts(&lang, &word, typed)
-                && crate::norm::fold_strict(typed) != crate::norm::fold_strict(&word));
+        let exact = crate::norm::answer_matches_in(&lang, typed, &word, kid);
+        let other_sense = !exact
+            && crate::homophones::accepts(&lang, &word, typed)
+            && crate::norm::fold_strict(typed) != crate::norm::fold_strict(&word);
+        let correct = exact || other_sense;
         crate::keyboard_moments::react_for("spell_search", "wsKeys", correct, typed, 0);
-        crate::learner::note_built(&lang, lock_in_attempt(&lang, &word, typed, correct, crate::learner::day_now()));
+        let outcome = if other_sense { crate::learner::OutcomeClass::OtherSense } else { crate::learner::OutcomeClass::of(correct) };
+        let tag = crate::learner::Tag { outcome, mode: crate::learner::mode_id::SPELL_SEARCH, impossible: false };
+        let a = lock_in_attempt(&lang, &word, typed, correct, crate::learner::day_now()).stamped(crate::learner::now_s(), tag);
+        crate::learner::note_built(&lang, a);
         if correct {
             note(&t("ws.right"));
         } else {

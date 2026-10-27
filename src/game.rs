@@ -2244,7 +2244,8 @@ pub fn submit_guess(app: &App) {
             crate::dom::show_toast(&crate::i18n::t("placement.done"));
         }
     } else {
-        crate::learner::note_attempt_typed(&cur_lang, &word, correct, crate::learner::Channel::Typed, Some(&typed));
+        let tag = learner_tag(&app.borrow(), correct);
+        crate::learner::note_attempt_typed(&cur_lang, &word, crate::learner::Channel::Typed, Some(&typed), tag);
     persist_timing(&cur_lang, &word, correct);
     {
         // CC-CALENDAR D3 (signed): today's story, outcomes only.
@@ -2325,7 +2326,8 @@ async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
     } else {
         // The English backend-verified path is the same submission, one
         // network hop later — recorded with the same channel.
-        crate::learner::note_attempt(crate::consts::EN, &word, correct, crate::learner::Channel::Typed);
+        let tag = learner_tag(&app.borrow(), correct);
+        crate::learner::note_attempt(crate::consts::EN, &word, crate::learner::Channel::Typed, tag);
     }
     let voided = round_voided(&app);
     if correct {
@@ -2600,6 +2602,22 @@ pub enum Outcome {
 }
 
 impl Outcome {
+    /// L0 CR-1: the class the learner log keeps. Exhaustive on purpose, so a
+    /// new outcome cannot reach the log unclassified. A void has none: it
+    /// records nothing (AUDIO-CLARITY D9).
+    #[cfg_attr(not(test), allow(dead_code))]
+    pub fn learner_class(self) -> Option<crate::learner::OutcomeClass> {
+        use crate::learner::OutcomeClass as C;
+        match self {
+            Outcome::Correct => Some(C::Correct),
+            Outcome::OtherSense => Some(C::OtherSense),
+            Outcome::Misspelled => Some(C::Misspelled),
+            Outcome::TimedOut => Some(C::TimedOut),
+            Outcome::GaveUp => Some(C::GaveUp),
+            Outcome::Voided => None,
+        }
+    }
+
     /// The class the renderer sets today, unchanged. F2 will replace this with
     /// a lookup on `feedback::State`, and that is the change that finally makes
     /// an other-sense answer look different from a plain success.
@@ -3527,6 +3545,39 @@ thread_local! {
 /// sense rather than as an exact answer?
 pub fn seam_valid_other_sense() -> bool {
     VALID_OTHER_SENSE.with(std::cell::Cell::get)
+}
+
+/// L0 CR-1: what the learner log records about this submission beyond the
+/// verdict — the graded class, the registry mode and the Impossible flag.
+fn learner_tag(s: &AppState, correct: bool) -> crate::learner::Tag {
+    tag_for(s, correct, seam_valid_other_sense())
+}
+
+fn tag_for(s: &AppState, correct: bool, other_sense: bool) -> crate::learner::Tag {
+    use crate::learner::{mode_id, OutcomeClass, Tag};
+    let outcome = match (correct, other_sense) {
+        (false, _) => OutcomeClass::Misspelled,
+        (true, true) => OutcomeClass::OtherSense,
+        (true, false) => OutcomeClass::Correct,
+    };
+    // Versus, the Spell Off and Spell Racing ride the base game's submit, and
+    // the last two ride the Daily's word flow, so the order here matters.
+    let mode = if s.versus.enabled {
+        mode_id::VERSUS
+    } else if s.daily.active && s.daily.spelloff {
+        mode_id::ONLINE_SPELLOFF
+    } else if s.daily.active && s.daily.racing {
+        mode_id::GHOST_RACING
+    } else if s.daily.active {
+        mode_id::DAILY
+    } else if s.review {
+        mode_id::MISSES
+    } else if s.level == "climb" {
+        mode_id::CLIMB
+    } else {
+        mode_id::STANDARD
+    };
+    Tag { outcome, mode, impossible: s.impossible_word || (s.daily.active && s.daily.impossible) }
 }
 
 thread_local! {
@@ -5007,5 +5058,64 @@ mod mine_lang_tests {
         // A built-in language is unaffected by the speak tag.
         assert!(joins_for(&s, "ar"));
         assert!(!joins_for(&s, "es"));
+    }
+}
+
+#[cfg(test)]
+mod learner_tag_tests {
+    //! L0 CR-1 acceptance 3 and 4: what the base game's submit tells the log.
+    use super::{tag_for, Outcome};
+    use crate::learner::{mode_id, OutcomeClass};
+    use crate::model::AppState;
+
+    /// Acceptance 3: every outcome but a void has a class, and the class's
+    /// verdict is the renderer's verdict (CR-I1 at the source).
+    #[test]
+    fn every_outcome_but_a_void_has_a_class_that_agrees_with_it() {
+        let all = [Outcome::Correct, Outcome::OtherSense, Outcome::Misspelled, Outcome::TimedOut, Outcome::GaveUp, Outcome::Voided];
+        for o in all {
+            match o.learner_class() {
+                None => assert_eq!(o, Outcome::Voided, "{o:?} lost its class"),
+                Some(c) => assert_eq!(c.is_correct(), o.css_class() == "feedback good", "{o:?} -> {c:?}"),
+            }
+        }
+    }
+
+    /// Acceptance 4: an Impossible word in Classic logs impossible, a plain
+    /// word does not, and neither changes the mode.
+    #[test]
+    fn an_impossible_word_is_flagged_and_a_plain_one_is_not() {
+        let mut s = AppState { level: "easy".into(), ..AppState::default() };
+        let plain = tag_for(&s, false, false);
+        assert_eq!((plain.mode, plain.impossible, plain.outcome), (mode_id::STANDARD, false, OutcomeClass::Misspelled));
+        s.impossible_word = true;
+        let hard = tag_for(&s, true, false);
+        assert_eq!((hard.mode, hard.impossible, hard.outcome), (mode_id::STANDARD, true, OutcomeClass::Correct));
+    }
+
+    #[test]
+    fn the_impossible_daily_is_flagged_and_other_sense_is_its_own_class() {
+        let mut s = AppState::default();
+        s.daily.active = true;
+        s.daily.impossible = true;
+        let t = tag_for(&s, true, true);
+        assert_eq!((t.mode, t.impossible, t.outcome), (mode_id::DAILY, true, OutcomeClass::OtherSense));
+    }
+
+    #[test]
+    fn the_mode_follows_the_surface_riding_the_submit() {
+        let mut s = AppState::default();
+        assert_eq!(tag_for(&s, true, false).mode, mode_id::CLIMB, "the default level is climb");
+        s.review = true;
+        s.level = "easy".into();
+        assert_eq!(tag_for(&s, true, false).mode, mode_id::MISSES);
+        s.daily.active = true;
+        s.daily.spelloff = true;
+        assert_eq!(tag_for(&s, true, false).mode, mode_id::ONLINE_SPELLOFF);
+        s.daily.spelloff = false;
+        s.daily.racing = true;
+        assert_eq!(tag_for(&s, true, false).mode, mode_id::GHOST_RACING);
+        s.versus.enabled = true;
+        assert_eq!(tag_for(&s, true, false).mode, mode_id::VERSUS);
     }
 }

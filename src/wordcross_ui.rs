@@ -490,7 +490,7 @@ fn check_word(i: usize, typed: &str, want: &str) {
         } else {
             lock_in_attempt(&g.lang, want, typed, correct, day)
         };
-        crate::learner::note_built(&g.lang, a);
+        crate::learner::note_built(&g.lang, crate::learner::stamp_now(a, crate::learner::mode_id::SPELL_CROSS));
         if !correct {
             APP.with(|ap| {
                 if let Some(app) = ap.borrow().as_ref() {
@@ -532,7 +532,7 @@ fn submit_keystone() {
         }
         let correct = crate::norm::answer_matches(typed, &word, false);
         crate::keyboard_moments::react_for("spell_cross", "xwKeys", correct, typed, 0);
-        crate::learner::note_built(&g.lang, lock_in_attempt(&g.lang, &word, typed, correct, crate::learner::day_now()));
+        crate::learner::note_built(&g.lang, crate::learner::stamp_now(lock_in_attempt(&g.lang, &word, typed, correct, crate::learner::day_now()), crate::learner::mode_id::SPELL_CROSS));
         if !correct {
             *missed = true;
         }

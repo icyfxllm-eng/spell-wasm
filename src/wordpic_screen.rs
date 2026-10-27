@@ -2434,7 +2434,7 @@ fn on_typed(app: &App) {
         // keeps an expert's standing garbage from recording once per
         // keystroke: only the transition counts, not the aftermath.
         if value.chars().count() == ok + 1 {
-            crate::learner::note_attempt(&lang, &target, false, crate::learner::Channel::Typed);
+            crate::learner::note_attempt(&lang, &target, crate::learner::Channel::Typed, wordpic_tag(false));
         }
         let tier = current_tier();
         let (repair, dims, charges) = miss_economics(&tier);
@@ -2513,7 +2513,7 @@ fn place(app: &App, word: &str) {
     wordpic::save(&s);
     PLACED.with(|c| c.set(placed));
     // CC-LEARNING-ENGINE: a landed word is a validated typed success.
-    crate::learner::note_attempt(&lang, word, true, crate::learner::Channel::Typed);
+    crate::learner::note_attempt(&lang, word, crate::learner::Channel::Typed, wordpic_tag(true));
     haptics::tap();
     let words = s.run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
     render_canvas(p, &lang, &words);
@@ -3252,5 +3252,14 @@ mod continue_row_tests {
         assert!(!done.contains("wp-th-ghost"), "nothing left at ghost weight");
         assert!(!done.contains("<text"), "still strokes only");
         assert_eq!(done, thumb_svg("star", "en", &mid), "deterministic re-render");
+    }
+}
+
+/// L0 CR-1: Word Picture grades a plain verdict, never Impossible.
+fn wordpic_tag(correct: bool) -> crate::learner::Tag {
+    crate::learner::Tag {
+        outcome: crate::learner::OutcomeClass::of(correct),
+        mode: crate::learner::mode_id::WORD_PICTURE,
+        impossible: false,
     }
 }
