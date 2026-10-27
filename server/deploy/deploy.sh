@@ -27,6 +27,9 @@ fi
 if grep -E '^PublishPort=' "${unit}" | grep -vqE '^PublishPort=127\.0\.0\.1:'; then
   echo "${unit} publishes a port beyond 127.0.0.1; refusing"; exit 2
 fi
+if ! grep -qE '^StopTimeout=900$' "${unit}"; then
+  echo "${unit} has no StopTimeout=900: podman would kill the drain after 10 s (G-D16)"; exit 2
+fi
 if grep -qE '^AutoUpdate=' "${unit}"; then
   echo "${unit} enables podman auto-update (G-D16); refusing"; exit 2
 fi

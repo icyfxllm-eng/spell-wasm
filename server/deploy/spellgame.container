@@ -24,6 +24,9 @@ Volume=spell-data:/data:Z
 ReadOnly=true
 NoNewPrivileges=true
 DropCapability=all
+# G-D16: Quadlet stops the container with `podman rm -f`, which allows only
+# 10 s after SIGTERM by default. The server drains for up to 15 minutes.
+StopTimeout=900
 PodmanArgs=--memory=1g --pids-limit=256
 # The container listens on all of ITS interfaces so the publish can reach it;
 # the two PublishPort lines above are what keep it off the network

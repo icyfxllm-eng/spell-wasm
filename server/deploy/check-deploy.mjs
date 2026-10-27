@@ -66,6 +66,8 @@ export function quadletUnit(text) {
     /^Restart=always$/m,
     /^RestartSec=2$/m,
     /^TimeoutStopSec=960$/m,
+    // podman's own stop timeout, or `podman rm -f` kills the drain after 10 s (G-D16).
+    /^StopTimeout=900$/m,
     /^WantedBy=default\.target$/m,
   ];
   for (const re of need) if (!re.test(text)) bad.push(`missing ${re.source}`);
