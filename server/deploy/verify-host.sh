@@ -17,11 +17,12 @@ pass() { echo "PASS  $1  $2"; }
 warn() { echo "WARN  $1  $2"; warns=$((warns + 1)); }
 fail() { echo "FAIL  $1  $2"; fails=$((fails + 1)); }
 
-svc_uid="$(id -u "${SVC_USER}" 2>/dev/null || echo "")"
-as_svc() {
-  sudo -u "${SVC_USER}" XDG_RUNTIME_DIR="/run/user/${svc_uid}" "$@"
+# The service user's own systemd, asked from here (systemd's machine syntax).
+svc_systemctl() {
+  sudo systemctl --user -M "${SVC_USER}@" "$@"
 }
 svc_home="$(getent passwd "${SVC_USER}" | cut -d: -f6)"
+[ -n "${svc_home}" ] || svc_home="/home/${SVC_USER}"
 unit="${svc_home}/.config/containers/systemd/spellgame.container"
 
 # H0 — a real hostname (it was "localhost").
@@ -64,7 +65,8 @@ else
   fail H4 "tailscale0 is not in a zone that allows ssh (zone: '${ts_zone:-none}')"
 fi
 
-# H5 — no TCP listener beyond loopback except sshd (G-D1).
+# H5 — no TCP listener beyond loopback except sshd (G-D1). tailscaled's own
+# listeners on its tailnet addresses are reachable over Tailscale only.
 bad=""
 while read -r local proc; do
   addr="${local%:*}"
@@ -73,6 +75,10 @@ while read -r local proc; do
   esac
   case "${proc}" in
     *sshd*) continue ;;
+    *tailscaled*)
+      case "${addr}" in
+        100.*%tailscale0|"[fd7a:115c:a1e0:"*"]%tailscale0"|100.*|"[fd7a:115c:a1e0:"*"]") continue ;;
+      esac ;;
   esac
   bad="${bad} ${local}(${proc})"
 done < <(sudo ss -Htlnp 2>/dev/null | awk '{print $4, $6}')
@@ -100,10 +106,11 @@ else
 fi
 
 # H9 — the room server unit is running.
-if [ -n "${svc_uid}" ] && as_svc systemctl --user is-active --quiet spellgame.service; then
+svc_state="$(svc_systemctl is-active spellgame.service 2>/dev/null)"
+if [ "${svc_state}" = "active" ]; then
   pass H9 "spellgame.service active"
 else
-  fail H9 "spellgame.service is not active for ${SVC_USER}"
+  fail H9 "spellgame.service for ${SVC_USER} is '${svc_state:-unknown}'"
 fi
 
 # H10 — the tunnel is running.
@@ -150,8 +157,7 @@ if systemctl is-active --quiet nut-monitor 2>/dev/null; then pass H16 "upsmon ac
 
 # H17 — podman auto-update is never on (G-D16).
 au_sys="$(systemctl is-enabled podman-auto-update.timer 2>/dev/null)"
-au_usr=""
-[ -n "${svc_uid}" ] && au_usr="$(as_svc systemctl --user is-enabled podman-auto-update.timer 2>/dev/null)"
+au_usr="$(svc_systemctl is-enabled podman-auto-update.timer 2>/dev/null)"
 if [ "${au_sys}" != "enabled" ] && [ "${au_usr}" != "enabled" ]; then
   pass H17 "podman-auto-update.timer not enabled"
 else
@@ -163,7 +169,7 @@ tts="$(sudo grep -E '^Environment=SPELL_TTS_BASE=' "${unit}" 2>/dev/null | cut -
 if [ -n "${tts}" ] && [ "$(curl -s -o /dev/null -w '%{http_code}' -m 5 "${tts}/api/health")" = "200" ]; then
   pass H18 "TTS reachable at ${tts}"
 else
-  fail H18 "TTS not reachable (SPELL_TTS_BASE='${tts:-unset}')"
+  fail H18 "TTS not reachable (SPELL_TTS_BASE='${tts:-unset}', read from ${unit})"
 fi
 
 echo
