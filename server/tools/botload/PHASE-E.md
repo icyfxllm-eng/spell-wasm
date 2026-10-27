@@ -40,8 +40,15 @@ outside. `verify-host.sh` H5 shows it as an extra listener until step 6.
 # as spellsrv (sudo -iu spellsrv):
 ulimit -n 16384
 ~/spell-wasm/target/release/botload run --target https://play.spellgame.net \
---admin http://127.0.0.1:8081 --profile load | tee ~/phase-e-load.txt
+--admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile load | tee ~/phase-e-load.txt
 ```
+The game sockets go through the tunnel; the clips come over loopback
+(`--audio-base`). All 400 bots share one IP, and Cloudflare throttles one IP
+fetching a clip every few seconds per bot (the first run drew 429s), which real
+players on their own home connections never would. The rooms also start over
+90 s (`--ramp`), and a bot that still meets a 429 backs off and retries; the
+summary counts those retries.
+
 PASS needs:
 - every room started and 400 connections at peak
 - handling p95 under 50 ms
@@ -51,7 +58,7 @@ PASS needs:
 ```
 # as spellsrv (sudo -iu spellsrv):
 ~/spell-wasm/target/release/botload run --target https://play.spellgame.net \
---admin http://127.0.0.1:8081 --profile soak | tee ~/phase-e-soak.txt
+--admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile soak | tee ~/phase-e-soak.txt
 ```
 PASS needs:
 - memory growth under 5% after the 10-minute warm-up (the server's RSS, read
@@ -63,7 +70,7 @@ PASS needs:
 ```
 # as spellsrv (sudo -iu spellsrv):
 ~/spell-wasm/target/release/botload run --target https://play.spellgame.net \
---admin http://127.0.0.1:8081 --profile chaos | tee ~/phase-e-chaos.txt
+--admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile chaos | tee ~/phase-e-chaos.txt
 ```
 While it runs, **once**, somewhere in the middle:
 ```

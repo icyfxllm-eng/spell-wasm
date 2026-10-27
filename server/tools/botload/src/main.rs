@@ -52,6 +52,12 @@ struct Opts {
     seed: u64,
     origin: String,
     warmup_min: f64,
+    /// Where bots fetch ticket audio. The game sockets always use `target`;
+    /// clips may come over the host's loopback so one IP's request rate
+    /// through Cloudflare doesn't throttle the test (Phase E, first run).
+    audio_base: String,
+    /// Spread the room starts over this many seconds.
+    ramp_secs: f64,
 }
 
 fn opts(args: &[String]) -> Opts {
@@ -76,6 +82,14 @@ fn opts(args: &[String]) -> Opts {
         seed: num("--seed", 1.0) as u64,
         origin: get("--origin").unwrap_or_else(|| "capacitor://localhost".into()),
         warmup_min: num("--warmup", if profile == "soak" || profile == "chaos" { 10.0 } else { 0.0 }),
+        audio_base: get("--audio-base")
+            .or_else(|| get("--target"))
+            .unwrap_or_else(|| "http://127.0.0.1:8080".into())
+            .trim_end_matches('/')
+            .into(),
+        // 400 sockets from one IP in 4 s drew Cloudflare 429s; real players
+        // arrive from many homes. Ramp like a crowd, not a burst.
+        ramp_secs: num("--ramp", if profile == "smoke" { 1.0 } else { 90.0 }),
         profile,
     }
 }
@@ -141,10 +155,32 @@ fn ws_url(target: &str) -> String {
     format!("{t}/v1/ws")
 }
 
+/// Times Cloudflare (or anything in front) answered 429 or 5xx and a bot retried.
+static RETRIES: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+fn backoff(attempt: u32) -> Duration {
+    // 0.5 s, 1 s, 2 s ... capped at 8 s, with up to 50% jitter from the clock.
+    let base = (500u64 << attempt.min(4)).min(8000);
+    let jitter = (Instant::now().elapsed().subsec_nanos() as u64 ^ (attempt as u64 * 7919)) % (base / 2 + 1);
+    Duration::from_millis(base + jitter)
+}
+
 async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> Result<Ws, String> {
-    let mut req = ws_url(&o.target).into_client_request().map_err(|e| e.to_string())?;
-    req.headers_mut().insert("Origin", o.origin.parse().unwrap());
-    let (mut ws, _) = tokio_tungstenite::connect_async(req).await.map_err(|e| format!("connect: {e}"))?;
+    use tokio_tungstenite::tungstenite::Error as WsError;
+    let mut attempt = 0;
+    let mut ws = loop {
+        let mut req = ws_url(&o.target).into_client_request().map_err(|e| e.to_string())?;
+        req.headers_mut().insert("Origin", o.origin.parse().unwrap());
+        match tokio_tungstenite::connect_async(req).await {
+            Ok((ws, _)) => break ws,
+            Err(WsError::Http(r)) if (r.status().as_u16() == 429 || r.status().is_server_error()) && attempt < 8 => {
+                RETRIES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                tokio::time::sleep(backoff(attempt)).await;
+                attempt += 1;
+            }
+            Err(e) => return Err(format!("connect: {e}")),
+        }
+    };
     let hello = ClientMsg::Hello(Hello {
         protocol: 1,
         app_build: "botload".into(),
@@ -193,13 +229,23 @@ async fn next(bot: &mut Bot, wait: Duration) -> Got {
 
 /// The word, read from the stub's clip, if the clip is the stub's.
 async fn word_of(o: &Opts, http: &reqwest::Client, token: &str, ticket: &str) -> Option<String> {
-    let r = http
-        .get(format!("{}/v1/audio/{ticket}", o.target))
-        .header("Origin", &o.origin)
-        .header("Authorization", format!("Bearer {token}"))
-        .send()
-        .await
-        .ok()?;
+    let mut attempt = 0;
+    let r = loop {
+        let r = http
+            .get(format!("{}/v1/audio/{ticket}", o.audio_base))
+            .header("Origin", &o.origin)
+            .header("Authorization", format!("Bearer {token}"))
+            .send()
+            .await
+            .ok()?;
+        if r.status().as_u16() == 429 && attempt < 5 {
+            RETRIES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            tokio::time::sleep(backoff(attempt)).await;
+            attempt += 1;
+            continue;
+        }
+        break r;
+    };
     if !r.status().is_success() {
         return None;
     }
@@ -501,7 +547,16 @@ async fn tokens(o: &Opts, n: usize) -> Result<Vec<String>, String> {
 // ---------------------------------------------------------------- the run
 
 async fn run(o: Opts) -> i32 {
-    println!("botload: profile={} rooms={} ({} connections) minutes={} target={}", o.profile, o.rooms, o.rooms * 2, o.minutes, o.target);
+    println!(
+        "botload: profile={} rooms={} ({} connections) minutes={} target={} audio={} ramp={}s",
+        o.profile,
+        o.rooms,
+        o.rooms * 2,
+        o.minutes,
+        o.target,
+        o.audio_base,
+        o.ramp_secs
+    );
     let toks = match tokens(&o, o.rooms * 2).await {
         Ok(t) => t,
         Err(e) => {
@@ -529,8 +584,8 @@ async fn run(o: Opts) -> i32 {
         let (o2, t2) = (o.clone(), t.clone());
         let pair = (toks[2 * i].clone(), toks[2 * i + 1].clone());
         handles.push(tokio::spawn(run_room(o2, t2, pair, o.seed.wrapping_mul(1_000_003).wrapping_add(i as u64), deadline)));
-        // Ramp: don't open every socket in the same millisecond.
-        tokio::time::sleep(Duration::from_millis(20)).await;
+        // Ramp: spread the starts over --ramp seconds, like players arriving.
+        tokio::time::sleep(Duration::from_secs_f64((o.ramp_secs / o.rooms.max(1) as f64).max(0.02))).await;
     }
     for h in handles {
         let _ = h.await;
@@ -600,6 +655,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         println!("  {} {name}: {detail}", if *ok { "PASS" } else { "FAIL" });
         failed |= !ok;
     }
+    println!("  retries after 429/5xx: {}", RETRIES.load(std::sync::atomic::Ordering::Relaxed));
     println!("  matches_ended: {:?}", t.match_ended);
     println!("  errors: {:?}", t.errors);
     for n in &t.notes {
