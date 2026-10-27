@@ -1,6 +1,6 @@
 # CC-HUB-NAV — Amendment AE-1: adult-only rows, edition rows, gated deep links
 
-**Status:** DECISIONS SIGNED. D-AE1 to D-AE4 were signed as recommended (Eric, 2026-10-26: "I like the recs they seem reasonable", then "record D-AE1 to D-AE4 and D-R1, D-R4, D-R6 to D-R10 as signed as recommended"). Nothing is built yet.
+**Status:** DECISIONS SIGNED. D-AE1 to D-AE4 were signed as recommended (Eric, 2026-10-26: "I like the recs they seem reasonable", then "record D-AE1 to D-AE4 and D-R1, D-R4, D-R6 to D-R10 as signed as recommended"). **BUILT 2026-10-26** (see "As built" below).
 **Raised by:** CC-GUARDIAN-REPORT v1 §0 C3 (HALT). Base: origin/main `5ffeb19d`.
 **Amends:** the CC-HUB-NAV row registry (`config/modes.json`, `src/modes.rs`), `build.rs`'s registry staging, and the hash router (`src/lib.rs:363`).
 **Consumes as-is:** CC-ONBOARD-JR's `experience::audience()`. The resolver doesn't change.
@@ -89,6 +89,40 @@ GUARDIAN-REPORT F4 needs a drawer row that is **absent**, not locked, in three c
 | **D-AE2** | How rows are kept out of Education | **Strip at build time,** following the `web` precedent. The alternative is an `edition` field on `HubCtx` checked at runtime. |
 | **D-AE3** | The adult gate for v1 | **Keep the existing challenge, merge DASH's copy into `parent_gate_then`, and name it a deterrent.** Strengthening it is a separate change. |
 | **D-AE4** | GUARDIAN-REPORT's `spell://` scheme | **Use the shipped `spellgame://`,** and amend GUARDIAN F7. |
+
+## As built (2026-10-26)
+
+**F1:**
+- `Mode` gains `adult_only` (`adultOnly`) and `editions`.
+- `HubCtx` gains `audience`, which `play_hub::ctx` fills from `experience::audience(kid, agegate::stored().is_some())`.
+- `permitted` gains the AE-I1 clause right after the Jr clause.
+- `modes-check` validates both fields, and its selftest grows from 19 to 24 malformed fixtures, plus a valid adult-only row that must pass.
+
+**F2:**
+- The registry strips moved into `src/modes_strip.rs`. `build.rs` pulls it in with `include!`, and the lib's tests compile it (`#[cfg(test)] mod modes_strip`).
+- The web strip's logic is unchanged, and a test pins that it keeps exactly the rows listing "web".
+- `CARGO_FEATURE_EDUCATION` strips rows whose `editions` excludes "education".
+- `edu-no-purchase-check` adds an `"id": "<id>"` needle for every excluded row.
+- No row sets `editions` yet, so the Edu registry is unchanged today.
+
+**F3:**
+- `modes::GATED_ROUTES` (empty), `RouteVerdict` and the pure `gated_route` are new.
+- The hash router consults them before its ordinary routes. A Refuse is consumed silently; an Open goes through `parent_gate_then` to the row's `launch_for` target.
+- The query string is ignored when matching, so `#guardian-report?week=…` matches its route.
+- **Not done:** the iOS `AppDelegate` change to forward the query. Nothing needs it until GUARDIAN-REPORT F7, and the native side wants checking with whichever session owns it.
+
+**F4:**
+- `guardian_dash.rs` dropped `GATE_ANSWER` and the `gdashGate` markup, and its opener now calls `parent_gate_then`.
+- `learner-surfaces.mjs` drives `parentQ` / `parentAnswer` / `parentSubmit` instead.
+- The `gdash.check` and `gdash.wrong` strings are now unused, but are left in the 16 locales for a later sweep.
+
+**Tests:**
+- `modes::ae1_golden` (A3) was pinned from the untouched tree before any change. It covers 24 contexts: junior, standard and unknown × app and web × preview and full × premium none and all.
+- `modes::ae1_strip_tests` covers A4, and adds an Education-only test when run with `--features education`.
+- `modes::ae1_tests` covers A1, A5's logic and wiring, and A6.
+- A mutation run (the Unknown clause, Refuse, the Education keep and the modes-check rule) failed a test each time.
+
+**Not covered:** A5 as an e2e. No gated route exists to drive yet, so the router is checked through `gated_route` and a source check. The first real e2e comes with GUARDIAN-REPORT F4.
 
 ## Non-goals
 

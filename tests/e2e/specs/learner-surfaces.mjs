@@ -51,14 +51,16 @@ export async function run(browser, base, suite) {
       assert(rematch.includes('rhythm'), `Reports rematch missing the due word: ${rematch}`);
       assert(!rematch.includes('faraway'), 'Reports rematch showed a word not due for 10 days');
 
-      // Guardian Dash, through the parental gate ("What is {a} times {b}?").
+      // Guardian Dash, through the app's one parental gate ("What is {a} times
+      // {b}?") -- CC-HUB-NAV AE-1 F4 retired the dashboard's own copy.
       await page.evaluate(() => document.getElementById('gdashOpen').click());
-      const qtext = await page.evaluate(() => document.getElementById('gdashQ').textContent);
+      assert(await page.evaluate(() => document.getElementById('parentScrim').classList.contains('show')), 'the parent gate did not open');
+      const qtext = await page.evaluate(() => document.getElementById('parentQ').textContent);
       const n = { three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8 };
       const [a, b] = (qtext.toLowerCase().match(/three|four|five|six|seven|eight/g) || []).map((w) => n[w]);
       assert(a && b, `could not read the gate question: ${qtext}`);
-      await page.fill('#gdashAnswer', String(a * b));
-      await page.evaluate(() => document.getElementById('gdashGo').click());
+      await page.fill('#parentAnswer', String(a * b));
+      await page.evaluate(() => document.getElementById('parentSubmit').click());
       await domSettled(page);
       const gd = await html('gdashBody');
       assert(/2\b/.test(gd) && gd.includes('gd-chip'), `Guardian Dash mastery groups did not render: ${gd.slice(0, 300)}`);

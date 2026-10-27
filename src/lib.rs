@@ -163,6 +163,8 @@ mod storage;
 mod syllable;
 mod experience; // CC-ONBOARD-JR F1/F2
 mod modes;
+#[cfg(test)]
+mod modes_strip; // CC-HUB-NAV AE-1: the registry strips build.rs runs, under test
 mod play_hub;
 mod tools_hub;
 #[cfg(feature = "testseam")]
@@ -367,6 +369,23 @@ pub fn start() -> Result<(), JsValue> {
         let a = app.clone();
         let route = move || {
             let hash = dom::window().location().hash().unwrap_or_default();
+            // CC-HUB-NAV AE-1 F3: a gated route opens only if the drawer would
+            // show its row right now, and then only behind the adult gate.
+            let catalog = || modes::catalog(&modes::all(), &play_hub::ctx(&a)).into_iter().map(|m| m.id).collect();
+            match modes::gated_route(&hash, modes::GATED_ROUTES, catalog) {
+                modes::RouteVerdict::NotGated => {}
+                modes::RouteVerdict::Refuse => {
+                    let _ = dom::window().location().set_hash("");
+                    return;
+                }
+                modes::RouteVerdict::Open(id) => {
+                    let _ = dom::window().location().set_hash("");
+                    if let Some(el) = play_hub::launch_for(id) {
+                        parent_gate_then(Box::new(move || dom::click(el)));
+                    }
+                    return;
+                }
+            }
             match hash.as_str() {
                 "#daily" => dom::click("dailyBtn"),
                 "#practice" => dom::click("orbWrap"),

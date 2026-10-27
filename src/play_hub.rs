@@ -181,6 +181,8 @@ pub(crate) fn ctx(app: &App) -> modes::HubCtx {
     };
     modes::HubCtx {
         kid,
+        // AE-1: the three-way answer, so an unanswered age gate is Unknown here.
+        audience: crate::experience::audience(kid, crate::agegate::stored().is_some()),
         // PLATFORM gate for the hub: is this iOS at all? (not "is the speech plugin
         // resolved" — that flaky check hid every iOS-only tile when the plugin proxy
         // was momentarily unavailable, leaving no way to reach the mode). Per-feature

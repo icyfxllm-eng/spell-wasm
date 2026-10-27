@@ -884,6 +884,7 @@ mod tests {
     fn ctx() -> HubCtx {
         HubCtx {
             kid: false,
+            audience: crate::experience::Audience::Standard,
             native: true,
             lang: "en".to_string(),
             level: AccessLevel::Full,

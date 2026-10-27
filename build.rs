@@ -97,7 +97,12 @@ fn main() {
     // compiled in.
     let modes = fs::read_to_string("config/modes.json").expect("modes.json");
     println!("cargo:rerun-if-changed=config/modes.json");
-    let staged_modes = if web { strip_app_only_modes(&modes) } else { modes };
+    println!("cargo:rerun-if-changed=src/modes_strip.rs");
+    let staged_modes = if web { strip_modes(&modes, keeps_on_web) } else { modes };
+    // CC-HUB-NAV AE-1 F2: a row the Education edition does not ship is deleted
+    // before it is compiled in -- absent, not filtered, like the site build.
+    let edu = env::var("CARGO_FEATURE_EDUCATION").is_ok();
+    let staged_modes = if edu { strip_modes(&staged_modes, keeps_in_education) } else { staged_modes };
     fs::write(Path::new(&env::var("OUT_DIR").unwrap()).join("modes.json"), staged_modes).unwrap();
 
     // CC-HUMAN-AUDIO e2e fixture. The testseam build compiles in a manifest
@@ -128,55 +133,8 @@ fn main() {
     }
 }
 
-/// Remove every registry entry that does not declare the `web` platform.
-///
-/// Rebuilds the `modes` array from the entries that survive rather than
-/// splicing text around the ones that go. The first attempt did comma
-/// surgery -- delete the entry, drop the comma before it AND the one after
-/// it -- which removed two separators for one entry and emitted JSON that
-/// would not parse. The registry tests caught it immediately, which is the
-/// argument for keeping data this load-bearing under test.
-fn strip_app_only_modes(src: &str) -> String {
-    let Some(arr) = src.find("\"modes\"").and_then(|i| src[i..].find('[').map(|j| i + j)) else {
-        return src.to_string();
-    };
-    let bytes = src.as_bytes();
-    let mut entries: Vec<&str> = Vec::new();
-    let (mut i, mut depth, mut start) = (arr + 1, 0i32, 0usize);
-    let mut arr_end = src.len();
-    while i < bytes.len() {
-        match bytes[i] {
-            b'{' => {
-                if depth == 0 {
-                    start = i;
-                }
-                depth += 1;
-            }
-            b'}' => {
-                depth -= 1;
-                if depth == 0 {
-                    entries.push(&src[start..=i]);
-                }
-            }
-            b']' if depth == 0 => {
-                arr_end = i;
-                break;
-            }
-            _ => {}
-        }
-        i += 1;
-    }
-    let kept: Vec<&str> = entries
-        .into_iter()
-        .filter(|e| {
-            e.find("\"platforms\"")
-                .and_then(|i| e[i..].find(']').map(|j| &e[i..i + j]))
-                .map(|block| block.contains("\"web\""))
-                .unwrap_or(true)
-        })
-        .collect();
-    format!("{}\n    {}\n  {}", &src[..=arr], kept.join(",\n    "), &src[arr_end..])
-}
+// The registry strips live in one file the lib tests compile too.
+include!("src/modes_strip.rs");
 
 /// Minimal JSON string quoting for the fixture (build scripts avoid a serde dep).
 fn serde_json_string(s: &str) -> String {
