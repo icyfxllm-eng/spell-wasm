@@ -1258,5 +1258,16 @@
   "ol.end.closed": "Der Raum wurde geschlossen.",
   "ol.end.left": "Du hast den Raum verlassen.",
   "ol.end.generic": "Das Spiel wurde gestoppt.",
-  "ol.end.dropped": "Die Verbindung war zu lange weg. Eröffne oder betritt einen neuen Raum."
+  "ol.end.dropped": "Die Verbindung war zu lange weg. Eröffne oder betritt einen neuen Raum.",
+  "rshare.name": "Fortschrittsbericht",
+  "rshare.desc": "Eine Woche Wörter zum Teilen",
+  "rshare.title": "Fortschritt beim Buchstabieren",
+  "rshare.partial": "Diese Woche bisher",
+  "rshare.lastWeek": "Letzte Woche",
+  "rshare.mastered": "Gemeistert ({n})",
+  "rshare.workingOn": "Wird geübt ({n})",
+  "rshare.new": "Neu diese Woche ({n})",
+  "rshare.empty": "Diese Woche noch nicht geübt.",
+  "rshare.share": "Teilen",
+  "rshare.week": "{start} – {end}"
 }

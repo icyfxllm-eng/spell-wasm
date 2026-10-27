@@ -1258,5 +1258,16 @@
   "ol.end.closed": "Pokój zamknięto.",
   "ol.end.left": "Wyszedłeś z pokoju.",
   "ol.end.generic": "Gra się zatrzymała.",
-  "ol.end.dropped": "Połączenie zniknęło na zbyt długo. Załóż nowy pokój lub dołącz do innego."
+  "ol.end.dropped": "Połączenie zniknęło na zbyt długo. Załóż nowy pokój lub dołącz do innego.",
+  "rshare.name": "Raport postępów",
+  "rshare.desc": "Tydzień słów do udostępnienia",
+  "rshare.title": "Postępy w pisowni",
+  "rshare.partial": "Ten tydzień do tej pory",
+  "rshare.lastWeek": "Zeszły tydzień",
+  "rshare.mastered": "Opanowane ({n})",
+  "rshare.workingOn": "W trakcie nauki ({n})",
+  "rshare.new": "Nowe w tym tygodniu ({n})",
+  "rshare.empty": "W tym tygodniu jeszcze bez ćwiczeń.",
+  "rshare.share": "Udostępnij",
+  "rshare.week": "{start} – {end}"
 }

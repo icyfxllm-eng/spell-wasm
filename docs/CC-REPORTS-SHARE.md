@@ -1,6 +1,6 @@
 # CC-REPORTS-SHARE v1 — Parent report composer, closed lexicon, pull-only share
 
-**Status:** DECISIONS SIGNED. D-R1, D-R4 and D-R6 to D-R10 were signed as recommended (Eric, 2026-10-26: "I like the recs they seem reasonable", then "record D-AE1 to D-AE4 and D-R1, D-R4, D-R6 to D-R10 as signed as recommended"). Nothing is built yet.
+**Status:** DECISIONS SIGNED. D-R1, D-R4 and D-R6 to D-R10 were signed as recommended (Eric, 2026-10-26: "I like the recs they seem reasonable", then "record D-AE1 to D-AE4 and D-R1, D-R4, D-R6 to D-R10 as signed as recommended"). **BUILT 2026-10-27** (see "As built" below).
 **Why it exists:** CC-GUARDIAN-REPORT v1, CC-SNAP-ROADMAP and CC-CONTRIBUTE all cite this file, and until now it existed nowhere (see `docs/CC-REPORTS-SHARE-gap-note.md`). This v1 is written to the shape those files already assume. It is small on purpose, because most of what it needs is already built.
 **Base:** origin/main `5ffeb19d`.
 **Depends on:**
@@ -145,6 +145,42 @@ pub fn render_text(r: &Report) -> String;        // pure, closed lexicon only
 - **C — Screen and share.** F5, F6, F7. Needs AE-1.
 
 GUARDIAN-REPORT's Phases A–D then extend these. Its F2 types and F3 practice list add sections to `Report`; they don't fork the composer.
+
+## As built (2026-10-27)
+
+**Phase A, the composer** (`src/reports_share.rs`):
+- **`compose` and `render_text` are pure.** The clock (`now_s`), the zone (the `Zone` trait; `DeviceZone` asks the device), the translator and the date format are all passed in, through `Voice`.
+- **`LearnerQuery` gains `redemptions`,** returning `RedemptionView` with `mastered_ms`. It's additive.
+- **Weeks** are computed in local days with an exact civil-date calendar, and start on Monday.
+- **Buckets** follow F2, with one decision recorded here. An attempt with an instant but no outcome class counts as unknown, and so does one with no instant (CR-1). A word with *any* unknown attempt is never "New", because the unknown attempt may be an earlier meeting. That shows less, never more.
+- **Language names** come from the fixed native-name table (`consts::BUILTIN_LANGS`), not from `rshare.*`. It's a closed table, not free text.
+- **Chinese words** render as stored, in pinyin with tone digits.
+
+**Phase B, the lexicon:**
+- **Eleven `rshare.*` keys** in all 15 locales. Ten are on the `translated` list and in `needs_audit` for the 14 non-English locales, so they're machine-drafted and owed a native pass. `rshare.week` (`{start} – {end}`) is `do_not_translate`.
+- **The prohibited lists** live in `config/report-prohibited.json`. `en` is `native`. Per Eric (2026-10-27), every other language is the English seed with status `draft-en-seed`.
+- **That placeholder already produced a false positive.** Swahili "Bado" ("not yet") contains "bad", so the Swahili empty-week line was reworded. The native pass would also catch real deficit words that an English token cannot.
+
+**Phase C, the screen** (`src/reports_share_ui.rs`):
+- **The registry row** is `progress_report`: `adultOnly`, `editions: ["consumer"]`, `requiresPremium: progress_reports`, `platforms: ["ios"]`, `juniorPolicy: hidden`, icon `share`.
+- **The flag** is `flags::progress_report()`, default ON.
+- **The launcher** is `rshareOpenBtn`, which opens `parent_gate_then` first.
+- **The first gated route** is `GATED_ROUTES = [("#progress-report", "progress_report")]`, on the app only.
+- **The screen** has a Last week / This week so far toggle, plain-text pre-wrap, Share (absent where `share::available()` is false) and Done.
+- **Dates** come from `Intl` in the UI language, read at UTC noon so no zone can shift the day.
+
+**Tests:**
+- `reports_share::tests` (14) covers acceptance 1–6, the DST fall-back, and the residue lint, which takes every key, word, name and date back out and requires nothing to remain.
+- `modes::ae1_tests` adds the gated-launcher test.
+- `tests/e2e/specs/progress-report.mjs` covers acceptance 7 and 8 against a real store seeded in the CR-1 shape. The page presents as iOS, and each case has a control, the `calendar` row, proving that an absent row is the rule and not the platform.
+- **Mutation runs:** bucket precedence, the Impossible exclusion, the partial label, case-folding in the lint, and, in the e2e, the Unknown-age clause. Each failed a test.
+
+**Not covered:** acceptance 9, Eric's TestFlight share through Messages and Mail.
+
+**Also changed:**
+- **The parent gate is readable on eclipse.** The full gate's contrast sweep reached the parent gate for the first time, through this row, and found its answer box at 1.18:1 (#efeaf7 on #ffffff). It is a `type="tel"` input that no modal input rule covered. `.modal input[type=tel]` now styles it like the modal text input, minus the uppercase. That changes the gate's look in every theme, so the separate visual zero-diff harness (`tests/e2e/visual/zero-diff.mjs`, which is not in the gate and captures `parent_gate`) will show the diff.
+- `config/allowed-tiers.golden.json` gains the row: Junior gets none, Standard gets all four tiers.
+- The AE-1 catalog golden gains `progress_report` in exactly the two Standard, iOS, with-Complete contexts.
 
 ## Non-goals
 

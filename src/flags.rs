@@ -459,6 +459,13 @@ pub fn reports() -> bool {
     resolve(stored("reports").as_deref(), true)
 }
 
+/// CC-REPORTS-SHARE v1: the parent progress report. Default ON, like the
+/// other Your Words rows: the gate that matters is the registry's (adult-only,
+/// Complete, consumer edition), not a switch.
+pub fn progress_report() -> bool {
+    resolve(stored("progress_report").as_deref(), true)
+}
+
 pub fn calendar() -> bool {
     resolve(stored("calendar").as_deref(), true)
 }
@@ -750,6 +757,8 @@ pub fn is_on(name: &str) -> bool {
         "word_picture" => word_picture(),
         #[cfg(not(feature = "web"))]
         "reports" => reports(),
+        #[cfg(not(feature = "web"))]
+        "progress_report" => progress_report(),
         #[cfg(not(feature = "web"))]
         "calendar" => calendar(),
         #[cfg(not(feature = "web"))]

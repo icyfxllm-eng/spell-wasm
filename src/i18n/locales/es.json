@@ -1258,5 +1258,16 @@
   "ol.end.closed": "La sala se cerró.",
   "ol.end.left": "Saliste de la sala.",
   "ol.end.generic": "La partida se detuvo.",
-  "ol.end.dropped": "La conexión se cortó demasiado tiempo. Crea o únete a una sala nueva."
+  "ol.end.dropped": "La conexión se cortó demasiado tiempo. Crea o únete a una sala nueva.",
+  "rshare.name": "Informe de progreso",
+  "rshare.desc": "Una semana de palabras para compartir",
+  "rshare.title": "Progreso en ortografía",
+  "rshare.partial": "Esta semana hasta ahora",
+  "rshare.lastWeek": "La semana pasada",
+  "rshare.mastered": "Dominadas ({n})",
+  "rshare.workingOn": "Practicando ({n})",
+  "rshare.new": "Nuevas esta semana ({n})",
+  "rshare.empty": "Aún no hay práctica esta semana.",
+  "rshare.share": "Compartir",
+  "rshare.week": "{start} – {end}"
 }

@@ -1258,5 +1258,16 @@
   "ol.end.closed": "Nagsara ang kuwarto.",
   "ol.end.left": "Umalis ka sa kuwarto.",
   "ol.end.generic": "Tumigil ang laban.",
-  "ol.end.dropped": "Matagal na naputol ang koneksiyon. Magbukas o sumali sa bagong kuwarto."
+  "ol.end.dropped": "Matagal na naputol ang koneksiyon. Magbukas o sumali sa bagong kuwarto.",
+  "rshare.name": "Ulat ng pag-unlad",
+  "rshare.desc": "Isang linggo ng mga salitang maibabahagi",
+  "rshare.title": "Pag-unlad sa pagbaybay",
+  "rshare.partial": "Ngayong linggo sa ngayon",
+  "rshare.lastWeek": "Nakaraang linggo",
+  "rshare.mastered": "Kabisado na ({n})",
+  "rshare.workingOn": "Pinag-aaralan ({n})",
+  "rshare.new": "Bago ngayong linggo ({n})",
+  "rshare.empty": "Wala pang pagsasanay ngayong linggo.",
+  "rshare.share": "Ibahagi",
+  "rshare.week": "{start} – {end}"
 }

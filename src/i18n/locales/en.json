@@ -1258,5 +1258,16 @@
   "ol.end.closed": "The room closed.",
   "ol.end.left": "You left the room.",
   "ol.end.generic": "The match stopped.",
-  "ol.end.dropped": "The connection dropped for too long. Start or join a new room."
+  "ol.end.dropped": "The connection dropped for too long. Start or join a new room.",
+  "rshare.name": "Progress report",
+  "rshare.desc": "A week of words to share",
+  "rshare.title": "Spelling progress",
+  "rshare.partial": "This week so far",
+  "rshare.lastWeek": "Last week",
+  "rshare.mastered": "Mastered ({n})",
+  "rshare.workingOn": "Working on ({n})",
+  "rshare.new": "New this week ({n})",
+  "rshare.empty": "No practice this week yet.",
+  "rshare.share": "Share",
+  "rshare.week": "{start} – {end}"
 }

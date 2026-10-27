@@ -171,6 +171,18 @@ pub trait LearnerQuery {
     /// L0 CR-1: every `word_id0` this profile has a logged attempt on
     /// (L-D3), backfilled from the stores before CR-1 kept one (L-D4).
     fn seen_set(&self, p: ProfileId, lang: &str) -> BTreeSet<String>;
+    /// CC-REPORTS-SHARE F1 (additive): words that graduated from the misses
+    /// queue, with when, oldest first.
+    fn redemptions(&self, p: ProfileId, lang: &str) -> Vec<RedemptionView>;
+}
+
+/// A mastered word: it left the misses queue (written once, at graduation).
+#[cfg_attr(not(test), allow(dead_code))]
+#[derive(Clone, Debug, PartialEq)]
+pub struct RedemptionView {
+    pub word: String,
+    /// Milliseconds since the epoch, UTC.
+    pub mastered_ms: f64,
 }
 
 /// The CR-1 view of one stored attempt.
@@ -306,6 +318,9 @@ impl LearnerQuery for Live<'_> {
     fn attempt_detail_log(&self, _p: ProfileId, lang: &str) -> Vec<AttemptDetail> {
         crate::learner::load_for(lang).log.iter().map(|a| detail_of(lang, a)).collect()
     }
+    fn redemptions(&self, _p: ProfileId, lang: &str) -> Vec<RedemptionView> {
+        crate::reports::redemptions(lang).into_iter().map(|r| RedemptionView { word: r.word, mastered_ms: r.mastered_ts }).collect()
+    }
     fn seen_set(&self, _p: ProfileId, lang: &str) -> BTreeSet<String> {
         crate::learner::seen_stored(lang).unwrap_or_else(|| {
             crate::learner::seen_backfill(lang, &crate::learner::load_for(lang).log, self.misses, &crate::reports::redemptions(lang))
@@ -360,6 +375,7 @@ pub struct Fake {
     pub schedule: Vec<Scheduled>,
     pub details: Vec<AttemptDetail>,
     pub seen: BTreeSet<String>,
+    pub redeemed: Vec<RedemptionView>,
 }
 
 #[cfg_attr(not(test), allow(dead_code))]
@@ -405,6 +421,7 @@ impl Fake {
                 ]
             },
             seen: ["en::knight", "en::rabbit", "en::receive"].into_iter().map(String::from).collect(),
+            redeemed: vec![RedemptionView { word: "because".into(), mastered_ms: 20399.0 * 86_400_000.0 }],
         }
     }
 }
@@ -436,6 +453,9 @@ impl LearnerQuery for Fake {
     }
     fn attempt_detail_log(&self, _p: ProfileId, _lang: &str) -> Vec<AttemptDetail> {
         self.details.clone()
+    }
+    fn redemptions(&self, _p: ProfileId, _lang: &str) -> Vec<RedemptionView> {
+        self.redeemed.clone()
     }
     fn seen_set(&self, _p: ProfileId, _lang: &str) -> BTreeSet<String> {
         self.seen.clone()

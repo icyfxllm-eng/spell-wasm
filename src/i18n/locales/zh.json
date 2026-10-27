@@ -1258,5 +1258,16 @@
   "ol.end.closed": "房间关闭了。",
   "ol.end.left": "你离开了房间。",
   "ol.end.generic": "比赛停了。",
-  "ol.end.dropped": "连接断开太久了。请创建或加入一个新房间。"
+  "ol.end.dropped": "连接断开太久了。请创建或加入一个新房间。",
+  "rshare.name": "学习报告",
+  "rshare.desc": "可分享的一周单词",
+  "rshare.title": "拼写进度",
+  "rshare.partial": "本周至今",
+  "rshare.lastWeek": "上周",
+  "rshare.mastered": "已掌握 ({n})",
+  "rshare.workingOn": "练习中 ({n})",
+  "rshare.new": "本周新词 ({n})",
+  "rshare.empty": "本周还没有练习。",
+  "rshare.share": "分享",
+  "rshare.week": "{start} – {end}"
 }

@@ -1258,5 +1258,16 @@
   "ol.end.closed": "أُغلقت الغرفة.",
   "ol.end.left": "غادرت الغرفة.",
   "ol.end.generic": "توقفت المباراة.",
-  "ol.end.dropped": "انقطع الاتصال مدة طويلة. افتح غرفة جديدة أو انضم إلى واحدة."
+  "ol.end.dropped": "انقطع الاتصال مدة طويلة. افتح غرفة جديدة أو انضم إلى واحدة.",
+  "rshare.name": "تقرير التقدم",
+  "rshare.desc": "أسبوع من الكلمات للمشاركة",
+  "rshare.title": "التقدم في الإملاء",
+  "rshare.partial": "هذا الأسبوع حتى الآن",
+  "rshare.lastWeek": "الأسبوع الماضي",
+  "rshare.mastered": "أتقنها ({n})",
+  "rshare.workingOn": "قيد التدرّب ({n})",
+  "rshare.new": "جديدة هذا الأسبوع ({n})",
+  "rshare.empty": "لا تدريب هذا الأسبوع بعد.",
+  "rshare.share": "مشاركة",
+  "rshare.week": "{start} – {end}"
 }

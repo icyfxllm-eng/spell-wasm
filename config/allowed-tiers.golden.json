@@ -175,6 +175,15 @@
         "expert"
       ]
     },
+    "progress_report": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
     "calendar": {
       "junior": [
         "easy",

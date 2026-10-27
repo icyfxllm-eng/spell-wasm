@@ -1258,5 +1258,16 @@
   "ol.end.closed": "ルームがとじました。",
   "ol.end.left": "ルームからぬけました。",
   "ol.end.generic": "しあいがとまりました。",
-  "ol.end.dropped": "せつぞくがながくきれていました。あたらしいルームをつくるか、入ってください。"
+  "ol.end.dropped": "せつぞくがながくきれていました。あたらしいルームをつくるか、入ってください。",
+  "rshare.name": "学習レポート",
+  "rshare.desc": "共有できる1週間の単語",
+  "rshare.title": "つづりの進み具合",
+  "rshare.partial": "今週ここまで",
+  "rshare.lastWeek": "先週",
+  "rshare.mastered": "マスター ({n})",
+  "rshare.workingOn": "練習中 ({n})",
+  "rshare.new": "今週の新しい単語 ({n})",
+  "rshare.empty": "今週はまだ練習していません。",
+  "rshare.share": "共有",
+  "rshare.week": "{start} – {end}"
 }

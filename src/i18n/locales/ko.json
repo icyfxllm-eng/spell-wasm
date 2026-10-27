@@ -1258,5 +1258,16 @@
   "ol.end.closed": "방이 닫혔어요.",
   "ol.end.left": "방에서 나왔어요.",
   "ol.end.generic": "경기가 멈췄어요.",
-  "ol.end.dropped": "연결이 너무 오래 끊겼어요. 새 방을 만들거나 들어가세요."
+  "ol.end.dropped": "연결이 너무 오래 끊겼어요. 새 방을 만들거나 들어가세요.",
+  "rshare.name": "학습 보고서",
+  "rshare.desc": "공유할 일주일의 단어",
+  "rshare.title": "철자 학습 현황",
+  "rshare.partial": "이번 주 지금까지",
+  "rshare.lastWeek": "지난주",
+  "rshare.mastered": "익힌 단어 ({n})",
+  "rshare.workingOn": "연습 중 ({n})",
+  "rshare.new": "이번 주 새 단어 ({n})",
+  "rshare.empty": "이번 주에는 아직 연습하지 않았어요.",
+  "rshare.share": "공유",
+  "rshare.week": "{start} – {end}"
 }

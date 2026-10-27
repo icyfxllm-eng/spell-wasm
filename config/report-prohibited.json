@@ -1,0 +1,290 @@
+{
+  "$doc": "CC-REPORTS-SHARE F3 (D-R8): words a parent report must never say, per UI language. The lint in reports_share.rs fails if any rshare.* string, or a rendered report, carries one of its language's tokens, and fails if a language has no list. Matching is case-insensitive substring. en is the signed seed: the kid-pool bans (reports.rs) plus G-D7's 'struggled'. Every other language is the ENGLISH SEED as a placeholder, status draft-en-seed, owed a native pass (Eric, 2026-10-26: the non-English lists can stay English-seeded drafts flagged for the native pass). An English token cannot catch a Japanese deficit word, so draft-en-seed is a flag, not a guarantee.",
+  "langs": {
+    "en": {
+      "status": "native",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "ar": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "de": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "es": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "fil": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "fr": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "hi": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "ja": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "ko": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "pl": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "pt": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "ru": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "sw": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "vi": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    },
+    "zh": {
+      "status": "draft-en-seed",
+      "tokens": [
+        "struggled",
+        "struggling",
+        "struggle",
+        "failed",
+        "failure",
+        "fail",
+        "wrong",
+        "behind",
+        "worse",
+        "weak",
+        "poor",
+        "bad",
+        "error",
+        "%"
+      ]
+    }
+  }
+}

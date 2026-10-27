@@ -38,14 +38,14 @@ standard native=true level=preview premium=none
   hub: practice,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell
   catalog: practice,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,my_words,misses,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell,standard,versus
 standard native=true level=preview premium=all
-  hub: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell
-  catalog: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,my_words,misses,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell,standard,versus
+  hub: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,reports,progress_report,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell
+  catalog: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,my_words,misses,reports,progress_report,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell,standard,versus
 standard native=true level=full premium=none
   hub: practice,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell
   catalog: practice,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,my_words,misses,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell,standard,climb,daily,versus
 standard native=true level=full premium=all
-  hub: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell
-  catalog: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,my_words,misses,reports,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell,standard,climb,daily,versus
+  hub: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,reports,progress_report,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell
+  catalog: practice,photo_list,def_match,letter_forge,word_chains,impostor,bee_sim,word_picture,my_words,misses,reports,progress_report,calendar,translate,spelldoku,spell_search,spell_cross,spelluzzle,boardgame,randospell,standard,climb,daily,versus
 unknown native=false level=preview premium=none
   hub: practice,def_match
   catalog: practice,def_match,my_words,misses,standard,versus

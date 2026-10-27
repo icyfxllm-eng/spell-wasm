@@ -410,6 +410,11 @@ pub fn visible(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
 /// registry id). A route opens only when the drawer would show its row in the
 /// same context, so a link can never reach what the menu hides (AE-I3). Empty
 /// until a gated row ships; GUARDIAN-REPORT F4 adds the first.
+#[cfg(not(feature = "web"))]
+pub const GATED_ROUTES: &[(&str, &str)] = &[("#progress-report", "progress_report")];
+/// The site has no gated rows (each is app-only), and app-only names stay out
+/// of the site bundle.
+#[cfg(feature = "web")]
 pub const GATED_ROUTES: &[(&str, &str)] = &[];
 
 /// What the router does with a hash.
@@ -473,19 +478,19 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        // 23 modes + 6 core surfaces (the drawn Quick Bee is the newest mode). my_words and misses are surfaces rather
+        // 24 modes + 6 core surfaces (the parent progress report is the newest row). my_words and misses are surfaces rather
         // than modes, registered so the CC-HUB-NAV drawer can resolve their
         // rows through this registry and not a second list (I2); `versus` is
         // the newest, and it is here because v1.3.1 F2 deletes the quick-play
         // row that was the local Spell Off's only door (H1).
-        assert_eq!(all.len(), 29, "23 modes + 6 core surfaces registered");
+        assert_eq!(all.len(), 30, "24 modes + 6 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "quickbee_draw", "standard", "climb", "daily", "versus"],
+            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "progress_report", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "randospell", "quickbee_draw", "standard", "climb", "daily", "versus"],
         );
     }
 
@@ -646,7 +651,10 @@ mod tests {
             // A mode that lists languages is judged in one of them (zh and ja
             // for the drawn Quick Bee), not in English.
             let lang = all.iter().find(|m| m.id == *id).and_then(|m| m.languages.as_ref()).and_then(|l| if l.iter().any(|x| x == "en") { None } else { l.first().cloned() }).unwrap_or_else(|| "en".to_string());
-            let c = HubCtx { native: true, enabled: live.clone(), lang, ..ctx() };
+            // Every entitlement held: a row that rides Complete (progress_report)
+            // is absent without it by design, which other tests pin.
+            let premium = ["photo_ocr", "multiple_profiles", "progress_reports", "custom_lists_unlimited"].map(String::from).to_vec();
+            let c = HubCtx { native: true, enabled: live.clone(), lang, premium, ..ctx() };
             let got = ids(&visible(&all, &c));
             assert!(got.contains(id), "{id} is LIVE but does not tile on device — got {got:?}");
         }
@@ -1139,6 +1147,7 @@ mod ae1_tests {
 
     /// Every gated route names a registry row that is adult-only, and has a
     /// launcher, so Open always has somewhere to go behind the gate.
+    #[cfg(not(feature = "web"))]
     #[test]
     fn every_gated_route_opens_an_adult_only_row_with_a_launcher() {
         let all = all();
@@ -1150,15 +1159,39 @@ mod ae1_tests {
     }
 
     /// A5's wiring: the router consults the table BEFORE its ordinary routes,
-    /// and an Open goes through the parent gate.
+    /// and an Open goes to the row's launcher -- which owns the parent gate, so
+    /// the drawer and the link pass the same gate once.
     #[test]
-    fn the_router_checks_gated_routes_first_and_gates_an_open() {
+    fn the_router_checks_gated_routes_first_and_opens_through_the_launcher() {
         let src = include_str!("lib.rs");
         let gated = src.find("modes::gated_route(&hash, modes::GATED_ROUTES").expect("the router must consult GATED_ROUTES");
         let plain = src.find("\"#daily\" => dom::click(\"dailyBtn\")").expect("the ordinary router moved");
         assert!(gated < plain, "gated routes must be checked before the ordinary ones");
         let open = &src[gated..plain];
-        assert!(open.contains("RouteVerdict::Open(id)") && open.contains("parent_gate_then("), "an Open must pass the parent gate");
+        assert!(open.contains("RouteVerdict::Open(id)") && open.contains("play_hub::launch_for(id)"), "an Open must go to the row's launcher");
+    }
+
+    /// AE-1 F3 + REPORTS-SHARE F6: every gated route's launcher opens the
+    /// parent gate before anything else, so no route reaches a row ungated.
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn every_gated_routes_launcher_opens_the_parent_gate_first() {
+        let sources = [include_str!("reports_share_ui.rs")];
+        for (_, id) in GATED_ROUTES {
+            let el = crate::play_hub::launch_for(id).unwrap();
+            let wire = format!("on_click(\"{el}\"");
+            let (src, at) = sources
+                .iter()
+                .find_map(|s| s.find(&wire).map(|i| (*s, i)))
+                .unwrap_or_else(|| panic!("no handler for {el} in the gated launchers' sources"));
+            let body = &src[at..at + src[at..].find("});\n    }").unwrap_or(400).min(600)];
+            let gate = body.find("parent_gate_then(").unwrap_or_else(|| panic!("{el} opens without the parent gate"));
+            for render in ["render(", "add_class(", "set_text(", "share_text("] {
+                if let Some(r) = body.find(render) {
+                    assert!(gate < r, "{el}: {render} runs before the parent gate");
+                }
+            }
+        }
     }
 
     /// A6 (AE-I5): one adult gate. The challenge is generated in one place,

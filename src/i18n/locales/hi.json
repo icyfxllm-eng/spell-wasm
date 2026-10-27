@@ -1258,5 +1258,16 @@
   "ol.end.closed": "कमरा बंद हो गया।",
   "ol.end.left": "आपने कमरा छोड़ दिया।",
   "ol.end.generic": "मैच रुक गया।",
-  "ol.end.dropped": "कनेक्शन बहुत देर तक टूटा रहा। नया कमरा खोलें या किसी में जुड़ें।"
+  "ol.end.dropped": "कनेक्शन बहुत देर तक टूटा रहा। नया कमरा खोलें या किसी में जुड़ें।",
+  "rshare.name": "प्रगति रिपोर्ट",
+  "rshare.desc": "साझा करने के लिए एक हफ़्ते के शब्द",
+  "rshare.title": "वर्तनी में प्रगति",
+  "rshare.partial": "इस हफ़्ते अब तक",
+  "rshare.lastWeek": "पिछला हफ़्ता",
+  "rshare.mastered": "सीख लिए ({n})",
+  "rshare.workingOn": "अभ्यास जारी ({n})",
+  "rshare.new": "इस हफ़्ते नए ({n})",
+  "rshare.empty": "इस हफ़्ते अभी कोई अभ्यास नहीं।",
+  "rshare.share": "साझा करें",
+  "rshare.week": "{start} – {end}"
 }

@@ -1258,5 +1258,16 @@
   "ol.end.closed": "Chumba kimefungwa.",
   "ol.end.left": "Umeondoka chumbani.",
   "ol.end.generic": "Mechi imesimama.",
-  "ol.end.dropped": "Muunganisho ulikatika kwa muda mrefu mno. Fungua au jiunge na chumba kipya."
+  "ol.end.dropped": "Muunganisho ulikatika kwa muda mrefu mno. Fungua au jiunge na chumba kipya.",
+  "rshare.name": "Ripoti ya maendeleo",
+  "rshare.desc": "Wiki ya maneno ya kushiriki",
+  "rshare.title": "Maendeleo ya tahajia",
+  "rshare.partial": "Wiki hii hadi sasa",
+  "rshare.lastWeek": "Wiki iliyopita",
+  "rshare.mastered": "Yamefahamika ({n})",
+  "rshare.workingOn": "Yanafanyiwa mazoezi ({n})",
+  "rshare.new": "Mapya wiki hii ({n})",
+  "rshare.empty": "Hakuna mazoezi wiki hii hadi sasa.",
+  "rshare.share": "Shiriki",
+  "rshare.week": "{start} – {end}"
 }
