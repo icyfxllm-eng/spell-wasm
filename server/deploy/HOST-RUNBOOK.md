@@ -103,7 +103,8 @@ Put your key in `~/.ssh/authorized_keys` first, and keep a session open while
 you test.
 ```
 # as your admin user (eric):
-sudo tee /etc/ssh/sshd_config.d/10-spell.conf <<'EOF'
+# 00- so it sorts first: sshd keeps the FIRST value it reads, and Rocky may ship 01-permitrootlogin.conf.
+sudo tee /etc/ssh/sshd_config.d/00-spell.conf <<'EOF'
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PermitRootLogin no
