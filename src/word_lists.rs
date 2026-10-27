@@ -71,6 +71,11 @@ pub struct WordList {
     pub deleted_at: Option<f64>,
     #[serde(default)]
     pub order: Order,
+    /// KC-1: a caller-owned identity for a list that must not be created twice
+    /// (GUARDIAN-REPORT's `guardian:<profile>:<monday>:<lang>`). None for every
+    /// list a player makes. Never shown, never edited, kept across renames.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub key: Option<String>,
 }
 
 impl WordList {
@@ -184,8 +189,44 @@ pub fn create(lists: &mut Lists, name: &str, source: ListSource, now: f64) -> St
         entries: Vec::new(),
         deleted_at: None,
         order: Order::default(),
+        key: None,
     });
     id
+}
+
+/// KC-1: what `create_keyed` did.
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub enum Keyed {
+    /// A live list already held the key; nothing was written.
+    Existing(String),
+    Created(String),
+}
+
+/// KC-1: the live list holding `key`, or a new one carrying it. A trashed list
+/// does not count (D-KC2), so Add after a delete makes a fresh list. If a
+/// restore leaves two live lists sharing a key, the oldest answers, so the
+/// result stays deterministic and nothing is merged or removed (I1, I2).
+/// Keyed lists are `Manual`: a new `ListSource` variant would make an older
+/// build fail to parse, start empty and wipe every list on its next save.
+pub fn create_keyed(lists: &mut Lists, key: &str, name: &str, now: f64) -> Keyed {
+    let held = lists
+        .lists
+        .iter()
+        .filter(|l| l.live() && l.key.as_deref() == Some(key))
+        .min_by(|a, b| a.created_at.total_cmp(&b.created_at).then_with(|| id_order(&a.id).cmp(&id_order(&b.id))));
+    if let Some(l) = held {
+        return Keyed::Existing(l.id.clone());
+    }
+    let id = create(lists, name, ListSource::Manual, now);
+    if let Some(l) = lists.lists.iter_mut().find(|l| l.id == id) {
+        l.key = Some(key.to_string());
+    }
+    Keyed::Created(id)
+}
+
+/// `l12` sorts after `l9`: ids compare by their number, then as text.
+fn id_order(id: &str) -> (u64, &str) {
+    (id.trim_start_matches('l').parse().unwrap_or(u64::MAX), id)
 }
 
 /// Add words to a list. Returns how many were NEW: a word the list already holds
@@ -500,16 +541,80 @@ pub fn boot(custom: &CustomSet, now: f64, migrated_name: &str) {
 
 // ---------- storage ----------
 
-pub fn load() -> Lists {
-    match storage::get_json::<Lists>(LISTS_KEY) {
-        Some(l) if l.v == VERSION => l,
-        // Unknown version or nothing stored: start clean, and leave the flat set
-        // alone so the migration can still claim it.
-        _ => Lists { v: VERSION, ..Default::default() },
+/// KC-O1: where unreadable bytes go before anything can overwrite them. Same
+/// key family, so every audit that polices the lists key covers it.
+pub const LISTS_BACKUP_KEY: &str = "byear_word_lists_v1_unreadable";
+
+/// KC-O1: what the stored bytes turned out to be. Pure, so the host tests
+/// can hold every branch (they have no localStorage).
+#[derive(Debug, PartialEq)]
+pub enum Loaded {
+    /// Nothing stored: a fresh store, saved normally.
+    Empty,
+    Stored(Lists),
+    /// Written by a newer build (`v` above ours): fresh in memory and NEVER
+    /// written back, so a downgrade cannot wipe what the newer build kept.
+    Newer,
+    /// Present but unreadable (corrupt, foreign, or a shape this build cannot
+    /// parse): back the bytes up, then continue fresh.
+    Unreadable,
+}
+
+pub fn resolve(raw: Option<&str>) -> Loaded {
+    let Some(raw) = raw else { return Loaded::Empty };
+    // Read the version alone first: a newer build's lists may hold a shape this
+    // build cannot parse, and that must read as Newer, not as garbage.
+    #[derive(Deserialize)]
+    struct Probe {
+        #[serde(default)]
+        v: u32,
+    }
+    match serde_json::from_str::<Probe>(raw) {
+        Ok(p) if p.v > VERSION => Loaded::Newer,
+        Ok(p) if p.v == VERSION => match serde_json::from_str::<Lists>(raw) {
+            Ok(l) => Loaded::Stored(l),
+            Err(_) => Loaded::Unreadable,
+        },
+        _ => Loaded::Unreadable,
     }
 }
 
+thread_local! {
+    /// KC-O1: false after a load that found a newer build's bytes. `store`
+    /// consults it, so none of the screens that load-edit-store has to.
+    static WRITABLE: std::cell::Cell<bool> = const { std::cell::Cell::new(true) };
+}
+
+pub fn load() -> Lists {
+    let fresh = || Lists { v: VERSION, ..Default::default() };
+    let raw = storage::get_raw(LISTS_KEY);
+    // Nothing stored, or unreadable: start clean, and leave the flat set alone
+    // so the migration can still claim it.
+    let (lists, writable) = match resolve(raw.as_deref()) {
+        Loaded::Stored(l) => (l, true),
+        Loaded::Empty => (fresh(), true),
+        Loaded::Newer => (fresh(), false),
+        Loaded::Unreadable => {
+            // Before KC-O1 the next store() silently overwrote these bytes and
+            // every list was gone. Keep the FIRST unreadable copy: a second
+            // failure must not replace the one worth recovering.
+            if let Some(raw) = &raw {
+                if storage::get_raw(LISTS_BACKUP_KEY).is_none() {
+                    storage::set_raw(LISTS_BACKUP_KEY, raw);
+                }
+            }
+            (fresh(), true)
+        }
+    };
+    WRITABLE.with(|w| w.set(writable));
+    lists
+}
+
+/// The one save. Lists loaded over a newer build's bytes are never written.
 pub fn store(lists: &Lists) {
+    if !WRITABLE.with(std::cell::Cell::get) {
+        return;
+    }
     let mut out = lists.clone();
     out.v = VERSION;
     storage::set_json(LISTS_KEY, &out);
@@ -909,5 +1014,226 @@ mod tests {
         assert_eq!(texts(false), vec!["cat", "dog", "hund"], "saved order, star ignored");
         // And honour=true is exactly play_entries (flag off is today's app).
         assert_eq!(play_entries(&l, &[a.clone()]), play_entries_with(&l, &[a], true));
+    }
+}
+
+#[cfg(test)]
+mod kc1_tests {
+    //! CC-MYWORDS-LISTS KC-1 (keyed create) and KC-O1 (a load never wipes).
+    //! Host tests have no localStorage, so KC-O1 is held through the pure
+    //! `resolve` and a source check of `load`/`store`; the real store is the
+    //! e2e's job.
+    use super::*;
+
+    const T0: f64 = 1_700_000_000_000.0;
+    const KEY: &str = "guardian:0:2026-10-19:en";
+    const NAME: &str = "Week of Oct 19";
+
+    fn fresh() -> Lists {
+        Lists { v: VERSION, ..Default::default() }
+    }
+
+    fn words(ws: &[&str]) -> Vec<(String, String)> {
+        ws.iter().map(|w| (w.to_string(), "en".to_string())).collect()
+    }
+
+    /// KC A1 (GUARDIAN A17): twice with one key is one list, and the second
+    /// call writes nothing.
+    #[test]
+    fn a_second_keyed_create_returns_the_first_list_and_writes_nothing() {
+        let mut l = fresh();
+        let Keyed::Created(a) = create_keyed(&mut l, KEY, NAME, T0) else { panic!("first must create") };
+        let before = l.clone();
+        assert_eq!(create_keyed(&mut l, KEY, NAME, T0 + 1.0), Keyed::Existing(a.clone()));
+        assert_eq!(l, before, "Existing must not touch the store, next_id included");
+        assert_eq!(l.lists.len(), 1);
+        assert_eq!(l.lists[0].source, ListSource::Manual);
+    }
+
+    /// KC A2: a rename keeps the key.
+    #[test]
+    fn a_renamed_keyed_list_still_answers_its_key() {
+        let mut l = fresh();
+        let Keyed::Created(a) = create_keyed(&mut l, KEY, NAME, T0) else { panic!() };
+        let new = rename_to(&l, &a, "Spelling homework").unwrap();
+        l.lists.iter_mut().find(|x| x.id == a).unwrap().name = new;
+        assert_eq!(create_keyed(&mut l, KEY, NAME, T0 + 1.0), Keyed::Existing(a));
+    }
+
+    /// KC A3: a player's own list with the same name is never matched.
+    #[test]
+    fn a_players_same_named_list_is_ignored_and_untouched() {
+        let mut l = fresh();
+        let mine = create(&mut l, NAME, ListSource::Photo, T0);
+        add_entries(&mut l, &mine, &words(&["cat"]), T0);
+        let theirs = l.lists[0].clone();
+        let Keyed::Created(k) = create_keyed(&mut l, KEY, NAME, T0 + 1.0) else { panic!("must not reuse the player's list") };
+        assert_ne!(k, mine);
+        assert_eq!(l.lists.iter().find(|x| x.id == k).unwrap().name, "Week of Oct 19 (2)");
+        assert_eq!(l.lists.iter().find(|x| x.id == mine).unwrap(), &theirs);
+    }
+
+    /// KC A4 (D-KC2): trash means a fresh list; a restore makes the oldest
+    /// live holder answer.
+    #[test]
+    fn trash_makes_a_fresh_list_and_restore_lets_the_oldest_answer() {
+        let mut l = fresh();
+        let Keyed::Created(a) = create_keyed(&mut l, KEY, NAME, T0) else { panic!() };
+        assert!(soft_delete(&mut l, &a, T0 + 1.0));
+        let Keyed::Created(b) = create_keyed(&mut l, KEY, NAME, T0 + 2.0) else { panic!("a trashed list does not count") };
+        assert_ne!(a, b);
+        assert!(restore(&mut l, &a));
+        assert_eq!(create_keyed(&mut l, KEY, NAME, T0 + 3.0), Keyed::Existing(a.clone()));
+        // Same instant: the lower id answers, l9 before l10.
+        let mut m = fresh();
+        m.next_id = 8;
+        let Keyed::Created(x) = create_keyed(&mut m, KEY, NAME, T0) else { panic!() };
+        soft_delete(&mut m, &x, T0);
+        let Keyed::Created(y) = create_keyed(&mut m, KEY, NAME, T0) else { panic!() };
+        restore(&mut m, &x);
+        assert_eq!((x.as_str(), y.as_str()), ("l9", "l10"));
+        assert_eq!(create_keyed(&mut m, KEY, NAME, T0), Keyed::Existing(x));
+    }
+
+    /// KC A5 (KC-I3): lists without a key write the bytes they always did.
+    #[test]
+    fn an_unkeyed_list_serialises_exactly_as_before() {
+        let mut l = fresh();
+        let id = create(&mut l, NAME, ListSource::Photo, T0);
+        add_entries(&mut l, &id, &words(&["cat"]), T0);
+        let j = serde_json::to_string(&l.lists[0]).unwrap();
+        assert!(!j.contains("\"key\""), "{j}");
+        let back: WordList = serde_json::from_str(&j).unwrap();
+        assert_eq!(back, l.lists[0]);
+    }
+
+    /// The fields a pre-KC-1 build compiled, for A6.
+    #[derive(Serialize, Deserialize)]
+    struct OldList {
+        id: String,
+        #[serde(default)]
+        profile: String,
+        name: String,
+        #[serde(rename = "createdAt")]
+        created_at: f64,
+        #[serde(rename = "updatedAt")]
+        updated_at: f64,
+        source: ListSource,
+        entries: Vec<ListEntry>,
+        #[serde(default, rename = "deletedAt")]
+        deleted_at: Option<f64>,
+        #[serde(default)]
+        order: Order,
+    }
+    #[derive(Serialize, Deserialize)]
+    struct OldLists {
+        #[serde(default)]
+        v: u32,
+        #[serde(default)]
+        lists: Vec<OldList>,
+        #[serde(default, rename = "nextId")]
+        next_id: u64,
+        #[serde(default)]
+        migrated: bool,
+        #[serde(default)]
+        selection: Vec<String>,
+    }
+
+    /// KC A6: an older build reads keyed bytes, saves, and only the key is lost.
+    #[test]
+    fn an_older_build_reads_keyed_bytes_and_loses_only_the_key() {
+        let mut l = fresh();
+        let Keyed::Created(a) = create_keyed(&mut l, KEY, NAME, T0) else { panic!() };
+        add_entries(&mut l, &a, &words(&["receive", "knight"]), T0);
+        let json = serde_json::to_string(&l).unwrap();
+        let old: OldLists = serde_json::from_str(&json).expect("a pre-KC-1 build must parse keyed bytes");
+        let rewritten = serde_json::to_string(&old).unwrap();
+        let Loaded::Stored(back) = resolve(Some(&rewritten)) else { panic!("the older build's rewrite must load") };
+        assert_eq!(back.lists[0].key, None);
+        assert_eq!(back.lists[0].entries, l.lists[0].entries);
+        assert_eq!(back.next_id, l.next_id);
+    }
+
+    /// KC A7 (KC-I4): no version bump and no new source. Either would make an
+    /// older build start empty and wipe every list on its next save.
+    #[test]
+    fn the_version_and_the_source_set_are_pinned() {
+        assert_eq!(VERSION, 1);
+        let all = [ListSource::Photo, ListSource::Translate, ListSource::Manual, ListSource::Migrated];
+        for s in all {
+            // Exhaustive: a new variant fails to compile here until it is pinned.
+            match s {
+                ListSource::Photo | ListSource::Translate | ListSource::Manual | ListSource::Migrated => {}
+            }
+        }
+        assert_eq!(serde_json::to_string(&all).unwrap(), r#"["Photo","Translate","Manual","Migrated"]"#);
+    }
+
+    /// KC A8 (GUARDIAN A17/A19): two Adds of the same words through the keyed
+    /// list hold each word once, in NFC, in its language.
+    #[test]
+    fn two_adds_through_the_keyed_list_hold_each_word_once_in_nfc() {
+        let mut l = fresh();
+        let decomposed = "cafe\u{0301}";
+        for t in [T0, T0 + 1.0] {
+            let id = match create_keyed(&mut l, KEY, NAME, t) {
+                Keyed::Created(id) | Keyed::Existing(id) => id,
+            };
+            add_entries(&mut l, &id, &[(decomposed.into(), "fr".into()), ("knight".into(), "en".into())], t);
+        }
+        let e = &l.lists[0].entries;
+        assert_eq!(e.len(), 2);
+        assert_eq!(e[0].text, "caf\u{e9}");
+        assert_eq!((e[0].lang.as_str(), e[1].lang.as_str()), ("fr", "en"));
+    }
+
+    // ---- KC-O1 -------------------------------------------------------------
+
+    #[test]
+    fn resolve_sorts_every_kind_of_stored_bytes() {
+        assert_eq!(resolve(None), Loaded::Empty);
+        let ok = serde_json::to_string(&fresh()).unwrap();
+        assert!(matches!(resolve(Some(&ok)), Loaded::Stored(_)));
+        assert_eq!(resolve(Some("not json")), Loaded::Unreadable);
+        assert_eq!(resolve(Some("{}")), Loaded::Unreadable, "no version is not ours");
+        assert_eq!(resolve(Some(r#"{"v":1,"lists":[{"id":"l1"}]}"#)), Loaded::Unreadable);
+    }
+
+    /// The downgrade case: a newer build's bytes may hold a shape this build
+    /// cannot parse (a new source, say). They must read as Newer, never as
+    /// garbage to be replaced.
+    #[test]
+    fn a_newer_builds_bytes_read_as_newer_even_when_unparseable() {
+        let newer = r#"{"v":2,"lists":[{"id":"l1","name":"x","createdAt":0,"updatedAt":0,"source":"Report","entries":[]}],"nextId":1}"#;
+        assert_eq!(resolve(Some(newer)), Loaded::Newer);
+        assert_eq!(resolve(Some(r#"{"v":7}"#)), Loaded::Newer);
+    }
+
+    /// The storage half, held on the source: load backs up an unreadable
+    /// store before anything can overwrite it, keeps the first backup, and
+    /// store refuses after a Newer load.
+    #[test]
+    fn load_backs_up_first_and_store_refuses_a_newer_store() {
+        let src = include_str!("word_lists.rs");
+        let body = |from: &str| {
+            let i = src.find(from).unwrap_or_else(|| panic!("{from} moved"));
+            let rest = &src[i..];
+            rest[..rest.find("\n}\n").unwrap()].to_string()
+        };
+        let load = body("pub fn load() -> Lists {");
+        assert!(load.contains("Loaded::Newer => (fresh(), false)"));
+        let backup = load.find("set_raw(LISTS_BACKUP_KEY").expect("an unreadable store must be backed up");
+        assert!(load[..backup].contains("get_raw(LISTS_BACKUP_KEY).is_none()"), "the first backup must be kept");
+        let store = body("pub fn store(lists: &Lists) {");
+        let guard = store.find("WRITABLE").expect("store must consult the write guard");
+        assert!(guard < store.find("set_json").unwrap(), "the guard must come before the write");
+        // And every caller still goes through the one pair: no direct write of the key.
+        for (f, s) in [
+            ("lists_screen.rs", include_str!("lists_screen.rs")),
+            ("lists_ui.rs", include_str!("lists_ui.rs")),
+            ("lib.rs", include_str!("lib.rs")),
+        ] {
+            assert!(!s.contains("set_json(word_lists::LISTS_KEY") && !s.contains("set_raw(word_lists::LISTS_KEY"), "{f} writes the lists key directly");
+        }
     }
 }

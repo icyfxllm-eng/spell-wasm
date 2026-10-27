@@ -1,6 +1,6 @@
 # CC-MYWORDS-LISTS — Amendment KC-1: keyed create (idempotent Add)
 
-**Status:** DECISIONS SIGNED. D-KC1 to D-KC4 were signed as recommended (Eric, 2026-10-26: "I like the recommendations"). Under D-KC4, KC-O1 is now in scope as its own small change, to land before GUARDIAN-REPORT Phase C. Nothing is built yet.
+**Status:** DECISIONS SIGNED. D-KC1 to D-KC4 were signed as recommended (Eric, 2026-10-26: "I like the recommendations"). Under D-KC4, KC-O1 is now in scope as its own small change, to land before GUARDIAN-REPORT Phase C. **BUILT 2026-10-26**, with KC-O1 (see "As built" below).
 **Raised by:** CC-GUARDIAN-REPORT v1 §0 C6 (HALT on the idempotency key). Base: origin/main `8a33d1a6`.
 **Amends:** §3 Data model, plus one new function in `src/word_lists.rs`. No existing function changes behaviour.
 **Carries forward unchanged:** I1–I7, D1 (today's-list default), F2 naming, F5 soft delete and the 30-day purge.
@@ -104,6 +104,24 @@ pub fn create_keyed(lists: &mut Lists, key: &str, name: &str, source: ListSource
 ## Open
 
 - **KC-O1.** My Words gets the learner store's C10 treatment: back up unreadable bytes before any write, and never overwrite bytes from a newer `v`. This is separate from KC-1, but it closes the hazard the ship-order table found.
+
+## As built (2026-10-26)
+
+**KC-1** is in `src/word_lists.rs`:
+- **`WordList.key`:** optional, and skipped when None, so unkeyed lists keep their bytes.
+- **`Keyed`:** Existing or Created.
+- **`create_keyed(lists, key, name, now)`:** the draft's `source` parameter is dropped, because D-KC3 fixes it to `Manual`. Ties at the same `created_at` break by numeric id, so `l9` answers before `l10`.
+
+**KC-O1** is in the same file:
+- **`resolve(raw) -> Loaded`:** Empty, Stored, Newer or Unreadable. It reads `v` alone first, so a newer build's bytes read as Newer even when this build can't parse them.
+- **`load()`:** backs up unreadable bytes to `byear_word_lists_v1_unreadable` before anything else can write, and keeps the first backup.
+- **`store()`:** refuses to write after a Newer load. A `WRITABLE` cell enforces it, so none of the roughly 30 load, edit, store callers changed.
+- **One behaviour change:** bytes with no `v` (for example `{}`) used to start clean silently. They now start clean *after a backup*.
+- **No restore UI.** The backup is there for recovery by hand.
+
+**Tests:** `word_lists::kc1_tests` covers KC A1–A8, plus three KC-O1 tests: every `resolve` branch, the newer-but-unparseable downgrade case, and a source check that the backup comes first and the guard comes before the write. A mutation run (the Newer threshold, the `live()` filter, the keep-first backup, the key's skip-if-None) failed a test each time.
+
+**Not covered here:** host tests have no localStorage, so the backup write and the write block are held through `resolve` and the source check. A real-store check is e2e work and is not done yet.
 
 ## Non-goals
 
