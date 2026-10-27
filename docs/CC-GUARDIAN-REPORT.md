@@ -400,4 +400,3 @@ Stop and ask if any of these comes up:
 - any need for network access.
 
 Never infer a reversal.
-</pasted_content id="0da9">
