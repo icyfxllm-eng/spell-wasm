@@ -74,7 +74,7 @@ The dark pair fails contrast on light grounds.
   - **(a) Recommended:** a dedicated Lab TestFlight build cut with `--features dev_preview`. It goes to internal testers only and is never submitted for review. It follows the pattern of the release branches and per-language audit builds, with its own build number and a lane guard that refuses `submit_review` when the dist contains a Lab marker.
   - **(b)** A dev_preview build installed from Xcode onto his phone, or run in the simulator. This needs no lane work, but it is not "his own device via TestFlight".
   - **(c)** A runtime gate, for example a TestFlight sandbox-receipt check. This breaks T-D10's "compiled out" and is not recommended.
-- **Found in passing, already in players' hands today:** the menu's "Test entitlements (Complete)" switch (`spell_dev_entitlements` in play_hub.rs:123) is in the App Store binary. A player who taps the logo five times gets the Complete entitlement for free. This is the same threat T-D10 describes. It should get its own fix whatever happens with Cosmos.
+- **Found in passing, already in players' hands today:** the menu's "Test entitlements (Complete)" switch (`spell_dev_entitlements` in play_hub.rs:123) is in the App Store binary. A player who taps the logo five times gets the Complete entitlement for free. This is the same threat T-D10 describes. It should get its own fix whatever happens with Cosmos. **Fixed 2026-10-28:** the grant, its menu row and its storage key are now compiled into dev and test builds only. Release builds (TestFlight and the App Store) cut the row and carry no trace of the key, and seam-absence-check fails any store dist that does.
 
 ## C4 Progress counters
 

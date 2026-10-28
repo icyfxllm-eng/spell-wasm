@@ -118,10 +118,24 @@ pub(crate) fn launch_for(id: &str) -> Option<&'static str> {
 /// (CC-ENTITLEMENTS), so today this resolves FREE_TIER — unless the dev-door
 /// "test entitlements" grant is on, which resolves the audit maximum so gated
 /// features stay testable on the floor device (the override is consumer-build
-/// only and invisible to normal users, like the rest of the dev door).
+/// only, and dev and test builds only: see `dev_grant`).
 pub fn live_entitlements() -> entitlements::EntitlementSet {
-    let dev = crate::storage::get_raw("spell_dev_entitlements").as_deref() == Some("on");
-    entitlements::resolve_entitlements(false, &[], dev)
+    entitlements::resolve_entitlements(false, &[], dev_grant())
+}
+
+/// The dev-door grant. Compiled into dev and test builds only: the door is in
+/// every binary, and TestFlight and the App Store ship the same one, so a
+/// storage switch here once let any player tap the logo five times and own
+/// Complete (CC-THEMES-COSMOS census). Release builds carry neither the read
+/// nor its key.
+#[cfg(feature = "dev_preview")]
+fn dev_grant() -> bool {
+    crate::storage::get_raw("spell_dev_entitlements").as_deref() == Some("on")
+}
+
+#[cfg(not(feature = "dev_preview"))]
+fn dev_grant() -> bool {
+    false
 }
 
 /// Gather the live context the pure rule needs. The only impure part of the hub.

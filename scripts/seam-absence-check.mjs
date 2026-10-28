@@ -15,7 +15,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // CC-ECLIPSE-HOTFIX F4 (I7): nor is the mic diag readout, its switch, or its
 // 'diag: ' prefix. TestFlight and the App Store ship this same dist.
 const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_preview',
-  'voiceSpellDiag', 'devDiagBar', 'spell_diag_bar', 'diag: '];
+  'voiceSpellDiag', 'devDiagBar', 'spell_diag_bar', 'diag: ',
+  // CC-THEMES-COSMOS census: nor the Test entitlements switch, which granted
+  // Complete to any player who tapped the logo five times.
+  'devEntitlements', 'spell_dev_entitlements'];
 // CC-THEMES-COSMOS T-D10 / AT-T2: nor is the Theme Lab -- its menu row, its
 // stored preview, its stylesheet and its chip. Otherwise any player could tap
 // the logo five times and wear every earned theme. The one build allowed to
