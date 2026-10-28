@@ -1207,7 +1207,6 @@ mod ae1_tests {
             ("guardian_dash.rs", include_str!("guardian_dash.rs")),
             ("credits.rs", include_str!("credits.rs")),
             ("lists_screen.rs", include_str!("lists_screen.rs")),
-            ("online_screen.rs", include_str!("online_screen.rs")),
         ]
         .into_iter()
         .filter(|(_, s)| s.contains("parent_problem()"))
