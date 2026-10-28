@@ -69,6 +69,19 @@ pub enum Which {
     LastWeek,
     /// The week so far, labelled partial.
     ThisWeek,
+    /// The week starting on this local Monday (a day count), for a deep link
+    /// that names its week (CC-GUARDIAN-REPORT F7). Partial if it is this week.
+    Week(i64),
+}
+
+/// The window's Monday and whether it is still running.
+pub fn window(which: Which, now_s: i64, zone: &dyn Zone) -> (i64, bool) {
+    let this_monday = week_monday(now_s, zone);
+    match which {
+        Which::LastWeek => (this_monday - 7, false),
+        Which::ThisWeek => (this_monday, true),
+        Which::Week(m) => (m, m == this_monday),
+    }
 }
 
 // ---------------------------------------------------------------- report
@@ -88,6 +101,20 @@ pub struct LangSection {
     pub mastered: Vec<String>,
     pub working_on: Vec<String>,
     pub new_words: Vec<String>,
+    /// CC-GUARDIAN-REPORT F2: the shown word-type groups. Empty from this
+    /// file's composer; `guardian_report::extend` fills it.
+    pub types: Vec<TypeGroup>,
+    /// CC-GUARDIAN-REPORT F3: the practice list, the same way.
+    pub practice: Vec<String>,
+}
+
+/// One shown word-type group: its registry label key, its full count, and
+/// up to five of its words (CC-GUARDIAN-REPORT F2).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TypeGroup {
+    pub label_key: String,
+    pub count: usize,
+    pub words: Vec<String>,
 }
 
 impl LangSection {
@@ -107,24 +134,20 @@ pub struct Report {
 }
 
 /// A miss-class outcome: Working on (F2).
-fn is_miss(o: OutcomeClass) -> bool {
+pub fn is_miss(o: OutcomeClass) -> bool {
     matches!(o, OutcomeClass::Misspelled | OutcomeClass::TimedOut | OutcomeClass::GaveUp | OutcomeClass::Trap)
 }
 
 /// F1/F2 — compose one window. Read-only, contract-only (L0 I6).
 pub fn compose(input: &ComposeInput) -> Report {
-    let this_monday = week_monday(input.now_s, input.zone);
-    let (monday, partial) = match input.which {
-        Which::LastWeek => (this_monday - 7, false),
-        Which::ThisWeek => (this_monday, true),
-    };
+    let (monday, partial) = window(input.which, input.now_s, input.zone);
     let in_window = |utc_s: i64| week_monday(utc_s, input.zone) == monday;
     let mut sections = Vec::new();
     for &lang in input.langs {
         let log = input.q.attempt_detail_log(input.profile, lang);
         // Speech and Impossible attempts are excluded from every bucket; an
         // attempt without its CR-1 instant or class is unknown, never guessed.
-        let eligible = || log.iter().filter(|a| a.channel != Channel::Speech && !a.impossible);
+        let eligible = || log.iter().filter(|a| counts(a));
 
         let mastered: BTreeSet<String> = input
             .q
@@ -166,6 +189,8 @@ pub fn compose(input: &ComposeInput) -> Report {
             mastered: mastered.into_iter().collect(),
             working_on: working.into_iter().collect(),
             new_words: new_words.into_iter().collect(),
+            types: Vec::new(),
+            practice: Vec::new(),
         };
         if !s.is_empty() {
             sections.push(s);
@@ -174,12 +199,19 @@ pub fn compose(input: &ComposeInput) -> Report {
     Report { monday, partial, sections }
 }
 
+/// An attempt any report may count: not Speech (Spell It voice results) and
+/// not Impossible. Voided rounds never log at all.
+pub fn counts(a: &crate::learner_query::AttemptDetail) -> bool {
+    a.channel != Channel::Speech && !a.impossible
+}
+
 // ---------------------------------------------------------------- render
 
 /// What the renderer may say, and how dates read. Injected so the renderer is
 /// pure: the live one is i18n plus Intl in the UI language.
 pub struct Voice<'a> {
-    /// A `rshare.*` key to its text. The renderer asks for nothing else (R-I4).
+    /// A `rshare.*` or `greport.*` key to its text. The renderer asks for
+    /// nothing else (R-I4; CC-GUARDIAN-REPORT I13).
     pub t: &'a dyn Fn(&str) -> String,
     /// (year, month, day, with_year) to a date in the UI language's format.
     pub date: &'a dyn Fn(i64, u32, u32, bool) -> String,
@@ -195,12 +227,14 @@ fn fill(s: String, params: &[(&str, &str)]) -> String {
 }
 
 /// F3 — the report as plain text, for the share sheet. Every word of prose is
-/// a `rshare.*` key; the rest is bank words, language names, dates and counts.
+/// a `rshare.*` or `greport.*` key; the rest is bank words, language names,
+/// dates and counts. CC-GUARDIAN-REPORT F5 adds, per language, the word types
+/// before the buckets and the practice list after them.
 pub fn render_text(r: &Report, v: &Voice) -> String {
     let (sy, sm, sd) = civil(r.monday);
     let (ey, em, ed) = civil(r.monday + 6);
     let mut out = vec![
-        (v.t)("rshare.title"),
+        (v.t)("greport.name"),
         fill((v.t)("rshare.week"), &[("start", &(v.date)(sy, sm, sd, false)), ("end", &(v.date)(ey, em, ed, true))]),
     ];
     if r.partial {
@@ -213,12 +247,23 @@ pub fn render_text(r: &Report, v: &Voice) -> String {
     for s in &r.sections {
         out.push(String::new());
         out.push(lang_name(&s.lang).to_string());
+        if !s.types.is_empty() {
+            out.push((v.t)("greport.types"));
+            for g in &s.types {
+                let head = fill((v.t)("greport.group"), &[("label", &(v.t)(&g.label_key)), ("n", &g.count.to_string())]);
+                out.push(format!("{head}: {}", g.words.join(", ")));
+            }
+        }
         for (key, words) in [("rshare.mastered", &s.mastered), ("rshare.workingOn", &s.working_on), ("rshare.new", &s.new_words)] {
             if words.is_empty() {
                 continue;
             }
             let head = fill((v.t)(key), &[("n", &words.len().to_string())]);
             out.push(format!("{head}: {}", words.join(", ")));
+        }
+        if !s.practice.is_empty() {
+            let head = fill((v.t)("greport.practice"), &[("n", &s.practice.len().to_string())]);
+            out.push(format!("{head}: {}", s.practice.join(", ")));
         }
     }
     out.join("\n")
@@ -227,16 +272,16 @@ pub fn render_text(r: &Report, v: &Voice) -> String {
 // ----------------------------------------------------------------- tests
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     use crate::learner_query::{AttemptDetail, Fake, RedemptionView, DEVICE};
 
     /// America/Indiana/Indianapolis: US Eastern rules since 2006. EDT from the
     /// second Sunday of March 02:00 EST (07:00 UTC) to the first Sunday of
     /// November 02:00 EDT (06:00 UTC).
-    struct Indianapolis;
+    pub(crate) struct Indianapolis;
 
-    struct Utc;
+    pub(crate) struct Utc;
 
     impl Zone for Utc {
         fn offset_s(&self, _: i64) -> i64 {
@@ -260,11 +305,11 @@ mod tests {
     }
 
     /// UTC seconds of a local wall time in Indianapolis, for a given offset.
-    fn at(y: i64, m: u32, d: u32, h: i64, mi: i64, s: i64, offset_h: i64) -> i64 {
+    pub(crate) fn at(y: i64, m: u32, d: u32, h: i64, mi: i64, s: i64, offset_h: i64) -> i64 {
         days_from_civil(y, m, d) * DAY_S + h * 3600 + mi * 60 + s - offset_h * 3600
     }
 
-    fn det(word: &str, ts: Option<i64>, outcome: Option<OutcomeClass>) -> AttemptDetail {
+    pub(crate) fn det(word: &str, ts: Option<i64>, outcome: Option<OutcomeClass>) -> AttemptDetail {
         AttemptDetail {
             word: word.into(),
             word_id: format!("en::{word}"),
@@ -277,10 +322,10 @@ mod tests {
         }
     }
 
-    const OCT19: (i64, u32, u32) = (2026, 10, 19);
-    const OCT26: (i64, u32, u32) = (2026, 10, 26);
+    pub(crate) const OCT19: (i64, u32, u32) = (2026, 10, 19);
+    pub(crate) const OCT26: (i64, u32, u32) = (2026, 10, 26);
 
-    fn monday_of(d: (i64, u32, u32)) -> i64 {
+    pub(crate) fn monday_of(d: (i64, u32, u32)) -> i64 {
         days_from_civil(d.0, d.1, d.2)
     }
 
@@ -324,7 +369,7 @@ mod tests {
         assert_eq!(r.sections[0].working_on, ["rhythm"]);
     }
 
-    fn week_fixture() -> Fake {
+    pub(crate) fn week_fixture() -> Fake {
         let mon = at(2026, 10, 19, 9, 0, 0, -4);
         let before = at(2026, 10, 12, 9, 0, 0, -4);
         let mut speech = det("spoken", Some(mon), Some(OutcomeClass::Misspelled));
@@ -354,7 +399,7 @@ mod tests {
         }
     }
 
-    fn compose_week(fake: &Fake) -> Report {
+    pub(crate) fn compose_week(fake: &Fake) -> Report {
         compose(&ComposeInput {
             q: fake,
             profile: DEVICE,
@@ -396,7 +441,7 @@ mod tests {
 
     // -- rendering ----------------------------------------------------------
 
-    fn locale(lang: &str) -> serde_json::Map<String, serde_json::Value> {
+    pub(crate) fn locale(lang: &str) -> serde_json::Map<String, serde_json::Value> {
         let raw = match lang {
             "en" => include_str!("i18n/locales/en.json"),
             "ar" => include_str!("i18n/locales/ar.json"),
@@ -418,17 +463,22 @@ mod tests {
         serde_json::from_str::<serde_json::Value>(raw).unwrap().as_object().unwrap().clone()
     }
 
-    pub(super) const LOCALES: [&str; 15] = ["en", "ar", "de", "es", "fil", "fr", "hi", "ja", "ko", "pl", "pt", "ru", "sw", "vi", "zh"];
+    pub(crate) const LOCALES: [&str; 15] = ["en", "ar", "de", "es", "fil", "fr", "hi", "ja", "ko", "pl", "pt", "ru", "sw", "vi", "zh"];
 
-    fn iso(y: i64, m: u32, d: u32, with_year: bool) -> String {
+    pub(crate) fn iso(y: i64, m: u32, d: u32, with_year: bool) -> String {
         if with_year { format!("{y:04}-{m:02}-{d:02}") } else { format!("{m:02}-{d:02}") }
     }
 
-    /// Render in `lang`, failing on any key outside `rshare.*` (R-I4).
-    fn render_in(r: &Report, lang: &str) -> String {
+    /// The closed lexicon's pools: REPORTS-SHARE's and CC-GUARDIAN-REPORT's.
+    pub(crate) fn in_pool(k: &str) -> bool {
+        k.starts_with("rshare.") || k.starts_with("greport.")
+    }
+
+    /// Render in `lang`, failing on any key outside the pools (R-I4).
+    pub(crate) fn render_in(r: &Report, lang: &str) -> String {
         let loc = locale(lang);
         let t = |k: &str| -> String {
-            assert!(k.starts_with("rshare."), "the renderer asked for a key outside rshare.*: {k}");
+            assert!(in_pool(k), "the renderer asked for a key outside rshare.* and greport.*: {k}");
             loc.get(k).and_then(|v| v.as_str()).unwrap_or_else(|| panic!("{lang} lacks {k}")).to_string()
         };
         render_text(r, &Voice { t: &t, date: &iso })
@@ -444,7 +494,7 @@ mod tests {
         }
         assert_eq!(
             first,
-            "Spelling progress\n10-19 – 2026-10-25\n\nEnglish\nMastered (1): because\nWorking on (1): receive\nNew this week (2): pair, rabbit"
+            "Guardian Report\n10-19 – 2026-10-25\n\nEnglish\nMastered (1): because\nWorking on (1): receive\nNew this week (2): pair, rabbit"
         );
     }
 
@@ -453,17 +503,17 @@ mod tests {
     fn an_empty_week_is_a_short_report() {
         let r = compose_week(&Fake::default());
         assert!(r.sections.is_empty());
-        assert_eq!(render_in(&r, "en"), "Spelling progress\n10-19 – 2026-10-25\n\nNo practice this week yet.");
+        assert_eq!(render_in(&r, "en"), "Guardian Report\n10-19 – 2026-10-25\n\nNo practice this week yet.");
     }
 
     /// What is left of a render once every rshare.* string, bank word,
     /// language name, date and count is taken out. Must be only separators.
-    pub(super) fn free_text_residue(rendered: &str, r: &Report, lang: &str) -> String {
+    pub(crate) fn free_text_residue(rendered: &str, r: &Report, lang: &str) -> String {
         let loc = locale(lang);
         let mut rest = rendered.to_string();
         let mut pieces: Vec<String> = Vec::new();
         for (k, v) in &loc {
-            if k.starts_with("rshare.") {
+            if in_pool(k) {
                 for part in v.as_str().unwrap().split(&['{', '}'][..]) {
                     pieces.push(part.to_string());
                 }
@@ -471,7 +521,10 @@ mod tests {
         }
         for s in &r.sections {
             pieces.push(lang_name(&s.lang).to_string());
-            pieces.extend(s.mastered.iter().chain(&s.working_on).chain(&s.new_words).cloned());
+            pieces.extend(s.mastered.iter().chain(&s.working_on).chain(&s.new_words).chain(&s.practice).cloned());
+            for g in &s.types {
+                pieces.extend(g.words.iter().cloned());
+            }
         }
         pieces.retain(|p| p.trim().len() > 1);
         pieces.sort_by_key(|p| std::cmp::Reverse(p.len()));
@@ -495,16 +548,16 @@ mod tests {
     }
 
     /// A file's code, without its test module (which names what it forbids).
-    fn code_of(src: &str) -> &str {
-        src.find("#[cfg(test)]\nmod ").map(|i| &src[..i]).unwrap_or(src)
+    pub(crate) fn code_of(src: &str) -> &str {
+        ["#[cfg(test)]\nmod ", "#[cfg(test)]\npub(crate) mod "].iter().filter_map(|m| src.find(m)).min().map(|i| &src[..i]).unwrap_or(src)
     }
 
     // -- F3 prohibited lists (D-R8) -----------------------------------------
 
-    const PROHIBITED: &str = include_str!("../config/report-prohibited.json");
+    pub(crate) const PROHIBITED: &str = include_str!("../config/report-prohibited.json");
 
     /// Every problem the prohibited lint finds in `text` for `lang`.
-    pub(super) fn prohibited_hits(lists: &serde_json::Value, lang: &str, text: &str) -> Result<Vec<String>, String> {
+    pub(crate) fn prohibited_hits(lists: &serde_json::Value, lang: &str, text: &str) -> Result<Vec<String>, String> {
         let entry = lists["langs"].get(lang).ok_or_else(|| format!("{lang} has no prohibited list"))?;
         let low = text.to_lowercase();
         Ok(entry["tokens"].as_array().unwrap().iter().filter_map(|t| t.as_str()).filter(|t| low.contains(&t.to_lowercase())).map(String::from).collect())
@@ -518,7 +571,7 @@ mod tests {
         let r = compose_week(&week_fixture());
         for lang in LOCALES {
             for (k, v) in locale(lang) {
-                if k.starts_with("rshare.") {
+                if in_pool(&k) {
                     let hits = prohibited_hits(&lists, lang, v.as_str().unwrap()).unwrap();
                     assert!(hits.is_empty(), "{lang}/{k} says {hits:?}");
                 }

@@ -16,6 +16,9 @@ Amendments already signed (these override the verbatim text where they conflict)
 
 Census HALTs C1, C2, C3 and C6 are cleared by CC-REPORTS-SHARE v1,
 L0 CR-1, CC-HUB-NAV AE-1 and CC-MYWORDS-LISTS KC-1 (all built on main).
+
+Phases A-D are built (2026-10-27): see "As built" at the end, below a rule
+that separates the signed text from the build record.
 -->
 
 # CC-GUARDIAN-REPORT v1 — Weekly Guardian Report, Word Types, Practice List, Monday Ping
@@ -400,3 +403,49 @@ Stop and ask if any of these comes up:
 - any need for network access.
 
 Never infer a reversal.
+
+---
+
+<!-- Appended 2026-10-27 by the Phase A–D build. Everything above this rule is
+the signed text, unedited; everything below is a record of the build. -->
+
+## As built (Phases A–D, 2026-10-27)
+
+**Phase A — composer.** `src/guardian_report.rs`, pure, on top of `reports_share::compose` (it adds two fields to each language section and does not fork the composer).
+- **W** is the miss-class attempts in the window (Misspelled, TimedOut, GaveUp, Trap), excluding Speech, Impossible and any attempt without its CR-1 instant or class. There is no close class (L-D2).
+- **Types** follow the closed registry in priority order. Only bank rows get SOUND, LONG or TIER, so a missed word from a player's own list is in no group (I12 allows that). SOUND reads only `kind: "true"` sets of a `verified` table (en, es, ru today). **T-TRAP is built but never fires:** nothing records a `TRAP_MISS(rule_id)` yet (census C5).
+- **Practice list:** missed words first, filtered to bank rows within the tier cap that are clean (not a proper noun, profanity-clean, kid list for Jr). **Reading of I5:** PURITY and the audited flag bind the top-up rows. Missed words are exempt from those two, because A15 says that without a ledger the list *equals* the missed words. Flag this if you read I5 as binding missed words too.
+- **Top-up is built, tested and OFF everywhere.** No bank has a per-row audited flag (census C4), and the filter may not be relaxed (F3.5). `config/guardian-topup.json` holds a per-language auditor claim, all empty, the same pattern as SENSE-CUE D9. Naming an auditor for a language turns its top-up on.
+- **PURITY** comes from `config/guardian-purity.json`, generated from the ledgers and checked against them in CI. A row with no verdict counts as not passing. Three zh bank rows have no verdict: `jie1zhu4|接著`, `ta1|牠` and `you3zhu4|有著`, all traditional characters in the simplified bank. vi has no ledger, so it gets no top-up.
+- **Seed:** FNV-1a over `profile|monday|lang`, so it is stable across builds and platforms.
+
+**Phase B — screen.** The REPORTS-SHARE row (`progress_report`) now uses `greport.name`, "Guardian Report", localized (G-D21). The title and row keys `rshare.name`, `rshare.desc` and `rshare.title` are retired. The screen shows, per language, Word types, then the three buckets, then the practice list. Share carries the same text.
+- 21 `greport.*` strings in all 15 locales. 20 are machine drafts in `needs_audit`; `greport.group` is a frame, held identical.
+- **No profile picker and no name in the header:** there is one profile, the device (census C7).
+
+**Phase C — import.**
+- **Add** writes one list per language through `word_lists::create_keyed` with key `guardian:0:<monday>:<lang>`, then shows "Added to My Words" or "Already in My Words" on the My Words screen. The app's only toast reads "Achievement —", so a small note line was added there instead.
+- With several languages, each list's name carries the language name ("Week of Oct 19 · Español") rather than a "(2)" suffix.
+- Add requires a gate passed in this app session (I8). It is checked inside the write, not only by the screen being behind the gate.
+- **Practice these is absent:** there is no profile switch (census C7; the spec's own rule).
+
+**Phase D — ping.**
+- **One notification, id 3, which is DASH F2's id.** The report screen toggle and the dashboard's "Weekly digest" toggle are the same opt-in (`spell_digest_on`), so existing opt-ins carry over. That makes the merge visible to them:
+  - It now fires Monday 08:00 instead of Sunday 17:00.
+  - It is one-shot, rescheduled, instead of repeating.
+  - It is skipped for an empty week.
+- **Copy:** the Guardian copy and action when the report row is reachable. Otherwise DASH's own count line ("{n} new words mastered this week"), with no action, so a device without Complete is never sent to a row it does not have.
+- **Permission:** asked only when a toggle is turned on, including the dashboard's, which used to schedule without asking. A refusal reads off with one line on the report screen, and a toast on the dashboard.
+- **Rescheduled** at boot and on every `visibilitychange`, which covers both foreground and leaving the app (session end).
+- **Deep link:** iOS `AppDelegate` now forwards the query (`spellgame://guardian-report?week=…` → `#guardian-report?week=…`), with host and query kept to `[A-Za-z0-9=&_-]` because they are written into a JS string. The router hands the launcher the route, so the report opens on the named week. The notification action sets the same hash, so it passes the gate the same way.
+
+**Acceptance coverage.**
+- **Host tests:** A1–A3, A4 (host only, not "both platforms"), A5 over the new strings, A8–A16, A20, A22 and A23.
+- **e2e:**
+  - REPORTS-SHARE's access tests cover A6 and A7.
+  - The new tests cover A17–A19 and A21, plus a live A20/A22 and I11 against a recording notification plugin.
+
+**Not covered:**
+- A5's "translations of struggled": the non-English prohibited lists are still English-seed drafts awaiting the native pass.
+- A23 live: there is one profile.
+- A24, the device run on your phone.

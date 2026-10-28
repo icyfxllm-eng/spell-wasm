@@ -1,0 +1,4 @@
+{
+  "$doc": "CC-GUARDIAN-REPORT F3/I5: top-up rows must be audited, and no bank stores a per-row audited flag (census C4). A language tops up only once a named human auditor vouches for its bank here, the SENSE-CUE D9 pattern: a claim no tool sets, so the safe state is the default. Until then the practice list is that language's missed words only.",
+  "langs": {}
+}

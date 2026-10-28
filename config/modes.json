@@ -473,8 +473,8 @@
     {
       "id": "progress_report",
       "group": "your_words",
-      "nameKey": "rshare.name",
-      "descKey": "rshare.desc",
+      "nameKey": "greport.name",
+      "descKey": "greport.desc",
       "icon": "share",
       "status": "live",
       "kidSafe": false,

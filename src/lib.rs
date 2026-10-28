@@ -176,9 +176,12 @@ mod human_audio; // CC-HUMAN-AUDIO F5/F6 — bundled verified recordings
 mod packs;
 mod reports;
 mod reports_share; // CC-REPORTS-SHARE v1: the pure parent-report composer
-mod reports_share_ui;
+#[cfg(not(feature = "web"))]
+mod reports_share_ui; // + CC-GUARDIAN-REPORT F4–F7: the screen, Add, the Monday ping
 mod reports_ui;
 mod guardian_dash;
+#[cfg(not(feature = "web"))]
+mod guardian_report; // CC-GUARDIAN-REPORT v1 Phase A: word types, practice list, Monday ping
 mod family_voices;
 mod bank_complete;
 mod calendar;
@@ -382,6 +385,8 @@ pub fn start() -> Result<(), JsValue> {
                     return;
                 }
                 modes::RouteVerdict::Open(id) => {
+                    // The launcher may read what the link named (its ?week=).
+                    ROUTE.with(|r| *r.borrow_mut() = Some(hash.clone()));
                     let _ = dom::window().location().set_hash("");
                     if let Some(el) = play_hub::launch_for(id) {
                         dom::click(el);
@@ -451,20 +456,12 @@ fn wire(app: &App) {
     wire_orb_and_answer(app);
     game::wire_placement(app);
     reports_ui::wire(&app);
+    #[cfg(not(feature = "web"))]
     reports_share_ui::wire(&app);
     guardian_dash::wire(&app);
     family_voices::wire(&app);
     yearbook_ui::wire(&app);
     calendar_ui::wire(&app);
-    {
-        // BD-3 digest: refresh the scheduled copy with live counts so the
-        // Sunday notification is never staler than the last app open.
-        let s = app.borrow();
-        if crate::storage::get_raw("spell_digest_on").as_deref() == Some("1") {
-            let (tw, _) = reports::week_over_week(&s.lang, (js_sys::Date::now() / 86_400_000.0) as u32);
-            notifications::weekly_digest(true, &i18n::tp("gdash.digestBody", &[("n", &tw.to_string())]));
-        }
-    }
     #[cfg(not(feature = "web"))]
     translate_ui::wire(&app);
     packs::wire(app);
@@ -1290,6 +1287,17 @@ pub(crate) fn open_import_sheet(app: &App) {
     lists_ui::populate("importDest", "saveWords"); // F1/D1: today's list, or a new one
     dom::add_class("importScrim", "show");
     dom::textarea("importText").focus().ok();
+}
+
+thread_local! {
+    /// The gated route a launcher was just opened by, for its query.
+    static ROUTE: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// The gated route that opened the current launcher click, once.
+#[cfg_attr(feature = "web", allow(dead_code))]
+pub(crate) fn take_route() -> Option<String> {
+    ROUTE.with(|r| r.borrow_mut().take())
 }
 
 /// Run `then` once a grown-up passes the parent gate. Used where a child must
