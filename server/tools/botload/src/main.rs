@@ -192,6 +192,14 @@ async fn resend_pending(bot: &mut Bot) {
     }
 }
 
+/// How each socket ended: the server's own close frames say why (a code and
+/// reason such as "no pong"); a cut elsewhere on the path shows as an error.
+static CLOSE_WHY: std::sync::OnceLock<Mutex<BTreeMap<String, usize>>> = std::sync::OnceLock::new();
+
+fn close_why(why: String) {
+    *CLOSE_WHY.get_or_init(Default::default).lock().unwrap().entry(why).or_default() += 1;
+}
+
 /// Actions resent after a resume because no answer came back.
 static RESENDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
@@ -280,8 +288,19 @@ async fn next(bot: &mut Bot, wait: Duration) -> Got {
                     None => Got::Idle,
                 }
             }
+            Ok(Some(Ok(Message::Close(f)))) => {
+                close_why(f.map_or("close frame, no code".into(), |f| format!("close {} {}", u16::from(f.code), f.reason)));
+                return Got::Closed;
+            }
             Ok(Some(Ok(_))) => continue,
-            _ => return Got::Closed,
+            Ok(Some(Err(e))) => {
+                close_why(format!("error: {}", e.to_string().chars().take(60).collect::<String>()));
+                return Got::Closed;
+            }
+            Ok(None) => {
+                close_why("stream ended, no close frame".into());
+                return Got::Closed;
+            }
         }
     }
 }
@@ -818,6 +837,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         t.close_resumed,
         RESENDS.load(std::sync::atomic::Ordering::Relaxed)
     );
+    println!("  how sockets closed: {:?}", CLOSE_WHY.get_or_init(Default::default).lock().unwrap());
     println!("  sends that timed out: {}", *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap());
     println!("  matches_ended: {:?}", t.match_ended);
     println!("  errors: {:?}", t.errors);
