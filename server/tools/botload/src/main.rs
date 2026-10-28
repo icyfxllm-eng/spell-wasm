@@ -155,6 +155,9 @@ fn ws_url(target: &str) -> String {
     format!("{t}/v1/ws")
 }
 
+/// Frame sends that did not finish within 10 s (the socket stopped draining).
+static SEND_TIMEOUTS: std::sync::OnceLock<Mutex<usize>> = std::sync::OnceLock::new();
+
 /// Times Cloudflare (or anything in front) answered 429 or 5xx and a bot retried.
 static RETRIES: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
@@ -171,7 +174,11 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
     let mut ws = loop {
         let mut req = ws_url(&o.target).into_client_request().map_err(|e| e.to_string())?;
         req.headers_mut().insert("Origin", o.origin.parse().unwrap());
-        match tokio_tungstenite::connect_async(req).await {
+        // A connect that hangs (the first soak sat 10 min) must surface as an error.
+        let Ok(got) = tokio::time::timeout(Duration::from_secs(20), tokio_tungstenite::connect_async(req)).await else {
+            return Err("connect: timed out after 20 s".into());
+        };
+        match got {
             Ok((ws, _)) => break ws,
             Err(WsError::Http(r)) if (r.status().as_u16() == 429 || r.status().is_server_error()) && attempt < 8 => {
                 RETRIES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
@@ -197,7 +204,10 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
 
 async fn send(bot: &mut Bot, m: &ClientMsg) {
     if let Some(ws) = bot.ws.as_mut() {
-        let _ = ws.send(Message::Text(encode_client(Uuid::new_v4(), m).into())).await;
+        let frame = Message::Text(encode_client(Uuid::new_v4(), m).into());
+        if tokio::time::timeout(Duration::from_secs(10), ws.send(frame)).await.is_err() {
+            *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap() += 1;
+        }
     }
 }
 
@@ -235,6 +245,7 @@ async fn word_of(o: &Opts, http: &reqwest::Client, token: &str, ticket: &str) ->
             .get(format!("{}/v1/audio/{ticket}", o.audio_base))
             .header("Origin", &o.origin)
             .header("Authorization", format!("Bearer {token}"))
+            .timeout(Duration::from_secs(10))
             .send()
             .await
             .ok()?;
@@ -520,7 +531,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
 
 async fn admin_stats(o: &Opts) -> Option<Value> {
     let a = o.admin.as_ref()?;
-    let r = reqwest::get(format!("{a}/admin/stats")).await.ok()?;
+    let r = reqwest::Client::new().get(format!("{a}/admin/stats")).timeout(Duration::from_secs(5)).send().await.ok()?;
     serde_json::from_str(&r.text().await.ok()?).ok()
 }
 
@@ -576,6 +587,43 @@ async fn run(o: Opts) -> i32 {
                     s2.lock().unwrap().push((start.elapsed().as_secs_f64() / 60.0, v));
                 }
                 tokio::time::sleep(Duration::from_secs(30)).await;
+            }
+        });
+    }
+    {
+        // Heartbeat: one wall-clock line a minute, so a stall can be dated
+        // against the host's journal and told apart: the line itself late
+        // means this process (or the box) stopped; loopback fine but tunnel
+        // failing means the network.
+        let (o2, t2) = (o.clone(), t.clone());
+        tokio::spawn(async move {
+            let probe = |url: String| async move {
+                let at = Instant::now();
+                match reqwest::Client::new().get(url).timeout(Duration::from_secs(10)).send().await {
+                    Ok(r) if r.status().is_success() => format!("{}ms", at.elapsed().as_millis()),
+                    Ok(r) => format!("http{}", r.status().as_u16()),
+                    Err(e) if e.is_timeout() => "timeout".into(),
+                    Err(_) => "fail".into(),
+                }
+            };
+            let mut planned = Instant::now();
+            loop {
+                let late = planned.elapsed().as_secs();
+                let unix = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+                let local = probe(format!("{}/healthz", o2.audio_base)).await;
+                let tunnel = probe(format!("{}/healthz", o2.target)).await;
+                let conns = admin_stats(&o2).await.and_then(|v| v["connections"].as_u64()).map_or("?".into(), |c| c.to_string());
+                let (words, rooms) = {
+                    let t = t2.lock().unwrap();
+                    (t.words, t.rooms_started)
+                };
+                let sends = *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap();
+                println!(
+                    "hb unix={unix} min={:.1} late={late}s loopback={local} tunnel={tunnel} server_conns={conns} rooms={rooms} words={words} send_timeouts={sends}",
+                    start.elapsed().as_secs_f64() / 60.0
+                );
+                planned += Duration::from_secs(60);
+                tokio::time::sleep_until(planned.into()).await;
             }
         });
     }
@@ -656,6 +704,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         failed |= !ok;
     }
     println!("  retries after 429/5xx: {}", RETRIES.load(std::sync::atomic::Ordering::Relaxed));
+    println!("  sends that timed out: {}", *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap());
     println!("  matches_ended: {:?}", t.match_ended);
     println!("  errors: {:?}", t.errors);
     for n in &t.notes {

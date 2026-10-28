@@ -57,9 +57,16 @@ PASS needs:
 ## 4. A16.2 — soak (50%, 2 hours)
 ```
 # as spellsrv (sudo -iu spellsrv):
-~/spell-wasm/target/release/botload run --target https://play.spellgame.net \
---admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile soak | tee ~/phase-e-soak.txt
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+systemd-run --user --unit=phase-e-soak -p LimitNOFILE=16384 /bin/sh -c 'exec $HOME/spell-wasm/target/release/botload run --target https://play.spellgame.net --admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile soak > $HOME/phase-e-soak.txt 2>&1'
+tail -f ~/phase-e-soak.txt                       # Ctrl-C stops the tail, not the run
 ```
+The 2-hour runs go to spellsrv's own systemd (`systemd-run --user`), not a
+terminal job, so no desktop session, terminal or logout can touch them. Every
+minute the run prints an `hb` line: wall-clock time, whether it was late, and
+the loopback and tunnel health. The first soak froze for 42 minutes with no
+cause in the journal; those lines date and place any repeat.
+
 PASS needs:
 - memory growth under 5% after the 10-minute warm-up (the server's RSS, read
   from /proc)
@@ -69,8 +76,9 @@ PASS needs:
 ## 5. A16.3 — chaos (the soak again, with failures)
 ```
 # as spellsrv (sudo -iu spellsrv):
-~/spell-wasm/target/release/botload run --target https://play.spellgame.net \
---admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile chaos | tee ~/phase-e-chaos.txt
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+systemd-run --user --unit=phase-e-chaos -p LimitNOFILE=16384 /bin/sh -c 'exec $HOME/spell-wasm/target/release/botload run --target https://play.spellgame.net --admin http://127.0.0.1:8081 --audio-base http://127.0.0.1:8080 --profile chaos > $HOME/phase-e-chaos.txt 2>&1'
+tail -f ~/phase-e-chaos.txt                       # Ctrl-C stops the tail, not the run
 ```
 While it runs, **once**, somewhere in the middle:
 ```
