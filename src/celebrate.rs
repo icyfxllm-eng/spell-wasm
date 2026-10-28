@@ -185,6 +185,7 @@ pub fn word_active(active: bool) {
     WORD_ACTIVE.with(|c| c.set(active));
     if !active {
         pump();
+        crate::themes::at_word_boundary(); // CC-THEMES-COSMOS I-T5: backgrounds change only here
     }
 }
 
@@ -219,6 +220,13 @@ pub fn climb_rank(difficulty: &str, rank: u32) {
     if let Some(t) = rank_up(stored, rank) {
         ask(t, crate::i18n::tp("celebrate.rankUp", &[("rank", &rank.to_string())]));
     }
+}
+
+/// The Theme Lab's "Play unlock moment" (F1.5): the big celebration with
+/// `msg`, now, writing nothing (no record, no queue).
+#[cfg(feature = "theme_lab")]
+pub fn preview_big(msg: &str) {
+    big(msg);
 }
 
 fn pump() {

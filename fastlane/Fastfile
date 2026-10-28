@@ -4,6 +4,24 @@ default_platform(:ios)
 #   npm run build && npx cap sync ios
 # (The GitHub Actions ios job / your release script does this before calling
 # these lanes.)
+# CC-THEMES-COSMOS T-D10: a Theme Lab build (SPELL_THEME_LAB=1) carries the
+# Lab, so it is internal TestFlight only. TestFlight and the App Store ship one
+# binary, so its number goes into a ledger when it is uploaded, and every lane
+# that submits for review or reaches external testers refuses a number in it.
+# Two ledgers: the repo's (travels with the branch) and one in the home folder
+# (every worktree and release branch on this Mac sees it).
+LAB_LEDGERS = [File.expand_path("lab-builds.txt", __dir__), File.expand_path("~/.spell-lab-builds")].freeze
+
+def lab_builds
+  LAB_LEDGERS.flat_map { |f| File.exist?(f) ? File.read(f).lines.map(&:strip).grep(/\A\d+\z/) : [] }.map(&:to_i)
+end
+
+def refuse_lab!(build)
+  if ENV["SPELL_THEME_LAB"] == "1" || (build && lab_builds.include?(build.to_i))
+    UI.user_error!("Build #{build || '(this one)'} is a Theme Lab build (CC-THEMES-COSMOS T-D10): internal TestFlight only. It is never submitted for review or sent to external testers.")
+  end
+end
+
 platform :ios do
   desc "Fetch signing certs & profiles (read-only)"
   lane :certs do
@@ -88,6 +106,7 @@ platform :ios do
 
   desc "Build, upload, and submit to external TestFlight (Beta App Review)"
   lane :beta_external do |options|
+    refuse_lab!(nil)
     match(type: "appstore", readonly: is_ci)
     profile_name = ENV["sigh_net.spellgame.app_appstore_profile-name"]
     update_code_signing_settings(
@@ -136,6 +155,7 @@ platform :ios do
     # Run from the release branch the submitted build was cut from; it fails if
     # a scene shows a feature whose flag is off here, or a shot maps to no scene.
     sh("cd .. && node scripts/store-assets-check.mjs")
+    refuse_lab!(ENV["SUBMIT_BUILD"] || "21")
     deliver(
       skip_binary_upload: true,
       skip_metadata: true,
@@ -159,6 +179,7 @@ platform :ios do
     # Run from the release branch the submitted build was cut from; it fails if
     # a scene shows a feature whose flag is off here, or a shot maps to no scene.
     sh("cd .. && node scripts/store-assets-check.mjs")
+    refuse_lab!(ENV["SUBMIT_BUILD"] || "21")
     deliver(
       skip_binary_upload: true,
       skip_metadata: false,
@@ -227,6 +248,11 @@ platform :ios do
     #    build. This keeps Info.plist's indirection intact.
     next_build = latest_testflight_build_number(api_key_path: key_path, initial_build_number: 0) + 1
     UI.important("Build number -> #{next_build}")
+    if ENV["SPELL_THEME_LAB"] == "1"
+      # Recorded BEFORE the upload, so a failed or retried upload is refused too.
+      LAB_LEDGERS.each { |f| File.open(f, "a") { |io| io.puts(next_build) } }
+      UI.important("THEME LAB build #{next_build}: internal TestFlight only; recorded in #{LAB_LEDGERS.join(' and ')}")
+    end
     pbxproj = File.expand_path("../ios/App/App.xcodeproj/project.pbxproj", __dir__)
     File.write(pbxproj, File.read(pbxproj).gsub(/CURRENT_PROJECT_VERSION = \d+;/, "CURRENT_PROJECT_VERSION = #{next_build};"))
 
@@ -370,6 +396,7 @@ platform :ios do
   desc "Submit an already-uploaded build for external Beta App Review"
   lane :submit_external_review do |options|
     build = options[:build] or UI.user_error!("pass build:NNN")
+    refuse_lab!(build)
     # What testers read in TestFlight. A build can carry its own note at
     # fastlane/changelog/<build>.md; without one the generic description below
     # goes out, so a forgotten file can never mail people last build's news.

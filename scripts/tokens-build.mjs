@@ -85,6 +85,18 @@ export function cssBlock(tokens) {
     const decls = Object.entries(map).map(([p, v]) => `${byPath.get(p).css}:${v}`).join(';');
     lines.push(`  ${sel}{${decls}}`);
   }
+  // CC-THEMES-COSMOS F1: a theme's colours also apply to a subtree marked
+  // data-theme-scope (the Theme Lab's live tiles). The reset re-declares every
+  // colour and theme token there, so the derived colour-mix tokens recompute
+  // inside the subtree instead of inheriting the page's.
+  const scopable = leaves.filter((l) => /^(?:color|theme)\./.test(l.path));
+  lines.push(`  [data-theme-scope]{${scopable.map((l) => `${l.css}:${l.value}`).join(';')}}`);
+  for (const [sel, map] of Object.entries(tokens.$overrides || {})) {
+    const m = sel.match(/^:root\[data-theme="([a-z]+)"\]((?:\[data-(?:band|planet)="[a-z]+"\])?)$/);
+    if (!m) continue;
+    const decls = Object.entries(map).map(([p, v]) => `${byPath.get(p).css}:${v}`).join(';');
+    lines.push(`  [data-theme-scope="${m[1]}"]${m[2]}{${decls}}`);
+  }
   lines.push(`  ${END}`);
   return lines.join('\n');
 }
@@ -134,6 +146,10 @@ if (MAIN && process.argv.includes('--selftest')) {
       return l.length === 2 && l[0].css === '--bg' && l[1].css === '--color-x-y';
     }],
     ['emits the overrides rule', () => cssBlock(t).includes(':root[data-lang="ja"]{--bg:#111}')],
+    ['scopes a theme to a subtree', () => {
+      const b = cssBlock({ ...t, $overrides: { ':root[data-theme="gold"]': { 'color.bg': '#222' }, ':root[data-theme="gold"] body.kid': { 'color.bg': '#333' } } });
+      return b.includes('[data-theme-scope]{--bg:#000') && b.includes('[data-theme-scope="gold"]{--bg:#222}') && !b.includes('[data-theme-scope="gold"] body.kid');
+    }],
     ['rejects an unknown override', () => validate({ ...t, $overrides: { ':root': { 'color.nope': '#1' } } }).problems.length === 1],
     ['rejects a duplicate CSS name', () => validate({ a: { $value: '#1', $css: '--x' }, b: { $value: '#2', $css: '--x' } }).problems.length === 1],
     ['rust consts', () => rustModule(t).includes('pub const COLOR_X_Y: Token = Token { css: "--color-x-y", value: "rgba(1,2,3,.5)" };')],

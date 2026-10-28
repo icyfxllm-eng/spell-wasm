@@ -368,6 +368,8 @@
     --motion-anim-key-dim:320ms;
     --motion-anim-key-pulse:320ms;
     --motion-anim-constellation:1200ms;
+    --motion-anim-art-glint:600ms;
+    --motion-anim-art-drift:1600ms;
     --motion-mode-defmatch-orb-glow:300ms;
     --motion-mode-defmatch-pulse:500ms;
     --motion-mode-defmatch-sway:2600ms;
@@ -402,6 +404,70 @@
     --lang-accent-sw:#e6e86b;
     --lang-accent-hi:#f78ad8;
     --lang-accent-fil:#69d2ff;
+    --page-image:none;
+    --art-scrim:transparent;
+    --hint-bg:transparent;
+    --orb-art:none;
+    --keycap-bg:var(--panel);
+    --keycap-edge:var(--edge);
+    --keycap-ink:var(--ink);
+    --orb-label-bg:transparent;
+    --art-grain-light:rgba(255,255,255,.22);
+    --art-grain-dark:rgba(0,0,0,.10);
+    --art-stone-table:#f4fbff;
+    --art-stone-bright:#d8f0ff;
+    --art-stone-mid:#9cc6e4;
+    --art-stone-deep:#4f7396;
+    --art-stone-dark:#1b2a3d;
+    --art-stone-fire-1:#ffd6f4;
+    --art-stone-fire-2:#c8fff0;
+    --art-stone-girdle:#e9f6ff;
+    --art-glint:rgba(255,255,255,.55);
+    --art-sun-glow:rgba(246,192,138,.38);
+    --art-dusk-glow:rgba(224,112,74,.36);
+    --art-cloud:rgba(255,255,255,.78);
+    --art-star:#f4f6ff;
+    --art-star-dim:rgba(244,246,255,.45);
+    --art-sea:#7cc6cf;
+    --art-sea-deep:#4fa7b4;
+    --art-foam:#ffffff;
+    --art-sand-fleck:rgba(150,120,80,.18);
+    --art-moon-lit:#f1ede2;
+    --art-moon-shadow:#2a2a31;
+    --art-moon-mare:rgba(150,145,130,.35);
+    --art-moon-pink-halo:rgba(242,166,200,.42);
+    --art-moon-blood:#9c2d22;
+    --art-moon-blood-rim:#d9643a;
+    --art-phlox-1:#e88fbd;
+    --art-phlox-2:#f6c2dc;
+    --art-phlox-eye:#fff2c4;
+    --art-leaf:#4f7a52;
+    --art-aurora-green:rgba(80,230,160,.42);
+    --art-aurora-violet:rgba(150,120,255,.38);
+    --art-ridge-far:#2a201b;
+    --art-ridge-near:#1a1411;
+    --art-wall:#3a2e26;
+    --art-wall-crenel:#4a3c31;
+    --art-dusk-moon:#efe6d2;
+    --art-mercury-1:#b3aca4;
+    --art-mercury-2:#7d766f;
+    --art-venus-1:#f1dca0;
+    --art-venus-2:#d2b46e;
+    --art-earth-sea:#2f6fc0;
+    --art-earth-land:#4f9a5a;
+    --art-earth-cloud:rgba(255,255,255,.7);
+    --art-mars-1:#d2693f;
+    --art-mars-2:#8f3a1e;
+    --art-jupiter-1:#e3c39a;
+    --art-jupiter-2:#b07b4f;
+    --art-jupiter-spot:#c0583a;
+    --art-saturn-1:#ecd9a8;
+    --art-saturn-2:#c8ad74;
+    --art-saturn-ring:rgba(230,214,170,.85);
+    --art-uranus-1:#9fe3e6;
+    --art-uranus-2:#5fb7c1;
+    --art-neptune-1:#4f73e6;
+    --art-neptune-2:#26409a;
   }
   /* BOARDGAME:BEGIN tokens (app only; stripped from the site build) */
   :root{--mode-boardgame-boostbg-stroke:#0e2b27;--mode-boardgame-c2-bg:#12b5c9;--mode-boardgame-t-medium-bg:#4a79b8;--mode-boardgame-c0-bg:#6d5cf0;--mode-boardgame-boostbg-fill:#8fd3c8;--mode-boardgame-t-expert-bg:#a24a5a;--mode-boardgame-t-hard-bg:#b8803a;--mode-boardgame-c1-bg:#ec5b9a;--mode-boardgame-c3-bg:#f1ecff;--mode-boardgame-start-fill:#d9d4f2;--mode-boardgame-me-fill:#f2c14e55;--motion-mode-boardgame-hop:160ms;--motion-mode-boardgame-fade-a:300ms;--motion-mode-boardgame-fade-b:300ms;--motion-mode-boardgame-tumble:700ms;--motion-mode-boardgame-land-in:250ms;--motion-mode-boardgame-timer:30000ms}
@@ -445,6 +511,72 @@
   :root[data-theme="chalkboard"] body.kid{--glow:#fff0a8;--controls-color:#82c4a5}
   :root[data-theme="typewriter"] body.kid{--glow:#d0533f;--controls-color:#a8925f}
   :root[data-theme="beestage"] body.kid{--glow:#ffd25e;--controls-color:#c48a46}
+  :root[data-theme="bronze"]{--bg:#b67a4e;--bg2:#e2ac80;--panel:#fbebdd;--panel-2:#f4dfcc;--edge:#c99a74;--ink:#1a0e06;--muted:#2e1a0c;--muted-2:#3d2412;--ink-on-bg:#1a0e06;--bg-color:#b67a4e;--amber:#4d2814;--amber-soft:#3a1d0e;--glow:#8a4a22;--controls-color:#8c5a38;--orb-color:#d79a68;--button-color:#4d2814;--button-ink:#fbebdd;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(115deg,#b67a4e 0%,#e2ac80 38%,#f6d2b2 52%,#e2ac80 64%,#b67a4e 100%);--keycap-bg:#f6dcc4;--keycap-edge:#9c6a44;--keycap-ink:#1a0e06;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="silver"]{--bg:#9fa8b4;--bg2:#e9edf2;--panel:#f7f9fb;--panel-2:#edf0f4;--edge:#b4bcc7;--ink:#11151a;--muted:#2f353e;--muted-2:#3a414b;--ink-on-bg:#11151a;--bg-color:#9fa8b4;--amber:#2e3540;--amber-soft:#232931;--glow:#56606e;--controls-color:#6f7986;--orb-color:#d3d9e1;--button-color:#2e3540;--button-ink:#ffffff;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(115deg,#9fa8b4 0%,#e9edf2 38%,#fafbfc 52%,#e9edf2 64%,#9fa8b4 100%);--keycap-bg:#eef1f5;--keycap-edge:#8a94a1;--keycap-ink:#11151a;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="gold"]{--bg:#b88a2c;--bg2:#f3d98a;--panel:#fff8e2;--panel-2:#faefcd;--edge:#d4b25e;--ink:#1e1608;--muted:#33270c;--muted-2:#43340f;--ink-on-bg:#1e1608;--bg-color:#b88a2c;--amber:#564106;--amber-soft:#433204;--glow:#8a6514;--controls-color:#9c7a2c;--orb-color:#f0cf6a;--button-color:#564106;--button-ink:#fff8e2;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(115deg,#b88a2c 0%,#f3d98a 38%,#fff1bf 52%,#f3d98a 64%,#b88a2c 100%);--keycap-bg:#fbeab4;--keycap-edge:#a8842c;--keycap-ink:#1e1608;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="diamond"]{--bg:#05070c;--bg2:#0a0e16;--panel:#111722;--panel-2:#0d121b;--edge:#2a3850;--ink:#eef4ff;--muted:#a3b2cb;--muted-2:#8090ab;--ink-on-bg:#eef4ff;--bg-color:#05070c;--amber:#bfe6ff;--amber-soft:#e0f3ff;--glow:#9fd8ff;--controls-color:#4b5a74;--orb-color:#dff1ff;--art-scrim:rgba(5,7,12,.84);--hint-bg:rgba(5,7,12,.92);--keycap-bg:rgba(12,17,26,.84);--keycap-edge:#9fd0f0;--keycap-ink:#eef4ff;--orb-text:#fdf6ec;--orb-label-bg:rgba(10,10,14,.66);--muted-on-bg:var(--muted)}
+  :root[data-theme="beach"]{--bg:#f6ebd6;--bg2:#efe0c4;--panel:#fffbf2;--panel-2:#fbf3e3;--edge:#dccaa6;--ink:#1f2a2e;--muted:#4a5458;--muted-2:#59646a;--ink-on-bg:#1f2a2e;--bg-color:#f6ebd6;--amber:#2891ab;--amber-soft:#1b6f85;--glow:#2f9cb6;--controls-color:#8fb0b0;--orb-color:#ffd27a;--button-color:#1d6e83;--button-ink:#ffffff;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--keycap-bg:#fffaf0;--keycap-edge:#c2ae88;--keycap-ink:#1f2a2e;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="lunar"]{--bg:#0a0a0e;--bg2:#101016;--panel:#15151c;--panel-2:#121218;--edge:#2c2c36;--ink:#f1efe8;--muted:#a8a49a;--muted-2:#8a867d;--ink-on-bg:#f1efe8;--bg-color:#0a0a0e;--amber:#d8d4c8;--amber-soft:#ece9e0;--glow:#e8e4d8;--controls-color:#55545e;--orb-color:#e8e4d8;--keycap-bg:rgba(26,26,34,.9);--keycap-edge:#4a4a56;--keycap-ink:#f1efe8;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="pinkmoon"]{--bg:#120a10;--bg2:#1a0f18;--panel:#1e121b;--panel-2:#190f17;--edge:#3f2738;--ink:#fbeff5;--muted:#c8a8b9;--muted-2:#a68a99;--ink-on-bg:#fbeff5;--bg-color:#120a10;--amber:#f7afd7;--amber-soft:#fcd9ec;--glow:#f2a6c8;--controls-color:#6e4a62;--orb-color:#fbe6ef;--keycap-bg:rgba(34,20,31,.9);--keycap-edge:#6a4560;--keycap-ink:#fbeff5;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="bloodmoon"]{--bg:#0e0606;--bg2:#160909;--panel:#1a0d0d;--panel-2:#150a0a;--edge:#3c2222;--ink:#f5ecea;--muted:#bba29e;--muted-2:#9a837f;--ink-on-bg:#f5ecea;--bg-color:#0e0606;--amber:#c9cfe0;--amber-soft:#e4e8f2;--glow:#b8c0d4;--controls-color:#5e4848;--orb-color:#e7dcd8;--keycap-bg:rgba(30,16,16,.9);--keycap-edge:#5c3c3c;--keycap-ink:#f5ecea;--orb-text:#fdf6ec;--orb-label-bg:rgba(10,10,14,.66);--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="solar"]{--bg:#05070d;--bg2:#0a0d16;--panel:#10141f;--panel-2:#0d111a;--edge:#28304a;--ink:#eef1f8;--muted:#a0a8bc;--muted-2:#8088a0;--ink-on-bg:#eef1f8;--bg-color:#05070d;--amber:#b5a89a;--amber-soft:#d8d0c6;--glow:#c8bdb0;--controls-color:#4a5470;--orb-color:#c8bdb0;--keycap-bg:rgba(20,26,40,.9);--keycap-edge:#4a5470;--keycap-ink:#eef1f8;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="aurora"]{--bg:#050b12;--bg2:#08121c;--panel:#0f1822;--panel-2:#0c141d;--edge:#24384a;--ink:#eaf4f4;--muted:#9db1b8;--muted-2:#7f949b;--ink-on-bg:#eaf4f4;--bg-color:#050b12;--amber:#9b8cff;--amber-soft:#cbc3ff;--glow:#a99cff;--controls-color:#3e5068;--orb-color:#f2f5f7;--keycap-bg:rgba(16,26,36,.9);--keycap-edge:#6b5fc8;--keycap-ink:#eaf4f4;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="greatwall"]{--bg:#14100e;--bg2:#1b1512;--panel:#211a16;--panel-2:#1c1612;--edge:#41352c;--ink:#f3ece4;--muted:#b9ab9c;--muted-2:#998c7e;--ink-on-bg:#f3ece4;--bg-color:#14100e;--amber:#c4b89f;--amber-soft:#e2d9c6;--glow:#d6c7a8;--controls-color:#64574a;--orb-color:#efe6d2;--keycap-bg:#2a221c;--keycap-edge:#6e6050;--keycap-ink:#f3ece4;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="sky"][data-band="sunrise"]{--bg:#2b2a4a;--bg2:#3a3058;--panel:#1a1830;--panel-2:#16142a;--edge:#3f3a63;--ink:#fff4ea;--muted:#d9c6c4;--muted-2:#b8a7ae;--ink-on-bg:#fff4ea;--bg-color:#2b2a4a;--amber:#f7deae;--amber-soft:#fff0d6;--glow:#f6c08a;--controls-color:#6a5a86;--orb-color:#ffcf8f;--page-image:linear-gradient(180deg,#2b2a4a 0%,#3d3158 60%,#5a3a5e 100%);--keycap-bg:#221f3c;--keycap-edge:#5a4f7c;--keycap-ink:#fff4ea;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="sky"][data-band="day"]{--bg:#eaf4fb;--bg2:#dcecf7;--panel:#ffffff;--panel-2:#f2f8fc;--edge:#c4d9e8;--ink:#0f2233;--muted:#3d5366;--muted-2:#4e6478;--ink-on-bg:#0f2233;--bg-color:#eaf4fb;--amber:#2f7fc1;--amber-soft:#1f5f94;--glow:#3d8fd0;--controls-color:#7fa8c8;--orb-color:#ffd46a;--button-color:#23649a;--button-ink:#ffffff;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(180deg,#d6eaf8 0%,#eaf4fb 55%,#f4f9fd 100%);--keycap-bg:#f7fbfe;--keycap-edge:#9cbcd6;--keycap-ink:#0f2233;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="sky"][data-band="sunset"]{--bg:#2a1a33;--bg2:#3a2040;--panel:#1e1424;--panel-2:#1a111f;--edge:#4a2c4c;--ink:#fff1ec;--muted:#dcc0bf;--muted-2:#bb9fa4;--ink-on-bg:#fff1ec;--bg-color:#2a1a33;--amber:#ffc8c2;--amber-soft:#ffe2de;--glow:#f2a07a;--controls-color:#7a4f6a;--orb-color:#ffab70;--page-image:linear-gradient(180deg,#2a1a33 0%,#43223d 60%,#5e2a3c 100%);--keycap-bg:#26182c;--keycap-edge:#6a4060;--keycap-ink:#fff1ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="sky"][data-band="night"]{--bg:#0b1020;--bg2:#10172c;--panel:#141a2e;--panel-2:#111628;--edge:#2a3352;--ink:#eef1ff;--muted:#a5afcf;--muted-2:#8590b3;--ink-on-bg:#eef1ff;--bg-color:#0b1020;--amber:#8fa8ff;--amber-soft:#c4d1ff;--glow:#9fb4ff;--controls-color:#465277;--orb-color:#e9ecf5;--keycap-bg:#151c33;--keycap-edge:#3c4a78;--keycap-ink:#eef1ff;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  :root[data-theme="solar"][data-planet="mercury"]{--amber:#b5a89a;--glow:#b5a89a;--orb-color:#b5a89a}
+  :root[data-theme="solar"][data-planet="venus"]{--amber:#e2cd92;--glow:#e2cd92;--orb-color:#e2cd92}
+  :root[data-theme="solar"][data-planet="earth"]{--amber:#4f9bd9;--glow:#4f9bd9;--orb-color:#4f9bd9}
+  :root[data-theme="solar"][data-planet="mars"]{--amber:#a28377;--glow:#a28377;--orb-color:#a28377;--button-ink:#1a1008}
+  :root[data-theme="solar"][data-planet="jupiter"]{--amber:#b3a375;--glow:#b3a375;--orb-color:#b3a375}
+  :root[data-theme="solar"][data-planet="saturn"]{--amber:#e6d3a3;--glow:#e6d3a3;--orb-color:#e6d3a3}
+  :root[data-theme="solar"][data-planet="uranus"]{--amber:#9bdff3;--glow:#9bdff3;--orb-color:#9bdff3}
+  :root[data-theme="solar"][data-planet="neptune"]{--amber:#4c6fe0;--glow:#4c6fe0;--orb-color:#4c6fe0;--button-color:#3a58c4;--button-ink:#ffffff}
+  :root[data-theme="bronze"] body.kid{--glow:#a16e4e;--controls-color:#9d7356}
+  :root[data-theme="silver"] body.kid{--glow:#78808b;--controls-color:#858d98}
+  :root[data-theme="gold"] body.kid{--glow:#a18443;--controls-color:#ab8e4c}
+  :root[data-theme="diamond"] body.kid{--glow:#b2e0ff;--controls-color:#667389}
+  :root[data-theme="beach"] body.kid{--glow:#59b0c5;--controls-color:#a0bcbc}
+  :root[data-theme="lunar"] body.kid{--glow:#ede9e0;--controls-color:#6e6e76}
+  :root[data-theme="pinkmoon"] body.kid{--glow:#f5b8d3;--controls-color:#84657a}
+  :root[data-theme="bloodmoon"] body.kid{--glow:#c6cddd;--controls-color:#766363}
+  :root[data-theme="solar"] body.kid{--glow:#d3cac0;--controls-color:#656e85}
+  :root[data-theme="aurora"] body.kid{--glow:#bab0ff;--controls-color:#5b6a7f}
+  :root[data-theme="greatwall"] body.kid{--glow:#ded2b9;--controls-color:#7b7065}
+  :root[data-theme="sky"][data-band="sunrise"] body.kid{--glow:#f8cda1;--controls-color:#807398}
+  :root[data-theme="sky"][data-band="day"] body.kid{--glow:#64a5d9;--controls-color:#92b5d0}
+  :root[data-theme="sky"][data-band="sunset"] body.kid{--glow:#f5b395;--controls-color:#8e6980}
+  :root[data-theme="sky"][data-band="night"] body.kid{--glow:#b2c3ff;--controls-color:#626c8b}
+  [data-theme-scope]{--ui-chrome:#7aa2ff;--bg:#0a0a0b;--bg2:#0f0f10;--panel:#141416;--panel-2:#111113;--edge:#2c2c31;--controls-color:#52525b;--icon-stroke:1.75;--button-color:var(--amber);--button-ink:var(--palette-on-gold-text);--color-button-swatch-amber:#ffb14d;--color-button-swatch-teal:#46d6b8;--color-button-swatch-blue:#6f9bff;--color-button-swatch-violet:#a98bff;--color-button-swatch-rose:#ff7a9a;--color-controls-swatch-neutral:#52525b;--color-controls-swatch-violet:#7b67c3;--color-controls-swatch-blue:#4f7fe0;--color-controls-swatch-teal:#2fae95;--color-controls-swatch-amber:#e0952f;--color-controls-swatch-rose:#d0607a;--panel-raised:color-mix(in srgb, var(--controls-color) 25%, var(--bg));--edge-strong:color-mix(in srgb, var(--controls-color) 70%, var(--bg));--lift-1:color-mix(in srgb, var(--ink) 6%, transparent);--lift-2:color-mix(in srgb, var(--ink) 10%, transparent);--lift-3:color-mix(in srgb, var(--ink) 16%, transparent);--control-border:color-mix(in srgb, var(--ink) 55%, transparent);--control-border-on-bg:color-mix(in srgb, var(--ink-on-bg) 55%, transparent);--icon:var(--ink);--icon-dim:color-mix(in srgb, var(--icon) 30%, transparent);--ink:#efeaf7;--muted:#968cb4;--muted-2:#6f6690;--ink-on-bg:#efeaf7;--muted-on-bg:color-mix(in srgb, var(--ink-on-bg) 62%, var(--bg-color));--amber:#ffb14d;--amber-soft:#ffd9a0;--accent-on-light:#b45f00;--good-on-light:#0d6f5e;--bad-on-light:#b8323f;--warn-on-light:#a14b09;--good-on-dark:#46d6b8;--bad-on-dark:#ff6b7a;--warn-on-dark:#ff9e57;--teal:#46d6b8;--coral:#ff6b7a;--glow:#ffb14d;--bg-color:#0a0a0b;--orb-color:#ffb14d;--orb-text:#2a1a06;--color-orb-text-dark:#2a1a06;--color-orb-text-light:#fdf6ec;--success:#46d6b8;--success-glow:rgba(70,214,184,.55);--warn:#ff9e57;--warn-glow:rgba(255,158,87,.5);--glow-streak-1:#ffb14d;--glow-streak-2:#ff9a3f;--glow-streak-3:#ff8330;--band-easy:#5ec98c;--band-medium:#e0b93c;--band-hard:#f0884a;--band-expert:#f0708c;--color-white:#fff;--color-black:#000;--color-text-on-light:#191527;--lang-accent:var(--lang-accent-en);--legacy-bg-default:#1c1830;--legacy-controls-default:#7a66c2;--page-image:none;--art-scrim:transparent;--hint-bg:transparent;--orb-art:none;--keycap-bg:var(--panel);--keycap-edge:var(--edge);--keycap-ink:var(--ink);--orb-label-bg:transparent}
+  [data-theme-scope="daybreak"]{--bg:#f4f1fb;--bg2:#f1eef9;--panel:#ffffff;--panel-2:#f6f3fc;--edge:#d7d0ea;--ink:#1c1830;--muted:#544c70;--muted-2:#665e85;--ink-on-bg:#1c1830;--bg-color:#f4f1fb;--amber:#b45f00;--amber-soft:#8a4a00;--glow:#e08a1a;--controls-color:#8f7fd6;--button-color:#ffb14d;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4}
+  [data-theme-scope="chalkboard"]{--bg:#16291f;--bg2:#1e3a2d;--panel:#244436;--panel-2:#1d382c;--edge:#3e6a57;--ink:#f3f0e4;--muted:#bccbb9;--muted-2:#9fb39e;--ink-on-bg:#f3f0e4;--bg-color:#1e3a2d;--amber:#f2e49b;--amber-soft:#f7eec4;--glow:#f2e49b;--controls-color:#6faa8f;--orb-color:#f2e49b}
+  [data-theme-scope="typewriter"]{--bg:#f1e9d6;--bg2:#ece2ca;--panel:#fbf6ea;--panel-2:#f5eedc;--edge:#d4c6a2;--ink:#1f1b15;--muted:#544c3d;--muted-2:#6a604c;--ink-on-bg:#1f1b15;--bg-color:#f1e9d6;--amber:#9b2f2f;--amber-soft:#7a2424;--glow:#b8483a;--controls-color:#8c7a58;--button-color:#9b2f2f;--button-ink:#fbf6ea;--orb-color:#c9a76a;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4}
+  [data-theme-scope="beestage"]{--bg:#160f0a;--bg2:#21160e;--panel:#2c1e13;--panel-2:#251910;--edge:#5c4026;--ink:#f7efe2;--muted:#cdb99d;--muted-2:#ad9a80;--ink-on-bg:#f7efe2;--bg-color:#21160e;--amber:#f2c14e;--amber-soft:#f8dc96;--glow:#f2c14e;--controls-color:#a8763f;--orb-color:#f2c14e}
+  [data-theme-scope="bronze"]{--bg:#b67a4e;--bg2:#e2ac80;--panel:#fbebdd;--panel-2:#f4dfcc;--edge:#c99a74;--ink:#1a0e06;--muted:#2e1a0c;--muted-2:#3d2412;--ink-on-bg:#1a0e06;--bg-color:#b67a4e;--amber:#4d2814;--amber-soft:#3a1d0e;--glow:#8a4a22;--controls-color:#8c5a38;--orb-color:#d79a68;--button-color:#4d2814;--button-ink:#fbebdd;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(115deg,#b67a4e 0%,#e2ac80 38%,#f6d2b2 52%,#e2ac80 64%,#b67a4e 100%);--keycap-bg:#f6dcc4;--keycap-edge:#9c6a44;--keycap-ink:#1a0e06;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="silver"]{--bg:#9fa8b4;--bg2:#e9edf2;--panel:#f7f9fb;--panel-2:#edf0f4;--edge:#b4bcc7;--ink:#11151a;--muted:#2f353e;--muted-2:#3a414b;--ink-on-bg:#11151a;--bg-color:#9fa8b4;--amber:#2e3540;--amber-soft:#232931;--glow:#56606e;--controls-color:#6f7986;--orb-color:#d3d9e1;--button-color:#2e3540;--button-ink:#ffffff;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(115deg,#9fa8b4 0%,#e9edf2 38%,#fafbfc 52%,#e9edf2 64%,#9fa8b4 100%);--keycap-bg:#eef1f5;--keycap-edge:#8a94a1;--keycap-ink:#11151a;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="gold"]{--bg:#b88a2c;--bg2:#f3d98a;--panel:#fff8e2;--panel-2:#faefcd;--edge:#d4b25e;--ink:#1e1608;--muted:#33270c;--muted-2:#43340f;--ink-on-bg:#1e1608;--bg-color:#b88a2c;--amber:#564106;--amber-soft:#433204;--glow:#8a6514;--controls-color:#9c7a2c;--orb-color:#f0cf6a;--button-color:#564106;--button-ink:#fff8e2;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(115deg,#b88a2c 0%,#f3d98a 38%,#fff1bf 52%,#f3d98a 64%,#b88a2c 100%);--keycap-bg:#fbeab4;--keycap-edge:#a8842c;--keycap-ink:#1e1608;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="diamond"]{--bg:#05070c;--bg2:#0a0e16;--panel:#111722;--panel-2:#0d121b;--edge:#2a3850;--ink:#eef4ff;--muted:#a3b2cb;--muted-2:#8090ab;--ink-on-bg:#eef4ff;--bg-color:#05070c;--amber:#bfe6ff;--amber-soft:#e0f3ff;--glow:#9fd8ff;--controls-color:#4b5a74;--orb-color:#dff1ff;--art-scrim:rgba(5,7,12,.84);--hint-bg:rgba(5,7,12,.92);--keycap-bg:rgba(12,17,26,.84);--keycap-edge:#9fd0f0;--keycap-ink:#eef4ff;--orb-text:#fdf6ec;--orb-label-bg:rgba(10,10,14,.66);--muted-on-bg:var(--muted)}
+  [data-theme-scope="beach"]{--bg:#f6ebd6;--bg2:#efe0c4;--panel:#fffbf2;--panel-2:#fbf3e3;--edge:#dccaa6;--ink:#1f2a2e;--muted:#4a5458;--muted-2:#59646a;--ink-on-bg:#1f2a2e;--bg-color:#f6ebd6;--amber:#2891ab;--amber-soft:#1b6f85;--glow:#2f9cb6;--controls-color:#8fb0b0;--orb-color:#ffd27a;--button-color:#1d6e83;--button-ink:#ffffff;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--keycap-bg:#fffaf0;--keycap-edge:#c2ae88;--keycap-ink:#1f2a2e;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="lunar"]{--bg:#0a0a0e;--bg2:#101016;--panel:#15151c;--panel-2:#121218;--edge:#2c2c36;--ink:#f1efe8;--muted:#a8a49a;--muted-2:#8a867d;--ink-on-bg:#f1efe8;--bg-color:#0a0a0e;--amber:#d8d4c8;--amber-soft:#ece9e0;--glow:#e8e4d8;--controls-color:#55545e;--orb-color:#e8e4d8;--keycap-bg:rgba(26,26,34,.9);--keycap-edge:#4a4a56;--keycap-ink:#f1efe8;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="pinkmoon"]{--bg:#120a10;--bg2:#1a0f18;--panel:#1e121b;--panel-2:#190f17;--edge:#3f2738;--ink:#fbeff5;--muted:#c8a8b9;--muted-2:#a68a99;--ink-on-bg:#fbeff5;--bg-color:#120a10;--amber:#f7afd7;--amber-soft:#fcd9ec;--glow:#f2a6c8;--controls-color:#6e4a62;--orb-color:#fbe6ef;--keycap-bg:rgba(34,20,31,.9);--keycap-edge:#6a4560;--keycap-ink:#fbeff5;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="bloodmoon"]{--bg:#0e0606;--bg2:#160909;--panel:#1a0d0d;--panel-2:#150a0a;--edge:#3c2222;--ink:#f5ecea;--muted:#bba29e;--muted-2:#9a837f;--ink-on-bg:#f5ecea;--bg-color:#0e0606;--amber:#c9cfe0;--amber-soft:#e4e8f2;--glow:#b8c0d4;--controls-color:#5e4848;--orb-color:#e7dcd8;--keycap-bg:rgba(30,16,16,.9);--keycap-edge:#5c3c3c;--keycap-ink:#f5ecea;--orb-text:#fdf6ec;--orb-label-bg:rgba(10,10,14,.66);--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="solar"]{--bg:#05070d;--bg2:#0a0d16;--panel:#10141f;--panel-2:#0d111a;--edge:#28304a;--ink:#eef1f8;--muted:#a0a8bc;--muted-2:#8088a0;--ink-on-bg:#eef1f8;--bg-color:#05070d;--amber:#b5a89a;--amber-soft:#d8d0c6;--glow:#c8bdb0;--controls-color:#4a5470;--orb-color:#c8bdb0;--keycap-bg:rgba(20,26,40,.9);--keycap-edge:#4a5470;--keycap-ink:#eef1f8;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="aurora"]{--bg:#050b12;--bg2:#08121c;--panel:#0f1822;--panel-2:#0c141d;--edge:#24384a;--ink:#eaf4f4;--muted:#9db1b8;--muted-2:#7f949b;--ink-on-bg:#eaf4f4;--bg-color:#050b12;--amber:#9b8cff;--amber-soft:#cbc3ff;--glow:#a99cff;--controls-color:#3e5068;--orb-color:#f2f5f7;--keycap-bg:rgba(16,26,36,.9);--keycap-edge:#6b5fc8;--keycap-ink:#eaf4f4;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="greatwall"]{--bg:#14100e;--bg2:#1b1512;--panel:#211a16;--panel-2:#1c1612;--edge:#41352c;--ink:#f3ece4;--muted:#b9ab9c;--muted-2:#998c7e;--ink-on-bg:#f3ece4;--bg-color:#14100e;--amber:#c4b89f;--amber-soft:#e2d9c6;--glow:#d6c7a8;--controls-color:#64574a;--orb-color:#efe6d2;--keycap-bg:#2a221c;--keycap-edge:#6e6050;--keycap-ink:#f3ece4;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="sky"][data-band="sunrise"]{--bg:#2b2a4a;--bg2:#3a3058;--panel:#1a1830;--panel-2:#16142a;--edge:#3f3a63;--ink:#fff4ea;--muted:#d9c6c4;--muted-2:#b8a7ae;--ink-on-bg:#fff4ea;--bg-color:#2b2a4a;--amber:#f7deae;--amber-soft:#fff0d6;--glow:#f6c08a;--controls-color:#6a5a86;--orb-color:#ffcf8f;--page-image:linear-gradient(180deg,#2b2a4a 0%,#3d3158 60%,#5a3a5e 100%);--keycap-bg:#221f3c;--keycap-edge:#5a4f7c;--keycap-ink:#fff4ea;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="sky"][data-band="day"]{--bg:#eaf4fb;--bg2:#dcecf7;--panel:#ffffff;--panel-2:#f2f8fc;--edge:#c4d9e8;--ink:#0f2233;--muted:#3d5366;--muted-2:#4e6478;--ink-on-bg:#0f2233;--bg-color:#eaf4fb;--amber:#2f7fc1;--amber-soft:#1f5f94;--glow:#3d8fd0;--controls-color:#7fa8c8;--orb-color:#ffd46a;--button-color:#23649a;--button-ink:#ffffff;--success:#13806b;--warn:#b5540a;--teal:#0d6f5e;--coral:#b8323f;--ui-chrome:#3159c4;--page-image:linear-gradient(180deg,#d6eaf8 0%,#eaf4fb 55%,#f4f9fd 100%);--keycap-bg:#f7fbfe;--keycap-edge:#9cbcd6;--keycap-ink:#0f2233;--panel-raised:color-mix(in srgb, var(--controls-color) 16%, var(--panel));--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="sky"][data-band="sunset"]{--bg:#2a1a33;--bg2:#3a2040;--panel:#1e1424;--panel-2:#1a111f;--edge:#4a2c4c;--ink:#fff1ec;--muted:#dcc0bf;--muted-2:#bb9fa4;--ink-on-bg:#fff1ec;--bg-color:#2a1a33;--amber:#ffc8c2;--amber-soft:#ffe2de;--glow:#f2a07a;--controls-color:#7a4f6a;--orb-color:#ffab70;--page-image:linear-gradient(180deg,#2a1a33 0%,#43223d 60%,#5e2a3c 100%);--keycap-bg:#26182c;--keycap-edge:#6a4060;--keycap-ink:#fff1ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="sky"][data-band="night"]{--bg:#0b1020;--bg2:#10172c;--panel:#141a2e;--panel-2:#111628;--edge:#2a3352;--ink:#eef1ff;--muted:#a5afcf;--muted-2:#8590b3;--ink-on-bg:#eef1ff;--bg-color:#0b1020;--amber:#8fa8ff;--amber-soft:#c4d1ff;--glow:#9fb4ff;--controls-color:#465277;--orb-color:#e9ecf5;--keycap-bg:#151c33;--keycap-edge:#3c4a78;--keycap-ink:#eef1ff;--orb-label-bg:rgba(10,10,14,.66);--orb-text:#fdf6ec;--muted-on-bg:var(--muted);--hint-bg:color-mix(in srgb, var(--bg-color) 82%, transparent)}
+  [data-theme-scope="solar"][data-planet="mercury"]{--amber:#b5a89a;--glow:#b5a89a;--orb-color:#b5a89a}
+  [data-theme-scope="solar"][data-planet="venus"]{--amber:#e2cd92;--glow:#e2cd92;--orb-color:#e2cd92}
+  [data-theme-scope="solar"][data-planet="earth"]{--amber:#4f9bd9;--glow:#4f9bd9;--orb-color:#4f9bd9}
+  [data-theme-scope="solar"][data-planet="mars"]{--amber:#a28377;--glow:#a28377;--orb-color:#a28377;--button-ink:#1a1008}
+  [data-theme-scope="solar"][data-planet="jupiter"]{--amber:#b3a375;--glow:#b3a375;--orb-color:#b3a375}
+  [data-theme-scope="solar"][data-planet="saturn"]{--amber:#e6d3a3;--glow:#e6d3a3;--orb-color:#e6d3a3}
+  [data-theme-scope="solar"][data-planet="uranus"]{--amber:#9bdff3;--glow:#9bdff3;--orb-color:#9bdff3}
+  [data-theme-scope="solar"][data-planet="neptune"]{--amber:#4c6fe0;--glow:#4c6fe0;--orb-color:#4c6fe0;--button-color:#3a58c4;--button-ink:#ffffff}
   /* tokens:end */
   /* #meaning inherits its face from body (resolved under the UI language), so a vi word
      being studied under another UI language needs the face set on the surface itself. */
@@ -1779,7 +1911,8 @@
     /* Brighter, glossier gem: a hot white specular near the top-left, a vivid
        saturated body, a rich rim, plus a glassy top light and depth shadow —
        all derived from --orb-color, so every orb color stays luminous. */
-    background:radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 20%, var(--color-white)) 0%, color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 82%, var(--color-white)) 24%, var(--orb-color-tinted,var(--orb-color)) 58%, color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 78%, var(--color-black)) 100%);
+    /* CC-THEMES-COSMOS: --orb-art (a moon phase, a planet, a stone) is drawn over the gem; none elsewhere. */
+    background:var(--orb-art) center/100% 100% no-repeat, radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 20%, var(--color-white)) 0%, color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 82%, var(--color-white)) 24%, var(--orb-color-tinted,var(--orb-color)) 58%, color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 78%, var(--color-black)) 100%);
     box-shadow:0 0 0 1px color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 40%, var(--color-white) 60%),
       0 0 22px 1px color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 78%, transparent),
       0 0 68px 12px color-mix(in srgb, var(--orb-color-tinted,var(--orb-color)) 50%, transparent),
@@ -2986,6 +3119,27 @@
   :root[data-theme="typewriter"][data-script="latin"]{--display:'Space Mono',ui-monospace,monospace}
   /* Light themes fade into their own second background, not toward black (which goes grey on light). */
   :root[data-theme="daybreak"]:not([data-page]) body,:root[data-theme="typewriter"]:not([data-page]) body{background-color:var(--bg-color);background-image:linear-gradient(180deg,var(--bg-color) 0%,var(--bg2) 100%)}
+  /* CC-THEMES-COSMOS F3: the earned themes. Their ground is the root's own
+     (a metal sheen, a sky gradient), the drawn art is ONE fixed layer behind
+     the page (#themeArt, made by src/theme_art.rs, rasterised once per size and
+     never redrawn during a word, I-T13), and the scrims sit above the art and
+     below the UI (T-D22). Everything here reads tokens; no box moves (I-T7). */
+  :root[data-cosmos]{background-color:var(--bg-color);background-image:var(--page-image);background-attachment:fixed}
+  :root[data-cosmos]:not([data-page]) body{background:transparent}
+  #themeArt{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background-repeat:no-repeat;background-size:100% 100%;transform:translate3d(var(--art-shift,0px),0,0);transition:transform var(--motion-anim-art-drift) ease-in-out}
+  #themeArt::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--art-scrim),var(--art-scrim)) 0 0/100% var(--scrim-head,150px) no-repeat,radial-gradient(ellipse var(--scrim-orb-r,150px) var(--scrim-orb-r,150px) at var(--scrim-orb-x,50%) var(--scrim-orb-y,30%),var(--art-scrim) 0 72%,transparent 100%),linear-gradient(var(--art-scrim),var(--art-scrim)) 0 var(--scrim-kb,520px)/100% 100% no-repeat}
+  #themeArt::before{content:"";position:absolute;inset:-10% -40%;background:linear-gradient(110deg,transparent 44%,var(--art-glint) 50%,transparent 56%);opacity:0;transform:translateX(-70%);will-change:transform}
+  #themeArt.glint::before{animation:artGlint var(--motion-anim-art-glint) ease-out 1}
+  @keyframes artGlint{0%{opacity:0;transform:translateX(-70%)}20%{opacity:1}100%{opacity:0;transform:translateX(70%)}}
+  .hint-line{background:var(--hint-bg);box-shadow:0 0 0 6px var(--hint-bg);border-radius:10px}
+  /* Hint and Definition sit straight on the art: the same pill, drawn as a spread so no box moves. */
+  :root[data-cosmos] .minor-row .ghost{background:var(--hint-bg);box-shadow:0 0 0 4px var(--hint-bg);border-radius:10px}
+  /* The orb's label sits on a backing pill where the orb wears a drawn face; transparent on the gem. */
+  :root[data-cosmos] .orb-glyph{background:var(--orb-label-bg);box-shadow:0 0 0 5px var(--orb-label-bg);border-radius:10px}
+  @media (prefers-reduced-motion: reduce){#themeArt{transition:none}#themeArt.glint::before{animation:none}}
+  /* The Theme Lab's "Simulate Reduce Motion" (dev builds only set data-rm). */
+  :root[data-rm] #themeArt{transition:none}
+  :root[data-rm] #themeArt.glint::before{animation:none}
   /* CC-ECLIPSE-HOTFIX F1: a picked Background decides the fade by its own
      lightness (settings::set_bg_color sets data-page). A light page barely fades,
      so the muted ink on it keeps 4.5:1 to the bottom; a dark page keeps the

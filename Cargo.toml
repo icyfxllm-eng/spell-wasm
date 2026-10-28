@@ -36,7 +36,10 @@ education = []
 # not compiled, it adds no markup or CSS to index.html, and
 # scripts/seam-absence-check.mjs greps the shipped bundle for its marker so a
 # release, auditor or education build cannot contain it (acceptance 12).
-dev_preview = []
+# CC-THEMES-COSMOS T-D10: the Theme Lab. Never in a store build; the Lab
+# TestFlight build (internal only, never submitted) turns it on alone.
+theme_lab = []
+dev_preview = ["theme_lab"]
 # AUDIT PREVIEW — a build that un-gates the ComingSoon languages (ar/fa/ur/ru) and
 # loads their unverified DRAFT word banks (assets/words-draft/, CC BY-SA, see its
 # README) so native speakers can PLAY and review them. Build-time only, and NEVER

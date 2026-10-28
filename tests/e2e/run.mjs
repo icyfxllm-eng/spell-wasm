@@ -54,6 +54,7 @@ import * as iconsSpec from './specs/icons.mjs';
 import * as celebrateSpec from './specs/celebrate.mjs';
 import * as cardsSpec from './specs/cards.mjs';
 import * as themesSpec from './specs/themes.mjs';
+import * as themesCosmos from './specs/themes-cosmos.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
 import * as hotfixContrast from './specs/hotfix-contrast.mjs';
@@ -153,6 +154,7 @@ const SPECS = [
   ['celebrate', celebrateSpec],
   ['cards', cardsSpec],
   ['themes', themesSpec],
+  ['themes-cosmos', themesCosmos],
   ['hotfix-contrast', hotfixContrast],
   ['hotfix-overlap', hotfixOverlap],
   ['hotfix-glow', hotfixGlow],

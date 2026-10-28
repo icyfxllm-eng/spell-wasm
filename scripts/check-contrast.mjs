@@ -37,6 +37,19 @@ for (const t of ['eclipse', 'daybreak', 'chalkboard', 'typewriter', 'beestage'])
   if (t !== 'eclipse') themes[t] = std;
   themes[`${t}-jr`] = { ...std, ...block(`:root[data-theme="${t}"] body.kid`) };
 }
+// CC-THEMES-COSMOS: the twelve earned themes, each Sky band and planet,
+// standard and Jr. (Text over their art is measured on pixels, AT-T5b.)
+for (const t of ['bronze', 'silver', 'gold', 'diamond', 'sky', 'lunar', 'solar', 'aurora', 'beach', 'pinkmoon', 'bloodmoon', 'greatwall']) {
+  const variants = t === 'sky' ? ['sunrise', 'day', 'sunset', 'night'].map((b) => [`[data-band="${b}"]`, b])
+    : t === 'solar' ? ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'].map((p) => [`[data-planet="${p}"]`, p])
+    : [['', '']];
+  for (const [attr, v] of variants) {
+    const std = { ...base, ...block(`:root[data-theme="${t}"]`), ...(attr ? block(`:root[data-theme="${t}"]${attr}`) : {}) };
+    const name = v ? `${t}/${v}` : t;
+    themes[name] = std;
+    themes[`${name}-jr`] = { ...std, ...block(`:root[data-theme="${t}"] body.kid`), ...(attr ? block(`:root[data-theme="${t}"]${attr} body.kid`) : {}) };
+  }
+}
 
 // Resolve var(--x) chains to a concrete color; return null for color-mix/rgba
 // (glows/shadows — not checked as text/bg here).

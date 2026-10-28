@@ -25,9 +25,31 @@ pub enum Theme {
     Chalkboard,
     Typewriter,
     BeeStage,
+    // CC-THEMES-COSMOS (src/themes_cosmos.rs): built for the Theme Lab, not yet
+    // earnable or listed (Phase A).
+    Bronze,
+    Silver,
+    Gold,
+    Diamond,
+    Sky,
+    Lunar,
+    Solar,
+    Aurora,
+    Beach,
+    PinkMoon,
+    BloodMoon,
+    GreatWall,
 }
 
+/// The Classic five: the ones Appearance lists and the ledger grants today.
 pub const ALL: [Theme; 5] = [Theme::Eclipse, Theme::Daybreak, Theme::Chalkboard, Theme::Typewriter, Theme::BeeStage];
+
+/// Every theme in the registry, Classic first (the Theme Lab's grid).
+pub const REGISTRY: [Theme; 17] = [
+    Theme::Eclipse, Theme::Daybreak, Theme::Chalkboard, Theme::Typewriter, Theme::BeeStage,
+    Theme::Bronze, Theme::Silver, Theme::Gold, Theme::Diamond, Theme::Sky, Theme::Lunar,
+    Theme::Solar, Theme::Aurora, Theme::Beach, Theme::PinkMoon, Theme::BloodMoon, Theme::GreatWall,
+];
 
 impl Theme {
     pub fn id(self) -> &'static str {
@@ -37,10 +59,22 @@ impl Theme {
             Theme::Chalkboard => "chalkboard",
             Theme::Typewriter => "typewriter",
             Theme::BeeStage => "beestage",
+            Theme::Bronze => "bronze",
+            Theme::Silver => "silver",
+            Theme::Gold => "gold",
+            Theme::Diamond => "diamond",
+            Theme::Sky => "sky",
+            Theme::Lunar => "lunar",
+            Theme::Solar => "solar",
+            Theme::Aurora => "aurora",
+            Theme::Beach => "beach",
+            Theme::PinkMoon => "pinkmoon",
+            Theme::BloodMoon => "bloodmoon",
+            Theme::GreatWall => "greatwall",
         }
     }
     pub fn from_id(s: &str) -> Option<Theme> {
-        ALL.into_iter().find(|t| t.id() == s)
+        REGISTRY.into_iter().find(|t| t.id() == s)
     }
     /// The i18n key of its name.
     pub fn name_key(self) -> String {
@@ -80,6 +114,8 @@ pub fn earned(t: Theme, p: Progress) -> bool {
         Theme::Chalkboard => p.best_daily_streak >= STREAK_FOR_CHALKBOARD,
         Theme::Typewriter => p.lifetime_correct >= CORRECT_FOR_TYPEWRITER,
         Theme::BeeStage => p.hard_correct >= HARD_FOR_BEESTAGE,
+        // CC-THEMES-COSMOS Phase A: no unlock wiring yet (each wave adds its rules).
+        _ => false,
     }
 }
 
@@ -253,24 +289,83 @@ fn after_progress(mut s: Store) {
 }
 
 pub fn current() -> Theme {
+    if let Some((t, _, _)) = preview() {
+        return t;
+    }
     let s = load();
     resolve(Choice::from_id(&s.choice), os_light(), &s.unlocked_themes())
 }
 
-/// Set `data-theme` on the root (only with the flag on; off, no attribute).
+/// The Theme Lab's preview: (theme, pins, clock override). Dev builds only
+/// (T-D10); a player's build has no Lab, so this is always None there.
+#[cfg(feature = "theme_lab")]
+fn preview() -> Option<(Theme, crate::themes_cosmos::Pins, Option<crate::themes_cosmos::LocalNow>)> {
+    crate::theme_lab::preview()
+}
+#[cfg(not(feature = "theme_lab"))]
+fn preview() -> Option<(Theme, crate::themes_cosmos::Pins, Option<crate::themes_cosmos::LocalNow>)> {
+    None
+}
+
+/// The device's local date and time (T-D13: the local clock, no location).
+pub fn local_now() -> crate::themes_cosmos::LocalNow {
+    let d = js_sys::Date::new_0();
+    crate::themes_cosmos::LocalNow { y: d.get_full_year() as i32, m: d.get_month() + 1, d: d.get_date(), h: d.get_hours(), min: d.get_minutes() }
+}
+
+fn set_or_remove(root: &web_sys::Element, name: &str, value: Option<&str>) {
+    let _ = match value {
+        Some(v) => root.set_attribute(name, v),
+        None => root.remove_attribute(name),
+    };
+}
+
+/// Set `data-theme` on the root (only with the flag on, or a Lab preview; off,
+/// no attribute). A CC-THEMES-COSMOS theme also gets `data-cosmos` and its
+/// band, phase or planet, and its art is drawn (src/theme_art.rs).
 pub fn apply() {
     let Some(root) = web_sys::window().and_then(|w| w.document()).and_then(|d| d.document_element()) else { return };
-    if !on() {
-        let _ = root.remove_attribute("data-theme");
+    let pv = preview();
+    if !on() && pv.is_none() {
+        for a in ["data-theme", "data-cosmos", "data-band", "data-phase", "data-planet"] {
+            let _ = root.remove_attribute(a);
+        }
+        crate::theme_art::render(None);
         sync_theme_color();
         return;
     }
-    let _ = root.set_attribute("data-theme", current().id());
+    let (t, pins, clock) = pv.unwrap_or_else(|| (current(), crate::themes_cosmos::Pins::default(), None));
+    let _ = root.set_attribute("data-theme", t.id());
+    let look = crate::themes_cosmos::look(t, clock.unwrap_or_else(local_now), pins);
+    set_or_remove(&root, "data-cosmos", crate::themes_cosmos::is_cosmos(t).then_some(""));
+    set_or_remove(&root, "data-band", look.band.map(crate::themes_cosmos::band_id));
+    let phase = look.phase.map(|p| p.0.to_string());
+    set_or_remove(&root, "data-phase", phase.as_deref());
+    set_or_remove(&root, "data-planet", look.planet.map(|p| p.id()));
+    crate::theme_art::render(Some(&look));
     // F9.8: a theme face only for scripts it covers. The typewriter face is
     // Latin; Vietnamese stacks marks it does not draw, so it is not "latin" here.
     let latin = matches!(crate::i18n::current().as_str(), "en" | "es" | "fr" | "de" | "pt" | "pl" | "fil" | "sw");
     let _ = root.set_attribute("data-script", if latin { "latin" } else { "other" });
     sync_theme_color();
+}
+
+fn reduce_motion() -> bool {
+    let Some(win) = web_sys::window() else { return false };
+    let lab = win.document().and_then(|d| d.document_element()).is_some_and(|r| r.has_attribute("data-rm"));
+    lab || win.match_media("(prefers-reduced-motion: reduce)").ok().flatten().is_some_and(|m| m.matches())
+}
+
+/// A word just ended (celebrate::word_active(false)). The only moment a
+/// theme's background may change (I-T5): the Sky band and moon phase are
+/// re-read, Diamond may glint, Aurora drifts.
+pub fn at_word_boundary() {
+    let Some(root) = web_sys::window().and_then(|w| w.document()).and_then(|d| d.document_element()) else { return };
+    if !root.has_attribute("data-cosmos") {
+        return;
+    }
+    apply();
+    crate::theme_art::between_words(current(), reduce_motion());
 }
 
 /// CC-ECLIPSE-HOTFIX F5/I10: the browser's theme-color (the status bar and the

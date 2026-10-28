@@ -22,6 +22,16 @@ if [ "${SPELL_WEB:-0}" = "1" ]; then
   FEATURES="--features web"
   echo "==> SITE build: English only (--features web)"
 fi
+# CC-THEMES-COSMOS T-D10: SPELL_THEME_LAB=1 builds the INTERNAL Lab app, the
+# only build that carries the Theme Lab (so Eric can review every theme on his
+# phone). TestFlight and the App Store ship one binary, so this build must
+# never be submitted: fastlane records its number in fastlane/lab-builds.txt
+# and every submit and external lane refuses it. Never for the site.
+if [ "${SPELL_THEME_LAB:-0}" = "1" ]; then
+  if [ "${SPELL_WEB:-0}" = "1" ]; then echo "SPELL_THEME_LAB is app-only" >&2; exit 1; fi
+  FEATURES="--features theme_lab"
+  echo "==> THEME LAB build: internal TestFlight only, never submitted (--features theme_lab)"
+fi
 echo "==> cargo build (release, wasm32-unknown-unknown) $FEATURES"
 # shellcheck disable=SC2086
 cargo build --release --target wasm32-unknown-unknown $FEATURES

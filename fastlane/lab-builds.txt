@@ -1,0 +1,2 @@
+# CC-THEMES-COSMOS T-D10: Theme Lab build numbers. Internal TestFlight only;
+# fastlane refuses to submit or externally distribute any build listed here.

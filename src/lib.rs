@@ -139,6 +139,11 @@ mod profanity;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
 mod themes; // CC-VISUAL-ECLIPSE F9: earnable themes (behind visual.themes)
+pub mod astro; // CC-THEMES-COSMOS F4: moon phase, sky band, event table (pure, no network, no location)
+mod themes_cosmos; // CC-THEMES-COSMOS: the twelve earned themes (registry, looks)
+mod theme_art; // CC-THEMES-COSMOS F3/F3a: the drawn art (SVG from art.* tokens)
+#[cfg(feature = "theme_lab")]
+mod theme_lab; // CC-THEMES-COSMOS F1: the Theme Lab (dev and Lab builds only, T-D10)
 mod result_card; // CC-VISUAL-ECLIPSE F11: 1080x1350 result cards (behind visual.cards)
 mod celebrate; // CC-VISUAL-ECLIPSE F7: celebration moments (behind visual.celebrate)
 mod icons; // CC-VISUAL-ECLIPSE F8: the drawn icon set (behind visual.icons)
@@ -539,6 +544,8 @@ fn wire(app: &App) {
         wordpic_screen::install_surface_hooks(); // I3: the picture registers itself
     }
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
+    #[cfg(feature = "theme_lab")]
+    theme_lab::wire(); // CC-THEMES-COSMOS F1: the Theme Lab joins the dev menu (never in a store build)
     #[cfg(feature = "dev_preview")]
     inspector::wire(app); // L0 R4: the learner inspector joins the dev menu
     #[cfg(feature = "dev_preview")]

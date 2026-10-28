@@ -1,0 +1,40 @@
+# NASA GSFC "Decade Tables of Lunar Eclipses", Fred Espenak. Date of greatest eclipse (TD) and type.
+# Source: https://eclipse.gsfc.nasa.gov/LEdecade/LEdecade2021.html and LEdecade2031.html (fetched 2026-10-28)
+# Licence: US government work (public domain); the pages state "Permission is freely granted to reproduce
+#   this data when accompanied by an acknowledgment." Acknowledgment: Eclipse Predictions by Fred Espenak, NASA's GSFC.
+# Columns: YYYY-MM-DD TYPE. Used by tools/build_astro_events.py as the cross-check for its computed totals.
+2026-03-03 Total
+2026-08-28 Partial
+2027-02-20 Penumbral
+2027-07-18 Penumbral
+2027-08-17 Penumbral
+2028-01-12 Partial
+2028-07-06 Partial
+2028-12-31 Total
+2029-06-26 Total
+2029-12-20 Total
+2030-06-15 Partial
+2030-12-09 Penumbral
+2031-05-07 Penumbral
+2031-06-05 Penumbral
+2031-10-30 Penumbral
+2032-04-25 Total
+2032-10-18 Total
+2033-04-14 Total
+2033-10-08 Total
+2034-04-03 Penumbral
+2034-09-28 Partial
+2035-02-22 Penumbral
+2035-08-19 Partial
+2036-02-11 Total
+2036-08-07 Total
+2037-01-31 Total
+2037-07-27 Partial
+2038-01-21 Penumbral
+2038-06-17 Penumbral
+2038-07-16 Penumbral
+2038-12-11 Penumbral
+2039-06-06 Partial
+2039-11-30 Partial
+2040-05-26 Total
+2040-11-18 Total
