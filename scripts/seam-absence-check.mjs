@@ -14,7 +14,10 @@ const dist = join(dirname(fileURLToPath(import.meta.url)), '..', process.argv[2]
 // CC-ECLIPSE-HOTFIX F4 (I7): nor is the mic diag readout, its switch, or its
 // 'diag: ' prefix. TestFlight and the App Store ship this same dist.
 const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_preview',
-  'voiceSpellDiag', 'devDiagBar', 'spell_diag_bar', 'diag: '];
+  'voiceSpellDiag', 'devDiagBar', 'spell_diag_bar', 'diag: ',
+  // CC-THEMES-COSMOS census: nor the Test entitlements switch, which granted
+  // Complete to any player who tapped the logo five times.
+  'devEntitlements', 'spell_dev_entitlements'];
 
 function walk(dir) {
   const out = [];

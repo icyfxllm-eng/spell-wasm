@@ -423,14 +423,17 @@
       }
       function trail(kind, text) { if (diagBar) diagBar.trail(kind, text); }
       sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); trail('T', d && d.token); });
-      function devDoorOpen() {
-        try { return localStorage.getItem('spell_dev_entitlements') === 'on'; }
-        catch (e) { return false; }
-      }
+      // Closed in every release build: the key is read only inside the cut
+      // region below, so no player build carries it (CC-THEMES-COSMOS census).
+      var devDoorOpen = function () { return false; };
       /* SPELL-DIAG:BEGIN — dev and test builds only. scripts/build-web.sh cuts
          this region from every release build, TestFlight and the App Store alike
          (they are one binary), so no player build carries the readout or its
          strings (CC-ECLIPSE-HOTFIX F4, D3, I7). */
+      devDoorOpen = function () {
+        try { return localStorage.getItem('spell_dev_entitlements') === 'on'; }
+        catch (e) { return false; }
+      };
       diagBar = (function () {
         // Default OFF, even in a dev build: its own switch in the dev menu,
         // separate from test entitlements (I8).
