@@ -411,7 +411,11 @@ pub fn visible(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
 /// same context, so a link can never reach what the menu hides (AE-I3). Empty
 /// until a gated row ships; GUARDIAN-REPORT F4 adds the first.
 #[cfg(not(feature = "web"))]
-pub const GATED_ROUTES: &[(&str, &str)] = &[("#progress-report", "progress_report")];
+pub const GATED_ROUTES: &[(&str, &str)] = &[
+    ("#progress-report", "progress_report"),
+    // CC-GUARDIAN-REPORT F7: the Monday ping's spellgame://guardian-report?week=
+    ("#guardian-report", "progress_report"),
+];
 /// The site has no gated rows (each is app-only), and app-only names stay out
 /// of the site bundle.
 #[cfg(feature = "web")]

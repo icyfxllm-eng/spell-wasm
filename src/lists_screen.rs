@@ -463,6 +463,7 @@ pub fn open(app: &App) {
     RENAMING.with(|c| c.set(false));
     CONFIRMING.with(|c| c.set(false));
     clear_undo();
+    note(None);
     render(app);
     dom::add_class("listsScreen", "show");
 }
@@ -473,6 +474,19 @@ pub fn open_list(app: &App, id: &str) {
     crate::pick_ui::reset_help(crate::pick_queue::SURFACE_MINE, id);
     OPEN_LIST.with(|c| *c.borrow_mut() = Some(id.to_string()));
     render(app);
+}
+
+/// CC-GUARDIAN-REPORT F6: open one list with a line saying how it got there
+/// ("Already in My Words"). The line lasts until the screen next opens.
+pub fn open_list_noting(app: &App, id: &str, text: &str) {
+    open_list(app, id);
+    note(Some(text));
+}
+
+fn note(text: Option<&str>) {
+    dom::set_text("listsNote", text.unwrap_or(""));
+    let el = dom::el("listsNote");
+    let _ = if text.is_some() { el.remove_attribute("hidden") } else { el.set_attribute("hidden", "") };
 }
 
 fn close() {

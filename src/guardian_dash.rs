@@ -73,7 +73,7 @@ fn render_body(app: &crate::App) {
     crate::yearbook_ui::dash_section_into(&mut html);
     // BD-3 remainder: digest opt-in (off by default) + the printable
     // report. Both parent-gated by construction (this body IS the gate).
-    let digest_on = crate::storage::get_raw("spell_digest_on").as_deref() == Some("1");
+    let digest_on = crate::notifications::digest_on();
     html.push_str(&format!(
         "<div class=\"gd-sec\"><div class=\"gd-row\"><button class=\"ghost{}\" id=\"gdDigest\">{}</button>         <button class=\"ghost\" id=\"gdPdf\">{}</button></div></div>",
         if digest_on { " on" } else { "" },
@@ -228,12 +228,18 @@ pub fn wire(app: &crate::App) {
             let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
             match el.get_attribute("id").as_deref() {
                 Some("gdDigest") => {
-                    let on = crate::storage::get_raw("spell_digest_on").as_deref() != Some("1");
-                    crate::storage::set_raw("spell_digest_on", if on { "1" } else { "0" });
-                    let lang = a.borrow().lang.clone();
-                    let (tw, _) = crate::reports::week_over_week(&lang, (js_sys::Date::now() / 86_400_000.0) as u32);
-                    crate::notifications::weekly_digest(on, &crate::i18n::tp("gdash.digestBody", &[("n", &tw.to_string())]));
-                    render_body(&a);
+                    // CC-GUARDIAN-REPORT Phase D: the digest IS the Monday
+                    // ping (I11) — one toggle, one scheduler, one copy rule.
+                    #[cfg(not(feature = "web"))]
+                    {
+                        let a2 = a.clone();
+                        crate::reports_share_ui::toggle_ping(&a, move |refused| {
+                            if refused {
+                                crate::dom::show_toast(&crate::i18n::t("greport.pingDenied"));
+                            }
+                            render_body(&a2);
+                        });
+                    }
                 }
                 Some("gdPdf") => {
                     let a2 = a.clone();

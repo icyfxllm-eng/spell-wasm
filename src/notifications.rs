@@ -34,43 +34,79 @@ fn set(obj: &Object, key: &str, val: &JsValue) {
     let _ = Reflect::set(obj, &JsValue::from_str(key), val);
 }
 
-/// Apply the reminder setting: schedule the daily notification when `enabled`,
-/// otherwise cancel any existing one. `time` is "HH:MM" (24h). Best-effort —
-/// silently does nothing on the web or if the plugin rejects.
-/// CC-YEARBOOK D5 (signed): ONE opt-in local ping when the calendar-year
-/// period closes — scheduled on-device for Jan 1, 09:00, id 2, cancelled
-/// whenever the parent opts back out. The only time-based prompt in the
-/// BD batch.
-/// BD-3 weekly digest: ONE local notification per week, generated
-/// on-device (I2 — zero network), off by default. The body is filled
-/// from an audited template at (re)schedule time — every app boot with
-/// the toggle on refreshes the scheduled copy with current counts, so
-/// the fired notification is at most a week stale, never fabricated.
-pub fn weekly_digest(enabled: bool, body: &str) {
+/// CC-GUARDIAN-REPORT F7 + CC-GUARDIAN-DASH F2: the ONE weekly Guardian
+/// notification (I11). DASH's digest id, kept so an old repeating digest is
+/// cancelled by the first reschedule.
+const GUARDIAN_ID: f64 = 3.0;
+const GUARDIAN_ACTIONS: &str = "GUARDIAN_REPORT";
+/// The one opt-in, shared by the report screen and the dashboard (off by
+/// default). DASH's key, so a parent who opted in there stays opted in.
+const DIGEST_KEY: &str = "spell_digest_on";
+
+/// Local notifications can run here (the native app, not the site).
+pub fn available() -> bool {
+    plugin().is_some()
+}
+
+pub fn digest_on() -> bool {
+    crate::storage::get_raw(DIGEST_KEY).as_deref() == Some("1")
+}
+
+pub fn set_digest_on(on: bool) {
+    crate::storage::set_raw(DIGEST_KEY, if on { "1" } else { "0" });
+}
+
+/// The OS notification permission: `Some(granted)`, or `None` where there is
+/// no plugin. `request` asks (the prompt, if the OS still shows one); only the
+/// parent turning a toggle on may pass it (F7: never at launch).
+pub fn permission(request: bool, then: impl FnOnce(Option<bool>) + 'static) {
+    let Some(ln) = plugin() else { return then(None) };
+    let name = if request { "requestPermissions" } else { "checkPermissions" };
+    let promise = method(&ln, name).and_then(|f| f.call0(&ln).ok()).and_then(|p| p.dyn_into::<js_sys::Promise>().ok());
+    let Some(promise) = promise else { return then(None) };
+    wasm_bindgen_futures::spawn_local(async move {
+        let display = wasm_bindgen_futures::JsFuture::from(promise)
+            .await
+            .ok()
+            .and_then(|v| Reflect::get(&v, &JsValue::from_str("display")).ok())
+            .and_then(|v| v.as_string());
+        then(display.map(|d| d == "granted"));
+    });
+}
+
+/// F7 scheduling: cancel the pending Guardian notification, then schedule
+/// `ping` (one, non-repeating) if there is one. Local notifications fix their
+/// content when scheduled, so callers reschedule on every foreground and
+/// session end. The payload is counts only (I7).
+#[cfg(not(feature = "web"))]
+pub fn guardian_ping(ping: Option<&crate::guardian_report::Ping>) {
     let Some(ln) = plugin() else { return };
     let ids = Array::new();
     let id_obj = Object::new();
-    set(&id_obj, "id", &JsValue::from_f64(3.0));
+    set(&id_obj, "id", &JsValue::from_f64(GUARDIAN_ID));
     ids.push(&id_obj);
     let cancel_arg = Object::new();
     set(&cancel_arg, "notifications", &ids);
     if let Some(f) = method(&ln, "cancel") {
         let _ = f.call1(&ln, &cancel_arg);
     }
-    if !enabled {
-        return;
-    }
-    // Sunday 17:00, repeating weekly (weekday 1 = Sunday in the plugin).
-    let on = Object::new();
-    set(&on, "weekday", &JsValue::from_f64(1.0));
-    set(&on, "hour", &JsValue::from_f64(17.0));
+    let Some(p) = ping else { return };
+    let (y, m, d) = p.date;
+    // A concrete local date, so `at` fires once (an `on` clause repeats).
+    let when = js_sys::Date::new_with_year_month_day_hr(y as u32, m as i32 - 1, d as i32, crate::guardian_report::PING_HOUR as i32);
     let schedule = Object::new();
-    set(&schedule, "on", &on);
+    set(&schedule, "at", &when);
     let notif = Object::new();
-    set(&notif, "id", &JsValue::from_f64(3.0));
-    set(&notif, "title", &JsValue::from_str(&crate::i18n::t("gdash.title")));
-    set(&notif, "body", &JsValue::from_str(body));
+    set(&notif, "id", &JsValue::from_f64(GUARDIAN_ID));
+    set(&notif, "title", &JsValue::from_str(&p.title));
+    set(&notif, "body", &JsValue::from_str(&p.body));
     set(&notif, "schedule", &schedule);
+    if let Some(route) = &p.route {
+        set(&notif, "actionTypeId", &JsValue::from_str(GUARDIAN_ACTIONS));
+        let extra = Object::new();
+        set(&extra, "route", &JsValue::from_str(route));
+        set(&notif, "extra", &extra);
+    }
     let arr = Array::new();
     arr.push(&notif);
     let arg = Object::new();
@@ -80,6 +116,50 @@ pub fn weekly_digest(enabled: bool, body: &str) {
     }
 }
 
+/// F7: the one action, "Review & add to My Words", foreground only (G-D9: no
+/// background action writes anything). Tapping the notification or the
+/// action hands its route to `open`, which goes through the router and so
+/// through the adult gate. Registered once at boot.
+#[cfg(not(feature = "web"))]
+pub fn register_guardian_actions(open: impl Fn(String) + 'static) {
+    let Some(ln) = plugin() else { return };
+    let action = Object::new();
+    set(&action, "id", &JsValue::from_str("review"));
+    set(&action, "title", &JsValue::from_str(&crate::i18n::t("greport.pingAction")));
+    set(&action, "foreground", &JsValue::TRUE);
+    let actions = Array::new();
+    actions.push(&action);
+    let kind = Object::new();
+    set(&kind, "id", &JsValue::from_str(GUARDIAN_ACTIONS));
+    set(&kind, "actions", &actions);
+    let types = Array::new();
+    types.push(&kind);
+    let arg = Object::new();
+    set(&arg, "types", &types);
+    if let Some(f) = method(&ln, "registerActionTypes") {
+        let _ = f.call1(&ln, &arg);
+    }
+    let cb = wasm_bindgen::closure::Closure::<dyn Fn(JsValue)>::new(move |ev: JsValue| {
+        let route = Reflect::get(&ev, &JsValue::from_str("notification"))
+            .and_then(|n| Reflect::get(&n, &JsValue::from_str("extra")))
+            .and_then(|e| Reflect::get(&e, &JsValue::from_str("route")))
+            .ok()
+            .and_then(|r| r.as_string());
+        // Only our own route, whatever else an event carries.
+        if let Some(r) = route.filter(|r| r.starts_with("#guardian-report")) {
+            open(r);
+        }
+    });
+    if let Some(f) = method(&ln, "addListener") {
+        let _ = f.call2(&ln, &JsValue::from_str("localNotificationActionPerformed"), cb.as_ref());
+    }
+    cb.forget();
+}
+
+/// CC-YEARBOOK D5 (signed): ONE opt-in local ping when the calendar-year
+/// period closes — scheduled on-device for Jan 1, 09:00, id 2, cancelled
+/// whenever the parent opts back out. The only time-based prompt in the
+/// BD batch.
 pub fn yearbook_ping(enabled: bool) {
     let Some(ln) = plugin() else { return };
     if !enabled {
@@ -114,6 +194,9 @@ pub fn yearbook_ping(enabled: bool) {
     }
 }
 
+/// Apply the reminder setting: schedule the daily notification when `enabled`,
+/// otherwise cancel any existing one. `time` is "HH:MM" (24h). Best-effort —
+/// silently does nothing on the web or if the plugin rejects.
 pub fn apply(enabled: bool, time: &str) {
     let Some(ln) = plugin() else { return };
 

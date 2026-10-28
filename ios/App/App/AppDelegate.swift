@@ -48,7 +48,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // "#daily" / "#practice" into the mode. Everything else falls
         // through to Capacitor's own handler.
         if url.scheme == "spellgame" {
-            let route = url.host ?? ""
+            // CC-GUARDIAN-REPORT F7: a query rides along
+            // (guardian-report?week=2026-10-19). Host and query are kept to a
+            // closed character set because they land inside a JS string.
+            let safe: (Character) -> Bool = { $0.isASCII && ($0.isLetter || $0.isNumber || "=&-_".contains($0)) }
+            let query = (url.query ?? "").filter(safe)
+            let route = (url.host ?? "").filter(safe) + (query.isEmpty ? "" : "?" + query)
             DispatchQueue.main.async {
                 if let bridge = (self.window?.rootViewController as? CAPBridgeViewController)?.bridge {
                     bridge.webView?.evaluateJavaScript("window.location.hash='" + route + "'; window.dispatchEvent(new HashChangeEvent('hashchange'));", completionHandler: nil)
