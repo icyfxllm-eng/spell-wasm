@@ -152,7 +152,48 @@ struct Bot {
     ws: Option<Ws>,
     seat: Option<u8>,
     last_seq: u64,
+    /// The last NextWord/Submit not yet answered, kept with its cid so a
+    /// resend after a resume is the same message (the server drops a
+    /// duplicate Submit cid, F5).
+    pending: Option<(Uuid, ClientMsg)>,
+    /// When to resend `pending`: shortly after a resume, once the replayed
+    /// frames have had the chance to answer it.
+    resend_at: Option<Instant>,
 }
+
+/// Resume as the app does after a drop: keep trying, inside the 60 s seat
+/// hold, while the path back (the tunnel) comes up again.
+async fn reconnect(o: &Opts, token: &str, who: &str, resume: Resume) -> Result<Ws, String> {
+    let give_up = Instant::now() + Duration::from_secs(45);
+    let mut attempt = 0;
+    loop {
+        match connect(o, token, who, Some(resume.clone())).await {
+            Ok(ws) => return Ok(ws),
+            Err(e) if Instant::now() >= give_up => return Err(e),
+            Err(_) => {
+                tokio::time::sleep(backoff(attempt.min(3))).await;
+                attempt += 1;
+            }
+        }
+    }
+}
+
+async fn send_tracked(bot: &mut Bot, m: ClientMsg) {
+    let cid = Uuid::new_v4();
+    send_cid(bot, cid, &m).await;
+    bot.pending = Some((cid, m));
+}
+
+async fn resend_pending(bot: &mut Bot) {
+    bot.resend_at = None;
+    if let Some((cid, m)) = bot.pending.clone() {
+        RESENDS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        send_cid(bot, cid, &m).await;
+    }
+}
+
+/// Actions resent after a resume because no answer came back.
+static RESENDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
 fn ws_url(target: &str) -> String {
     let t = target.replacen("https://", "wss://", 1).replacen("http://", "ws://", 1);
@@ -207,8 +248,12 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
 }
 
 async fn send(bot: &mut Bot, m: &ClientMsg) {
+    send_cid(bot, Uuid::new_v4(), m).await
+}
+
+async fn send_cid(bot: &mut Bot, cid: Uuid, m: &ClientMsg) {
     if let Some(ws) = bot.ws.as_mut() {
-        let frame = Message::Text(encode_client(Uuid::new_v4(), m).into());
+        let frame = Message::Text(encode_client(cid, m).into());
         if tokio::time::timeout(Duration::from_secs(10), ws.send(frame)).await.is_err() {
             *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap() += 1;
         }
@@ -283,6 +328,8 @@ struct RoomRun {
     seen_words: HashSet<(u8, u32)>,
     drop_at: Option<Instant>,
     deadline: Instant,
+    /// The local scoreboard already ended the current turn.
+    turn_closed: bool,
 }
 
 impl RoomRun {
@@ -304,14 +351,27 @@ impl RoomRun {
     async fn on_msg(&mut self, bot: &mut Bot, scorer: bool, seq: u64, msg: ServerMsg) -> bool {
         self.track_seq(bot, seq);
         match msg {
-            ServerMsg::TurnStart { seat, .. } if Some(seat) == bot.seat => {
-                send(bot, &ClientMsg::NextWord {}).await;
+            ServerMsg::TurnStart { seat, .. } => {
+                if scorer {
+                    self.turn_closed = false;
+                }
+                if Some(seat) == bot.seat {
+                    send_tracked(bot, ClientMsg::NextWord {}).await;
+                }
+            }
+            ServerMsg::WordPaused { .. } => {
+                // No audio: the same player asks for a fresh word (the app's
+                // "can't hear it" round).
+                if matches!(bot.pending, Some((_, ClientMsg::NextWord {}))) {
+                    bot.resend_at = Some(Instant::now() + Duration::from_secs(1));
+                }
             }
             ServerMsg::WordStart { seat, word_no, audio_ticket, .. } => {
                 if scorer && !self.seen_words.insert((seat, word_no)) {
                     self.t.lock().unwrap().dup_words += 1;
                 }
                 if Some(seat) == bot.seat {
+                    bot.pending = None;
                     let word = word_of(&self.o, &self.http, &bot.token, &audio_ticket).await;
                     let right = self.rng.unit() < self.o.right;
                     let typed = match (&word, right) {
@@ -321,10 +381,16 @@ impl RoomRun {
                     if word.is_none() {
                         *self.t.lock().unwrap().errors.entry("no_word_in_clip".into()).or_default() += 1;
                     }
-                    send(bot, &ClientMsg::Submit { typed }).await;
+                    send_tracked(bot, ClientMsg::Submit { typed }).await;
                 }
             }
-            ServerMsg::WordResult { correct, .. } if scorer => {
+            ServerMsg::WordResult { seat, correct, .. } => {
+                if Some(seat) == bot.seat {
+                    bot.pending = None;
+                }
+                if !scorer {
+                    return false;
+                }
                 let mut t = self.t.lock().unwrap();
                 t.words += 1;
                 if correct {
@@ -335,9 +401,17 @@ impl RoomRun {
                     self.local.record_correct();
                 } else {
                     self.local.end_turn();
+                    self.turn_closed = true;
                 }
             }
-            ServerMsg::TurnEnd { .. } => {}
+            ServerMsg::TurnEnd { .. } if scorer => {
+                // A turn can also end with no WordResult: the 120 s turn-start
+                // idle rule counts it as a miss (h2h idle_turn).
+                if !self.turn_closed {
+                    self.local.end_turn();
+                    self.turn_closed = true;
+                }
+            }
             ServerMsg::MatchResult { standings, winner_seat } if scorer => {
                 let best = |s: u8| standings.iter().find(|x| x.seat == s).map(|x| x.best).unwrap_or(u32::MAX);
                 let want_winner = self.local.winner().map(|w| w as u8);
@@ -375,6 +449,7 @@ impl RoomRun {
     }
 
     fn new_match(&mut self) {
+        self.turn_closed = false;
         self.local = Versus::start("P1".into(), "P2".into(), 3);
         self.seen_words.clear();
     }
@@ -382,8 +457,8 @@ impl RoomRun {
 
 async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadline: Instant) {
     let http = reqwest::Client::new();
-    let mut a = Bot { name: "A", token: tokens.0, ws: None, seat: None, last_seq: 0 };
-    let mut b = Bot { name: "B", token: tokens.1, ws: None, seat: None, last_seq: 0 };
+    let mut a = Bot { name: "A", token: tokens.0, ws: None, seat: None, last_seq: 0, pending: None, resend_at: None };
+    let mut b = Bot { name: "B", token: tokens.1, ws: None, seat: None, last_seq: 0, pending: None, resend_at: None };
     let fail = |t: &Shared, what: &str| *t.lock().unwrap().errors.entry(what.to_string()).or_default() += 1;
     match connect(&o, &a.token, "BotA", None).await {
         Ok(ws) => a.ws = Some(ws),
@@ -448,6 +523,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
         seen_words: HashSet::new(),
         drop_at,
         deadline,
+        turn_closed: false,
     };
     t.lock().unwrap().rooms_started += 1;
     send(&mut a, &ClientMsg::StartMatch {}).await;
@@ -465,8 +541,11 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
             dropped_since = Some(Instant::now());
             tokio::time::sleep(Duration::from_millis(500 + (run.rng.next() % 4000))).await;
             let resume = Resume { room: code.clone(), last_seq: b.last_seq };
-            match connect(&o, &b.token, "BotB", Some(resume)).await {
-                Ok(ws) => b.ws = Some(ws),
+            match reconnect(&o, &b.token, "BotB", resume).await {
+                Ok(ws) => {
+                    b.ws = Some(ws);
+                    b.resend_at = Some(Instant::now() + Duration::from_secs(3));
+                }
                 Err(e) => note(&t, format!("{code} resume connect: {e}")),
             }
         }
@@ -502,15 +581,19 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
                     let resume = Resume { room: code.clone(), last_seq: bot.last_seq };
                     let who = if which == 0 { "BotA" } else { "BotB" };
                     tokio::time::sleep(Duration::from_millis(250 + (run.rng.next() % 2000))).await;
-                    match connect(&o, &bot.token, who, Some(resume)).await {
+                    match reconnect(&o, &bot.token, who, resume).await {
                         Ok(ws) => {
                             bot.ws = Some(ws);
+                            bot.resend_at = Some(Instant::now() + Duration::from_secs(3));
                             t.lock().unwrap().close_resumed += 1;
                         }
                         Err(e) => note(&t, format!("{code} bot {} resume after close: {e}", bot.name)),
                     }
                 }
                 _ => {}
+            }
+            if bot.resend_at.is_some_and(|at| Instant::now() >= at) {
+                resend_pending(bot).await;
             }
         }
         if progressed {
@@ -635,13 +718,13 @@ async fn run(o: Opts) -> i32 {
                 let local = probe(format!("{}/healthz", o2.audio_base)).await;
                 let tunnel = probe(format!("{}/healthz", o2.target)).await;
                 let conns = admin_stats(&o2).await.and_then(|v| v["connections"].as_u64()).map_or("?".into(), |c| c.to_string());
-                let (words, rooms) = {
+                let (words, rooms, closes) = {
                     let t = t2.lock().unwrap();
-                    (t.words, t.rooms_started)
+                    (t.words, t.rooms_started, t.server_closes)
                 };
                 let sends = *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap();
                 println!(
-                    "hb unix={unix} min={:.1} late={late}s loopback={local} tunnel={tunnel} server_conns={conns} rooms={rooms} words={words} send_timeouts={sends}",
+                    "hb unix={unix} min={:.1} late={late}s loopback={local} tunnel={tunnel} server_conns={conns} rooms={rooms} words={words} send_timeouts={sends} closes={closes}",
                     start.elapsed().as_secs_f64() / 60.0
                 );
                 planned += Duration::from_secs(60);
@@ -672,7 +755,10 @@ async fn run(o: Opts) -> i32 {
 fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
     let p95_max = samples.iter().filter_map(|(_, v)| v["handling_us_p95"].as_u64()).max().unwrap_or(0);
     let peak_conns = samples.iter().filter_map(|(_, v)| v["connections"].as_u64()).max().unwrap_or(0);
-    let warm: Vec<&(f64, Value)> = samples.iter().filter(|(m, _)| *m >= o.warmup_min).collect();
+    // Live samples only: the last one is taken after every bot has closed,
+    // when the server rightly holds no sockets (the first passing soak read
+    // that as "fds 259 → 19").
+    let warm: Vec<&(f64, Value)> = samples.iter().filter(|(m, _)| *m >= o.warmup_min && *m <= o.minutes).collect();
     let rss = |s: &&(f64, Value)| s.1["rss_bytes"].as_u64();
     let fds = |s: &&(f64, Value)| s.1["open_fds"].as_u64();
     let (rss0, rss1) = (warm.first().and_then(rss), warm.last().and_then(rss));
@@ -726,7 +812,12 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         failed |= !ok;
     }
     println!("  retries after 429/5xx: {}", RETRIES.load(std::sync::atomic::Ordering::Relaxed));
-    println!("  server closes: {} (resumed {})", t.server_closes, t.close_resumed);
+    println!(
+        "  server closes: {} (resumed {}), actions resent after a resume: {}",
+        t.server_closes,
+        t.close_resumed,
+        RESENDS.load(std::sync::atomic::Ordering::Relaxed)
+    );
     println!("  sends that timed out: {}", *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap());
     println!("  matches_ended: {:?}", t.match_ended);
     println!("  errors: {:?}", t.errors);
