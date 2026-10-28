@@ -122,7 +122,18 @@ struct Tally {
 
 type Shared = Arc<Mutex<Tally>>;
 
+/// A line in the run log at once, stamped so it lines up with the hb lines
+/// and the journal.
+fn log(s: &str) {
+    let unix = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_secs());
+    println!("note unix={unix} {s}");
+}
+
+/// A problem: logged at once, and kept for the summary. Routine events go
+/// through log() alone, so they can never crowd a failure out of the 40 kept
+/// (the 2026-10-28 soak lost its one stall note behind 253 close notes).
 fn note(t: &Shared, s: String) {
+    log(&s);
     let mut t = t.lock().unwrap();
     if t.notes.len() < 40 {
         t.notes.push(s);
@@ -159,6 +170,8 @@ struct Bot {
     /// When to resend `pending`: shortly after a resume, once the replayed
     /// frames have had the chance to answer it.
     resend_at: Option<Instant>,
+    /// The start of the last frame received, for the stall report.
+    last_msg: String,
 }
 
 /// Resume as the app does after a drop: keep trying, inside the 60 s seat
@@ -476,8 +489,8 @@ impl RoomRun {
 
 async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadline: Instant) {
     let http = reqwest::Client::new();
-    let mut a = Bot { name: "A", token: tokens.0, ws: None, seat: None, last_seq: 0, pending: None, resend_at: None };
-    let mut b = Bot { name: "B", token: tokens.1, ws: None, seat: None, last_seq: 0, pending: None, resend_at: None };
+    let mut a = Bot { name: "A", token: tokens.0, ws: None, seat: None, last_seq: 0, pending: None, resend_at: None, last_msg: String::new() };
+    let mut b = Bot { name: "B", token: tokens.1, ws: None, seat: None, last_seq: 0, pending: None, resend_at: None, last_msg: String::new() };
     let fail = |t: &Shared, what: &str| *t.lock().unwrap().errors.entry(what.to_string()).or_default() += 1;
     match connect(&o, &a.token, "BotA", None).await {
         Ok(ws) => a.ws = Some(ws),
@@ -574,6 +587,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
             match next(bot, Duration::from_millis(50)).await {
                 Got::Msg(seq, msg) => {
                     progressed = true;
+                    bot.last_msg = format!("{msg:?}").chars().take(80).collect();
                     if which == 1 {
                         if let (Some(since), ServerMsg::Welcome { .. }) = (dropped_since, &msg) {
                             let ms = since.elapsed().as_millis() as u64;
@@ -593,7 +607,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
                 Got::Closed if bot.ws.is_some() => {
                     bot.ws = None;
                     t.lock().unwrap().server_closes += 1;
-                    note(&t, format!("{code} bot {} closed by server", bot.name));
+                    log(&format!("{code} bot {} closed by server", bot.name));
                     // The app resumes after a drop; so do the bots. The 2026-10-27
                     // soak lost every socket to a tunnel reconnect, and bots
                     // that never came back spun this loop and starved the run.
@@ -630,7 +644,21 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
             break; // between matches at the end of the run
         }
         if last_progress.elapsed() > Duration::from_secs(150) {
-            note(&t, format!("{code}: stalled 150 s"));
+            for bot in [&a, &b] {
+                note(
+                    &t,
+                    format!(
+                        "{code}: stalled 150 s; bot {} connected={} seat={:?} last_seq={} pending={:?} last frame: {}",
+                        bot.name,
+                        bot.ws.is_some(),
+                        bot.seat,
+                        bot.last_seq,
+                        bot.pending.as_ref().map(|(_, m)| m),
+                        bot.last_msg
+                    ),
+                );
+            }
+            note(&t, format!("{code}: local p1 turns_left={} p2 turns_left={} turn_closed={} resuming={}", run.local.p1.turns_left, run.local.p2.turns_left, run.turn_closed, dropped_since.is_some()));
             fail(&t, "stalled");
             break;
         }
