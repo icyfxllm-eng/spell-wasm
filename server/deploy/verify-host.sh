@@ -172,6 +172,21 @@ else
   fail H18 "TTS not reachable (SPELL_TTS_BASE='${tts:-unset}', read from ${unit})"
 fi
 
+# H19 — on the cable (runbook step 3); on Wi-Fi, at least no power saving.
+def_if="$(ip route show default 2>/dev/null | awk '{for (i = 1; i < NF; i++) if ($i == "dev") { print $(i + 1); exit }}')"
+if [ -z "${def_if}" ]; then
+  fail H19 "no default route"
+elif [ -d "/sys/class/net/${def_if}/wireless" ]; then
+  ps="$(iw dev "${def_if}" get power_save 2>/dev/null | awk '{print $NF}')"
+  if [ "${ps}" = "off" ]; then
+    warn H19 "default route is Wi-Fi (${def_if}), power save off; the cable is better"
+  else
+    warn H19 "default route is Wi-Fi (${def_if}) with power save '${ps:-unknown}' (runbook step 3)"
+  fi
+else
+  pass H19 "default route on ${def_if} (wired)"
+fi
+
 echo
 echo "${fails} FAIL, ${warns} WARN"
 [ "${fails}" -eq 0 ]

@@ -58,6 +58,18 @@ without a button press (go/no-go §10.3).
 Use the cable, not Wi-Fi.
 Check: `nmcli -t -f DEVICE,TYPE,STATE device | grep ethernet:connected`.
 
+If Rocky has to stay on Wi-Fi for now, at least turn Wi-Fi power saving off
+(it dozes the radio between bursts and stalls live sockets):
+```
+# as your admin user (eric):
+printf '[connection]\nwifi.powersave = 2\n' | sudo tee /etc/NetworkManager/conf.d/wifi-powersave-off.conf
+sudo systemctl restart NetworkManager
+```
+Restart NetworkManager only when no test or match is running: the address
+changes it brings can arrive minutes later and make the tunnel reconnect,
+which drops every live socket (the first Phase E soak, 2026-10-27).
+Check: `iw dev wlp2s0 get power_save` prints `off`. **H19** (WARN while on Wi-Fi)
+
 ## 4. Never sleep
 ```
 # as your admin user (eric):

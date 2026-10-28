@@ -111,6 +111,10 @@ struct Tally {
     resume_ms: Vec<u64>,
     resume_late: usize,
     ended_clean: usize,
+    /// Sockets the server side closed (a tunnel reconnect closes them all)
+    /// and how many the bots got back with a resume, as the app does.
+    server_closes: usize,
+    close_resumed: usize,
     match_ended: BTreeMap<String, usize>,
     errors: BTreeMap<String, usize>,
     notes: Vec<String>,
@@ -490,13 +494,31 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
                 }
                 Got::Closed if bot.ws.is_some() => {
                     bot.ws = None;
+                    t.lock().unwrap().server_closes += 1;
                     note(&t, format!("{code} bot {} closed by server", bot.name));
+                    // The app resumes after a drop; so do the bots. The 2026-10-27
+                    // soak lost every socket to a tunnel reconnect, and bots
+                    // that never came back spun this loop and starved the run.
+                    let resume = Resume { room: code.clone(), last_seq: bot.last_seq };
+                    let who = if which == 0 { "BotA" } else { "BotB" };
+                    tokio::time::sleep(Duration::from_millis(250 + (run.rng.next() % 2000))).await;
+                    match connect(&o, &bot.token, who, Some(resume)).await {
+                        Ok(ws) => {
+                            bot.ws = Some(ws);
+                            t.lock().unwrap().close_resumed += 1;
+                        }
+                        Err(e) => note(&t, format!("{code} bot {} resume after close: {e}", bot.name)),
+                    }
                 }
                 _ => {}
             }
         }
         if progressed {
             last_progress = Instant::now();
+        }
+        if a.ws.is_none() || b.ws.is_none() {
+            // A lost bot answers next() at once; never spin on it.
+            tokio::time::sleep(Duration::from_millis(50)).await;
         }
         if rematch {
             tokio::time::sleep(Duration::from_millis(200)).await;
@@ -704,6 +726,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         failed |= !ok;
     }
     println!("  retries after 429/5xx: {}", RETRIES.load(std::sync::atomic::Ordering::Relaxed));
+    println!("  server closes: {} (resumed {})", t.server_closes, t.close_resumed);
     println!("  sends that timed out: {}", *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap());
     println!("  matches_ended: {:?}", t.match_ended);
     println!("  errors: {:?}", t.errors);
