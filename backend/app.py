@@ -135,6 +135,38 @@ PAD_TRAIL_MS = 150
 # Rate stays 0.85 (Eric, 2026-10-29: 0.85 over the spec's 0.9).
 PAD_TRAIL_MS_BY_LANG = {"en": 250}
 RENDER_PROFILE = {"en": "vc1"}
+# CC-VOICE-CLARITY lead-in -- an English word the bare clip cannot get across
+# is spoken after a short carrier phrase ("The word is ... worm"), which a blind
+# test of 18 hard words lifted from 0 pass to 9. The phrase adds about a second
+# a play, so it applies ONLY to the words in config/audio-leadin-en.txt, and those
+# clips carry the suffix below on top of their profile (|rp:vc1li) so the old
+# bare clips are orphaned, never served and never deleted. Every other English
+# word keeps the exact key and SSML it had.
+LEADIN_KEY_SUFFIX = "li"
+LEADIN_PHRASE = "The word is"
+LEADIN_GAP_MS = 150
+LEADIN_WORDS_PATH = os.environ.get(
+    "AUDIO_LEADIN_FILE", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "audio-leadin-en.txt")
+)
+
+
+def _load_leadin_words() -> frozenset:
+    # A missing file means no lead-in anywhere (the old behaviour), not an error:
+    # the server must keep speaking if the list was not deployed beside it.
+    try:
+        with open(LEADIN_WORDS_PATH, encoding="utf-8") as f:
+            return frozenset(
+                w.strip().lower() for w in f if w.strip() and not w.lstrip().startswith("#")
+            )
+    except OSError:
+        return frozenset()
+
+
+LEADIN_WORDS_EN = _load_leadin_words()
+
+
+def has_leadin(lang: str, word: str) -> bool:
+    return lang == "en" and word.lower() in LEADIN_WORDS_EN
 
 # CC-AUDIO-CLARITY v1.1 F3 — pronunciation overrides, one row per word, signed
 # by a native-speaker auditor (see audio/lexicon/README.md). Emitted as an SSML
@@ -376,6 +408,8 @@ def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str 
         key = f"{key}|voice:{voice}"
     if lang in RENDER_PROFILE and not key_override:
         key = f"{key}|rp:{RENDER_PROFILE[lang]}"
+        if has_leadin(lang, word):
+            key += LEADIN_KEY_SUFFIX
     digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
@@ -535,6 +569,8 @@ def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py
     spoken = html.escape(word, quote=False)
     if entry:
         spoken = f'<phoneme alphabet="ipa" ph="{html.escape(entry[0], quote=True)}">{spoken}</phoneme>'
+    if has_leadin(lang, word):
+        spoken = f'{LEADIN_PHRASE} <break time="{LEADIN_GAP_MS}ms"/>{spoken}'
     synthesis_input = texttospeech.SynthesisInput(ssml=_padded_ssml(spoken, lang))
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
     language_code, voice_name = LANG_VOICES.get(lang, LANG_VOICES[DEFAULT_LANG])

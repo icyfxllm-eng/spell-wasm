@@ -168,13 +168,17 @@ fn speak_url(word: &str, py: Option<&str>, variant: &str, lang: &str) -> String 
     // own parameter because `word` is validated as letters-and-marks only —
     // tone digits and the spaces between syllables would be rejected outright.
     let reading = py.map(|p| format!("&py={}", urlencode(p))).unwrap_or_default();
+    // Lead-in words only: a new URL is a new immutable-cache entry, so devices
+    // holding the old bare clip fetch the lead-in one. Others stay byte-identical.
+    let version = if crate::audio_verdict::leadin(lang, word) { "&v=li" } else { "" };
     format!(
-        "{}/api/speak?word={}&variant={}&lang={}{}",
+        "{}/api/speak?word={}&variant={}&lang={}{}{}",
         api_base(),
         urlencode(word),
         variant,
         lang,
-        reading
+        reading,
+        version
     )
 }
 

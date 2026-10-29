@@ -148,7 +148,7 @@
       "v": "Pass"
     },
     "en|worm|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|zoo|normal": {
       "v": "Pass"
@@ -208,7 +208,7 @@
       "v": "Pass"
     },
     "en|were|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|it|normal": {
       "v": "Pass"
@@ -226,7 +226,7 @@
       "v": "Pass"
     },
     "en|he|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|had|normal": {
       "v": "Pass"
@@ -304,7 +304,7 @@
       "v": "Pass"
     },
     "en|her|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|over|normal": {
       "v": "Pass"
@@ -319,7 +319,7 @@
       "v": "Pass"
     },
     "en|will|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|him|normal": {
       "v": "Pass"
@@ -454,7 +454,7 @@
       "v": "Pass"
     },
     "en|less|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|does|normal": {
       "v": "Pass"
@@ -469,7 +469,7 @@
       "v": "Weak"
     },
     "en|took|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|see|normal": {
       "v": "ExemptHomophone"
@@ -484,7 +484,7 @@
       "v": "Pass"
     },
     "en|day|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|term|normal": {
       "v": "Pass"
@@ -658,7 +658,7 @@
       "v": "Pass"
     },
     "en|uses|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|art|normal": {
       "v": "Pass"
@@ -724,7 +724,7 @@
       "v": "Pass"
     },
     "en|put|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|live|normal": {
       "v": "Pass"
@@ -898,7 +898,7 @@
       "v": "ExemptHomophone"
     },
     "en|ways|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|hold|normal": {
       "v": "Pass"
@@ -952,7 +952,7 @@
       "v": "Pass"
     },
     "en|unit|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|page|normal": {
       "v": "Pass"
@@ -1003,7 +1003,7 @@
       "v": "Pass"
     },
     "en|tend|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|wave|normal": {
       "v": "Pass"
@@ -1078,7 +1078,7 @@
       "v": "Pass"
     },
     "en|ones|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|pope|normal": {
       "v": "Pass"
@@ -1108,7 +1108,7 @@
       "v": "Pass"
     },
     "en|fell|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|cars|normal": {
       "v": "Pass"
@@ -1147,7 +1147,7 @@
       "v": "Pass"
     },
     "en|onto|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|lake|normal": {
       "v": "Pass"
@@ -1165,7 +1165,7 @@
       "v": "Pass"
     },
     "en|sex|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|dark|normal": {
       "v": "Pass"
@@ -1363,7 +1363,7 @@
       "v": "Pass"
     },
     "en|ago|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|else|normal": {
       "v": "Pass"
@@ -1477,13 +1477,13 @@
       "v": "ExemptHomophone"
     },
     "en|bowl|normal": {
-      "v": "Weak"
+      "v": "Fail"
     },
     "en|safe|normal": {
       "v": "Pass"
     },
     "en|boat|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|jazz|normal": {
       "v": "Pass"
@@ -1504,7 +1504,7 @@
       "v": "Pass"
     },
     "en|duke|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|hole|normal": {
       "v": "ExemptHomophone"
@@ -1591,7 +1591,7 @@
       "v": "Pass"
     },
     "en|rear|normal": {
-      "v": "Fail"
+      "v": "Pass"
     },
     "en|tape|normal": {
       "v": "Pass"
@@ -1603,13 +1603,13 @@
       "v": "Pass"
     },
     "en|axis|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|bear|normal": {
       "v": "Fail"
     },
     "en|bulk|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|firm|normal": {
       "v": "Pass"
@@ -1654,7 +1654,7 @@
       "v": "Pass"
     },
     "en|gun|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|beam|normal": {
       "v": "Pass"
@@ -1798,7 +1798,7 @@
       "v": "Pass"
     },
     "en|neck|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|odd|normal": {
       "v": "Pass"
@@ -1828,7 +1828,7 @@
       "v": "Pass"
     },
     "en|chip|normal": {
-      "v": "Fail"
+      "v": "Pass"
     },
     "en|lift|normal": {
       "v": "Weak"
@@ -1849,7 +1849,7 @@
       "v": "Pass"
     },
     "en|belt|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|cuts|normal": {
       "v": "Pass"
@@ -1894,7 +1894,7 @@
       "v": "Pass"
     },
     "en|bet|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|deck|normal": {
       "v": "Pass"
@@ -1918,7 +1918,7 @@
       "v": "Pass"
     },
     "en|pool|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|verb|normal": {
       "v": "Pass"
@@ -2029,13 +2029,13 @@
       "v": "Pass"
     },
     "en|clay|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|fed|normal": {
       "v": "Pass"
     },
     "en|fee|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|mild|normal": {
       "v": "Pass"
@@ -2068,7 +2068,7 @@
       "v": "Pass"
     },
     "en|ease|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|horn|normal": {
       "v": "Pass"
@@ -2089,7 +2089,7 @@
       "v": "ExemptHomophone"
     },
     "en|don|normal": {
-      "v": "Weak"
+      "v": "Fail"
     },
     "en|bias|normal": {
       "v": "Pass"
@@ -2137,7 +2137,7 @@
       "v": "Pass"
     },
     "en|coat|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|drag|normal": {
       "v": "Pass"
@@ -2155,7 +2155,7 @@
       "v": "Pass"
     },
     "en|aims|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|cult|normal": {
       "v": "Pass"
@@ -2191,7 +2191,7 @@
       "v": "Pass"
     },
     "en|wake|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|hide|normal": {
       "v": "Pass"
@@ -2233,7 +2233,7 @@
       "v": "Pass"
     },
     "en|dies|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|egg|normal": {
       "v": "Pass"
@@ -2266,7 +2266,7 @@
       "v": "Pass"
     },
     "en|dot|normal": {
-      "v": "Fail"
+      "v": "Pass"
     },
     "en|flee|normal": {
       "v": "Weak"
@@ -3031,7 +3031,7 @@
       "v": "Pass"
     },
     "en|whose|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|widely|normal": {
       "v": "Pass"
@@ -3127,7 +3127,7 @@
       "v": "Pass"
     },
     "en|career|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|units|normal": {
       "v": "Pass"
@@ -3406,7 +3406,7 @@
       "v": "Weak"
     },
     "en|meant|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|beyond|normal": {
       "v": "Pass"
@@ -3505,7 +3505,7 @@
       "v": "ExemptHomophone"
     },
     "en|latter|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|sides|normal": {
       "v": "Pass"
@@ -3619,7 +3619,7 @@
       "v": "Pass"
     },
     "en|plays|normal": {
-      "v": "Fail"
+      "v": "Pass"
     },
     "en|sexual|normal": {
       "v": "Pass"
@@ -3760,7 +3760,7 @@
       "v": "Pass"
     },
     "en|search|normal": {
-      "v": "Weak"
+      "v": "Fail"
     },
     "en|marked|normal": {
       "v": "Pass"
@@ -3856,7 +3856,7 @@
       "v": "Pass"
     },
     "en|coast|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|sites|normal": {
       "v": "Pass"
@@ -4018,7 +4018,7 @@
       "v": "Pass"
     },
     "en|threat|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|trial|normal": {
       "v": "Pass"
@@ -4084,7 +4084,7 @@
       "v": "Pass"
     },
     "en|glass|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|super|normal": {
       "v": "Pass"
@@ -4150,7 +4150,7 @@
       "v": "Pass"
     },
     "en|seats|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|stored|normal": {
       "v": "Pass"
@@ -4198,7 +4198,7 @@
       "v": "Pass"
     },
     "en|mixed|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|nearby|normal": {
       "v": "Pass"
@@ -4207,7 +4207,7 @@
       "v": "Pass"
     },
     "en|prince|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|audio|normal": {
       "v": "Pass"
@@ -4243,7 +4243,7 @@
       "v": "Pass"
     },
     "en|chain|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|ending|normal": {
       "v": "Pass"
@@ -4369,7 +4369,7 @@
       "v": "Pass"
     },
     "en|merely|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|votes|normal": {
       "v": "Pass"
@@ -4606,10 +4606,10 @@
       "v": "Pass"
     },
     "en|choose|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|joint|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|losing|normal": {
       "v": "Pass"
@@ -4660,7 +4660,7 @@
       "v": "Pass"
     },
     "en|campus|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|duties|normal": {
       "v": "Pass"
@@ -4714,7 +4714,7 @@
       "v": "Pass"
     },
     "en|apparent|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|archipelago|normal": {
       "v": "Pass"
@@ -4819,7 +4819,7 @@
       "v": "Pass"
     },
     "en|mischievous|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|necessary|normal": {
       "v": "Pass"
@@ -4882,7 +4882,7 @@
       "v": "Pass"
     },
     "en|against|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|usually|normal": {
       "v": "Pass"
@@ -5062,7 +5062,7 @@
       "v": "Pass"
     },
     "en|increase|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|material|normal": {
       "v": "Pass"
@@ -5230,7 +5230,7 @@
       "v": "Pass"
     },
     "en|percent|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|changed|normal": {
       "v": "Pass"
@@ -5524,7 +5524,7 @@
       "v": "Pass"
     },
     "en|billion|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|cultural|normal": {
       "v": "Pass"
@@ -5590,7 +5590,7 @@
       "v": "Pass"
     },
     "en|becoming|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|efforts|normal": {
       "v": "Pass"
@@ -6262,7 +6262,7 @@
       "v": "Pass"
     },
     "en|balance|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|minimum|normal": {
       "v": "Pass"
@@ -6394,7 +6394,7 @@
       "v": "Pass"
     },
     "en|arranged|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|attended|normal": {
       "v": "Pass"
@@ -6664,7 +6664,7 @@
       "v": "Pass"
     },
     "en|strings|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|supports|normal": {
       "v": "Pass"
@@ -6949,7 +6949,7 @@
       "v": "Pass"
     },
     "en|bacteria|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|columns|normal": {
       "v": "Pass"
@@ -7051,7 +7051,7 @@
       "v": "Pass"
     },
     "en|dollars|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|messages|normal": {
       "v": "Pass"
@@ -7108,7 +7108,7 @@
       "v": "Pass"
     },
     "en|amanuensis|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|anachronism|normal": {
       "v": "Weak"
@@ -7129,13 +7129,13 @@
       "v": "Fail"
     },
     "en|chrysanthemum|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|colonel|normal": {
       "v": "Pass"
     },
     "en|connoisseur|normal": {
-      "v": "Fail"
+      "v": "Pass"
     },
     "en|conscientious|normal": {
       "v": "Pass"
@@ -7162,13 +7162,13 @@
       "v": "Pass"
     },
     "en|gregarious|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|hyperbole|normal": {
       "v": "Pass"
     },
     "en|idiosyncrasy|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|inchoate|normal": {
       "v": "Fail"
@@ -7207,7 +7207,7 @@
       "v": "Weak"
     },
     "en|onomatopoeia|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|paradigm|normal": {
       "v": "Pass"
@@ -7219,10 +7219,10 @@
       "v": "Pass"
     },
     "en|prestidigitation|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|quinoa|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|quintessential|normal": {
       "v": "Pass"
@@ -7234,16 +7234,16 @@
       "v": "Pass"
     },
     "en|schadenfreude|normal": {
-      "v": "Weak"
+      "v": "Fail"
     },
     "en|silhouette|normal": {
       "v": "Pass"
     },
     "en|soliloquy|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|succinct|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|surveillance|normal": {
       "v": "Pass"
@@ -8338,7 +8338,7 @@
       "v": "Pass"
     },
     "en|discussed|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|distinction|normal": {
       "v": "Pass"
@@ -8560,7 +8560,7 @@
       "v": "Pass"
     },
     "en|percentage|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|representing|normal": {
       "v": "Pass"
@@ -9301,7 +9301,7 @@
       "v": "Pass"
     },
     "en|portrayed|normal": {
-      "v": "Weak"
+      "v": "Pass"
     },
     "en|precision|normal": {
       "v": "Pass"
@@ -9400,7 +9400,7 @@
       "v": "Pass"
     },
     "en|manufacture|normal": {
-      "v": "Weak"
+      "v": "Fail"
     },
     "en|manuscript|normal": {
       "v": "Pass"

@@ -192,8 +192,8 @@
   "wolf"
  ],
  "en|worm|normal": [
-  "worm",
-  "warm"
+  "The word is \"worm\".",
+  "the word is worm"
  ],
  "en|zoo|normal": [
   "Zoo",
@@ -208,8 +208,8 @@
   "of"
  ],
  "en|and|normal": [
-  "End.",
-  ""
+  "The word is, end.",
+  "the word is"
  ],
  "en|to|normal": [
   "2.",
@@ -272,8 +272,8 @@
   "his"
  ],
  "en|were|normal": [
-  "were",
-  ""
+  "The word is \"were\".",
+  "the word is were"
  ],
  "en|it|normal": [
   "it",
@@ -296,8 +296,8 @@
   "have"
  ],
  "en|he|normal": [
-  "he",
-  ""
+  "The word is \"he\".",
+  "the word is he"
  ],
  "en|had|normal": [
   "had",
@@ -352,16 +352,16 @@
   "all"
  ],
  "en|into|normal": [
-  "into",
-  "in"
+  "The word is \"into\".",
+  "the word is in"
  ],
  "en|two|normal": [
   "2.",
   "2"
  ],
  "en|than|normal": [
-  "Then,",
-  "then"
+  "The word is \"then\".",
+  "the word is then"
  ],
  "en|only|normal": [
   "only.",
@@ -400,8 +400,8 @@
   "many"
  ],
  "en|her|normal": [
-  "Huh.",
-  "her"
+  "The word is \"her\".",
+  "the word is her"
  ],
  "en|over|normal": [
   "over.",
@@ -420,8 +420,8 @@
   "new"
  ],
  "en|will|normal": [
-  "Will",
-  ""
+  "The word is \"will\".",
+  "the word is Will"
  ],
  "en|him|normal": [
   "him",
@@ -600,8 +600,8 @@
   "film"
  ],
  "en|less|normal": [
-  "Less",
-  ""
+  "The word is \"less\".",
+  "the word is less"
  ],
  "en|does|normal": [
   "does",
@@ -620,8 +620,8 @@
   ""
  ],
  "en|took|normal": [
-  "took",
-  "to"
+  "The word is \"took\".",
+  "the word is took"
  ],
  "en|see|normal": [
   "C",
@@ -640,8 +640,8 @@
   "line"
  ],
  "en|day|normal": [
-  "Day",
-  ""
+  "The word is \"day\".",
+  "the word is day"
  ],
  "en|term|normal": [
   "Term",
@@ -816,8 +816,8 @@
   "type"
  ],
  "en|rate|normal": [
-  "Great.",
-  "rate"
+  "The word is \"rate\".",
+  "the word is great"
  ],
  "en|too|normal": [
   "2.",
@@ -872,8 +872,8 @@
   "fact"
  ],
  "en|uses|normal": [
-  "Users",
-  "uses"
+  "The word is, uses.",
+  "the word is uses"
  ],
  "en|art|normal": [
   "Art",
@@ -960,8 +960,8 @@
   "lead"
  ],
  "en|put|normal": [
-  "Put.",
-  ""
+  "The word is \"put\".",
+  "the word is put"
  ],
  "en|live|normal": [
   "Live!",
@@ -984,8 +984,8 @@
   "real"
  ],
  "en|my|normal": [
-  "My",
-  ""
+  "The word is \"my\".",
+  "the word is"
  ],
  "en|sent|normal": [
   "Send",
@@ -1192,8 +1192,8 @@
   "mail"
  ],
  "en|ways|normal": [
-  "ways",
-  "Waze"
+  "The word is \"ways\".",
+  "the word is ways"
  ],
  "en|hold|normal": [
   "Hold.",
@@ -1264,8 +1264,8 @@
   "deal"
  ],
  "en|unit|normal": [
-  "UNED",
-  "unit"
+  "The word is \"unit\".",
+  "the word is unit"
  ],
  "en|page|normal": [
   "Page",
@@ -1332,8 +1332,8 @@
   "says"
  ],
  "en|tend|normal": [
-  "10.",
-  "10"
+  "The word is \"tend\".",
+  "the word is"
  ],
  "en|wave|normal": [
   "Wave",
@@ -1432,8 +1432,8 @@
   "Hall"
  ],
  "en|ones|normal": [
-  "ones",
-  "on"
+  "The word is \"ones\".",
+  "the word is ones"
  ],
  "en|pope|normal": [
   "Pope",
@@ -1472,8 +1472,8 @@
   "ice"
  ],
  "en|fell|normal": [
-  "fell",
-  "Phil"
+  "The word is \"fell\".",
+  "the word is fell"
  ],
  "en|cars|normal": [
   "Cars",
@@ -1524,8 +1524,8 @@
   "arms"
  ],
  "en|onto|normal": [
-  "onto",
-  "on to"
+  "The word is \"onto\".",
+  "the word is onto"
  ],
  "en|lake|normal": [
   "Lake",
@@ -1548,8 +1548,8 @@
   "dry"
  ],
  "en|sex|normal": [
-  "Sex",
-  "6"
+  "The word is \"sex\".",
+  "the word is sex"
  ],
  "en|dark|normal": [
   "dark",
@@ -1580,8 +1580,8 @@
   "port"
  ],
  "en|ran|normal": [
-  "ran",
-  "Ren"
+  "The word is \"ran\".",
+  "the word is Ren"
  ],
  "en|fast|normal": [
   "Fast.",
@@ -1688,8 +1688,8 @@
   ""
  ],
  "en|am|normal": [
-  "M",
-  "m"
+  "The word is M.",
+  "the word is m"
  ],
  "en|kill|normal": [
   "Kill",
@@ -1812,8 +1812,8 @@
   "add"
  ],
  "en|ago|normal": [
-  "A go.",
-  "ago"
+  "The word is \"ago\".",
+  "the word is ago"
  ],
  "en|else|normal": [
   "Else.",
@@ -1860,8 +1860,8 @@
   "guns"
  ],
  "en|sort|normal": [
-  "Sword",
-  "sort"
+  "The word is \"sword\".",
+  "the word is sort"
  ],
  "en|lee|normal": [
   "Lee",
@@ -1964,24 +1964,24 @@
   ""
  ],
  "en|bowl|normal": [
-  "Bull",
-  "Bowl"
+  "The word is \"bull\".",
+  "the word is b"
  ],
  "en|safe|normal": [
   "Safe.",
   "safe"
  ],
  "en|boat|normal": [
-  "boat",
-  "vote"
+  "The word is \"boat\".",
+  "the word is boat"
  ],
  "en|jazz|normal": [
   "Jazz",
   "jazz"
  ],
  "en|plus|normal": [
-  "+ 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 +",
-  "Plus"
+  "The word is \"plus\".",
+  "the word is"
  ],
  "en|tool|normal": [
   "Tool",
@@ -2000,8 +2000,8 @@
   "net"
  ],
  "en|duke|normal": [
-  "D.U.B.",
-  "Duke"
+  "The word is \"Duke\".",
+  "the word is Duke"
  ],
  "en|hole|normal": [
   "whole",
@@ -2116,8 +2116,8 @@
   "Loop"
  ],
  "en|rear|normal": [
-  "ROOR-R-E-R",
-  "Maria"
+  "The word is \"rear\".",
+  "the word is rear"
  ],
  "en|tape|normal": [
   "Tape",
@@ -2132,16 +2132,16 @@
   "rely"
  ],
  "en|axis|normal": [
-  "Access",
-  "access"
+  "The word is \"access\".",
+  "the word is axis"
  ],
  "en|bear|normal": [
   "There.",
   "there"
  ],
  "en|bulk|normal": [
-  "Bolt.",
-  "bulk"
+  "The word is \"bulk\".",
+  "the word is bulk"
  ],
  "en|firm|normal": [
   "Firm.",
@@ -2200,8 +2200,8 @@
   "wing"
  ],
  "en|gun|normal": [
-  "Done.",
-  "gun"
+  "The word is \"gun\".",
+  "the word is gun"
  ],
  "en|beam|normal": [
   "Beam",
@@ -2284,8 +2284,8 @@
   "boys"
  ],
  "en|fill|normal": [
-  "Fill",
-  "Phil"
+  "The word is \"fill\".",
+  "the word is Phil"
  ],
  "en|node|normal": [
   "Node",
@@ -2392,16 +2392,16 @@
   "flag"
  ],
  "en|neck|normal": [
-  "Net",
-  "neck"
+  "The word is \"neck\".",
+  "the word is neck"
  ],
  "en|odd|normal": [
   "Odd.",
   "odd"
  ],
  "en|adds|normal": [
-  "ads",
-  "ads"
+  "The word is \"ads\".",
+  "the word is ads"
  ],
  "en|jet|normal": [
   "Jet",
@@ -2432,12 +2432,12 @@
   "tons"
  ],
  "en|chip|normal": [
-  "Ship",
-  "ship"
+  "The word is \"chip\".",
+  "the word is Chip"
  ],
  "en|lift|normal": [
-  "Lift.",
-  "Lyft"
+  "The word is \"lift\".",
+  "the word is Lyft"
  ],
  "en|raw|normal": [
   "Raw.",
@@ -2460,8 +2460,8 @@
   "beer"
  ],
  "en|belt|normal": [
-  "Built.",
-  "belt"
+  "The word is \"belt\".",
+  "the word is belt"
  ],
  "en|cuts|normal": [
   "Cuts",
@@ -2520,8 +2520,8 @@
   "bars"
  ],
  "en|bet|normal": [
-  "Bet.",
-  ""
+  "The word is \"bet\".",
+  "the word is BET"
  ],
  "en|deck|normal": [
   "Deck",
@@ -2540,8 +2540,8 @@
   "t"
  ],
  "en|ban|normal": [
-  "then",
-  "then"
+  "The word is \"ben\".",
+  "the word is Ben"
  ],
  "en|ill|normal": [
   "ill",
@@ -2552,8 +2552,8 @@
   "lens"
  ],
  "en|pool|normal": [
-  "pool",
-  "cool"
+  "The word is \"pool\".",
+  "the word is pool"
  ],
  "en|verb|normal": [
   "Verb",
@@ -2700,16 +2700,16 @@
   "aged"
  ],
  "en|clay|normal": [
-  "Play",
-  "clay"
+  "The word is \"clay\".",
+  "the word is clay"
  ],
  "en|fed|normal": [
   "Fed",
   "fed"
  ],
  "en|fee|normal": [
-  "Fee",
-  ""
+  "The word is 'fee'.",
+  "the word is fee"
  ],
  "en|mild|normal": [
   "Mild",
@@ -2752,8 +2752,8 @@
   "blow"
  ],
  "en|ease|normal": [
-  "ease",
-  "e"
+  "The word is ease.",
+  "the word is ease"
  ],
  "en|horn|normal": [
   "Horn.",
@@ -2780,8 +2780,8 @@
   "sale"
  ],
  "en|don|normal": [
-  "Don.",
-  "Dawn"
+  "The word is \"done\".",
+  "the word is dawn"
  ],
  "en|bias|normal": [
   "Bias",
@@ -2816,8 +2816,8 @@
   "bow"
  ],
  "en|ink|normal": [
-  "Inc.",
-  "ink"
+  "The word is \"Ink\".",
+  "the word is Inc"
  ],
  "en|bind|normal": [
   "Bind.",
@@ -2844,8 +2844,8 @@
   "tie"
  ],
  "en|coat|normal": [
-  "Code",
-  "code"
+  "The word is \"coat\".",
+  "the word is quote"
  ],
  "en|drag|normal": [
   "Drag",
@@ -2868,8 +2868,8 @@
   "Leo"
  ],
  "en|aims|normal": [
-  "Ames",
-  "as"
+  "The word is \"Aims\".",
+  "the word is Ames"
  ],
  "en|cult|normal": [
   "Cult",
@@ -2916,8 +2916,8 @@
   "shop"
  ],
  "en|wake|normal": [
-  "Wake.",
-  "wait"
+  "The word is \"wake\".",
+  "the word is wake"
  ],
  "en|hide|normal": [
   "Hide.",
@@ -2972,8 +2972,8 @@
   "coil"
  ],
  "en|dies|normal": [
-  "dies",
-  "dyes"
+  "The word is, dies.",
+  "the word is dies"
  ],
  "en|egg|normal": [
   "Egg",
@@ -3016,8 +3016,8 @@
   "beta"
  ],
  "en|dot|normal": [
-  ".",
-  "do"
+  "The word is \"dot\".",
+  "the word is Dot"
  ],
  "en|flee|normal": [
   "Flee",
@@ -4036,8 +4036,8 @@
   "stated"
  ],
  "en|whose|normal": [
-  "Who's?",
-  "who's"
+  "The word is \"poos\".",
+  "the word is whose"
  ],
  "en|widely|normal": [
   "Widely.",
@@ -4164,8 +4164,8 @@
   "cells"
  ],
  "en|career|normal": [
-  "Career",
-  "Courier"
+  "The word is \"career\".",
+  "the word is career"
  ],
  "en|units|normal": [
   "Units",
@@ -4504,8 +4504,8 @@
   "object"
  ],
  "en|except|normal": [
-  "Accept.",
-  "except"
+  "The word is \"accept\".",
+  "the word is except"
  ],
  "en|output|normal": [
   "Output",
@@ -4532,12 +4532,12 @@
   "giving"
  ],
  "en|claim|normal": [
-  "Flame",
-  "claim"
+  "The word is \"claim\".",
+  "the word is claimed"
  ],
  "en|meant|normal": [
-  "meant",
-  "mint"
+  "The word is \"meant\".",
+  "the word is meant"
  ],
  "en|beyond|normal": [
   "beyond",
@@ -4668,8 +4668,8 @@
   "right"
  ],
  "en|latter|normal": [
-  "latter",
-  "ladder"
+  "The word is \"latter\".",
+  "the word is latter"
  ],
  "en|sides|normal": [
   "Sides",
@@ -4776,8 +4776,8 @@
   "Bridge"
  ],
  "en|toward|normal": [
-  "T.O.R.D.",
-  "toward"
+  "The word is \"toured\".",
+  "the word is toward"
  ],
  "en|asked|normal": [
   "Asked",
@@ -4820,8 +4820,8 @@
   "equal"
  ],
  "en|plays|normal": [
-  "Please.",
-  "please"
+  "The word is \"plays\".",
+  "the word is plays"
  ],
  "en|sexual|normal": [
   "Sexual",
@@ -5008,8 +5008,8 @@
   "saying"
  ],
  "en|search|normal": [
-  "Surge",
-  "search"
+  "The word is \"surge\".",
+  "the word is searched"
  ],
  "en|marked|normal": [
   "marked",
@@ -5136,8 +5136,8 @@
   "block"
  ],
  "en|coast|normal": [
-  "Coast",
-  "host"
+  "The word is \"coast\".",
+  "the word is coast"
  ],
  "en|sites|normal": [
   "Sites",
@@ -5260,8 +5260,8 @@
   "plane"
  ],
  "en|bands|normal": [
-  "Bands",
-  "Bens"
+  "The word is \"bends\".",
+  "the word is bands"
  ],
  "en|males|normal": [
   "Males",
@@ -5352,8 +5352,8 @@
   "Steel"
  ],
  "en|threat|normal": [
-  "Threat",
-  "fret"
+  "The word is \"threat\".",
+  "the word is threat"
  ],
  "en|trial|normal": [
   "Trial",
@@ -5440,16 +5440,16 @@
   "floor"
  ],
  "en|glass|normal": [
-  "== Class ==",
-  "glass"
+  "The word is \"glass\".",
+  "the word is glass"
  ],
  "en|super|normal": [
   "Super!",
   "super"
  ],
  "en|accept|normal": [
-  "Accept.",
-  "except"
+  "The word is \"accept\".",
+  "the word is except"
  ],
  "en|dates|normal": [
   "Dates",
@@ -5528,8 +5528,8 @@
   "Escape"
  ],
  "en|seats|normal": [
-  "Seeds",
-  "seats"
+  "The word is \"seats\".",
+  "the word is seats"
  ],
  "en|stored|normal": [
   "stored",
@@ -5592,8 +5592,8 @@
   "medium"
  ],
  "en|mixed|normal": [
-  "Next.",
-  "mixed"
+  "The word is \"mixed\".",
+  "the word is mixed"
  ],
  "en|nearby|normal": [
   "Nearby.",
@@ -5604,8 +5604,8 @@
   "prison"
  ],
  "en|prince|normal": [
-  "== Prins ==",
-  "Prince"
+  "The word is \"prince\".",
+  "the word is Prince"
  ],
  "en|audio|normal": [
   "Audio.",
@@ -5652,8 +5652,8 @@
   "budget"
  ],
  "en|chain|normal": [
-  "Shane.",
-  "chain"
+  "The word is \"chain\".",
+  "the word is chain"
  ],
  "en|ending|normal": [
   "Ending",
@@ -5820,8 +5820,8 @@
   "losses"
  ],
  "en|merely|normal": [
-  "MIRRORLY",
-  "merely"
+  "The word is \"merely\".",
+  "the word is merely"
  ],
  "en|votes|normal": [
   "Votes",
@@ -5932,8 +5932,8 @@
   "titles"
  ],
  "en|chose|normal": [
-  "Shows",
-  "shows"
+  "The word is \"choose\".",
+  "the word is Joe's"
  ],
  "en|ideal|normal": [
   "Ideal.",
@@ -6136,12 +6136,12 @@
   "appeal"
  ],
  "en|choose|normal": [
-  "Shoes",
-  "choose"
+  "The word is \"choose\".",
+  "the word is choose"
  ],
  "en|joint|normal": [
-  "Joined.",
-  "joint"
+  "The word is \"joint\".",
+  "the word is joint"
  ],
  "en|losing|normal": [
   "Losing",
@@ -6208,16 +6208,16 @@
   "spoken"
  ],
  "en|campus|normal": [
-  "Campus",
-  "compass"
+  "The word is \"campus\".",
+  "the word is campus"
  ],
  "en|duties|normal": [
   "duties",
   "duties"
  ],
  "en|finds|normal": [
-  "Fines",
-  "finds"
+  "The word is \"fines\".",
+  "the word is finds"
  ],
  "en|notion|normal": [
   "Notion",
@@ -6272,16 +6272,16 @@
   "accommodate"
  ],
  "en|acquaintance|normal": [
-  "Aquaintance",
-  "acquaintance"
+  "The word is \"acquaintance\".",
+  "the word is acquaintances"
  ],
  "en|acquire|normal": [
   "Acquire",
   "acquire"
  ],
  "en|apparent|normal": [
-  "Apparent",
-  "a parent"
+  "The word is \"apparent\".",
+  "the word is apparent"
  ],
  "en|archipelago|normal": [
   "Archipelago",
@@ -6420,8 +6420,8 @@
   "millennium"
  ],
  "en|mischievous|normal": [
-  "Ms. Chavez",
-  "mischievous"
+  "The word is mischievous.",
+  "the word is mischievous"
  ],
  "en|necessary|normal": [
   "Necessary",
@@ -6504,8 +6504,8 @@
   "century"
  ],
  "en|against|normal": [
-  "Against",
-  "again against"
+  "The word is \"against\".",
+  "the word is against"
  ],
  "en|usually|normal": [
   "Usually.",
@@ -6744,8 +6744,8 @@
   "function"
  ],
  "en|increase|normal": [
-  "In preese.",
-  "increase"
+  "The word is, increase.",
+  "the word is increase"
  ],
  "en|material|normal": [
   "Material",
@@ -6968,8 +6968,8 @@
   "industry"
  ],
  "en|percent|normal": [
-  "%",
-  "percent"
+  "The word is, percent.",
+  "the word is percent"
  ],
  "en|changed|normal": [
   "changed",
@@ -7360,8 +7360,8 @@
   "workers"
  ],
  "en|billion|normal": [
-  "Billion",
-  "bill"
+  "The word is \"billion\".",
+  "the word is billion"
  ],
  "en|cultural|normal": [
   "Cultural",
@@ -7448,8 +7448,8 @@
   "address"
  ],
  "en|becoming|normal": [
-  "Becoming",
-  "we're coming"
+  "The word is \"becoming\".",
+  "the word is becoming"
  ],
  "en|efforts|normal": [
   "== Efforts ==",
@@ -8324,8 +8324,8 @@
   "degrees"
  ],
  "en|hundred|normal": [
-  "100",
-  "00"
+  "The word is \"hundred\".",
+  "the word is"
  ],
  "en|concepts|normal": [
   "Concepts",
@@ -8344,8 +8344,8 @@
   "assigned"
  ],
  "en|balance|normal": [
-  "Valence",
-  "balance"
+  "The word is \"balance\".",
+  "the word is balance"
  ],
  "en|minimum|normal": [
   "Minimum",
@@ -8364,8 +8364,8 @@
   "academic"
  ],
  "en|patients|normal": [
-  "Patience",
-  "patience"
+  "The word is \"patience\".",
+  "the word is patience"
  ],
  "en|opinion|normal": [
   "Opinion",
@@ -8520,8 +8520,8 @@
   "weather"
  ],
  "en|arranged|normal": [
-  "Arrange.",
-  "arranged"
+  "The word is \"arranged\".",
+  "the word is arranged"
  ],
  "en|attended|normal": [
   "attended",
@@ -8552,8 +8552,8 @@
   "theorem"
  ],
  "en|thousand|normal": [
-  "thousand",
-  ""
+  "The word is \"thousand\".",
+  "the word is"
  ],
  "en|universe|normal": [
   "Universe",
@@ -8668,8 +8668,8 @@
   "symptoms"
  ],
  "en|advance|normal": [
-  "Advance.",
-  "advanced"
+  "The word is \"advance\".",
+  "the word is advanced"
  ],
  "en|supplies|normal": [
   "Supplies",
@@ -8880,8 +8880,8 @@
   "rotation"
  ],
  "en|strings|normal": [
-  "Stringes",
-  "strings"
+  "The word is \"strings\".",
+  "the word is strings"
  ],
  "en|supports|normal": [
   "Supports",
@@ -9260,8 +9260,8 @@
   "accuracy"
  ],
  "en|bacteria|normal": [
-  "Vacteria",
-  "bacteria"
+  "The word is \"bacteria\".",
+  "the word is bacteria"
  ],
  "en|columns|normal": [
   "Columns",
@@ -9396,8 +9396,8 @@
   "database"
  ],
  "en|dollars|normal": [
-  "== Dollars ==",
-  "dollar"
+  "The word is \"Dollars\".",
+  "the word is dollars"
  ],
  "en|messages|normal": [
   "Messages",
@@ -9472,52 +9472,52 @@
   "aberration"
  ],
  "en|amanuensis|normal": [
-  "Immanuensis",
-  "amanuensis"
+  "The word is \"Amanuensis\".",
+  "the word is amanuensis"
  ],
  "en|anachronism|normal": [
-  "Anachronism",
-  "an acronym"
+  "The word is, anachronism.",
+  "the word is anacronismo"
  ],
  "en|apotheosis|normal": [
   "Apotheosis",
   "apotheosis"
  ],
  "en|bourgeoisie|normal": [
-  "Bourgeoisie",
-  "bourgeois"
+  "The word is, bourgeoisie.",
+  "the word is bourgeois"
  ],
  "en|brouhaha|normal": [
-  "Bruhaha.",
-  "brouhaha"
+  "The word is \"bruhaha\".",
+  "the word is brouhaha"
  ],
  "en|cacophony|normal": [
   "Cacophony",
   "cacophony"
  ],
  "en|chiaroscuro|normal": [
-  "Kiara Skuro",
-  "Kiara skurow"
+  "The word is, T-R-E-S-C-U-R-O.",
+  "the word is Kiara"
  ],
  "en|chrysanthemum|normal": [
-  "Crisanthemum",
-  "chrysanthemum"
+  "The word is chrysanthemum.",
+  "the word is chrysanthemum"
  ],
  "en|colonel|normal": [
   "Colonel",
   "colonel"
  ],
  "en|connoisseur|normal": [
-  "Kana Sir",
-  "Kana sir"
+  "The word is, connoisseur.",
+  "the word is connoisseur"
  ],
  "en|conscientious|normal": [
   "Conscientious",
   "conscientious"
  ],
  "en|ebullient|normal": [
-  "Abolient",
-  "a byant"
+  "The word is \"abolient\".",
+  "the word is a buoyant"
  ],
  "en|ecclesiastical|normal": [
   "Ecclesiastical",
@@ -9528,8 +9528,8 @@
   "ephemeral"
  ],
  "en|epitome|normal": [
-  "Epidemi",
-  "epitome"
+  "The word is \"apitomy\".",
+  "the word is epitome"
  ],
  "en|esoteric|normal": [
   "Esoteric",
@@ -9544,28 +9544,28 @@
   "gauge"
  ],
  "en|gregarious|normal": [
-  "Grigarius",
-  "gregarious"
+  "The word is \"gregarious\".",
+  "the word is gregarious"
  ],
  "en|hyperbole|normal": [
   "Hyperbole",
   "hyperbole"
  ],
  "en|idiosyncrasy|normal": [
-  "Idiocyncrasy",
-  "idiosyncrasy"
+  "The word is idiosyncrasy.",
+  "the word is idiosyncrasy"
  ],
  "en|inchoate|normal": [
-  "In Poet",
-  "in poet"
+  "The word is, in poet.",
+  "the word is in poet"
  ],
  "en|insouciant|normal": [
-  "Insouciant",
-  "in Susan"
+  "The word is, insouciant.",
+  "the word is in Susan"
  ],
  "en|isthmus|normal": [
-  "Isthmus",
-  "isms"
+  "The word is \"ismus\".",
+  "the word is isthmus"
  ],
  "en|kaleidoscope|normal": [
   "Kaleidoscope",
@@ -9596,16 +9596,16 @@
   "maneuver"
  ],
  "en|mnemonic|normal": [
-  "Nemanik",
-  "pneumonic"
+  "The word is \"nemonic\".",
+  "the word is pneumonic"
  ],
  "en|obfuscate|normal": [
-  "Opfersgate",
-  "obfuscate"
+  "The word is, obfuscate.",
+  "the word is obfuscated"
  ],
  "en|onomatopoeia|normal": [
-  "Anamata Pia",
-  "anamata Pia"
+  "The word is onomatopoeia.",
+  "the word is anaimiya"
  ],
  "en|paradigm|normal": [
   "Paradigm",
@@ -9620,40 +9620,40 @@
   "pneumonia"
  ],
  "en|prestidigitation|normal": [
-  "Prestidigitation",
-  "press to digitation"
+  "The word is prestidigitation.",
+  "the word is prestidigitation"
  ],
  "en|quinoa|normal": [
-  "Keen Wah.",
-  "quinoa"
+  "The word is, quinoa.",
+  "the word is quinoa"
  ],
  "en|quintessential|normal": [
   "Quintessential",
   "quintessential"
  ],
  "en|rendezvous|normal": [
-  "Rendezvous",
-  "Rendevous"
+  "The word is, rendezvous.",
+  "the word is Rendevous"
  ],
  "en|sacrilegious|normal": [
   "Sacrilegious",
   "sacrilegious"
  ],
  "en|schadenfreude|normal": [
-  "Schadenfreude",
-  "shot in Florida"
+  "The word is \"Shot and Freuda\".",
+  "the word is shot and freuda"
  ],
  "en|silhouette|normal": [
   "Silhouette",
   "silhouette"
  ],
  "en|soliloquy|normal": [
-  "soliloquy",
-  "siluku"
+  "The word is, soliloquy.",
+  "the word is soliloquy"
  ],
  "en|succinct|normal": [
-  "6. Synced",
-  "succinct"
+  "The word is, succinct.",
+  "the word is succinct"
  ],
  "en|surveillance|normal": [
   "Surveillance",
@@ -9664,8 +9664,8 @@
   "yacht"
  ],
  "en|zephyr|normal": [
-  "Zephyr",
-  "zefr"
+  "The word is \"Zephyr\".",
+  "the word is zefr"
  ],
  "en|different|normal": [
   "Different.",
@@ -11112,8 +11112,8 @@
   "Communications"
  ],
  "en|discussed|normal": [
-  "Discussed",
-  "disgust"
+  "The word is \"discussed\".",
+  "the word is discussed"
  ],
  "en|distinction|normal": [
   "Distinction",
@@ -11224,8 +11224,8 @@
   "electricity"
  ],
  "en|encouraged|normal": [
-  "Empourage.",
-  "encouraged"
+  "The word is \"emperaged\".",
+  "the word is encouraged"
  ],
  "en|experimental|normal": [
   "Experimental",
@@ -11408,8 +11408,8 @@
   "partially"
  ],
  "en|percentage|normal": [
-  "%",
-  "percentage"
+  "The word is \"percentage\".",
+  "the word is percentage"
  ],
  "en|representing|normal": [
   "Representing",
@@ -12396,8 +12396,8 @@
   "mainstream"
  ],
  "en|portrayed|normal": [
-  "portrayed",
-  "per trade"
+  "The word is, portrayed.",
+  "the word is portrayed"
  ],
  "en|precision|normal": [
   "Precision",
@@ -12528,8 +12528,8 @@
   "legislature"
  ],
  "en|manufacture|normal": [
-  "Manufacture",
-  "manufacturer"
+  "The word is \"manufacturer\".",
+  "the word is manufacturer"
  ],
  "en|manuscript|normal": [
   "Manuscript",
@@ -12632,8 +12632,8 @@
   "interactions"
  ],
  "en|introduce|normal": [
-  "Introduce.",
-  "introduced"
+  "The word is \"introduce\".",
+  "the word is introduced"
  ],
  "en|presentation|normal": [
   "Presentation",

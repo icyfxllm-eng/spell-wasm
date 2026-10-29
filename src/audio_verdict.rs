@@ -67,6 +67,24 @@ fn store() -> &'static Store {
     S.get_or_init(|| serde_json::from_str(include_str!("../config/audio-verdicts.json")).unwrap_or_default())
 }
 
+/// CC-VOICE-CLARITY lead-in: English words whose server clip opens with "The word
+/// is". The server sends every clip as immutable for a year and the native build
+/// keeps a copy on disk, so a device that already holds the bare clip would never
+/// ask again. The URL and the native asset id therefore carry a version for
+/// these words only, and every other clip keeps the address it always had.
+pub fn leadin(lang: &str, word: &str) -> bool {
+    static W: OnceLock<std::collections::HashSet<&'static str>> = OnceLock::new();
+    lang == "en"
+        && W.get_or_init(|| {
+            include_str!("../config/audio-leadin-en.txt")
+                .lines()
+                .map(str::trim)
+                .filter(|l| !l.is_empty() && !l.starts_with('#'))
+                .collect()
+        })
+        .contains(word.to_lowercase().as_str())
+}
+
 /// The key a verdict is filed under. The voice is not in it on purpose: the
 /// server picks the voice per language, so a voice change regenerates the clips
 /// AND the verdicts together (I8), and the app never has to know which voice it
@@ -99,6 +117,15 @@ pub fn servable(lang: &str, word: &str, variant: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn leadin_words_are_versioned_and_others_are_not() {
+        assert!(leadin("en", "worm"));
+        assert!(leadin("en", "Worm"));
+        assert!(!leadin("en", "cat"));
+        assert!(!leadin("es", "worm"));
+        assert!(!leadin("en", "coup"));
+    }
 
     #[test]
     fn only_fail_is_withheld() {

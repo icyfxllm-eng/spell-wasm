@@ -59,8 +59,22 @@ function collisionSets(lang) {
   return setsOfKind(lang, ['true']);
 }
 
+/// CC-VOICE-CLARITY lead-in: these English clips say "The word is ... <word>", so a
+/// transcript is the carrier phrase plus the word. Comparing the whole line to
+/// the word would fail every one of them; comparing the LAST word of each
+/// transcript is the same test the bare clips get, and only these words are
+/// read this way, so no other verdict can change.
+const LEADIN_FILE = 'config/audio-leadin-en.txt';
+const LEADIN = new Set(
+  existsSync(LEADIN_FILE)
+    ? readFileSync(LEADIN_FILE, 'utf8').split('\n').map((l) => l.trim().toLowerCase()).filter((l) => l && !l.startsWith('#'))
+    : [],
+);
+export const lastWord = (h) => String(h).trim().split(/\s+/).pop() || '';
+
 function verdictFor(word, key, heard, sets, lang) {
   if (key === 'unscorable') return 'Unscorable';
+  if (lang === 'en' && LEADIN.has(word.toLowerCase())) heard = heard.map(lastWord);
   const want = normalize(word, key, lang);
   const hits = heard.filter((h) => normalize(h, key, lang) === want).length;
   if (hits >= 2) return 'Pass';

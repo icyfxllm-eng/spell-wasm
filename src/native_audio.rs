@@ -39,7 +39,9 @@ pub fn available() -> bool {
 /// Stable key for a word+variant clip, shared as the NativeAudio assetId and
 /// (sanitized) the on-disk cache filename.
 pub fn asset_id(word: &str, variant: &str, lang: &str) -> String {
-    format!("w:{lang}:{variant}:{word}")
+    // Lead-in words get a new id so a clip already on the device's disk is not reused.
+    let version = if crate::audio_verdict::leadin(lang, word) { ":li" } else { "" };
+    format!("w:{lang}:{variant}:{word}{version}")
 }
 
 /// Start native playback of a word clip, downloading+caching it on first use.

@@ -139,12 +139,12 @@ class RenderProfile(unittest.TestCase):
 
     def test_english_key_carries_the_profile_and_others_do_not(self):
         import hashlib
-        en = app.cache_path_for("worm", "normal", "en")
-        old = hashlib.md5(f"worm|voice:{app.LANG_VOICES['en'][1]}".encode()).hexdigest()
-        new = hashlib.md5(f"worm|voice:{app.LANG_VOICES['en'][1]}|rp:vc1".encode()).hexdigest()
+        en = app.cache_path_for("cat", "normal", "en")
+        old = hashlib.md5(f"cat|voice:{app.LANG_VOICES['en'][1]}".encode()).hexdigest()
+        new = hashlib.md5(f"cat|voice:{app.LANG_VOICES['en'][1]}|rp:vc1".encode()).hexdigest()
         self.assertIn(new, en)
         self.assertNotIn(old, en)
-        self.assertEqual(app.cache_path_for("worm", "slow", "en").split("_")[-1], "slow.mp3")
+        self.assertEqual(app.cache_path_for("cat", "slow", "en").split("_")[-1], "slow.mp3")
         # Another language's key is exactly what it was.
         de = hashlib.md5(f"de:wurm|voice:{app.LANG_VOICES['de'][1]}".encode()).hexdigest()
         self.assertIn(de, app.cache_path_for("wurm", "normal", "de"))
@@ -156,6 +156,62 @@ class RenderProfile(unittest.TestCase):
         p = app.cache_path_for("worm", "normal", "en", key_override="bakeoff|x")
         import hashlib
         self.assertIn(hashlib.md5(b"bakeoff|x").hexdigest(), p)
+
+
+class LeadIn(unittest.TestCase):
+    """CC-VOICE-CLARITY lead-in: flagged English words only, everything else byte-identical."""
+
+    def setUp(self):
+        self.vc1 = lambda w: __import__("hashlib").md5(
+            f"{w}|voice:{app.LANG_VOICES['en'][1]}|rp:vc1".encode()).hexdigest()
+        self.li = lambda w: __import__("hashlib").md5(
+            f"{w}|voice:{app.LANG_VOICES['en'][1]}|rp:vc1li".encode()).hexdigest()
+
+    def _ssml(self, word, variant, lang="en"):
+        sent = {}
+
+        class Client:
+            def synthesize_speech(self, input=None, voice=None, audio_config=None):
+                sent["ssml"] = input.ssml
+                return FakeResponse()
+
+        with mock.patch.object(app, "tts_client", Client()):
+            app.synthesize_to_cache(word, variant, os.path.join(_TMP, "li.mp3"), lang)
+        return sent["ssml"]
+
+    def test_the_list_is_loaded_and_excludes_the_quarantine(self):
+        self.assertGreater(len(app.LEADIN_WORDS_EN), 50)
+        self.assertIn("worm", app.LEADIN_WORDS_EN)
+        for w in ("coup", "ben", "machiavellian"):
+            self.assertNotIn(w, app.LEADIN_WORDS_EN)
+
+    def test_flagged_word_gets_its_own_key_for_both_variants(self):
+        for v in ("normal", "slow"):
+            p = app.cache_path_for("worm", v, "en")
+            self.assertIn(self.li("worm"), p)
+            self.assertNotIn(self.vc1("worm"), p)
+
+    def test_every_other_english_key_is_unchanged(self):
+        import hashlib
+        for w in ("cat", "dog", "half", "because"):
+            self.assertNotIn(w, app.LEADIN_WORDS_EN)
+            self.assertIn(self.vc1(w), app.cache_path_for(w, "normal", "en"))
+        # Same word in another language, and a bakeoff override, never take it.
+        self.assertIn(hashlib.md5(b"es:worm").hexdigest(), app.cache_path_for("worm", "normal", "es"))
+        self.assertIn(hashlib.md5(b"bakeoff|x").hexdigest(),
+                      app.cache_path_for("worm", "normal", "en", key_override="bakeoff|x"))
+
+    def test_ssml_has_the_lead_in_only_for_flagged_words(self):
+        lead, trail = app._breaks("en")
+        for v in ("normal", "slow"):
+            ssml = self._ssml("worm", v)
+            self.assertEqual(ssml, f'<speak>{lead}The word is <break time="150ms"/>worm{trail}</speak>')
+            self.assertNotIn("The word is", self._ssml("cat", v))
+        self.assertEqual(self._ssml("cat", "normal"), f"<speak>{lead}cat{trail}</speak>")
+
+    def test_a_missing_list_means_no_lead_in(self):
+        with mock.patch.object(app, "LEADIN_WORDS_PATH", "/nonexistent/x.txt"):
+            self.assertEqual(app._load_leadin_words(), frozenset())
 
 
 class CacheVersion(unittest.TestCase):
