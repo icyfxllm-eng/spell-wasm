@@ -13,6 +13,10 @@ Amendments already signed (these override the verbatim text where they conflict)
   docs/CC-LEARNING-ENGINE-L0-CR1.md.
 - F7: the deep-link scheme is spellgame://, not spell:// (census C8). The ping
   opens spellgame://guardian-report?week=<monday>.
+- F3.1 (2026-10-28): a missed word from the player's own My Words lists is
+  in the practice list (and so in Add). It has no tier, so the tier cap does
+  not bind it; the clean check still does. Bank misses keep the cap. Signed:
+  "Yes, include them".
 
 Census HALTs C1, C2, C3 and C6 are cleared by CC-REPORTS-SHARE v1,
 L0 CR-1, CC-HUB-NAV AE-1 and CC-MYWORDS-LISTS KC-1 (all built on main).
@@ -414,7 +418,8 @@ the signed text, unedited; everything below is a record of the build. -->
 **Phase A — composer.** `src/guardian_report.rs`, pure, on top of `reports_share::compose` (it adds two fields to each language section and does not fork the composer).
 - **W** is the miss-class attempts in the window (Misspelled, TimedOut, GaveUp, Trap), excluding Speech, Impossible and any attempt without its CR-1 instant or class. There is no close class (L-D2).
 - **Types** follow the closed registry in priority order. Only bank rows get SOUND, LONG or TIER, so a missed word from a player's own list is in no group (I12 allows that). SOUND reads only `kind: "true"` sets of a `verified` table (en, es, ru today). **T-TRAP is built but never fires:** nothing records a `TRAP_MISS(rule_id)` yet (census C5).
-- **Practice list:** missed words first, filtered to bank rows within the tier cap that are clean (not a proper noun, profanity-clean, kid list for Jr). **Reading of I5:** PURITY and the audited flag bind the top-up rows. Missed words are exempt from those two, because A15 says that without a ledger the list *equals* the missed words. Flag this if you read I5 as binding missed words too.
+- **Practice list:** missed words first, filtered to bank rows within the tier cap that are clean (not a proper noun, profanity-clean, kid list for Jr). **Reading of I5:** PURITY and the audited flag bind the top-up rows. Missed words are exempt from those two, because A15 says that without a ledger the list *equals* the missed words. **Signed by Eric, 2026-10-27:** "Yes, I5 binds top-up words only. Keep it as built."
+- **Own-list misses (amended 2026-10-28).** A missed word that is no bank row now joins the practice list as well. It has no tier, so no cap binds it, including in a week with no bank play at all (the cap is then None, and before this every word was dropped). The clean check still binds it. It is still in no type group (I12) and never seeds a top-up. Test: `an_own_list_miss_joins_the_practice_list`. **Signed by Eric, 2026-10-28:** "Yes, include them".
 - **Top-up is built, tested and OFF everywhere.** No bank has a per-row audited flag (census C4), and the filter may not be relaxed (F3.5). `config/guardian-topup.json` holds a per-language auditor claim, all empty, the same pattern as SENSE-CUE D9. Naming an auditor for a language turns its top-up on.
 - **PURITY** comes from `config/guardian-purity.json`, generated from the ledgers and checked against them in CI. A row with no verdict counts as not passing. Three zh bank rows have no verdict: `jie1zhu4|接著`, `ta1|牠` and `you3zhu4|有著`, all traditional characters in the simplified bank. vi has no ledger, so it gets no top-up.
 - **Seed:** FNV-1a over `profile|monday|lang`, so it is stable across builds and platforms.
