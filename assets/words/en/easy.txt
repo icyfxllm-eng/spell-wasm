@@ -662,7 +662,6 @@ jury
 tip
 walk
 trek
-coup
 en
 gay
 maps

@@ -1,6 +1,6 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
-#tier	easy	0x0E8DE8FAC9642D90
+#tier	easy	0x605353B8148DD91D
 #tier	medium	0xBE789A9607523573
 #tier	hard	0xC0F03B7FB52AFB66
 #tier	expert	0x2229BBCC85D8B570
@@ -668,7 +668,6 @@ jury	dictionary	en_US
 tip	dictionary	en_US
 walk	dictionary	en_US
 trek	dictionary	en_US
-coup	dictionary	en_US
 en	dictionary	en_US
 gay	dictionary	en_US
 maps	dictionary	en_US

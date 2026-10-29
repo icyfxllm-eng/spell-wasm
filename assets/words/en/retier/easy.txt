@@ -134,7 +134,6 @@ copy
 core
 corn
 cost
-coup
 cowgirl
 crew
 crop

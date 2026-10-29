@@ -215,7 +215,13 @@ fn wordgrid_property_10k() {
 /// CC-BANK-PURITY as proper nouns, misspellings or non-words. Those rows left
 /// the banks, so these 500 seeds draw differently. Hold this pin back to the
 /// previous value if that quarantine is reversed.
-pub const GOLDEN: u64 = 0x9da6_33a5_1b27_9a4e;
+///
+/// Re-pinned 2026-10-29, from 0x9da6_33a5_1b27_9a4e, on Eric's ruling: the
+/// English Easy row coup (pronounced "coo", silent p, so nobody can spell it by
+/// ear) quarantined through CC-BANK-PURITY as dictation_unfair. The row left
+/// the bank, so these 500 seeds draw differently. Hold this pin back to the
+/// previous value if that quarantine is reversed.
+pub const GOLDEN: u64 = 0x81bb_1d05_6e8b_1863;
 
 #[test]
 fn wordgrid_determinism() {
