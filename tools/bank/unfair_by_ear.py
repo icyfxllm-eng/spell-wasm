@@ -35,7 +35,9 @@ diff = json.load(open(os.path.join(ROOT, "assets/words/en/en_difficulty.json")))
 pron = json.load(open(os.path.join(ROOT, "assets/words/en/en_pron.json")))["keys"]
 verd = json.load(open(os.path.join(ROOT, "config/audio-verdicts.json")))["clips"]
 trans = json.load(open(os.path.join(ROOT, "audio_clarity/transcripts.json")))
-sa = json.load(open(os.path.join(ROOT, "assets/words/en/soundalikes.json")))["sets"]
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+from soundalikes import soundalikes
+sa = soundalikes("en")["sets"]
 svd = json.load(open(os.path.join(ROOT, "assets/words/en/soundalike-verdicts.json")))["sets"]
 sov = json.load(open(os.path.join(ROOT, "assets/words/en/soundalike-overrides.json")))["sets"]
 cue_mode = json.load(open(os.path.join(ROOT, "config/sense-cue.json")))["languages"]["en"]["cueMode"]
