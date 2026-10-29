@@ -9,7 +9,7 @@ out loud rather than leave implied.
 
 | Language | Pass | Weak | Fail | Exempt | Unscorable | Measured |
 |---|---|---|---|---|---|---|
-| en | 2927 | 141 | 35 | 62 | 0 | no |
+| en | 2928 | 147 | 28 | 62 | 0 | no |
 | es | 0 | 0 | 0 | 0 | 0 | no |
 | fr | 0 | 0 | 0 | 0 | 0 | no |
 | de | 38 | 15 | 7 | 0 | 0 | no |
@@ -50,10 +50,7 @@ out loud rather than leave implied.
 - en|and|normal (normal)
 - en|an|normal (normal)
 - en|than|normal (normal)
-- en|rate|normal (normal)
 - en|tend|normal (normal)
-- en|ones|normal (normal)
-- en|bay|normal (normal)
 - en|am|normal (normal)
 - en|row|normal (normal)
 - en|rear|normal (normal)
@@ -70,10 +67,7 @@ out loud rather than leave implied.
 - en|dot|normal (normal)
 - en|whose|normal (normal)
 - en|plays|normal (normal)
-- en|search|normal (normal)
 - en|chose|normal (normal)
-- en|choose|normal (normal)
-- en|managed|normal (normal)
 - en|patients|normal (normal)
 - en|chiaroscuro|normal (normal)
 - en|connoisseur|normal (normal)
@@ -81,7 +75,6 @@ out loud rather than leave implied.
 - en|inchoate|normal (normal)
 - en|mnemonic|normal (normal)
 - en|onomatopoeia|normal (normal)
-- en|discussed|normal (normal)
 - de|osten|normal (normal)
 - de|tee|normal (normal)
 - de|endete|normal (normal)

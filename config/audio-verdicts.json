@@ -616,7 +616,7 @@
       "v": "Pass"
     },
     "en|rate|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|too|normal": {
       "v": "ExemptHomophone"
@@ -1078,7 +1078,7 @@
       "v": "Pass"
     },
     "en|ones|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|pope|normal": {
       "v": "Pass"
@@ -1267,7 +1267,7 @@
       "v": "Pass"
     },
     "en|bay|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|am|normal": {
       "v": "Fail"
@@ -3760,7 +3760,7 @@
       "v": "Pass"
     },
     "en|search|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|marked|normal": {
       "v": "Pass"
@@ -4606,7 +4606,7 @@
       "v": "Pass"
     },
     "en|choose|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|joint|normal": {
       "v": "Weak"
@@ -5890,7 +5890,7 @@
       "v": "Pass"
     },
     "en|managed|normal": {
-      "v": "Fail"
+      "v": "Pass"
     },
     "en|audience|normal": {
       "v": "Pass"
@@ -8338,7 +8338,7 @@
       "v": "Pass"
     },
     "en|discussed|normal": {
-      "v": "Fail"
+      "v": "Weak"
     },
     "en|distinction|normal": {
       "v": "Pass"

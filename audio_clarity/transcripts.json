@@ -817,7 +817,7 @@
  ],
  "en|rate|normal": [
   "Great.",
-  "great"
+  "rate"
  ],
  "en|too|normal": [
   "2.",
@@ -1432,7 +1432,7 @@
   "Hall"
  ],
  "en|ones|normal": [
-  "1s",
+  "ones",
   "on"
  ],
  "en|pope|normal": [
@@ -1684,7 +1684,7 @@
   "slow"
  ],
  "en|bay|normal": [
-  "They",
+  "Bay",
   ""
  ],
  "en|am|normal": [
@@ -5009,7 +5009,7 @@
  ],
  "en|search|normal": [
   "Surge",
-  "surge"
+  "search"
  ],
  "en|marked|normal": [
   "marked",
@@ -6137,7 +6137,7 @@
  ],
  "en|choose|normal": [
   "Shoes",
-  "shoes"
+  "choose"
  ],
  "en|joint|normal": [
   "Joined.",
@@ -7848,8 +7848,8 @@
   "contract"
  ],
  "en|managed|normal": [
-  "Manage.",
-  "manage"
+  "Managed.",
+  "managed"
  ],
  "en|audience|normal": [
   "Audience",
@@ -11112,7 +11112,7 @@
   "Communications"
  ],
  "en|discussed|normal": [
-  "Disgust",
+  "Discussed",
   "disgust"
  ],
  "en|distinction|normal": [
