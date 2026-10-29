@@ -127,6 +127,14 @@ VOLUME_GAIN_DB = 4.0  # louder baseline; stay well under the 16 max to avoid cli
 # These two values are the only place padding is defined.
 PAD_LEAD_MS = 200
 PAD_TRAIL_MS = 150
+# CC-VOICE-CLARITY v1 F1/F3 -- English word clips end on a longer silence, so a
+# final consonant (worm, main) is not the last thing a small speaker or a
+# Bluetooth link gets to play. A language listed here renders with its own
+# trail pad and carries its profile in the cache key, so its old clips are
+# orphaned rather than served or deleted. Other languages are untouched.
+# Rate stays 0.85 (Eric, 2026-10-29: 0.85 over the spec's 0.9).
+PAD_TRAIL_MS_BY_LANG = {"en": 250}
+RENDER_PROFILE = {"en": "vc1"}
 
 # CC-AUDIO-CLARITY v1.1 F3 — pronunciation overrides, one row per word, signed
 # by a native-speaker auditor (see audio/lexicon/README.md). Emitted as an SSML
@@ -366,21 +374,23 @@ def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str 
     if lang in VOICE_IN_KEY and not key_override:
         voice = (AZURE_VOICES.get(lang) or LANG_VOICES.get(lang) or (LANGUAGE_CODE, VOICE_NAME))[1]
         key = f"{key}|voice:{voice}"
+    if lang in RENDER_PROFILE and not key_override:
+        key = f"{key}|rp:{RENDER_PROFILE[lang]}"
     digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
 
-def _breaks() -> tuple:
+def _breaks(lang: str = None) -> tuple:
     """The lead and trail silence, as SSML. One definition, three call sites."""
     return (
         f'<break time="{PAD_LEAD_MS}ms"/>',
-        f'<break time="{PAD_TRAIL_MS}ms"/>',
+        f'<break time="{PAD_TRAIL_MS_BY_LANG.get(lang, PAD_TRAIL_MS)}ms"/>',
     )
 
 
-def _padded_ssml(body: str) -> str:
+def _padded_ssml(body: str, lang: str = None) -> str:
     """Wrap already-escaped SSML body in <speak> with F1's padding."""
-    lead, trail = _breaks()
+    lead, trail = _breaks(lang)
     return f"<speak>{lead}{body}{trail}</speak>"
 
 
@@ -525,7 +535,7 @@ def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py
     spoken = html.escape(word, quote=False)
     if entry:
         spoken = f'<phoneme alphabet="ipa" ph="{html.escape(entry[0], quote=True)}">{spoken}</phoneme>'
-    synthesis_input = texttospeech.SynthesisInput(ssml=_padded_ssml(spoken))
+    synthesis_input = texttospeech.SynthesisInput(ssml=_padded_ssml(spoken, lang))
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
     language_code, voice_name = LANG_VOICES.get(lang, LANG_VOICES[DEFAULT_LANG])
     if voice_override:

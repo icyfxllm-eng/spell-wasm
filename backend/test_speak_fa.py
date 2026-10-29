@@ -39,8 +39,9 @@ class PersianSpeak(unittest.TestCase):
         word = "\u06a9\u062a\u0627\u0628"
         want = hashlib.md5(f"fa:{word}|voice:fa-IR-DilaraNeural".encode()).hexdigest()
         self.assertIn(want, app_module.cache_path_for(word, "normal", "fa"))
-        # Google-routed languages keep their keys: English's clips must not move.
-        en = hashlib.md5(f"cat|voice:{app_module.LANG_VOICES['en'][1]}".encode()).hexdigest()
+        # Google-routed languages keep their keys, except English, which moved on purpose
+        # (CC-VOICE-CLARITY F3: the |rp:vc1 render profile). Only the profile was added.
+        en = hashlib.md5(f"cat|voice:{app_module.LANG_VOICES['en'][1]}|rp:vc1".encode()).hexdigest()
         self.assertIn(en, app_module.cache_path_for("cat", "normal", "en"))
 
     def test_every_bank_word_validates_unchanged(self):

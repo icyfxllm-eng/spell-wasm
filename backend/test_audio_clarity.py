@@ -43,6 +43,14 @@ class Padding(unittest.TestCase):
         self.assertTrue(body.startswith("<speak>" + lead))
         self.assertTrue(body.endswith(trail + "</speak>"))
 
+    def test_english_trail_is_250_and_others_keep_150(self):
+        # CC-VOICE-CLARITY F1: only a language in PAD_TRAIL_MS_BY_LANG changes.
+        self.assertEqual(app._breaks("en")[1], '<break time="250ms"/>')
+        for lang in ("de", "es", "ru", "ko", "sw"):
+            self.assertEqual(app._breaks(lang)[1], '<break time="150ms"/>')
+        self.assertTrue(app._padded_ssml("worm", "en").endswith('<break time="250ms"/></speak>'))
+        self.assertTrue(app._padded_ssml("worm", "de").endswith('<break time="150ms"/></speak>'))
+
     def test_google_text_path_pads(self):
         sent = {}
 
@@ -51,7 +59,7 @@ class Padding(unittest.TestCase):
                 sent["ssml"] = getattr(input, "ssml", "") or ""
                 return FakeResponse()
 
-        lead, trail = app._breaks()
+        lead, trail = app._breaks("en")
         with mock.patch.object(app, "tts_client", Client()):
             app.synthesize_to_cache("half", "normal", os.path.join(_TMP, "en.mp3"), "en")
         self.assertIn(lead, sent["ssml"])
@@ -126,6 +134,30 @@ class Formats(unittest.TestCase):
         self.assertGreaterEqual(cfg.sample_rate_hertz, 24000)
 
 
+class RenderProfile(unittest.TestCase):
+    """CC-VOICE-CLARITY F3: a profile in the key orphans old English clips."""
+
+    def test_english_key_carries_the_profile_and_others_do_not(self):
+        import hashlib
+        en = app.cache_path_for("worm", "normal", "en")
+        old = hashlib.md5(f"worm|voice:{app.LANG_VOICES['en'][1]}".encode()).hexdigest()
+        new = hashlib.md5(f"worm|voice:{app.LANG_VOICES['en'][1]}|rp:vc1".encode()).hexdigest()
+        self.assertIn(new, en)
+        self.assertNotIn(old, en)
+        self.assertEqual(app.cache_path_for("worm", "slow", "en").split("_")[-1], "slow.mp3")
+        # Another language's key is exactly what it was.
+        de = hashlib.md5(f"de:wurm|voice:{app.LANG_VOICES['de'][1]}".encode()).hexdigest()
+        self.assertIn(de, app.cache_path_for("wurm", "normal", "de"))
+        es = hashlib.md5("es:casa".encode()).hexdigest()
+        self.assertIn(es, app.cache_path_for("casa", "normal", "es"))
+
+    def test_bakeoff_override_keeps_its_own_key(self):
+        self.assertNotIn("rp:", "x")  # key_override paths never take the suffix
+        p = app.cache_path_for("worm", "normal", "en", key_override="bakeoff|x")
+        import hashlib
+        self.assertIn(hashlib.md5(b"bakeoff|x").hexdigest(), p)
+
+
 class CacheVersion(unittest.TestCase):
     def test_a_padded_clip_cannot_be_served_from_the_old_cache(self):
         self.assertNotEqual(app.CACHE_VERSION, "v3", "bump the version or v3 clips keep serving")
@@ -197,7 +229,7 @@ class PronunciationOverrides(unittest.TestCase):
         self.assertIn('alphabet="ipa"', sent["ssml"])
         self.assertIn("hæf", sent["ssml"])
         # And it is still padded: an override must not cost the clip its edges.
-        lead, trail = app._breaks()
+        lead, trail = app._breaks("en")
         self.assertIn(lead, sent["ssml"])
         self.assertIn(trail, sent["ssml"])
 
