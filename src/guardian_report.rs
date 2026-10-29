@@ -207,9 +207,14 @@ pub fn compose(input: &GuardianInput) -> Report {
             .map(|(t, v)| TypeGroup { label_key: t.label_key(), count: v.len(), words: v.iter().take(GROUP_WORDS).map(|m| m.word.clone()).collect() })
             .collect();
 
-        // F3.1: the missed words, in order, that are bank rows inside the cap.
+        // F3.1: the missed words, in order, that are bank rows inside the cap
+        // or words from the player's own lists. An own-list word has no tier,
+        // so no cap binds it (signed 2026-10-28); `clean` still does.
         let cap = tier_cap(b, &lang, &log, in_window, input.junior);
-        let within = |word: &str| cap.is_some_and(|c| b.tier(&lang, word).is_some_and(|t| t <= c));
+        let within = |word: &str| match b.tier(&lang, word) {
+            Some(t) => cap.is_some_and(|c| t <= c),
+            None => true,
+        };
         let mut list: Vec<String> =
             w.iter().filter(|m| within(&m.word) && b.clean(&lang, &m.word, input.junior)).take(PRACTICE_MAX).map(|m| m.word.clone()).collect();
 
@@ -760,6 +765,28 @@ mod tests {
         let jr = run(&fake, &bank, true).sections[0].practice.clone();
         assert!(jr.iter().all(|w| bank.tiers[w] <= 1), "a Jr list held a Hard or Expert row: {jr:?}");
         assert!(!jr.is_empty());
+    }
+
+    /// Own-list words: a missed word that is no bank row joins the practice
+    /// list with no cap, even in a week with no bank play at all, and `clean`
+    /// still binds it. It is in no type group (I12) and never tops up.
+    #[test]
+    fn an_own_list_miss_joins_the_practice_list() {
+        let (mut fake, mut bank) = fixture();
+        fake.details.push(miss("quixotic", 13));
+        fake.details.push(miss("Zanzibar", 13));
+        fake.details.push(miss("blocked", 13));
+        bank.dirty.insert("Zanzibar".into());
+        bank.dirty.insert("blocked".into());
+        bank.unaudited = true;
+        let s = &run(&fake, &bank, false).sections[0];
+        assert_eq!(s.practice, ["cat", "quixotic", "sun", "dog"]);
+        assert!(!s.types.iter().any(|g| g.words.iter().any(|w| w == "quixotic")));
+        assert_eq!(run(&fake, &bank, true).sections[0].practice, s.practice, "Jr: no tier, no cap");
+
+        let only = Fake { details: vec![miss("quixotic", 9), miss("rhythm", 10)], ..Fake::default() };
+        let p = run(&only, &FakeBank::with(&[("cat", 1)]), false).sections[0].practice.clone();
+        assert_eq!(p, ["rhythm", "quixotic"], "no bank play this week, the own-list misses still count");
     }
 
     /// The cap is binding for the standard profile too: no tier above what was

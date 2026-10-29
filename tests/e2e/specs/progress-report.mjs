@@ -12,7 +12,7 @@ const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
 /** CR-1 attempts `daysAgo` days back (7: always inside last Mon–Sun week;
  * 0: this week). "because" and "rabbit" are English Hard bank rows. */
-function learnerStore(daysAgo = 7) {
+function learnerStore(daysAgo = 7, words = [['because', 'misspelled', false], ['rabbit', 'correct', true]]) {
   const ts = Math.floor(Date.now() / 1000) - daysAgo * 86400;
   const attempt = (word, outcome, correct) => ({
     day: Math.floor(ts / 86400), word, skills: [], correct, channel: 'typed',
@@ -20,14 +20,14 @@ function learnerStore(daysAgo = 7) {
   });
   return JSON.stringify({
     version: 2, lang: 'en', skills: [], placed: true,
-    log: [attempt('because', 'misspelled', false), attempt('rabbit', 'correct', true)],
+    log: words.map((w) => attempt(...w)),
   });
 }
 
 /** Init script: optional Complete (the dev grant), optional seeded learner. */
-const init = ({ complete, learner, daysAgo = 7 }) => [
+const init = ({ complete, learner, daysAgo = 7, words }) => [
   complete ? "localStorage.setItem('spell_dev_entitlements', 'on');" : '',
-  learner ? `localStorage.setItem('spell_learner_en', ${JSON.stringify(learnerStore(daysAgo))});` : '',
+  learner ? `localStorage.setItem('spell_learner_en', ${JSON.stringify(learnerStore(daysAgo, words))});` : '',
 ].join('\n');
 
 /** Present as iOS. The row is app-only, so without this every "absent" below
@@ -193,6 +193,25 @@ export async function run(browser, base, suite) {
       const again = await page.evaluate(() => document.getElementById('listsNote').textContent);
       assert(again === 'Already in My Words', `second Add said: ${again}`);
       assert(JSON.stringify(JSON.parse(await listsRaw(page))) === JSON.stringify(first), 'a second Add changed My Words');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('guardian report: a week of only own-list words still has a practice list, and Add saves it', async () => {
+    // "zorvenly" is in no bank: a word from the player's own My Words list.
+    const words = [['zorvenly', 'misspelled', false], ['zorvenly', 'misspelled', false]];
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: init({ complete: true, learner: true, words }) });
+    try {
+      await asNative(page);
+      const monday = await mondayOf(page, 7);
+      await openReport(page);
+      const text = await page.evaluate(() => document.getElementById('rshareBody').textContent);
+      assert(text.includes('Practice list (1): zorvenly'), `an own-list miss must reach the practice list: ${text}`);
+      await page.evaluate(() => document.getElementById('rshareAdd').click());
+      await domSettled(page);
+      assert(await shown(page, 'listsScreen'), 'Add must open the list it made');
+      const keyed = JSON.parse(await listsRaw(page)).lists.filter((l) => l.key === `guardian:0:${monday}:en` && !l.deletedAt);
+      const entries = keyed.flatMap((l) => l.entries.map((e) => `${e.text}|${e.lang}`));
+      assert(JSON.stringify(entries) === JSON.stringify(['zorvenly|en']), `entries: ${entries}`);
     } finally { await ctx.close(); }
   });
 
