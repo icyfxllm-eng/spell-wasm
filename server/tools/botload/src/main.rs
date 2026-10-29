@@ -213,6 +213,10 @@ fn close_why(why: String) {
     *CLOSE_WHY.get_or_init(Default::default).lock().unwrap().entry(why).or_default() += 1;
 }
 
+/// StartMatch sent again because no TurnStart followed.
+static START_RESENDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+const START_RETRY: Duration = Duration::from_secs(5);
+
 /// Actions resent after a resume because no answer came back.
 static RESENDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
@@ -362,6 +366,11 @@ struct RoomRun {
     deadline: Instant,
     /// The local scoreboard already ended the current turn.
     turn_closed: bool,
+    /// StartMatch is sent and no TurnStart has come yet: when to send it
+    /// again. A StartMatch lost in a drop, or refused while the guest is
+    /// still resuming (seat_disconnected), left rooms in the lobby for good
+    /// in the 2026-10-28 chaos run.
+    start_retry_at: Option<Instant>,
 }
 
 impl RoomRun {
@@ -384,6 +393,7 @@ impl RoomRun {
         self.track_seq(bot, seq);
         match msg {
             ServerMsg::TurnStart { seat, .. } => {
+                self.start_retry_at = None;
                 if scorer {
                     self.turn_closed = false;
                 }
@@ -472,6 +482,10 @@ impl RoomRun {
                 self.new_match();
                 return reason == "player_left" && Instant::now() < self.deadline;
             }
+            // While StartMatch is being retried these answers are expected:
+            // the guest is still resuming, or an earlier copy got through.
+            ServerMsg::Error { code }
+                if self.start_retry_at.is_some() && (code == "seat_disconnected" || code == "match_in_progress") => {}
             ServerMsg::Error { code } if code != "not_your_turn" => {
                 *self.t.lock().unwrap().errors.entry(code).or_default() += 1;
             }
@@ -556,9 +570,11 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
         drop_at,
         deadline,
         turn_closed: false,
+        start_retry_at: None,
     };
     t.lock().unwrap().rooms_started += 1;
     send(&mut a, &ClientMsg::StartMatch {}).await;
+    run.start_retry_at = Some(Instant::now() + START_RETRY);
 
     let mut dropped_since: Option<Instant> = None;
     let mut last_progress = Instant::now();
@@ -587,7 +603,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
             match next(bot, Duration::from_millis(50)).await {
                 Got::Msg(seq, msg) => {
                     progressed = true;
-                    bot.last_msg = format!("{msg:?}").chars().take(80).collect();
+                    bot.last_msg = format!("{msg:?}").chars().take(400).collect();
                     if which == 1 {
                         if let (Some(since), ServerMsg::Welcome { .. }) = (dropped_since, &msg) {
                             let ms = since.elapsed().as_millis() as u64;
@@ -639,6 +655,11 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
         if rematch {
             tokio::time::sleep(Duration::from_millis(200)).await;
             send(&mut a, &ClientMsg::StartMatch {}).await;
+            run.start_retry_at = Some(Instant::now() + START_RETRY);
+        } else if a.ws.is_some() && run.start_retry_at.is_some_and(|at| Instant::now() >= at) {
+            START_RESENDS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            send(&mut a, &ClientMsg::StartMatch {}).await;
+            run.start_retry_at = Some(Instant::now() + START_RETRY);
         }
         if Instant::now() >= deadline && run.local.p1.turns_left == 3 && run.local.p2.turns_left == 3 && !rematch {
             break; // between matches at the end of the run
@@ -865,6 +886,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         t.close_resumed,
         RESENDS.load(std::sync::atomic::Ordering::Relaxed)
     );
+    println!("  StartMatch sent again (no TurnStart within 5 s): {}", START_RESENDS.load(std::sync::atomic::Ordering::Relaxed));
     println!("  how sockets closed: {:?}", CLOSE_WHY.get_or_init(Default::default).lock().unwrap());
     println!("  sends that timed out: {}", *SEND_TIMEOUTS.get_or_init(Default::default).lock().unwrap());
     println!("  matches_ended: {:?}", t.match_ended);
