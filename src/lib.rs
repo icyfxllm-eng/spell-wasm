@@ -771,6 +771,10 @@ fn wire_orb_and_answer(app: &App) {
         let a = app.clone();
         dom::on_click("rescueShow", move || game::rescue_reveal_or_skip(&a));
     }
+    {
+        let a = app.clone();
+        dom::on_click("rescueCantTell", move || game::cant_tell(&a));
+    }
     dom::on_click("rescueClose", game::close_rescue);
     {
         let a = app.clone();

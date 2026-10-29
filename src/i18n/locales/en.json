@@ -567,6 +567,8 @@
   "rescue.skip": "Skip this word",
   "rescue.slow": "Hear it slowly",
   "rescue.title": "Can't hear it?",
+  "rescue.cantTell": "Can't make it out — skip",
+  "rescue.cantTellDone": "Skipped. Your streak is safe.",
   "sd.allPlaced": "All {n} {sym}s are placed",
   "sd.audioOff": "Audio isn't available right now",
   "sd.avail": "Coming soon in this language",

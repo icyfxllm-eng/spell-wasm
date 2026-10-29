@@ -567,6 +567,8 @@
   "rescue.skip": "Bỏ qua từ này",
   "rescue.slow": "Nghe chậm lại",
   "rescue.title": "Không nghe rõ?",
+  "rescue.cantTell": "Không nghe rõ — bỏ qua",
+  "rescue.cantTellDone": "Đã bỏ qua. Chuỗi của bạn vẫn còn.",
   "sd.allPlaced": "Đã đặt đủ {n} {sym}",
   "sd.audioOff": "Hiện chưa có âm thanh",
   "sd.avail": "Sắp có ở ngôn ngữ này",

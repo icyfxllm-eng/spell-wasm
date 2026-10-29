@@ -91,6 +91,86 @@
         }
       }
     ],
+    "clip_batch": [
+      {
+        "name": "v",
+        "type": "version"
+      },
+      {
+        "name": "build",
+        "type": "build"
+      },
+      {
+        "name": "platform",
+        "type": {
+          "enum": [
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ]
+        }
+      },
+      {
+        "name": "reports",
+        "type": {
+          "list": "clip_report",
+          "max": 50
+        }
+      }
+    ],
+    "clip_report": [
+      {
+        "name": "lang",
+        "type": {
+          "enum": [
+            "en",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "pl",
+            "vi",
+            "ko",
+            "ja",
+            "fil",
+            "ru",
+            "sw",
+            "ar",
+            "hi",
+            "fa",
+            "zh",
+            "mine",
+            "other"
+          ]
+        }
+      },
+      {
+        "name": "item_hash",
+        "type": "hash64"
+      },
+      {
+        "name": "variant",
+        "type": {
+          "enum": [
+            "normal",
+            "slow"
+          ]
+        }
+      },
+      {
+        "name": "source",
+        "type": {
+          "enum": [
+            "server_cache",
+            "native_tts",
+            "human",
+            "pack",
+            "other"
+          ]
+        }
+      }
+    ],
     "error_event": [
       {
         "name": "error_code",

@@ -567,6 +567,8 @@
   "rescue.skip": "Saltar esta palabra",
   "rescue.slow": "Escúchalo despacio",
   "rescue.title": "¿No lo oyes?",
+  "rescue.cantTell": "No se entiende — saltar",
+  "rescue.cantTellDone": "Saltada. Tu racha está a salvo.",
   "sd.allPlaced": "Ya están colocados los {n} {sym}",
   "sd.audioOff": "El audio no está disponible ahora",
   "sd.avail": "Pronto en este idioma",

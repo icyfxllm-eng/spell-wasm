@@ -567,6 +567,8 @@
   "rescue.skip": "Пропустить слово",
   "rescue.slow": "Послушать медленно",
   "rescue.title": "Не слышно?",
+  "rescue.cantTell": "Не разобрать — пропустить",
+  "rescue.cantTellDone": "Пропущено. Серия сохранена.",
   "sd.allPlaced": "Все {n} {sym} расставлены",
   "sd.audioOff": "Звук сейчас недоступен",
   "sd.avail": "Скоро на этом языке",

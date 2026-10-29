@@ -117,6 +117,18 @@ wire_enum!(
     }
 );
 
+wire_enum!(
+    /// CLIP-REPORT -- which clip the player heard: the slow replay or the normal one.
+    ClipVariant { Normal => "normal", Slow => "slow" }
+);
+
+wire_enum!(
+    /// CLIP-REPORT -- where the audio came from (`api::last_audio_source`). It
+    /// tells a bad server clip from the on-device fallback voice. Anything the
+    /// router can name that is not one of these four is `other`.
+    ClipSource { ServerCache => "server_cache", NativeTts => "native_tts", Human => "human", Pack => "pack", Other => "other" }
+);
+
 /// A 64-bit FNV-1a hash, on the wire as 16 lowercase hex digits.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Hash64(pub u64);
@@ -187,6 +199,29 @@ pub struct AggPerfRow {
     pub count: u32,
 }
 
+/// CLIP-REPORT -- a standard player said a clip was unintelligible. `item_hash`
+/// is `Hash64::of("<lang>|<bank entry>")`: no string, so no word can be typed
+/// into the record, but anyone holding the bank can look the hash up
+/// (`scripts/clip_report.py` does). My Words and Jr/unknown/Education devices
+/// never produce one.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct ClipReport {
+    pub lang: Lang,
+    pub item_hash: Hash64,
+    pub variant: ClipVariant,
+    pub source: ClipSource,
+}
+
+/// POST /v1/clips -- a standard player's clip reports. No session id: two
+/// reports from one launch are not linked.
+#[derive(Debug, Clone, Serialize)]
+pub struct ClipBatch {
+    pub v: u32,
+    pub build: BuildId,
+    pub platform: Platform,
+    pub reports: Vec<ClipReport>,
+}
+
 /// POST /v1/events — a standard player's batch. `session_id` is random per
 /// launch and never reused (D4).
 #[derive(Debug, Clone, Serialize)]
@@ -254,6 +289,8 @@ pub struct Record {
 /// Transport caps (Transport and storage).
 pub const QUEUE_MAX_EVENTS: u32 = 200;
 pub const QUEUE_MAX_BYTES: usize = 128 * 1024;
+/// Clip reports held / sent at once (the session cap is far lower).
+pub const CLIP_MAX_REPORTS: u32 = 50;
 pub const AGG_MAX_COUNT: u64 = 1_000_000;
 /// Every (metric, bucket, lang) cell, so a full histogram always fits.
 pub const PERF_MAX_ROWS: u32 = (PerfMetric::ALL.len() * Bucket::ALL.len() * Lang::ALL.len()) as u32;
@@ -296,6 +333,18 @@ pub const RECORDS: &[Record] = &[
         f("platform", FieldType::Enum(Platform::ALL)),
         f("rows", FieldType::List { of: "agg_row", max: ErrorCode::ALL.len() as u32 }),
         f("perf", FieldType::List { of: "agg_perf_row", max: (PerfMetric::ALL.len() * Bucket::ALL.len()) as u32 }),
+    ]},
+    Record { name: "clip_report", fields: &[
+        f("lang", FieldType::Enum(Lang::ALL)),
+        f("item_hash", FieldType::Hash64),
+        f("variant", FieldType::Enum(ClipVariant::ALL)),
+        f("source", FieldType::Enum(ClipSource::ALL)),
+    ]},
+    Record { name: "clip_batch", fields: &[
+        f("v", FieldType::Version),
+        f("build", FieldType::BuildId),
+        f("platform", FieldType::Enum(Platform::ALL)),
+        f("reports", FieldType::List { of: "clip_report", max: CLIP_MAX_REPORTS }),
     ]},
     Record { name: "flags", fields: &[
         f("telemetry_enabled", FieldType::Bool),
@@ -448,6 +497,16 @@ mod tests {
         validate("agg_batch", &aj).unwrap();
         assert!(aj.get("session_id").is_none(), "an aggregate carries no identifier (F6)");
         assert!(!aj.to_string().contains("\"lang\""), "an aggregate carries no language (F6)");
+        let cb = ClipBatch {
+            v: SCHEMA_VERSION,
+            build: BuildId::parse("0123456789ab"),
+            platform: Platform::Ios,
+            reports: vec![ClipReport { lang: Lang::En, item_hash: Hash64::of(b"en|coup"), variant: ClipVariant::Slow, source: ClipSource::NativeTts }],
+        };
+        let cj = serde_json::to_value(&cb).unwrap();
+        validate("clip_batch", &cj).unwrap();
+        assert!(cj.get("session_id").is_none(), "clip reports are not linked to a launch");
+        assert!(!cj.to_string().contains("coup"), "the word itself is never on the wire");
         validate("flags", &serde_json::to_value(Flags { telemetry_enabled: false }).unwrap()).unwrap();
     }
 
@@ -489,17 +548,22 @@ mod tests {
     /// may are this schema, its generated bindings, and the listed consumers.
     #[test]
     fn single_source() {
-        const MARKERS: &[&str] = &["stack_hash", "session_id", "error_code"];
+        const MARKERS: &[&str] = &["stack_hash", "session_id", "error_code", "item_hash"];
         const ALLOWED: &[&str] = &[
             "src/telemetry/schema.rs",          // the definition
             "src/telemetry/mod.rs",             // the client transport
             "workers/telemetry/schema.json",    // generated
             "workers/telemetry/src/index.js",   // the endpoint (validates via schema.json)
             "workers/telemetry/migrations/0001_init.sql",
+            "workers/telemetry/migrations/0003_clips.sql",
+            "workers/telemetry/reports/clips.sql",
+            "scripts/clip_report.py",
+            "scripts/clip-report-check.mjs",
             "workers/telemetry/reports/crashes.sql", // acceptance 9 report
             "workers/telemetry/test/worker.test.js",
             "workers/telemetry/README.md",
             "tests/e2e/specs/telemetry.mjs",
+            "tests/e2e/specs/cant-tell.mjs",
         ];
         let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
         let mut offenders = Vec::new();

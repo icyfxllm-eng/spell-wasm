@@ -37,6 +37,8 @@ use schema::*;
 
 const QUEUE_KEY: &str = "spell_tel_queue_v1";
 const AGG_KEY: &str = "spell_tel_agg_v1";
+/// CLIP-REPORT queue (standard players only): "lang|hash|variant|source".
+const CLIP_KEY: &str = "spell_tel_clips_v1";
 /// F5 histogram cells for a standard player, "metric|bucket|lang" → count.
 const PERF_KEY: &str = "spell_tel_perf_v1";
 /// Written by index.html's pre-WASM error hook; drained into the route here.
@@ -242,7 +244,7 @@ fn route_now() -> Route {
 }
 
 fn clear_all() {
-    for k in [QUEUE_KEY, AGG_KEY, PERF_KEY, JSBUF_KEY] {
+    for k in [QUEUE_KEY, AGG_KEY, PERF_KEY, JSBUF_KEY, CLIP_KEY] {
         storage::remove(k);
     }
 }
@@ -303,6 +305,74 @@ fn record(code: ErrorCode, lang: Lang, stack_hash: Hash64) {
             storage::set_json(AGG_KEY, &a);
         }
     }
+}
+
+/// CLIP-REPORT -- queue one "can't tell" report. Standard players only: an
+/// aggregate device (Jr, unknown age, Education) and My Words send nothing,
+/// and an Off route drops it. `entry` is the bank entry exactly as the game
+/// holds it; only its hash leaves the device.
+pub fn record_clip(lang_code: &str, entry: &str, variant: ClipVariant, source: ClipSource) {
+    // Queued only for a standard player: a Jr, unknown-age or Education device
+    // never writes one, even while the server has not yet answered (Hold).
+    if lang_code == consts::MINE
+        || !consts::telemetry_events_available()
+        || audience_now() != Audience::Standard
+        || !matches!(route_now(), Route::Events | Route::Hold)
+    {
+        return;
+    }
+    let Some(line) = clip_line(lang_code, entry, variant, source) else { return };
+    let mut q: Vec<String> = storage::get_json(CLIP_KEY).unwrap_or_default();
+    q.push(line);
+    let over = q.len().saturating_sub(CLIP_MAX_REPORTS as usize);
+    q.drain(..over);
+    storage::set_json(CLIP_KEY, &q);
+}
+
+/// The stored form of one report. `None` for a language the schema cannot name.
+fn clip_line(lang_code: &str, entry: &str, variant: ClipVariant, source: ClipSource) -> Option<String> {
+    let lang = Lang::from_wire(lang_code)?;
+    if lang == Lang::Mine {
+        return None;
+    }
+    Some(format!("{}|{:016x}|{}|{}", lang.as_str(), item_hash(lang_code, entry).0, variant.as_str(), source.as_str()))
+}
+
+/// The identity a report carries: FNV-1a of "<lang>|<entry>".
+pub fn item_hash(lang_code: &str, entry: &str) -> Hash64 {
+    Hash64::of(format!("{lang_code}|{entry}").as_bytes())
+}
+
+fn clip_from_line(line: &str) -> Option<ClipReport> {
+    let mut p = line.split('|');
+    let r = ClipReport {
+        lang: Lang::from_wire(p.next()?)?,
+        item_hash: Hash64::parse(p.next()?)?,
+        variant: ClipVariant::from_wire(p.next()?)?,
+        source: ClipSource::from_wire(p.next()?)?,
+    };
+    p.next().is_none().then_some(r)
+}
+
+/// Send the clip queue. Called on the Events route only; a send that fails
+/// leaves the queue for next time.
+async fn flush_clips() {
+    let q: Vec<String> = storage::get_json(CLIP_KEY).unwrap_or_default();
+    if q.is_empty() {
+        return;
+    }
+    let reports: Vec<ClipReport> = q.iter().filter_map(|l| clip_from_line(l)).collect();
+    if !reports.is_empty() {
+        let batch = ClipBatch { v: SCHEMA_VERSION, build: build(), platform: platform(), reports };
+        let Ok(body) = serde_json::to_string(&batch) else { return };
+        if !post(&format!("{}/v1/clips", base()), body).await {
+            return;
+        }
+    }
+    let mut now: Vec<String> = storage::get_json(CLIP_KEY).unwrap_or_default();
+    let sent = q.len().min(now.len());
+    now.drain(..sent);
+    storage::set_json(CLIP_KEY, &now);
 }
 
 /// F5 — count one measurement in its histogram cell. A bucket that doesn't
@@ -484,6 +554,7 @@ async fn flush_inner() {
         Route::Off => clear_all(),
         Route::Hold => {}
         Route::Events => {
+            flush_clips().await;
             let q: Vec<Queued> = storage::get_json(QUEUE_KEY).unwrap_or_default();
             let cells: BTreeMap<String, u32> = storage::get_json(PERF_KEY).unwrap_or_default();
             if q.is_empty() && cells.is_empty() {
@@ -511,6 +582,8 @@ async fn flush_inner() {
             }
         }
         Route::Aggregate => {
+            // A clip report names a word; an aggregate device sends none.
+            storage::remove(CLIP_KEY);
             // Standard-era events still queued are demoted to counts: an
             // aggregate device never sends an event, a lang, or a session id.
             let q: Vec<Queued> = storage::get_json(QUEUE_KEY).unwrap_or_default();
@@ -625,6 +698,29 @@ mod tests {
         // R4 — never heard from the server: hold, don't send.
         assert_eq!(route_for(None, None, true, false, Standard), Route::Hold);
         assert_eq!(route_for(None, None, true, false, Junior), Route::Hold);
+    }
+
+    #[test]
+    fn a_clip_report_round_trips_and_carries_a_hash_not_the_word() {
+        let line = clip_line("en", "coup", ClipVariant::Slow, ClipSource::NativeTts).unwrap();
+        assert!(!line.contains("coup"), "the stored line holds no word: {line}");
+        let r = clip_from_line(&line).unwrap();
+        assert_eq!((r.lang, r.variant, r.source), (Lang::En, ClipVariant::Slow, ClipSource::NativeTts));
+        assert_eq!(r.item_hash, item_hash("en", "coup"));
+        // lang is part of the identity: the same letters in another language differ.
+        assert_ne!(item_hash("en", "coup"), item_hash("fr", "coup"));
+        // My Words never produces one, and neither does an unknown language code.
+        assert!(clip_line(consts::MINE, "my word", ClipVariant::Normal, ClipSource::Other).is_none());
+        assert!(clip_from_line("en|nothex|normal|pack").is_none());
+        assert!(clip_from_line(&format!("{line}|extra")).is_none());
+    }
+
+    /// Pinned so scripts/clip_report.py (Python) and the client agree on the hash.
+    #[test]
+    fn the_hash_is_fnv1a_of_lang_bar_entry() {
+        assert_eq!(format!("{:016x}", item_hash("en", "coup").0), format!("{:016x}", Hash64::of(b"en|coup").0));
+        assert_eq!(format!("{:016x}", Hash64::of(b"").0), "cbf29ce484222325");
+        assert_eq!(format!("{:016x}", Hash64::of(b"a").0), "af63dc4c8601ec8c");
     }
 
     #[test]

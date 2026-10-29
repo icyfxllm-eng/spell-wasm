@@ -68,6 +68,14 @@ pub fn en_retier() -> bool {
     resolve(stored("en_retier").as_deref(), true)
 }
 
+/// CC-CLIP-REPORT -- the "Can't tell" step in the rescue panel: the player says
+/// a clip was unintelligible, the round is voided (streak untouched, no miss),
+/// and a standard player's report is queued. **Default OFF**; see
+/// `docs/CC-CLIP-REPORT.md` for the rules Eric must confirm before it is on.
+pub fn cant_tell() -> bool {
+    resolve(stored("cant_tell").as_deref(), false)
+}
+
 /// CC-IMPOSSIBLE v1 F12 -- the master Impossible flag. **Default OFF.** Nothing
 /// Impossible is offered unless this is on. v1 F12 calls these remote flags; this
 /// module is localStorage only, so turning one on for players needs a build (or a

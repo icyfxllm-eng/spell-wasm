@@ -37,7 +37,7 @@ import { gzipSync as zlibGzip } from "node:zlib";
 const gzipSync = (u8) => new Uint8Array(zlibGzip(u8));
 
 function fakeDb() {
-  const rows = { events: [], daily_counts: new Map(), perf_counts: new Map() };
+  const rows = { events: [], clip_reports: [], daily_counts: new Map(), perf_counts: new Map() };
   const run = (sql, args) => {
     if (sql.startsWith("INSERT INTO events")) {
       const [day, build, platform, session_id, error_code, lang, mode, stack_hash] = args;
@@ -53,6 +53,11 @@ function fakeDb() {
       const [day, build, platform, source, metric, bucket, lang, n] = args;
       const key = [day, build, platform, source, metric, bucket, lang].join("|");
       rows.perf_counts.set(key, (rows.perf_counts.get(key) || 0) + n);
+    } else if (sql.startsWith("INSERT INTO clip_reports")) {
+      const [day, build, platform, lang, item_hash, variant, source] = args;
+      rows.clip_reports.push({ day, build, platform, lang, item_hash, variant, source });
+    } else if (sql.startsWith("DELETE FROM clip_reports")) {
+      rows.clip_reports = rows.clip_reports.filter((e) => e.day >= args[0]);
     } else if (sql.startsWith("DELETE FROM events")) {
       rows.events = rows.events.filter((e) => e.day >= args[0]);
     } else throw new Error(`unexpected SQL ${sql}`);
@@ -177,4 +182,39 @@ test("the IP trap itself works (instrument check)", () => {
   assert.throws(() => r.headers.get("user-agent"), /Worker read/);
   assert.throws(() => r.cf, /request.cf/);
   assert.equal(r.headers.get("Origin"), "capacitor://localhost");
+});
+
+const clips = () => ({
+  v: 1,
+  build: "0a1b2c3d4e5f",
+  platform: "ios",
+  reports: [{ lang: "en", item_hash: "0123456789abcdef", variant: "slow", source: "native_tts" }],
+});
+
+test("a clip batch is stored one row per report, with no session id", async () => {
+  const e = env();
+  const r = await handle(req("POST", "/v1/clips", { body: clips() }), e, Date.UTC(2026, 9, 29, 12));
+  assert.equal(r.status, 204);
+  assert.deepEqual(e.DB.rows.clip_reports, [{ day: "2026-10-29", build: "0a1b2c3d4e5f", platform: "ios", lang: "en", item_hash: "0123456789abcdef", variant: "slow", source: "native_tts" }]);
+});
+
+test("a clip batch refuses a session id, a word, or an unknown source", async () => {
+  for (const bad of [
+    { ...clips(), session_id: "00000000000000ff" },
+    { ...clips(), reports: [{ ...clips().reports[0], word: "coup" }] },
+    { ...clips(), reports: [{ ...clips().reports[0], item_hash: "coup" }] },
+    { ...clips(), reports: [{ ...clips().reports[0], source: "google" }] },
+  ]) {
+    assert.equal((await handle(req("POST", "/v1/clips", { body: bad }), env())).status, 400);
+  }
+});
+
+test("the kill switch discards clip reports too, and the purge ages them out", async () => {
+  const off = env(false);
+  assert.equal((await handle(req("POST", "/v1/clips", { body: clips() }), off)).status, 204);
+  assert.equal(off.DB.rows.clip_reports.length, 0);
+  const e = env();
+  await handle(req("POST", "/v1/clips", { body: clips() }), e, Date.UTC(2026, 0, 1));
+  await purge(e, Date.UTC(2026, 9, 29));
+  assert.equal(e.DB.rows.clip_reports.length, 0);
 });

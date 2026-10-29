@@ -567,6 +567,8 @@
   "rescue.skip": "यह शब्द छोड़ो",
   "rescue.slow": "धीरे सुनो",
   "rescue.title": "सुनाई नहीं दे रहा?",
+  "rescue.cantTell": "समझ नहीं आया — छोड़ें",
+  "rescue.cantTellDone": "छोड़ दिया गया। आपकी लय सुरक्षित है।",
   "sd.allPlaced": "सभी {n} {sym} रखे जा चुके हैं",
   "sd.audioOff": "अभी ऑडियो उपलब्ध नहीं है",
   "sd.avail": "इस भाषा में जल्द आ रहा है",

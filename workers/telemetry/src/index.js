@@ -5,6 +5,7 @@
 //   GET  /telemetry/v1/flags      → {"telemetry_enabled": bool}   (I7, R4)
 //   POST /telemetry/v1/events     → a standard player's error batch
 //   POST /telemetry/v1/aggregate  → a Jr / unknown / Education daily count
+//   POST /telemetry/v1/clips      → "Can't tell" clip reports (CLIP-REPORT)
 //
 // WHAT THIS NEVER DOES. It never reads the client IP (CF-Connecting-IP,
 // X-Forwarded-For, X-Real-IP), request.cf (geo), or the User-Agent, and it
@@ -154,6 +155,16 @@ function perfStmts(env, batch, day, source) {
     );
 }
 
+// CLIP-REPORT: one row per report; nothing links two reports together.
+async function storeClips(env, batch, day) {
+  const stmts = batch.reports.map((r) =>
+    env.DB.prepare(
+      "INSERT INTO clip_reports (day, build, platform, lang, item_hash, variant, source) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    ).bind(day, batch.build, batch.platform, r.lang, r.item_hash, r.variant, r.source),
+  );
+  if (stmts.length) await env.DB.batch(stmts);
+}
+
 async function storeAggregate(env, batch, day) {
   const stmts = batch.rows
     .filter((r) => r.count > 0)
@@ -177,7 +188,8 @@ export async function handle(request, env, now = Date.now()) {
     return reply(request, 200, { telemetry_enabled: enabled(env) });
   }
 
-  const record = path === "/v1/events" ? "event_batch" : path === "/v1/aggregate" ? "agg_batch" : null;
+  const record =
+    path === "/v1/events" ? "event_batch" : path === "/v1/aggregate" ? "agg_batch" : path === "/v1/clips" ? "clip_batch" : null;
   if (!record || request.method !== "POST") return reply(request, 404);
 
   // Kill switch: accept and discard, so clients stop retrying a dead queue.
@@ -190,6 +202,7 @@ export async function handle(request, env, now = Date.now()) {
 
   const day = utcDay(now);
   if (record === "event_batch") await storeEvents(env, value, day);
+  else if (record === "clip_batch") await storeClips(env, value, day);
   else await storeAggregate(env, value, day);
   return reply(request, 204);
 }
@@ -197,6 +210,7 @@ export async function handle(request, env, now = Date.now()) {
 export async function purge(env, now = Date.now()) {
   const cutoff = utcDay(now - RAW_DAYS * 86_400_000);
   await env.DB.prepare("DELETE FROM events WHERE day < ?").bind(cutoff).run();
+  await env.DB.prepare("DELETE FROM clip_reports WHERE day < ?").bind(cutoff).run();
 }
 
 export default {

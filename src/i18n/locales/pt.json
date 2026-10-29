@@ -567,6 +567,8 @@
   "rescue.skip": "Saltar esta palavra",
   "rescue.slow": "Ouvir devagar",
   "rescue.title": "Não consegues ouvir?",
+  "rescue.cantTell": "Não dá para entender — pular",
+  "rescue.cantTellDone": "Pulada. Sua sequência está salva.",
   "sd.allPlaced": "Os {n} {sym} já estão colocados",
   "sd.audioOff": "O áudio não está disponível agora",
   "sd.avail": "Em breve neste idioma",

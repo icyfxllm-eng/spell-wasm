@@ -567,6 +567,8 @@
   "rescue.skip": "Laktawan ang salita",
   "rescue.slow": "Pakinggan nang mabagal",
   "rescue.title": "Hindi marinig?",
+  "rescue.cantTell": "Hindi maintindihan — laktawan",
+  "rescue.cantTellDone": "Nilaktawan. Ligtas ang iyong streak.",
   "sd.allPlaced": "Nailagay na lahat ng {n} {sym}",
   "sd.audioOff": "Walang audio sa ngayon",
   "sd.avail": "Malapit na sa wikang ito",

@@ -567,6 +567,8 @@
   "rescue.skip": "Pomiń to słowo",
   "rescue.slow": "Posłuchaj powoli",
   "rescue.title": "Nie słyszysz?",
+  "rescue.cantTell": "Nie rozumiem — pomiń",
+  "rescue.cantTellDone": "Pominięto. Twoja seria jest bezpieczna.",
   "sd.allPlaced": "Wszystkie {n} {sym} są już ustawione",
   "sd.audioOff": "Dźwięk jest teraz niedostępny",
   "sd.avail": "Wkrótce w tym języku",

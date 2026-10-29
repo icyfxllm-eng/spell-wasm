@@ -567,6 +567,8 @@
   "rescue.skip": "跳过这个词",
   "rescue.slow": "放慢听",
   "rescue.title": "听不清吗？",
+  "rescue.cantTell": "听不清——跳过",
+  "rescue.cantTellDone": "已跳过。你的连胜不受影响。",
   "sd.allPlaced": "{n} 个 {sym} 都放好了",
   "sd.audioOff": "目前无法播放音频",
   "sd.avail": "此语言即将推出",

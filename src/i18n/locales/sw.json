@@ -567,6 +567,8 @@
   "rescue.skip": "Ruka neno hili",
   "rescue.slow": "Sikiliza polepole",
   "rescue.title": "Husikii?",
+  "rescue.cantTell": "Sielewi — ruka",
+  "rescue.cantTellDone": "Imerukwa. Mfululizo wako uko salama.",
   "sd.allPlaced": "{sym} zote {n} zimewekwa",
   "sd.audioOff": "Sauti haipatikani sasa",
   "sd.avail": "Inakuja hivi karibuni kwa lugha hii",

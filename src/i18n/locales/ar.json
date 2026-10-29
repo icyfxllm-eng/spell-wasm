@@ -567,6 +567,8 @@
   "rescue.skip": "تخطَّ هذه الكلمة",
   "rescue.slow": "استمع ببطء",
   "rescue.title": "لا تسمعها؟",
+  "rescue.cantTell": "لا أستطيع فهمها — تخطَّ",
+  "rescue.cantTellDone": "تم التخطي. سلسلتك محفوظة.",
   "sd.allPlaced": "كل الـ {n} {sym} موضوعة",
   "sd.audioOff": "الصوت غير متاح الآن",
   "sd.avail": "قريبًا بهذه اللغة",

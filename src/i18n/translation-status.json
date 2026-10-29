@@ -394,7 +394,9 @@
     "greport.pingProfiles",
     "greport.pingAction",
     "greport.pingToggle",
-    "greport.pingDenied"
+    "greport.pingDenied",
+    "rescue.cantTell",
+    "rescue.cantTellDone"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -799,7 +801,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -1192,7 +1196,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1585,7 +1591,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -1978,7 +1986,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -2371,7 +2381,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -2764,7 +2776,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -3157,7 +3171,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -3550,7 +3566,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -3943,7 +3961,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -4336,7 +4356,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -4729,7 +4751,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -5122,7 +5146,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -5515,7 +5541,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -5908,7 +5936,9 @@
       "greport.pingProfiles",
       "greport.pingAction",
       "greport.pingToggle",
-      "greport.pingDenied"
+      "greport.pingDenied",
+      "rescue.cantTell",
+      "rescue.cantTellDone"
     ]
   }
 }

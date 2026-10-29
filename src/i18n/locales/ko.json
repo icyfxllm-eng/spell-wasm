@@ -567,6 +567,8 @@
   "rescue.skip": "이 단어 건너뛰기",
   "rescue.slow": "천천히 듣기",
   "rescue.title": "안 들리나요?",
+  "rescue.cantTell": "알아들을 수 없어요 — 건너뛰기",
+  "rescue.cantTellDone": "건너뛰었어요. 연속 기록은 그대로예요.",
   "sd.allPlaced": "{sym} {n}개를 모두 놓았어요",
   "sd.audioOff": "지금은 오디오를 쓸 수 없어요",
   "sd.avail": "이 언어는 곧 지원돼요",

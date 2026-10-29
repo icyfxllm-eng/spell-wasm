@@ -35,7 +35,7 @@ export async function run(browser, base, suite) {
       assert(await page.$eval('#rescuePanel', (e) => !e.hasAttribute('hidden')), 'the panel opens');
       // Scoped to THIS panel: every mode has a rescue now, and an unscoped
       // selector matches all four.
-      const steps = await page.$$eval('#rescuePanel .rescue-steps button', (b) => b.map((x) => x.id));
+      const steps = await page.$$eval('#rescuePanel .rescue-steps button:not([hidden])', (b) => b.map((x) => x.id));
       assertEq(JSON.stringify(steps), JSON.stringify(['rescueSlow', 'rescueShow']), 'exactly the built steps');
     } finally { await ctx.close(); }
   });

@@ -92,6 +92,7 @@ import * as learnerReset from './specs/learner-reset.mjs';
 import * as reviewQueue from './specs/review-queue.mjs';
 import * as inspector from './specs/inspector.mjs';
 import * as audioRescue from './specs/audio-rescue.mjs';
+import * as cantTell from './specs/cant-tell.mjs';
 import * as pickQueue from './specs/pick-queue.mjs';
 import * as pickQueueHelp from './specs/pick-queue-help.mjs';
 import * as online from './specs/online.mjs';
@@ -101,7 +102,7 @@ const SPECS = [
   ['stats-sheet', statsSheet],
   ['review-queue', reviewQueue],
   ['inspector', inspector],
-  ['audio-rescue', audioRescue],
+  ['audio-rescue', audioRescue, cantTell],
   ['hub-inventory', hubInventory],
   ['drawer-close', drawerClose],
   ['keyboard', keyboard],

@@ -1290,6 +1290,7 @@ pub fn voice_target(lang: &str, word: &str, spoken: &str) -> (String, Option<Str
 }
 
 fn speak_word(app: &App, variant: &str, rate: f32) {
+    LAST_VARIANT.with(|v| v.set(if variant == "slow" { "slow" } else { "normal" }));
     let s = app.borrow();
     if s.word.is_empty() {
         return;
@@ -1587,6 +1588,13 @@ fn shown_form(lang: &str, word: &str) -> String {
 }
 
 pub fn reveal_word(app: &App) {
+    void_round(app, true);
+}
+
+/// The one way a round is voided. `reveal` shows the word (the rescue's "Show
+/// me the word"); `false` ends the round without showing it (CLIP-REPORT's
+/// "Can't tell"). Both record nothing, so the streak stands.
+fn void_round(app: &App, reveal: bool) {
     let (answered, word, lang) = {
         let s = app.borrow();
         (s.answered, s.word.clone(), s.cur_lang.clone())
@@ -1614,8 +1622,12 @@ pub fn reveal_word(app: &App) {
     // Shown, never entered (I11): the word goes to the feedback line, and the
     // answer box is left empty and disabled.
     set_answer(app, ""); // the box is emptied, and stays empty (I11)
-    let shown = format!("{} {}", crate::i18n::t("fb.wordWas"), word);
-    dom::set_text("feedback", &shown);
+    if reveal {
+        let shown = format!("{} {}", crate::i18n::t("fb.wordWas"), word);
+        dom::set_text("feedback", &shown);
+    } else {
+        dom::set_text("feedback", &crate::i18n::t("rescue.cantTellDone"));
+    }
     // D12: a substitute keeps the run the length it was. In the Daily the word
     // list is fixed, so the entry is REPLACED rather than advanced past.
     schedule(app, 1600, |app| {
@@ -1672,6 +1684,74 @@ pub fn skip_word(app: &App) {
 pub fn refresh_rescue(app: &App) {
     let allowed = can_void(app);
     dom::set_text("rescueShow", &crate::i18n::t(if allowed { "rescue.show" } else { "rescue.skip" }));
+    dom::set_hidden("rescueCantTell", !cant_tell_offered(app));
+}
+
+/// CLIP-REPORT: "Can't tell" skips per page load that stay streak-safe. The
+/// counter is in memory, so a relaunch starts over; the per-run void cap
+/// (`void_cap`) still bounds Daily and Climb on top of it. Eric confirms the
+/// number (docs/CC-CLIP-REPORT.md).
+pub const CANT_TELL_SESSION_CAP: u32 = 5;
+
+thread_local! {
+    static CANT_TELL_USED: std::cell::Cell<u32> = const { std::cell::Cell::new(0) };
+    /// The variant of the clip the player last asked for on this word.
+    static LAST_VARIANT: std::cell::Cell<&'static str> = const { std::cell::Cell::new("normal") };
+}
+
+/// Where "Can't tell" is offered. Pure, so every mode's decision is a test.
+/// Off everywhere unless the flag is on; never in Impossible (no aids), in
+/// Versus (a skip would hand the opponent the turn for free) or in a racing
+/// Daily (a lap clock is running); and not once the session cap or the run's
+/// own void cap is spent -- past either, the only way out is Give up, which is
+/// a real miss.
+pub(crate) fn cant_tell_allowed(flag: bool, used: u32, voidable: bool, impossible: bool, versus: bool, racing: bool) -> bool {
+    flag && used < CANT_TELL_SESSION_CAP && voidable && !impossible && !versus && !racing
+}
+
+fn cant_tell_offered(app: &App) -> bool {
+    let (impossible, versus, racing) = {
+        let s = app.borrow();
+        (s.impossible_word, s.versus.enabled, s.daily.racing || s.daily.spelloff)
+    };
+    cant_tell_allowed(crate::flags::cant_tell(), CANT_TELL_USED.with(|c| c.get()), can_void(app), impossible, versus, racing)
+}
+
+/// CLIP-REPORT: the player says the clip was unintelligible. The round is
+/// voided -- no outcome, no streak movement, no credit -- and a report is
+/// queued for a standard player.
+pub fn cant_tell(app: &App) {
+    if !cant_tell_offered(app) {
+        return;
+    }
+    let (answered, entry, lang) = {
+        let s = app.borrow();
+        (s.answered, s.word.clone(), s.cur_lang.clone())
+    };
+    if answered || entry.is_empty() {
+        return;
+    }
+    CANT_TELL_USED.with(|c| c.set(c.get() + 1));
+    let variant = if LAST_VARIANT.with(|v| v.get()) == "slow" {
+        crate::telemetry::schema::ClipVariant::Slow
+    } else {
+        crate::telemetry::schema::ClipVariant::Normal
+    };
+    crate::telemetry::record_clip(&lang, &entry, variant, clip_source(api::last_audio_source()));
+    close_rescue();
+    void_round(app, false);
+}
+
+/// The router's source name as the report's closed enum.
+pub(crate) fn clip_source(source: &str) -> crate::telemetry::schema::ClipSource {
+    use crate::telemetry::schema::ClipSource::*;
+    match source {
+        "server-cache" => ServerCache,
+        "native-tts" => NativeTts,
+        "human" => Human,
+        "pack" => Pack,
+        _ => Other,
+    }
 }
 
 pub fn open_rescue(app: &App) {
@@ -5117,5 +5197,54 @@ mod learner_tag_tests {
         assert_eq!(tag_for(&s, true, false).mode, mode_id::GHOST_RACING);
         s.versus.enabled = true;
         assert_eq!(tag_for(&s, true, false).mode, mode_id::VERSUS);
+    }
+}
+
+#[cfg(test)]
+mod cant_tell_tests {
+    use super::*;
+    use crate::telemetry::schema::ClipSource;
+
+    /// The per-mode table in docs/CC-CLIP-REPORT.md, one row per line.
+    #[test]
+    fn where_cant_tell_is_offered() {
+        // (flag, used, voidable, impossible, versus, racing)
+        assert!(!cant_tell_allowed(false, 0, true, false, false, false), "flag off: never");
+        assert!(cant_tell_allowed(true, 0, true, false, false, false), "practice / Climb / Daily / Misses");
+        assert!(!cant_tell_allowed(true, 0, true, true, false, false), "Impossible: no aids");
+        assert!(!cant_tell_allowed(true, 0, true, false, true, false), "Versus: a free skip hands over the turn");
+        assert!(!cant_tell_allowed(true, 0, true, false, false, true), "Racing: a lap clock is running");
+        assert!(!cant_tell_allowed(true, 0, false, false, false, false), "the run's void cap is spent");
+    }
+
+    #[test]
+    fn the_session_cap_is_five() {
+        assert_eq!(CANT_TELL_SESSION_CAP, 5);
+        for used in 0..CANT_TELL_SESSION_CAP {
+            assert!(cant_tell_allowed(true, used, true, false, false, false), "skip {} is offered", used + 1);
+        }
+        assert!(!cant_tell_allowed(true, CANT_TELL_SESSION_CAP, true, false, false, false), "the sixth is not");
+    }
+
+    /// The run's own void cap (Daily 2, Climb 1) rides on top of the session cap.
+    #[test]
+    fn the_run_cap_still_applies() {
+        let mut s = AppState::default();
+        s.daily.active = true;
+        assert_eq!(void_cap(&s), Some(2));
+        s.daily.active = false;
+        s.level = "climb".into();
+        assert_eq!(void_cap(&s), Some(1));
+    }
+
+    #[test]
+    fn the_source_names_map_to_the_closed_enum() {
+        assert_eq!(clip_source("server-cache"), ClipSource::ServerCache);
+        assert_eq!(clip_source("native-tts"), ClipSource::NativeTts);
+        assert_eq!(clip_source("human"), ClipSource::Human);
+        assert_eq!(clip_source("pack"), ClipSource::Pack);
+        for other in ["", "none", "web-speech", "anything else"] {
+            assert_eq!(clip_source(other), ClipSource::Other, "{other:?}");
+        }
     }
 }

@@ -567,6 +567,8 @@
   "rescue.skip": "この単語をとばす",
   "rescue.slow": "ゆっくり聞く",
   "rescue.title": "聞こえない？",
+  "rescue.cantTell": "聞き取れない — スキップ",
+  "rescue.cantTellDone": "スキップしました。連続記録は守られています。",
   "sd.allPlaced": "{sym} は {n} 個すべて置いたよ",
   "sd.audioOff": "今は音声を使えません",
   "sd.avail": "この言語はもうすぐ対応",

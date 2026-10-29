@@ -27,6 +27,15 @@ else
   rc=1
 fi
 
+# CLIP-REPORT rows age out on the same 90 days (migration 0003).
+out=$(npx --yes wrangler@4 d1 execute spell-telemetry --remote --json \
+  --command "DELETE FROM clip_reports WHERE day < date('now','-90 day')" 2>&1)
+if n=$(printf '%s' "$out" | python3 -c 'import sys,json; print(json.load(sys.stdin)[0]["meta"]["changes"])' 2>/dev/null); then
+  echo "$(ts) telemetry-purge: deleted $n clip reports older than 90 days"
+else
+  echo "$(ts) telemetry-purge: clip_reports purge skipped or failed (migration 0003 applied?)"
+fi
+
 if [ -d "$SRV/logs/speak" ]; then
   python3 "$SRV/bin/speak_report.py" "$SRV/logs/speak" --days 0 --prune > /dev/null 2>"$SRV/logs/.speak-prune.tmp" \
     && echo "$(ts) telemetry-purge: speak metrics pruned ($(grep -c pruned "$SRV/logs/.speak-prune.tmp" || true) files)" \

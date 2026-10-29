@@ -201,6 +201,11 @@ echo "== gate: no dead element IDs (the wpDone/drawHint law)"
 node scripts/dom-id-live-check.mjs || { echo "GATE FAIL: a dom:: call names an element that does not exist"; exit 1; }
 node scripts/dom-id-live-check.mjs --selftest || { echo "GATE FAIL: dead-id selftest"; exit 1; }
 
+echo "== gate: Can't tell stays a void and stays dark (CLIP-REPORT)"
+node scripts/clip-report-check.mjs || { echo "GATE FAIL: Can't tell is no longer a streak-safe void"; exit 1; }
+python3 scripts/clip_report.py --selftest || { echo "GATE FAIL: clip_report hash vectors"; exit 1; }
+node scripts/clip-report-check.mjs --selftest || { echo "GATE FAIL: clip-report selftest"; exit 1; }
+
 echo "== gate: every word in exactly one tier (BD-G4)"
 node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tiers"; exit 1; }
 

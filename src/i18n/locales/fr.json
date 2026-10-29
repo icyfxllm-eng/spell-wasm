@@ -567,6 +567,8 @@
   "rescue.skip": "Passer ce mot",
   "rescue.slow": "Écoute-le lentement",
   "rescue.title": "Tu n'entends pas ?",
+  "rescue.cantTell": "Incompréhensible — passer",
+  "rescue.cantTellDone": "Passé. Ta série est intacte.",
   "sd.allPlaced": "Les {n} {sym} sont tous placés",
   "sd.audioOff": "L'audio n'est pas disponible pour l'instant",
   "sd.avail": "Bientôt dans cette langue",

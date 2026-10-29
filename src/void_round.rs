@@ -40,7 +40,7 @@ mod tests {
     /// of an outcome (§9), not a quieter version of one.
     #[test]
     fn the_reveal_never_calls_an_outcome_path() {
-        let b = body(GAME, "pub fn reveal_word(app: &App) {");
+        let b = body(GAME, "fn void_round(app: &App, reveal: bool) {");
         for outcome in ["on_correct(", "finalize_incorrect", "on_wrong", "stats::record", "record_miss_routed", "bump_streak"] {
             assert!(!b.contains(outcome), "reveal_word calls {outcome} -- a void must record nothing");
         }
@@ -54,7 +54,7 @@ mod tests {
     /// answer box is emptied and the inputs are locked before it is shown.
     #[test]
     fn the_revealed_word_never_reaches_the_answer_field() {
-        let b = body(GAME, "pub fn reveal_word(app: &App) {");
+        let b = body(GAME, "fn void_round(app: &App, reveal: bool) {");
         assert!(b.contains("lock_inputs()"), "the inputs must be locked");
         assert!(b.contains("set_answer(app, \"\")"), "the answer box must be emptied");
         assert!(!b.contains("set_answer(app, &word"), "the word must never be placed in the answer field");
@@ -66,7 +66,7 @@ mod tests {
     /// I12: the rescue is local. Nothing in it reaches the network.
     #[test]
     fn the_rescue_sends_nothing() {
-        for f in ["pub fn reveal_word(app: &App) {", "pub fn open_rescue(app: &App) {", "pub fn rescue_reveal_or_skip(app: &App) {"] {
+        for f in ["fn void_round(app: &App, reveal: bool) {", "pub fn open_rescue(app: &App) {", "pub fn rescue_reveal_or_skip(app: &App) {"] {
             let b = body(GAME, f);
             for net in ["fetch", "XmlHttpRequest", "telemetry::record", "http"] {
                 assert!(!b.contains(net), "{f} touches {net} -- the rescue must work offline and send nothing");
@@ -89,5 +89,31 @@ mod tests {
     fn at_the_cap_the_step_becomes_the_modes_own_miss() {
         let b = body(GAME, "pub fn skip_word(app: &App) {");
         assert!(b.contains("give_up(app)"), "a skip must be the existing miss, not a new rule");
+    }
+
+    /// CLIP-REPORT: "Can't tell" is the same void as the reveal, not a new
+    /// scoring rule. Pointing it at the miss (give up) is the mutation that
+    /// costs a player their streak, and these are what catch it.
+    #[test]
+    fn both_rescue_entries_go_through_the_one_void() {
+        let r = body(GAME, "pub fn reveal_word(app: &App) {");
+        assert!(r.contains("void_round(app, true)"), "the reveal shows the word through the shared void");
+        let c = body(GAME, "pub fn cant_tell(app: &App) {");
+        assert!(c.contains("void_round(app, false)"), "Can't tell voids the round without showing the word");
+        for outcome in ["give_up(", "skip_word(", "on_correct(", "finalize_incorrect", "bump_streak", "break_streak", "stats::record", "record_miss_routed", "streak = 0"] {
+            assert!(!c.contains(outcome), "cant_tell calls {outcome} -- a skip must not be an outcome");
+        }
+    }
+
+    /// The report is the ONLY thing Can't tell sends, and it only goes through
+    /// the telemetry module's route (opt-in, kill switch, Jr and My Words rules).
+    #[test]
+    fn cant_tell_reports_only_through_the_telemetry_route() {
+        let c = body(GAME, "pub fn cant_tell(app: &App) {");
+        for net in ["fetch", "XmlHttpRequest", "http", "post("] {
+            assert!(!c.contains(net), "cant_tell touches {net}");
+        }
+        assert!(c.contains("telemetry::record_clip("), "the report goes through record_clip");
+        assert!(c.contains("cant_tell_offered(app)"), "the same gate as the button guards the handler");
     }
 }
