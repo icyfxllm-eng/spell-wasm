@@ -828,7 +828,10 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
     // that as "fds 259 → 19").
     let warm: Vec<&(f64, Value)> = samples.iter().filter(|(m, _)| *m >= o.warmup_min && *m <= o.minutes).collect();
     let rss = |s: &&(f64, Value)| s.1["rss_bytes"].as_u64();
-    let fds = |s: &&(f64, Value)| s.1["open_fds"].as_u64();
+    // Descriptors beyond one per open socket: rooms that end early close
+    // their sockets, and a fall in fds is not a leak (the 2026-10-28 chaos
+    // run read 38 stalled rooms as "fds 299 → 200").
+    let fds = |s: &&(f64, Value)| Some(s.1["open_fds"].as_u64()?.saturating_sub(s.1["connections"].as_u64()?));
     let (rss0, rss1) = (warm.first().and_then(rss), warm.last().and_then(rss));
     let (fd0, fd1) = (warm.first().and_then(fds), warm.last().and_then(fds));
     let rss_growth = match (rss0, rss1) {
@@ -863,7 +866,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         }
         if let (Some(a), Some(b)) = (fd0, fd1) {
             let flat = (b as i64 - a as i64).abs() <= (a as i64 / 50).max(8);
-            checks.push(("file descriptors flat", flat, format!("{a} → {b}")));
+            checks.push(("file descriptors flat (beyond one per socket)", flat, format!("{a} → {b}")));
         }
     }
     if o.drop_frac > 0.0 {
