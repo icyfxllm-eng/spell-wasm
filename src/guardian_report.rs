@@ -1032,9 +1032,12 @@ mod live_bank_tests {
     /// auditor, so nothing tops up today; and an auditor must be a name.
     #[test]
     fn no_language_is_audited_until_someone_is_named() {
+        // en: Eric Hillman, signed 2026-10-30. A new name goes here and in
+        // the commit that adds it to config/guardian-topup.json.
+        const NAMED: &[&str] = &["en"];
         let b = LiveBank::default();
         for (lang, _, _, _) in crate::consts::BUILTIN_LANGS {
-            assert!(!b.audited(lang, "any"), "{lang} claims an auditor; record who in the commit");
+            assert_eq!(b.audited(lang, "any"), NAMED.contains(&lang), "{lang}: the auditor claim and this list disagree");
         }
     }
 
@@ -1051,5 +1054,40 @@ mod live_bank_tests {
         let member = set.members.iter().find(|m| m.word_id.is_some()).unwrap();
         assert!(b.sound_alike("en", &member.member_id), "{} is in a verified set", member.member_id);
         assert!(!b.sound_alike("vi", &member.member_id), "vi's table is not verified");
+    }
+
+    /// With en audited, three missed Easy words make a shown group and the
+    /// live bank tops the list up to ten. Every added row passes I5 and is a
+    /// row the group's type names.
+    #[test]
+    fn english_tops_up_from_the_live_bank() {
+        use crate::learner::OutcomeClass;
+        use crate::learner_query::{Fake, DEVICE};
+        use crate::reports_share::tests::{at, det, Indianapolis};
+        let b = LiveBank::default();
+        let missed: Vec<String> = b
+            .rows("en")
+            .into_iter()
+            .filter(|r| primary_type(&b, "en", &r.word) == Some(WordType::Tier(0)) && b.clean("en", &r.word, false))
+            .take(3)
+            .map(|r| r.word)
+            .collect();
+        assert_eq!(missed.len(), 3);
+        let ts = Some(at(2026, 10, 20, 9, 0, 0, -4));
+        let fake = Fake { details: missed.iter().map(|w| det(w, ts, Some(OutcomeClass::Misspelled))).collect(), ..Fake::default() };
+        let r = compose(&GuardianInput {
+            base: ComposeInput { q: &fake, profile: DEVICE, langs: &["en"], now_s: at(2026, 10, 27, 8, 0, 0, -4), zone: &Indianapolis, which: Which::LastWeek },
+            bank: &b,
+            junior: false,
+        });
+        let p = &r.sections[0].practice;
+        assert_eq!(p.len(), PRACTICE_MAX, "{p:?}");
+        assert!(missed.iter().all(|w| p[..3].contains(w)), "missed words come first: {p:?}");
+        let rows = b.rows("en");
+        for w in &p[3..] {
+            let row = rows.iter().find(|r| &r.word == w).expect("a top-up word is a bank row");
+            assert!(b.purity_pass("en", &row.row) && b.clean("en", w, false), "{w} fails I5");
+            assert_eq!(primary_type(&b, "en", w), Some(WordType::Tier(0)), "{w} is not the group's type");
+        }
     }
 }
