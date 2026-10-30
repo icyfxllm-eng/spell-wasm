@@ -17,6 +17,10 @@ Amendments already signed (these override the verbatim text where they conflict)
   in the practice list (and so in Add). It has no tier, so the tier cap does
   not bind it; the clean check still does. Bank misses keep the cap. Signed:
   "Yes, include them".
+- F3.2 / I5 (2026-10-30): English top-up is ON. Eric Hillman is the named
+  auditor for the en bank (config/guardian-topup.json). Every other language
+  stays off until someone who reads it signs. Signed: "Report top-up words",
+  "English only".
 
 Census HALTs C1, C2, C3 and C6 are cleared by CC-REPORTS-SHARE v1,
 L0 CR-1, CC-HUB-NAV AE-1 and CC-MYWORDS-LISTS KC-1 (all built on main).
@@ -421,6 +425,7 @@ the signed text, unedited; everything below is a record of the build. -->
 - **Practice list:** missed words first, filtered to bank rows within the tier cap that are clean (not a proper noun, profanity-clean, kid list for Jr). **Reading of I5:** PURITY and the audited flag bind the top-up rows. Missed words are exempt from those two, because A15 says that without a ledger the list *equals* the missed words. **Signed by Eric, 2026-10-27:** "Yes, I5 binds top-up words only. Keep it as built."
 - **Own-list misses (amended 2026-10-28).** A missed word that is no bank row now joins the practice list as well. It has no tier, so no cap binds it, including in a week with no bank play at all (the cap is then None, and before this every word was dropped). The clean check still binds it. It is still in no type group (I12) and never seeds a top-up. Test: `an_own_list_miss_joins_the_practice_list`. **Signed by Eric, 2026-10-28:** "Yes, include them".
 - **Top-up is built, tested and OFF everywhere.** No bank has a per-row audited flag (census C4), and the filter may not be relaxed (F3.5). `config/guardian-topup.json` holds a per-language auditor claim, all empty, the same pattern as SENSE-CUE D9. Naming an auditor for a language turns its top-up on.
+- **English top-up ON (2026-10-30).** Eric Hillman is named as the en auditor, covering the en bank as a whole; rows failing PURITY stay excluded (en has none). Other languages stay off. Top-up only fills from groups that are shown (3 or more misses of one type), so a week with fewer misses still gets only the missed words. Tests: `no_language_is_audited_until_someone_is_named` (now an exact list) and `english_tops_up_from_the_live_bank`. **Signed by Eric, 2026-10-30:** "Report top-up words", "English only".
 - **PURITY** comes from `config/guardian-purity.json`, generated from the ledgers and checked against them in CI. A row with no verdict counts as not passing. Three zh bank rows have no verdict: `jie1zhu4|接著`, `ta1|牠` and `you3zhu4|有著`, all traditional characters in the simplified bank. vi has no ledger, so it gets no top-up.
 - **Seed:** FNV-1a over `profile|monday|lang`, so it is stable across builds and platforms.
 
