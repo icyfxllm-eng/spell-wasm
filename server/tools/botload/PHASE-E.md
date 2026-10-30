@@ -26,7 +26,8 @@ word instantly. The container reaches the host through
 `host.containers.internal`.
 ```
 # as spellsrv (sudo -iu spellsrv):
-~/spell-wasm/target/release/botload tts-stub --listen 0.0.0.0:9190 &
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+systemd-run --user --unit=phase-e-stub $HOME/spell-wasm/target/release/botload tts-stub --listen 0.0.0.0:9190
 sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=http://host.containers.internal:9190|' ~/.config/containers/systemd/spellgame.container
 systemctl --user daemon-reload && systemctl --user restart spellgame.service
 curl -s http://127.0.0.1:8081/admin/readyz        # "tts": true
@@ -34,6 +35,11 @@ curl -s http://127.0.0.1:8081/admin/readyz        # "tts": true
 Port 9190, not 9090: Rocky's Cockpit console listens on 9090 by default.
 firewalld's public zone has no 9190, so the stub can't be reached from
 outside. `verify-host.sh` H5 shows it as an extra listener until step 6.
+The stub runs under spellsrv's systemd, not as a shell job: a job started
+with `&` dies with its shell, and on 2026-10-29 a chaos run started after
+that ended every match `audio_unavailable` in its first minutes. Before
+every run, check it is up (`systemctl --user is-active phase-e-stub` and
+readyz `"tts": true`).
 
 ## 3. A16.1 — load (400 connections, 200 rooms, 10 min)
 ```
@@ -92,7 +98,7 @@ mismatches.
 ## 6. Back to the real voice
 ```
 # as spellsrv (sudo -iu spellsrv):
-kill %1                                            # the stub
+systemctl --user stop phase-e-stub                 # the stub
 sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=http://<MAC_MINI_TAILNET_IP>:8000|' ~/.config/containers/systemd/spellgame.container
 systemctl --user daemon-reload && systemctl --user restart spellgame.service
 # as your admin user (eric):

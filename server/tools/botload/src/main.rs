@@ -213,6 +213,9 @@ fn close_why(why: String) {
     *CLOSE_WHY.get_or_init(Default::default).lock().unwrap().entry(why).or_default() += 1;
 }
 
+/// The audio_unavailable hint is logged once per run.
+static AUDIO_HINT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 /// StartMatch sent again because no TurnStart followed.
 static START_RESENDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 const START_RETRY: Duration = Duration::from_secs(5);
@@ -478,6 +481,9 @@ impl RoomRun {
                 return Instant::now() < self.deadline; // rematch while time remains
             }
             ServerMsg::MatchEnded { reason } if scorer => {
+                if reason == "audio_unavailable" && !AUDIO_HINT.swap(true, std::sync::atomic::Ordering::Relaxed) {
+                    note(&self.t, format!("{}: match ended audio_unavailable: is the tts stub up? (systemctl --user is-active phase-e-stub; readyz \"tts\")", self.code));
+                }
                 *self.t.lock().unwrap().match_ended.entry(reason.clone()).or_default() += 1;
                 self.new_match();
                 return reason == "player_left" && Instant::now() < self.deadline;
