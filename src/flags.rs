@@ -81,20 +81,22 @@ pub fn cant_tell() -> bool {
 /// module is localStorage only, so turning one on for players needs a build (or a
 /// remote-flag channel, which does not exist yet).
 pub fn impossible() -> bool {
-    resolve(stored("impossible").as_deref(), false)
+    resolve(stored("impossible").as_deref(), true)
 }
 
 /// CC-IMPOSSIBLE v1 F12 -- one flag per language (`spell_flag_impossible_<lang>`),
 /// every one **default OFF**. The registry (`crate::impossible`) still applies
 /// the pool, table, release and entitlement gates on top of it.
 pub fn impossible_lang(lang: &str) -> bool {
-    resolve(stored(&format!("impossible_{lang}")).as_deref(), false)
+    // RELEASE BRANCH ONLY (TestFlight 2): the ten launch languages on. hi/vi/ar/zh/ja stay locked by the registry.
+    let launch = matches!(lang, "en" | "es" | "ru" | "fr" | "de" | "pt" | "pl" | "ko" | "fil" | "sw");
+    resolve(stored(&format!("impossible_{lang}")).as_deref(), launch)
 }
 
 /// CC-IMPOSSIBLE v1.2 M8 -- Impossible Mix. **Default OFF.** It needs the master
 /// flag and at least two qualifying languages as well (`impossible::mix_status`).
 pub fn impossible_mix() -> bool {
-    resolve(stored("impossible_mix").as_deref(), false)
+    resolve(stored("impossible_mix").as_deref(), true)
 }
 
 /// F6 "Spell Racing in The Climb" (formerly Ghost racing) — race your best local run. Cross-platform.
@@ -265,21 +267,21 @@ pub fn randospell_marathon() -> bool {
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_daily() -> bool {
-    randospell() && resolve(stored("randospell_daily").as_deref(), false)
+    randospell() && resolve(stored("randospell_daily").as_deref(), true)
 }
 
 /// CC-RANDOSPELL F9: Head-to-Head (Phase C). Needs `randospell`.
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_h2h() -> bool {
-    randospell() && resolve(stored("randospell_h2h").as_deref(), false)
+    randospell() && resolve(stored("randospell_h2h").as_deref(), true)
 }
 
 /// CC-RANDOSPELL F9: the Spell Jr variant (Phase D). Needs `randospell`.
 #[cfg(not(feature = "web"))]
 #[allow(dead_code)]
 pub fn randospell_jr() -> bool {
-    randospell() && resolve(stored("randospell_jr").as_deref(), false)
+    randospell() && resolve(stored("randospell_jr").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F19 -- the "over the top" mechanics. Each is **default OFF**
@@ -287,47 +289,47 @@ pub fn randospell_jr() -> bool {
 /// are for staging. With one off, that mechanic is exactly v1.
 #[cfg(not(feature = "web"))]
 pub fn randospell_heat() -> bool {
-    randospell() && resolve(stored("randospell_heat").as_deref(), false)
+    randospell() && resolve(stored("randospell_heat").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_call() -> bool {
-    randospell() && resolve(stored("randospell_call").as_deref(), false)
+    randospell() && resolve(stored("randospell_call").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_stretch() -> bool {
-    randospell() && resolve(stored("randospell_stretch").as_deref(), false)
+    randospell() && resolve(stored("randospell_stretch").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_doubles() -> bool {
-    randospell() && resolve(stored("randospell_doubles").as_deref(), false)
+    randospell() && resolve(stored("randospell_doubles").as_deref(), true)
 }
 
 #[cfg(not(feature = "web"))]
 pub fn randospell_ear() -> bool {
-    randospell() && resolve(stored("randospell_ear").as_deref(), false)
+    randospell() && resolve(stored("randospell_ear").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F19 -- the NPC table (F10). **Default OFF**; needs `randospell`.
 /// With it on, Jr's Sprint also gets its one racing NPC.
 #[cfg(not(feature = "web"))]
 pub fn randospell_npc() -> bool {
-    randospell() && resolve(stored("randospell_npc").as_deref(), false)
+    randospell() && resolve(stored("randospell_npc").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F15 -- Steal, NPC table and Head-to-Head only. **Default OFF**.
 #[cfg(not(feature = "web"))]
 pub fn randospell_steal() -> bool {
-    randospell() && resolve(stored("randospell_steal").as_deref(), false)
+    randospell() && resolve(stored("randospell_steal").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F16 -- the Final Round (was "Last Call"), NPC table and
 /// Head-to-Head only. **Default OFF**.
 #[cfg(not(feature = "web"))]
 pub fn randospell_lastcall() -> bool {
-    randospell() && resolve(stored("randospell_lastcall").as_deref(), false)
+    randospell() && resolve(stored("randospell_lastcall").as_deref(), true)
 }
 
 /// CC-RANDOSPELL v1.1 F18 -- the Eclipse visuals. **Default OFF** and independent:
@@ -335,7 +337,7 @@ pub fn randospell_lastcall() -> bool {
 /// still readable (I20).
 #[cfg(not(feature = "web"))]
 pub fn randospell_fx() -> bool {
-    randospell() && resolve(stored("randospell_fx").as_deref(), false)
+    randospell() && resolve(stored("randospell_fx").as_deref(), true)
 }
 
 /// CC-QUICKBEE-DRAW F4 -- the drawn Quick Bee, one flag per language
@@ -344,13 +346,13 @@ pub fn randospell_fx() -> bool {
 /// `quickbee_draw::LANGS` table, not this file.
 #[cfg(not(feature = "web"))]
 pub fn quickbee_draw_lang(lang: &str) -> bool {
-    crate::quickbee_draw::cfg(lang).is_some_and(|c| resolve(stored(c.flag_key).as_deref(), false))
+    crate::quickbee_draw::cfg(lang).is_some_and(|c| resolve(stored(c.flag_key).as_deref(), c.measured))
 }
 
 /// The registry's mode flag: any language's draw flag is on.
 #[cfg(not(feature = "web"))]
 pub fn quickbee_draw() -> bool {
-    crate::quickbee_draw::LANGS.iter().any(|c| resolve(stored(c.flag_key).as_deref(), false))
+    crate::quickbee_draw::LANGS.iter().any(|c| resolve(stored(c.flag_key).as_deref(), c.measured))
 }
 
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
@@ -631,7 +633,7 @@ pub fn pick_queue_d() -> bool {
 /// can only switch it off, as `visual_type`). Off is a true no-op: the body never
 /// gets the `visual-type` class, so none of its rules match.
 pub fn visual_type() -> bool {
-    resolve(stored("visual_type").as_deref(), false)
+    resolve(stored("visual_type").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.feedback` (Phase B, F4): answer feedback that
@@ -641,7 +643,7 @@ pub fn visual_type() -> bool {
 /// (V-D22), killable as `visual_feedback`. Off is a true no-op: no body class,
 /// and the reveal takes today's path.
 pub fn visual_feedback() -> bool {
-    resolve(stored("visual_feedback").as_deref(), false)
+    resolve(stored("visual_feedback").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.orb` (Phase B, F3): the orb as a living character
@@ -649,35 +651,35 @@ pub fn visual_feedback() -> bool {
 /// (V-D22), killable as `visual_orb`. Off: no body class, no state machine
 /// attribute, no envelope decode.
 pub fn visual_orb() -> bool {
-    resolve(stored("visual_orb").as_deref(), false)
+    resolve(stored("visual_orb").as_deref(), true)
 }
 
 /// CC-SPELL-KEYBOARD `keyboard.flight` (Phase C, KF5): a typed letter's ghost
 /// rises from its key into the answer. **Default OFF** (K-D28), killable as
 /// `keyboard_flight`.
 pub fn keyboard_flight() -> bool {
-    resolve(stored("keyboard_flight").as_deref(), false)
+    resolve(stored("keyboard_flight").as_deref(), true)
 }
 
 /// CC-SPELL-KEYBOARD `keyboard.constellation` (Phase C, KF6): after a correct
 /// answer its keys light as stars joined in typing order. **Default OFF**
 /// (K-D28), killable as `keyboard_constellation`.
 pub fn keyboard_constellation() -> bool {
-    resolve(stored("keyboard_constellation").as_deref(), false)
+    resolve(stored("keyboard_constellation").as_deref(), true)
 }
 
 /// CC-SPELL-KEYBOARD `keyboard.react` (Phase C, KF7): the keyboard reacts to a
 /// verdict (wave, amber dim, streak warmth; a neutral pulse where the mode
 /// shows none). **Default OFF** (K-D28), killable as `keyboard_react`.
 pub fn keyboard_react() -> bool {
-    resolve(stored("keyboard_react").as_deref(), false)
+    resolve(stored("keyboard_react").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.sound` (Phase C, F5): the synthesized game sounds
 /// and the Game sounds setting. **Default OFF** (V-D22), killable as
 /// `visual_sound`. Off: no sound plays and the Settings rows stay hidden.
 pub fn visual_sound() -> bool {
-    resolve(stored("visual_sound").as_deref(), false)
+    resolve(stored("visual_sound").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.haptics` (Phase C, F6): the signed haptic table
@@ -685,21 +687,21 @@ pub fn visual_sound() -> bool {
 /// OFF** (V-D22), killable as `visual_haptics`. Off: today's mapping, no cap,
 /// no toggles.
 pub fn visual_haptics() -> bool {
-    resolve(stored("visual_haptics").as_deref(), false)
+    resolve(stored("visual_haptics").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.icons` (Phase D, F8): the drawn icon set in place
 /// of emoji. **Default OFF** (V-D22), killable as `visual_icons`. Off: every
 /// icon slot shows the emoji it replaced, so the screen is as it was.
 pub fn visual_icons() -> bool {
-    resolve(stored("visual_icons").as_deref(), false)
+    resolve(stored("visual_icons").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.celebrate` (Phase D, F7): big and small
 /// celebrations on the V-D18 triggers. **Default OFF** (V-D22), killable as
 /// `visual_celebrate`. Off: no celebration; achievements keep today's toast.
 pub fn visual_celebrate() -> bool {
-    resolve(stored("visual_celebrate").as_deref(), false)
+    resolve(stored("visual_celebrate").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.cards` (Phase D, F11): the 1080x1350 result card
@@ -707,21 +709,21 @@ pub fn visual_celebrate() -> bool {
 /// Randospell. **Default OFF** (V-D22), killable as `visual_cards`. Off:
 /// sharing is exactly as it was.
 pub fn visual_cards() -> bool {
-    resolve(stored("visual_cards").as_deref(), false)
+    resolve(stored("visual_cards").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.themes` (Phase E, F9): the five themes, the
 /// Appearance rows and the earned unlocks. **Default OFF** (V-D22), killable as
 /// `visual_themes`. Off: no data-theme, no rows; unlocks are still recorded.
 pub fn visual_themes() -> bool {
-    resolve(stored("visual_themes").as_deref(), false)
+    resolve(stored("visual_themes").as_deref(), true)
 }
 
 /// CC-VISUAL-ECLIPSE `visual.accents` (Phase E, F10): the study language's
 /// accent on the language chip, progress fills and a light orb tint. **Default
 /// OFF** (V-D22), killable as `visual_accents`.
 pub fn visual_accents() -> bool {
-    resolve(stored("visual_accents").as_deref(), false)
+    resolve(stored("visual_accents").as_deref(), true)
 }
 
 pub fn is_on(name: &str) -> bool {
