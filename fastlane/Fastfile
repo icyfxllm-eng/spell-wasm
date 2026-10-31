@@ -237,6 +237,10 @@ platform :ios do
     key_path = File.expand_path("api_key.json", __dir__)
     root = File.expand_path("..", __dir__)
 
+    # 0. The tree must hold every fix in fastlane/must-contain.txt (a branch cut
+    #    from an older release branch silently drops them).
+    sh("cd #{root.shellescape} && node scripts/must-contain-check.mjs")
+
     # 1. WASM + web bundle -> dist/ -> synced into the iOS project.
     sh("cd #{root.shellescape} && npm run sync:ios")
 

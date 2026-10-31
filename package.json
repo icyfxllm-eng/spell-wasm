@@ -6,6 +6,7 @@
   "scripts": {
     "i18n:check": "node scripts/i18n-check.mjs",
     "viewport:check": "node scripts/viewport-check.mjs",
+    "must-contain": "node scripts/must-contain-check.mjs",
     "seam:check": "node scripts/seam-absence-check.mjs dist",
     "build:test": "bash scripts/build-web-test.sh",
     "build:dev": "bash scripts/build-web-dev.sh",

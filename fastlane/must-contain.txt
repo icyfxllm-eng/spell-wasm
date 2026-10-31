@@ -1,0 +1,5 @@
+# Commits every shipped build's tree must contain, as ancestors of HEAD.
+# scripts/must-contain-check.mjs enforces this; the ship lane runs it first.
+# One per line: <full sha> <why>. Add a line when a fix must never be dropped
+# by cutting a release branch from an older one.
+d2a7ed3293de5489d39f43f890542c91a9e8a450 Test entitlements switch cut from release builds (builds 304-307 shipped without it)
