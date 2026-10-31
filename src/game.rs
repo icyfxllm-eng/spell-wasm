@@ -3498,6 +3498,8 @@ fn end_chain(app: &App) {
         let s = app.borrow();
         (s.streak, s.level.clone(), s.run_start_ms, s.kid, s.review)
     };
+    // The best chain is written here, before the save prompt can be dismissed.
+    crate::chain_best::note_run(reached, review);
     // Post to The Climb: ranked difficulty (submit_run filters to medium/hard/
     // expert) and logged-in only; never in Spell Jr — Jr Climb is unranked and
     // makes zero leaderboard calls (CC-ONBOARD-JR I6). A plausible run duration
