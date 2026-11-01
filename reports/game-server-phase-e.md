@@ -11,7 +11,8 @@ are done.**
 
 The server held score, order and resume under every test. The host check is
 at 0 FAIL, 1 WARN (H16, UPS on order, which the runbook allows) as of
-2026-10-31. Nightly backups to Cloudflare R2 are on, and H12 passes.
+2026-10-31. Nightly backups to Cloudflare R2 are on, H12 passes, and the
+restore drill (go/no-go 10.6) passed, as reported by Eric.
 
 ## Results
 
@@ -68,7 +69,6 @@ server/tools/botload.
 ## Before launch
 
 Blocking:
-- Restore drill result (go/no-go 10.6): to be recorded here.
 - App build carrying the resend of an action lost in a drop. The fix is on
   main, tested on the web build only. Builds before it make the player wait
   120 s and lose the turn.
