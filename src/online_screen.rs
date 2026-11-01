@@ -24,8 +24,7 @@ use crate::{dom, App};
 const FAMILY_KEY: &str = "spell_online_family_v1";
 /// The adult's typed name, remembered for next time (a convenience only).
 const NAME_KEY: &str = "spell_online_name_v1";
-/// O: Eric supplies the id; until then the card links to this placeholder.
-const APP_STORE_URL: &str = "https://apps.apple.com/app/idXXXXXXXXXX";
+const APP_STORE_URL: &str = "https://apps.apple.com/app/id6788927897";
 
 thread_local! {
     static MODEL: RefCell<Model> = RefCell::new(Model::default());
