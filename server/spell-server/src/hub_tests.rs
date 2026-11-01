@@ -261,14 +261,18 @@ async fn a3_2_room_lifetimes_under_paused_time() {
     let hub = Hub::new();
     let mut a = connect(&hub, "a", ProfileKind::Adult, 1);
     let code = create(&hub, &mut a, "test");
-    // The host drops. The seat is held 60 s; when it is released no adult is
-    // left, so the room closes at once (A3.3) -- which is why the 10-minute
-    // empty-room rule is only a safety net: an empty room has no host.
+    // The host drops in the lobby. The seat is held 5 min; when it is released
+    // no adult is left, so the room closes at once (A3.3) -- which is why the
+    // 10-minute empty-room rule is only a safety net: an empty room has no host.
     hub.detach("a", 1, Instant::now());
-    advance(&hub, Duration::from_secs(59)).await;
+    advance(&hub, LOBBY_SEAT_HOLD - Duration::from_secs(1)).await;
     assert!(hub.room_exists(&code), "the seat hold keeps the room");
     advance(&hub, Duration::from_secs(2)).await;
     assert!(!hub.room_exists(&code));
+
+    // Coming back after that is told the room is gone.
+    let mut back = connect_resume(&hub, "a", ProfileKind::Adult, 3, Some((code.clone(), 0)));
+    assert!(take(&mut back).iter().any(|o| matches!(&o.msg, ServerMsg::MatchEnded { reason } if reason == "room_closed")));
 
     let mut b = connect(&hub, "b", ProfileKind::Adult, 2);
     let code = create(&hub, &mut b, "test");

@@ -32,6 +32,9 @@ pub const CODE_LEN: usize = 6;
 pub const RING: usize = 512;
 pub const PENDING_TTL: Duration = Duration::from_secs(120);
 pub const SEAT_HOLD: Duration = Duration::from_secs(60);
+/// Outside a running match nothing is at stake, so a player who switches apps
+/// keeps the seat longer.
+pub const LOBBY_SEAT_HOLD: Duration = Duration::from_secs(300);
 pub const EMPTY_TTL: Duration = Duration::from_secs(600);
 pub const ROOM_LIFETIME: Duration = Duration::from_secs(3 * 3600);
 pub const EMOTES: u8 = 8;
@@ -477,7 +480,14 @@ impl Hub {
         if let Some(deadline) = s.draining {
             let _ = tx.send(Out::Frame(encode_server(0, &ServerMsg::ServerDraining { deadline_unix_ms: deadline })));
         }
-        let Some(code) = s.room_of.get(&sess.player).cloned() else { return };
+        let Some(code) = s.room_of.get(&sess.player).cloned() else {
+            // Coming back to a room that is gone: say so, or the client sits in
+            // a room that no longer exists.
+            if resume.is_some() {
+                let _ = tx.send(Out::Frame(encode_server(0, &ServerMsg::MatchEnded { reason: "room_closed".into() })));
+            }
+            return;
+        };
         let room = s.rooms.get_mut(&code).unwrap();
         let seat = room.seat_of(&sess.player).unwrap();
         {
@@ -816,10 +826,11 @@ impl Hub {
                 s.direct(&p.player, &ServerMsg::Denied { reason: "expired".into() });
             }
             // Seat holds (A5.2).
+            let hold = if s.rooms[&code].mode.running() { SEAT_HOLD } else { LOBBY_SEAT_HOLD };
             let released: Vec<String> = s.rooms[&code]
                 .seats
                 .values()
-                .filter(|m| m.dropped_at.is_some_and(|t| now.duration_since(t) >= SEAT_HOLD))
+                .filter(|m| m.dropped_at.is_some_and(|t| now.duration_since(t) >= hold))
                 .map(|m| m.player.clone())
                 .collect();
             for player in released {

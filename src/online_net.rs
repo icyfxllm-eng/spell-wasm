@@ -31,6 +31,8 @@ pub mod close {
 pub const UNREACHABLE_AFTER: u32 = 2;
 /// F5: a room seat is held 60 s; the client keeps trying that long.
 pub const RECONNECT_WINDOW_MS: f64 = 60_000.0;
+/// The server holds a lobby seat longer than a seat in a running match.
+pub const LOBBY_RECONNECT_WINDOW_MS: f64 = 300_000.0;
 
 const TOKEN_KEY: &str = "online_token";
 
