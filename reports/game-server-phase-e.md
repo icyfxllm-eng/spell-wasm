@@ -61,7 +61,8 @@ server/tools/botload.
 5. **Network path.** H19 shows the default route on Wi-Fi at the final host
    check, though soak 4 ran with the cable connected. Wi-Fi saw about 8
    closes a minute, soak 4 on the cable about 2. Which path the chaos runs
-   used is not recorded.
+   used is not recorded. Fixed 2026-10-31: enp1s0 connected with autoconnect
+   on, H19 passes. Not yet tested across a reboot.
 
 ## Before launch
 
@@ -73,7 +74,6 @@ Blocking:
 
 Still open with Eric:
 - O4 outside uptime monitor (runbook step 14)
-- Ethernet as the default route (H19)
 - UPS (H16)
 - A13.3 signed kill doc
 - Maestro
