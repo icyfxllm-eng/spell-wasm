@@ -342,6 +342,38 @@ export async function run(browser, base, suite) {
     } finally { await a.ctx.close(); await b.ctx.close(); srv.close(); }
   });
 
+  await suite.test('coming back from another app reconnects to the room; the rules and turns left show', async () => {
+    const srv = await roomServer(base);
+    const a = await app(browser, base, srv);
+    const b = await app(browser, base, srv);
+    try {
+      await openOnline(a.page);
+      const code = await create(a.page);
+      await openOnline(b.page);
+      let sockets = 0;
+      b.page.on('websocket', () => { sockets += 1; });
+      await join(b.page, code);
+      await a.page.waitForFunction(() => document.querySelectorAll('#olPlayers li').length === 2, null, { timeout: 10000 });
+      assert((await a.page.textContent('#olRulesLobby')).includes('3'), 'the lobby does not say how many turns');
+      assertEq(sockets, 1, 'one socket before leaving the app');
+      const setHidden = (hidden) => b.page.evaluate((h) => {
+        Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => (h ? 'hidden' : 'visible') });
+        document.dispatchEvent(new Event('visibilitychange'));
+      }, hidden);
+      await setHidden(true);
+      // sleep-ok: the rule under test is about time spent away; no event marks it.
+      await b.page.waitForTimeout(2200);
+      await setHidden(false);
+      await b.page.waitForFunction(() => document.getElementById('olLobby') && !document.getElementById('olLobby').hidden, null, { timeout: 5000 });
+      for (let i = 0; i < 50 && sockets < 2; i++) await b.page.waitForTimeout(100); // sleep-ok: polling a counter kept in node
+      assertEq(sockets, 2, 'coming back did not open a new socket');
+      await a.page.waitForFunction(() => !document.querySelector('#olPlayers .ol-tag.off'), null, { timeout: 10000 });
+      await a.page.click('#olStart');
+      await b.page.waitForSelector('#olMatch:not([hidden])', { timeout: 10000 });
+      await b.page.waitForFunction(() => document.getElementById('olTurns').textContent.includes('3'), null, { timeout: 10000 });
+    } finally { await a.ctx.close(); await b.ctx.close(); srv.close(); }
+  });
+
   await suite.test('A13.2: twenty seconds offline mid-match shows the reconnect overlay, then the match resumes', async () => {
     const srv = await roomServer(base);
     const a = await app(browser, base, srv);

@@ -32,8 +32,10 @@ thread_local! {
     static OPEN: Cell<bool> = const { Cell::new(false) };
     /// Bad-open count with no room (F13: two, then the resting card).
     static FAILS: Cell<u32> = const { Cell::new(0) };
-    /// When a drop with a room began (ms), for the 60 s reconnect overlay.
+    /// When a drop with a room began (ms), for the reconnect overlay.
     static DROPPED_AT: Cell<Option<f64>> = const { Cell::new(None) };
+    /// When the app went to the background (ms).
+    static HIDDEN_AT: Cell<Option<f64>> = const { Cell::new(None) };
     static SUBMITTED: Cell<bool> = const { Cell::new(false) };
     static KEYS_LANG: RefCell<String> = const { RefCell::new(String::new()) };
     static LEAVING: Cell<bool> = const { Cell::new(false) };
@@ -215,10 +217,25 @@ fn wire_keys_capture() {
 
 /// F13 / A13.3: coming back to the app re-reads the kill file; a remote kill
 /// while the screen is open shows the resting card.
+/// Shorter than this in the background, the socket has survived.
+const RETURN_RECONNECT_MS: f64 = 2000.0;
+
 fn wire_visibility() {
     let f = Closure::<dyn FnMut()>::new(|| {
         let visible = dom::doc().visibility_state() == web_sys::VisibilityState::Visible;
+        if !visible {
+            HIDDEN_AT.with(|h| h.set(Some(now_ms())));
+        }
         if visible && OPEN.with(Cell::get) {
+            // iOS may have killed the socket without telling us, and timers do
+            // not run in the background: back in a room, always reconnect.
+            let away = HIDDEN_AT.with(Cell::take).is_some_and(|t| now_ms() - t >= RETURN_RECONNECT_MS);
+            if away && with_model(|m| m.room.is_some()) {
+                DROPPED_AT.with(|d| d.set(None));
+                dom::set_hidden("olReconnect", true);
+                net::shut();
+                connect();
+            }
             spawn_local(async {
                 crate::killflags::refresh().await;
                 if !crate::flags::online_enabled() {
@@ -356,6 +373,13 @@ fn clean_code_field() {
 
 fn join_room() {
     let code = om::clean_code(&dom::input("olCode").value()).unwrap_or_default();
+    // Nothing typed yet is not a wrong code: take them to the field.
+    if code.is_empty() {
+        with_model(|m| m.entry_error = None);
+        render();
+        let _ = dom::input("olCode").focus();
+        return;
+    }
     if code.chars().count() != om::CODE_LEN {
         with_model(|m| m.entry_error = Some("bad_code".into()));
         render();
@@ -572,7 +596,7 @@ fn on_drop() {
             }
             d.get().unwrap()
         });
-        if now_ms() - started >= net::RECONNECT_WINDOW_MS {
+        if now_ms() - started >= reconnect_window() {
             DROPPED_AT.with(|d| d.set(None));
             dom::set_hidden("olReconnect", true);
             SUBMITTED.with(|s| s.set(false));
@@ -608,9 +632,17 @@ fn on_drop() {
     });
 }
 
+fn reconnect_window() -> f64 {
+    if with_model(|m| m.in_match) {
+        net::RECONNECT_WINDOW_MS
+    } else {
+        net::LOBBY_RECONNECT_WINDOW_MS
+    }
+}
+
 fn tick_overlay() {
     let Some(start) = DROPPED_AT.with(Cell::get) else { return };
-    let left = ((net::RECONNECT_WINDOW_MS - (now_ms() - start)) / 1000.0).ceil().max(0.0) as u32;
+    let left = ((reconnect_window() - (now_ms() - start)) / 1000.0).ceil().max(0.0) as u32;
     dom::set_text("olReconnectText", &crate::i18n::tp("ol.reconnecting", &[("s", &left.to_string())]));
     dom::after_ms(1000, tick_overlay);
 }
@@ -673,7 +705,11 @@ fn render_lobby() {
     dom::set_disabled("olStart", n < 2);
     // A child does not share codes (share.rs refuses in Kid Mode anyway).
     dom::set_hidden("olShare", is_kid());
-    let wait = if n < 2 {
+    dom::set_text("olRulesLobby", &with_model(|m| m.rules_text()));
+    let away = with_model(|m| m.away_name());
+    let wait = if let Some(name) = away {
+        crate::i18n::tp("ol.waitBack", &[("name", &name)])
+    } else if n < 2 {
         crate::i18n::t("ol.needTwo")
     } else if host {
         String::new()
@@ -717,6 +753,8 @@ fn render_match() {
         dom::toggle_class(&format!("olP{n}"), "active", *active);
     }
     dom::set_text("olStatus", &status);
+    dom::set_text("olRulesMatch", &with_model(|m| m.rules_text()));
+    dom::set_text("olTurns", &with_model(|m| m.turns_text()));
     let orb = if can_tap {
         crate::i18n::t("ol.tapOrb")
     } else if can_answer {

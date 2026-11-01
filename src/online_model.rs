@@ -295,6 +295,26 @@ impl Model {
         self.in_match && self.word.as_ref().is_some_and(|w| Some(w.seat) == self.my_seat)
     }
 
+    /// The other player, if they have dropped and their seat is being held.
+    pub fn away_name(&self) -> Option<String> {
+        let room = self.room.as_ref()?;
+        room.seats.iter().find(|s| !s.connected && Some(s.seat) != self.my_seat).map(|s| s.name.clone())
+    }
+
+    /// How a match is won. Turns each are the server's rule: kid-safe 2, else 3.
+    pub fn rules_text(&self) -> String {
+        let n = if self.room.as_ref().is_some_and(|r| r.kid_safe) { "2" } else { "3" };
+        crate::i18n::tp("ol.rules", &[("n", n)])
+    }
+
+    /// The active player's remaining turns, this one included.
+    pub fn turns_text(&self) -> String {
+        match self.turn {
+            Some((_, n)) => crate::i18n::tp("ol.turnsLeft", &[("n", &n.to_string())]),
+            None => String::new(),
+        }
+    }
+
     pub fn name_of(&self, seat: u8) -> String {
         self.room
             .as_ref()
@@ -626,6 +646,9 @@ pub fn status_text(m: &Model) -> String {
         let key = if f.correct { "ol.right" } else { "ol.wrong" };
         return crate::i18n::tp(key, &[("name", &m.name_of(f.seat)), ("word", &display_word(&f.word))]);
     }
+    if let Some(away) = m.away_name() {
+        return crate::i18n::tp("ol.waitBack", &[("name", &away)]);
+    }
     let Some((seat, _)) = m.turn else { return String::new() };
     let name = m.name_of(seat);
     match (&m.word, m.my_turn()) {
@@ -689,6 +712,16 @@ mod tests {
             ],
             mode_state: Value::Null,
         })
+    }
+
+    #[test]
+    fn away_is_the_other_player_never_me() {
+        let mut m = lobby(0);
+        assert_eq!(m.away_name(), None);
+        m.room.as_mut().unwrap().seats[0].connected = false;
+        assert_eq!(m.away_name(), None);
+        m.room.as_mut().unwrap().seats[1].connected = false;
+        assert_eq!(m.away_name().as_deref(), Some("Teal Bee 07"));
     }
 
     fn lobby(me: u8) -> Model {

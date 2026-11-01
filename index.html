@@ -2457,6 +2457,7 @@
   .ol-field input,.ol-field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:10px;padding:8px}
   .ol-check{display:flex;align-items:center;gap:8px}
   .ol-code{font-family:var(--mono);font-size:24px;letter-spacing:.3em;text-transform:uppercase;text-align:center;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:10px;padding:8px}
+  .ol-code::placeholder{font-family:var(--body);font-size:16px;letter-spacing:normal;text-transform:none;color:var(--muted)}
   .ol-hint,.ol-err{min-height:1.2em;color:var(--coral);font-size:14px}
   .ol-drain{width:100%;max-width:600px;text-align:center;background:var(--panel);border:1px solid var(--amber);border-radius:12px;padding:8px;color:var(--amber-soft)}
   .ol-codebox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -4584,7 +4585,7 @@
       </div>
       <div class="ol-box">
         <h3 data-i18n="ol.join">Join a room</h3>
-        <input id="olCode" class="ol-code" type="text" maxlength="6" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="ACDEFG" data-i18n-aria="ol.codePh" aria-label="Room code" />
+        <input id="olCode" class="ol-code" type="text" maxlength="6" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="Room code" data-i18n-ph="ol.codePh" data-i18n-aria="ol.codePh" aria-label="Room code" />
         <div class="ol-hint" id="olCodeHint" aria-live="polite"></div>
         <button class="btn btn-check" id="olJoin" data-i18n="ol.joinBtn">Join</button>
       </div>
@@ -4605,6 +4606,7 @@
       <ul class="ol-players" id="olPlayers"></ul>
       <ul class="ol-requests" id="olRequests"></ul>
       <p class="ol-note" id="olLobbyNote" aria-live="polite"></p>
+      <p class="ol-note" id="olRulesLobby"></p>
       <div class="row">
         <button class="btn" id="olLeave" data-i18n="ol.leave">Leave</button>
         <button class="btn btn-check" id="olStart" data-i18n="ol.start">Start match</button>
@@ -4620,6 +4622,8 @@
       <div class="ol-timer" id="olTimer" hidden><div class="ol-timer-fill" id="olTimerFill"></div></div>
       <button type="button" class="orb-wrap ol-orb" id="olOrb"><div class="orb"></div><span class="ol-orb-glyph" id="olOrbGlyph"></span></button>
       <p class="ol-status" id="olStatus" aria-live="polite"></p>
+      <p class="ol-note" id="olTurns"></p>
+      <p class="ol-note" id="olRulesMatch"></p>
       <div class="row ol-replays">
         <button class="btn btn-icon" id="olReplay" data-i18n="ol.replay">Hear again</button>
         <button class="btn btn-icon" id="olSlow" data-i18n="ol.slow">Slower</button>
