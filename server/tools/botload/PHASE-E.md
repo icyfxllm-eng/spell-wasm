@@ -99,7 +99,7 @@ mismatches.
 ```
 # as spellsrv (sudo -iu spellsrv):
 systemctl --user stop phase-e-stub                 # the stub
-sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=http://<MAC_MINI_TAILNET_IP>:8000|' ~/.config/containers/systemd/spellgame.container
+sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=https://spellgame.net|' ~/.config/containers/systemd/spellgame.container
 systemctl --user daemon-reload && systemctl --user restart spellgame.service
 # as your admin user (eric):
 sudo -v && ~spellsrv/spell-wasm/server/deploy/verify-host.sh      # all PASS again (H18 included)
