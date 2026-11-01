@@ -102,7 +102,7 @@ systemctl --user stop phase-e-stub                 # the stub
 sed -i 's|^Environment=SPELL_TTS_BASE=.*|Environment=SPELL_TTS_BASE=https://spellgame.net|' ~/.config/containers/systemd/spellgame.container
 systemctl --user daemon-reload && systemctl --user restart spellgame.service
 # as your admin user (eric):
-sudo -v && ~spellsrv/spell-wasm/server/deploy/verify-host.sh      # all PASS again (H18 included)
+sudo -v && bash <(sudo cat ~spellsrv/spell-wasm/server/deploy/verify-host.sh)      # all PASS again (H18 included)
 ```
 The bots' sessions stay in the players table, are never used again, and are
 swept after 12 months of inactivity (§9). To remove them sooner, revoke them

@@ -236,7 +236,7 @@ arrives within 5 minutes (go/no-go §10.5). Start it again.
 ## Then
 ```
 # as your admin user (eric):
-sudo -v && ~spellsrv/spell-wasm/server/deploy/verify-host.sh
+sudo -v && bash <(sudo cat ~spellsrv/spell-wasm/server/deploy/verify-host.sh)
 ```
 Every line must PASS. H16 may WARN only while the UPS is on order. Then work
 through the go/no-go list in `docs/CC-GAME-SERVER.md` §10. Phase E's load,
