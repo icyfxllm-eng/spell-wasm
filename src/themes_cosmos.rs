@@ -80,6 +80,20 @@ pub fn entry(t: Theme) -> &'static Entry {
     REGISTRY.iter().find(|e| e.theme == t).expect("every theme has a registry row")
 }
 
+/// Whether a theme is offered in this build. Diamond is earned by Impossible
+/// words, so it follows the Impossible flag: where Impossible is off, Diamond
+/// is not listed, not previewable and not granted (CC-THEMES-COSMOS C7).
+/// Everything else is always offered.
+pub fn visible(t: Theme, impossible_on: bool) -> bool {
+    t != Theme::Diamond || impossible_on
+}
+
+/// `visible` against this build's Impossible flag.
+#[allow(dead_code)] // read by the theme list and the unlock grant once they honour visibility
+pub fn visible_now(t: Theme) -> bool {
+    visible(t, crate::flags::impossible())
+}
+
 /// The twelve themes that draw art (`data-cosmos` on the root).
 pub fn is_cosmos(t: Theme) -> bool {
     entry(t).family != Family::Classic
@@ -215,6 +229,15 @@ mod tests {
     use super::*;
 
     const NOON: LocalNow = LocalNow { y: 2026, m: 11, d: 2, h: 12, min: 0 };
+
+    #[test]
+    fn diamond_follows_the_impossible_flag_and_nothing_else_does() {
+        assert!(visible(Theme::Diamond, true));
+        assert!(!visible(Theme::Diamond, false));
+        for e in REGISTRY.iter().filter(|e| e.theme != Theme::Diamond) {
+            assert!(visible(e.theme, false) && visible(e.theme, true), "{}", e.name);
+        }
+    }
 
     #[test]
     fn the_registry_holds_all_seventeen_once() {
