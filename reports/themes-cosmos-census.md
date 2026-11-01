@@ -200,3 +200,13 @@ The CIEDE2000 code was checked against Sharma pair 1.
 6. **C9:** extend the F11 renderer for art, or accept flat cards.
 7. **O2:** a Great Wall chain number with no data, sourced from the local best.
 8. **Separate:** the "Test entitlements" switch ships to players. Fix it now?
+
+## Resolved 2026-10-31 (Eric)
+
+- **Test entitlements switch:** cut from release builds in d2a7ed32. Builds 304 to 307 shipped it; 308 is clean from source. The ship lane now runs `scripts/must-contain-check.mjs` (fastlane/must-contain.txt) so a branch cut from an older release branch cannot drop it again.
+- **O2 / Great Wall:** 25 chain at any difficulty, read from `chain_best` (73c09068), a never-lowered max written at run end. The board is not used: it only holds runs whose player saved a name.
+- **C4 counters:** approved as `play_counters` (5b55934a): Impossible correct (Impossible or Mix, not review, not rescued), sessions (one completed round: a solo run with a correct word, or a finished Daily), days played (seeded from the Daily history). "Session" is the recommended definition, not yet confirmed. The Impossible Daily's words do not count toward Diamond.
+- **C7:** Diamond follows `flags::impossible()` (`themes_cosmos::visible`, aa70caca). The theme list and grant must filter through it when they are built.
+- **C8:** the 45 `theme.keycap.*` tokens exist in design/tokens.json and nothing consumes them. They stay unused until the keyboard track wires them; Diamond's frosted caps wait for that.
+- **C9:** result cards stay flat in v1 (theme colours only). Art on cards is a separate signed change to F11, not part of Cosmos.
+- **Still open:** C10 (web unlocks are browser-local), `streak` or `best_streak` for Sky, the "session" confirmation.
