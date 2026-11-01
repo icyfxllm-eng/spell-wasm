@@ -233,6 +233,9 @@ static SEND_TIMEOUTS: std::sync::OnceLock<Mutex<usize>> = std::sync::OnceLock::n
 
 /// Times Cloudflare (or anything in front) answered 429 or 5xx and a bot retried.
 static RETRIES: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+/// Connect retries by HTTP status, and audio fetches that answered 429.
+static RETRY_WHY: std::sync::OnceLock<Mutex<BTreeMap<u16, usize>>> = std::sync::OnceLock::new();
+static RETRY_AUDIO: std::sync::OnceLock<Mutex<usize>> = std::sync::OnceLock::new();
 
 fn backoff(attempt: u32) -> Duration {
     // 0.5 s, 1 s, 2 s ... capped at 8 s, with up to 50% jitter from the clock.
@@ -255,6 +258,7 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
             Ok((ws, _)) => break ws,
             Err(WsError::Http(r)) if (r.status().as_u16() == 429 || r.status().is_server_error()) && attempt < 8 => {
                 RETRIES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                *RETRY_WHY.get_or_init(Default::default).lock().unwrap().entry(r.status().as_u16()).or_default() += 1;
                 tokio::time::sleep(backoff(attempt)).await;
                 attempt += 1;
             }
@@ -339,6 +343,7 @@ async fn word_of(o: &Opts, http: &reqwest::Client, token: &str, ticket: &str) ->
             .ok()?;
         if r.status().as_u16() == 429 && attempt < 5 {
             RETRIES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            *RETRY_AUDIO.get_or_init(Default::default).lock().unwrap() += 1;
             tokio::time::sleep(backoff(attempt)).await;
             attempt += 1;
             continue;
@@ -834,16 +839,17 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
     // that as "fds 259 → 19").
     let warm: Vec<&(f64, Value)> = samples.iter().filter(|(m, _)| *m >= o.warmup_min && *m <= o.minutes).collect();
     let rss = |s: &&(f64, Value)| s.1["rss_bytes"].as_u64();
-    // Descriptors beyond one per open socket: rooms that end early close
-    // their sockets, and a fall in fds is not a leak (the 2026-10-28 chaos
-    // run read 38 stalled rooms as "fds 299 → 200").
-    let fds = |s: &&(f64, Value)| Some(s.1["open_fds"].as_u64()?.saturating_sub(s.1["connections"].as_u64()?));
+    // Descriptors per connection: each room also holds an audio connection, so
+    // fds move with the room count, up or down, and only a rising ratio is a leak.
+    let fds = |s: &&(f64, Value)| Some(s.1["open_fds"].as_f64()? / s.1["connections"].as_f64().filter(|c| *c > 0.0)?);
     let (rss0, rss1) = (warm.first().and_then(rss), warm.last().and_then(rss));
     let (fd0, fd1) = (warm.first().and_then(fds), warm.last().and_then(fds));
     let rss_growth = match (rss0, rss1) {
         (Some(a), Some(b)) if a > 0 => Some((b as f64 - a as f64) / a as f64 * 100.0),
         _ => None,
     };
+    let conns_at_start = samples.first().and_then(|(_, v)| v["connections"].as_u64()).unwrap_or(0);
+    let idle_at_start = conns_at_start <= 4;
     let mut resume = t.resume_ms.clone();
     resume.sort_unstable();
     let resume_max = resume.last().copied().unwrap_or(0);
@@ -857,6 +863,9 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         ("duplicated words = 0", t.dup_words == 0, t.dup_words.to_string()),
         ("stalled rooms = 0", !t.errors.contains_key("stalled"), t.errors.get("stalled").copied().unwrap_or(0).to_string()),
         ("right answers were possible (stub clips)", t.right > 0, format!("{} of {} words", t.right, t.words)),
+        // Another run on the same server moves every memory and descriptor
+        // number (2026-10-31: two chaos runs overlapped, "memory +76.91%").
+        ("server idle at the start", idle_at_start, format!("{} connections", conns_at_start)),
     ];
     if o.admin.is_some() {
         checks.push(("handling p95 < 50 ms", p95_max < 50_000, format!("{:.2} ms", p95_max as f64 / 1000.0)));
@@ -871,8 +880,7 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
             checks.push(("memory growth after warm-up < 5%", false, "no /proc samples (run on the Linux host)".into()));
         }
         if let (Some(a), Some(b)) = (fd0, fd1) {
-            let flat = (b as i64 - a as i64).abs() <= (a as i64 / 50).max(8);
-            checks.push(("file descriptors flat (beyond one per socket)", flat, format!("{a} → {b}")));
+            checks.push(("file descriptors per connection flat", b <= a * 1.03, format!("{a:.2} → {b:.2}")));
         }
     }
     if o.drop_frac > 0.0 {
@@ -888,7 +896,12 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         println!("  {} {name}: {detail}", if *ok { "PASS" } else { "FAIL" });
         failed |= !ok;
     }
-    println!("  retries after 429/5xx: {}", RETRIES.load(std::sync::atomic::Ordering::Relaxed));
+    println!(
+        "  retries after 429/5xx: {} (connects by status {:?}, audio {})",
+        RETRIES.load(std::sync::atomic::Ordering::Relaxed),
+        RETRY_WHY.get_or_init(Default::default).lock().unwrap(),
+        RETRY_AUDIO.get_or_init(Default::default).lock().unwrap()
+    );
     println!(
         "  server closes: {} (resumed {}), actions resent after a resume: {}",
         t.server_closes,
