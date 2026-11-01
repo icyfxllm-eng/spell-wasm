@@ -160,6 +160,7 @@ mod share;
 mod tokens; // CC-VISUAL-ECLIPSE F1: generated from design/tokens.json (scripts/tokens-build.mjs)
 mod speech_out;
 mod stats;
+mod play_counters; // Impossible correct words, sessions, days played (cosmos unlocks)
 mod chain_best; // best chain at any difficulty, written at run end (Great Wall reads it)
 pub mod snap_clean; // CC-SNAP-CLEAN v1 — OCR lines to word candidates (tests/snap_clean_golden.rs)
 pub mod snap_highlight; // CC-SNAP-HIGHLIGHT v1 — which words sit on a highlighter mark (tests/snap_highlight_core.rs)

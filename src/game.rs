@@ -2506,6 +2506,7 @@ fn on_correct(app: &App) {
     }
     crate::haptics::correct();
     crate::themes::note_correct();
+    crate::play_counters::note_day_played();
     let (cur_lang, cur_tier, word) = {
         let s = app.borrow();
         (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
@@ -2519,6 +2520,9 @@ fn on_correct(app: &App) {
     let rescued = flags::attempts_shields() && app.borrow().aids.retry_used;
     if !rescued {
         stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
+        if !app.borrow().review && crate::impossible::engine::is_level(&app.borrow().level) {
+            crate::play_counters::note_impossible_correct();
+        }
         // Adaptive word stats: solo practice only (Misses/review has its own SR).
         if !app.borrow().review {
             wordstats::record(&cur_lang, &word, true);
@@ -3500,6 +3504,9 @@ fn end_chain(app: &App) {
     };
     // The best chain is written here, before the save prompt can be dismissed.
     crate::chain_best::note_run(reached, review);
+    if reached > 0 && !review {
+        crate::play_counters::note_session();
+    }
     // Post to The Climb: ranked difficulty (submit_run filters to medium/hard/
     // expert) and logged-in only; never in Spell Jr — Jr Climb is unranked and
     // makes zero leaderboard calls (CC-ONBOARD-JR I6). A plausible run duration
@@ -4069,6 +4076,8 @@ fn render_daily_bar(app: &App) {
 }
 
 fn show_daily_result(app: &App, correct: u32, total: u32, streak: u32, best: u32) {
+    crate::play_counters::note_session();
+    crate::play_counters::note_day_played(); // the Daily returns before the base-game seam
     // CC-VISUAL-ECLIPSE F7: the result screen is a gap, so these play now.
     crate::celebrate::word_active(false);
     if let Some(t) = crate::celebrate::streak_tier(streak) {
