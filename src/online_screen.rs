@@ -16,7 +16,7 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::online_model::{self as om, Effect, Model, Panel};
+use crate::online_model::{self as om, Action, Effect, Model, Panel, Unanswered};
 use crate::online_net::{self as net, close};
 use crate::{dom, App};
 
@@ -404,7 +404,7 @@ fn room_lang() -> String {
 fn tap_orb() {
     let (tap, live) = with_model(|m| (m.can_tap(), m.word.is_some()));
     if tap {
-        net::send("next_word", json!({}));
+        act(Action::Next);
     } else if live {
         replay_normal();
     }
@@ -419,13 +419,54 @@ fn replay_normal() {
 }
 
 fn submit() {
-    let (ok, typed) = with_model(|m| (m.can_answer(), m.typed.trim().to_string()));
+    let (ok, typed, word_no) =
+        with_model(|m| (m.can_answer(), m.typed.trim().to_string(), m.word.as_ref().map(|w| w.word_no)));
+    let Some(word_no) = word_no else { return };
     if !ok || typed.is_empty() || SUBMITTED.with(Cell::get) {
         return;
     }
-    if net::send("submit", json!({ "typed": typed })) {
-        SUBMITTED.with(|s| s.set(true));
-        render_match();
+    SUBMITTED.with(|s| s.set(true));
+    act(Action::Submit { typed, word_no });
+    render_match();
+}
+
+/// Sends a game action and keeps it until the server answers. With the
+/// socket down it still counts: the resume sends it (`resend_unanswered`).
+fn act(action: Action) {
+    let u = Unanswered { cid: net::cid(), action };
+    let (t, body) = u.parts();
+    net::send_as(t, &u.cid, body);
+    with_model(|m| m.unanswered = Some(u));
+}
+
+/// How long a resumed socket gets to replay what it missed, before anything
+/// still unanswered counts as lost. Without this a dropped answer locks the
+/// keyboard until the server's 120 s idle rule takes the turn.
+const REPLAY_SETTLE_MS: i32 = 1500;
+
+fn resend_unanswered() {
+    if !OPEN.with(Cell::get) {
+        return;
+    }
+    for f in with_model(|m| m.after_resume()) {
+        run_effect(f);
+    }
+    render();
+}
+
+fn run_effect(f: Effect) {
+    match f {
+        Effect::Play(t) => crate::online_audio::play(t, || {}),
+        Effect::ClearAnswer => {
+            SUBMITTED.with(|s| s.set(false));
+            with_model(|m| m.typed.clear());
+        }
+        Effect::Haptic(true) => crate::haptics::correct(),
+        Effect::Haptic(false) => crate::haptics::incorrect(is_kid()),
+        Effect::Resend(u) => {
+            let (t, body) = u.parts();
+            net::send_as(t, &u.cid, body);
+        }
     }
 }
 
@@ -480,17 +521,12 @@ fn on_frame(text: &str) {
     let welcomed = matches!(msg, om::ServerMsg::Welcome { .. });
     let fx = with_model(|m| m.apply(seq, msg));
     for f in fx {
-        match f {
-            Effect::Play(t) => crate::online_audio::play(t, || {}),
-            Effect::ClearAnswer => {
-                SUBMITTED.with(|s| s.set(false));
-                with_model(|m| m.typed.clear());
-            }
-            Effect::Haptic(true) => crate::haptics::correct(),
-            Effect::Haptic(false) => crate::haptics::incorrect(is_kid()),
-        }
+        run_effect(f);
     }
     if welcomed {
+        if with_model(|m| m.unanswered.is_some()) {
+            dom::after_ms(REPLAY_SETTLE_MS, resend_unanswered);
+        }
         if let Some((t, body)) = PENDING_SEND.with(|p| p.borrow_mut().take()) {
             net::send(t, body);
         }
@@ -540,9 +576,11 @@ fn on_drop() {
         if now_ms() - started >= net::RECONNECT_WINDOW_MS {
             DROPPED_AT.with(|d| d.set(None));
             dom::set_hidden("olReconnect", true);
+            SUBMITTED.with(|s| s.set(false));
             with_model(|m| {
                 m.room = None;
                 m.in_match = false;
+                m.unanswered = None;
                 m.ended = Some("dropped".into());
             });
             render();

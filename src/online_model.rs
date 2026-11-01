@@ -191,6 +191,33 @@ pub enum Effect {
     /// Clear the typed answer.
     ClearAnswer,
     Haptic(bool),
+    /// Send this unanswered action again, with its own cid.
+    Resend(Unanswered),
+}
+
+/// The action a drop may have lost: the last `next_word` or `submit` the
+/// server has not answered yet. A resend keeps the cid, so a submit that did
+/// reach the server is ignored the second time (F5).
+#[derive(Clone, Debug, PartialEq)]
+pub struct Unanswered {
+    pub cid: String,
+    pub action: Action,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum Action {
+    Next,
+    Submit { typed: String, word_no: u32 },
+}
+
+impl Unanswered {
+    /// The wire type and body.
+    pub fn parts(&self) -> (&'static str, Value) {
+        match &self.action {
+            Action::Next => ("next_word", json!({})),
+            Action::Submit { typed, .. } => ("submit", json!({ "typed": typed })),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Default)]
@@ -219,6 +246,7 @@ pub struct Model {
     pub typed: String,
     /// The last error the server sent (shown inline where it applies).
     pub last_error: Option<String>,
+    pub unanswered: Option<Unanswered>,
 }
 
 impl Model {
@@ -291,6 +319,40 @@ impl Model {
         self.room.as_ref().map(|r| (r.code.clone(), self.last_seq))
     }
 
+    /// A resumed socket has had time to replay what we missed. Whatever is
+    /// still unanswered was lost, if the server still wants it: the room's own
+    /// snapshot says so. Resending an answer to a word that has moved on would
+    /// grade it against the wrong word, so that one is dropped instead.
+    pub fn after_resume(&mut self) -> Vec<Effect> {
+        let Some(u) = self.unanswered.clone() else { return Vec::new() };
+        let state = self.room.as_ref().map(|r| r.mode_state.clone()).unwrap_or(Value::Null);
+        let phase = state.get("phase").and_then(|p| p.as_str()).unwrap_or("");
+        match u.action {
+            Action::Next => match phase {
+                "await_next" if self.can_tap() => vec![Effect::Resend(self.unanswered.clone().unwrap())],
+                // The word is on its way, or a timer hands it over: wait for it.
+                "fetching" | "after_correct" | "after_miss" => Vec::new(),
+                _ => {
+                    self.unanswered = None;
+                    Vec::new()
+                }
+            },
+            Action::Submit { word_no, .. } => {
+                let live = state.get("live").and_then(|l| l.get("word_no")).and_then(|n| n.as_u64());
+                let same = phase == "live"
+                    && live == Some(word_no as u64)
+                    && self.can_answer()
+                    && self.word.as_ref().is_some_and(|w| w.word_no == word_no);
+                if same {
+                    vec![Effect::Resend(self.unanswered.clone().unwrap())]
+                } else {
+                    self.unanswered = None;
+                    vec![Effect::ClearAnswer]
+                }
+            }
+        }
+    }
+
     /// Applies one server frame.
     pub fn apply(&mut self, seq: u64, msg: ServerMsg) -> Vec<Effect> {
         if seq > 0 {
@@ -357,6 +419,7 @@ impl Model {
                 self.word = None;
                 self.flash = None;
                 self.paused = false;
+                self.unanswered = None;
                 fx.push(Effect::ClearAnswer);
             }
             ServerMsg::WordStart { seat, word_no, tier, audio_ticket, deadline_ms } => {
@@ -364,18 +427,21 @@ impl Model {
                 self.slow_ticket = None;
                 self.flash = None;
                 self.paused = false;
+                self.unanswered = None;
                 fx.push(Effect::ClearAnswer);
                 fx.push(Effect::Play(audio_ticket));
             }
             ServerMsg::WordPaused { .. } => {
                 self.word = None;
                 self.paused = true;
+                self.unanswered = None;
             }
             ServerMsg::WordResult { seat, correct, chain, best, word } => {
                 self.set_score(seat, chain, best);
                 self.word = None;
                 self.flash = Some(Flash { seat, correct, word });
                 if Some(seat) == self.my_seat {
+                    self.unanswered = None;
                     fx.push(Effect::Haptic(correct));
                 }
             }
@@ -383,6 +449,7 @@ impl Model {
                 let (_, best) = self.score_of(seat);
                 self.set_score(seat, 0, best);
                 self.word = None;
+                self.unanswered = None;
             }
             ServerMsg::MatchResult { standings, winner_seat } => {
                 for s in &standings {
@@ -393,12 +460,14 @@ impl Model {
                 self.in_match = false;
                 self.turn = None;
                 self.word = None;
+                self.unanswered = None;
             }
             ServerMsg::MatchEnded { reason } => {
                 self.in_match = false;
                 self.turn = None;
                 self.word = None;
                 self.result = None;
+                self.unanswered = None;
                 // A closed room (or our own leave) takes us out of it.
                 let closes = matches!(
                     reason.as_str(),
@@ -420,6 +489,10 @@ impl Model {
                 fx.push(Effect::Play(audio_ticket));
             }
             ServerMsg::Error { code } => {
+                // The server says the unanswered action no longer applies.
+                if matches!(code.as_str(), "word_live" | "not_your_turn") && self.unanswered.take().is_some() {
+                    fx.push(Effect::ClearAnswer);
+                }
                 if matches!(
                     code.as_str(),
                     "room_not_found" | "bad_code" | "rate_limited" | "room_full" | "match_in_progress" | "draining"
@@ -624,6 +697,97 @@ mod tests {
         m.apply(1, ServerMsg::Joined { code: "ACDEFG".into(), seat: me });
         m.apply(2, room("lobby", me == 0, false));
         m
+    }
+
+    fn state(phase: &str, live: Option<u32>) -> Value {
+        json!({ "phase": phase, "active_seat": 0, "live": live.map(|n| json!({ "word_no": n })) })
+    }
+
+    fn playing(state: Value) -> ServerMsg {
+        let ServerMsg::RoomState(mut r) = room("playing", true, false) else { unreachable!() };
+        r.mode_state = state;
+        ServerMsg::RoomState(r)
+    }
+
+    fn mid_word(me: u8, word_no: u32) -> Model {
+        let mut m = lobby(me);
+        m.apply(3, ServerMsg::TurnStart { seat: me, turn_no: 1, turns_left: 3 });
+        m.apply(4, ServerMsg::WordStart { seat: me, word_no, tier: "easy".into(), audio_ticket: "t".into(), deadline_ms: None });
+        m
+    }
+
+    fn sent(action: Action) -> Option<Unanswered> {
+        Some(Unanswered { cid: "c".into(), action })
+    }
+
+    fn resent(fx: &[Effect]) -> bool {
+        fx.iter().any(|f| matches!(f, Effect::Resend(_)))
+    }
+
+    #[test]
+    fn a_lost_answer_is_resent_with_its_own_cid() {
+        let mut m = mid_word(0, 7);
+        m.unanswered = sent(Action::Submit { typed: "cat".into(), word_no: 7 });
+        m.apply(5, playing(state("live", Some(7))));
+        let fx = m.after_resume();
+        let Some(Effect::Resend(u)) = fx.first() else { panic!("no resend: {fx:?}") };
+        assert_eq!(u.cid, "c");
+        assert_eq!(u.parts(), ("submit", json!({ "typed": "cat" })));
+    }
+
+    #[test]
+    fn an_answer_is_never_resent_to_a_different_word() {
+        let mut m = mid_word(0, 7);
+        m.unanswered = sent(Action::Submit { typed: "cat".into(), word_no: 7 });
+        m.apply(5, playing(state("live", Some(8))));
+        let fx = m.after_resume();
+        assert!(!resent(&fx));
+        assert!(fx.contains(&Effect::ClearAnswer), "the keyboard unlocks");
+        assert_eq!(m.unanswered, None);
+    }
+
+    #[test]
+    fn the_replay_answering_an_action_means_no_resend() {
+        for answer in [
+            ServerMsg::WordResult { seat: 0, correct: true, chain: 1, best: 1, word: "cat".into() },
+            ServerMsg::TurnEnd { seat: 0 },
+            ServerMsg::MatchEnded { reason: "player_left".into() },
+            ServerMsg::Error { code: "not_your_turn".into() },
+        ] {
+            let mut m = mid_word(0, 7);
+            m.unanswered = sent(Action::Submit { typed: "cat".into(), word_no: 7 });
+            m.apply(5, answer);
+            assert_eq!(m.unanswered, None);
+            assert!(!resent(&m.after_resume()));
+        }
+    }
+
+    #[test]
+    fn someone_elses_result_leaves_my_action_unanswered() {
+        let mut m = mid_word(0, 7);
+        m.unanswered = sent(Action::Submit { typed: "cat".into(), word_no: 7 });
+        m.apply(5, ServerMsg::WordResult { seat: 1, correct: true, chain: 1, best: 1, word: "x".into() });
+        assert!(m.unanswered.is_some());
+    }
+
+    #[test]
+    fn a_lost_tap_is_resent_only_while_the_server_waits_for_it() {
+        let mut m = lobby(0);
+        m.apply(3, ServerMsg::TurnStart { seat: 0, turn_no: 1, turns_left: 3 });
+        m.unanswered = sent(Action::Next);
+        m.apply(4, playing(state("await_next", None)));
+        assert!(resent(&m.after_resume()));
+        m.apply(5, playing(state("fetching", None)));
+        assert!(!resent(&m.after_resume()), "the word is already coming");
+        assert!(m.unanswered.is_some(), "and still expected");
+        m.apply(6, ServerMsg::WordStart { seat: 0, word_no: 1, tier: "easy".into(), audio_ticket: "t".into(), deadline_ms: None });
+        assert_eq!(m.unanswered, None);
+    }
+
+    #[test]
+    fn nothing_unanswered_means_nothing_to_do() {
+        let mut m = mid_word(0, 7);
+        assert_eq!(m.after_resume(), Vec::new());
     }
 
     #[test]

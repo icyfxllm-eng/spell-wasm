@@ -258,9 +258,14 @@ fn hello_frame(h: &Hello, tok: &str) -> String {
 
 /// Sends one client message; false if the socket is not open.
 pub fn send(t: &str, body: Value) -> bool {
+    send_as(t, &cid(), body)
+}
+
+/// `send` with a chosen cid, so a resend is the same message to the server.
+pub fn send_as(t: &str, cid: &str, body: Value) -> bool {
     WS.with(|w| match w.borrow().as_ref() {
         Some(ws) if ws.ready_state() == WebSocket::OPEN => {
-            ws.send_with_str(&crate::online_model::frame(t, &cid(), body)).is_ok()
+            ws.send_with_str(&crate::online_model::frame(t, cid, body)).is_ok()
         }
         _ => false,
     })

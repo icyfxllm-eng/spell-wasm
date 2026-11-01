@@ -67,8 +67,9 @@ server/tools/botload.
 
 Blocking:
 - H12: nightly backups (O5, runbook step 13).
-- App: resend an action lost in a drop. Today the player waits 120 s and
-  loses the turn. Not built; needs Eric's OK.
+- App build carrying the resend of an action lost in a drop. The fix is on
+  main, tested on the web build only. Builds before it make the player wait
+  120 s and lose the turn.
 
 Still open with Eric:
 - O4 outside uptime monitor (runbook step 14)

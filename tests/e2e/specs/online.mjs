@@ -42,17 +42,20 @@ async function ttsStub() {
 async function proxy(target) {
   const socks = new Set();
   let refuseUntil = 0;
+  let swallow = false;
   const srv = createTcp((c) => {
     if (Date.now() < refuseUntil) return c.destroy();
     const u = connect(target, '127.0.0.1');
     socks.add(c); socks.add(u);
-    c.pipe(u); u.pipe(c);
+    c.on('data', (d) => { if (!swallow) u.write(d); }); u.pipe(c);
     const end = () => { c.destroy(); u.destroy(); socks.delete(c); socks.delete(u); };
     c.on('error', end); u.on('error', end); c.on('close', end); u.on('close', end);
   });
   const port = await listen(srv);
   return {
     port,
+    // What the browser sends from here on never arrives, and it cannot tell.
+    swallow(on) { swallow = on; },
     cut(ms) { refuseUntil = Date.now() + ms; for (const s of socks) s.destroy(); },
     close() { for (const s of socks) s.destroy(); srv.close(); },
   };
@@ -308,6 +311,34 @@ export async function run(browser, base, suite) {
       await a.page.waitForSelector('#olRequests [data-approve]', { timeout: 10000 });
       await a.page.click('#olRequests [data-approve]');
       await b.page.waitForSelector('#olLobby:not([hidden])', { timeout: 10000 });
+    } finally { await a.ctx.close(); await b.ctx.close(); srv.close(); }
+  });
+
+  await suite.test('F5: an answer lost in a drop is resent after the resume, not lost to the 120 s idle rule', async () => {
+    const srv = await roomServer(base);
+    const a = await app(browser, base, srv);
+    const b = await app(browser, base, srv);
+    try {
+      await openOnline(a.page);
+      const code = await create(a.page);
+      await openOnline(b.page);
+      await join(b.page, code);
+      await a.page.waitForFunction(() => document.querySelectorAll('#olPlayers li').length === 2, null, { timeout: 10000 });
+      await a.page.click('#olStart');
+      await a.page.waitForSelector('#olOrb.ready', { timeout: 15000 });
+      await a.page.click('#olOrb');
+      await a.page.waitForSelector('#olOrb.live', { timeout: 10000 });
+      for (const k of ['z', 'q']) await a.page.click(`#olKeys [data-k="${k}"]`);
+      srv.px.swallow(true);
+      await a.page.click('#olCheck');
+      await a.page.waitForSelector('#olCheck:disabled', { state: 'attached', timeout: 5000 });
+      // In this one tick: the answer was swallowed, or dies with the socket.
+      srv.px.swallow(false);
+      srv.px.cut(2000);
+      await a.page.waitForSelector('#olReconnect:not([hidden])', { timeout: 10000 });
+      await a.page.waitForSelector('#olReconnect[hidden]', { state: 'attached', timeout: 30000 });
+      // The miss was graded, so the turn passes to B well inside the idle limit.
+      await b.page.waitForSelector('#olOrb.ready', { timeout: 20000 });
     } finally { await a.ctx.close(); await b.ctx.close(); srv.close(); }
   });
 
