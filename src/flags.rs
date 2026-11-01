@@ -373,14 +373,14 @@ pub fn online_spelloff() -> bool {
 /// it on; the signed kill file can force it off. Deliberately NOT a Tools-hub
 /// row: that row writes a local "on", which would defeat build-on-only.
 pub fn online_enabled() -> bool {
-    resolve(stored("online_enabled").as_deref(), false)
+    resolve(stored("online_enabled").as_deref(), true)
 }
 
 /// The build's own `online_enabled`, BEFORE the kill file. F13: a remotely
 /// killed build still shows the entry, and the entry opens the "resting"
 /// card; only a build with the flag off hides it. Online code only.
 pub fn online_enabled_built() -> bool {
-    resolve(crate::storage::get_raw("spell_flag_online_enabled").as_deref(), false)
+    resolve(crate::storage::get_raw("spell_flag_online_enabled").as_deref(), true)
 }
 
 /// G-D7 / F10: online play for a kid profile. Default OFF, and it also needs
