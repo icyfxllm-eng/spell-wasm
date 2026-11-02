@@ -208,6 +208,15 @@ fn active_languages() -> Vec<&'static str> {
 
 // ---------------------------------------------------------------- A9.1
 
+#[test]
+fn a_leak_is_this_word_early_not_an_earlier_word_containing_it() {
+    let forms: BTreeSet<String> = ["mano".to_string()].into();
+    let frame = |t: &str, body: serde_json::Value| ("ws", serde_json::json!({ "v": 1, "t": t, "seq": 1, "body": body }).to_string().into_bytes());
+    assert!(leaks(&[frame("word_result", serde_json::json!({ "word": "hermano" }))], &forms).is_empty());
+    assert!(!leaks(&[frame("word_result", serde_json::json!({ "word": "mano" }))], &forms).is_empty(), "this word's result, early");
+    assert!(!leaks(&[frame("word_start", serde_json::json!({ "audio_ticket": "hermano" }))], &forms).is_empty(), "inside anything else");
+}
+
 /// Every form the word could take on the wire: NFC, NFD, lowercase, each
 /// half of a Mandarin entry, and the Mac mini's cache-key digests (R4).
 fn forms(lang: &str, entry: &str) -> BTreeSet<String> {
@@ -270,8 +279,10 @@ fn leaks(got: &[(&'static str, Vec<u8>)], forms: &BTreeSet<String>) -> Vec<Strin
                         continue;
                     }
                     let low = val.to_lowercase();
+                    // An earlier word's own result may contain this word ("hermano", "mano").
+                    let resolved = k == "word" && v["t"] == "word_result";
                     for f in forms {
-                        let long = f.chars().count() >= 4;
+                        let long = f.chars().count() >= 4 && !resolved;
                         if val == *f || low == *f || (long && (val.contains(f.as_str()) || low.contains(f.as_str()))) {
                             hits.push(format!("ws {k}={val:?} ~ {f:?}"));
                         }
