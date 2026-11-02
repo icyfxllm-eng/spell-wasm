@@ -14,6 +14,7 @@ fn req(lang: &str, tier_mode: TierMode, tier: Option<&str>, timed: bool) -> Crea
         tier: tier.map(str::to_string),
         timed,
         approve_joins: false,
+        options: None,
     }
 }
 

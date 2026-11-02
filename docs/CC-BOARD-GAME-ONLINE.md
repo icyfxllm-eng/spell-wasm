@@ -87,8 +87,8 @@ F8 Results. Each seat writes its own spelled words to its no-repeat history and 
 * D-B11 Jr rooms: only Jr profiles and the adult-profile host may sit. Standard rooms: any profile. Jr trap/boost rules per POLISH D-P11.
 * D-B12 Humans and NPCs share one piece pool (hat, wand, bee, book); humans pick first in join order; NPCs take what is left; NPC names = piece nouns (D17).
 * D-B13 Haptics and tile-by-tile hop animation (D-P6) play on every seat's device for every move, including NPC and other-human moves; Reduce Motion honoured per seat.
-* D-B14 A seat that has finished (crossed tile M) stays in the room as a spectator and keeps reactions.
-* D-B15 Game ends when all human seats have finished or been converted, or when every seat has finished. NPCs never prolong a game past the last human.
+* D-B14 (dropped, Eric 2026-11-01) The first finisher wins and the game ends, as in solo. No seat plays on or spectates.
+* D-B15 (amended, Eric 2026-11-01) The game ends when any seat finishes, including an NPC, or when no human remains. NPCs never prolong a game past the last human.
 * D-B16 Win-rate CI (D18) is not run against online games. Online NPCs reuse the solo deltas untested.
 
 ### 3.3 Open (build default in parentheses)
@@ -117,7 +117,7 @@ Phase D — TestFlight real match: 3 humans + 1 NPC, two networks, one forced di
 
 ## 6. Acceptance tests
 
-* A1 4-seat room, one client killed during awaiting_spell, relaunched after 40 s: same seat, same tile, same audio_ticket, deadline within 1 s.
+* A1 (amended, Eric 2026-11-01) 4-seat room, one client killed during awaiting_spell, relaunched after 20 s: same seat, same tile, same audio ticket, same deadline. Back after the 35 s hard timer (D-B4): the word was a miss, same seat, same tile.
 * A2 Same, not relaunched: two turn.auto, then seat.status = npc, game reaches ended, NPC seat's tile and boosts match its last human state.
 * A3 Tampered client sends roll=6 each turn: ignored, logged; actual moves match the seeded rolls.
 * A4 Replay from seed with recorded inputs: identical board, traps, boosts, rolls, words, winner (I1).

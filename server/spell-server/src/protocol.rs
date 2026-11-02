@@ -96,6 +96,9 @@ pub struct CreateRoom {
     /// O8: the optional approve-joins toggle for adult-only rooms.
     #[serde(default)]
     pub approve_joins: bool,
+    /// A turn-engine mode's own room settings; the mode checks them.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub options: Option<Value>,
 }
 
 /// Every client→server message (F1).
@@ -490,6 +493,7 @@ pub mod samples {
                 tier: Some("medium".into()),
                 timed: true,
                 approve_joins: false,
+        options: None,
             }),
             ClientMsg::JoinRoom { code: "ACDEFG".into() },
             ClientMsg::ApproveJoin { request_id: 1 },

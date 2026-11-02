@@ -8,6 +8,7 @@
 
 pub mod app;
 pub mod audio;
+pub mod boardgame;
 pub mod config;
 pub mod conn;
 pub mod grader;

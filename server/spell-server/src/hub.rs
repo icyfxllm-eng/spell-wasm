@@ -695,6 +695,7 @@ impl Hub {
         let mode = match mode::make(&req) {
             Ok(m) => m,
             Err(MakeError::Unavailable) => return s.direct(p, &ServerMsg::error("mode_unavailable")),
+            Err(MakeError::BadOptions) => return s.direct(p, &ServerMsg::error("bad_options")),
             Err(MakeError::Unknown) => return s.direct(p, &ServerMsg::error("unknown_mode")),
         };
         let code = loop {
@@ -763,6 +764,9 @@ impl Hub {
         // I5: an invite code is no way into a language that is not active.
         if mode::is_turn_mode(&room.req.mode) && !spell_wasm::native_api::is_active_lang(&room.req.lang) {
             return s.direct(p, &ServerMsg::error("inactive_language"));
+        }
+        if !room.mode.admits(sess.kind) {
+            return s.direct(p, &ServerMsg::error("tier_locked"));
         }
         if room.mode.running() {
             return fail(s, "match_in_progress");

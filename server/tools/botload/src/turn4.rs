@@ -186,7 +186,7 @@ pub async fn run_room(o: Opts, t: Shared, tokens: Vec<String>, seed: u64, deadli
         }
         bots.push(bot);
     }
-    let req = CreateRoom { mode: MODE.into(), lang: o.lang.clone(), tier_mode: TierMode::Climb, tier: None, timed: false, approve_joins: false };
+    let req = CreateRoom { mode: MODE.into(), lang: o.lang.clone(), tier_mode: TierMode::Climb, tier: None, timed: false, approve_joins: false, options: None};
     send(&mut bots[0], &ClientMsg::CreateRoom(req)).await;
     let mut code = String::new();
     while code.is_empty() {

@@ -13,7 +13,7 @@ use sha2::{Digest, Sha256};
 use tokio::time::Instant;
 
 use crate::mode::{AudioKey, Ctx, Event, ModeRules};
-use crate::protocol::ServerMsg;
+use crate::protocol::{ProfileKind, ServerMsg};
 
 /// D-O15: the one place the seat limit lives.
 pub const MAX_SEATS: u8 = 4;
@@ -96,10 +96,31 @@ pub struct Outcome {
 /// §5.3: a mode's rules. `Self` is the game state.
 pub trait TurnRules: Sized + Send {
     const ABANDON: Abandon;
-    fn init(seats: &[u8], seed: u64) -> Self;
+    /// What the host chose when creating the room.
+    type Config: Clone + Default + Send;
+    /// The seats this room may hold (D-O15 caps it).
+    fn max_seats(_config: &Self::Config) -> u8 {
+        MAX_SEATS
+    }
+    /// May this profile join, beyond the host? (A Jr room takes only kids.)
+    fn admits(_config: &Self::Config, _kind: ProfileKind) -> bool {
+        true
+    }
+    /// `None`: a game cannot start on what the room has (a bank too small).
+    fn init(config: &Self::Config, seats: &[u8], kid_safe: bool, seed: u64) -> Option<Self>;
+    /// Every seat in the game and whether the mode plays it. Default fills nobody.
+    fn table(&self, seats: &[u8]) -> Vec<(u8, bool)> {
+        seats.iter().map(|s| (*s, false)).collect()
+    }
+    /// Whose turn the rules say it is. `None` leaves the engine to rotate seats.
+    fn current_seat(&self) -> Option<u8> {
+        None
+    }
     fn on_turn_begin(&mut self, seat: u8) -> Step;
     /// The seat tapped to roll, in `awaiting_roll`. The server does the rolling.
-    fn on_roll(&mut self, seat: u8) -> Step;
+    fn on_roll(&mut self, seat: u8) -> Outcome;
+    /// A seat came back from NPC (O3).
+    fn on_return(&mut self, _seat: u8) {}
     fn on_answer(&mut self, seat: u8, answer: &str) -> Verdict;
     /// `None` refuses a choice that is not legal right now.
     fn on_choice(&mut self, seat: u8, choice: &str) -> Option<Outcome>;
@@ -152,6 +173,7 @@ struct SeatState {
 }
 
 pub struct TurnEngine<R: TurnRules> {
+    config: R::Config,
     rules: Option<R>,
     fixed_seed: Option<u64>,
     game_id: String,
@@ -171,6 +193,7 @@ pub struct TurnEngine<R: TurnRules> {
 impl<R: TurnRules> Default for TurnEngine<R> {
     fn default() -> Self {
         TurnEngine {
+            config: R::Config::default(),
             rules: None,
             fixed_seed: None,
             game_id: String::new(),
@@ -188,6 +211,26 @@ impl<R: TurnRules> Default for TurnEngine<R> {
 impl<R: TurnRules + 'static> TurnEngine<R> {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn with_config(config: R::Config) -> Self {
+        TurnEngine { config, ..Self::default() }
+    }
+
+    pub fn set_seed(&mut self, seed: u64) {
+        self.fixed_seed = Some(seed);
+    }
+
+    pub fn rules_ref(&self) -> Option<&R> {
+        self.rules.as_ref()
+    }
+
+    pub fn phase_name(&self) -> &'static str {
+        self.phase
+    }
+
+    pub fn active(&self) -> u8 {
+        self.seats[self.active].seat
     }
 
     /// A reproducible game (I6, tests).
@@ -264,6 +307,12 @@ impl<R: TurnRules + 'static> TurnEngine<R> {
         if let Some(step) = next {
             return self.apply_step(step, now);
         }
+        self.next_human(true, now)
+    }
+
+    /// Moves on to the next seat a human holds. `advance` is false for the
+    /// first turn of a game, which nobody has played yet.
+    fn next_human(&mut self, mut advance: bool, now: Instant) -> Vec<Event> {
         let mut ev = Vec::new();
         loop {
             if self.rules().is_over() {
@@ -281,7 +330,12 @@ impl<R: TurnRules + 'static> TurnEngine<R> {
                 ev.push(Event::Over);
                 return ev;
             }
-            self.active = (self.active + 1) % self.seats.len();
+            match self.rules().current_seat() {
+                Some(seat) => self.active = self.seats.iter().position(|s| s.seat == seat).unwrap_or(0),
+                None if advance => self.active = (self.active + 1) % self.seats.len(),
+                None => {}
+            }
+            advance = true;
             self.auto_this_turn = false;
             let seat = self.seats[self.active].seat;
             match self.seats[self.active].status {
@@ -373,7 +427,10 @@ pub fn content_hash(state: &Value) -> String {
 
 impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
     fn max_seats(&self) -> u8 {
-        MAX_SEATS
+        R::max_seats(&self.config).min(MAX_SEATS)
+    }
+    fn admits(&self, kind: ProfileKind) -> bool {
+        R::admits(&self.config, kind)
     }
     fn min_seats(&self) -> u8 {
         MIN_SEATS
@@ -393,19 +450,27 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
         });
         self.game_id = crate::h2h::ticket();
         tracing::info!(event = "game_started", game_id = %self.game_id, seed);
-        self.seats = ctx
-            .seats
-            .iter()
-            .map(|s| SeatState { seat: *s, status: Status::Connected, dropped_at: None, autos: 0, left: false })
-            .collect();
         self.active = 0;
         self.ticket = None;
         self.auto_this_turn = false;
-        self.running = true;
-        let mut rules = R::init(ctx.seats, seed);
-        let step = rules.on_turn_begin(ctx.seats[0]);
+        let Some(rules) = R::init(&self.config, ctx.seats, ctx.kid_safe, seed) else {
+            self.rules = None;
+            return vec![Event::all(ServerMsg::MatchEnded { reason: "bank_exhausted".into() }), Event::Over];
+        };
+        self.seats = rules
+            .table(ctx.seats)
+            .into_iter()
+            .map(|(seat, npc)| SeatState {
+                seat,
+                status: if npc { Status::Npc } else { Status::Connected },
+                dropped_at: None,
+                autos: 0,
+                left: false,
+            })
+            .collect();
         self.rules = Some(rules);
-        let ev = self.apply_step(step, ctx.now);
+        self.running = true;
+        let ev = self.next_human(false, ctx.now);
         self.logged(ev)
     }
 
@@ -415,8 +480,12 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
             return self.bad_phase(seat);
         }
         self.acted();
-        let step = self.rules().on_roll(seat);
-        let ev = self.apply_step(step, ctx.now);
+        let o = self.rules().on_roll(seat);
+        let mut ev = Vec::new();
+        if !o.effects.is_empty() {
+            ev.push(Event::all(ServerMsg::TurnEffects { seat, effects: o.effects }));
+        }
+        ev.extend(self.after(o.next, ctx.now));
         self.logged(ev)
     }
 
@@ -530,7 +599,11 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
         // O3: back from NPC too, while the game lasts; its NPC turns stand.
         s.dropped_at = None;
         s.autos = 0;
+        let was_npc = s.status == Status::Npc;
         s.status = Status::Connected;
+        if was_npc {
+            self.rules().on_return(seat);
+        }
         let ev = vec![Event::all(ServerMsg::SeatStatus { seat, status: "connected".into() })];
         self.logged(ev)
     }
@@ -621,22 +694,26 @@ pub mod null {
 
     impl<const ELIMINATE: bool> TurnRules for NullRules<ELIMINATE> {
         const ABANDON: Abandon = if ELIMINATE { Abandon::Eliminate } else { Abandon::Npc };
+        type Config = ();
 
-        fn init(seats: &[u8], seed: u64) -> Self {
-            Self { seed, draws: 0, word: None, scores: seats.iter().map(|s| (*s, 0)).collect(), turns: 0 }
+        fn init(_config: &(), seats: &[u8], _kid_safe: bool, seed: u64) -> Option<Self> {
+            Some(Self { seed, draws: 0, word: None, scores: seats.iter().map(|s| (*s, 0)).collect(), turns: 0 })
         }
         fn on_turn_begin(&mut self, _seat: u8) -> Step {
             Step::new(AWAITING_ROLL, Value::Null)
         }
-        fn on_roll(&mut self, _seat: u8) -> Step {
+        fn on_roll(&mut self, _seat: u8) -> Outcome {
             let roll = self.draw() % 6 + 1;
             let word = format!("secret{}", self.draw());
             self.word = Some(word.clone());
-            Step {
-                phase: AWAITING_SPELL,
-                payload: json!({ "roll": roll }),
-                audio: Some(AudioKey { lang: "en".into(), text: word, py: None, variant: Variant::Normal }),
-                limit: Some(SPELL_SECS),
+            Outcome {
+                effects: Vec::new(),
+                next: Some(Step {
+                    phase: AWAITING_SPELL,
+                    payload: json!({ "roll": roll }),
+                    audio: Some(AudioKey { lang: "en".into(), text: word, py: None, variant: Variant::Normal }),
+                    limit: Some(SPELL_SECS),
+                }),
             }
         }
         fn on_answer(&mut self, seat: u8, answer: &str) -> Verdict {
@@ -670,7 +747,7 @@ pub mod null {
         fn on_auto(&mut self, seat: u8, phase: &str) -> Outcome {
             // A roll is not a decision: the server rolls anyway.
             if phase == AWAITING_ROLL {
-                return Outcome { effects: Vec::new(), next: Some(self.on_roll(seat)) };
+                return self.on_roll(seat);
             }
             self.word = None;
             self.turns += 1;

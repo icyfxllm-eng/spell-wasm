@@ -185,6 +185,7 @@ fn create_msg(mode: &str) -> ClientMsg {
         tier: None,
         timed: false,
         approve_joins: false,
+        options: None,
     })
 }
 

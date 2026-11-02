@@ -9,7 +9,7 @@ use std::time::Duration;
 use serde_json::Value;
 use tokio::time::Instant;
 
-use crate::protocol::{CreateRoom, ServerMsg, Variant};
+use crate::protocol::{CreateRoom, ProfileKind, ServerMsg, Variant};
 
 /// What the server asks the TTS backend for (F9). Never sent to a client.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -97,6 +97,10 @@ pub trait ModeRules: Send {
     fn on_audio(&mut self, _ticket: &str, _ok: bool, _ctx: &Ctx) -> Vec<Event> {
         Vec::new()
     }
+    /// May this profile join as a guest? (A Jr BoardGame room takes only kids.)
+    fn admits(&self, _kind: ProfileKind) -> bool {
+        true
+    }
     /// A spelling, on the turn engine. Other modes have no such message.
     fn on_answer(&mut self, seat: u8, _answer: &str, _ctx: &Ctx) -> Vec<Event> {
         vec![Event::seat(seat, ServerMsg::error("bad_phase"))]
@@ -117,8 +121,11 @@ pub trait ModeRules: Send {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum MakeError {
-    /// The mode exists in the spec but not in this build yet.
+    /// The mode exists in the spec but not in this build yet, or the room's
+    /// language has too few words for it.
     Unavailable,
+    /// The host's options make no sense for this mode.
+    BadOptions,
     Unknown,
 }
 
@@ -130,12 +137,10 @@ pub fn is_turn_mode(mode: &str) -> bool {
 /// A turn-engine mode's rule version (F7). `None` for every other mode.
 pub fn version(mode: &str) -> Option<u32> {
     match mode {
+        "boardgame" => Some(crate::boardgame::MODE_VERSION),
         #[cfg(any(test, feature = "test-modes"))]
         "turn_null" => Some(crate::turn::null::MODE_VERSION),
-        _ => {
-            let _ = mode;
-            None
-        }
+        _ => None,
     }
 }
 
@@ -143,6 +148,7 @@ pub fn version(mode: &str) -> Option<u32> {
 pub fn make(req: &CreateRoom) -> Result<Box<dyn ModeRules>, MakeError> {
     match req.mode.as_str() {
         "h2h" => Ok(Box::new(crate::h2h::H2h::new(req))),
+        "boardgame" => crate::boardgame::make(req),
         #[cfg(any(test, feature = "test-modes"))]
         "h2h_fast" => Ok(Box::new(crate::h2h::H2h::fast(req))),
         #[cfg(any(test, feature = "test-modes"))]

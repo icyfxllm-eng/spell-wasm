@@ -538,6 +538,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
         tier: None,
         timed: false,
         approve_joins: false,
+        options: None,
     };
     send(&mut a, &ClientMsg::CreateRoom(req)).await;
     let mut code = String::new();
