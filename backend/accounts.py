@@ -176,7 +176,9 @@ def email_tag(email_lc: str) -> str:
 
 
 def killed(flag: str) -> bool:
-    """I12: the server flag file can only kill. Absent file or key => not killed."""
+    """I12: the server flag file can only kill. This is the same signed document the app reads
+    ({"v":1,"issued":...,"kill":["accounts_enabled"],"sig":...}); the host trusts its own copy of
+    the file, so the signature is the app's concern. Absent file or name => not killed."""
     if not KILL_FLAGS_FILE:
         return False
     try:
@@ -184,8 +186,8 @@ def killed(flag: str) -> bool:
             data = json.loads(fh.read(65536))
     except (OSError, ValueError):
         return False
-    flags = data.get("flags", data) if isinstance(data, dict) else {}
-    return isinstance(flags, dict) and flags.get(flag) is False
+    kill = data.get("kill") if isinstance(data, dict) else None
+    return isinstance(kill, list) and flag in kill
 
 
 # ---------- signing keys ----------
@@ -316,7 +318,7 @@ def _rate_ok(key: str, limit: int, window: float) -> bool:
 
 def _guard():
     """503 when the kill flag is thrown or the signing key is missing."""
-    if killed("accounts.enabled"):
+    if killed("accounts_enabled"):
         return jsonify(error="unavailable"), 503
     if _private_key() is None:
         return jsonify(error="unavailable"), 503

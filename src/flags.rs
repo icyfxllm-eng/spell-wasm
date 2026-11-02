@@ -388,6 +388,31 @@ pub fn online_kids() -> bool {
     resolve(stored("online_kids").as_deref(), false)
 }
 
+/// CC-ACCOUNTS F8: the four account flags. Every one **default OFF**; only a build turns one on
+/// and the signed kill file can only turn one off (I12). With all four off the app behaves exactly
+/// as it did before accounts existed.
+pub fn accounts_enabled() -> bool {
+    resolve(stored("accounts_enabled").as_deref(), false)
+}
+
+/// Sync of the player's lists and progress to the account (Phase 3). Its own flag so it can ship
+/// before online enforcement (D6).
+#[allow(dead_code)] // read by Phase 3
+pub fn accounts_sync() -> bool {
+    resolve(stored("accounts_sync").as_deref(), false)
+}
+
+/// Tapping an online entry while signed out opens the account sheet (F1).
+pub fn accounts_online_gate() -> bool {
+    resolve(stored("accounts_online_gate").as_deref(), false)
+}
+
+/// Child profiles under a parent account (Phase 5; blocked on O2).
+#[allow(dead_code)] // read by Phase 5
+pub fn accounts_family() -> bool {
+    resolve(stored("accounts_family").as_deref(), false)
+}
+
 /// Feature "Spell It Out Loud" — voice spelling INPUT (a mic beside the answer
 /// field; the player speaks letter names "C… A… T" and the parser produces the
 /// same string a keyboard would). **Default ON for the v2 TestFlight QA pass**

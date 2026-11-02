@@ -76,7 +76,8 @@ pub fn setup(app: &App) {
             return;
         }
         dom::remove_class("vsSetupScrim", "show");
-        open_screen();
+        // CC-ACCOUNTS F1: with the gate flag off this runs open_screen at once.
+        crate::accounts_screen::gate_then(Box::new(open_screen));
     });
     wire_family();
     wire_controls();

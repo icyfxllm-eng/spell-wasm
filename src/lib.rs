@@ -129,6 +129,12 @@ mod online_model; // CC-GAME-SERVER F12/F13: the online client's pure state
 mod online_net; // CC-GAME-SERVER F2/F5: session token, room socket, reconnect
 #[cfg(not(feature = "web"))]
 mod online_screen; // CC-GAME-SERVER F12/F13/F10: the online screen
+#[cfg(not(feature = "web"))]
+mod accounts_model; // CC-ACCOUNTS Phase 2: the account sheet's pure state
+#[cfg(not(feature = "web"))]
+mod accounts_net; // CC-ACCOUNTS Phase 2: tokens in the Keychain, the identity service client
+#[cfg(not(feature = "web"))]
+mod accounts_screen; // CC-ACCOUNTS Phase 2: the account sheet and Settings → Account
 mod pinyin;
 mod tone_drill;
 mod zh_sandhi; // GENERATED — tools/build-zh-sandhi.py (CC-ZH-TONE F5) // CC-ZH-TONE F3 — tone misses study separately (Invariant 6)
@@ -486,6 +492,8 @@ fn wire(app: &App) {
     online_spelloff::setup(app);
     #[cfg(not(feature = "web"))]
     online_screen::setup(app);
+    #[cfg(not(feature = "web"))]
+    accounts_screen::setup();
     // "Spell It Out Loud" — voice spelling INPUT. Wires nothing unless the flag
     // is on (ships dark, Invariant I6); the mic is hidden until config voiceSpell
     // + on-device availability both hold (Invariant I3).

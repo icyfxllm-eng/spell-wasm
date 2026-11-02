@@ -4530,6 +4530,66 @@
     </div>
   </div>
 
+  <!-- CC-ACCOUNTS Phase 2: the account sheet. Opens only from an online entry while accounts_online_gate is on. -->
+  <div class="scrim age-scrim" id="acnScrim" role="dialog" aria-modal="true" aria-labelledby="acnTitle">
+    <div class="modal">
+      <div id="acnAge">
+        <h3 id="acnTitle" data-i18n="age.title">When's your birthday?</h3>
+        <p data-i18n="acn.age.blurb">Accounts are for grown-ups. Enter your birthday to continue.</p>
+        <div class="dob-row">
+          <select id="acnMonth" aria-label="Birth month" data-i18n-aria="aria.birthMonth"></select>
+          <select id="acnDay" aria-label="Birth day" data-i18n-aria="aria.birthDay"></select>
+          <select id="acnYear" aria-label="Birth year" data-i18n-aria="aria.birthYear"></select>
+        </div>
+        <div class="dob-err" id="acnAgeErr" role="alert"></div>
+        <button class="btn btn-check" id="acnAgeGo" data-i18n="age.continue" style="width:100%">Continue</button>
+        <button class="ghost" id="acnNotNow" data-i18n="acn.notNow" style="width:100%;margin-top:8px">Not now</button>
+      </div>
+      <div id="acnUnder" hidden>
+        <h3 data-i18n="acn.under.title">Ask a grown-up</h3>
+        <p data-i18n="acn.under.body">Accounts are for grown-ups. Ask a parent or guardian to set one up.</p>
+        <button class="btn" id="acnUnderClose" data-i18n="acn.notNow" style="width:100%">Not now</button>
+      </div>
+      <div id="acnMethod" hidden>
+        <h3 data-i18n="acn.gate.title">Play online with an account</h3>
+        <p data-i18n="acn.gate.body">An account puts your online games under your name. Everything else in Spell works without one.</p>
+        <button class="btn btn-check" id="acnApple" data-i18n="acn.apple" style="width:100%" hidden>Continue with Apple</button>
+        <button class="btn btn-check" id="acnEmailBtn" data-i18n="acn.email" style="width:100%;margin-top:8px">Continue with email</button>
+        <button class="ghost" id="acnNotNow2" data-i18n="acn.notNow" style="width:100%;margin-top:8px">Not now</button>
+      </div>
+      <div id="acnEmail" hidden>
+        <h3 data-i18n="acn.email.label">Your email</h3>
+        <input id="acnEmailIn" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Your email" data-i18n-aria="acn.email.label" style="width:100%" />
+        <div class="dob-err" id="acnEmailErr" role="alert"></div>
+        <button class="btn btn-check" id="acnSend" data-i18n="acn.email.send" style="width:100%">Send code</button>
+        <button class="ghost" id="acnEmailBack" data-i18n="acn.back" style="width:100%;margin-top:8px">Back</button>
+      </div>
+      <div id="acnCode" hidden>
+        <h3 data-i18n="acn.code.label">6-digit code</h3>
+        <p data-i18n="acn.code.hint">Check your email for the code.</p>
+        <input id="acnCodeIn" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="9" aria-label="6-digit code" data-i18n-aria="acn.code.label" style="width:100%" />
+        <div class="dob-err" id="acnCodeErr" role="alert"></div>
+        <button class="btn btn-check" id="acnVerify" data-i18n="acn.code.go" style="width:100%">Sign in</button>
+        <button class="ghost" id="acnCodeBack" data-i18n="acn.back" style="width:100%;margin-top:8px">Back</button>
+      </div>
+      <div id="acnWorking" hidden><p data-i18n="ol.connecting">Connecting…</p></div>
+      <div id="acnErr" hidden>
+        <p id="acnErrText" role="alert"></p>
+        <button class="btn" id="acnErrBack" data-i18n="acn.back" style="width:100%">Back</button>
+        <button class="ghost" id="acnErrClose" data-i18n="acn.notNow" style="width:100%;margin-top:8px">Not now</button>
+      </div>
+    </div>
+  </div>
+  <div class="scrim age-scrim" id="acnDeleteScrim" role="dialog" aria-modal="true" aria-labelledby="acnDeleteTitle">
+    <div class="modal">
+      <h3 id="acnDeleteTitle" data-i18n="acn.delete.title">Delete your account?</h3>
+      <p data-i18n="acn.delete.body">This permanently deletes your account and what we hold for it. Progress on this device stays. An App Store purchase belongs to your Apple ID, so it is not lost. Backups are cleared within 35 days.</p>
+      <div class="dob-err" id="acnDeleteErr" role="alert"></div>
+      <button class="btn" id="acnDeleteConfirm" data-i18n="acn.delete.confirm" style="width:100%">Delete</button>
+      <button class="ghost" id="acnDeleteCancel" data-i18n="ol.cancel" style="width:100%;margin-top:8px">Cancel</button>
+    </div>
+  </div>
+
   <!-- parent gate: worded-math challenge to change a kid-locked verdict -->
   <div class="scrim age-scrim" id="parentScrim">
     <div class="modal">
@@ -5144,6 +5204,8 @@
            (Apple 5.1.1(v)): Settings, this row, then Delete my account. Hidden
            when there is no account to delete (climb::reflect_auth). -->
       <div class="set-row btn-hide" id="setAccountRow"><span class="lbl2"><span data-i18n="acct.title">Your account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span><button class="ghost" id="setAccountBtn" data-i18n="acct.deleteLabel" style="flex:none;border-radius:12px">Delete account</button></div>
+      <!-- CC-ACCOUNTS Phase 2: Settings → Account. Hidden unless accounts_enabled. -->
+      <div class="set-row" id="acnSetRow" hidden><span class="lbl2"><span data-i18n="acn.set.title">Account</span><small id="acnSetState" data-i18n="acn.set.out">Not signed in</small></span><span style="display:flex;gap:8px;flex:none"><button class="ghost" id="acnSignIn" data-i18n="acn.signIn" style="border-radius:12px" hidden>Sign in</button><button class="ghost" id="acnSignOut" data-i18n="acn.signOut" style="border-radius:12px" hidden>Sign out</button><button class="ghost" id="acnDelete" data-i18n="acn.delete" style="border-radius:12px" hidden>Delete account</button></span></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /><button type="button" class="btn btn-icon btn-hide" id="kidGrownups" data-i18n="parent.title" style="flex:none;border-radius:12px">Ask a grown-up</button></label>
       <!-- ONLINE:BEGIN CC-GAME-SERVER F10: parent-gated, shown only for a kid while online.kids is on -->
       <label class="set-row" id="olFamilyRow" hidden><span class="lbl2"><span data-i18n="ol.family">Play online with family</span><small data-i18n="ol.familySmall">A grown-up says yes first</small></span><input type="checkbox" class="switch" id="olFamily" /></label>

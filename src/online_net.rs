@@ -76,7 +76,7 @@ fn ws_url() -> String {
 }
 
 /// The app's own native plugin (iOS), when present.
-fn kit() -> Option<JsValue> {
+pub(crate) fn kit() -> Option<JsValue> {
     let w = web_sys::window()?;
     let cap = Reflect::get(&w, &JsValue::from_str("Capacitor")).ok()?;
     let plugins = Reflect::get(&cap, &JsValue::from_str("Plugins")).ok()?;
@@ -93,7 +93,7 @@ pub fn platform() -> &'static str {
     }
 }
 
-async fn kit_call(method: &str, args: Value) -> Result<JsValue, JsValue> {
+pub(crate) async fn kit_call(method: &str, args: Value) -> Result<JsValue, JsValue> {
     let kit = kit().ok_or_else(|| JsValue::from_str("no native"))?;
     let f: Function = Reflect::get(&kit, &JsValue::from_str(method))?.dyn_into()?;
     let arg = js_sys::JSON::parse(&args.to_string())?;

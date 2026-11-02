@@ -37,6 +37,9 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "keychainGet", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "keychainSet", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "keychainDelete", returnType: CAPPluginReturnPromise),
+        // CC-ACCOUNTS Phase 2: Sign in with Apple (NativeLanguageKitPlugin+Keychain.swift).
+        CAPPluginMethod(name: "siwaAvailable", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "signInWithApple", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "donateSpotlight", returnType: CAPPluginReturnPromise),
         // CC-OFFLINE-PACKS (BD-2): per-file fetch/verify, atomic activate,
         // storage states, and the pack-first audio src resolver.
