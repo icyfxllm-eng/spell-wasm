@@ -5,3 +5,5 @@ gunicorn==23.0.0
 # The Climb — accounts + leaderboard
 bcrypt==4.2.1
 better-profanity==0.7.0
+# CC-ACCOUNTS identity service: ES256 tokens, Apple RS256 verify, AES-GCM for the revoke token
+cryptography==49.0.0

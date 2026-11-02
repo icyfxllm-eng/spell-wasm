@@ -16,6 +16,8 @@
 //! that fetches its ticket can read it and answer right on purpose. That side
 //! channel exists only with the stub; real TTS clips carry no text.
 
+mod turn4;
+
 use std::collections::{BTreeMap, HashSet};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
@@ -68,6 +70,8 @@ fn opts(args: &[String]) -> Opts {
         "load" => (200, 10.0, 0.0),
         "soak" => (100, 120.0, 0.0),
         "chaos" => (100, 120.0, 0.10),
+        // CC-ONLINE-TURN A9: 200 connections in 4-seat rooms.
+        "turn4" => (50, 10.0, 0.0),
         _ => (4, 1.5, 0.25),
     };
     let num = |k: &str, d: f64| get(k).and_then(|v| v.parse().ok()).unwrap_or(d);
@@ -265,8 +269,9 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
             Err(e) => return Err(format!("connect: {e}")),
         }
     };
+    let turn = o.profile == "turn4";
     let hello = ClientMsg::Hello(Hello {
-        protocol: 1,
+        protocol: if turn { spell_server::protocol::TURN_PROTOCOL } else { 1 },
         app_build: "botload".into(),
         platform: "bot".into(),
         profile_kind: ProfileKind::Adult,
@@ -274,6 +279,7 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
         display_name: Some(name.into()),
         token: token.into(),
         resume,
+        mode_versions: if turn { BTreeMap::from([("turn_null".to_string(), turn4::NULL_MODE_VERSION)]) } else { BTreeMap::new() },
     });
     ws.send(Message::Text(encode_client(Uuid::new_v4(), &hello).into())).await.map_err(|e| e.to_string())?;
     Ok(ws)
@@ -532,6 +538,7 @@ async fn run_room(o: Opts, t: Shared, tokens: (String, String), seed: u64, deadl
         tier: None,
         timed: false,
         approve_joins: false,
+        options: None,
     };
     send(&mut a, &ClientMsg::CreateRoom(req)).await;
     let mut code = String::new();
@@ -742,17 +749,18 @@ async fn tokens(o: &Opts, n: usize) -> Result<Vec<String>, String> {
 // ---------------------------------------------------------------- the run
 
 async fn run(o: Opts) -> i32 {
+    let seats = if o.profile == "turn4" { turn4::SEATS } else { 2 };
     println!(
         "botload: profile={} rooms={} ({} connections) minutes={} target={} audio={} ramp={}s",
         o.profile,
         o.rooms,
-        o.rooms * 2,
+        o.rooms * seats,
         o.minutes,
         o.target,
         o.audio_base,
         o.ramp_secs
     );
-    let toks = match tokens(&o, o.rooms * 2).await {
+    let toks = match tokens(&o, o.rooms * seats).await {
         Ok(t) => t,
         Err(e) => {
             eprintln!("botload: {e}");
@@ -814,8 +822,14 @@ async fn run(o: Opts) -> i32 {
     let mut handles = Vec::new();
     for i in 0..o.rooms {
         let (o2, t2) = (o.clone(), t.clone());
-        let pair = (toks[2 * i].clone(), toks[2 * i + 1].clone());
-        handles.push(tokio::spawn(run_room(o2, t2, pair, o.seed.wrapping_mul(1_000_003).wrapping_add(i as u64), deadline)));
+        let seed = o.seed.wrapping_mul(1_000_003).wrapping_add(i as u64);
+        if seats == 2 {
+            let pair = (toks[2 * i].clone(), toks[2 * i + 1].clone());
+            handles.push(tokio::spawn(run_room(o2, t2, pair, seed, deadline)));
+        } else {
+            let room = toks[seats * i..seats * (i + 1)].to_vec();
+            handles.push(tokio::spawn(turn4::run_room(o2, t2, room, seed, deadline)));
+        }
         // Ramp: spread the starts over --ramp seconds, like players arriving.
         tokio::time::sleep(Duration::from_secs_f64((o.ramp_secs / o.rooms.max(1) as f64).max(0.02))).await;
     }
@@ -882,6 +896,11 @@ fn report(o: &Opts, t: &Tally, samples: &[(f64, Value)]) -> i32 {
         if let (Some(a), Some(b)) = (fd0, fd1) {
             checks.push(("file descriptors per connection flat", b <= a * 1.03, format!("{a:.2} → {b:.2}")));
         }
+    }
+    if o.profile == "turn4" {
+        checks.push(("peak connections ≥ 4×rooms", peak_conns as usize >= o.rooms * turn4::SEATS, peak_conns.to_string()));
+        checks.push(("no errors and no automatic turns", t.errors.is_empty(), format!("{:?}", t.errors)));
+        checks.push(("no match ended early", t.match_ended.is_empty(), format!("{:?}", t.match_ended)));
     }
     if o.drop_frac > 0.0 {
         checks.push((
@@ -965,7 +984,7 @@ async fn main() {
             tts_stub(listen.as_deref().unwrap_or("127.0.0.1:9190")).await
         }
         _ => {
-            eprintln!("usage: botload run --target URL --admin URL --profile smoke|load|soak|chaos [--rooms N --minutes M --lang en --right 0.8 --drop-frac 0.1]\n       botload tts-stub --listen 127.0.0.1:9190");
+            eprintln!("usage: botload run --target URL --admin URL --profile smoke|load|soak|chaos|turn4 [--rooms N --minutes M --lang en --right 0.8 --drop-frac 0.1]\n       botload tts-stub --listen 127.0.0.1:9190");
             2
         }
     };

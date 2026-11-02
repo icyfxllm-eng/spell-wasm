@@ -9,7 +9,7 @@ use std::time::Duration;
 use serde_json::Value;
 use tokio::time::Instant;
 
-use crate::protocol::{CreateRoom, ServerMsg, Variant};
+use crate::protocol::{CreateRoom, ProfileKind, ServerMsg, Variant};
 
 /// What the server asks the TTS backend for (F9). Never sent to a client.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -73,6 +73,11 @@ pub trait ModeRules: Send {
     fn min_seats(&self) -> u8;
     /// True between `on_start` and the `Over` event.
     fn running(&self) -> bool;
+    /// A running game plays on without absent seats: the room neither releases
+    /// them on the seat hold nor ends the match when too few remain (F5, I3).
+    fn keeps_absent_seats(&self) -> bool {
+        false
+    }
     fn on_start(&mut self, ctx: &Ctx) -> Vec<Event>;
     fn on_next(&mut self, seat: u8, ctx: &Ctx) -> Vec<Event>;
     fn on_submit(&mut self, seat: u8, typed: &str, ctx: &Ctx) -> Vec<Event>;
@@ -92,6 +97,30 @@ pub trait ModeRules: Send {
     fn on_audio(&mut self, _ticket: &str, _ok: bool, _ctx: &Ctx) -> Vec<Event> {
         Vec::new()
     }
+    /// May this profile join as a guest? (A Jr BoardGame room takes only kids.)
+    fn admits(&self, _kind: ProfileKind) -> bool {
+        true
+    }
+    /// A spelling, on the turn engine. Other modes have no such message.
+    fn on_answer(&mut self, seat: u8, _answer: &str, _ctx: &Ctx) -> Vec<Event> {
+        vec![Event::seat(seat, ServerMsg::error("bad_phase"))]
+    }
+    fn on_choice(&mut self, seat: u8, _choice: &str, _ctx: &Ctx) -> Vec<Event> {
+        vec![Event::seat(seat, ServerMsg::error("bad_phase"))]
+    }
+    /// A `turn.choice` sent in the lobby (D-B12: a piece). True when it changed
+    /// something the room should see.
+    fn on_lobby_choice(&mut self, _seat: u8, _choice: &str) -> bool {
+        false
+    }
+    /// What the lobby shows of the mode before a game (`room_state.mode_state`).
+    fn lobby_state(&self) -> Value {
+        Value::Null
+    }
+    /// The hash a client echoes to confirm sync (turn engine only).
+    fn state_hash(&self) -> Option<String> {
+        None
+    }
     fn next_deadline(&self) -> Option<Instant>;
     /// The mode's part of a `room_state` snapshot (F5 resume).
     fn snapshot(&self) -> Value;
@@ -101,21 +130,42 @@ pub trait ModeRules: Send {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum MakeError {
-    /// The mode exists in the spec but not in this build yet.
+    /// The mode exists in the spec but not in this build yet, or the room's
+    /// language has too few words for it.
     Unavailable,
+    /// The host's options make no sense for this mode.
+    BadOptions,
     Unknown,
+}
+
+/// Runs on the turn engine, so it is behind `online.turn`.
+pub fn is_turn_mode(mode: &str) -> bool {
+    version(mode).is_some()
+}
+
+/// A turn-engine mode's rule version (F7). `None` for every other mode.
+pub fn version(mode: &str) -> Option<u32> {
+    match mode {
+        "boardgame" => Some(crate::boardgame::MODE_VERSION),
+        #[cfg(any(test, feature = "test-modes"))]
+        "turn_null" => Some(crate::turn::null::MODE_VERSION),
+        _ => None,
+    }
 }
 
 /// The mode registry.
 pub fn make(req: &CreateRoom) -> Result<Box<dyn ModeRules>, MakeError> {
     match req.mode.as_str() {
         "h2h" => Ok(Box::new(crate::h2h::H2h::new(req))),
+        "boardgame" => crate::boardgame::make(req),
         #[cfg(any(test, feature = "test-modes"))]
         "h2h_fast" => Ok(Box::new(crate::h2h::H2h::fast(req))),
         #[cfg(any(test, feature = "test-modes"))]
         "test" => Ok(Box::new(test_mode::TestMode::new(2))),
         #[cfg(any(test, feature = "test-modes"))]
         "test4" => Ok(Box::new(test_mode::TestMode::new(4))),
+        #[cfg(any(test, feature = "test-modes"))]
+        "turn_null" => Ok(Box::new(crate::turn::TurnEngine::<crate::turn::null::NullRules>::new())),
         _ => Err(MakeError::Unknown),
     }
 }

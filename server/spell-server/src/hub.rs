@@ -15,7 +15,6 @@ use std::net::IpAddr;
 use std::sync::Mutex;
 use std::time::Duration;
 
-use serde_json::Value;
 use tokio::sync::mpsc::UnboundedSender;
 use tokio::time::Instant;
 use uuid::Uuid;
@@ -87,6 +86,9 @@ pub struct Session {
     pub kind: ProfileKind,
     pub name: String,
     pub ip: IpAddr,
+    /// The protocol this client said hello with.
+    pub protocol: u32,
+    pub mode_versions: BTreeMap<String, u32>,
 }
 
 struct Live {
@@ -197,13 +199,14 @@ impl Room {
                     host: m.player == self.host,
                 })
                 .collect(),
-            mode_state: if self.mode.running() { self.mode.snapshot() } else { Value::Null },
+            mode_state: if self.mode.running() { self.mode.snapshot() } else { self.mode.lobby_state() },
         }
     }
 }
 
 #[derive(Default)]
 struct State {
+    online_turn: bool,
     live: HashMap<String, Live>,
     rooms: HashMap<String, Room>,
     room_of: HashMap<String, String>,
@@ -238,6 +241,22 @@ impl Default for Hub {
 }
 
 /// A fresh room code: uniform over the alphabet (rejection sampling).
+/// F7 and CC-ONLINE-TURN A-4: a client too old for a turn-engine mode is told
+/// to update for that mode alone. Every other mode is open to every client.
+fn mode_gate(sess: &Session, mode_name: &str) -> Option<ServerMsg> {
+    let version = mode::version(mode_name)?;
+    if sess.protocol < crate::protocol::TURN_PROTOCOL {
+        return Some(ServerMsg::UpdateRequired {
+            min: crate::protocol::TURN_PROTOCOL,
+            current: crate::protocol::PROTOCOL_CURRENT,
+        });
+    }
+    if sess.mode_versions.get(mode_name) != Some(&version) {
+        return Some(ServerMsg::error("mode_version"));
+    }
+    None
+}
+
 pub fn new_code() -> String {
     let mut out = String::with_capacity(CODE_LEN);
     while out.len() < CODE_LEN {
@@ -428,7 +447,7 @@ impl State {
             }
         }
         let room = self.rooms.get(code).unwrap();
-        if room.mode.running() && (room.seats.len() as u8) < room.mode.min_seats() {
+        if room.mode.running() && !room.mode.keeps_absent_seats() && (room.seats.len() as u8) < room.mode.min_seats() {
             self.end_match(code, "player_left");
         } else {
             self.send_room_state(code);
@@ -439,6 +458,11 @@ impl State {
 impl Hub {
     pub fn new() -> Hub {
         Hub::default()
+    }
+
+    /// `online.turn`: off, no turn-engine room can be created.
+    pub fn set_online_turn(&self, on: bool) {
+        self.state.lock().unwrap().online_turn = on;
     }
 
     pub fn stats(&self) -> Stats {
@@ -475,7 +499,7 @@ impl Hub {
         );
         let _ = tx.send(Out::Frame(encode_server(
             0,
-            &ServerMsg::Welcome { player_id: sess.player.clone(), protocol: crate::protocol::PROTOCOL_CURRENT },
+            &ServerMsg::Welcome { player_id: sess.player.clone(), protocol: sess.protocol },
         )));
         if let Some(deadline) = s.draining {
             let _ = tx.send(Out::Frame(encode_server(0, &ServerMsg::ServerDraining { deadline_unix_ms: deadline })));
@@ -584,12 +608,25 @@ impl Hub {
                 let seat = s.rooms[&code].seat_of(p).unwrap();
                 s.broadcast(&code, &ServerMsg::Emote { seat, id });
             }
-            msg @ (ClientMsg::NextWord {} | ClientMsg::Submit { .. } | ClientMsg::ReplayAudio { .. }) => {
+            msg @ (ClientMsg::NextWord {}
+            | ClientMsg::Submit { .. }
+            | ClientMsg::ReplayAudio { .. }
+            | ClientMsg::TurnAnswer { .. }
+            | ClientMsg::TurnChoice { .. }
+            | ClientMsg::TurnSync { .. }) => {
                 let Some(code) = s.room_of.get(p).cloned() else {
                     return s.direct(p, &ServerMsg::error("not_in_room"));
                 };
                 let room = s.rooms.get_mut(&code).unwrap();
                 if !room.mode.running() {
+                    // D-B12: the one choice a lobby takes is a piece.
+                    if let ClientMsg::TurnChoice { choice } = &msg {
+                        let seat = room.seat_of(p).unwrap();
+                        if room.mode.on_lobby_choice(seat, choice) {
+                            return s.send_room_state(&code);
+                        }
+                        return s.direct(p, &ServerMsg::error("piece_taken"));
+                    }
                     return s.direct(p, &ServerMsg::error("no_match"));
                 }
                 let seat = room.seat_of(p).unwrap();
@@ -605,6 +642,25 @@ impl Hub {
                         }
                         room.mode.on_submit(seat, &typed, &ctx)
                     }
+                    ClientMsg::TurnAnswer { answer } => {
+                        if !room.cids.insert(inbound.cid) {
+                            return;
+                        }
+                        room.mode.on_answer(seat, &answer, &ctx)
+                    }
+                    ClientMsg::TurnChoice { choice } => {
+                        if !room.cids.insert(inbound.cid) {
+                            return;
+                        }
+                        room.mode.on_choice(seat, &choice, &ctx)
+                    }
+                    ClientMsg::TurnSync { hash } => {
+                        // F4: out of sync gets the snapshot again.
+                        if room.mode.state_hash().is_some_and(|h| h != hash) {
+                            s.send_room_state(&code);
+                        }
+                        return;
+                    }
                     _ => unreachable!(),
                 };
                 s.deliver(&code, ev);
@@ -618,7 +674,9 @@ impl Hub {
             return s.direct(p, &ServerMsg::error("draining"));
         }
         if sess.kind == ProfileKind::Kid {
-            return s.direct(p, &ServerMsg::error("not_allowed")); // O3, A3.6
+            // O3, A3.6. The turn engine says it in its own words (F6).
+            let code = if mode::is_turn_mode(&req.mode) { "not_adult_host" } else { "not_allowed" };
+            return s.direct(p, &ServerMsg::error(code));
         }
         if s.room_of.contains_key(p) || s.pending_of.contains_key(p) {
             return s.direct(p, &ServerMsg::error("already_in_room"));
@@ -632,11 +690,19 @@ impl Hub {
             return s.direct(p, &ServerMsg::error("bad_tier"));
         }
         if !spell_wasm::native_api::is_active_lang(&req.lang) {
-            return s.direct(p, &ServerMsg::error("lang_unavailable"));
+            let code = if mode::is_turn_mode(&req.mode) { "inactive_language" } else { "lang_unavailable" };
+            return s.direct(p, &ServerMsg::error(code));
+        }
+        if mode::is_turn_mode(&req.mode) && !s.online_turn {
+            return s.direct(p, &ServerMsg::error("unknown_mode"));
+        }
+        if let Some(refusal) = mode_gate(sess, &req.mode) {
+            return s.direct(p, &refusal);
         }
         let mode = match mode::make(&req) {
             Ok(m) => m,
             Err(MakeError::Unavailable) => return s.direct(p, &ServerMsg::error("mode_unavailable")),
+            Err(MakeError::BadOptions) => return s.direct(p, &ServerMsg::error("bad_options")),
             Err(MakeError::Unknown) => return s.direct(p, &ServerMsg::error("unknown_mode")),
         };
         let code = loop {
@@ -699,6 +765,16 @@ impl Hub {
         }
         let Some(code) = normalize_code(raw) else { return fail(s, "bad_code") };
         let Some(room) = s.rooms.get_mut(&code) else { return fail(s, "room_not_found") };
+        if let Some(refusal) = mode_gate(sess, &room.req.mode) {
+            return s.direct(p, &refusal);
+        }
+        // I5: an invite code is no way into a language that is not active.
+        if mode::is_turn_mode(&room.req.mode) && !spell_wasm::native_api::is_active_lang(&room.req.lang) {
+            return s.direct(p, &ServerMsg::error("inactive_language"));
+        }
+        if !room.mode.admits(sess.kind) {
+            return s.direct(p, &ServerMsg::error("tier_locked"));
+        }
         if room.mode.running() {
             return fail(s, "match_in_progress");
         }
@@ -749,7 +825,11 @@ impl Hub {
             room.kid_safe = true; // G-D13: sticky for the room's life
         }
         room_of.insert(player.into(), code.into());
+        let turn_mode = mode::is_turn_mode(&room.req.mode);
         s.send_room_state(code);
+        if turn_mode {
+            s.broadcast(code, &ServerMsg::SeatStatus { seat, status: "connected".into() });
+        }
     }
 
     fn decide(s: &mut State, host: &str, id: u64, approve: bool, now: Instant) {
@@ -826,7 +906,22 @@ impl Hub {
                 s.direct(&p.player, &ServerMsg::Denied { reason: "expired".into() });
             }
             // Seat holds (A5.2).
-            let hold = if s.rooms[&code].mode.running() { SEAT_HOLD } else { LOBBY_SEAT_HOLD };
+            // D-O18: a turn game keeps its seats until every human is gone.
+            let room = &s.rooms[&code];
+            if room.mode.running()
+                && room.mode.keeps_absent_seats()
+                && room.seats.values().all(|m| m.dropped_at.is_some_and(|t| now.duration_since(t) >= SEAT_HOLD))
+            {
+                s.close_room(&code, "room_empty");
+                continue;
+            }
+            let hold = if room.mode.keeps_absent_seats() && room.mode.running() {
+                Duration::MAX
+            } else if room.mode.running() {
+                SEAT_HOLD
+            } else {
+                LOBBY_SEAT_HOLD
+            };
             let released: Vec<String> = s.rooms[&code]
                 .seats
                 .values()

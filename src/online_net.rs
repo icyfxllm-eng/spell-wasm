@@ -76,7 +76,7 @@ fn ws_url() -> String {
 }
 
 /// The app's own native plugin (iOS), when present.
-fn kit() -> Option<JsValue> {
+pub(crate) fn kit() -> Option<JsValue> {
     let w = web_sys::window()?;
     let cap = Reflect::get(&w, &JsValue::from_str("Capacitor")).ok()?;
     let plugins = Reflect::get(&cap, &JsValue::from_str("Plugins")).ok()?;
@@ -93,7 +93,7 @@ pub fn platform() -> &'static str {
     }
 }
 
-async fn kit_call(method: &str, args: Value) -> Result<JsValue, JsValue> {
+pub(crate) async fn kit_call(method: &str, args: Value) -> Result<JsValue, JsValue> {
     let kit = kit().ok_or_else(|| JsValue::from_str("no native"))?;
     let f: Function = Reflect::get(&kit, &JsValue::from_str(method))?.dyn_into()?;
     let arg = js_sys::JSON::parse(&args.to_string())?;
@@ -240,8 +240,11 @@ fn hello_frame(h: &Hello, tok: &str) -> String {
         .and_then(|w| Reflect::get(&w, &JsValue::from_str("SPELL_BUILD")).ok())
         .and_then(|v| v.as_string())
         .unwrap_or_else(|| "DEV".into());
+    // CC-ONLINE-TURN: the turn messages need protocol 2 and the mode's version.
+    // With Board Game off the hello is byte for byte what it was.
+    let board = crate::flags::online_boardgame();
     let mut body = json!({
-        "protocol": PROTOCOL,
+        "protocol": if board { crate::online_board::TURN_PROTOCOL } else { PROTOCOL },
         "app_build": build,
         "platform": platform(),
         "profile_kind": if h.kid { "kid" } else { "adult" },
@@ -251,6 +254,9 @@ fn hello_frame(h: &Hello, tok: &str) -> String {
     // A10.3: a kid sends no name at all; the server makes one.
     if !h.kid {
         body["display_name"] = json!(h.name);
+    }
+    if board {
+        body["mode_versions"] = json!({ crate::online_board::MODE: crate::online_board::MODE_VERSION });
     }
     if let Some((room, last_seq)) = &h.resume {
         body["resume"] = json!({ "room": room, "last_seq": last_seq });

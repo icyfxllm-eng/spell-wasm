@@ -25,11 +25,12 @@ const KILL_DOC = process.env.SPELL_KILL_ONLINE_DOC || '';
 
 const listen = (srv) => new Promise((r) => srv.listen(0, '127.0.0.1', () => r(srv.address().port)));
 
-/** A silent-clip TTS stand-in on its own port. */
-async function ttsStub() {
+/** A silent-clip TTS stand-in on its own port. `onWord` sees each word asked for. */
+async function ttsStub(onWord) {
   const srv = createServer((req, res) => {
     if (req.url.startsWith('/api/health')) return res.end('ok');
     if (req.url.startsWith('/api/speak')) {
+      if (onWord) onWord(new URL(req.url, 'http://x').searchParams.get('word'));
       res.writeHead(200, { 'content-type': 'audio/mpeg' });
       return res.end(Buffer.from([0xff, 0xfb, 0x90, 0x00, 0, 0, 0, 0]));
     }
@@ -62,9 +63,9 @@ async function proxy(target) {
 }
 
 /** One spell-server for one test, reachable through a proxy. */
-async function roomServer(base, env = {}) {
+export async function roomServer(base, env = {}, { onWord } = {}) {
   assert(existsSync(BIN), `build the server first: cargo build -p spell-server --features test-modes (${BIN})`);
-  const tts = await ttsStub();
+  const tts = await ttsStub(onWord);
   const probe = createTcp();
   const port = await listen(probe);
   probe.close();
@@ -101,7 +102,7 @@ async function roomServer(base, env = {}) {
 }
 
 /** Opens the app with online on, pointed at `srv`; logs every request to it. */
-async function app(browser, base, srv, { kid = false, flags = { online_enabled: 'on' }, family = false } = {}) {
+export async function app(browser, base, srv, { kid = false, flags = { online_enabled: 'on' }, family = false } = {}) {
   const init = (args) => {
     for (const [k, v] of Object.entries(args.flags)) localStorage.setItem(`spell_flag_${k}`, v);
     if (args.family) localStorage.setItem('spell_online_family_v1', 'on');
@@ -116,7 +117,7 @@ async function app(browser, base, srv, { kid = false, flags = { online_enabled: 
   return { ctx, page, hits };
 }
 
-async function openOnline(page) {
+export async function openOnline(page) {
   await page.evaluate(() => document.getElementById('vsBtn').click());
   await domSettled(page);
   await page.click('#vsOnline');
@@ -132,7 +133,7 @@ async function create(page, { timed = false, approve = false } = {}) {
   return (await page.textContent('#olRoomCode')).trim();
 }
 
-async function join(page, code, name = 'Dad') {
+export async function join(page, code, name = 'Dad') {
   await page.fill('#olName', name);
   await page.fill('#olCode', code);
   await page.click('#olJoin');

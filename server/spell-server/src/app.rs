@@ -89,10 +89,12 @@ impl AppState {
     }
 
     pub fn with_audio(cfg: Config, store: Store, source: Arc<dyn AudioSource>) -> Arc<AppState> {
+        let hub = Hub::new();
+        hub.set_online_turn(cfg.online_turn);
         Arc::new(AppState {
             cfg,
             store,
-            hub: Hub::new(),
+            hub,
             audio: AudioService::new(source),
             timing: Timing::default(),
             conns: AtomicUsize::new(0),

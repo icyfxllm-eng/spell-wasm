@@ -12,6 +12,15 @@ mod spelldoku {
     pub use super::rng_impl as rng;
 }
 
+// The Impossible word needs a pool, and no golden game has one, so this never runs.
+mod impossible {
+    pub mod engine {
+        pub fn grade(_lang: &str, _typed: &str, _word: &str) -> bool {
+            unreachable!("no golden game has an Impossible pool")
+        }
+    }
+}
+
 #[path = "../../../src/boardgame/mod.rs"]
 mod boardgame;
 

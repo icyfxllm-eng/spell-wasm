@@ -46,7 +46,7 @@ use std::sync::Arc;
 use crate::spelldoku::rng::Rng;
 
 #[allow(unused_imports)]
-pub use engine::{apply, applied, new_game};
+pub use engine::{apply, applied, new_game, set_npc};
 
 // Tile counts, pool minimums, tier weights, trap rules and the NPC delta ladder
 // all live in ONE config block per variant: `rules::VariantCfg` (I-P10). Nothing
@@ -171,6 +171,9 @@ pub struct GameConfig {
     pub boosts: bool,
     /// Feature 3 / D-P16: hot streak, captured here too.
     pub streak: bool,
+    /// CC-BOARD-GAME-ONLINE: several humans and NPCs at one table. The app's solo and
+    /// pass-and-play configs never set it, and refuse the mix as they always have.
+    pub mixed: bool,
 }
 
 // A function pointer has no stable identity to compare or print.
@@ -184,6 +187,7 @@ impl PartialEq for GameConfig {
             && self.stretch == o.stretch
             && self.boosts == o.boosts
             && self.streak == o.streak
+            && self.mixed == o.mixed
     }
 }
 
@@ -210,7 +214,7 @@ impl GameConfig {
             }
             p += 1;
         }
-        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false }
+        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false, mixed: false }
     }
 
     /// Turn Stretch on (the flag) for this game. Ignored by variants that have none (Jr).
@@ -234,7 +238,13 @@ impl GameConfig {
     /// F7: 2-4 humans on one phone, pieces in seat order.
     pub fn pass_and_play(variant: Variant, humans: u8, lang: &str, kid: bool, grader: Grader) -> Self {
         let seats = (0..humans).map(|piece| Seat { piece, npc: false }).collect();
-        GameConfig { variant, difficulty: Difficulty::Normal, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false }
+        GameConfig { variant, difficulty: Difficulty::Normal, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false, mixed: false }
+    }
+
+    /// CC-BOARD-GAME-ONLINE D-B2: an online table, in seat order: any mix with at least one
+    /// human. `difficulty` sets the NPCs' delta (D-B3).
+    pub fn mixed_table(variant: Variant, difficulty: Difficulty, seats: Vec<Seat>, lang: &str, kid: bool, grader: Grader) -> Self {
+        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false, mixed: true }
     }
 }
 
@@ -500,15 +510,20 @@ impl BoardGameState {
 
     /// D13/D27/D-P20: `(prior_hits + hits) / (prior_attempts + attempts)` (3 and 2 except Sprint) of the human, in thousandths. It
     /// starts at 1.5 and the NPC clamp holds it to 0.95 until attempts accumulate. In
-    /// solo there is exactly one human; in pass-and-play nothing reads it.
+    /// solo there is exactly one human; in pass-and-play nothing reads it; at a mixed table
+    /// (D-B3) it is the mean of the seats a human holds right now.
     pub fn human_acc_milli(&self) -> i64 {
-        let (h, a) = self
+        let prior = self.cfg.variant.cfg().prior();
+        let humans: Vec<i64> = self
             .players
             .iter()
-            .find(|p| !p.seat.npc)
-            .map(|p| (p.hits as i64, p.attempts as i64))
-            .unwrap_or((0, 0));
-        human_accuracy_milli(self.cfg.variant.cfg().prior(), h, a)
+            .filter(|p| !p.seat.npc)
+            .map(|p| human_accuracy_milli(prior, p.hits as i64, p.attempts as i64))
+            .collect();
+        if humans.is_empty() {
+            return human_accuracy_milli(prior, 0, 0);
+        }
+        humans.iter().sum::<i64>() / humans.len() as i64
     }
 
     /// The seats from first to last: a finisher first, then by position

@@ -8,6 +8,7 @@
 
 pub mod app;
 pub mod audio;
+pub mod boardgame;
 pub mod config;
 pub mod conn;
 pub mod grader;
@@ -18,6 +19,7 @@ pub mod mode;
 pub mod names;
 pub mod protocol;
 pub mod store;
+pub mod turn;
 
 use std::net::SocketAddr;
 use std::sync::Arc;

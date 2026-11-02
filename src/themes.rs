@@ -223,7 +223,7 @@ pub fn load() -> Store {
     crate::storage::get_json(KEY).unwrap_or_default()
 }
 
-fn save(s: &Store) {
+pub(crate) fn save(s: &Store) {
     crate::storage::set_json(KEY, s);
 }
 

@@ -98,6 +98,44 @@ pub enum ServerMsg {
     Emote { seat: u8, id: u8 },
     Audio { variant: String, audio_ticket: String },
     Error { code: String },
+    // CC-ONLINE-TURN: the turn engine's messages (BoardGame online).
+    #[serde(rename = "turn.begin")]
+    TurnBegin {
+        seat: u8,
+        phase: String,
+        #[serde(default)]
+        payload: Value,
+        #[serde(default)]
+        deadline_ms: Option<u64>,
+    },
+    #[serde(rename = "turn.audio")]
+    TurnAudio { seat: u8, audio_ticket: String },
+    #[serde(rename = "turn.verdict")]
+    TurnVerdict { seat: u8, word: String, answer: String, correct: bool, effects: Vec<Value> },
+    #[serde(rename = "turn.effects")]
+    TurnEffects { seat: u8, effects: Vec<Value> },
+    #[serde(rename = "turn.auto")]
+    TurnAuto { seat: u8, reason: String },
+    #[serde(rename = "seat.status")]
+    SeatStatus { seat: u8, status: String },
+    #[serde(rename = "game.end")]
+    GameEnd { ranking: Vec<u8>, summary: Value },
+}
+
+impl ServerMsg {
+    /// A turn-engine message: the board screen's, not this model's.
+    pub fn is_turn(&self) -> bool {
+        matches!(
+            self,
+            ServerMsg::TurnBegin { .. }
+                | ServerMsg::TurnAudio { .. }
+                | ServerMsg::TurnVerdict { .. }
+                | ServerMsg::TurnEffects { .. }
+                | ServerMsg::TurnAuto { .. }
+                | ServerMsg::SeatStatus { .. }
+                | ServerMsg::GameEnd { .. }
+        )
+    }
 }
 
 /// One decoded frame: its per-member sequence (0 = a direct reply) and message.
@@ -508,6 +546,15 @@ impl Model {
                 }
                 fx.push(Effect::Play(audio_ticket));
             }
+            ServerMsg::TurnBegin { .. } => self.in_match = true,
+            ServerMsg::GameEnd { .. } => {
+                // The board screen shows the result; the room is a lobby again.
+                self.in_match = false;
+                self.turn = None;
+                self.word = None;
+                self.unanswered = None;
+            }
+            ServerMsg::TurnAudio { .. } | ServerMsg::TurnVerdict { .. } | ServerMsg::TurnEffects { .. } | ServerMsg::TurnAuto { .. } | ServerMsg::SeatStatus { .. } => {}
             ServerMsg::Error { code } => {
                 // The server says the unanswered action no longer applies.
                 if matches!(code.as_str(), "word_live" | "not_your_turn") && self.unanswered.take().is_some() {
@@ -517,6 +564,8 @@ impl Model {
                     code.as_str(),
                     "room_not_found" | "bad_code" | "rate_limited" | "room_full" | "match_in_progress" | "draining"
                         | "already_in_room" | "lang_unavailable" | "not_allowed"
+                        // The turn engine's own refusals (CC-ONLINE-TURN F6).
+                        | "not_adult_host" | "inactive_language" | "mode_unavailable" | "tier_locked" | "mode_version" | "bad_options"
                 ) {
                     self.entry_error = Some(code.clone());
                 }
@@ -545,8 +594,10 @@ pub fn entry_error_key(code: &str) -> &'static str {
         "draining" => "ol.err.draining",
         "denied" => "ol.err.denied",
         "denied_expired" => "ol.err.expired",
-        "lang_unavailable" => "ol.err.lang",
-        "not_allowed" => "ol.err.notAllowed",
+        "lang_unavailable" | "inactive_language" | "mode_unavailable" => "ol.err.lang",
+        "not_allowed" | "not_adult_host" => "ol.err.notAllowed",
+        "tier_locked" => "ol.err.jr",
+        "mode_version" => "ol.update",
         _ => "ol.err.generic",
     }
 }
@@ -616,6 +667,41 @@ pub fn players_html(m: &Model) -> String {
             format!("<li class=\"ol-player\" data-seat=\"{}\"><b>{}</b>{tags}</li>", s.seat, esc(&s.name))
         })
         .collect()
+}
+
+/// D-B12: the lobby's piece picker. Mine is marked, another seat's is taken.
+pub fn pieces_html(m: &Model) -> String {
+    let Some(r) = &m.room else { return String::new() };
+    let picks: Vec<(u8, u8)> = r
+        .mode_state
+        .get("picks")
+        .and_then(Value::as_array)
+        .map(|a| a.iter().filter_map(|p| Some((p.get("seat")?.as_u64()? as u8, p.get("piece")?.as_u64()? as u8))).collect())
+        .unwrap_or_default();
+    let n = r.mode_state.get("pieces").and_then(Value::as_u64).unwrap_or(4) as u8;
+    let mut h = format!("<span>{}</span>", esc(&crate::i18n::t("ol.pickPiece")));
+    for piece in 0..n {
+        let glyph = crate::boardgame_screen::PIECES.get(piece as usize).copied().unwrap_or("");
+        let by = picks.iter().find(|(_, p)| *p == piece).map(|(s, _)| *s);
+        let (class, extra) = match by {
+            Some(s) if Some(s) == m.my_seat => (" on", String::new()),
+            Some(s) => (" taken", format!(" disabled aria-label=\"{glyph} {}\"", esc(&m.name_of(s)))),
+            None => ("", String::new()),
+        };
+        h.push_str(&format!("<button type=\"button\" class=\"bg-btn{class}\" data-piece=\"{piece}\"{extra}>{glyph}</button>"));
+    }
+    h
+}
+
+/// How a Board Game room is played, and who fills the empty seats (F4, D-B5).
+pub fn board_rules_text(m: &Model) -> String {
+    let Some(r) = &m.room else { return String::new() };
+    let empty = r.max_seats.saturating_sub(r.seats.len() as u8);
+    let mut t = crate::i18n::t("ol.boardRules");
+    if empty > 0 {
+        t = format!("{t} {}", crate::i18n::tp("ol.npcFill", &[("n", &empty.to_string())]));
+    }
+    t
 }
 
 /// The host's knock list: each request with Let in / Not now.
@@ -834,7 +920,7 @@ mod tests {
             assert!(decode(line).is_some(), "the client cannot read: {line}");
             n += 1;
         }
-        assert_eq!(n, 18, "one golden line per server message type");
+        assert_eq!(n, 25, "one golden line per server message type");
     }
 
     #[test]

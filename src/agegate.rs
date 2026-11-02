@@ -95,6 +95,11 @@ pub fn age_from(y: i32, m: u32, d: u32) -> u32 {
 /// Fill the month/day/year selectors. Year starts at a neutral 2000 (never a
 /// value that hints at the cutoff); range is the last ~100 years.
 pub fn populate_selects() {
+    populate_into("ageMonth", "ageDay", "ageYear");
+}
+
+/// The same neutral selectors under other ids (the account sheet's own age screen, CC-ACCOUNTS).
+pub fn populate_into(month_id: &str, day_id: &str, year_id: &str) {
     // Phase B carry-in B-C2: the month names come from the platform's own date
     // formatting in the player's interface language (they were a hard-coded
     // English list, so a Spanish player chose from "January"). The option VALUE
@@ -104,24 +109,24 @@ pub fn populate_selects() {
     for (i, name) in names.iter().enumerate() {
         mo.push_str(&format!("<option value=\"{}\">{}</option>", i + 1, dom::escape_html(name)));
     }
-    dom::set_html("ageMonth", &mo);
+    dom::set_html(month_id, &mo);
 
     let mut da = String::new();
     for d in 1..=31 {
         da.push_str(&format!("<option value=\"{d}\">{d}</option>"));
     }
-    dom::set_html("ageDay", &da);
+    dom::set_html(day_id, &da);
 
     let (ty, _, _) = today();
     let mut ye = String::new();
     for y in (ty - 100..=ty).rev() {
         ye.push_str(&format!("<option value=\"{y}\">{y}</option>"));
     }
-    dom::set_html("ageYear", &ye);
+    dom::set_html(year_id, &ye);
 
-    dom::select("ageMonth").set_value("1");
-    dom::select("ageDay").set_value("1");
-    dom::select("ageYear").set_value("2000");
+    dom::select(month_id).set_value("1");
+    dom::select(day_id).set_value("1");
+    dom::select(year_id).set_value("2000");
 }
 
 const MONTHS_EN: [&str; 12] = [
@@ -157,9 +162,13 @@ fn month_names(locale: &str) -> Vec<String> {
 
 /// Read the current (year, month, day) from the selectors.
 pub fn read_selection() -> (i32, u32, u32) {
-    let y = dom::select("ageYear").value().parse().unwrap_or(0);
-    let m = dom::select("ageMonth").value().parse().unwrap_or(0);
-    let d = dom::select("ageDay").value().parse().unwrap_or(0);
+    read_selection_from("ageMonth", "ageDay", "ageYear")
+}
+
+pub fn read_selection_from(month_id: &str, day_id: &str, year_id: &str) -> (i32, u32, u32) {
+    let y = dom::select(year_id).value().parse().unwrap_or(0);
+    let m = dom::select(month_id).value().parse().unwrap_or(0);
+    let d = dom::select(day_id).value().parse().unwrap_or(0);
     (y, m, d)
 }
 

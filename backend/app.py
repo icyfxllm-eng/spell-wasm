@@ -282,11 +282,13 @@ tts_client = texttospeech.TextToSpeechClient(
 import db  # noqa: E402
 import climb  # noqa: E402
 import matches  # noqa: E402
+import accounts  # noqa: E402  (CC-ACCOUNTS Phase 1; endpoints answer 503 until a signing key exists)
 import entitlements  # noqa: E402
 import speak_metrics  # noqa: E402  (R8)
 
 db.init()
 app.register_blueprint(climb.bp)
+app.register_blueprint(accounts.bp)
 app.register_blueprint(matches.bp)  # async 1v1 "Spell Off" (account-gated)
 # Regional free-language grants, derived from the caller's Cloudflare edge
 # country (no accounts, no tracking). The adapter — backend/entitlements.py — is
