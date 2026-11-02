@@ -26,7 +26,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
         return Err(ConfigError::SeatCount);
     }
     let npcs = cfg.seats.iter().filter(|s| s.npc).count();
-    if npcs > 0 && n - npcs != 1 || npcs == n {
+    if npcs > 0 && n - npcs != 1 && !cfg.mixed || npcs == n {
         return Err(ConfigError::MixedSeats);
     }
     let mut seen = [false; MAX_SEATS];
@@ -165,6 +165,23 @@ pub fn apply(s: &mut BoardGameState, action: Action) -> Result<(), Rejected> {
             Ok(())
         }
     }
+}
+
+/// CC-BOARD-GAME-ONLINE F4 (TURN D-O5, O3): hands a seat to the NPC rules or back to its player.
+/// Its piece, tile, boosts and streak stay exactly as they are (I3). A seat in the middle of its
+/// own turn cannot change hands: resolve the turn first, or `AdvanceNpc` would have no way in.
+pub fn set_npc(s: &mut BoardGameState, seat: u8, npc: bool) -> Result<(), Rejected> {
+    if s.phase == Phase::Finished {
+        return Err(Rejected::GameOver);
+    }
+    if seat as usize >= s.players.len() {
+        return Err(Rejected::BadTarget);
+    }
+    if seat == s.current_seat() && s.phase != Phase::AwaitRoll {
+        return Err(Rejected::WrongPhase);
+    }
+    s.players[seat as usize].seat.npc = npc;
+    Ok(())
 }
 
 /// The same, as a pure function of the old state.

@@ -1635,3 +1635,131 @@ fn jr_never_gets_an_impossible_pool() {
     let s = new_game(3, GameConfig::pass_and_play(Variant::Jr, 2, "en", true, exact), jr_pools()).unwrap();
     assert!(s.board.traps.iter().all(Option::is_none));
 }
+
+// ---------------------------------------------------------------- CC-BOARD-GAME-ONLINE
+
+fn table(seed: u64, npcs: &[bool]) -> BoardGameState {
+    let seats = npcs.iter().enumerate().map(|(i, npc)| Seat { piece: i as u8, npc: *npc }).collect();
+    let cfg = GameConfig::mixed_table(Variant::Sprint, Difficulty::Normal, seats, "en", false, exact);
+    new_game(seed, cfg, pools_for(Variant::Sprint)).unwrap()
+}
+
+/// Plays on, every human right except each third word, and returns the actions' digest.
+fn drive(s: &mut BoardGameState) {
+    let mut k = 0u32;
+    for _ in 0..20_000 {
+        if s.phase == Phase::Finished {
+            return;
+        }
+        let a = if s.is_npc_turn() {
+            Action::AdvanceNpc
+        } else {
+            match s.phase {
+                Phase::AwaitRoll => Action::Roll,
+                Phase::AwaitStretch => Action::ChooseStretch(false),
+                Phase::AwaitSpelling => {
+                    k += 1;
+                    let w = s.pending.as_ref().unwrap().word.clone();
+                    Action::SubmitSpelling(if k % 3 == 0 { "x".into() } else { w })
+                }
+                _ => Action::ChooseSwitchTarget(None),
+            }
+        };
+        apply(s, a).unwrap();
+    }
+    panic!("the game did not finish");
+}
+
+#[test]
+fn online_a_mixed_table_plays_to_a_winner_and_replays_exactly() {
+    let run = |seed| {
+        let mut s = table(seed, &[false, true, false, true]);
+        drive(&mut s);
+        s
+    };
+    for seed in 0..50 {
+        let a = run(seed);
+        assert!(a.winner.is_some());
+        assert_eq!(a.digest(), run(seed).digest(), "I1: seed {seed}");
+    }
+}
+
+#[test]
+fn online_mixing_stays_refused_without_the_table_and_a_table_needs_a_human() {
+    let mut c = solo(Variant::Sprint, Difficulty::Normal, 3);
+    c.seats[1].npc = false;
+    assert_eq!(new_game(1, c.clone(), pools_for(Variant::Sprint)).unwrap_err(), ConfigError::MixedSeats);
+    c.mixed = true;
+    assert!(new_game(1, c, pools_for(Variant::Sprint)).is_ok());
+    let seats = (0..2).map(|piece| Seat { piece, npc: true }).collect();
+    let all_npc = GameConfig::mixed_table(Variant::Sprint, Difficulty::Normal, seats, "en", false, exact);
+    assert_eq!(new_game(1, all_npc, pools_for(Variant::Sprint)).unwrap_err(), ConfigError::MixedSeats);
+}
+
+#[test]
+fn online_npcs_follow_the_mean_of_the_humans_at_the_table() {
+    let mut s = table(3, &[false, false, true]);
+    let prior = Variant::Sprint.cfg().prior();
+    s.players[0].hits = 10;
+    s.players[0].attempts = 10;
+    s.players[1].hits = 0;
+    s.players[1].attempts = 10;
+    let (a, b) = (human_accuracy_milli(prior, 10, 10), human_accuracy_milli(prior, 0, 10));
+    assert_ne!(a, b);
+    assert_eq!(s.human_acc_milli(), (a + b) / 2);
+    // A seat the NPC rules hold no longer counts as a human's.
+    s.players[1].seat.npc = true;
+    assert_eq!(s.human_acc_milli(), a);
+    let d = Variant::Sprint.cfg().delta(Difficulty::Normal);
+    assert_eq!(s.npc_acc_milli(), super::engine::npc_accuracy_milli(a, d));
+}
+
+#[test]
+fn online_one_human_at_a_table_gets_exactly_the_solo_number() {
+    for (h, a) in [(0, 0), (3, 7), (40, 41)] {
+        let mut s = table(5, &[true, false, true]);
+        s.players[1].hits = h;
+        s.players[1].attempts = a;
+        assert_eq!(s.human_acc_milli(), human_accuracy_milli(Variant::Sprint.cfg().prior(), h as i64, a as i64));
+    }
+}
+
+#[test]
+fn online_a_seat_changes_hands_keeping_everything() {
+    let mut s = table(7, &[false, false, false, false]);
+    let cur = s.current_seat();
+    // Mid-turn it cannot: the word in hand has to resolve first.
+    apply(&mut s, Action::Roll).unwrap();
+    if s.phase == Phase::AwaitSpelling {
+        assert_eq!(set_npc(&mut s, cur, true), Err(Rejected::WrongPhase));
+        let w = s.pending.as_ref().unwrap().word.clone();
+        apply(&mut s, Action::SubmitSpelling(w)).unwrap();
+    }
+    drive_to_roll(&mut s);
+    let seat = s.current_seat();
+    let before = s.players[seat as usize].clone();
+    set_npc(&mut s, seat, true).unwrap();
+    let after = &s.players[seat as usize];
+    assert_eq!((after.pos, after.skip, after.hits, after.attempts), (before.pos, before.skip, before.hits, before.attempts));
+    assert!(s.is_npc_turn());
+    apply(&mut s, Action::AdvanceNpc).unwrap();
+    // O3: back again while the game lasts.
+    set_npc(&mut s, seat, false).unwrap();
+    assert!(!s.players[seat as usize].seat.npc);
+    assert_eq!(set_npc(&mut s, 9, true), Err(Rejected::BadTarget));
+    drive(&mut s);
+    assert_eq!(set_npc(&mut s, seat, true), Err(Rejected::GameOver));
+}
+
+fn drive_to_roll(s: &mut BoardGameState) {
+    for _ in 0..20 {
+        let a = match s.phase {
+            Phase::AwaitRoll | Phase::Finished => return,
+            Phase::AwaitStretch => Action::ChooseStretch(false),
+            Phase::AwaitSpelling => Action::SubmitSpelling(s.pending.as_ref().unwrap().word.clone()),
+            _ => Action::ChooseSwitchTarget(None),
+        };
+        apply(s, a).unwrap();
+    }
+    panic!("never reached a roll");
+}
