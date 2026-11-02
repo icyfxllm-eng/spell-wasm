@@ -1913,6 +1913,8 @@ fn show_over() {
     })
     .unwrap_or_default();
     dom::set_html("bgPodium", &rows);
+    // An online game renames this button "Back to room"; solo names it again.
+    dom::set_text("bgAgain", &i18n::t("bg.again"));
     dom::set_hidden("bgShare", !crate::share::available());
     dom::set_hidden("bgOver", false);
 }
