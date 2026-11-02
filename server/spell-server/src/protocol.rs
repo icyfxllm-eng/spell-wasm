@@ -449,6 +449,14 @@ mod tests {
         assert_eq!(decode(&"x".repeat(MAX_FRAME + 1)), Err(DecodeError::TooLarge));
     }
 
+    #[test]
+    fn a11_a_hello_without_a_profile_is_refused() {
+        let body = r#"{"protocol":2,"app_build":"1","platform":"ios","ui_lang":"en","token":"t"}"#;
+        let frame = format!(r#"{{"v":1,"t":"hello","cid":"00000000-0000-4000-8000-000000000001","body":{body}}}"#);
+        assert_eq!(decode(&frame), Err(DecodeError::BadBody));
+        assert!(crate::names::adult("").is_err(), "an adult profile needs a name");
+    }
+
     proptest! {
         // A1.6 runs the 1M-case version in tests/frame_decoder_proptest.rs.
         #[test]

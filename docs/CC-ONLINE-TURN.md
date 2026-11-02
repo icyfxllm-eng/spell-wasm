@@ -84,7 +84,7 @@ F8 Load gate. The existing load scenario (`server/tools/botload`) extended to 4-
 * D-O22 Emoji set: 8 reactions, defined once on the server, same in every language.
 * D-O23 NPC seats are visibly labelled as computer players to every seat.
 * D-O24 Audio tickets are single-use per room: a stale ticket returns 404.
-* D-O25 All server logs of a game are keyed by game_id and retain the seed, every event, and every snapshot hash. Retention follows CC-SECURITY-BASELINE O3.
+* D-O25 (amended, Eric 2026-11-01) All server logs of a game are keyed by game_id and retain the seed, every event type, and every snapshot hash. Typed answers and words are never logged, because the log could hold a child's input. Retention follows CC-SECURITY-BASELINE O3.
 
 ### 3.3 Open (build default in parentheses)
 
@@ -155,7 +155,7 @@ Each phase ends with its tests green in CI and a one-paragraph note appended to 
 * A4 Packet capture of a full game contains no target word before its turn.verdict.
 * A5 Kid profile attempts host: error.not_adult_host. Joins adult-hosted room: seat.status = connected.
 * A6 (replaced, A-3) A join to a room whose language is inactive is refused with error.inactive_language.
-* A7 Replay from logged seed: identical event sequence, identical final hash.
+* A7 (amended) Replay from the logged seed plus a recorded input list: identical event sequence, identical final hash. The logs alone do not hold the inputs (D-O25).
 * A8 Head-to-Head wire-format fixture recorded before Phase A replays byte-identical after Phase E; an old-protocol client plays H2H unchanged and receives `update_required` for any other mode.
 * A9 Load: 50 concurrent 4-seat null-mode rooms within the R6 ceilings.
 * A10 Stale audio_ticket request returns 404.

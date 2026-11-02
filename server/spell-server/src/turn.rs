@@ -36,6 +36,11 @@ const CHOICE_LIMIT: Duration = Duration::from_secs(15);
 /// A mode gives `awaiting_spell` its solo timer + 5 s; this is for one that does not.
 const SPELL_LIMIT: Duration = Duration::from_secs(35);
 
+/// Reserved, unused in v1: no store exists to check (CC-ONLINE-TURN A-3). The
+/// entitlement join hook sends it once in-app purchase ships, with no protocol
+/// bump.
+pub const NOT_ENTITLED: &str = "not_entitled";
+
 /// What `on_abandon` turns a seat into (D-O4).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Abandon {
@@ -426,13 +431,22 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
         self.acted();
         let v = self.rules().on_answer(seat, answer);
         let mut ev = self.expire_ticket();
-        ev.push(Event::all(ServerMsg::TurnVerdict {
-            seat,
-            word: v.word,
-            answer: answer.to_string(),
-            correct: v.correct,
-            effects: v.effects,
-        }));
+        // I9: what a seat typed is free text, so in a room with a kid only that
+        // seat gets it back. Everyone still gets the word at the same moment.
+        let seats: Vec<u8> = self.seats.iter().map(|s| s.seat).collect();
+        for to in seats {
+            let shown = if ctx.kid_safe && to != seat { "" } else { answer };
+            ev.push(Event::seat(
+                to,
+                ServerMsg::TurnVerdict {
+                    seat,
+                    word: v.word.clone(),
+                    answer: shown.to_string(),
+                    correct: v.correct,
+                    effects: v.effects.clone(),
+                },
+            ));
+        }
         ev.extend(self.after(v.next, ctx.now));
         self.logged(ev)
     }
@@ -1044,6 +1058,24 @@ mod tests {
         g.now = d;
         let ctx = Ctx { now: g.now, seats: &[0, 1, 2, 3], kid_safe: false, grace: [Duration::from_millis(300); 4], connected: [true; 4] };
         assert!(g.e.on_timer(&ctx).is_empty(), "still inside the seat's grace");
+    }
+
+    #[test]
+    fn i9_a_kid_never_sees_what_another_seat_typed() {
+        let mut g = G::new(1);
+        g.roll(0);
+        let ctx = Ctx { now: g.now, seats: &[0, 1, 2, 3], kid_safe: true, grace: [Duration::ZERO; 4], connected: [true; 4] };
+        let ev = g.e.on_answer(0, "rude words", &ctx);
+        let mut verdicts = 0;
+        for e in &ev {
+            if let Event::Send { to, msg: ServerMsg::TurnVerdict { answer, word, .. } } = e {
+                verdicts += 1;
+                assert!(!word.is_empty(), "every seat gets the word");
+                let own = *to == crate::mode::Audience::Seat(0);
+                assert_eq!(answer, if own { "rude words" } else { "" }, "{to:?}");
+            }
+        }
+        assert_eq!(verdicts, 4);
     }
 
     #[test]

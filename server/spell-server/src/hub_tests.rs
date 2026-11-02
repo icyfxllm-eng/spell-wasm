@@ -802,3 +802,75 @@ async fn everyone_gone_closes_a_turn_room() {
     advance(&hub, SEAT_HOLD + Duration::from_secs(1)).await;
     assert!(!hub.room_exists(&code));
 }
+
+fn turn_kid(hub: &Hub, id: &str, conn_id: u64) -> P {
+    let (tx, rx) = unbounded_channel();
+    let mode_versions = BTreeMap::from([("turn_null".to_string(), crate::turn::null::MODE_VERSION)]);
+    let sess = Session { player: id.into(), conn_id, kind: ProfileKind::Kid, name: format!("n-{id}"), ip: ip(), protocol: 2, mode_versions };
+    hub.attach(&sess, tx, None, Instant::now());
+    P { sess, rx }
+}
+
+#[tokio::test(start_paused = true)]
+async fn a5_a_kid_cannot_host_but_can_join_an_adults_room() {
+    let hub = Hub::new();
+    hub.set_online_turn(true);
+    let mut kid = turn_kid(&hub, "k", 1);
+    send(&hub, &kid, ClientMsg::CreateRoom(room_req("turn_null")));
+    assert_eq!(errors(&take(&mut kid)), vec!["not_adult_host"]);
+    assert_eq!(hub.seat_of("k"), None);
+
+    let mut host = turn_client(&hub, "a", 2, 2, Some(crate::turn::null::MODE_VERSION));
+    let code = create(&hub, &mut host, "turn_null");
+    send(&hub, &kid, ClientMsg::JoinRoom { code });
+    assert_eq!(hub.seat_of("k"), None, "a kid knocks first (G-D13)");
+    let id = pending_id(&take(&mut host)).expect("the host hears the knock");
+    send(&hub, &host, ClientMsg::ApproveJoin { request_id: id });
+    assert!(hub.seat_of("k").is_some());
+    assert!(saw(&mut kid, |m| matches!(m, ServerMsg::SeatStatus { status, .. } if status == "connected")));
+}
+
+#[tokio::test(start_paused = true)]
+async fn a6_an_inactive_language_is_refused_at_create_and_at_join() {
+    let hub = Hub::new();
+    hub.set_online_turn(true);
+    let v = Some(crate::turn::null::MODE_VERSION);
+    let mut a = turn_client(&hub, "a", 1, 2, v);
+    let mut req = room_req("turn_null");
+    req.lang = "xx".into();
+    send(&hub, &a, ClientMsg::CreateRoom(req));
+    assert_eq!(errors(&take(&mut a)), vec!["inactive_language"]);
+
+    // A language can go inactive after the code went out.
+    let code = create(&hub, &mut a, "turn_null");
+    hub.state.lock().unwrap().rooms.get_mut(&code).unwrap().req.lang = "xx".into();
+    let mut b = turn_client(&hub, "b", 2, 2, v);
+    send(&hub, &b, ClientMsg::JoinRoom { code });
+    assert_eq!(errors(&take(&mut b)), vec!["inactive_language"]);
+    assert_eq!(hub.seat_of("b"), None);
+}
+
+#[tokio::test(start_paused = true)]
+async fn head_to_head_keeps_its_own_refusal_words() {
+    let hub = Hub::new();
+    hub.set_online_turn(true);
+    let mut kid = turn_kid(&hub, "k", 1);
+    send(&hub, &kid, ClientMsg::CreateRoom(h2h_req(false)));
+    assert_eq!(errors(&take(&mut kid)), vec!["not_allowed"]);
+    let mut a = turn_client(&hub, "a", 2, 1, None);
+    let mut req = h2h_req(false);
+    req.lang = "xx".into();
+    send(&hub, &a, ClientMsg::CreateRoom(req));
+    assert_eq!(errors(&take(&mut a)), vec!["lang_unavailable"]);
+}
+
+#[tokio::test(start_paused = true)]
+async fn reactions_are_the_fixed_set_only() {
+    let hub = Hub::new();
+    let (mut seats, _) = turn_room(&hub).await;
+    take(&mut seats[1]);
+    send(&hub, &seats[0], ClientMsg::Emote { id: 7 });
+    assert!(saw(&mut seats[1], |m| matches!(m, ServerMsg::Emote { seat: 0, id: 7 })));
+    send(&hub, &seats[0], ClientMsg::Emote { id: EMOTES });
+    assert!(errors(&take(&mut seats[0])).contains(&"bad_emote".to_string()));
+}

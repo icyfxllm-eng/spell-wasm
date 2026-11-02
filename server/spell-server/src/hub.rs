@@ -667,7 +667,9 @@ impl Hub {
             return s.direct(p, &ServerMsg::error("draining"));
         }
         if sess.kind == ProfileKind::Kid {
-            return s.direct(p, &ServerMsg::error("not_allowed")); // O3, A3.6
+            // O3, A3.6. The turn engine says it in its own words (F6).
+            let code = if mode::is_turn_mode(&req.mode) { "not_adult_host" } else { "not_allowed" };
+            return s.direct(p, &ServerMsg::error(code));
         }
         if s.room_of.contains_key(p) || s.pending_of.contains_key(p) {
             return s.direct(p, &ServerMsg::error("already_in_room"));
@@ -681,7 +683,8 @@ impl Hub {
             return s.direct(p, &ServerMsg::error("bad_tier"));
         }
         if !spell_wasm::native_api::is_active_lang(&req.lang) {
-            return s.direct(p, &ServerMsg::error("lang_unavailable"));
+            let code = if mode::is_turn_mode(&req.mode) { "inactive_language" } else { "lang_unavailable" };
+            return s.direct(p, &ServerMsg::error(code));
         }
         if mode::is_turn_mode(&req.mode) && !s.online_turn {
             return s.direct(p, &ServerMsg::error("unknown_mode"));
@@ -757,6 +760,10 @@ impl Hub {
         if let Some(refusal) = mode_gate(sess, &room.req.mode) {
             return s.direct(p, &refusal);
         }
+        // I5: an invite code is no way into a language that is not active.
+        if mode::is_turn_mode(&room.req.mode) && !spell_wasm::native_api::is_active_lang(&room.req.lang) {
+            return s.direct(p, &ServerMsg::error("inactive_language"));
+        }
         if room.mode.running() {
             return fail(s, "match_in_progress");
         }
@@ -807,7 +814,11 @@ impl Hub {
             room.kid_safe = true; // G-D13: sticky for the room's life
         }
         room_of.insert(player.into(), code.into());
+        let turn_mode = mode::is_turn_mode(&room.req.mode);
         s.send_room_state(code);
+        if turn_mode {
+            s.broadcast(code, &ServerMsg::SeatStatus { seat, status: "connected".into() });
+        }
     }
 
     fn decide(s: &mut State, host: &str, id: u64, approve: bool, now: Instant) {
