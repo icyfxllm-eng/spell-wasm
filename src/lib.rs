@@ -134,6 +134,10 @@ mod accounts_model; // CC-ACCOUNTS Phase 2: the account sheet's pure state
 #[cfg(not(feature = "web"))]
 mod accounts_net; // CC-ACCOUNTS Phase 2: tokens in the Keychain, the identity service client
 #[cfg(not(feature = "web"))]
+mod sync_model; // CC-ACCOUNTS Phase 3: the pure merge for synced lists, misses and themes
+#[cfg(not(feature = "web"))]
+mod sync_store; // CC-ACCOUNTS Phase 3: the sync cycle
+#[cfg(not(feature = "web"))]
 mod accounts_screen; // CC-ACCOUNTS Phase 2: the account sheet and Settings → Account
 mod pinyin;
 mod tone_drill;
@@ -494,6 +498,8 @@ fn wire(app: &App) {
     online_screen::setup(app);
     #[cfg(not(feature = "web"))]
     accounts_screen::setup();
+    #[cfg(not(feature = "web"))]
+    sync_store::setup(app);
     // "Spell It Out Loud" — voice spelling INPUT. Wires nothing unless the flag
     // is on (ships dark, Invariant I6); the mic is hidden until config voiceSpell
     // + on-device availability both hold (Invariant I3).

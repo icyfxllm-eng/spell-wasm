@@ -62,7 +62,7 @@ class Base(unittest.TestCase):
     def setUp(self):
         accounts.conn().executescript(
             "DELETE FROM users; DELETE FROM sessions; DELETE FROM email_codes; DELETE FROM rate_events;"
-            "DELETE FROM tickets; DELETE FROM apple_events;")
+            "DELETE FROM tickets; DELETE FROM apple_events; DELETE FROM sync_records; DELETE FROM child_profiles;")
         accounts.conn().commit()
         app = Flask(__name__)
         app.register_blueprint(accounts.bp)
@@ -298,6 +298,142 @@ class Flags(Base):
         finally:
             accounts.KEY_PATH = old
         self.assertFalse(os.path.exists(os.path.join(_TMP, "absent.pem")))
+
+
+class Sync(Base):
+    def rec(self, rid, ts, payload='{"n":1}', kind="list", deleted=False, profile=""):
+        return {"kind": kind, "record_id": rid, "profile_id": profile, "payload": payload,
+                "updated_at": ts, "deleted": deleted}
+
+    def push(self, tok, records=None, since=0):
+        return self.post("/api/accounts/sync", {"records": records or [], "since": since}, token=tok)
+
+    def two_devices(self):
+        a = self.sign_in_email("same@example.com")
+        self.mail.clear()
+        accounts.conn().execute("DELETE FROM rate_events")
+        accounts.conn().commit()
+        b = self.sign_in_email("same@example.com")
+        self.assertEqual(a["user_id"], b["user_id"])
+        return a["access_token"], b["access_token"]
+
+    def test_a8_added_on_one_device_appears_on_the_other_and_delete_propagates(self):
+        da, db = self.two_devices()
+        r = self.push(da, [self.rec("g1", 1000.0, '{"name":"Animals"}')]).get_json()
+        self.assertEqual(r["accepted"], 1)
+        pulled = self.push(db, since=0).get_json()
+        self.assertEqual([x["record_id"] for x in pulled["records"]], ["g1"])
+        self.assertEqual(json.loads(pulled["records"][0]["payload"])["name"], "Animals")
+        cur = pulled["cursor"]
+        # device B deletes it; device A, pulling from its own cursor, sees the tombstone
+        self.push(db, [self.rec("g1", 2000.0, deleted=True)], since=cur)
+        seen = self.push(da, since=cur).get_json()["records"]
+        self.assertEqual([(x["record_id"], x["deleted"], x["payload"]) for x in seen], [("g1", True, None)])
+
+    def test_last_write_wins_ties_and_resurrection(self):
+        t = self.sign_in_email("lww@example.com")["access_token"]
+        self.push(t, [self.rec("a", 100.0, '{"v":"old"}')])
+        self.push(t, [self.rec("a", 200.0, '{"v":"new"}')])
+        self.push(t, [self.rec("a", 150.0, '{"v":"stale"}')])           # older: ignored
+        self.push(t, [self.rec("a", 200.0, '{"v":"tie"}')])             # tie: the server's copy stands
+        got = {x["record_id"]: x for x in self.push(t).get_json()["records"]}
+        self.assertEqual(json.loads(got["a"]["payload"])["v"], "new")
+        self.push(t, [self.rec("a", 300.0, deleted=True)])
+        self.push(t, [self.rec("a", 250.0, '{"v":"late"}')])            # older than the tombstone: stays deleted
+        self.assertTrue(self.push(t).get_json()["records"][0]["deleted"])
+        self.push(t, [self.rec("a", 400.0, '{"v":"back"}')])            # newer than the tombstone: resurrects
+        row = self.push(t).get_json()["records"][0]
+        self.assertFalse(row["deleted"])
+        self.assertEqual(json.loads(row["payload"])["v"], "back")
+
+    def test_replayed_push_changes_nothing(self):
+        t = self.sign_in_email("replay@example.com")["access_token"]
+        batch = [self.rec("x", 10.0), self.rec("y", 11.0)]
+        first = self.push(t, batch).get_json()
+        again = self.push(t, batch, since=first["cursor"]).get_json()
+        self.assertEqual((again["accepted"], again["records"]), (0, []))
+
+    def test_a_clock_in_the_future_cannot_win_forever(self):
+        t = self.sign_in_email("future@example.com")["access_token"]
+        self.push(t, [self.rec("f", 9e15, '{"v":"far"}')])
+        stored = accounts.conn().execute("SELECT updated_at FROM sync_records").fetchone()[0]
+        self.assertLess(stored, (time.time() + 600) * 1000)
+
+    def test_cursor_pages_through_everything(self):
+        t = self.sign_in_email("pages@example.com")["access_token"]
+        old = accounts.PULL_PAGE
+        accounts.PULL_PAGE = 3
+        try:
+            self.push(t, [self.rec(f"r{i}", 1.0 + i) for i in range(8)])
+            seen, cur = [], 0
+            for _ in range(5):
+                r = self.push(t, since=cur).get_json()
+                seen += [x["record_id"] for x in r["records"]]
+                cur = r["cursor"]
+                if not r["more"]:
+                    break
+        finally:
+            accounts.PULL_PAGE = old
+        self.assertEqual(sorted(seen), sorted(f"r{i}" for i in range(8)))
+
+    def test_requires_a_session_and_validates_records(self):
+        self.assertEqual(self.post("/api/accounts/sync", {}).status_code, 401)
+        t = self.sign_in_email("val@example.com")["access_token"]
+        bad = [self.rec("k", 1.0, kind="nonsense"), self.rec("", 1.0), self.rec("p", 1.0, payload="not json"),
+               self.rec("q", -5.0), self.rec("big", 1.0, payload='"' + "x" * 70000 + '"'),
+               self.rec("pp", 1.0, profile="3"), {"junk": True}, "string"]
+        r = self.push(t, bad).get_json()
+        self.assertEqual((r["accepted"], r["rejected"]), (0, len(bad)))
+        self.assertEqual(self.post("/api/accounts/sync", {"records": [0] * 501}, token=t).status_code, 400)
+        self.assertEqual(self.post("/api/accounts/sync", {"since": "x"}, token=t).status_code, 400)
+
+    def test_users_cannot_see_each_others_records(self):
+        a = self.sign_in_email("one@example.com")["access_token"]
+        accounts.conn().execute("DELETE FROM rate_events")
+        accounts.conn().commit()
+        b = self.sign_in_email("two@example.com")["access_token"]
+        self.push(a, [self.rec("mine", 1.0)])
+        self.assertEqual(self.push(b).get_json()["records"], [])
+
+    def test_a13_child_sync_off_leaves_no_child_rows(self):
+        s = self.sign_in_email("parent@example.com")
+        t, uid = s["access_token"], s["user_id"]
+        c = accounts.conn()
+        c.execute("INSERT INTO child_profiles(id,parent_id,generated_name,created_at) VALUES(5,?,?,1)", (uid, "Brave Bee 42"))
+        c.commit()
+        kid = self.rec("w1", 1.0, kind="child_progress", profile="5")
+        self.assertEqual(self.push(t, [kid]).get_json()["accepted"], 1)          # default on (D11)
+        self.assertEqual(self.post("/api/accounts/child-sync", {"enabled": False}, token=t).status_code, 200)
+        self.assertEqual(c.execute("SELECT COUNT(*) FROM sync_records WHERE profile_id!=''").fetchone()[0], 0)
+        r = self.push(t, [self.rec("w2", 2.0, kind="child_progress", profile="5")]).get_json()
+        self.assertEqual((r["accepted"], r["rejected"]), (0, 1))
+        self.assertEqual(c.execute("SELECT COUNT(*) FROM sync_records WHERE profile_id!=''").fetchone()[0], 0)
+        # a profile that is not this parent's is refused even with sync on
+        self.post("/api/accounts/child-sync", {"enabled": True}, token=t)
+        r = self.push(t, [self.rec("w3", 3.0, kind="child_progress", profile="99")]).get_json()
+        self.assertEqual(r["accepted"], 0)
+
+    def test_export_returns_the_records_as_json(self):
+        s = self.sign_in_email("export@example.com")
+        self.push(s["access_token"], [self.rec("e1", 5.0, '{"name":"Kept"}')])
+        r = self.c.get("/api/accounts/export", headers={"Authorization": f"Bearer {s['access_token']}"})
+        body = r.get_json()
+        self.assertEqual(body["records"][0]["payload"], {"name": "Kept"})
+        self.assertEqual(body["account"]["user_id"], s["user_id"])
+        self.assertEqual(self.c.get("/api/accounts/export").status_code, 401)
+
+    def test_delete_account_takes_the_synced_rows_with_it(self):
+        s = self.sign_in_email("gone@example.com")
+        self.push(s["access_token"], [self.rec("z", 1.0)])
+        self.post("/api/accounts/delete", token=s["access_token"])
+        self.assertEqual(accounts.conn().execute("SELECT COUNT(*) FROM sync_records").fetchone()[0], 0)
+
+    def test_sync_kill_flag_only_kills_sync(self):
+        t = self.sign_in_email("kill@example.com")["access_token"]
+        with open(os.environ["KILL_FLAGS_FILE"], "w") as fh:
+            json.dump({"v": 1, "kill": ["accounts_sync"]}, fh)
+        self.assertEqual(self.push(t).status_code, 503)
+        self.assertEqual(self.c.get("/api/accounts/me", headers={"Authorization": f"Bearer {t}"}).status_code, 200)
 
 
 class Migration(Base):

@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS users (
   email_lc       TEXT UNIQUE,
   email_verified INTEGER NOT NULL DEFAULT 0,
   apple_revoke   BLOB,                 -- encrypted Apple refresh token, for revocation on delete
+  child_sync     INTEGER NOT NULL DEFAULT 1,   -- D11: child progress syncs unless the parent turns it off
   created_at     REAL NOT NULL
 );
 CREATE TABLE IF NOT EXISTS child_profiles (
@@ -105,10 +106,12 @@ CREATE TABLE IF NOT EXISTS sync_records (
   kind       TEXT NOT NULL,
   record_id  TEXT NOT NULL,
   payload    TEXT,
-  updated_at REAL NOT NULL,
-  deleted    INTEGER NOT NULL DEFAULT 0,
+  updated_at REAL NOT NULL,           -- the writer's clock, in ms, clamped on the way in
+  deleted    INTEGER NOT NULL DEFAULT 0, -- a tombstone: kept so a delete reaches every device
+  seq        INTEGER NOT NULL DEFAULT 0, -- per-user write counter; the pull cursor, never a clock
   PRIMARY KEY (user_id, profile_id, kind, record_id)
-);                                     -- Phase 3
+);
+CREATE INDEX IF NOT EXISTS idx_sync_seq ON sync_records(user_id, seq);
 CREATE TABLE IF NOT EXISTS email_codes (
   email_lc   TEXT PRIMARY KEY,
   salt       TEXT NOT NULL,
@@ -692,3 +695,155 @@ def apple_notify():
             c.commit()
             delete_user(u["id"])
     return jsonify(ok=True)
+
+
+# ---------- sync (Phase 3) ----------
+
+SYNC_KINDS = {"list", "miss", "themes"}      # adult data; Phase 5 adds child progress under profile ids
+CHILD_KINDS = {"child_progress"}
+MAX_BATCH = 500
+MAX_PAYLOAD = 65536
+MAX_ROWS_PER_USER = 20000
+PULL_PAGE = 1000
+FUTURE_SLACK_MS = 5 * 60 * 1000
+
+
+def _sync_guard():
+    if killed("accounts_sync"):
+        return jsonify(error="unavailable"), 503
+    return None
+
+
+def _valid_record(r, u, c):
+    """The row to store for a pushed record, or None. Child progress is accepted only for
+    one of this parent's own profiles and only while the parent has child sync on (A13)."""
+    if not isinstance(r, dict):
+        return None
+    kind, rid, prof = r.get("kind"), r.get("record_id"), r.get("profile_id") or ""
+    if not isinstance(kind, str) or not isinstance(rid, str) or not rid or len(rid) > 200:
+        return None
+    if not isinstance(prof, str) or len(prof) > 64:
+        return None
+    if kind in SYNC_KINDS:
+        if prof != "":
+            return None
+    elif kind in CHILD_KINDS:
+        if not u["child_sync"] or not prof.isdigit():
+            return None
+        if not c.execute("SELECT 1 FROM child_profiles WHERE id=? AND parent_id=?", (int(prof), u["id"])).fetchone():
+            return None
+    else:
+        return None
+    ts = r.get("updated_at")
+    if not isinstance(ts, (int, float)) or isinstance(ts, bool) or ts < 0:
+        return None
+    deleted = r.get("deleted") is True
+    payload = r.get("payload")
+    if deleted:
+        payload = None
+    elif not isinstance(payload, str) or len(payload) > MAX_PAYLOAD:
+        return None
+    else:
+        try:
+            json.loads(payload)
+        except ValueError:
+            return None
+    ts = min(float(ts), now() * 1000 + FUTURE_SLACK_MS)        # a wrong clock cannot win forever
+    return kind, prof, rid, payload, ts, 1 if deleted else 0
+
+
+@bp.route("/api/accounts/sync", methods=["POST"])
+def sync():
+    """Push local changes and pull everyone else's in one round trip.
+
+    Last write wins per record, by the writer's updated_at; an exact tie keeps what the
+    server holds, so a replayed push changes nothing. A delete is a row with deleted=1, and a
+    newer live write beats an older tombstone. Pull is paged by the per-user seq counter."""
+    g = _sync_guard()
+    if g:
+        return g
+    u = current_user()
+    if not u:
+        return jsonify(error="unauthorized"), 401
+    data = request.get_json(silent=True) or {}
+    pushed = data.get("records") or []
+    since = data.get("since", 0)
+    if not isinstance(pushed, list) or len(pushed) > MAX_BATCH or not isinstance(since, int) or isinstance(since, bool) or since < 0:
+        return jsonify(error="bad_request"), 400
+    c = conn()
+    accepted = rejected = 0
+    if pushed:
+        total = c.execute("SELECT COUNT(*) FROM sync_records WHERE user_id=?", (u["id"],)).fetchone()[0]
+        seq = c.execute("SELECT COALESCE(MAX(seq),0) FROM sync_records WHERE user_id=?", (u["id"],)).fetchone()[0]
+        for r in pushed:
+            row = _valid_record(r, u, c)
+            if not row:
+                rejected += 1
+                continue
+            kind, prof, rid, payload, ts, deleted = row
+            cur = c.execute("SELECT updated_at FROM sync_records WHERE user_id=? AND profile_id=? AND kind=? AND record_id=?",
+                            (u["id"], prof, kind, rid)).fetchone()
+            if cur is None and total >= MAX_ROWS_PER_USER:
+                rejected += 1
+                continue
+            if cur is not None and cur["updated_at"] >= ts:
+                continue                                     # older or equal: the server's copy stands
+            seq += 1
+            c.execute(
+                "INSERT INTO sync_records(user_id,profile_id,kind,record_id,payload,updated_at,deleted,seq) "
+                "VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(user_id,profile_id,kind,record_id) DO UPDATE SET "
+                "payload=excluded.payload, updated_at=excluded.updated_at, deleted=excluded.deleted, seq=excluded.seq",
+                (u["id"], prof, kind, rid, payload, ts, deleted, seq))
+            if cur is None:
+                total += 1
+            accepted += 1
+        c.commit()
+    rows = c.execute(
+        "SELECT kind,profile_id,record_id,payload,updated_at,deleted,seq FROM sync_records "
+        "WHERE user_id=? AND seq>? ORDER BY seq LIMIT ?", (u["id"], since, PULL_PAGE + 1)).fetchall()
+    more = len(rows) > PULL_PAGE
+    rows = rows[:PULL_PAGE]
+    cursor = rows[-1]["seq"] if rows else max(
+        since, c.execute("SELECT COALESCE(MAX(seq),0) FROM sync_records WHERE user_id=?", (u["id"],)).fetchone()[0])
+    return jsonify(
+        records=[{"kind": r["kind"], "profile_id": r["profile_id"], "record_id": r["record_id"], "payload": r["payload"],
+                  "updated_at": r["updated_at"], "deleted": bool(r["deleted"])} for r in rows],
+        cursor=cursor, more=more, accepted=accepted, rejected=rejected)
+
+
+@bp.route("/api/accounts/child-sync", methods=["POST"])
+def child_sync():
+    """The parent's switch. Off means the server holds no child progress rows (A13): turning it off
+    deletes the ones it has, and pushes are refused until it is turned back on."""
+    u = current_user()
+    if not u:
+        return jsonify(error="unauthorized"), 401
+    enabled = (request.get_json(silent=True) or {}).get("enabled")
+    if not isinstance(enabled, bool):
+        return jsonify(error="bad_request"), 400
+    c = conn()
+    c.execute("UPDATE users SET child_sync=? WHERE id=?", (1 if enabled else 0, u["id"]))
+    if not enabled:
+        c.execute("DELETE FROM sync_records WHERE user_id=? AND profile_id != ''", (u["id"],))
+    c.commit()
+    return jsonify(ok=True, enabled=enabled)
+
+
+@bp.route("/api/accounts/export")
+def export():
+    """F6: everything the service holds for this account, as JSON the player can keep."""
+    u = current_user()
+    if not u:
+        return jsonify(error="unauthorized"), 401
+    c = conn()
+    recs = c.execute("SELECT kind,profile_id,record_id,payload,updated_at,deleted FROM sync_records WHERE user_id=? ORDER BY seq",
+                     (u["id"],)).fetchall()
+    kids = c.execute("SELECT id,generated_name,created_at FROM child_profiles WHERE parent_id=?", (u["id"],)).fetchall()
+    return jsonify(
+        account={"user_id": u["id"], "email": u["email"], "email_verified": bool(u["email_verified"]),
+                 "signed_in_with_apple": bool(u["apple_sub"]), "created_at": u["created_at"],
+                 "child_sync": bool(u["child_sync"])},
+        records=[{"kind": r["kind"], "profile_id": r["profile_id"], "record_id": r["record_id"],
+                  "payload": json.loads(r["payload"]) if r["payload"] else None,
+                  "updated_at": r["updated_at"], "deleted": bool(r["deleted"])} for r in recs],
+        children=[dict(k) for k in kids])

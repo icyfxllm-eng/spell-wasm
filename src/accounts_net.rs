@@ -192,3 +192,24 @@ pub async fn delete_account() -> Result<(), Problem> {
         Err(am::problem_for_status(status))
     }
 }
+
+#[derive(serde::Deserialize)]
+pub struct SyncResp {
+    #[serde(default)]
+    pub records: Vec<crate::sync_model::SyncRecord>,
+    pub cursor: i64,
+    #[serde(default)]
+    pub more: bool,
+}
+
+/// One round trip of `/api/accounts/sync`: push `records`, pull everything after `since`.
+/// `Rejected` means there is no session; the caller treats that as "nothing to do", not a failure.
+pub async fn sync_call(since: i64, records: &[crate::sync_model::SyncRecord]) -> Result<SyncResp, Problem> {
+    let a = access_token().await.ok_or(Problem::Rejected)?;
+    let body = json!({ "since": since, "records": records });
+    let (status, text) = post("/api/accounts/sync", &body, Some(&a)).await;
+    if status != 200 {
+        return Err(am::problem_for_status(status));
+    }
+    serde_json::from_str(&text).map_err(|_| Problem::Rejected)
+}

@@ -26,7 +26,7 @@ pub fn carry_over_all(list: &mut [MissEntry]) {
     }
 }
 
-fn save(state: &AppState) {
+pub(crate) fn save(state: &AppState) {
     let capped: Vec<&MissEntry> = state.misses.iter().take(MISS_CAP).collect();
     storage::set_json(MISS_KEY, &capped);
 }

@@ -53,6 +53,80 @@ const storageDump = (page) => page.evaluate(async () => {
   return out;
 });
 
+// ---- Phase 3: a shared stand-in for the service, with the same rules as backend/accounts.py's /sync ----
+const LISTS_KEY = 'byear_word_lists_v1';
+const list = (id, name, words, updatedAt = 10) => ({
+  id, profile: '', name, createdAt: 1, updatedAt, source: 'Manual', order: 'Mixed', deletedAt: null,
+  entries: words.map((text) => ({ text, lang: 'en', addedAt: 1, starred: false })),
+});
+const listsDoc = (lists) => JSON.stringify({ v: 1, lists, nextId: lists.length, migrated: true, selection: [] });
+
+function service() {
+  const rows = new Map();
+  let seq = 0;
+  const st = { rows, syncCalls: 0, failSync: false };
+  st.attach = async (ctx) => {
+    await ctx.route('**/api/accounts/email/request', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
+    await ctx.route('**/api/accounts/email/verify', (r) => r.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ access_token: TOKEN, refresh_token: REFRESH, user_id: 7, expires_in: 900 }) }));
+    await ctx.route('**/api/accounts/sync', (r) => {
+      st.syncCalls++;
+      if (st.failSync) return r.abort();
+      const body = JSON.parse(r.request().postData());
+      for (const rec of body.records) {
+        const k = `${rec.kind}|${rec.record_id}`;
+        const cur = rows.get(k);
+        if (cur && cur.rec.updated_at >= rec.updated_at) continue;
+        rows.set(k, { rec, seq: ++seq });
+      }
+      const out = [...rows.values()].filter((x) => x.seq > body.since).sort((a, b) => a.seq - b.seq);
+      return r.fulfill({ status: 200, contentType: 'application/json',
+        body: JSON.stringify({ records: out.map((x) => x.rec), cursor: out.length ? out[out.length - 1].seq : Math.max(body.since, seq), more: false }) });
+    });
+  };
+  return st;
+}
+
+async function device(browser, base, svc, seedLists) {
+  const flags = { ...ON, accounts_sync: 'on' };
+  const init = (a) => {
+    for (const [k, v] of Object.entries(a.flags)) localStorage.setItem(`spell_flag_${k}`, v);
+    if (a.lists && !localStorage.getItem(a.key)) localStorage.setItem(a.key, a.lists);
+  };
+  const { ctx, page } = await openApp(browser, base, { lang: 'en',
+    init: `(${init})(${JSON.stringify({ flags, key: LISTS_KEY, lists: seedLists ? listsDoc(seedLists) : null })})` });
+  await svc.attach(ctx);
+  return { ctx, page };
+}
+
+async function signIn(page) {
+  await tapPlayOnline(page);
+  await page.waitForSelector('#acnAge:not([hidden])');
+  await answerAge(page, 1985);
+  await page.click('#acnEmailBtn');
+  await page.fill('#acnEmailIn', 'grownup@example.com');
+  await page.click('#acnSend');
+  await page.fill('#acnCodeIn', '123456');
+  await page.click('#acnVerify');
+  await page.waitForSelector('#olEntry:not([hidden])', { timeout: 10000 });
+}
+
+const storedLists = (page) => page.evaluate((k) => {
+  const raw = localStorage.getItem(k);
+  return raw ? JSON.parse(raw).lists : [];
+}, LISTS_KEY);
+
+/** Poll a condition, nudging a sync each round the way coming back to the foreground does. */
+async function until(page, what, test, tries = 30) {
+  for (let i = 0; i < tries; i++) {
+    if (await test()) return;
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    // sleep-ok: the cycle is a background task with no event to wait on; the poll is the wait.
+    await page.waitForTimeout(500);
+  }
+  throw new Error(`timed out waiting for ${what}`);
+}
+
 export async function run(browser, base, suite) {
   await suite.test('flags off: Play online opens the online screen at once and nothing talks to the identity service', async () => {
     const { ctx, page, calls } = await app(browser, base, { online_enabled: 'on' });
@@ -190,6 +264,74 @@ export async function run(browser, base, suite) {
       // sleep-ok: an absence of requests needs a window to watch.
       await page.waitForTimeout(400);
       assertEq(calls.length, 0, `account requests during solo use: ${JSON.stringify(calls)}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('A8: a list made on one device appears on the other exactly once, with ids that never collide, and a delete travels', async () => {
+    const svc = service();
+    const a = await device(browser, base, svc, [list('l1', 'Animals', ['cat', 'dog', 'owl'])]);
+    const b = await device(browser, base, svc, [list('l1', 'Food', ['pie'])]);
+    try {
+      await signIn(a.page);
+      await until(a.page, 'device A pushed', async () => svc.rows.size >= 1);
+      await signIn(b.page);
+      const names = async (p) => (await storedLists(p)).map((l) => l.name).sort();
+      await until(b.page, 'both lists on B', async () => (await names(b.page)).length === 2);
+      assertEq((await names(b.page)).join(','), 'Animals,Food');
+      await until(a.page, 'both lists on A', async () => (await names(a.page)).length === 2);
+      const animals = (await storedLists(b.page)).find((l) => l.name === 'Animals');
+      assertEq(animals.entries.map((e) => e.text).join(','), 'cat,dog,owl');
+      assert(animals.id !== 'l1' || (await storedLists(b.page)).filter((l) => l.id === 'l1').length === 1, 'two lists share a local id');
+
+      // A removes Animals for good (the 30-day purge, or Delete now): the other device loses it too.
+      await a.page.evaluate((k) => {
+        const d = JSON.parse(localStorage.getItem(k));
+        d.lists = d.lists.filter((l) => l.name !== 'Animals');
+        localStorage.setItem(k, JSON.stringify(d));
+      }, LISTS_KEY);
+      await until(a.page, 'tombstone reached the service', async () => [...svc.rows.values()].some((x) => x.rec.deleted));
+      await until(b.page, 'the delete on B', async () => (await names(b.page)).join(',') === 'Food');
+      // Nothing churns: more cycles change nothing.
+      await until(a.page, 'a quiet round', async () => true, 1);
+      await a.page.waitForTimeout(2500); // sleep-ok: proving nothing changes needs a window to watch.
+      await a.page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+      await a.page.waitForTimeout(800); // sleep-ok: as above.
+      assertEq((await names(a.page)).join(','), 'Food');
+    } finally { await a.ctx.close(); await b.ctx.close(); }
+  });
+
+  await suite.test('A7: a sync that fails leaves local lists exactly as they were, and the retry brings them together once', async () => {
+    const svc = service();
+    const a = await device(browser, base, svc, [list('l1', 'Animals', ['cat'])]);
+    const b = await device(browser, base, svc, [list('l1', 'Mine', ['x', 'y'])]);
+    try {
+      await signIn(a.page);
+      await until(a.page, 'A pushed', async () => svc.rows.size >= 1);
+      svc.failSync = true;
+      const before = await b.page.evaluate((k) => localStorage.getItem(k), LISTS_KEY);
+      await signIn(b.page);
+      // sleep-ok: a failing background call has no success event; this is the window it has to fail in.
+      await b.page.waitForTimeout(1500);
+      assertEq(await b.page.evaluate((k) => localStorage.getItem(k), LISTS_KEY), before, 'a failed sync changed local lists');
+      svc.failSync = false;
+      // The failed cycle backs off for 15 s; the poll below outlasts it, as a player simply coming back later would.
+      await until(b.page, 'both lists after the retry', async () => (await storedLists(b.page)).length === 2, 60);
+      const got = (await storedLists(b.page)).map((l) => l.name).sort();
+      assertEq(got.join(','), 'Animals,Mine');
+      assertEq((await storedLists(b.page)).find((l) => l.name === 'Mine').entries.length, 2);
+    } finally { await a.ctx.close(); await b.ctx.close(); }
+  });
+
+  await suite.test('sync flag off: signing in sends nothing to /sync', async () => {
+    const svc = service();
+    const { ctx, page } = await openApp(browser, base, { lang: 'en',
+      init: `(() => { for (const [k, v] of Object.entries(${JSON.stringify(ON)})) localStorage.setItem('spell_flag_' + k, v); })` + '()' });
+    await svc.attach(ctx);
+    try {
+      await signIn(page);
+      // sleep-ok: an absence of requests needs a window to watch.
+      await page.waitForTimeout(1500);
+      assertEq(svc.syncCalls, 0, 'sync ran with accounts_sync off');
     } finally { await ctx.close(); }
   });
 }

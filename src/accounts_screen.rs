@@ -111,6 +111,7 @@ fn succeeded(s: am::Session) {
         storage::set_raw(am::LOCAL_KEYS[1], &m);
         storage::set_raw(am::LOCAL_KEYS[0], &m);
     }
+    crate::sync_store::kick();
     close(true);
 }
 

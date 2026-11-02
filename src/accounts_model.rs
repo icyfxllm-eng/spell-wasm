@@ -163,7 +163,7 @@ pub fn needs_refresh(access: &str, now_secs: f64) -> bool {
 }
 
 /// The only localStorage keys account code may write (I5/I6). None holds progress, and none holds a token.
-pub const LOCAL_KEYS: &[&str] = &["spell_acct_user_v1", "spell_acct_adopt_v1"];
+pub const LOCAL_KEYS: &[&str] = &["spell_acct_user_v1", "spell_acct_adopt_v1", "spell_acct_sync_v1"];
 
 /// F2: on a player's first sign-in the device's progress is marked "adopt me"; Phase 3's sync does the
 /// merge. Marking never copies, moves, or deletes anything. Returns the marker to store, or `None` when
