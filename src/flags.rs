@@ -394,7 +394,7 @@ pub fn online_kids() -> bool {
 /// turns it on, and it needs `online_enabled` too. Eric signs the real match (Phase D)
 /// before any build ships it on.
 pub fn online_boardgame() -> bool {
-    resolve(stored("online_boardgame").as_deref(), false)
+    resolve(stored("online_boardgame").as_deref(), true)
 }
 
 /// CC-ACCOUNTS F8: the four account flags. Every one **default OFF**; only a build turns one on
