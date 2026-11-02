@@ -274,6 +274,7 @@ async fn connect(o: &Opts, token: &str, name: &str, resume: Option<Resume>) -> R
         display_name: Some(name.into()),
         token: token.into(),
         resume,
+        mode_versions: Default::default(),
     });
     ws.send(Message::Text(encode_client(Uuid::new_v4(), &hello).into())).await.map_err(|e| e.to_string())?;
     Ok(ws)

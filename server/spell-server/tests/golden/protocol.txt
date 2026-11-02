@@ -10,6 +10,9 @@
 {"body":{"typed":"cat"},"cid":"00000000-0000-4000-8000-000000000001","t":"submit","v":1}
 {"body":{"variant":"slow"},"cid":"00000000-0000-4000-8000-000000000001","t":"replay_audio","v":1}
 {"body":{"id":3},"cid":"00000000-0000-4000-8000-000000000001","t":"emote","v":1}
+{"body":{"answer":"cat"},"cid":"00000000-0000-4000-8000-000000000001","t":"turn.answer","v":1}
+{"body":{"choice":"stop"},"cid":"00000000-0000-4000-8000-000000000001","t":"turn.choice","v":1}
+{"body":{"hash":"abc"},"cid":"00000000-0000-4000-8000-000000000001","t":"turn.sync","v":1}
 # server -> client
 {"body":{"player_id":"00112233445566778899aabbccddeeff","protocol":1},"seq":1,"t":"welcome","v":1}
 {"body":{"current":1,"min":1},"seq":2,"t":"update_required","v":1}
@@ -29,3 +32,10 @@
 {"body":{"id":3,"seat":1},"seq":16,"t":"emote","v":1}
 {"body":{"audio_ticket":"fedcba9876543210fedcba9876543210","variant":"slow"},"seq":17,"t":"audio","v":1}
 {"body":{"code":"unknown_type"},"seq":18,"t":"error","v":1}
+{"body":{"deadline_ms":35000,"payload":{"roll":4},"phase":"awaiting_spell","seat":0},"seq":19,"t":"turn.begin","v":1}
+{"body":{"audio_ticket":"0123456789abcdef0123456789abcdef","seat":0},"seq":20,"t":"turn.audio","v":1}
+{"body":{"answer":"kat","correct":false,"effects":[{"move":0}],"seat":0,"word":"cat"},"seq":21,"t":"turn.verdict","v":1}
+{"body":{"effects":[{"stopped":true}],"seat":0},"seq":22,"t":"turn.effects","v":1}
+{"body":{"reason":"timeout","seat":1},"seq":23,"t":"turn.auto","v":1}
+{"body":{"seat":1,"status":"grace"},"seq":24,"t":"seat.status","v":1}
+{"body":{"ranking":[0,1],"summary":{"turns":8}},"seq":25,"t":"game.end","v":1}

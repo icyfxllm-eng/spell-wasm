@@ -8,10 +8,14 @@
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::BTreeMap;
 use uuid::Uuid;
 
 /// The newest protocol this server speaks.
-pub const PROTOCOL_CURRENT: u32 = 1;
+pub const PROTOCOL_CURRENT: u32 = 2;
+/// The first protocol with the `turn.*` messages (CC-ONLINE-TURN). Older
+/// clients stay welcome and play Head-to-Head exactly as before.
+pub const TURN_PROTOCOL: u32 = 2;
 /// The envelope version (`v`). One today.
 pub const ENVELOPE_V: u32 = 1;
 /// The largest text frame accepted (A1.3).
@@ -61,6 +65,9 @@ pub struct Hello {
     pub token: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resume: Option<Resume>,
+    /// The turn-engine modes this client plays, and each rule version (F7).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub mode_versions: BTreeMap<String, u32>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -106,10 +113,17 @@ pub enum ClientMsg {
     Submit { typed: String },
     ReplayAudio { variant: Variant },
     Emote { id: u8 },
+    #[serde(rename = "turn.answer")]
+    TurnAnswer { answer: String },
+    #[serde(rename = "turn.choice")]
+    TurnChoice { choice: String },
+    /// F4: the client's snapshot hash, so the server can confirm sync.
+    #[serde(rename = "turn.sync")]
+    TurnSync { hash: String },
 }
 
 impl ClientMsg {
-    pub const TYPES: [&'static str; 11] = [
+    pub const TYPES: [&'static str; 14] = [
         "hello",
         "create_room",
         "join_room",
@@ -121,6 +135,9 @@ impl ClientMsg {
         "submit",
         "replay_audio",
         "emote",
+        "turn.answer",
+        "turn.choice",
+        "turn.sync",
     ];
 
     pub fn type_name(&self) -> &'static str {
@@ -136,6 +153,9 @@ impl ClientMsg {
             ClientMsg::Submit { .. } => "submit",
             ClientMsg::ReplayAudio { .. } => "replay_audio",
             ClientMsg::Emote { .. } => "emote",
+            ClientMsg::TurnAnswer { .. } => "turn.answer",
+            ClientMsg::TurnChoice { .. } => "turn.choice",
+            ClientMsg::TurnSync { .. } => "turn.sync",
         }
     }
 }
@@ -282,10 +302,32 @@ pub enum ServerMsg {
     /// same variant, never the word.
     Audio { variant: Variant, audio_ticket: String },
     Error { code: String },
+    #[serde(rename = "turn.begin")]
+    TurnBegin {
+        seat: u8,
+        phase: String,
+        #[serde(default)]
+        payload: Value,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        deadline_ms: Option<u64>,
+    },
+    #[serde(rename = "turn.audio")]
+    TurnAudio { seat: u8, audio_ticket: String },
+    #[serde(rename = "turn.verdict")]
+    TurnVerdict { seat: u8, word: String, answer: String, correct: bool, effects: Vec<Value> },
+    /// What a choice changed.
+    #[serde(rename = "turn.effects")]
+    TurnEffects { seat: u8, effects: Vec<Value> },
+    #[serde(rename = "turn.auto")]
+    TurnAuto { seat: u8, reason: String },
+    #[serde(rename = "seat.status")]
+    SeatStatus { seat: u8, status: String },
+    #[serde(rename = "game.end")]
+    GameEnd { ranking: Vec<u8>, summary: Value },
 }
 
 impl ServerMsg {
-    pub const TYPES: [&'static str; 18] = [
+    pub const TYPES: [&'static str; 25] = [
         "welcome",
         "update_required",
         "room_state",
@@ -304,6 +346,13 @@ impl ServerMsg {
         "emote",
         "audio",
         "error",
+        "turn.begin",
+        "turn.audio",
+        "turn.verdict",
+        "turn.effects",
+        "turn.auto",
+        "seat.status",
+        "game.end",
     ];
 
     pub fn error(code: &str) -> ServerMsg {
@@ -424,6 +473,7 @@ pub mod samples {
                 display_name: Some("Mom".into()),
                 token: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".into(),
                 resume: Some(Resume { room: "ACDEFG".into(), last_seq: 7 }),
+                mode_versions: BTreeMap::new(),
             }),
             ClientMsg::CreateRoom(CreateRoom {
                 mode: "h2h".into(),
@@ -442,6 +492,9 @@ pub mod samples {
             ClientMsg::Submit { typed: "cat".into() },
             ClientMsg::ReplayAudio { variant: Variant::Slow },
             ClientMsg::Emote { id: 3 },
+            ClientMsg::TurnAnswer { answer: "cat".into() },
+            ClientMsg::TurnChoice { choice: "stop".into() },
+            ClientMsg::TurnSync { hash: "abc".into() },
         ]
     }
 
@@ -493,6 +546,24 @@ pub mod samples {
             ServerMsg::Emote { seat: 1, id: 3 },
             ServerMsg::Audio { variant: Variant::Slow, audio_ticket: "fedcba9876543210fedcba9876543210".into() },
             ServerMsg::error("unknown_type"),
+            ServerMsg::TurnBegin {
+                seat: 0,
+                phase: "awaiting_spell".into(),
+                payload: serde_json::json!({ "roll": 4 }),
+                deadline_ms: Some(35000),
+            },
+            ServerMsg::TurnAudio { seat: 0, audio_ticket: "0123456789abcdef0123456789abcdef".into() },
+            ServerMsg::TurnVerdict {
+                seat: 0,
+                word: "cat".into(),
+                answer: "kat".into(),
+                correct: false,
+                effects: vec![serde_json::json!({ "move": 0 })],
+            },
+            ServerMsg::TurnEffects { seat: 0, effects: vec![serde_json::json!({ "stopped": true })] },
+            ServerMsg::TurnAuto { seat: 1, reason: "timeout".into() },
+            ServerMsg::SeatStatus { seat: 1, status: "grace".into() },
+            ServerMsg::GameEnd { ranking: vec![0, 1], summary: serde_json::json!({ "turns": 8 }) },
         ]
     }
 }

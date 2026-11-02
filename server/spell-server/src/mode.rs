@@ -92,6 +92,17 @@ pub trait ModeRules: Send {
     fn on_audio(&mut self, _ticket: &str, _ok: bool, _ctx: &Ctx) -> Vec<Event> {
         Vec::new()
     }
+    /// A spelling, on the turn engine. Other modes have no such message.
+    fn on_answer(&mut self, seat: u8, _answer: &str, _ctx: &Ctx) -> Vec<Event> {
+        vec![Event::seat(seat, ServerMsg::error("bad_phase"))]
+    }
+    fn on_choice(&mut self, seat: u8, _choice: &str, _ctx: &Ctx) -> Vec<Event> {
+        vec![Event::seat(seat, ServerMsg::error("bad_phase"))]
+    }
+    /// The hash a client echoes to confirm sync (turn engine only).
+    fn state_hash(&self) -> Option<String> {
+        None
+    }
     fn next_deadline(&self) -> Option<Instant>;
     /// The mode's part of a `room_state` snapshot (F5 resume).
     fn snapshot(&self) -> Value;
@@ -106,6 +117,23 @@ pub enum MakeError {
     Unknown,
 }
 
+/// Runs on the turn engine, so it is behind `online.turn`.
+pub fn is_turn_mode(mode: &str) -> bool {
+    version(mode).is_some()
+}
+
+/// A turn-engine mode's rule version (F7). `None` for every other mode.
+pub fn version(mode: &str) -> Option<u32> {
+    match mode {
+        #[cfg(any(test, feature = "test-modes"))]
+        "turn_null" => Some(crate::turn::null::MODE_VERSION),
+        _ => {
+            let _ = mode;
+            None
+        }
+    }
+}
+
 /// The mode registry.
 pub fn make(req: &CreateRoom) -> Result<Box<dyn ModeRules>, MakeError> {
     match req.mode.as_str() {
@@ -116,6 +144,8 @@ pub fn make(req: &CreateRoom) -> Result<Box<dyn ModeRules>, MakeError> {
         "test" => Ok(Box::new(test_mode::TestMode::new(2))),
         #[cfg(any(test, feature = "test-modes"))]
         "test4" => Ok(Box::new(test_mode::TestMode::new(4))),
+        #[cfg(any(test, feature = "test-modes"))]
+        "turn_null" => Ok(Box::new(crate::turn::TurnEngine::<crate::turn::null::NullRules>::new())),
         _ => Err(MakeError::Unknown),
     }
 }

@@ -95,7 +95,7 @@ pub async fn run(mut ws: WebSocket, app: Arc<AppState>, ip: IpAddr) {
         },
     };
     let conn_id = app.next_conn.fetch_add(1, Ordering::Relaxed);
-    let sess = Session { player: player.clone(), conn_id, kind: hello.profile_kind, name, ip };
+    let sess = Session { player: player.clone(), conn_id, kind: hello.profile_kind, name, ip, protocol: hello.protocol, mode_versions: hello.mode_versions };
     let (tx, mut rx) = mpsc::unbounded_channel::<Out>();
     let resume = hello.resume.map(|r| (r.room.to_ascii_uppercase(), r.last_seq));
     app.hub.attach(&sess, tx, resume, Instant::now());

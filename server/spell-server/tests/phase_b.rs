@@ -118,6 +118,7 @@ async fn client(srv: &Srv, ip: &str, kind: ProfileKind, name: &str, ui: &str) ->
         display_name: Some(name.into()),
         token,
         resume: None,
+        mode_versions: Default::default(),
     }))
     .await;
     c

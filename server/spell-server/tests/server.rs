@@ -128,6 +128,7 @@ fn hello(token: &str, kind: ProfileKind, name: Option<&str>, resume: Option<Resu
         display_name: name.map(str::to_string),
         token: token.into(),
         resume,
+        mode_versions: Default::default(),
     })
 }
 
@@ -207,7 +208,7 @@ async fn a1_2_an_old_protocol_gets_update_required_then_4001() {
         x.protocol = 0;
     }
     tx(&mut ws, &h).await;
-    assert!(matches!(rx(&mut ws).await.unwrap().msg, ServerMsg::UpdateRequired { min: 1, current: 1 }));
+    assert!(matches!(rx(&mut ws).await.unwrap().msg, ServerMsg::UpdateRequired { min: 1, current: spell_server::protocol::PROTOCOL_CURRENT }));
     assert_eq!(closed_with(&mut ws).await, Some(close::UPDATE_REQUIRED));
 }
 

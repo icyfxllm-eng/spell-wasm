@@ -676,3 +676,56 @@ fn a_dropped_player_at_turn_start_waits_on_the_seat_hold_and_returns_to_a_fresh_
     assert!(s.advance(TURN_START_IDLE - Duration::from_millis(1)).is_empty());
     assert!(has(&s.advance(Duration::from_millis(1)), |m| matches!(m, ServerMsg::TurnEnd { seat: 0 })));
 }
+
+/// A8 of CC-ONLINE-TURN: every frame of a whole match, byte for byte, with the
+/// random tickets and the bank's words normalized. Recorded before the turn
+/// engine existed. A change here means shipped clients see something new.
+#[test]
+fn wire_fixture_is_unchanged() {
+    let mut s = Sim::new(req("en", TierMode::Climb, None, true), 7, false);
+    s.start();
+    for _ in 0..40 {
+        let turn = s.log.iter().rev().find_map(|e| match e {
+            Event::Send { msg: ServerMsg::TurnStart { seat, .. }, .. } => Some(*seat),
+            _ => None,
+        });
+        let Some(seat) = turn else { break };
+        s.next(seat);
+        s.submit(seat, "zzzzzz");
+        s.advance(Duration::from_secs(5));
+        if !s.m.running() {
+            break;
+        }
+    }
+    assert!(!s.m.running(), "the match should finish");
+    let mut tickets: Vec<String> = Vec::new();
+    let mut out = String::new();
+    for (i, e) in s.log.iter().enumerate() {
+        let Event::Send { to, msg } = e else { continue };
+        let mut v: serde_json::Value = serde_json::from_str(&crate::protocol::encode_server(i as u64, msg)).unwrap();
+        if let Some(body) = v.get_mut("body").and_then(|b| b.as_object_mut()) {
+            if body.contains_key("word") {
+                body.insert("word".into(), "W".into());
+            }
+            if let Some(t) = body.get("audio_ticket").and_then(|t| t.as_str()).map(str::to_string) {
+                let n = tickets.iter().position(|x| *x == t).unwrap_or_else(|| {
+                    tickets.push(t);
+                    tickets.len() - 1
+                });
+                body.insert("audio_ticket".into(), format!("T{n}").into());
+            }
+            if body.contains_key("deadline_ms") {
+                body.insert("deadline_ms".into(), 0.into());
+            }
+            if body.contains_key("tier") {
+                body.insert("tier".into(), "TIER".into());
+            }
+        }
+        out.push_str(&format!("{to:?} {v}\n"));
+    }
+    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/golden/h2h_wire.txt");
+    if std::env::var_os("UPDATE_GOLDEN").is_some() {
+        std::fs::write(path, &out).unwrap();
+    }
+    assert_eq!(out, std::fs::read_to_string(path).unwrap(), "H2H frames changed");
+}

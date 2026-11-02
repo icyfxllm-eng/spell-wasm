@@ -100,3 +100,7 @@ Read only, nothing compiled or run.
 5. Protocol bump versus I8: how old H2H clients are held.
 6. D-O16/D-B4: solo timer is a soft ring (D16), online is hard. Not a conflict by itself, but confirm.
 7. Spec drift: 5 trap kinds, boost/streak code not on main, Randospell not on main, BOARD-GAME specs not in the main checkout.
+
+## Phase notes
+
+**Phase A (2026-11-01).** `server/spell-server/src/turn.rs` adds `TurnRules` (§5.3) and `TurnEngine`, a `ModeRules` for 2-4 seats that owns seat order, active seat and phase. The protocol is now 2: `turn.*`, `seat.status`, `game.end`, plus `turn.effects` (what a choice changed) and `turn.sync` (F4's hash echo), which the spec implied but did not list. Protocol-1 clients keep H2H, see `protocol: 1` in their welcome, and get `update_required` only for a turn mode; shipped clients also drop message types they don't know (`online_model::decode`). Hello carries `mode_versions`. Flag: `SPELL_ONLINE_TURN`, default off. The only mode is `turn_null`, compiled for tests. A8's fixture, `tests/golden/h2h_wire.txt`, was recorded on the code before this phase; `protocol.txt` gained 10 lines and changed none. Not in this phase: timers and disconnects (B), room rules (C), load (D), client code. `grader_parity` was already red on main. `a9_1` failed once in a full parallel run and passed the next three; cause not found.

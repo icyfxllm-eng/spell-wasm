@@ -21,7 +21,7 @@ fn connect(hub: &Hub, id: &str, kind: ProfileKind, conn_id: u64) -> P {
 
 fn connect_resume(hub: &Hub, id: &str, kind: ProfileKind, conn_id: u64, resume: Option<(String, u64)>) -> P {
     let (tx, rx) = unbounded_channel();
-    let sess = Session { player: id.into(), conn_id, kind, name: format!("n-{id}"), ip: ip() };
+    let sess = Session { player: id.into(), conn_id, kind, name: format!("n-{id}"), ip: ip(), protocol: crate::protocol::PROTOCOL_CURRENT, mode_versions: BTreeMap::new() };
     hub.attach(&sess, tx, resume, Instant::now());
     P { sess, rx }
 }
@@ -653,4 +653,83 @@ async fn rtt_samples_become_capped_grace() {
     }
     let s = hub.state.lock().unwrap();
     assert_eq!(s.rooms[&code].seats[&0].grace(), GRACE_CAP, "capped at 300 ms");
+}
+
+// ---------------------------------------------------------------- CC-ONLINE-TURN gate
+
+fn turn_client(hub: &Hub, id: &str, conn_id: u64, protocol: u32, version: Option<u32>) -> P {
+    let (tx, rx) = unbounded_channel();
+    let mode_versions = version.map(|v| BTreeMap::from([("turn_null".to_string(), v)])).unwrap_or_default();
+    let sess = Session { player: id.into(), conn_id, kind: ProfileKind::Adult, name: format!("n-{id}"), ip: ip(), protocol, mode_versions };
+    hub.attach(&sess, tx, None, Instant::now());
+    P { sess, rx }
+}
+
+#[tokio::test(start_paused = true)]
+async fn the_turn_engine_is_off_until_the_flag_says_so() {
+    let hub = Hub::new();
+    let mut a = turn_client(&hub, "a", 1, 2, Some(crate::turn::null::MODE_VERSION));
+    send(&hub, &a, ClientMsg::CreateRoom(room_req("turn_null")));
+    assert_eq!(errors(&take(&mut a)), vec!["unknown_mode"]);
+}
+
+#[tokio::test(start_paused = true)]
+async fn an_old_client_keeps_h2h_and_is_told_to_update_for_the_rest() {
+    let hub = Hub::new();
+    hub.set_online_turn(true);
+    let v = Some(crate::turn::null::MODE_VERSION);
+    let mut host = turn_client(&hub, "host", 1, 2, v);
+    let code = create(&hub, &mut host, "turn_null");
+    let mut old = turn_client(&hub, "old", 2, 1, None);
+    let got = take(&mut old);
+    assert!(got.iter().any(|o| matches!(&o.msg, ServerMsg::Welcome { protocol: 1, .. })), "an old client must see its own protocol: {got:?}");
+    send(&hub, &old, ClientMsg::JoinRoom { code: code.clone() });
+    assert!(take(&mut old).iter().any(|o| matches!(o.msg, ServerMsg::UpdateRequired { min: 2, .. })));
+    send(&hub, &old, ClientMsg::CreateRoom(room_req("turn_null")));
+    assert!(take(&mut old).iter().any(|o| matches!(o.msg, ServerMsg::UpdateRequired { .. })));
+    assert_eq!(hub.seat_of("old"), None);
+    send(&hub, &old, ClientMsg::CreateRoom(h2h_req(false)));
+    assert!(hub.seat_of("old").is_some(), "Head-to-Head stays open to it");
+}
+
+#[tokio::test(start_paused = true)]
+async fn a_mode_version_mismatch_refuses_that_mode_only() {
+    let hub = Hub::new();
+    hub.set_online_turn(true);
+    let mut host = turn_client(&hub, "host", 1, 2, Some(crate::turn::null::MODE_VERSION));
+    let code = create(&hub, &mut host, "turn_null");
+    let mut stale = turn_client(&hub, "stale", 2, 2, Some(crate::turn::null::MODE_VERSION + 1));
+    send(&hub, &stale, ClientMsg::JoinRoom { code });
+    assert!(errors(&take(&mut stale)).contains(&"mode_version".to_string()));
+}
+
+#[tokio::test(start_paused = true)]
+async fn four_seats_play_a_turn_game_through_the_room() {
+    let hub = Hub::new();
+    hub.set_online_turn(true);
+    let v = Some(crate::turn::null::MODE_VERSION);
+    let mut seats = vec![turn_client(&hub, "s0", 1, 2, v)];
+    let code = create(&hub, &mut seats[0], "turn_null");
+    for (i, id) in ["s1", "s2", "s3"].iter().enumerate() {
+        let mut p = turn_client(&hub, id, i as u64 + 2, 2, v);
+        join(&hub, &mut p, &code);
+        seats.push(p);
+    }
+    send(&hub, &seats[0], ClientMsg::StartMatch {});
+    let saw_begin = take(&mut seats[3]).iter().any(|o| matches!(&o.msg, ServerMsg::TurnBegin { seat: 0, phase, .. } if phase == "awaiting_roll"));
+    assert!(saw_begin, "every seat hears the turn begin");
+    // Out of turn: refused, nothing moves.
+    send(&hub, &seats[1], ClientMsg::TurnAnswer { answer: "x".into() });
+    assert_eq!(errors(&take(&mut seats[1])), vec!["bad_phase"]);
+    // The room state now carries a hash; a wrong echo gets the snapshot again.
+    take(&mut seats[2]);
+    send(&hub, &seats[2], ClientMsg::TurnSync { hash: "wrong".into() });
+    let resent = take(&mut seats[2]);
+    let hash = resent.iter().find_map(|o| match &o.msg {
+        ServerMsg::RoomState(r) => r.mode_state.get("hash").and_then(|h| h.as_str()).map(str::to_string),
+        _ => None,
+    });
+    let hash = hash.expect("a wrong hash gets the snapshot, with its hash");
+    send(&hub, &seats[2], ClientMsg::TurnSync { hash });
+    assert!(take(&mut seats[2]).is_empty(), "a matching hash needs no reply");
 }

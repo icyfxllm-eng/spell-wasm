@@ -87,6 +87,9 @@ pub struct Session {
     pub kind: ProfileKind,
     pub name: String,
     pub ip: IpAddr,
+    /// The protocol this client said hello with.
+    pub protocol: u32,
+    pub mode_versions: BTreeMap<String, u32>,
 }
 
 struct Live {
@@ -204,6 +207,7 @@ impl Room {
 
 #[derive(Default)]
 struct State {
+    online_turn: bool,
     live: HashMap<String, Live>,
     rooms: HashMap<String, Room>,
     room_of: HashMap<String, String>,
@@ -238,6 +242,22 @@ impl Default for Hub {
 }
 
 /// A fresh room code: uniform over the alphabet (rejection sampling).
+/// F7 and CC-ONLINE-TURN A-4: a client too old for a turn-engine mode is told
+/// to update for that mode alone. Every other mode is open to every client.
+fn mode_gate(sess: &Session, mode_name: &str) -> Option<ServerMsg> {
+    let version = mode::version(mode_name)?;
+    if sess.protocol < crate::protocol::TURN_PROTOCOL {
+        return Some(ServerMsg::UpdateRequired {
+            min: crate::protocol::TURN_PROTOCOL,
+            current: crate::protocol::PROTOCOL_CURRENT,
+        });
+    }
+    if sess.mode_versions.get(mode_name) != Some(&version) {
+        return Some(ServerMsg::error("mode_version"));
+    }
+    None
+}
+
 pub fn new_code() -> String {
     let mut out = String::with_capacity(CODE_LEN);
     while out.len() < CODE_LEN {
@@ -441,6 +461,11 @@ impl Hub {
         Hub::default()
     }
 
+    /// `online.turn`: off, no turn-engine room can be created.
+    pub fn set_online_turn(&self, on: bool) {
+        self.state.lock().unwrap().online_turn = on;
+    }
+
     pub fn stats(&self) -> Stats {
         let s = self.state.lock().unwrap();
         Stats {
@@ -475,7 +500,7 @@ impl Hub {
         );
         let _ = tx.send(Out::Frame(encode_server(
             0,
-            &ServerMsg::Welcome { player_id: sess.player.clone(), protocol: crate::protocol::PROTOCOL_CURRENT },
+            &ServerMsg::Welcome { player_id: sess.player.clone(), protocol: sess.protocol },
         )));
         if let Some(deadline) = s.draining {
             let _ = tx.send(Out::Frame(encode_server(0, &ServerMsg::ServerDraining { deadline_unix_ms: deadline })));
@@ -584,7 +609,12 @@ impl Hub {
                 let seat = s.rooms[&code].seat_of(p).unwrap();
                 s.broadcast(&code, &ServerMsg::Emote { seat, id });
             }
-            msg @ (ClientMsg::NextWord {} | ClientMsg::Submit { .. } | ClientMsg::ReplayAudio { .. }) => {
+            msg @ (ClientMsg::NextWord {}
+            | ClientMsg::Submit { .. }
+            | ClientMsg::ReplayAudio { .. }
+            | ClientMsg::TurnAnswer { .. }
+            | ClientMsg::TurnChoice { .. }
+            | ClientMsg::TurnSync { .. }) => {
                 let Some(code) = s.room_of.get(p).cloned() else {
                     return s.direct(p, &ServerMsg::error("not_in_room"));
                 };
@@ -604,6 +634,25 @@ impl Hub {
                             return;
                         }
                         room.mode.on_submit(seat, &typed, &ctx)
+                    }
+                    ClientMsg::TurnAnswer { answer } => {
+                        if !room.cids.insert(inbound.cid) {
+                            return;
+                        }
+                        room.mode.on_answer(seat, &answer, &ctx)
+                    }
+                    ClientMsg::TurnChoice { choice } => {
+                        if !room.cids.insert(inbound.cid) {
+                            return;
+                        }
+                        room.mode.on_choice(seat, &choice, &ctx)
+                    }
+                    ClientMsg::TurnSync { hash } => {
+                        // F4: out of sync gets the snapshot again.
+                        if room.mode.state_hash().is_some_and(|h| h != hash) {
+                            s.send_room_state(&code);
+                        }
+                        return;
                     }
                     _ => unreachable!(),
                 };
@@ -633,6 +682,12 @@ impl Hub {
         }
         if !spell_wasm::native_api::is_active_lang(&req.lang) {
             return s.direct(p, &ServerMsg::error("lang_unavailable"));
+        }
+        if mode::is_turn_mode(&req.mode) && !s.online_turn {
+            return s.direct(p, &ServerMsg::error("unknown_mode"));
+        }
+        if let Some(refusal) = mode_gate(sess, &req.mode) {
+            return s.direct(p, &refusal);
         }
         let mode = match mode::make(&req) {
             Ok(m) => m,
@@ -699,6 +754,9 @@ impl Hub {
         }
         let Some(code) = normalize_code(raw) else { return fail(s, "bad_code") };
         let Some(room) = s.rooms.get_mut(&code) else { return fail(s, "room_not_found") };
+        if let Some(refusal) = mode_gate(sess, &room.req.mode) {
+            return s.direct(p, &refusal);
+        }
         if room.mode.running() {
             return fail(s, "match_in_progress");
         }

@@ -13,6 +13,8 @@ pub struct Config {
     pub allowed_origins: Vec<String>,
     pub max_conns: usize,
     pub protocol_min: u32,
+    /// `online.turn`: turn-engine rooms. Off by default.
+    pub online_turn: bool,
     pub drain: Duration,
     pub log: String,
     /// Phase D (pending Eric's call): set ONLY by the Quadlet unit, which
@@ -94,6 +96,7 @@ impl Config {
                 .collect(),
             max_conns: number("SPELL_MAX_CONNS", 2000)? as usize,
             protocol_min: number("SPELL_PROTOCOL_MIN", 1)? as u32,
+            online_turn: boolean("SPELL_ONLINE_TURN", false)?,
             drain: Duration::from_secs(number("SPELL_DRAIN_SECS", 900)?),
             log: get("SPELL_LOG").unwrap_or_else(|| "info".into()),
             published_loopback_only: boolean("SPELL_PUBLISHED_LOOPBACK_ONLY", false)?,
@@ -129,6 +132,7 @@ impl Config {
             allowed_origins: vec!["capacitor://localhost".into()],
             max_conns: 2000,
             protocol_min: 1,
+            online_turn: false,
             drain: Duration::from_secs(900),
             log: "info".into(),
             published_loopback_only: false,
