@@ -96,6 +96,7 @@ import * as cantTell from './specs/cant-tell.mjs';
 import * as pickQueue from './specs/pick-queue.mjs';
 import * as pickQueueHelp from './specs/pick-queue-help.mjs';
 import * as online from './specs/online.mjs';
+import * as onlineBoard from './specs/online-board.mjs';
 import * as accounts from './specs/accounts.mjs';
 
 const SPECS = [
@@ -169,6 +170,7 @@ const SPECS = [
   ['gallery', gallery],
   // CC-GAME-SERVER Phase C: needs `cargo build -p spell-server --features test-modes`.
   ['online', online],
+  ['online-board', onlineBoard],
   ['accounts', accounts],
 ];
 

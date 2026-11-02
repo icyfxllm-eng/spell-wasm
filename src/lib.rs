@@ -124,6 +124,8 @@ mod online_spelloff;
 #[cfg(not(feature = "web"))]
 mod online_audio; // CC-GAME-SERVER F9 (client): ticket audio
 #[cfg(not(feature = "web"))]
+mod online_board; // CC-BOARD-GAME-ONLINE F6/F7: the server's game as the board screen draws it
+#[cfg(not(feature = "web"))]
 mod online_model; // CC-GAME-SERVER F12/F13: the online client's pure state
 #[cfg(not(feature = "web"))]
 mod online_net; // CC-GAME-SERVER F2/F5: session token, room socket, reconnect

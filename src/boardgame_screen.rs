@@ -27,8 +27,11 @@ use crate::boardgame_pools as pools;
 use crate::wordsearch::ledger::Ledger;
 use crate::{dom, haptics, i18n, speech_out, storage, App};
 
+/// CC-BOARD-GAME-ONLINE F6: the same screen in an online room (the server's game).
+pub mod online;
+
 /// D23: pieces are icons, in seat/piece order.
-const PIECES: [&str; 4] = ["\u{1f3a9}", "\u{1f41d}", "\u{1fa84}", "\u{1f4d6}"];
+pub(crate) const PIECES: [&str; 4] = ["\u{1f3a9}", "\u{1f41d}", "\u{1fa84}", "\u{1f4d6}"];
 /// D10 / A10: one NPC turn. Three of them is 4.5 s, inside the 7 s budget; a tap
 /// anywhere finishes the whole run at once.
 pub const NPC_STEP_MS: i32 = 1500;
@@ -100,6 +103,9 @@ struct Ui {
     marks: Vec<u32>,
     /// Feature 1: the seat whose next Moved/Missed chip carries a star (a Stretch move).
     star: Option<u8>,
+    /// CC-BOARD-GAME-ONLINE: `Some` in an online room, where `game` is the server's
+    /// game as `online_board` mirrors it and no action is ever applied to it.
+    online: Option<online::Online>,
 }
 
 #[derive(Clone, Copy)]
@@ -267,6 +273,8 @@ pub fn open(app: &App) {
         }
     }
     refresh_gate();
+    // CC-BOARD-GAME-ONLINE: the way into a room, behind its own flag.
+    dom::set_hidden("bgOnline", !crate::online_screen::board_entry_visible());
     dom::set_hidden("bgSetup", false);
     dom::set_hidden("bgPlay", true);
     dom::remove_class("bgScreen", "playing");
@@ -291,6 +299,10 @@ fn refresh_gate() {
 }
 
 fn close() {
+    if online::is_open() {
+        // The way out of an online game is out of its room too (mode-exit-check).
+        return crate::online_screen::leave_from_board();
+    }
     bump();
     cancel_anim();
     speech_out::stop();
@@ -462,6 +474,7 @@ fn start() {
             roll_at: 0.0,
             marks: Vec::new(),
             star: None,
+            online: None,
         })
     });
     render_keys();
@@ -473,6 +486,9 @@ fn start() {
 }
 
 fn again() {
+    if online::is_open() {
+        return crate::online_screen::back_to_room();
+    }
     cancel_anim();
     finish_record();
     UI.with(|u| *u.borrow_mut() = None);
@@ -490,6 +506,10 @@ fn again() {
 
 /// Decide what the screen is waiting for and show it.
 fn advance() {
+    // Online the server moves the game on; the screen only draws it.
+    if online::is_open() {
+        return render();
+    }
     let Some((finished, npc, miss, hand)) = with_ui(|u| {
         let g = &u.game;
         let finished = g.phase == Phase::Finished;
@@ -589,7 +609,7 @@ fn npc_step() {
 fn skip_npc() {
     // State, not a flag: a tap during the beat before the first NPC moves
     // skips the run too.
-    let npc_now = with_ui(|u| u.game.is_npc_turn()).unwrap_or(false);
+    let npc_now = with_ui(|u| u.game.is_npc_turn() && u.online.is_none()).unwrap_or(false);
     if !npc_now || now_ms() - RUN_AT.with(Cell::get) < 250.0 {
         return;
     }
@@ -823,8 +843,12 @@ fn render() {
         dom::set_text("bgField", &u.typed);
         // D16: a soft 30 s ring in Standard, never an auto-fail.
         let timed = spelling && g.cfg.variant.cfg().timed;
-        dom::remove_class("bgTimer", "run");
-        dom::set_hidden("bgTimer", !timed);
+        if u.online.is_some() {
+            online::decorate(u);
+        } else {
+            dom::remove_class("bgTimer", "run");
+            dom::set_hidden("bgTimer", !timed);
+        }
     });
     fit_view();
 }
@@ -877,6 +901,12 @@ fn hud(u: &Ui) -> String {
         // marker while a Ward charge is held.
         let mut marks = String::new();
         let mut label = format!("{} {}", piece(p.seat.piece), i + 1);
+        // Online: whose piece it is, by name (F6 seat labels).
+        let named = online::chip_label(u, i);
+        if let Some((name, tag)) = &named {
+            label = if tag.is_empty() { format!("{} {name}", piece(p.seat.piece)) } else { format!("{} {name}, {tag}", piece(p.seat.piece)) };
+            marks.push_str(&format!("<s class=\"bg-nm\">{}</s>", dom::escape_html(name)));
+        }
         if u.game.cfg.streak {
             let n = if p.bonus { i18n::t("bg.streakBonus") } else { i18n::tp("bg.streak", &[("n", &p.streak.to_string())]) };
             marks.push_str(&format!("<em class=\"bg-sk{}\" data-streak=\"{}\">{}{}</em>", if p.bonus { " bonus" } else { "" }, p.streak, STREAK_GLYPH, if p.bonus { "+1".to_string() } else { p.streak.to_string() }));
@@ -1603,6 +1633,9 @@ fn pending_word() -> Option<(String, String)> {
 
 fn orb() {
     RUN_AT.with(|r| r.set(now_ms()));
+    if online::is_open() {
+        return online::orb();
+    }
     let Some((phase, npc)) = with_ui(|u| (u.game.phase, u.game.is_npc_turn())) else { return };
     if npc {
         return;
@@ -1669,6 +1702,9 @@ fn stretch_tap(e: web_sys::MouseEvent) {
         return;
     };
     let take = el.get_attribute("data-st").as_deref() == Some("1");
+    if online::is_open() {
+        return online::stretch(take);
+    }
     let ok = with_ui(|u| boardgame::apply(&mut u.game, Action::ChooseStretch(take)).is_ok()).unwrap_or(false);
     if !ok {
         return;
@@ -1707,7 +1743,7 @@ fn press_key(k: &Key) {
         _ => k,
     };
     with_ui(|u| {
-        if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() {
+        if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() && !online::locked(u) {
             u.typed = input::press(&u.lang, &u.typed, k);
         }
     });
@@ -1718,7 +1754,7 @@ fn press_key(k: &Key) {
 
 fn delete() {
     with_ui(|u| {
-        if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() {
+        if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() && !online::locked(u) {
             u.typed = input::backspace(&u.lang, &u.typed);
         }
     });
@@ -1732,6 +1768,9 @@ fn submit() {
     let Some(typed) = with_ui(|u| u.typed.clone()) else { return };
     if typed.is_empty() {
         return;
+    }
+    if online::is_open() {
+        return online::submit(typed);
     }
     let Some((before_seat, kid)) = with_ui(|u| (u.game.current_seat(), u.kid)) else {
         return;
@@ -1789,6 +1828,9 @@ fn swap_tap(e: web_sys::MouseEvent) {
         Some(n) => n.parse::<u8>().ok(),
         None => return,
     };
+    if online::is_open() {
+        return online::swap(target);
+    }
     let ok = with_ui(|u| boardgame::apply(&mut u.game, Action::ChooseSwitchTarget(target)).is_ok()).unwrap_or(false);
     if !ok {
         return;
@@ -1821,6 +1863,11 @@ fn finish_record() {
     };
 }
 
+/// The podium's first three places.
+fn medal(rank: usize) -> &'static str {
+    ["\u{1f947}", "\u{1f948}", "\u{1f949}"].get(rank).copied().unwrap_or("")
+}
+
 fn show_over() {
     finish_record();
     let rows = with_ui(|u| {
@@ -1828,7 +1875,7 @@ fn show_over() {
         let mut h = String::new();
         for (rank, seat) in g.standings().into_iter().enumerate() {
             let p = &g.players[seat as usize];
-            let medal = ["\u{1f947}", "\u{1f948}", "\u{1f949}"].get(rank).copied().unwrap_or("");
+            let medal = medal(rank);
             let mut tail = i18n::tp("bg.turns", &[("n", &p.rolls.to_string())]);
             // Words spelled counts every correct landing word, Stretch ones included; the percentage
             // is accuracy at the tiles' own tiers only (D-P11), the number the NPCs track.
@@ -1916,6 +1963,7 @@ pub fn seam_state() -> String {
                     "stretchOn": g.cfg.stretch,
                     "sc": g.players.iter().map(|p| vec![p.stretch_offered, p.stretch_taken, p.stretch_hits]).collect::<Vec<_>>(),
                     "stretchSpell": g.pending.as_ref().map(|p| p.stretch),
+                    "online": online::seam(u),
                 })
                 .to_string()
             })

@@ -16,6 +16,7 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 
+use crate::boardgame_screen::online as board;
 use crate::online_model::{self as om, Action, Effect, Model, Panel, Unanswered};
 use crate::online_net::{self as net, close};
 use crate::{dom, App};
@@ -39,6 +40,8 @@ thread_local! {
     static SUBMITTED: Cell<bool> = const { Cell::new(false) };
     static KEYS_LANG: RefCell<String> = const { RefCell::new(String::new()) };
     static LEAVING: Cell<bool> = const { Cell::new(false) };
+    /// A resumed socket: the next board snapshot rebuilds the board (F7).
+    static RESYNC: Cell<bool> = const { Cell::new(false) };
 }
 
 fn now_ms() -> f64 {
@@ -60,6 +63,15 @@ pub fn entry_visible() -> bool {
     om::entry_visible(crate::flags::online_enabled_built(), crate::flags::online_kids(), is_kid(), family_ok())
 }
 
+/// CC-BOARD-GAME-ONLINE: the Board Game setup's "Play online", behind its own flag.
+pub fn board_entry_visible() -> bool {
+    crate::flags::online_boardgame() && entry_visible()
+}
+
+fn is_board_room(m: &Model) -> bool {
+    m.room.as_ref().is_some_and(|r| r.mode == crate::online_board::MODE)
+}
+
 fn with_model<R>(f: impl FnOnce(&mut Model) -> R) -> R {
     MODEL.with(|m| f(&mut m.borrow_mut()))
 }
@@ -78,6 +90,17 @@ pub fn setup(app: &App) {
         dom::remove_class("vsSetupScrim", "show");
         // CC-ACCOUNTS F1: with the gate flag off this runs open_screen at once.
         crate::accounts_screen::gate_then(Box::new(open_screen));
+    });
+    dom::on_click("bgOnline", || {
+        if !board_entry_visible() {
+            return;
+        }
+        dom::remove_class("bgScreen", "show");
+        crate::accounts_screen::gate_then(Box::new(|| {
+            open_screen();
+            dom::select("olMode").set_value(crate::online_board::MODE);
+            show_mode_fields();
+        }));
     });
     wire_family();
     wire_controls();
@@ -118,6 +141,13 @@ fn wire_controls() {
         let _ = dom::window().open_with_url(APP_STORE_URL);
     });
     dom::on_click("olCreate", create_room);
+    dom::on::<web_sys::Event, _>("olMode", "change", |_| show_mode_fields());
+    // D-B12: a piece, picked in the lobby; the room says who has which.
+    dom::on::<web_sys::MouseEvent, _>("olPieces", "click", |e| {
+        if let Some(p) = attr_of(&e, "data-piece") {
+            net::send("turn.choice", json!({ "choice": format!("piece:{p}") }));
+        }
+    });
     dom::on_click("olJoin", join_room);
     dom::on::<web_sys::Event, _>("olCode", "input", |_| clean_code_field());
     dom::on_click("olShare", || {
@@ -174,6 +204,13 @@ fn wire_controls() {
         .map(|(i, g)| format!("<button type=\"button\" class=\"ol-emote\" data-emote=\"{i}\">{g}</button>"))
         .collect();
     dom::set_html("olEmotes", &emotes);
+    // The same eight on the online board (F6); the board shows them only in a room.
+    dom::set_html("bgEmotes", &emotes);
+    dom::on::<web_sys::MouseEvent, _>("bgEmotes", "click", |e| {
+        if let Some(id) = attr_of(&e, "data-emote").and_then(|v| v.parse::<u8>().ok()) {
+            net::send("emote", json!({ "id": id }));
+        }
+    });
 }
 
 fn attr_of(e: &web_sys::MouseEvent, name: &str) -> Option<String> {
@@ -233,7 +270,7 @@ fn wire_visibility() {
             let away = HIDDEN_AT.with(Cell::take).is_some_and(|t| now_ms() - t >= RETURN_RECONNECT_MS);
             if away && with_model(|m| m.room.is_some()) {
                 DROPPED_AT.with(|d| d.set(None));
-                dom::set_hidden("olReconnect", true);
+                hide_reconnect();
                 net::shut();
                 connect();
             }
@@ -269,7 +306,23 @@ fn open_screen() {
     });
 }
 
+/// The board's own exit: out of the game and out of the room.
+pub fn leave_from_board() {
+    board::close();
+    close_screen();
+}
+
+/// The result card's "Back to room": the lobby again, where the host can start another.
+pub fn back_to_room() {
+    board::close();
+    dom::add_class("olScreen", "show");
+    render();
+}
+
 fn close_screen() {
+    if board::is_open() {
+        board::close();
+    }
     if with_model(|m| m.room.is_some() || m.pending_code.is_some()) {
         net::send("leave", json!({}));
     }
@@ -278,14 +331,14 @@ fn close_screen() {
     crate::online_audio::stop();
     with_model(Model::reset);
     dom::remove_class("olScreen", "show");
-    dom::set_hidden("olReconnect", true);
+    hide_reconnect();
 }
 
 /// The resting card: killed remotely, or unreachable (F13).
 fn rest() {
     net::stop();
     with_model(|m| m.panel_override = Some(Panel::Resting));
-    dom::set_hidden("olReconnect", true);
+    hide_reconnect();
     render();
 }
 
@@ -331,14 +384,46 @@ fn fill_entry_form() {
     dom::set_html("olLang", &opts);
     // A kid cannot host (O3): the create half is not shown at all.
     dom::set_hidden("olCreateBox", kid);
+    // CC-BOARD-GAME-ONLINE: the game to host, only while Board Game online is on.
+    dom::set_hidden("olModeRow", !crate::flags::online_boardgame());
+    if !crate::flags::online_boardgame() {
+        dom::select("olMode").set_value("h2h");
+    }
+    show_mode_fields();
     dom::set_text("olEntryErr", "");
     dom::set_text("olCodeHint", "");
+}
+
+/// The create box shows the chosen game's own settings.
+fn show_mode_fields() {
+    let board = dom::select("olMode").value() == crate::online_board::MODE;
+    dom::set_hidden("olH2hOpts", board);
+    dom::set_hidden("olBoardOpts", !board);
 }
 
 // ---------------------------------------------------------------- entry actions
 
 fn create_room() {
     let lang = dom::select("olLang").value();
+    if dom::select("olMode").value() == crate::online_board::MODE && crate::flags::online_boardgame() {
+        // F6 + D-B9: the room's settings, and the host build's own feature switches.
+        let body = json!({
+            "mode": crate::online_board::MODE,
+            "lang": lang,
+            "tier_mode": "climb",
+            "timed": true,
+            "approve_joins": dom::input("olApprove").checked(),
+            "options": {
+                "seats": dom::select("olSeats").value().parse::<u8>().unwrap_or(4),
+                "size": dom::select("olSize").value(),
+                "npc": dom::select("olNpc").value(),
+                "stretch": crate::flags::board_stretch(),
+                "boosts": crate::flags::board_boosts(),
+                "streak": crate::flags::board_streak(),
+            },
+        });
+        return send_or_connect("create_room", body);
+    }
     let fixed = dom::select("olTierMode").value() != "climb";
     let tier = dom::select("olTier").value();
     let mut body = json!({
@@ -525,7 +610,7 @@ fn on_net(e: net::Event) {
         net::Event::Open => {
             FAILS.with(|f| f.set(0));
             DROPPED_AT.with(|d| d.set(None));
-            dom::set_hidden("olReconnect", true);
+            hide_reconnect();
         }
         net::Event::Frame(text) => on_frame(&text),
         net::Event::Closed(code) => on_closed(code),
@@ -542,20 +627,70 @@ fn on_frame(text: &str) {
             return;
         }
     }
+    if let (om::ServerMsg::Emote { seat, id }, true) = (&msg, board::is_open()) {
+        let name = with_model(|m| m.name_of(*seat));
+        board::emote(&name, om::EMOTES.get(*id as usize).copied().unwrap_or(""));
+    }
     let welcomed = matches!(msg, om::ServerMsg::Welcome { .. });
+    if welcomed && with_model(|m| m.room.is_some()) {
+        RESYNC.with(|r| r.set(true));
+    }
+    let turn = msg.is_turn().then(|| msg.clone());
+    let ended = matches!(msg, om::ServerMsg::MatchEnded { .. });
+    let snapshot = matches!(msg, om::ServerMsg::RoomState(_));
     let fx = with_model(|m| m.apply(seq, msg));
     for f in fx {
         run_effect(f);
     }
+    if snapshot {
+        sync_board();
+    }
+    if let Some(t) = turn {
+        board::frame(t);
+    }
+    // The room is gone under the board: show why, on the online screen.
+    if ended && board::is_open() && with_model(|m| m.room.is_none()) {
+        board::close();
+        dom::add_class("olScreen", "show");
+    }
     if welcomed {
         if with_model(|m| m.unanswered.is_some()) {
             dom::after_ms(REPLAY_SETTLE_MS, resend_unanswered);
+        }
+        if board::is_open() {
+            dom::after_ms(REPLAY_SETTLE_MS, || {
+                if board::is_open() {
+                    board::resend();
+                }
+            });
         }
         if let Some((t, body)) = PENDING_SEND.with(|p| p.borrow_mut().take()) {
             net::send(t, body);
         }
     }
     render();
+}
+
+/// A board room that is playing shows the board: opened from the room's
+/// snapshot the first time, and again after a resume (F7). Only a snapshot
+/// that just arrived: the one held from before a drop is stale.
+fn sync_board() {
+    let open = with_model(|m| {
+        if !is_board_room(m) || !m.in_match {
+            return None;
+        }
+        let r = m.room.as_ref()?;
+        if r.phase != "playing" || (board::is_open() && !RESYNC.with(Cell::get)) {
+            return None;
+        }
+        let seats: Vec<board::SeatName> = r.seats.iter().map(|s| board::SeatName { seat: s.seat, name: s.name.clone() }).collect();
+        Some((r.mode_state.clone(), r.lang.clone(), m.my_seat?, seats))
+    });
+    let Some((state, lang, me, seats)) = open else { return };
+    if board::open(&state, &lang, is_kid(), me, &seats) {
+        RESYNC.with(|r| r.set(false));
+        dom::remove_class("olScreen", "show");
+    }
 }
 
 fn on_closed(code: u16) {
@@ -599,7 +734,7 @@ fn on_drop() {
         });
         if now_ms() - started >= reconnect_window() {
             DROPPED_AT.with(|d| d.set(None));
-            dom::set_hidden("olReconnect", true);
+            hide_reconnect();
             SUBMITTED.with(|s| s.set(false));
             with_model(|m| {
                 m.room = None;
@@ -611,6 +746,7 @@ fn on_drop() {
             return;
         }
         dom::set_hidden("olReconnect", false);
+        dom::set_hidden("bgReconnect", !board::is_open());
         tick_overlay();
         dom::after_ms(2000, || {
             if OPEN.with(Cell::get) && !net::is_open() {
@@ -641,16 +777,26 @@ fn reconnect_window() -> f64 {
     }
 }
 
+fn hide_reconnect() {
+    dom::set_hidden("olReconnect", true);
+    dom::set_hidden("bgReconnect", true);
+}
+
 fn tick_overlay() {
     let Some(start) = DROPPED_AT.with(Cell::get) else { return };
     let left = ((reconnect_window() - (now_ms() - start)) / 1000.0).ceil().max(0.0) as u32;
-    dom::set_text("olReconnectText", &crate::i18n::tp("ol.reconnecting", &[("s", &left.to_string())]));
+    let text = crate::i18n::tp("ol.reconnecting", &[("s", &left.to_string())]);
+    dom::set_text("olReconnectText", &text);
+    dom::set_text("bgReconnectText", &text);
     dom::after_ms(1000, tick_overlay);
 }
 
 // ---------------------------------------------------------------- drawing
 
 fn render() {
+    if board::is_open() {
+        return;
+    }
     let panel = with_model(|m| m.panel());
     for p in om::PANELS.iter() {
         dom::set_hidden(om::panel_id(p), *p != panel);
@@ -704,9 +850,14 @@ fn render_lobby() {
     dom::set_html("olRequests", &requests);
     dom::set_hidden("olStart", !host);
     dom::set_disabled("olStart", n < 2);
+    let board = with_model(|m| is_board_room(m));
+    dom::set_hidden("olPieces", !board);
+    if board {
+        dom::set_html("olPieces", &with_model(|m| om::pieces_html(m)));
+    }
     // A child does not share codes (share.rs refuses in Kid Mode anyway).
     dom::set_hidden("olShare", is_kid());
-    dom::set_text("olRulesLobby", &with_model(|m| m.rules_text()));
+    dom::set_text("olRulesLobby", &with_model(|m| if is_board_room(m) { om::board_rules_text(m) } else { m.rules_text() }));
     let away = with_model(|m| m.away_name());
     let wait = if let Some(name) = away {
         crate::i18n::tp("ol.waitBack", &[("name", &name)])

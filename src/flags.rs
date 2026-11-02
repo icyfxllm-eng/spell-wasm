@@ -388,6 +388,13 @@ pub fn online_kids() -> bool {
     resolve(stored("online_kids").as_deref(), false)
 }
 
+/// CC-BOARD-GAME-ONLINE Phase C: Board Game in online rooms. **Default OFF**; only a build
+/// turns it on, and it needs `online_enabled` too. Eric signs the real match (Phase D)
+/// before any build ships it on.
+pub fn online_boardgame() -> bool {
+    resolve(stored("online_boardgame").as_deref(), false)
+}
+
 /// CC-ACCOUNTS F8: the four account flags. Every one **default OFF**; only a build turns one on
 /// and the signed kill file can only turn one off (I12). With all four off the app behaves exactly
 /// as it did before accounts existed.

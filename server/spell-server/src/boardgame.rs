@@ -22,7 +22,7 @@ pub const MODE_VERSION: u32 = 1;
 
 /// F6's room settings, with D-B8's defaults. D-B9: the three feature switches
 /// come from the host's build flags.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, serde::Serialize, PartialEq)]
 #[serde(deny_unknown_fields, default)]
 pub struct Options {
     pub seats: u8,
@@ -114,6 +114,9 @@ struct Record {
     kid: bool,
     seed: u64,
     humans: Vec<u8>,
+    /// D-B12: the lobby's picks, `(seat, piece)`.
+    #[serde(default)]
+    picks: Vec<(u8, u8)>,
     log: Vec<Logged>,
 }
 
@@ -170,7 +173,7 @@ fn build(r: &Record) -> Option<(BoardGameState, Vec<u8>)> {
         free += 1;
     }
     table.sort_unstable();
-    let seats = table.iter().enumerate().map(|(i, s)| Seat { piece: i as u8, npc: !r.humans.contains(s) }).collect();
+    let seats = pieces(&table, &r.humans, &r.picks).into_iter().zip(&table).map(|(piece, s)| Seat { piece, npc: !r.humans.contains(s) }).collect();
     let mut pools = supply(&r.lang, board, &Ledger::default(), 0, r.seed).ok()?.pools;
     // A kid at a Standard table gets words a kid may have, as Head-to-Head does (F8).
     if r.kid {
@@ -184,6 +187,26 @@ fn build(r: &Record) -> Option<(BoardGameState, Vec<u8>)> {
         .with_boosts(r.boosts)
         .with_streak(r.streak);
     Some((new_game(r.seed, cfg, pools).ok()?, table))
+}
+
+/// D-B12: a human keeps the piece picked in the lobby; the other humans, then
+/// the NPCs, take what is left, lowest first, in seat order.
+fn pieces(table: &[u8], humans: &[u8], picks: &[(u8, u8)]) -> Vec<u8> {
+    let picked = |seat: u8| picks.iter().find(|(s, _)| *s == seat).map(|(_, p)| *p).filter(|p| (*p as usize) < MAX_SEATS as usize);
+    let mut out: Vec<Option<u8>> = table.iter().map(|s| if humans.contains(s) { picked(*s) } else { None }).collect();
+    let mut taken: Vec<u8> = out.iter().flatten().copied().collect();
+    let mut fill = |want_human: bool, out: &mut Vec<Option<u8>>| {
+        for (i, s) in table.iter().enumerate() {
+            if out[i].is_none() && humans.contains(s) == want_human {
+                let p = (0..MAX_SEATS).find(|p| !taken.contains(p)).unwrap_or(0);
+                taken.push(p);
+                out[i] = Some(p);
+            }
+        }
+    };
+    fill(true, &mut out);
+    fill(false, &mut out);
+    out.into_iter().map(|p| p.unwrap_or(0)).collect()
 }
 
 fn replay_one(s: &mut BoardGameState, l: &Logged) -> bool {
@@ -248,7 +271,18 @@ impl BoardRules {
         let s = &self.state;
         match s.phase {
             Phase::Finished => None,
-            Phase::AwaitStretch => Some(Step::new(AWAITING_CHOICE, json!({ "kind": "stretch" }))),
+            Phase::AwaitStretch => {
+                // The two moves on offer: tiers and tiles, no word yet (I-P6).
+                let o = s.offer.as_ref()?;
+                Some(Step::new(
+                    AWAITING_CHOICE,
+                    json!({
+                        "kind": "stretch", "roll": o.roll,
+                        "normal": { "tile": o.normal_dest, "tier": o.normal_tier.name() },
+                        "stretch": { "tile": o.stretch_dest, "tier": o.stretch_tier.name() },
+                    }),
+                ))
+            }
             Phase::AwaitSwitchTarget => Some(Step::new(AWAITING_CHOICE, json!({ "kind": "switch" }))),
             Phase::AwaitSpelling => {
                 let p = s.pending.as_ref()?;
@@ -267,9 +301,46 @@ impl BoardRules {
         }
     }
 
+    /// Every seat's public state and the tiles revealed so far. Each phase's
+    /// payload carries it, so a client is right again at every turn (F7).
+    fn table_json(&self) -> Value {
+        let s = &self.state;
+        let seats: Vec<Value> = s
+            .players
+            .iter()
+            .enumerate()
+            .map(|(i, p)| {
+                json!({
+                    "seat": self.wire(i as u8), "piece": p.seat.piece, "npc": p.seat.npc, "tile": p.pos,
+                    "skip": p.skip, "ward": p.ward, "streak": p.streak, "bonus": p.bonus,
+                })
+            })
+            .collect();
+        // A trap or boost tile, once triggered (F4). Nothing else is shown.
+        let revealed: Vec<Value> = s
+            .revealed
+            .iter()
+            .map(|t| {
+                let trap = s.board.traps.get(*t as usize).copied().flatten().map(trap_name);
+                let boost = s.board.boosts.get(*t as usize).copied().flatten().map(boost_name);
+                json!({ "tile": t, "trap": trap, "boost": boost })
+            })
+            .collect();
+        json!({ "seats": seats, "revealed": revealed })
+    }
+
+    fn with_table(&self, mut step: Step) -> Step {
+        if let Some(o) = step.payload.as_object_mut() {
+            o.insert("table".into(), self.table_json());
+        } else {
+            step.payload = json!({ "table": self.table_json() });
+        }
+        step
+    }
+
     fn settled(&mut self, seat: u8) -> Outcome {
         let effects = self.drain();
-        Outcome { effects, next: self.step_now(seat) }
+        Outcome { effects, next: self.step_now(seat).map(|st| self.with_table(st)) }
     }
 }
 
@@ -286,7 +357,17 @@ impl TurnRules for BoardRules {
         config.options.size != "jr" || kind == ProfileKind::Kid
     }
 
+    const PIECES: u8 = MAX_SEATS;
+
+    fn describe(config: &Config) -> Value {
+        serde_json::to_value(&config.options).unwrap_or(Value::Null)
+    }
+
     fn init(config: &Config, seats: &[u8], kid_safe: bool, seed: u64) -> Option<Self> {
+        Self::init_picked(config, seats, &[], kid_safe, seed)
+    }
+
+    fn init_picked(config: &Config, seats: &[u8], picks: &[(u8, u8)], kid_safe: bool, seed: u64) -> Option<Self> {
         let o = &config.options;
         let record = Record {
             lang: config.lang.clone(),
@@ -299,6 +380,7 @@ impl TurnRules for BoardRules {
             kid: kid_safe,
             seed,
             humans: seats.to_vec(),
+            picks: picks.to_vec(),
             log: Vec::new(),
         };
         let (state, table) = build(&record)?;
@@ -315,7 +397,7 @@ impl TurnRules for BoardRules {
     }
 
     fn on_turn_begin(&mut self, _seat: u8) -> Step {
-        Step::new(AWAITING_ROLL, Value::Null)
+        self.with_table(Step::new(AWAITING_ROLL, Value::Null))
     }
 
     fn on_roll(&mut self, seat: u8) -> Outcome {
@@ -413,34 +495,14 @@ impl TurnRules for BoardRules {
     /// F7, minus anything hidden: tile kinds only once revealed, no word.
     fn view(&self) -> Value {
         let s = &self.state;
-        let seats: Vec<Value> = s
-            .players
-            .iter()
-            .enumerate()
-            .map(|(i, p)| {
-                json!({
-                    "seat": self.wire(i as u8), "piece": p.seat.piece, "npc": p.seat.npc, "tile": p.pos,
-                    "skip": p.skip, "ward": p.ward, "streak": p.streak, "bonus": p.bonus,
-                })
-            })
-            .collect();
-        let revealed: Vec<Value> = s
-            .revealed
-            .iter()
-            .map(|t| {
-                let trap = s.board.traps.get(*t as usize).copied().flatten().map(trap_name);
-                let boost = s.board.boosts.get(*t as usize).copied().flatten().map(boost_name);
-                json!({ "tile": t, "trap": trap, "boost": boost })
-            })
-            .collect();
         let tiers: Vec<Value> = s.board.tiers.iter().map(|t| json!(t.map(|t| t.name()))).collect();
-        json!({
-            "size": self.record.size,
-            "tiers": tiers,
-            "revealed": revealed,
-            "seats": seats,
-            "winner": s.winner.map(|w| self.wire(w)),
-        })
+        let mut v = self.table_json();
+        v["size"] = json!(self.record.size);
+        v["tiers"] = json!(tiers);
+        v["winner"] = json!(s.winner.map(|w| self.wire(w)));
+        let r = &self.record;
+        v["options"] = json!({ "stretch": r.stretch, "boosts": r.boosts, "streak": r.streak, "npc": r.npc });
+        v
     }
 }
 
@@ -761,6 +823,71 @@ mod tests {
             assert!(matches!(&ev[0], Ev::Send { to: Audience::Seat(_), msg: ServerMsg::Error { .. } }));
         }
         assert_eq!(g.rules().state.digest(), before);
+    }
+
+    #[test]
+    fn d_b12_picked_pieces_are_kept_and_the_rest_fill_lowest_first() {
+        assert_eq!(pieces(&[0, 1, 2, 3], &[0, 2], &[(2, 0), (0, 3)]), vec![3, 1, 0, 2]);
+        assert_eq!(pieces(&[0, 1, 2, 3], &[0, 1, 2], &[(1, 2)]), vec![0, 2, 1, 3], "humans fill before NPCs");
+        assert_eq!(pieces(&[0, 1], &[0, 1], &[]), vec![0, 1]);
+        // Through the engine: the lobby's picks reach the board, and a taken piece is refused.
+        let mut e = TurnEngine::<BoardRules>::with_config(cfg(4, false, false));
+        e.set_seed(4);
+        assert!(e.on_lobby_choice(1, "piece:3"));
+        assert!(!e.on_lobby_choice(0, "piece:3"), "taken");
+        assert!(!e.on_lobby_choice(0, "piece:4"), "no such piece");
+        assert!(!e.on_lobby_choice(0, "roll"));
+        assert!(e.on_lobby_choice(0, "piece:2"));
+        assert!(e.on_lobby_choice(0, "piece:1"), "a seat may change its mind");
+        assert_eq!(e.lobby_state()["picks"], json!([{ "seat": 1, "piece": 3 }, { "seat": 0, "piece": 1 }]));
+        let humans = [0u8, 1];
+        let ctx = Ctx { now: Instant::now(), seats: &humans, kid_safe: false, grace: [Duration::ZERO; 4], connected: [true; 4] };
+        e.on_start(&ctx);
+        let got: Vec<u8> = e.rules_ref().unwrap().state.players.iter().map(|p| p.seat.piece).collect();
+        assert_eq!(got, vec![1, 3, 0, 2]);
+        assert!(!e.on_lobby_choice(0, "piece:0"), "no picking once the game runs");
+        // A pick is replayed with the record.
+        let back = BoardRules::restore(&e.rules_ref().unwrap().snapshot()).unwrap();
+        assert_eq!(back.state.digest(), e.rules_ref().unwrap().state.digest());
+    }
+
+    #[test]
+    fn a_seat_that_leaves_the_lobby_frees_its_piece() {
+        let mut e = TurnEngine::<BoardRules>::with_config(cfg(3, false, false));
+        let humans = [0u8, 1];
+        let ctx = Ctx { now: Instant::now(), seats: &humans, kid_safe: false, grace: [Duration::ZERO; 4], connected: [true; 4] };
+        assert!(e.on_lobby_choice(1, "piece:0"));
+        e.on_disconnect(1, false, &ctx);
+        assert!(!e.on_lobby_choice(0, "piece:0"), "a dropped seat is still held");
+        e.on_disconnect(1, true, &ctx);
+        assert!(e.on_lobby_choice(0, "piece:0"));
+    }
+
+    #[test]
+    fn f7_a_snapshot_keeps_the_phase_payload_and_stretch_names_both_moves() {
+        let mut g = G::new(cfg(2, false, false), &[0, 1], 3);
+        let seat = g.active();
+        let ev = g.e.on_next(seat, &ctx!(g));
+        g.take(ev);
+        assert_eq!(g.phase(), AWAITING_SPELL);
+        let p = &g.e.snapshot()["payload"];
+        assert!(p["tier"].is_string() && p["length"].as_u64().unwrap() > 0 && p["tile"].is_u64(), "{p}");
+        for seed in 0..40 {
+            let mut g = G::new(cfg(2, true, false), &[0, 1], seed);
+            let mut k = 0;
+            while g.e.running() {
+                if g.rules().state.phase == Phase::AwaitStretch {
+                    let p = g.e.snapshot()["payload"].clone();
+                    let o = g.rules().state.offer.unwrap();
+                    assert_eq!(p["kind"], "stretch");
+                    assert_eq!(p["normal"], json!({ "tile": o.normal_dest, "tier": o.normal_tier.name() }));
+                    assert_eq!(p["stretch"], json!({ "tile": o.stretch_dest, "tier": o.stretch_tier.name() }));
+                    return;
+                }
+                g.step(&mut k);
+            }
+        }
+        panic!("no game offered Stretch");
     }
 
     #[test]

@@ -15,7 +15,6 @@ use std::net::IpAddr;
 use std::sync::Mutex;
 use std::time::Duration;
 
-use serde_json::Value;
 use tokio::sync::mpsc::UnboundedSender;
 use tokio::time::Instant;
 use uuid::Uuid;
@@ -200,7 +199,7 @@ impl Room {
                     host: m.player == self.host,
                 })
                 .collect(),
-            mode_state: if self.mode.running() { self.mode.snapshot() } else { Value::Null },
+            mode_state: if self.mode.running() { self.mode.snapshot() } else { self.mode.lobby_state() },
         }
     }
 }
@@ -620,6 +619,14 @@ impl Hub {
                 };
                 let room = s.rooms.get_mut(&code).unwrap();
                 if !room.mode.running() {
+                    // D-B12: the one choice a lobby takes is a piece.
+                    if let ClientMsg::TurnChoice { choice } = &msg {
+                        let seat = room.seat_of(p).unwrap();
+                        if room.mode.on_lobby_choice(seat, choice) {
+                            return s.send_room_state(&code);
+                        }
+                        return s.direct(p, &ServerMsg::error("piece_taken"));
+                    }
                     return s.direct(p, &ServerMsg::error("no_match"));
                 }
                 let seat = room.seat_of(p).unwrap();

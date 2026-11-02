@@ -108,6 +108,15 @@ pub trait ModeRules: Send {
     fn on_choice(&mut self, seat: u8, _choice: &str, _ctx: &Ctx) -> Vec<Event> {
         vec![Event::seat(seat, ServerMsg::error("bad_phase"))]
     }
+    /// A `turn.choice` sent in the lobby (D-B12: a piece). True when it changed
+    /// something the room should see.
+    fn on_lobby_choice(&mut self, _seat: u8, _choice: &str) -> bool {
+        false
+    }
+    /// What the lobby shows of the mode before a game (`room_state.mode_state`).
+    fn lobby_state(&self) -> Value {
+        Value::Null
+    }
     /// The hash a client echoes to confirm sync (turn engine only).
     fn state_hash(&self) -> Option<String> {
         None

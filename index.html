@@ -2494,6 +2494,19 @@
   .ol-emote{font-size:22px;border:1px solid var(--edge);background:var(--panel);border-radius:12px;padding:4px 8px}
   .ol-emote-show{min-height:1.6em;font-size:18px;opacity:0;transition:opacity var(--motion-duration-base) ease}
   .ol-emote-show.pop{opacity:1}
+  .ol-opts{display:flex;flex-direction:column;gap:10px}
+  .ol-opts[hidden],.ol-pieces[hidden],.ol-field[hidden]{display:none}
+  .ol-pieces .bg-btn.taken{opacity:.35}
+  /* CC-BOARD-GAME-ONLINE: the board screen in a room */
+  .bg-chip s.bg-nm{text-decoration:none;font-size:.66rem;max-width:7ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-inline-start:2px}
+  .bg-online{margin:0 0 6px;font-size:.8rem;color:var(--muted)}
+  .bg-emotes{display:none}
+  .bg-screen.online .bg-emotes{display:flex;flex:none}
+  .bg-screen.online.spelling .bg-emotes{display:none}
+  .bg-emotes .ol-emote{font-size:16px;padding:2px 6px}
+  .bg-screen.online .bg-orb.other{animation:bg-orb-wait 1.4s ease-in-out infinite}
+  @keyframes bg-orb-wait{50%{opacity:.8}}
+  @media (prefers-reduced-motion:reduce){.bg-screen.online .bg-orb.other{animation:none}}
   .ol-reconnect{position:fixed;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 80%,transparent);z-index:61;font-size:18px;text-align:center;padding:16px}
   /* ONLINE:END */
   .daily-bar{width:100%;max-width:600px;margin:0 auto 10px;text-align:center;font-family:var(--display);
@@ -4167,6 +4180,7 @@
       <div class="bg-opt" id="bgOptPiece"></div>
       <div class="bg-note" id="bgNote" aria-live="polite"></div>
       <button class="btn btn-check" id="bgStart" data-i18n="bg.start">Start</button>
+      <button class="btn" id="bgOnline" data-i18n="ol.title" hidden>Play online</button>
     </div>
     <div class="bg-play" id="bgPlay" hidden>
       <div class="bg-view" id="bgView"><svg id="bgBoard" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Board" data-i18n-aria="aria.board"></svg><div class="bg-stage" id="bgStage" role="group" hidden>
@@ -4177,6 +4191,7 @@
       <div class="bg-chips" id="bgChips"></div>
       <div class="bg-timer" id="bgTimer"></div>
       <div class="bg-feed" id="bgFeed" aria-live="polite"></div>
+      <div class="ol-emotes bg-emotes" id="bgEmotes" role="group" data-i18n-aria="ol.emotes" aria-label="Emotes"></div>
       <div class="bg-act" id="bgAct">
         <button type="button" class="bg-orb" id="bgOrb" data-state="roll" data-i18n="bg.roll">Roll</button>
         <div class="bg-results" id="bgResults"></div>
@@ -4209,6 +4224,7 @@
       <button class="btn" id="bgShare" data-i18n="bg.share" hidden>Share</button>
         <button class="btn mode-leave" id="bgOverExit" data-i18n="import.close" style="margin-top:8px">Close</button>
     </div>
+    <div class="ol-reconnect" id="bgReconnect" role="alert" hidden><p id="bgReconnectText"></p></div>
   </div>
   <!-- BOARDGAME:END -->
 
@@ -4634,12 +4650,24 @@
         <input id="olName" type="text" maxlength="14" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" /></label>
       <div class="ol-box" id="olCreateBox">
         <h3 data-i18n="ol.create">Start a room</h3>
+        <label class="ol-field" id="olModeRow" hidden><span data-i18n="ol.game">Game</span>
+          <select id="olMode"><option value="h2h" data-i18n="vs.title">Spell Off</option><option value="boardgame" data-i18n="bg.name">Board Game</option></select></label>
         <label class="ol-field"><span data-i18n="ol.lang">Language</span><select id="olLang"></select></label>
+        <div class="ol-opts" id="olH2hOpts">
         <label class="ol-field"><span data-i18n="ol.level">Words</span>
           <select id="olTierMode"><option value="climb" data-i18n="ol.tierClimb">Get harder as you go</option><option value="fixed" data-i18n="ol.tierFixed">One level</option></select></label>
         <label class="ol-field"><span data-i18n="ol.levelPick">Level</span>
           <select id="olTier"><option value="easy" data-i18n="level.easy">Easy</option><option value="medium" data-i18n="level.medium">Medium</option><option value="hard" data-i18n="level.hard">Hard</option><option value="expert" data-i18n="level.expert">Expert</option></select></label>
         <label class="ol-check"><input type="checkbox" id="olTimed" /> <span data-i18n="ol.timed">Timer</span></label>
+        </div>
+        <div class="ol-opts" id="olBoardOpts" hidden>
+        <label class="ol-field"><span data-i18n="ol.seats">Seats</span>
+          <select id="olSeats"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></label>
+        <label class="ol-field"><span data-i18n="bg.size">Size</span>
+          <select id="olSize"><option value="sprint" data-i18n="bg.sprint">Sprint</option><option value="full" data-i18n="bg.full">Full</option><option value="jr" data-i18n="settings.kid">Spell Jr</option></select></label>
+        <label class="ol-field"><span data-i18n="ol.npcLevel">Computer players</span>
+          <select id="olNpc"><option value="easy" data-i18n="bg.diff.easy">Easy</option><option value="normal" data-i18n="bg.diff.normal" selected>Normal</option><option value="tough" data-i18n="bg.diff.tough">Tough</option></select></label>
+        </div>
         <label class="ol-check"><input type="checkbox" id="olApprove" /> <span data-i18n="ol.approve">I let people in</span></label>
         <button class="btn btn-check" id="olCreate" data-i18n="ol.createBtn">Create room</button>
       </div>
@@ -4664,6 +4692,7 @@
         <span class="ol-tag kid" id="olKidBadge" data-i18n="ol.kidSafe" hidden>Kid-safe room</span></div>
       <button class="btn" id="olShare" data-i18n="ol.share">Share code</button>
       <ul class="ol-players" id="olPlayers"></ul>
+      <div class="bg-opt ol-pieces" id="olPieces" role="group" hidden></div>
       <ul class="ol-requests" id="olRequests"></ul>
       <p class="ol-note" id="olLobbyNote" aria-live="polite"></p>
       <p class="ol-note" id="olRulesLobby"></p>

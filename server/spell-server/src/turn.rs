@@ -108,6 +108,16 @@ pub trait TurnRules: Sized + Send {
     }
     /// `None`: a game cannot start on what the room has (a bank too small).
     fn init(config: &Self::Config, seats: &[u8], kid_safe: bool, seed: u64) -> Option<Self>;
+    /// CC-BOARD-GAME-ONLINE D-B12: pieces a seat may pick in the lobby (0: none).
+    const PIECES: u8 = 0;
+    /// The room's settings, as the lobby shows them.
+    fn describe(_config: &Self::Config) -> Value {
+        Value::Null
+    }
+    /// `init` with the lobby's picks, `(seat, piece)` in the order they were made.
+    fn init_picked(config: &Self::Config, seats: &[u8], _picks: &[(u8, u8)], kid_safe: bool, seed: u64) -> Option<Self> {
+        Self::init(config, seats, kid_safe, seed)
+    }
     /// Every seat in the game and whether the mode plays it. Default fills nobody.
     fn table(&self, seats: &[u8]) -> Vec<(u8, bool)> {
         seats.iter().map(|s| (*s, false)).collect()
@@ -188,6 +198,11 @@ pub struct TurnEngine<R: TurnRules> {
     /// time out are one absent turn.
     auto_this_turn: bool,
     running: bool,
+    /// The phase's public payload, kept for a snapshot (F7: a rejoin mid-word
+    /// sees the same tier, length and tile).
+    payload: Value,
+    /// D-B12: lobby picks, `(seat, piece)`, first come first served.
+    picks: Vec<(u8, u8)>,
 }
 
 impl<R: TurnRules> Default for TurnEngine<R> {
@@ -204,6 +219,8 @@ impl<R: TurnRules> Default for TurnEngine<R> {
             deadline: None,
             auto_this_turn: false,
             running: false,
+            payload: Value::Null,
+            picks: Vec::new(),
         }
     }
 }
@@ -274,6 +291,7 @@ impl<R: TurnRules + 'static> TurnEngine<R> {
         let gone = self.seats[self.active].dropped_at.is_some_and(|t| now.duration_since(t) >= GRACE);
         self.deadline = Some(if gone { now } else { now + limit });
         self.phase = step.phase;
+        self.payload = step.payload.clone();
         let mut ev = vec![Event::all(ServerMsg::TurnBegin {
             seat,
             phase: step.phase.to_string(),
@@ -299,6 +317,7 @@ impl<R: TurnRules + 'static> TurnEngine<R> {
         self.running = false;
         self.phase = ENDED;
         self.deadline = None;
+        self.payload = Value::Null;
     }
 
     /// `next` continues this seat's turn; `None` ends it. NPC seats play at
@@ -413,6 +432,7 @@ impl<R: TurnRules + 'static> TurnEngine<R> {
         Some(json!({
             "phase": self.phase,
             "active_seat": self.seats.get(self.active).map(|s| s.seat),
+            "payload": self.payload,
             "audio_ticket": self.ticket.as_ref().filter(|t| t.1).map(|t| t.0.clone()),
             "seats": statuses,
             "view": rules.view(),
@@ -453,7 +473,9 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
         self.active = 0;
         self.ticket = None;
         self.auto_this_turn = false;
-        let Some(rules) = R::init(&self.config, ctx.seats, ctx.kid_safe, seed) else {
+        // A pick by a seat that has since gone is no pick.
+        self.picks.retain(|(seat, _)| ctx.seats.contains(seat));
+        let Some(rules) = R::init_picked(&self.config, ctx.seats, &self.picks, ctx.kid_safe, seed) else {
             self.rules = None;
             return vec![Event::all(ServerMsg::MatchEnded { reason: "bank_exhausted".into() }), Event::Over];
         };
@@ -520,6 +542,26 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
         self.logged(ev)
     }
 
+    fn on_lobby_choice(&mut self, seat: u8, choice: &str) -> bool {
+        let piece = choice.strip_prefix("piece:").and_then(|p| p.parse::<u8>().ok());
+        let Some(piece) = piece.filter(|p| *p < R::PIECES) else { return false };
+        if self.running || self.picks.iter().any(|(s, p)| *p == piece && *s != seat) {
+            return false;
+        }
+        self.picks.retain(|(s, _)| *s != seat);
+        self.picks.push((seat, piece));
+        true
+    }
+
+    fn lobby_state(&self) -> Value {
+        let options = R::describe(&self.config);
+        if R::PIECES == 0 && options.is_null() {
+            return Value::Null;
+        }
+        let picks: Vec<Value> = self.picks.iter().map(|(seat, piece)| json!({ "seat": seat, "piece": piece })).collect();
+        json!({ "pieces": R::PIECES, "picks": picks, "options": options })
+    }
+
     fn on_choice(&mut self, seat: u8, choice: &str, ctx: &Ctx) -> Vec<Event> {
         if !self.running || seat != self.active_seat() || self.phase != AWAITING_CHOICE {
             return self.bad_phase(seat);
@@ -546,6 +588,9 @@ impl<R: TurnRules + 'static> ModeRules for TurnEngine<R> {
     }
 
     fn on_disconnect(&mut self, seat: u8, released: bool, ctx: &Ctx) -> Vec<Event> {
+        if released {
+            self.picks.retain(|(s, _)| *s != seat);
+        }
         if !self.running {
             return Vec::new();
         }
