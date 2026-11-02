@@ -733,3 +733,72 @@ async fn four_seats_play_a_turn_game_through_the_room() {
     send(&hub, &seats[2], ClientMsg::TurnSync { hash });
     assert!(take(&mut seats[2]).is_empty(), "a matching hash needs no reply");
 }
+
+async fn turn_room(hub: &Hub) -> (Vec<P>, String) {
+    hub.set_online_turn(true);
+    let v = Some(crate::turn::null::MODE_VERSION);
+    let mut seats = vec![turn_client(hub, "s0", 1, 2, v)];
+    let code = create(hub, &mut seats[0], "turn_null");
+    for (i, id) in ["s1", "s2", "s3"].iter().enumerate() {
+        let mut p = turn_client(hub, id, i as u64 + 2, 2, v);
+        join(hub, &mut p, &code);
+        seats.push(p);
+    }
+    send(hub, &seats[0], ClientMsg::StartMatch {});
+    (seats, code)
+}
+
+fn saw(p: &mut P, want: impl Fn(&ServerMsg) -> bool) -> bool {
+    take(p).iter().any(|o| want(&o.msg))
+}
+
+#[tokio::test(start_paused = true)]
+async fn a2_a_dropped_seat_holds_no_one_up_and_is_not_released() {
+    let hub = Hub::new();
+    let (mut seats, code) = turn_room(&hub).await;
+    hub.detach("s0", 1, Instant::now());
+    // The server rolls at 20 s and the word times out at 60 s more.
+    advance(&hub, Duration::from_secs(20)).await;
+    advance(&hub, Duration::from_secs(60)).await;
+    assert!(saw(&mut seats[1], |m| matches!(m, ServerMsg::TurnAuto { seat: 0, .. })));
+    assert!(hub.seat_of("s0").is_some(), "past the seat hold, the seat stays");
+    for i in [1, 2, 3] {
+        send(&hub, &seats[i], ClientMsg::NextWord {});
+        send(&hub, &seats[i], ClientMsg::TurnAnswer { answer: "nope".into() });
+    }
+    advance(&hub, Duration::from_secs(1)).await;
+    assert!(saw(&mut seats[1], |m| matches!(m, ServerMsg::SeatStatus { seat: 0, status } if status == "npc")));
+    // The other three finish the game.
+    for _ in 0..3 {
+        for i in [1, 2, 3] {
+            send(&hub, &seats[i], ClientMsg::NextWord {});
+            send(&hub, &seats[i], ClientMsg::TurnAnswer { answer: "nope".into() });
+        }
+    }
+    assert!(saw(&mut seats[1], |m| matches!(m, ServerMsg::GameEnd { .. })));
+    assert!(hub.room_exists(&code));
+}
+
+#[tokio::test(start_paused = true)]
+async fn the_host_leaving_does_not_end_a_turn_game() {
+    let hub = Hub::new();
+    let (mut seats, code) = turn_room(&hub).await;
+    send(&hub, &seats[0], ClientMsg::Leave {});
+    assert!(hub.room_exists(&code));
+    assert!(saw(&mut seats[1], |m| matches!(m, ServerMsg::TurnBegin { seat: 1, .. })));
+    send(&hub, &seats[1], ClientMsg::Leave {});
+    send(&hub, &seats[2], ClientMsg::Leave {});
+    assert!(hub.room_exists(&code), "one human still plays with two NPCs");
+    assert!(!saw(&mut seats[3], |m| matches!(m, ServerMsg::MatchEnded { .. })));
+}
+
+#[tokio::test(start_paused = true)]
+async fn everyone_gone_closes_a_turn_room() {
+    let hub = Hub::new();
+    let (seats, code) = turn_room(&hub).await;
+    for (i, p) in seats.iter().enumerate() {
+        hub.detach(&p.sess.player, i as u64 + 1, Instant::now());
+    }
+    advance(&hub, SEAT_HOLD + Duration::from_secs(1)).await;
+    assert!(!hub.room_exists(&code));
+}

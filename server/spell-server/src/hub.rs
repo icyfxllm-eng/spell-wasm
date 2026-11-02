@@ -448,7 +448,7 @@ impl State {
             }
         }
         let room = self.rooms.get(code).unwrap();
-        if room.mode.running() && (room.seats.len() as u8) < room.mode.min_seats() {
+        if room.mode.running() && !room.mode.keeps_absent_seats() && (room.seats.len() as u8) < room.mode.min_seats() {
             self.end_match(code, "player_left");
         } else {
             self.send_room_state(code);
@@ -884,7 +884,22 @@ impl Hub {
                 s.direct(&p.player, &ServerMsg::Denied { reason: "expired".into() });
             }
             // Seat holds (A5.2).
-            let hold = if s.rooms[&code].mode.running() { SEAT_HOLD } else { LOBBY_SEAT_HOLD };
+            // D-O18: a turn game keeps its seats until every human is gone.
+            let room = &s.rooms[&code];
+            if room.mode.running()
+                && room.mode.keeps_absent_seats()
+                && room.seats.values().all(|m| m.dropped_at.is_some_and(|t| now.duration_since(t) >= SEAT_HOLD))
+            {
+                s.close_room(&code, "room_empty");
+                continue;
+            }
+            let hold = if room.mode.keeps_absent_seats() && room.mode.running() {
+                Duration::MAX
+            } else if room.mode.running() {
+                SEAT_HOLD
+            } else {
+                LOBBY_SEAT_HOLD
+            };
             let released: Vec<String> = s.rooms[&code]
                 .seats
                 .values()

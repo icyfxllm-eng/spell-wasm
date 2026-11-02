@@ -73,6 +73,11 @@ pub trait ModeRules: Send {
     fn min_seats(&self) -> u8;
     /// True between `on_start` and the `Over` event.
     fn running(&self) -> bool;
+    /// A running game plays on without absent seats: the room neither releases
+    /// them on the seat hold nor ends the match when too few remain (F5, I3).
+    fn keeps_absent_seats(&self) -> bool {
+        false
+    }
     fn on_start(&mut self, ctx: &Ctx) -> Vec<Event>;
     fn on_next(&mut self, seat: u8, ctx: &Ctx) -> Vec<Event>;
     fn on_submit(&mut self, seat: u8, typed: &str, ctx: &Ctx) -> Vec<Event>;
