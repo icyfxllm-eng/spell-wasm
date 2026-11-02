@@ -340,10 +340,28 @@ async fn a2_4_the_sixth_mint_from_one_ip_in_an_hour_is_429() {
 async fn a4_3_a_message_flood_closes_4008() {
     let srv = start().await;
     let (mut ws, _, _) = player(&srv, "198.51.100.30", ProfileKind::Adult, "Mom").await;
-    for _ in 0..60 {
-        let _ = ws.send(Message::Text(encode_client(Uuid::new_v4(), &ClientMsg::Emote { id: 1 }).into())).await;
+    let frame = || Message::Text(encode_client(Uuid::new_v4(), &ClientMsg::Emote { id: 1 }).into());
+    for _ in 0..40 {
+        let _ = ws.send(frame()).await;
     }
-    assert_eq!(closed_with(&mut ws).await, Some(close::FLOOD));
+    // One at a time from here, stopping at the close. Frames the server never
+    // reads make its close a TCP reset, which can overtake the close frame.
+    for _ in 0..200 {
+        let _ = ws.send(frame()).await;
+        loop {
+            match tokio::time::timeout(Duration::from_millis(5), ws.next()).await {
+                Ok(Some(Ok(Message::Close(f)))) => {
+                    assert_eq!(f.map(|f| u16::from(f.code)), Some(close::FLOOD));
+                    return;
+                }
+                Ok(Some(Ok(_))) => continue,
+                Ok(Some(Err(e))) => panic!("closed without a close frame: {e}"),
+                Ok(None) => panic!("closed without a close frame"),
+                Err(_) => break,
+            }
+        }
+    }
+    panic!("a flood was never closed");
 }
 
 #[tokio::test]
