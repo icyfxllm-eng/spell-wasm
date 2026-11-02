@@ -874,3 +874,16 @@ async fn reactions_are_the_fixed_set_only() {
     send(&hub, &seats[0], ClientMsg::Emote { id: EMOTES });
     assert!(errors(&take(&mut seats[0])).contains(&"bad_emote".to_string()));
 }
+
+#[tokio::test(start_paused = true)]
+async fn a10_a_stale_audio_ticket_is_gone() {
+    let hub = Hub::new();
+    let (seats, _) = turn_room(&hub).await;
+    send(&hub, &seats[0], ClientMsg::NextWord {});
+    let ticket = hub.state.lock().unwrap().tickets.keys().next().cloned().expect("the word has a ticket");
+    assert!(hub.audio_lookup(&ticket, "s1", Instant::now()).is_some(), "the table can hear it");
+    assert!(hub.audio_lookup(&ticket, "stranger", Instant::now()).is_none());
+    send(&hub, &seats[0], ClientMsg::TurnAnswer { answer: "nope".into() });
+    advance(&hub, TICKET_AFTER_RESOLVE).await;
+    assert!(hub.audio_lookup(&ticket, "s1", Instant::now()).is_none(), "app.rs answers None with a 404");
+}

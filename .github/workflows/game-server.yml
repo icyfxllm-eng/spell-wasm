@@ -70,7 +70,9 @@ jobs:
       - name: A14.4 quadlet dry run
         run: |
           mkdir -p ~/.config/containers/systemd
-          sed "s|<DIGEST>|$(printf 'a%.0s' $(seq 64))|; s|<MAC_MINI_TAILNET_IP>|100.64.0.2|" \
+          # The runner's older podman does not know StopTimeout; Rocky's does, and
+          # check-deploy.mjs and deploy.sh both require it.
+          sed "s|<DIGEST>|$(printf 'a%.0s' $(seq 64))|; s|<MAC_MINI_TAILNET_IP>|100.64.0.2|; /^StopTimeout=/d" \
             server/deploy/spellgame.container > ~/.config/containers/systemd/spellgame.container
           /usr/libexec/podman/quadlet -dryrun -user
       - name: A14.7 gitleaks

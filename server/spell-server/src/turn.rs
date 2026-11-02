@@ -604,7 +604,7 @@ pub mod null {
     pub const SPELL_SECS: Duration = Duration::from_secs(60);
 
     #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-    pub struct NullRules {
+    pub struct NullRules<const ELIMINATE: bool = false> {
         seed: u64,
         draws: u64,
         word: Option<String>,
@@ -612,18 +612,18 @@ pub mod null {
         turns: u32,
     }
 
-    impl NullRules {
+    impl<const ELIMINATE: bool> NullRules<ELIMINATE> {
         fn draw(&mut self) -> u64 {
             self.draws += 1;
             self.seed.wrapping_add(self.draws).wrapping_mul(0x9E37_79B9_7F4A_7C15) >> 40
         }
     }
 
-    impl TurnRules for NullRules {
-        const ABANDON: Abandon = Abandon::Npc;
+    impl<const ELIMINATE: bool> TurnRules for NullRules<ELIMINATE> {
+        const ABANDON: Abandon = if ELIMINATE { Abandon::Eliminate } else { Abandon::Npc };
 
         fn init(seats: &[u8], seed: u64) -> Self {
-            NullRules { seed, draws: 0, word: None, scores: seats.iter().map(|s| (*s, 0)).collect(), turns: 0 }
+            Self { seed, draws: 0, word: None, scores: seats.iter().map(|s| (*s, 0)).collect(), turns: 0 }
         }
         fn on_turn_begin(&mut self, _seat: u8) -> Step {
             Step::new(AWAITING_ROLL, Value::Null)
@@ -893,8 +893,8 @@ mod tests {
         let mut g = G::new(5);
         g.roll(0);
         let rules = g.e.rules.as_ref().unwrap();
-        assert_eq!(NullRules::restore(&rules.snapshot()).as_ref(), Some(rules));
-        assert_eq!(NullRules::restore(b"not a state"), None);
+        assert_eq!(<NullRules>::restore(&rules.snapshot()).as_ref(), Some(rules));
+        assert_eq!(<NullRules>::restore(b"not a state"), None);
     }
 
     impl G {
@@ -1076,6 +1076,41 @@ mod tests {
             }
         }
         assert_eq!(verdicts, 4);
+    }
+
+    #[test]
+    fn a_mode_that_eliminates_drops_the_seat_for_good() {
+        let mut e = TurnEngine::<NullRules<true>>::with_seed(4);
+        let seats = [0, 1, 2];
+        let mut now = Instant::now();
+        let cx = |now| Ctx { now, seats: &seats, kid_safe: false, grace: [Duration::ZERO; 4], connected: [true; 4] };
+        let status = |log: &[Event]| log.iter().rev().find_map(|ev| match ev {
+            Event::Send { msg: ServerMsg::SeatStatus { seat: 0, status }, .. } => Some(status.clone()),
+            _ => None,
+        });
+        let mut log = e.on_start(&cx(now));
+        log.extend(e.on_disconnect(0, false, &cx(now)));
+        // Seat 0's first absent turn: roll, then word. Then the others miss.
+        now += ROLL_LIMIT;
+        log.extend(e.on_timer(&cx(now)));
+        now += null::SPELL_SECS;
+        log.extend(e.on_timer(&cx(now)));
+        for seat in [1, 2] {
+            log.extend(e.on_next(seat, &cx(now)));
+            log.extend(e.on_answer(seat, "nope", &cx(now)));
+        }
+        log.extend(e.on_timer(&cx(now)));
+        assert_eq!(status(&log).as_deref(), Some("eliminated"));
+        // Coming back changes nothing, and the turn order skips the seat.
+        log.extend(e.on_reconnect(0, &cx(now)));
+        assert_eq!(status(&log).as_deref(), Some("eliminated"));
+        while e.running() {
+            let seat = e.active_seat();
+            assert_ne!(seat, 0, "an eliminated seat never plays");
+            log.extend(e.on_next(seat, &cx(now)));
+            log.extend(e.on_answer(seat, "nope", &cx(now)));
+        }
+        assert!(log.iter().any(|ev| matches!(ev, Event::Send { msg: ServerMsg::GameEnd { .. }, .. })));
     }
 
     #[test]
