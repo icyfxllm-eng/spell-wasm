@@ -49,9 +49,19 @@ fn is_silent_mark(c: char) -> bool {
     )
 }
 
+/// One apostrophe form for every language (CC-EN-VARIANTS F2): the right and left single quotes and the
+/// modifier-letter apostrophe a keyboard, recognizer or pasted document emits fold to U+0027, the form every
+/// stored answer uses. Runs BEFORE NFC, on both the typed and the stored side, so the comparison is like-for-like.
+///
+/// No lineup language spends these marks as letters (no bank, keyboard layout or key holds one), which the census
+/// checked (reports/en-variants-census.md). U+02BB (okina) is deliberately NOT here: it is a letter where it occurs.
+pub fn fold_apostrophes(s: &str) -> String {
+    s.chars().map(|c| if matches!(c, '\u{2019}' | '\u{02BC}' | '\u{2018}') { '\'' } else { c }).collect()
+}
+
 /// NFC + Unicode lowercase, whitespace and silent marks removed. Accent-strict.
 pub fn fold_strict(s: &str) -> String {
-    s.nfc()
+    fold_apostrophes(s).nfc()
         .collect::<String>()
         .to_lowercase()
         .chars()
@@ -62,7 +72,7 @@ pub fn fold_strict(s: &str) -> String {
 /// Accent-lenient fold for Kid Mode: strip combining marks and map the letters
 /// that have no NFD decomposition down to A–Z-ish equivalents.
 pub fn fold_lenient(s: &str) -> String {
-    let lowered: String = s.nfc().collect::<String>().to_lowercase();
+    let lowered: String = fold_apostrophes(s).nfc().collect::<String>().to_lowercase();
     // Silent marks go BEFORE the NFD pass, not after: NFD would decompose أ into
     // ا + U+0654, which sits inside the tashkeel range, and stripping it there
     // would quietly make Kid Mode hamza-blind -- gutting Arabic's main trap
@@ -161,6 +171,22 @@ fn trim_edge_punct(tok: &str) -> &str {
 mod tests {
     use super::*;
     use unicode_normalization::UnicodeNormalization;
+
+    /// CC-EN-VARIANTS T4: a curly or modifier apostrophe grades as the straight one, in every language, both modes.
+    #[test]
+    fn apostrophe_forms_grade_as_one() {
+        for mark in ['\u{2019}', '\u{02BC}', '\u{2018}'] {
+            let typed = format!("don{mark}t");
+            assert!(answer_matches_in("en", &typed, "don't", false), "{mark:?}");
+            assert!(answer_matches_in("en", &typed, "don't", true), "{mark:?} kid");
+            assert!(answer_matches_in("fr", &format!("aujourd{mark}hui"), "aujourd'hui", false), "{mark:?} fr");
+            // like-for-like: a stored curly form still matches a straight typed one
+            assert!(answer_matches_in("en", "don't", &typed, false), "{mark:?} stored");
+        }
+        assert!(spoken_matches("I don\u{2019}t know", "don't"), "recognizer output");
+        assert!(!answer_matches_in("en", "dont", "don't", false), "a missing apostrophe is still wrong");
+        assert_eq!(fold_apostrophes("\u{02BB}okina"), "\u{02BB}okina", "okina is a letter and is left alone");
+    }
 
     /// CC-PERSIAN-FOUNDATION F1/F2 reach the verdict: the canonicalizer is the
     /// comparison for Persian, in both Kid Mode and normal play.

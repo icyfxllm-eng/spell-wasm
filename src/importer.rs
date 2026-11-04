@@ -16,7 +16,8 @@ pub fn extract_words(text: &str) -> Vec<String> {
     let mut seen: HashSet<String> = HashSet::new();
     let mut out: Vec<String> = Vec::new();
     for m in re.find_iter(text) {
-        let trimmed = m.as_str().trim_matches(|c| c == '\'' || c == '\u{2019}' || c == '-');
+        let folded = crate::norm::fold_apostrophes(m.as_str());
+        let trimmed = folded.trim_matches(|c| c == '\'' || c == '-');
         if trimmed.is_empty() {
             continue;
         }
@@ -196,5 +197,16 @@ mod batch_tests {
         assert!(b2 > b1, "ids are monotonic across clear");
         assert_eq!(undo_batch(&mut s, b1), 0, "stale handle hits nothing");
         assert_eq!(s.custom.words, v(&["dog"]));
+    }
+}
+
+#[cfg(test)]
+mod apostrophe_tests {
+    use super::extract_words;
+
+    /// CC-EN-VARIANTS F2: a pasted curly apostrophe is stored straight, so the player can type the word.
+    #[test]
+    fn pasted_curly_apostrophe_is_stored_straight() {
+        assert_eq!(extract_words("don\u{2019}t Don't \u{2019}tis"), vec!["don't", "tis"]);
     }
 }

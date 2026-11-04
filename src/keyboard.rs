@@ -394,6 +394,8 @@ fn wire_physical(app: &App) {
         // Exactly one printable char, and one we accept.
         let mut chars = key.chars();
         if let (Some(c), None) = (chars.next(), chars.next()) {
+            // A curly apostrophe from a hardware layout is the straight one (CC-EN-VARIANTS F2); it used to be dropped.
+            let c = if matches!(c, '\u{2019}' | '\u{02BC}' | '\u{2018}') { '\'' } else { c };
             // Digits are accepted for Mandarin pinyin tone numbers; letters/ñ/etc.
             // for every language; apostrophe/hyphen for My Words / Filipino.
             if c.is_alphabetic() || c.is_ascii_digit() || c == '\'' || c == '-' {
