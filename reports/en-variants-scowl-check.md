@@ -58,3 +58,17 @@ Re-running against the GB/AU/CA large builds would likely sort most of the first
 These nine are also valid in en_US, so the "variant" may be a different word rather than a spelling of the same one: `bogie` for `bogey`, `castor` for `caster`, `drier` for `dryer`, `likeable` for `likable`, `practised` for `practiced`, `sizeable` for `sizable`, `verandah` for `veranda`, `vice` for `vise`, `whizz` for `whiz`.
 
 `vice`/`vise`, `castor`/`caster` and `drier`/`dryer` are separate words with their own meanings, so a mechanical pass would accept a different word. They need a human decision. I would hold all three.
+
+## Recheck against the large builds (GB, AU, CA large; SCOWL rel-2026.02.25)
+
+Fetched `hunspell-en_GB-large`, `hunspell-en_AU-large`, `hunspell-en_CA-large` (about 300 KB each) to the scratch directory. Run on the 14 held words and the 11 junk words.
+
+| Result | Words |
+|---|---|
+| **Now confirmed, non-US variety only** | `encyclopaedic`, `discolouration`, `synthesiser`, `focussed`, `cypher`, `adaptor` (GB, AU, CA); `gramme`, `kilogramme` (GB, AU); `yogourt` (CA only); `carburetter` (moved up from the junk list: GB and CA large accept it) |
+| **Valid in US too, so not a regional variant** | `neurone`, `annexe`, `fête` |
+| **US-only** | `donut` (a US variant of `doughnut`, not a British one) |
+| **No SCOWL variety has it** | `fiord` |
+| **Still rejected (junk)** | `counterie`, `soal`, `strenth`, `humourous`, `wharp`, `paedagogical`, `beigel`, `byelaw`, `defencible`, `amoxycillin` |
+
+Net effect on the 135: confirmed 110 + 10 = **120**. Unconfirmed **15**: the 10 junk words stay out, and `neurone`, `annexe`, `fête`, `donut` and `fiord` go to review. `fête` is the accent form (F4), not a spelling variant. The three different-word pairs (`vice`/`vise`, `castor`/`caster`, `drier`/`dryer`) are still held out of the 120 and are not in either count above.
