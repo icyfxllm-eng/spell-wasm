@@ -14,6 +14,10 @@
    "mary-marry-merry": {
     "what": "AE and EY become EH before R (Mary = marry = merry)",
     "status": "active"
+   },
+   "wine-whine": {
+    "what": "/hw/ merges into /w/ (wine = whine). CMUdict already gives these identical phonemes, so which/witch, whine/wine, weather/whether, ware/wear/where are kind \"true\" in the base key. Declined as a rule: it would only relabel true sets as accent (forbidden by I9) and drop them from accept-all grading (CC-SENSE-CUE v1.2 census, 2026-11-04)",
+    "status": "declined: already in the base key"
    }
   }
  },
@@ -29,5 +33,14 @@
  "ru": {
   "voice": "ru-RU-Wavenet-A",
   "rules": {}
+ },
+ "de": {
+  "voice": "de-DE-Neural2-A",
+  "rules": {
+   "ae-e": {
+    "what": "long /\u025b\u02d0/ merges into /e\u02d0/ (\u00c4hre = Ehre). Needs a German generator, which does not exist (de status missing)",
+    "status": "deferred: no de generator; revisit with a real pair count once one exists (CC-SENSE-CUE v1.2, Eric 2026-11-04)"
+   }
+  }
  }
 }
