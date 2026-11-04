@@ -1,0 +1,31 @@
+# CC-ORTHO-SWEEP-DE-JA F1: spellings the Amtliches Regelwerk struck (2024 list) or removed (2017). One form per line; matched case-insensitively.
+# Source: Eric's seed list in the CC-ORTHO-SWEEP-DE-JA v1 spec, 2026-11-04. NOT yet checked against the Regelwerk text, which is not held locally.
+# The pre-1996 patterns (daß, ß after a short vowel, two-letter triple consonants) are rules in tests/ortho/test_de_struck.py, not words.
+Buklee
+Busuki
+Dekolletee
+Dränage
+Dublee
+Exposee
+Frappee
+Frigidär
+Glacee
+Hämorriden
+Jogurt
+Katode
+Kurtage
+Kusine
+Lymphdränage
+Panter
+photogen
+Polonäse
+Sorbett
+Spagetti
+Tunfisch
+Katarr
+Myrre
+Majonäse
+Ketschup
+Anschovis
+Komplice
+Wandalismus

@@ -1,0 +1,8 @@
+# CC-ORTHO-SWEEP-DE-JA F3 / D4: stored<TAB>accepted<TAB>source. The stored form is the one in the bank; the grader reads accepted variants only from here.
+# Admitted: Hunspell de_DE_frami accepts both (census F3), the pair is not on data/de/struck-variants.txt, and it is not a name, a brand or a different word.
+# Left out of the 23 census candidates: the 11 a~e pairs (Maerkte/Merkte, Saetze/Setzen are other words), names (Theresa, Hertha), a brand (Photoshop),
+# and Panther/Spaghetti, which the 2024 struck list removes. STILL TO CONFIRM against the Regelwerk word list (not held locally): the four below.
+Ghetto	Getto	de_DE_frami accepts both
+Xylophon	Xylofon	de_DE_frami accepts both
+geographische	geografische	de_DE_frami accepts both
+fantastischen	phantastischen	de_DE_frami accepts both

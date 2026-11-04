@@ -1,6 +1,9 @@
-# CC-ORTHO-SWEEP-DE-JA v1 F5: stored <TAB> accepted <TAB> source. Read by the grader in Phase B only; the grader may not infer variants.
-# Source: JMdict_e lists both spellings as readings of the same word (EDRDG).
-きづく	きずく	JMdict_e (both readings listed)
-づき	ずき	JMdict_e (both readings listed)
-づつ	ずつ	JMdict_e (both readings listed)
-なかんづく	なかんずく	JMdict_e (both readings listed)
+# CC-ORTHO-SWEEP-DE-JA F5 / D7: stored<TAB>accepted<TAB>source. Read by src/accepted.rs; the grader reads accepted variants from nowhere else.
+# Admitted only where ONE JMdict entry lists both readings (checked 2026-11-04). The census listed 4; づき/ずき are different words (suffixes) and are NOT here.
+# Both directions are listed so either form may be the stored one.
+きづく	きずく	JMdict_e same entry
+きずく	きづく	JMdict_e same entry
+づつ	ずつ	JMdict_e same entry
+ずつ	づつ	JMdict_e same entry
+なかんづく	なかんずく	JMdict_e same entry
+なかんずく	なかんづく	JMdict_e same entry

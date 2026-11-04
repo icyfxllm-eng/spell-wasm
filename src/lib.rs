@@ -94,6 +94,8 @@ mod dom;
 pub mod editor;
 mod enrich;
 pub mod entitlements;
+mod accepted; // CC-ORTHO-SWEEP-DE-JA F3/F5: accepted spelling variants (de/ja), data files only
+mod ja_canon; // CC-ORTHO-SWEEP-DE-JA F6: half-width katakana key
 mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; Persian answer grading)
 mod flags;
 mod telemetry; // CC-TELEMETRY-FOUNDATION v1.1 (F1 crash reporting)

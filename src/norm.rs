@@ -113,13 +113,15 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
 /// extra way to match, never a replacement, so no answer that matched before can
 /// stop matching.
 pub fn same_answer(lang: &str, typed: &str, word: &str) -> bool {
-    fold_strict(typed) == fold_strict(word) || language_key_matches(lang, typed, word)
+    fold_strict(typed) == fold_strict(word) || language_key_matches(lang, typed, word) || crate::accepted::accepts(lang, word, typed)
 }
 
 fn language_key_matches(lang: &str, typed: &str, word: &str) -> bool {
     match lang {
         crate::consts::VI => crate::viet::answer_key(typed) == crate::viet::answer_key(word),
         crate::consts::FA => crate::fa_canon::match_key(typed) == crate::fa_canon::match_key(word),
+        // CC-ORTHO-SWEEP-DE-JA: half-width katakana is full-width; no other width is folded.
+        crate::consts::JA => crate::ja_canon::match_key(typed) == crate::ja_canon::match_key(word),
         _ => false,
     }
 }
@@ -132,7 +134,8 @@ pub fn answer_matches_in(lang: &str, typed: &str, word: &str, kid: bool) -> bool
         // too: an Arabic yeh from the system keyboard is no more a misspelling
         // for a child than for an adult.
         fold_lenient(typed) == fold_lenient(word)
-            || (lang == crate::consts::FA && language_key_matches(lang, typed, word))
+            || (matches!(lang, crate::consts::FA | crate::consts::JA) && language_key_matches(lang, typed, word))
+            || crate::accepted::accepts(lang, word, typed)
     } else {
         same_answer(lang, typed, word)
     }
@@ -171,6 +174,31 @@ fn trim_edge_punct(tok: &str) -> &str {
 mod tests {
     use super::*;
     use unicode_normalization::UnicodeNormalization;
+
+    /// CC-ORTHO-SWEEP-DE-JA T7/T8: half-width katakana grades as full-width; look-alike long marks and
+    /// unlisted script swaps grade wrong.
+    #[test]
+    fn ja_input_normalization_and_script_rules() {
+        for kid in [false, true] {
+            assert!(answer_matches_in("ja", "\u{FF79}\u{FF70}\u{FF77}", "ケーキ", kid), "ｹｰｷ");
+            assert!(!answer_matches_in("ja", "ケ\u{FF0D}キ", "ケーキ", kid), "full-width hyphen-minus");
+            assert!(!answer_matches_in("ja", "ケ一キ", "ケーキ", kid), "kanji one");
+            assert!(!answer_matches_in("ja", "ケ\u{2014}キ", "ケーキ", kid), "em dash");
+            assert!(!answer_matches_in("ja", "こーひー", "コーヒー", kid), "not a dual_script row");
+            assert!(answer_matches_in("ja", "ねこ", "ネコ", kid), "T8: ねこ is a dual_script row");
+            assert!(answer_matches_in("ja", "オオカミ", "おおかみ", kid), "dual_script row takes katakana");
+            assert!(answer_matches_in("ja", "ｵｵｶﾐ", "おおかみ", kid), "half-width of the other script");
+            assert!(!answer_matches_in("en", "ｹｰｷ", "ケーキ", kid), "the registry entry is ja only");
+        }
+    }
+
+    /// CC-ORTHO-SWEEP-DE-JA T4: a listed double spelling grades; ss for ß and ae for ä do not.
+    #[test]
+    fn de_double_spelling_and_no_silent_folding() {
+        assert!(answer_matches_in("de", "Getto", "Ghetto", false));
+        assert!(!answer_matches_in("de", "Strasse", "Straße", false));
+        assert!(!answer_matches_in("de", "Maedchen", "Mädchen", false));
+    }
 
     /// CC-EN-VARIANTS T4: a curly or modifier apostrophe grades as the straight one, in every language, both modes.
     #[test]
