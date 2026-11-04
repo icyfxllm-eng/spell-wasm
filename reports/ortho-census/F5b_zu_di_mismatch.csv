@@ -1,0 +1,13 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+ja:きづい,ja,expert,きづい,F5b_zu_di_mismatch,not a JMdict reading; JMdict has きずい,quarantine
+ja:ぢみち,ja,expert,ぢみち,F5b_zu_di_mismatch,not a JMdict reading; JMdict has じみち,quarantine
+ja:つづい,ja,expert,つづい,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:つづか,ja,expert,つづか,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:づがわしりつ,ja,expert,づがわしりつ,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:づみみずはら,ja,expert,づみみずはら,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:づらく,ja,expert,づらく,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:てづか,ja,expert,てづか,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:ぬまづ,ja,expert,ぬまづ,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:たからづか,ja,hard,たからづか,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:ちかづけ,ja,hard,ちかづけ,F5b_zu_di_mismatch,not a JMdict reading,quarantine
+ja:づのおかといい,ja,hard,づのおかといい,F5b_zu_di_mismatch,not a JMdict reading,quarantine

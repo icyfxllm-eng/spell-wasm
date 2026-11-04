@@ -1,0 +1,24 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+de:Dänen,de,expert,Dänen,F3_double_spelling_candidate,dictionary accepts both Dänen and Denen (rule ä~e); Denen in bank: False,needs Regelwerk list to decide stored/accepted
+de:Ghetto,de,expert,Ghetto,F3_double_spelling_candidate,dictionary accepts both Ghetto and Getto (rule gh~g); Getto in bank: False,needs Regelwerk list to decide stored/accepted
+de:Panther,de,expert,Panther,F3_double_spelling_candidate,dictionary accepts both Panther and Panter (rule th~t); Panter in bank: False,needs Regelwerk list to decide stored/accepted
+de:Photoshop,de,expert,Photoshop,F3_double_spelling_candidate,dictionary accepts both Photoshop and Fotoshop (rule ph~f); Fotoshop in bank: False,needs Regelwerk list to decide stored/accepted
+de:Spaghetti,de,expert,Spaghetti,F3_double_spelling_candidate,dictionary accepts both Spaghetti and Spagetti (rule gh~g); Spagetti in bank: False,needs Regelwerk list to decide stored/accepted
+de:Theresa,de,expert,Theresa,F3_double_spelling_candidate,dictionary accepts both Theresa and Teresa (rule th~t); Teresa in bank: False,needs Regelwerk list to decide stored/accepted
+de:Umsätze,de,expert,Umsätze,F3_double_spelling_candidate,dictionary accepts both Umsätze and Umsetze (rule ä~e); Umsetze in bank: False,needs Regelwerk list to decide stored/accepted
+de:Xylophon,de,expert,Xylophon,F3_double_spelling_candidate,dictionary accepts both Xylophon and Xylofon (rule ph~f); Xylofon in bank: False,needs Regelwerk list to decide stored/accepted
+de:bewährte,de,expert,bewährte,F3_double_spelling_candidate,dictionary accepts both bewährte and bewehrte (rule ä~e); bewehrte in bank: False,needs Regelwerk list to decide stored/accepted
+de:fantastischen,de,expert,fantastischen,F3_double_spelling_candidate,dictionary accepts both fantastischen and phantastischen (rule f~ph); phantastischen in bank: False,needs Regelwerk list to decide stored/accepted
+de:geographische,de,expert,geographische,F3_double_spelling_candidate,dictionary accepts both geographische and geografische (rule ph~f); geografische in bank: False,needs Regelwerk list to decide stored/accepted
+de:Ansätze,de,hard,Ansätze,F3_double_spelling_candidate,dictionary accepts both Ansätze and Ansetze (rule ä~e); Ansetze in bank: False,needs Regelwerk list to decide stored/accepted
+de:Europäer,de,hard,Europäer,F3_double_spelling_candidate,dictionary accepts both Europäer and Europeer (rule ä~e); Europeer in bank: False,needs Regelwerk list to decide stored/accepted
+de:Hertha,de,hard,Hertha,F3_double_spelling_candidate,dictionary accepts both Hertha and Herta (rule th~t); Herta in bank: False,needs Regelwerk list to decide stored/accepted
+de:Märkte,de,hard,Märkte,F3_double_spelling_candidate,dictionary accepts both Märkte and Merkte (rule ä~e); Merkte in bank: False,needs Regelwerk list to decide stored/accepted
+de:Sätzen,de,hard,Sätzen,F3_double_spelling_candidate,dictionary accepts both Sätzen and Setzen (rule ä~e); Setzen in bank: False,needs Regelwerk list to decide stored/accepted
+de:gewährt,de,hard,gewährt,F3_double_spelling_candidate,dictionary accepts both gewährt and gewehrt (rule ä~e); gewehrt in bank: False,needs Regelwerk list to decide stored/accepted
+de:während,de,hard,während,F3_double_spelling_candidate,dictionary accepts both während and wehrend (rule ä~e); wehrend in bank: False,needs Regelwerk list to decide stored/accepted
+de:Josef,de,medium,Josef,F3_double_spelling_candidate,dictionary accepts both Josef and Joseph (rule f~ph); Joseph in bank: False,needs Regelwerk list to decide stored/accepted
+de:Rhein,de,medium,Rhein,F3_double_spelling_candidate,dictionary accepts both Rhein and Rein (rule rh~r); Rein in bank: False,needs Regelwerk list to decide stored/accepted
+de:Stefan,de,medium,Stefan,F3_double_spelling_candidate,dictionary accepts both Stefan and Stephan (rule f~ph); Stephan in bank: False,needs Regelwerk list to decide stored/accepted
+de:Telefon,de,medium,Telefon,F3_double_spelling_candidate,dictionary accepts both Telefon and Telephon (rule f~ph); Telephon in bank: False,needs Regelwerk list to decide stored/accepted
+de:rächen,de,medium,rächen,F3_double_spelling_candidate,dictionary accepts both rächen and rechen (rule ä~e); rechen in bank: False,needs Regelwerk list to decide stored/accepted

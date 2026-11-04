@@ -1,0 +1,31 @@
+# CENSUS INPUT ONLY, not the Phase A data file data/de/struck-variants.txt.
+# Source: the seed list in CC-ORTHO-SWEEP-DE-JA v1 F1 as pasted by Eric. NOT verified against the Amtliches Regelwerk.
+# The spec's header-comment source citation for the real file is still owed.
+Buklee
+Busuki
+Dekolletee
+Dränage
+Dublee
+Exposee
+Frappee
+Frigidär
+Glacee
+Hämorriden
+Jogurt
+Katode
+Kurtage
+Kusine
+Lymphdränage
+Panter
+photogen
+Polonäse
+Sorbett
+Spagetti
+Tunfisch
+Katarr
+Myrre
+Majonäse
+Ketschup
+Anschovis
+Komplice
+Wandalismus

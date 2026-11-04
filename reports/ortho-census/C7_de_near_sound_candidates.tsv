@@ -1,0 +1,18 @@
+beten	betten	single->double
+busen	bussen	single->double
+liegen	ligen	i->ie
+nase	nasse	single->double
+wahren	waren	h-removed
+wider	wieder	i->ie
+armeen	armen	EXTRA:vowel-doubling
+boden	booten	EXTRA:t<->d + vowel-doubling
+boden	boten	EXTRA:t<->d
+booten	boten	EXTRA:vowel-doubling
+enden	enten	EXTRA:t<->d
+endstand	entstand	EXTRA:t<->d
+leiden	leiten	EXTRA:t<->d
+leidet	leitet	EXTRA:t<->d
+seide	seite	EXTRA:t<->d
+stadt	statt	EXTRA:t<->d
+weide	weite	EXTRA:t<->d
+worden	worten	EXTRA:t<->d

@@ -1,0 +1,82 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+ja:こんにちは,ja,easy,こんにちは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:はい,ja,easy,はい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はつげん,ja,easy,はつげん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はは,ja,easy,はは,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:ばくはつ,ja,easy,ばくはつ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へいきん,ja,easy,へいきん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:あてはまる,ja,expert,あてはまる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:いろは,ja,expert,いろは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:おそらくは,ja,expert,おそらくは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:じっさいは,ja,expert,じっさいは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:はいかん,ja,expert,はいかん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はいとう,ja,expert,はいとう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はいび,ja,expert,はいび,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はえる,ja,expert,はえる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はくだつ,ja,expert,はくだつ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はこぶ,ja,expert,はこぶ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はこん,ja,expert,はこん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はさん,ja,expert,はさん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はしる,ja,expert,はしる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はじまる,ja,expert,はじまる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっこう,ja,expert,はっこう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっしゃ,ja,expert,はっしゃ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっそう,ja,expert,はっそう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっちゃく,ja,expert,はっちゃく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっぽう,ja,expert,はっぽう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はて,ja,expert,はて,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はまる,ja,expert,はまる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はみがき,ja,expert,はみがき,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はれ,ja,expert,はれ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はれつ,ja,expert,はれつ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんげん,ja,expert,はんげん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんそく,ja,expert,はんそく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へえ,ja,expert,へえ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へる,ja,expert,へる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんい,ja,expert,へんい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんかく,ja,expert,へんかく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんそう,ja,expert,へんそう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんぴん,ja,expert,へんぴん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:ようは,ja,expert,ようは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:れいはい,ja,expert,れいはい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:をめぐって,ja,expert,をめぐって,C10_particle,contains を,check JMdict; must stay を
+ja:からには,ja,hard,からには,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:きはん,ja,hard,きはん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:げきは,ja,hard,げきは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:すいはん,ja,hard,すいはん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はいしゅつ,ja,hard,はいしゅつ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はいせん,ja,hard,はいせん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はいそう,ja,hard,はいそう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はじめまして,ja,hard,はじめまして,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっしょう,ja,hard,はっしょう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっぱ,ja,hard,はっぱ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はつじょう,ja,hard,はつじょう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はてな,ja,hard,はてな,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はなせる,ja,hard,はなせる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はめつ,ja,hard,はめつ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はやおき,ja,hard,はやおき,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんきょう,ja,hard,はんきょう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんぎゃく,ja,hard,はんぎゃく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんげき,ja,hard,はんげき,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんこう,ja,hard,はんこう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんする,ja,hard,はんする,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんそう,ja,hard,はんそう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんてん,ja,hard,はんてん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:ばくは,ja,hard,ばくは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:へいこう,ja,hard,へいこう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へいてん,ja,hard,へいてん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんけい,ja,hard,へんけい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんとう,ja,hard,へんとう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:こうはい,ja,medium,こうはい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:こんばんは,ja,medium,こんばんは,C10_particle,ends in / contains a particle-looking は・へ,check JMdict expression
+ja:しゅくはく,ja,medium,しゅくはく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はぁ,ja,medium,はぁ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はいぼく,ja,medium,はいぼく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はっしん,ja,medium,はっしん,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はつどう,ja,medium,はつどう,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はやく,ja,medium,はやく,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はる,ja,medium,はる,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんえい,ja,medium,はんえい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:はんしゃ,ja,medium,はんしゃ,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へい,ja,medium,へい,C10_particle,JMdict expression/interjection containing は/へ,check reading
+ja:へんどう,ja,medium,へんどう,C10_particle,JMdict expression/interjection containing は/へ,check reading

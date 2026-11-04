@@ -1,0 +1,6 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+ja:あつし,ja,expert,あつし,F5c_gairaigo_in_hiragana,every JMdict entry for this reading has a foreign-language source,quarantine (PURITY recheck)
+ja:ざんまい,ja,expert,ざんまい,F5c_gairaigo_in_hiragana,every JMdict entry for this reading has a foreign-language source,quarantine (PURITY recheck)
+ja:てんぷら,ja,expert,てんぷら,F5c_gairaigo_in_hiragana,every JMdict entry for this reading has a foreign-language source,quarantine (PURITY recheck)
+ja:ぱっち,ja,expert,ぱっち,F5c_gairaigo_in_hiragana,every JMdict entry for this reading has a foreign-language source,quarantine (PURITY recheck)
+ja:ぎょうざ,ja,hard,ぎょうざ,F5c_gairaigo_in_hiragana,every JMdict entry for this reading has a foreign-language source,quarantine (PURITY recheck)

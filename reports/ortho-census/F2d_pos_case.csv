@@ -1,0 +1,2 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+de:Hamburger,de,medium,Hamburger,F2d_pos_case,"POS adjective, stored capitalised",recapitalise (review)

@@ -1,0 +1,5 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+ja:きづく,ja,expert,きづく,F5b_zu_di_both_listed,JMdict lists both きづく and きずく,add both to data/ja/accepted-variants.tsv
+ja:づき,ja,expert,づき,F5b_zu_di_both_listed,JMdict lists both づき and ずき,add both to data/ja/accepted-variants.tsv
+ja:づつ,ja,expert,づつ,F5b_zu_di_both_listed,JMdict lists both づつ and ずつ,add both to data/ja/accepted-variants.tsv
+ja:なかんづく,ja,expert,なかんづく,F5b_zu_di_both_listed,JMdict lists both なかんづく and なかんずく,add both to data/ja/accepted-variants.tsv

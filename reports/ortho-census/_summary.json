@@ -1,0 +1,62 @@
+{
+ "rows": {
+  "de": 6263,
+  "ja": 4979
+ },
+ "tiers": {
+  "de": {
+   "easy": 272,
+   "medium": 1000,
+   "hard": 2000,
+   "expert": 2991
+  },
+  "ja": {
+   "easy": 209,
+   "medium": 947,
+   "hard": 1479,
+   "expert": 2344
+  }
+ },
+ "de_hunspell_rejected": 32,
+ "de_pos_coverage": "5552/6263",
+ "F4_could_not_run": "no Austrian/Swiss tag in any local de dictionary",
+ "F6_normalization_today": "ja has no entry in norm.rs language_key_matches (only vi, fa); same_answer = fold_strict = NFC+lowercase+whitespace-drop; Kid Mode fold_lenient additionally maps ß->ss and strips combining marks",
+ "C7_pairs": 6,
+ "C7_extra_rule_pairs": 12,
+ "C7_seeds": {
+  "masse/maße": "absent from bank",
+  "busse/buße": "absent from bank",
+  "miete/mitte": "absent from bank",
+  "staat/stadt": "absent from bank",
+  "ofen/offen": "absent from bank",
+  "hüte/hütte": "absent from bank"
+ },
+ "C8_pairs": 119,
+ "C8_seeds": {
+  "おばさん/おばあさん": "absent from bank",
+  "きて/きって": "absent from bank",
+  "びょういん/びよういん": "absent from bank",
+  "きんえん/きねん": "absent from bank"
+ },
+ "C8_devoicing_tagged_rows": 870,
+ "C8_T13_たくさん": "たくさん not in the ja bank",
+ "C9_rows_with_space_or_hyphen": {
+  "space": 0,
+  "hyphen": 0
+ },
+ "C9_note": "Today fold_strict DROPS whitespace on both sides, so 'kennen lernen' already grades equal to 'kennenlernen', and so does any split (v1.1 T14 'rejects an unlisted split' fails today).",
+ "C11_participles_total": 138,
+ "C11_no_dictionary_infinitive": 15,
+ "findings": {
+  "C10_particle": 81,
+  "C11_participle_form": 138,
+  "F2d_pos_case": 1,
+  "F3_double_spelling_candidate": 23,
+  "F4_weak_signal_definition_text": 11,
+  "F5a_long_vowel": 10,
+  "F5b_zu_di_both_listed": 4,
+  "F5b_zu_di_mismatch": 12,
+  "F5c_gairaigo_in_hiragana": 5,
+  "F5d_dual_script": 420
+ }
+}

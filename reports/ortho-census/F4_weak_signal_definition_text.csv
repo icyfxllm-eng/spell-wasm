@@ -1,0 +1,12 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+de:Mitteleuropa,de,expert,Mitteleuropa,F4_weak_signal_definition_text,"definition mentions region: Central Europe (a geographic region in the center of Europe, usually including A",NOT a dictionary tag; verify before tagging
+de:Sitten,de,expert,Sitten,F4_weak_signal_definition_text,"definition mentions region: Sion (a municipality and town, the capital of Vaud canton, Switzerland)",NOT a dictionary tag; verify before tagging
+de:österreichisch,de,expert,österreichisch,F4_weak_signal_definition_text,definition mentions region: Austrian,NOT a dictionary tag; verify before tagging
+de:Bundesrat,de,hard,Bundesrat,F4_weak_signal_definition_text,"definition mentions region: a federal council, especially: the federal council of the Federal Republic of Ge",NOT a dictionary tag; verify before tagging
+de:Gemeinderat,de,hard,Gemeinderat,F4_weak_signal_definition_text,"definition mentions region: a local authority in Germany, Austria, Switzerland or East Belgium",NOT a dictionary tag; verify before tagging
+de:Genf,de,hard,Genf,F4_weak_signal_definition_text,definition mentions region: Geneva (a canton of Switzerland),NOT a dictionary tag; verify before tagging
+de:Jura,de,hard,Jura,F4_weak_signal_definition_text,"definition mentions region: Jura (a mountain range on the border of France and Switzerland, extending into G",NOT a dictionary tag; verify before tagging
+de:Kanton,de,hard,Kanton,F4_weak_signal_definition_text,definition mentions region: canton (state of Switzerland),NOT a dictionary tag; verify before tagging
+de:Kärnten,de,hard,Kärnten,F4_weak_signal_definition_text,"definition mentions region: Carinthia (a former duchy and historical region of Central Europe, now split pol",NOT a dictionary tag; verify before tagging
+de:Steiermark,de,hard,Steiermark,F4_weak_signal_definition_text,definition mentions region: Styria (a state of Austria),NOT a dictionary tag; verify before tagging
+de:Rhein,de,medium,Rhein,F4_weak_signal_definition_text,"definition mentions region: Rhine (a major river in Switzerland, Liechtenstein, Austria, Germany, France and",NOT a dictionary tag; verify before tagging
