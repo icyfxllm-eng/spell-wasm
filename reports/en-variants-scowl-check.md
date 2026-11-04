@@ -71,4 +71,4 @@ Fetched `hunspell-en_GB-large`, `hunspell-en_AU-large`, `hunspell-en_CA-large` (
 | **No SCOWL variety has it** | `fiord` |
 | **Still rejected (junk)** | `counterie`, `soal`, `strenth`, `humourous`, `wharp`, `paedagogical`, `beigel`, `byelaw`, `defencible`, `amoxycillin` |
 
-Net effect on the 135: confirmed 110 + 10 = **120**. Unconfirmed **15**: the 10 junk words stay out, and `neurone`, `annexe`, `fête`, `donut` and `fiord` go to review. `fête` is the accent form (F4), not a spelling variant. The three different-word pairs (`vice`/`vise`, `castor`/`caster`, `drier`/`dryer`) are still held out of the 120 and are not in either count above.
+Net effect on the 135: confirmed 110 + 10 = **120**. Unconfirmed **15**: the 10 junk words stay out, and `neurone`, `annexe`, `fête`, `donut` and `fiord` go to review. `fête` is the accent form (F4), not a spelling variant. The 120 still contains the three different-word pairs (`vice`/`vise`, `castor`/`caster`, `drier`/`dryer`), which I would hold out, so **117** are eligible to admit. 117 + 3 held + 15 unconfirmed = 135.
