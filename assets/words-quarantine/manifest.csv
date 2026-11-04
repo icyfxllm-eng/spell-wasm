@@ -9419,3 +9419,7 @@ pt,manu,expert,1532,proper_noun,outside-twin review (Eric 2026-10-23),2026-10-23
 pt,mattos,expert,1153,proper_noun,outside-twin review (Eric 2026-10-23),2026-10-23
 pt,mimi,expert,2281,proper_noun,outside-twin review (Eric 2026-10-23),2026-10-23
 en,coup,easy,666,dictation_unfair,Eric 2026-10-29 (TestFlight recording; silent p),2026-10-29
+ja,こおら,expert,808,misspelled_nonstandard,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04): reading not in JMdict; JMdict has こうら,2026-11-04
+ja,きづい,expert,592,misspelled_nonstandard,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04): reading not in JMdict; JMdict has きずい,2026-11-04
+ja,ぢみち,expert,1462,misspelled_nonstandard,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04): reading not in JMdict; JMdict has じみち,2026-11-04
+ja,おおた,expert,305,proper_noun,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04): reading not in JMdict; a surname; JMdict has おうた only,2026-11-04
