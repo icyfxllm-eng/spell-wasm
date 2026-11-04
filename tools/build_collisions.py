@@ -550,8 +550,8 @@ def check():
         return bad
     # CC-SENSE-CUE v1.2 M2: the bank holds no Mary/marry/merry pair, so the rule
     # finds nothing in real data; this fixture keeps it honest if the bank grows.
-    mmm = {_en_mary_marry_merry(p) for p in ("M EH1 R IY0", "M AE1 R IY0", "M EY1 R IY0")}
-    if mmm != {"M EH1 R IY0"}:
+    mmm = {_en_mary_marry_merry(p) for p in ("M EH R IY", "M AE R IY", "M EY R IY")}
+    if mmm != {"M EH R IY"}:
         bad.append("en: mary-marry-merry no longer merges Mary/marry/merry")
     src = (ROOT / "src/soundalikes.rs").read_text()
     for lang, variant in [(l, None) for l in LANGS] + VARIANTS:
