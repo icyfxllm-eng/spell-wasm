@@ -29,3 +29,7 @@ No rule is near MG5's 10% threshold.
 M1 and M2 add nothing to Impossible and M1 would change grading if forced; sign neither as new work. M3 is a German-generator task. Decide on finding 3.
 
 HALT. Phase M waits for Eric.
+
+## Decision (Eric, 2026-11-04)
+
+pin-pen stays `active` in `config/soundalike-merger-rules.json` (3 accent sets, 0 Expert rows). MG4 is read as "no new pin-pen work", and T4 is dropped as written. M1, M2 and M3 are still open.
