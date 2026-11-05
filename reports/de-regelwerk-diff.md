@@ -40,3 +40,10 @@ The document does confirm one thing I had already assumed: **Panter and Spagetti
 
 - Approve the struck-list change in section A (add two, keep the 21, keep the 7 flagged unverified).
 - Say how to confirm section B: I fetch the Wörterverzeichnis entries from grammis, or you supply the Wörterverzeichnis.
+
+## Resolution, 2026-11-04 (full Regelwerk 2024, 348 PDF pages; printed page = PDF page - 2)
+
+- **Struck list:** approved and written. 23 entries `verified` (changes document p. 1; none appears as a valid entry in the Wörterverzeichnis), 7 `unverified` with an open row to check the 2011/2017 editions. The file blocks admission only and no grader reads it. The Wörterverzeichnis lists only the kept form for all 7 (Katarrh, Myrrhe, Mayonnaise, Ketchup, Anchovis, Komplize, Vandalismus), which supports them but is not the 2017 text.
+- **Conflict found:** the rules text (PDF p. 41) still gives Pralinee among the ee-ending examples. The Wörterverzeichnis (p. 285) lists Praline, Praliné only and the 2024 changes document strikes Pralinee. I followed the dictionary and the changes document, and noted the conflict in the file.
+- **Added foreign spellings:** Kuvert 0 and Fasson 0 in the bank, nothing to add. Porträt: the bank holds only the plural `Porträts`, so `Porträts -> Portraits` is added (Wörterverzeichnis p. 284). Façon has no row, so the ç input question does not arise yet.
+- **Double spellings:** all four confirmed in the Wörterverzeichnis and § 32(2), so they are live with page citations: Ghetto/Getto p. 225, Xylophon/Xylofon p. 339, Geografie/Geographie p. 224 (the adjective has no own entry; § 32(2) -graph- covers it), fantastisch/phantastisch p. 213 and p. 282. No other inflected rows of these lemmas exist in the bank.

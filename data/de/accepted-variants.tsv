@@ -1,8 +1,11 @@
 # CC-ORTHO-SWEEP-DE-JA F3 / D4: stored<TAB>accepted<TAB>source. The stored form is the one in the bank; the grader reads accepted variants only from here.
-# Admitted: Hunspell de_DE_frami accepts both (census F3), the pair is not on data/de/struck-variants.txt, and it is not a name, a brand or a different word.
+# Admitted: the Amtliches Regelwerk 2024 lists both spellings (WV = Wörterverzeichnis, rule = § 32(2) Variantenschreibungen; PDF page, printed page = PDF page - 2),
+# the pair is not on data/de/struck-variants.txt, and it is not a name, a brand or a different word. Hunspell de_DE_frami agreed (census F3) but is no longer the source.
 # Left out of the 23 census candidates: the 11 a~e pairs (Maerkte/Merkte, Saetze/Setzen are other words), names (Theresa, Hertha), a brand (Photoshop),
-# and Panther/Spaghetti, which the 2024 struck list removes. STILL TO CONFIRM against the Regelwerk word list (not held locally): the four below.
-Ghetto	Getto	de_DE_frami accepts both
-Xylophon	Xylofon	de_DE_frami accepts both
-geographische	geografische	de_DE_frami accepts both
-fantastischen	phantastischen	de_DE_frami accepts both
+# and Panther/Spaghetti, which the 2024 struck list removes.
+# Inflected rows follow the lemma: geographische/geografische (lemma Geografie, Geographie), fantastischen/phantastischen (lemma fantastisch, phantastisch), Porträts/Portraits (lemma Portrait, Porträt).
+Ghetto	Getto	Regelwerk 2024: WV PDF p.225 "Ghetto, Getto"; § 32(2) PDF p.54 (gh - g)
+Xylophon	Xylofon	Regelwerk 2024: WV PDF p.339 "Xylofon, Xylophon"; § 32(2) PDF p.53 (-phon- - -fon-)
+geographische	geografische	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); the adjective has no own WV entry
+fantastischen	phantastischen	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+Porträts	Portraits	Regelwerk 2024: WV PDF p.284 "Portrait, Porträt" (added foreign spelling, UE p.1); plural follows the lemma

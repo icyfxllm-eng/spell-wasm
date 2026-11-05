@@ -22,7 +22,7 @@ def struck():
     out = set()
     for line in open(os.path.join(ROOT, "data/de/struck-variants.txt"), encoding="utf-8"):
         if line.strip() and not line.startswith("#"):
-            out.add(line.strip().lower())
+            out.add(line.split("\t")[0].strip().lower())
     return out
 
 

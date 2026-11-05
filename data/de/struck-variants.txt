@@ -1,31 +1,36 @@
-# CC-ORTHO-SWEEP-DE-JA F1: spellings the Amtliches Regelwerk struck (2024 list) or removed (2017). One form per line; matched case-insensitively.
-# Source: Eric's seed list in the CC-ORTHO-SWEEP-DE-JA v1 spec, 2026-11-04. NOT yet checked against the Regelwerk text, which is not held locally.
+# CC-ORTHO-SWEEP-DE-JA F1: spellings the Amtliches Regelwerk struck (2024 list) or removed (2017). form<TAB>status<TAB>citation. Matched case-insensitively on the first column.
+# Source: Rat für deutsche Rechtschreibung, "Zusammenfassung der wesentlichen Änderungen" 2024 (UE), section "Variantenschreibungen", p. 1 (rechtschreibrat.com/DOX/RfdR_Amtliches-Regelwerk_2024_UeberblickAenderungen.pdf),
+# checked 2026-11-04 against the full Amtliches Regelwerk 2024 (WV = Wörterverzeichnis; PDF page, printed page = PDF page - 2): none of the 23 struck forms appears in it as a valid entry.
+# RULE: a struck entry blocks admission only. It never enters data/de/accepted-variants.tsv or the bank, and no grader reads this file. status=verified: named in the 2024 changes document. status=unverified: Eric's seed, not in that document (2011/2017 changes), open row below.
 # The pre-1996 patterns (daß, ß after a short vowel, two-letter triple consonants) are rules in tests/ortho/test_de_struck.py, not words.
-Buklee
-Busuki
-Dekolletee
-Dränage
-Dublee
-Exposee
-Frappee
-Frigidär
-Glacee
-Hämorriden
-Jogurt
-Katode
-Kurtage
-Kusine
-Lymphdränage
-Panter
-photogen
-Polonäse
-Sorbett
-Spagetti
-Tunfisch
-Katarr
-Myrre
-Majonäse
-Ketschup
-Anschovis
-Komplice
-Wandalismus
+# OPEN ROW: verify the 7 status=unverified entries against the 2011/2017 Regelwerk editions. Blocks nothing. WV evidence so far is absence of the form plus presence of the kept one (column 3).
+Buklee	verified	UE p.1
+Busuki	verified	UE p.1
+Dekolletee	verified	UE p.1; WV p.196 lists Dekolleté only
+Dränage	verified	UE p.1
+Dublee	verified	UE p.1
+Exposee	verified	UE p.1; WV p.210 lists Exposé only
+Frappee	verified	UE p.1; WV p.218 lists Frappé only
+Frigidär	verified	UE p.1
+Glacee	verified	UE p.1; WV p.225 lists Glace, Glacé
+Hämorriden	verified	UE p.1
+Jogurt	verified	UE p.1
+Katode	verified	UE p.1
+Kurtage	verified	UE p.1; WV p.193 lists Courtage
+Kusine	verified	UE p.1; WV p.193 lists Cousine
+Lymphdränage	verified	UE p.1
+Panter	verified	UE p.1
+photogen	verified	UE p.1
+Polonäse	verified	UE p.1
+Pralinee	verified	UE p.1; WV p.285 lists Praline, Praliné only. CONFLICT: the rules text (PDF p.41, printed 39, the ee-ending examples) still names Pralinee
+Sorbett	verified	UE p.1
+Soufflee	verified	UE p.1; WV p.308 lists Soufflé only
+Spagetti	verified	UE p.1
+Tunfisch	verified	UE p.1
+Katarr	unverified	not in UE; WV p.250 lists Katarrh only
+Myrre	unverified	not in UE; WV p.270 lists Myrrhe only
+Majonäse	unverified	not in UE (2017 removal); WV p.267 lists Mayonnaise only
+Ketschup	unverified	not in UE (2017 removal); WV p.251 lists Ketchup only
+Anschovis	unverified	not in UE (2017 removal); WV p.172 lists Anchovis only
+Komplice	unverified	not in UE (2017 removal); WV p.254 lists Komplize only
+Wandalismus	unverified	not in UE (2017 removal); WV p.326 lists Vandalismus only
