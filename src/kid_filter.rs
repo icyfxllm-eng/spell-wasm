@@ -104,6 +104,16 @@ mod tests {
         }
     }
 
+    /// Eric, 2026-11-05: sexual or medical words that a child should not be served, in both national spellings.
+    #[test]
+    fn the_sexual_and_medical_words_never_reach_a_child() {
+        for w in ["feces", "faeces", "gonorrhea", "gonorrhoea", "hemorrhoid", "haemorrhoid", "hemorrhoids", "haemorrhoids", "womanizer", "womaniser", "womanizers", "womanisers"] {
+            assert!(!kid_allowed("en", w), "{w} must not be served in Kid Mode or Spell Jr");
+        }
+        let pool: Vec<String> = ["cat", "feces", "gonorrhoea", "dog"].iter().map(|s| s.to_string()).collect();
+        assert_eq!(filter_kid("en", pool), vec!["cat".to_string(), "dog".to_string()]);
+    }
+
     #[test]
     fn cemetery_is_excluded_for_english() {
         assert!(!kid_allowed("en", "cemetery"));

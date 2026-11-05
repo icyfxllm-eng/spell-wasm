@@ -96,7 +96,7 @@ mod tests {
 
     #[test]
     fn en_pairs_grade_both_ways_and_migrated_whole() {
-        assert_eq!(pairs().count(), 212, "the 209 pairs Eric signed on 2026-10-19, plus neurone, annexe and donut (2026-11-04)");
+        assert_eq!(pairs().count(), 327, "the 209 pairs Eric signed on 2026-10-19, neurone, annexe and donut (2026-11-04), and 115 SCOWL-confirmed pairs approved 2026-11-05");
         for (us, gb) in [("color", "colour"), ("theater", "theatre"), ("organize", "organise"), ("traveled", "travelled"), ("gray", "grey"), ("learned", "learnt"), ("judgment", "judgement"), ("anemia", "anaemia")] {
             assert!(accepts("en", us, gb) && accepts("en", gb, us), "{us} / {gb}");
         }
@@ -112,6 +112,46 @@ mod tests {
         assert!(!pairs().any(|(_, gb)| gb.chars().any(|c| !c.is_ascii())), "no accented form reaches the display switch");
         assert!(accepts("en", "neuron", "neurone") && accepts("en", "doughnut", "donut") && accepts("en", "annex", "annexe"));
         assert!(!accepts("en", "fjord", "fiord"), "fiord has no commercial-licence source; staged");
+    }
+
+    /// CC-EN-VARIANTS B2 (Eric, 2026-11-05): the approved SCOWL batch is live; the pairs he pulled or rejected are not.
+    #[test]
+    fn en_approved_batch_is_live_and_the_pulled_pairs_are_not() {
+        assert!(accepts("en", "organization", "organisation") && accepts("en", "tumor", "tumour") && accepts("en", "yogurt", "yoghurt"));
+        assert!(accepts("en", "visualization", "visualisation"));
+        let kind = |us: &str| EN.lines().find(|l| l.starts_with(&format!("{us}\t"))).and_then(|l| l.split('\t').nth(3)).unwrap_or("");
+        assert_eq!(kind("visualization"), "ise", "relabelled from other");
+        assert!(!accepts("en", "bogey", "bogie") && !accepts("en", "bogie", "bogey"), "separate words, not a variant");
+        assert!(!accepts("en", "pedophilia", "paedophilia") && !accepts("en", "paedophilia", "pedophilia"), "the word is quarantined");
+        for (w, v) in [("country", "counterie"), ("sole", "soal"), ("strength", "strenth"), ("humorous", "humourous"), ("warp", "wharp"), ("pedagogical", "paedagogical"), ("defensible", "defencible"), ("bagel", "beigel")] {
+            assert!(!accepts("en", w, v), "{w}/{v} was rejected");
+        }
+        for (w, v) in [("bylaw", "byelaw"), ("amoxicillin", "amoxycillin"), ("fjord", "fiord")] {
+            assert!(!accepts("en", w, v), "{w}/{v} waits for a commercial-licence source");
+        }
+        for (a, b) in [("vice", "vise"), ("castor", "caster"), ("drier", "dryer")] {
+            assert!(!accepts("en", a, b) && !accepts("en", b, a), "{a}/{b} are different words");
+        }
+    }
+
+    /// A staged file is documentation, never read: it holds exactly the three pairs still waiting on a licensed source.
+    #[test]
+    fn en_staged_file_holds_only_the_waiting_pairs() {
+        let staged = include_str!("../data/en/accepted-variants.staged.tsv");
+        let got: Vec<&str> = rows(staged).filter_map(|l| l.split('\t').next()).collect();
+        assert_eq!(got, ["bylaw", "amoxicillin", "fjord"]);
+    }
+
+    /// Eric, 2026-11-05: pedophilia is quarantined (both spellings) and can never reach the growth stage again.
+    #[test]
+    fn pedophilia_is_quarantined_and_not_staged() {
+        let q = include_str!("../assets/words-quarantine/en/expert.txt");
+        assert!(q.lines().any(|l| l == "pedophilia") && q.lines().any(|l| l == "paedophilia"));
+        let staged = include_str!("../assets/words/en/staged.tsv");
+        assert!(!staged.lines().any(|l| l.starts_with("pedophilia\t") || l.starts_with("paedophilia\t")));
+        for t in [include_str!("../assets/words/en/easy.txt"), include_str!("../assets/words/en/medium.txt"), include_str!("../assets/words/en/hard.txt"), include_str!("../assets/words/en/expert.txt")] {
+            assert!(!t.lines().any(|l| l.trim() == "pedophilia" || l.trim() == "paedophilia"));
+        }
     }
 
     #[test]

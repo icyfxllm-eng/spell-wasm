@@ -150,3 +150,21 @@ Source for every pair below: SCOWL rel-2026.02.25 only. Not Wiktionary. Nothing 
 
 SCOWL confirms that each spelling is a real word in its variety. It does not publish which US word a British spelling pairs with. I found the pairing by looking up each variant against its US form (the earlier lookup used Wiktionary glosses to find candidates; the rows now cite SCOWL as the confirming source). If you want pairing provenance too, that is a distinction counsel could weigh in on.
 
+
+## Decisions, 2026-11-05 (Eric)
+
+- **A. 20 of 20 spot-checked pairs correct: the batch is approved and live** in `data/en/accepted-variants.tsv` (115 pairs). `visualization/visualisation` relabelled kind `other` -> `ise`. `bogey/bogie` pulled from the variants (separate words). `pedophilia/paedophilia` dropped with the word (quarantined).
+- **bogey/bogie to the homophone seed: NOT done, blocked.** The seed feeds `tools/build_collisions.py`, whose `--check` fails until the table is regenerated, and regenerating flips the English sound-alike table from `verified` to `missing` (the F5 loopback has no measurement for the new set) which would turn the cues off. The loopback needs the local server and the voice (TTS billing was off from 2026-09-30). Until it is re-measured, bogey/bogie is accepted as neither variant nor homophone. This is CC-SENSE-CUE's lane.
+- **B. Rejected and removed** (they were never in a data file): counterie, soal, strenth, humourous, wharp, paedagogical, defencible, beigel. **Staged until a commercial-licence source exists:** byelaw, amoxycillin, fiord (`data/en/accepted-variants.staged.tsv`, three rows, not read).
+- **C. Held out, agreed:** vice/vise, castor/caster, drier/dryer.
+- **The four earlier approvals:** all four variant rows are live, and none of the four stored forms is in the live bank (each is growth-staged only: neuron, annex, fete, doughnut), so grading is ready and nothing serves them until growth ships.
+
+| word | variant row | where the stored form is |
+|---|---|---|
+| neurone | `neuron/neurone`, live (Eric + SCOWL) | `neuron` growth-staged, not in the bank |
+| annexe | `annex/annexe`, live (Eric + SCOWL). A row is per word, so it also accepts annexe for the verb; there is no part-of-speech field | `annex` growth-staged |
+| fête | `fete/fête`, live as an F4 accent row (SCOWL) | `fete` growth-staged |
+| donut | `doughnut/donut`, live (Eric + SCOWL) | `doughnut` growth-staged |
+
+- **Bank rows (separate from the variants):** pedophilia and paedophilia are in `assets/words-quarantine/en/expert.txt` and removed from the growth-staged list, so `tools/en_growth/admit.py` cannot admit them. It was never a live bank row, so I did not add a manifest row (its `pos` column restores bank order). feces, faeces, gonorrhea, gonorrhoea, hemorrhoid(s), haemorrhoid(s), womanizer(s), womaniser(s) are on the Kid Mode exclusion list, which every Spell Jr surface reads; a test pins them. Every similar row is listed in `reports/en-content-concern-review.md`.
+- **Provenance footnote for the counsel note (not a blocker):** the variant-to-stored pairing was found by looking each variant up, with Wiktionary glosses used only to find candidates. SCOWL confirms each spelling is a real word in its variety; it does not publish the pairing.
