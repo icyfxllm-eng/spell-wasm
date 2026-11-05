@@ -203,6 +203,16 @@ mod tests {
     }
 
     #[test]
+    fn german_seed_sets_are_accepted_while_the_table_stays_missing() {
+        // CC-SENSE-CUE v1.2: de has no generator, but its curated seed pairs grade
+        // accept-both, and the table stays "missing" so Impossible stays locked.
+        for (a, b) in [("wahren", "waren"), ("wider", "wieder"), ("stadt", "statt"), ("endstand", "entstand"), ("booten", "boten")] {
+            assert!(accepts("de", a, b) && accepts("de", b, a), "{a}/{b}");
+        }
+        assert_eq!(crate::soundalikes::soundalikes("de").status, "missing");
+    }
+
+    #[test]
     fn accepts_exact_prompt_too() {
         // The prompt spelled correctly is still in its own group.
         assert!(accepts(ES, "casa", "casa"));

@@ -1,0 +1,7 @@
+# German homophone groups (CC-SENSE-CUE v1.2 seed-only path; from the ORTHO-SWEEP feedback).
+# One equivalence group per line. de has no generator, so these are the only de sets.
+wahren waren
+wider wieder
+stadt statt
+endstand entstand
+booten boten

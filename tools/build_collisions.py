@@ -165,9 +165,20 @@ def write_table(lang, sets, words, variant=None, accent=()):
                     encoding="utf-8")
 
 
+def seed_groups(lang):
+    """Curated equivalence groups from assets/words/<lang>/homophones.seed.txt."""
+    seed = OUT / lang / "homophones.seed.txt"
+    if not seed.exists():
+        return []
+    return [l.split() for l in seed.read_text(encoding="utf-8").splitlines()
+            if l.strip() and not l.lstrip().startswith("#") and len(l.split()) > 1]
+
+
 def write_stub(lang):
-    """A language with no generator still gets a table: status "missing", no sets."""
-    write_table(lang, [], bank(lang))
+    """A language with no generator still gets a table: status "missing" and
+    generator null, carrying its curated seed sets (kind "true") so grading
+    accepts them. Seeds used to be dropped here silently."""
+    write_table(lang, seed_groups(lang), bank(lang))
 
 
 def _shortpath(p):
@@ -553,6 +564,27 @@ def check():
     mmm = {_en_mary_marry_merry(p) for p in ("M EH R IY", "M AE R IY", "M EY R IY")}
     if mmm != {"M EH R IY"}:
         bad.append("en: mary-marry-merry no longer merges Mary/marry/merry")
+    # A seed file whose sets are absent from the table is a silent narrowing of
+    # grading (the German seed was dropped this way before the stub kept seeds).
+    for lang in LANGS:
+        tp = table_path(lang)
+        if not tp.exists():
+            continue
+        have = {tuple(sorted(unicodedata.normalize("NFC", m["memberId"]) for m in st["members"]))
+                for st in json.loads(tp.read_text(encoding="utf-8"))["sets"]}
+        have_words = [set(h) for h in have]
+        for g in seed_groups(lang):
+            want = set(unicodedata.normalize("NFC", m) for m in g)
+            if not any(want <= h for h in have_words):
+                bad.append(f"{lang}: seed set {' '.join(g)} is in homophones.seed.txt but absent from the table")
+    # Voice parity: the registry's voice must be the one the backend plays (I6).
+    reg = json.loads(RULES_CONFIG.read_text(encoding="utf-8"))
+    l1 = layer1_voices()
+    for lang, ent in sorted(reg.items()):
+        if lang.startswith("$"):
+            continue
+        if ent.get("voice") != l1.get(lang):
+            bad.append(f"{lang}: config/soundalike-merger-rules.json voice {ent.get('voice')!r} != backend Layer-1 voice {l1.get(lang)!r}")
     src = (ROOT / "src/soundalikes.rs").read_text()
     for lang, variant in [(l, None) for l in LANGS] + VARIANTS:
         path = table_path(lang, variant=variant)

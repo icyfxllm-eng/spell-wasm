@@ -3,7 +3,93 @@
  "bankRows": 6259,
  "generator": null,
  "lang": "de",
- "sets": [],
+ "sets": [
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "wahren",
+     "wordId": "wahren"
+    },
+    {
+     "memberId": "waren",
+     "wordId": "waren"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:1761d8cb28eb"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "wider",
+     "wordId": "wider"
+    },
+    {
+     "memberId": "wieder",
+     "wordId": "wieder"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:809bcb6fd4af"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "stadt",
+     "wordId": null
+    },
+    {
+     "memberId": "statt",
+     "wordId": "statt"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:b8687d59de60"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "endstand",
+     "wordId": null
+    },
+    {
+     "memberId": "entstand",
+     "wordId": "entstand"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:f0f05a9f3c93"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "booten",
+     "wordId": "booten"
+    },
+    {
+     "memberId": "boten",
+     "wordId": "boten"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:905e190dd86e"
+  }
+ ],
  "status": "missing",
  "statusReason": "no generator for this language yet",
  "voice": "de-DE-Neural2-A"
