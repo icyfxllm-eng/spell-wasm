@@ -88,6 +88,23 @@
    ],
    "mergerRules": [],
    "setId": "de:905e190dd86e"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "liegen",
+     "wordId": "liegen"
+    },
+    {
+     "memberId": "ligen",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:cc0f651e210a"
   }
  ],
  "status": "missing",

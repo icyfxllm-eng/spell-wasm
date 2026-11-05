@@ -20,10 +20,10 @@
   },
   "de": {
    "bankRows": 6259,
-   "bonusEligibleBankWords": 8,
+   "bonusEligibleBankWords": 9,
    "confirmedSets": 0,
    "generator": null,
-   "impossibleFilterRemoves": 8,
+   "impossibleFilterRemoves": 9,
    "impossibleFilterRemovesExpert": 1,
    "loopbackFlags": 0,
    "proof": {
@@ -31,7 +31,7 @@
     "reason": "no spoken-key generator for this language yet; cannot be proved safe"
    },
    "sets": {
-    "true": 5
+    "true": 6
    },
    "status": "missing",
    "voice": "de-DE-Neural2-A",
