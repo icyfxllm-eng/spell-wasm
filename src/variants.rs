@@ -1,42 +1,19 @@
 //! CC-IMPOSSIBLE-LAUNCH: English spelling varieties that are BOTH right (British / American).
 //!
 //! Eric, 2026-10-19: both spellings are accepted, for every player, whatever their region. The list lives in
-//! `assets/words/en/spelling-variants.tsv` (one British/American pair per line). This is a grading list and
+//! `data/en/accepted-variants.tsv` (one US/British pair per line, read through `accepted.rs`). This is a grading list and
 //! nothing else: it never makes a sound-alike set, a cue or a bonus pair, and the two spellings need not sound
 //! alike (learnt / learned). English only; no other language has such a list.
 //!
 //! [`accepts`] answers one question: is `typed` the other spelling of `word`? A spelling that is the same after
 //! the usual fold is not "another spelling", so it is left to the normal comparison.
 
-use std::collections::HashMap;
-use std::sync::OnceLock;
-
 use crate::norm::fold_strict;
 
-const PAIRS: &str = include_str!("../assets/words/en/spelling-variants.tsv");
-
-/// folded spelling -> the folded spellings that are its other form(s).
-fn map() -> &'static HashMap<String, Vec<String>> {
-    static MAP: OnceLock<HashMap<String, Vec<String>>> = OnceLock::new();
-    MAP.get_or_init(|| {
-        let mut m: HashMap<String, Vec<String>> = HashMap::new();
-        for line in PAIRS.lines().filter(|l| !l.trim().is_empty() && !l.starts_with('#')) {
-            let mut it = line.split('\t');
-            let (Some(a), Some(b)) = (it.next(), it.next()) else { continue };
-            let (a, b) = (fold_strict(a), fold_strict(b));
-            if a != b {
-                m.entry(a.clone()).or_default().push(b.clone());
-                m.entry(b).or_default().push(a);
-            }
-        }
-        m
-    })
-}
-
-/// Is `typed` the other national spelling of the English prompt `word`?
+/// Is `typed` the other national spelling of the English prompt `word`? The list is `data/en/accepted-variants.tsv`,
+/// read by `accepted.rs` (CC-EN-VARIANTS: one mechanism for en, de and ja); English grades both ways.
 pub fn accepts(word: &str, typed: &str) -> bool {
-    let (w, t) = (fold_strict(word), fold_strict(typed));
-    w != t && map().get(&w).is_some_and(|others| others.contains(&t))
+    crate::accepted::accepts(crate::consts::EN, word, typed)
 }
 
 
@@ -85,9 +62,7 @@ pub fn set_prefers_british(on: bool) {
 pub fn display(word: &str, british: bool) -> String {
     let w = fold_strict(word);
     let mut hit: Option<&str> = None;
-    for line in PAIRS.lines().filter(|l| !l.trim().is_empty() && !l.starts_with('#')) {
-        let mut it = line.split('\t');
-        let (Some(gb), Some(us)) = (it.next(), it.next()) else { continue };
+    for (us, gb) in crate::accepted::pairs() {
         let (gb, us) = (gb.trim(), us.trim());
         if fold_strict(gb) == w || fold_strict(us) == w {
             hit = Some(if british { gb } else { us });
@@ -154,9 +129,8 @@ mod tests {
     fn the_list_is_well_formed() {
         let mut seen = std::collections::HashSet::new();
         let mut n = 0;
-        for line in PAIRS.lines().filter(|l| !l.trim().is_empty() && !l.starts_with('#')) {
-            let f: Vec<&str> = line.split('\t').collect();
-            assert_eq!(f.len(), 2, "not a pair: {line:?}");
+        for (us, gb) in crate::accepted::pairs() {
+            let (line, f) = (format!("{us}\t{gb}"), [us, gb]);
             assert!(f.iter().all(|w| w.chars().all(|c| c.is_ascii_lowercase() || c == '-')), "plain lowercase only: {line:?}");
             assert_ne!(f[0], f[1], "{line}");
             let mut k = [f[0], f[1]];

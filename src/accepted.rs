@@ -3,6 +3,8 @@
 //! `data/<lang>/accepted-variants.tsv` is `stored<TAB>accepted<TAB>source[<TAB>kind]`. The grader reads accepted
 //! variants from these files and nowhere else; no pair is generated from a pattern. The English list
 //! (`variants.rs`) predates this and will migrate onto the same format (CC-EN-VARIANTS Phase B).
+//! English is the one symmetric list (either spelling grades for the other), and its pairs also drive the
+//! Settings display switch: see [`pairs`].
 //! `data/ja/dual-script.tsv` (`row<TAB>dual_script`) lists the rows that also accept the other kana script (D8): hiragana for katakana
 //! and the reverse, and only for those rows.
 //!
@@ -15,6 +17,7 @@ use std::sync::OnceLock;
 use crate::norm::fold_strict;
 
 const DE: &str = include_str!("../data/de/accepted-variants.tsv");
+const EN: &str = include_str!("../data/en/accepted-variants.tsv");
 const JA: &str = include_str!("../data/ja/accepted-variants.tsv");
 const JA_DUAL: &str = include_str!("../data/ja/dual-script.tsv");
 
@@ -27,13 +30,17 @@ fn table() -> &'static HashMap<&'static str, HashMap<String, Vec<&'static str>>>
     static T: OnceLock<HashMap<&'static str, HashMap<String, Vec<&'static str>>>> = OnceLock::new();
     T.get_or_init(|| {
         let mut all = HashMap::new();
-        for (lang, text) in [(crate::consts::DE, DE), (crate::consts::JA, JA)] {
+        for (lang, text) in [(crate::consts::DE, DE), (crate::consts::JA, JA), (crate::consts::EN, EN)] {
             let mut m: HashMap<String, Vec<&'static str>> = HashMap::new();
             for line in rows(text) {
                 let mut it = line.split('\t');
                 let (Some(stored), Some(accepted)) = (it.next(), it.next()) else { continue };
                 if fold_strict(stored) != fold_strict(accepted) {
                     m.entry(fold_strict(stored)).or_default().push(accepted);
+                    // English is graded both ways (Eric, 2026-10-19); de and ja list the reverse row when they want it.
+                    if lang == crate::consts::EN {
+                        m.entry(fold_strict(accepted)).or_default().push(stored);
+                    }
                 }
             }
             all.insert(lang, m);
@@ -45,6 +52,14 @@ fn table() -> &'static HashMap<&'static str, HashMap<String, Vec<&'static str>>>
 fn dual_script() -> &'static HashSet<String> {
     static S: OnceLock<HashSet<String>> = OnceLock::new();
     S.get_or_init(|| rows(JA_DUAL).filter_map(|l| l.split('\t').next()).map(fold_strict).collect())
+}
+
+/// The English pairs as `(stored US form, accepted British form)`, for the display switch.
+pub fn pairs() -> impl Iterator<Item = (&'static str, &'static str)> {
+    rows(EN).filter_map(|l| {
+        let mut it = l.split('\t');
+        Some((it.next()?, it.next()?))
+    })
 }
 
 /// The listed accepted spellings of `word`, as written (case kept, for the case-strict German grader).
@@ -75,6 +90,16 @@ mod tests {
         for (w, t) in [("Straße", "Strasse"), ("Mädchen", "Maedchen"), ("Mädchen", "Madchen")] {
             assert!(!accepts("de", w, t) && !crate::norm::same_answer("de", t, w), "{t} for {w}");
         }
+    }
+
+    #[test]
+    fn en_pairs_grade_both_ways_and_migrated_whole() {
+        assert_eq!(pairs().count(), 209, "the 209 pairs Eric signed on 2026-10-19");
+        for (us, gb) in [("color", "colour"), ("theater", "theatre"), ("organize", "organise"), ("traveled", "travelled"), ("gray", "grey"), ("learned", "learnt"), ("judgment", "judgement"), ("anemia", "anaemia")] {
+            assert!(accepts("en", us, gb) && accepts("en", gb, us), "{us} / {gb}");
+        }
+        assert!(!accepts("en", "size", "sise") && !accepts("en", "prize", "prise"), "T3: no pattern-made pair");
+        assert!(!accepts("en", "color", "color"), "the same spelling is the normal comparison");
     }
 
     #[test]
