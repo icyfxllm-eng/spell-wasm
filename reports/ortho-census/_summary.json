@@ -1,7 +1,7 @@
 {
  "rows": {
   "de": 6263,
-  "ja": 4979
+  "ja": 4974
  },
  "tiers": {
   "de": {
@@ -14,7 +14,7 @@
    "easy": 209,
    "medium": 947,
    "hard": 1479,
-   "expert": 2344
+   "expert": 2339
   }
  },
  "de_hunspell_rejected": 32,
@@ -53,9 +53,9 @@
   "F2d_pos_case": 1,
   "F3_double_spelling_candidate": 23,
   "F4_weak_signal_definition_text": 11,
-  "F5a_long_vowel": 10,
-  "F5b_zu_di_both_listed": 4,
-  "F5b_zu_di_mismatch": 12,
+  "F5a_long_vowel": 8,
+  "F5b_zu_di_both_listed": 1,
+  "F5b_zu_di_mismatch": 10,
   "F5c_gairaigo_in_hiragana": 5,
   "F5d_dual_script": 420
  }

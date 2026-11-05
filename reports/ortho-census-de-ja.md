@@ -11,7 +11,7 @@ Read-only. Run 2026-11-04 on `origin/main` (worktree `~/repos/spell-wasm-ortho`)
    - `fold_strict` lowercases everything (module doc: "v1: no capitalization mechanics"). D11 says capitalization is graded at Impossible per CC-IMPOSSIBLE-COMPLETE D-C4; I did not read that file, so I cannot say whether D11 matches the grader.
    - `fold_strict` drops all whitespace on both sides. So `kennen lernen` already grades equal to `kennenlernen`, and so does any unlisted split. v1.1 T14 ("rejects an unlisted split") fails today and F9 needs a grader change, not only a data file.
    - ja has no entry in the per-language key registry (`language_key_matches` knows only vi and fa), so F6 adds the first ja entry. Half-width katakana is not folded today.
-4. **>5% on one check:** F5d `dual_script` tags 420/4979 ja rows (8.4%). That is a tag, not a defect, but v1's literal stop rule trips. All other checks are under 2.5%.
+4. **>5% on one check:** F5d `dual_script` tags 420/4974 ja rows (8.4%). That is a tag, not a defect, but v1's literal stop rule trips. All other checks are under 2.5%.
 5. **C12: no de/ja intake in CC-VOICE-CLARITY. HALT on F7/F8 and ask.** The VOICE-CLARITY spec is not in the repo; the only artefact is `reports/voice-clarity-census.md`, which says "Non-English clips were not measured (Phase D)". No de/ja intake format exists to hand the pair files to.
 6. **v1.1 T11–T13 cannot pass from the current banks.** None of the seed pairs exist in the banks (table below), and `たくさん` is not a ja row. Staat/Stadt is not produced by the v1.1 rule list (it needs t↔d plus vowel-length), so T11 needs a rule added or the seed dropped.
 
@@ -20,7 +20,7 @@ Read-only. Run 2026-11-04 on `origin/main` (worktree `~/repos/spell-wasm-ortho`)
 | | easy | medium | hard | expert | total |
 |---|---|---|---|---|---|
 | de | 272 | 1000 | 2000 | 2991 | 6263 |
-| ja | 209 | 947 | 1479 | 2344 | 4979 |
+| ja | 209 | 947 | 1479 | 2339 | 4974 |
 
 **Where things live.** Banks: `assets/words/{de,ja}/{easy,medium,hard,expert}.txt` (one answer per line; ja is 100% hiragana). Purity ledgers: `assets/words/purity/{de,ja}.tsv`. Answer normalization: `src/norm.rs` (`fold_strict`, `fold_lenient`, `same_answer`, `language_key_matches`; registry today = vi, fa). Variant/alias table: none exists (`data/de/accepted-variants.tsv` and `data/ja/accepted-variants.tsv` are not in the repo; `data/` has no `de` directory). Dictionaries (build inputs under `.corpus-cache`, not committed): Hunspell de_DE_frami; JMdict_e (readings, pos, lsource). Nothing was moved.
 
@@ -37,9 +37,9 @@ Read-only. Run 2026-11-04 on `origin/main` (worktree `~/repos/spell-wasm-ortho`)
 | F2d POS vs capitalisation | 1 | 0.0% | 5552/6263 rows have POS |
 | F3 official double spellings (candidates) | 23 | 0.4% | candidates only: dictionary accepts both forms; the Regelwerk list is needed to pick stored/accepted |
 | F4 regional AT/CH | 11 | 0.2% | COULD NOT RUN (no tags); rows are a text-match hint only |
-| F5a ja long-vowel おお/おう/…/えい | 10 | 0.2% |  |
-| F5b ぢ/づ mismatch | 12 | 0.2% |  |
-| F5b ぢ/づ both forms in JMdict (variant file) | 4 | 0.1% |  |
+| F5a ja long-vowel おお/おう/…/えい | 8 | 0.2% |  |
+| F5b ぢ/づ mismatch | 10 | 0.2% |  |
+| F5b ぢ/づ both forms in JMdict (variant file) | 1 | 0.0% |  |
 | F5c gairaigo in hiragana | 5 | 0.1% | PURITY recheck |
 | F5d dual_script candidates | 420 | 8.4% | >5%: stop rule |
 | F6 look-alike / half-width in stored answers | 0 | 0.0% | zero stored |
@@ -99,14 +99,12 @@ Hunspell rejects only 32 of 6263 de rows, so the de bank has already been cleane
 | hard | Steiermark | definition mentions region: Styria (a state of Austria) |
 | medium | Rhein | definition mentions region: Rhine (a major river in Switzerland, Liechtenstein, Austria, Germany, France and |
 
-### F5a_long_vowel (10)
+### F5a_long_vowel (8)
 
 | tier | stored | finding |
 |---|---|---|
 | expert | うっとうし | not a JMdict reading; no swapped form either |
-| expert | おおた | not a JMdict reading; JMdict has おうた |
 | expert | おもいとうり | not a JMdict reading; no swapped form either |
-| expert | こおら | not a JMdict reading; JMdict has こうら |
 | hard | ありほう | not a JMdict reading; no swapped form either |
 | hard | おおくぼ | not a JMdict reading; no swapped form either |
 | hard | おおくり | not a JMdict reading; no swapped form either |
@@ -114,12 +112,10 @@ Hunspell rejects only 32 of 6263 de rows, so the de bank has already been cleane
 | hard | こうりやま | not a JMdict reading; no swapped form either |
 | hard | ざいじょうほう | not a JMdict reading; no swapped form either |
 
-### F5b_zu_di_mismatch (12)
+### F5b_zu_di_mismatch (10)
 
 | tier | stored | finding |
 |---|---|---|
-| expert | きづい | not a JMdict reading; JMdict has きずい |
-| expert | ぢみち | not a JMdict reading; JMdict has じみち |
 | expert | つづい | not a JMdict reading |
 | expert | つづか | not a JMdict reading |
 | expert | づがわしりつ | not a JMdict reading |
@@ -131,14 +127,11 @@ Hunspell rejects only 32 of 6263 de rows, so the de bank has already been cleane
 | hard | ちかづけ | not a JMdict reading |
 | hard | づのおかといい | not a JMdict reading |
 
-### F5b_zu_di_both_listed (4)
+### F5b_zu_di_both_listed (1)
 
 | tier | stored | finding |
 |---|---|---|
 | expert | きづく | JMdict lists both きづく and きずく |
-| expert | づき | JMdict lists both づき and ずき |
-| expert | づつ | JMdict lists both づつ and ずつ |
-| expert | なかんづく | JMdict lists both なかんづく and なかんずく |
 
 ### F5c_gairaigo_in_hiragana (5)
 

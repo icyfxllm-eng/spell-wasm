@@ -1,8 +1,6 @@
 row_id,lang,tier,stored_answer,check_id,finding,proposed_action
 ja:うっとうし,ja,expert,うっとうし,F5a_long_vowel,not a JMdict reading; no swapped form either,defer to purity (not a headword)
-ja:おおた,ja,expert,おおた,F5a_long_vowel,not a JMdict reading; JMdict has おうた,quarantine
 ja:おもいとうり,ja,expert,おもいとうり,F5a_long_vowel,not a JMdict reading; no swapped form either,defer to purity (not a headword)
-ja:こおら,ja,expert,こおら,F5a_long_vowel,not a JMdict reading; JMdict has こうら,quarantine
 ja:ありほう,ja,hard,ありほう,F5a_long_vowel,not a JMdict reading; no swapped form either,defer to purity (not a headword)
 ja:おおくぼ,ja,hard,おおくぼ,F5a_long_vowel,not a JMdict reading; no swapped form either,defer to purity (not a headword)
 ja:おおくり,ja,hard,おおくり,F5a_long_vowel,not a JMdict reading; no swapped form either,defer to purity (not a headword)
