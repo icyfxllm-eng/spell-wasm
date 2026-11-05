@@ -1,0 +1,11 @@
+id,item,status,what,needs_from_you,commit
+1,Regelwerk page citations,done,Struck list (28 words) and F3 variants cite Wörterverzeichnis pages; Pralinee dropped; Frigidär parked in struck-variants.unverified.txt,"Nothing, unless you want Frigidär decided (no Regelwerk entry to cite)",12c62ce8
+2,ja names veto pass,done,All 185 batch 1 rows marked cut by you; nothing restored,Nothing,0093d07e
+3,Removal candidates,done,"Cut: いっつも, すっごい, いやぁ, てぇ. Kept: でっかい (stays out of pair files)",Say if でっかい should be paired,0093d07e
+4,Fragment siblings and character/brand names,done,37 cut; ざつぎょ quarantined as unsure,ja auditor to rule on ざつぎょ,0093d07e
+5,F7/F8 intake for the staged near-sound and devoicing files,held,"Files are data only (99 ja pairs, 12 de pairs, 27 devoicing pairs); nothing reads them",Commit CC-VOICE-CLARITY v1.1 intake format; then I write a converter,
+6,Spec text edits,not started,"Record the 5% tag waiver, the F4 drop (D5/T5 deferred), and the T11-T13 rewrite to fixture words with the t/d plus vowel-length rule",Your go to start; you review the diff,
+7a,F9 de together/apart: grade only listed splits,not started,fold_strict currently drops whitespace so any split grades equal; restrict to listed entries; tests T14-T16 first (incl. rejects an unlisted split),Your go BEFORE push (changes live grading),
+7b,Normal-mode-only D2/D3,not started,"Same grader path as 7a, done together",Your go BEFORE push (changes live grading),
+8,D11 case grading for Impossible,blocked,Lowercase grading stays everywhere,You sign CC-IMPOSSIBLE-COMPLETE D-C4,
+9,de homophone grading (liegen/ligen etc.),done,6 groups live in the de seed; table status stays missing so German Impossible stays locked,Nothing; a de generator is the SENSE-CUE session's work,

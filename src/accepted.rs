@@ -17,6 +17,7 @@ use std::sync::OnceLock;
 use crate::norm::fold_strict;
 
 const DE: &str = include_str!("../data/de/accepted-variants.tsv");
+const DE_SPLIT: &str = include_str!("../data/de/together-apart.tsv");
 const EN: &str = include_str!("../data/en/accepted-variants.tsv");
 const JA: &str = include_str!("../data/ja/accepted-variants.tsv");
 const JA_DUAL: &str = include_str!("../data/ja/dual-script.tsv");
@@ -67,6 +68,17 @@ pub fn alternates(lang: &str, word: &str) -> &'static [&'static str] {
     table().get(lang).and_then(|m| m.get(&fold_strict(word))).map(|v| v.as_slice()).unwrap_or(&[])
 }
 
+/// CC-ORTHO-SWEEP-DE-JA F9: is `typed` (which has a space inside it) a together/apart spelling the Regelwerk LISTS for the stored `word`?
+/// Whitespace runs collapse to one space and case is folded; nothing else is loosened and no split is inferred from a rule.
+pub fn split_listed(word: &str, typed: &str) -> bool {
+    let squash = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ").to_lowercase();
+    let t = squash(typed);
+    rows(DE_SPLIT).any(|l| {
+        let mut it = l.split('\t');
+        matches!((it.next(), it.next()), (Some(a), Some(b)) if fold_strict(a) == fold_strict(word) && squash(b) == t)
+    })
+}
+
 /// Is `typed` a listed variant of the stored `word`, or its other-script spelling for a `dual_script` row?
 pub fn accepts(lang: &str, word: &str, typed: &str) -> bool {
     let t = fold_strict(typed);
@@ -90,6 +102,26 @@ mod tests {
         for (w, t) in [("Straße", "Strasse"), ("Mädchen", "Maedchen"), ("Mädchen", "Madchen")] {
             assert!(!accepts("de", w, t) && !crate::norm::same_answer("de", t, w), "{t} for {w}");
         }
+    }
+
+    #[test]
+    fn de_listed_splits_are_accepted_and_unlisted_splits_are_not() {
+        use crate::norm::same_answer;
+        for (w, t) in [("sodass", "so dass"), ("weitgehend", "weit gehend"), ("dahingehend", "dahin gehend"), ("hierzulande", "hier zu Lande"), ("sodass", "  So   dass ")] {
+            assert!(same_answer("de", t, w), "T15 {t} for {w}");
+        }
+        for (w, t) in [("kennenlernen", "kennen lernen"), ("sodass", "s o dass"), ("weitgehend", "weitgeh end"), ("stattdessen", "statt dessen"), ("nachdem", "nach dem")] {
+            assert!(!same_answer("de", t, w), "T14 an unlisted split is wrong: {t} for {w}");
+        }
+        assert!(same_answer("de", "sodass ", "sodass") && same_answer("de", " sodass", "sodass"), "edge whitespace is trimmed, not a split");
+    }
+
+    #[test]
+    fn de_split_rule_is_normal_mode_and_german_only() {
+        use crate::norm::{answer_matches_in, same_answer};
+        assert!(answer_matches_in("de", "kennen lernen", "kennenlernen", true), "T16 Kid Mode is untouched");
+        assert!(same_answer("en", "ice cream", "icecream"), "T16 other languages keep the whitespace-free fold");
+        assert!(!answer_matches_in("de", "kennen lernen", "kennenlernen", false));
     }
 
     #[test]

@@ -113,6 +113,11 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
 /// extra way to match, never a replacement, so no answer that matched before can
 /// stop matching.
 pub fn same_answer(lang: &str, typed: &str, word: &str) -> bool {
+    // CC-ORTHO-SWEEP-DE-JA F9: in German a space inside the typed answer is a split, and a split grades only where the Regelwerk lists it
+    // (data/de/together-apart.tsv). Normal mode only: Kid Mode keeps the whitespace-free fold. Edge whitespace is not a split.
+    if lang == crate::consts::DE && typed.trim().contains(char::is_whitespace) && !word.trim().contains(char::is_whitespace) {
+        return crate::accepted::split_listed(word, typed);
+    }
     fold_strict(typed) == fold_strict(word) || language_key_matches(lang, typed, word) || crate::accepted::accepts(lang, word, typed)
 }
 
