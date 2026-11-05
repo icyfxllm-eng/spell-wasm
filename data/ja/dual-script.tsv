@@ -1,5 +1,5 @@
 # CC-ORTHO-SWEEP-DE-JA v1 F5 / D8: rows tagged dual_script. Only these rows may accept the other script (katakana for a hiragana key).
-# Source: JMdict_e (EDRDG); a row is tagged when one JMdict entry writes both the stored reading and its katakana form.
+# Source: DERIVED FROM JMdict_e, which D-NOBYSA (Eric 2026-11-04) forbids as a source for shipped data. PROVISIONAL: replace with an auditor-signed list (reports/ja-dual-script-auditor-sheet.csv). Kept only so grading does not change under players meanwhile.
 # Census tools/ortho/census_de_ja.py check F5d, 2026-11-04. Data only; the grader reads this in Phase B.
 あい	dual_script
 あかん	dual_script
