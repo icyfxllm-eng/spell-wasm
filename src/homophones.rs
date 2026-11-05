@@ -206,10 +206,16 @@ mod tests {
     fn german_seed_sets_are_accepted_while_the_table_stays_missing() {
         // CC-SENSE-CUE v1.2: de has no generator, but its curated seed pairs grade
         // accept-both, and the table stays "missing" so Impossible stays locked.
-        for (a, b) in [("wahren", "waren"), ("wider", "wieder"), ("stadt", "statt"), ("endstand", "entstand"), ("booten", "boten")] {
+        for (a, b) in [("wahren", "waren"), ("wider", "wieder"), ("stadt", "statt"), ("endstand", "entstand"), ("booten", "boten"),
+            ("reist", "reißt"), ("leeren", "lehren"), ("fielen", "vielen"), ("Ligen", "liegen"), ("Rad", "Rat"), ("Tod", "tot"),
+            ("Lid", "Lied"), ("seid", "seit"), ("Wal", "Wahl"), ("Stiel", "Stil"), ("Miene", "Mine"), ("mehr", "Meer"),
+            ("malen", "mahlen"), ("Saite", "Seite"), ("Leib", "Laib"), ("Waise", "Weise")] {
             assert!(accepts("de", a, b) && accepts("de", b, a), "{a}/{b}");
         }
         assert_eq!(crate::soundalikes::soundalikes("de").status, "missing");
+        // Rulings: ae pairs and weisen/weissen stay out (accent at most), and Mohr is never seeded.
+        assert!(!accepts("de", "weisen", "weißen") && !accepts("de", "Moor", "Mohr"));
+        assert!(!accepts("de", "Dänen", "denen"));
     }
 
     #[test]

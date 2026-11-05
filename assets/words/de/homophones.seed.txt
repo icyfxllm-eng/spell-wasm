@@ -1,8 +1,24 @@
-# German homophone groups (CC-SENSE-CUE v1.2 seed-only path; from the ORTHO-SWEEP feedback).
-# One equivalence group per line. de has no generator, so these are the only de sets.
+# German homophone groups (CC-SENSE-CUE v1.2 seed-only path). Hand-audited, Eric 2026-11-04.
+# One equivalence group per line; de has no generator, so these are the only de sets.
+# Excluded by ruling: ae pairs (MG3 deferred), weisen/weißen (voiced s: accent at most), Mohr (quarantined via PURITY).
 wahren waren
 wider wieder
-stadt statt
-endstand entstand
+Stadt statt
+Endstand entstand
 booten boten
-liegen ligen
+reist reißt
+leeren lehren
+fielen vielen
+Ligen liegen
+Rad Rat
+Tod tot
+Lid Lied
+seid seit
+Wal Wahl
+Stiel Stil
+Miene Mine
+mehr Meer
+malen mahlen
+Saite Seite
+Leib Laib
+Waise Weise

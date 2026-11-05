@@ -44,8 +44,8 @@
    "loopbackFlag": null,
    "members": [
     {
-     "memberId": "stadt",
-     "wordId": null
+     "memberId": "Stadt",
+     "wordId": "Stadt"
     },
     {
      "memberId": "statt",
@@ -53,7 +53,7 @@
     }
    ],
    "mergerRules": [],
-   "setId": "de:b8687d59de60"
+   "setId": "de:6399e4c96133"
   },
   {
    "confirmed": false,
@@ -61,8 +61,8 @@
    "loopbackFlag": null,
    "members": [
     {
-     "memberId": "endstand",
-     "wordId": null
+     "memberId": "Endstand",
+     "wordId": "Endstand"
     },
     {
      "memberId": "entstand",
@@ -70,7 +70,7 @@
     }
    ],
    "mergerRules": [],
-   "setId": "de:f0f05a9f3c93"
+   "setId": "de:dc28f177c57e"
   },
   {
    "confirmed": false,
@@ -95,16 +95,271 @@
    "loopbackFlag": null,
    "members": [
     {
-     "memberId": "liegen",
-     "wordId": "liegen"
+     "memberId": "reist",
+     "wordId": "reist"
     },
     {
-     "memberId": "ligen",
+     "memberId": "reißt",
+     "wordId": "reißt"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:0c247de2d616"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "leeren",
+     "wordId": "leeren"
+    },
+    {
+     "memberId": "lehren",
+     "wordId": "lehren"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:85f2f4514f33"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "fielen",
+     "wordId": "fielen"
+    },
+    {
+     "memberId": "vielen",
+     "wordId": "vielen"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:37a8ec433f5b"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Ligen",
+     "wordId": "Ligen"
+    },
+    {
+     "memberId": "liegen",
+     "wordId": "liegen"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:7be821940a15"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Rad",
+     "wordId": null
+    },
+    {
+     "memberId": "Rat",
      "wordId": null
     }
    ],
    "mergerRules": [],
-   "setId": "de:cc0f651e210a"
+   "setId": "de:b2912f903eb6"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Tod",
+     "wordId": "Tod"
+    },
+    {
+     "memberId": "tot",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:730c775c8d93"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Lid",
+     "wordId": null
+    },
+    {
+     "memberId": "Lied",
+     "wordId": "Lied"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:d0072736b9fc"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "seid",
+     "wordId": null
+    },
+    {
+     "memberId": "seit",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:936761adf7db"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Wahl",
+     "wordId": null
+    },
+    {
+     "memberId": "Wal",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:e7784bac2698"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Stiel",
+     "wordId": null
+    },
+    {
+     "memberId": "Stil",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:54782e0f98fa"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Miene",
+     "wordId": null
+    },
+    {
+     "memberId": "Mine",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:98d65ad2e3c0"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Meer",
+     "wordId": "Meer"
+    },
+    {
+     "memberId": "mehr",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:532f44d7b44a"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "mahlen",
+     "wordId": null
+    },
+    {
+     "memberId": "malen",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:8cda999ca07d"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Saite",
+     "wordId": null
+    },
+    {
+     "memberId": "Seite",
+     "wordId": "Seite"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:4effa9c7a716"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Laib",
+     "wordId": null
+    },
+    {
+     "memberId": "Leib",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:a4c53665f0d6"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "Waise",
+     "wordId": null
+    },
+    {
+     "memberId": "Weise",
+     "wordId": null
+    }
+   ],
+   "mergerRules": [],
+   "setId": "de:ba5ba909393e"
   }
  ],
  "status": "missing",
