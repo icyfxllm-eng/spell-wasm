@@ -41,9 +41,10 @@ The document does confirm one thing I had already assumed: **Panter and Spagetti
 - Approve the struck-list change in section A (add two, keep the 21, keep the 7 flagged unverified).
 - Say how to confirm section B: I fetch the Wörterverzeichnis entries from grammis, or you supply the Wörterverzeichnis.
 
-## Resolution, 2026-11-04 (full Regelwerk 2024, 348 PDF pages; printed page = PDF page - 2)
+## Resolution, 2026-11-04 (full Regelwerk 2024)
 
-- **Struck list:** approved. Main already carries the 23 cited entries (changes document p. 1) in `struck-variants.txt` and the 7 seed words in `struck-variants.unverified.txt`, which nothing reads; open row: verify those 7 against the 2011/2017 editions. The Wörterverzeichnis lists only the kept form for all 7 (Katarrh p. 250, Myrrhe p. 270, Mayonnaise p. 267, Ketchup p. 251, Anchovis p. 172, Komplize p. 254, Vandalismus p. 326), which supports them but is not the 2017 text. None of the 23 struck forms appears as a valid entry in the Wörterverzeichnis. The file blocks admission only and no grader reads it.
-- **Conflict found:** the rules text (PDF p. 41) still gives Pralinee among the ee-ending examples. The Wörterverzeichnis (p. 285) lists Praline, Praliné only and the 2024 changes document strikes Pralinee. I followed the dictionary and the changes document, and noted the conflict in the file.
-- **Added foreign spellings:** Kuvert 0 and Fasson 0 in the bank, nothing to add. Porträt: the bank holds only the plural `Porträts`, so `Porträts -> Portraits` is added (Wörterverzeichnis p. 284). Façon has no row, so the ç input question does not arise yet.
-- **Double spellings:** all four confirmed in the Wörterverzeichnis and § 32(2), so their rows (main's lemma inflection sets) now cite pages instead of 'page pending': Ghetto/Getto p. 225, Xylophon/Xylofon p. 339, Geografie/Geographie p. 224 (the adjective has no own entry; § 32(2) -graph- covers it), fantastisch/phantastisch p. 213 and p. 282. 
+The ortho session cited the Wörterverzeichnis pages for the struck list and the four double spellings on main (12c62ce8; its printed pages equal PDF page - 2, matching my own page search). What this session adds:
+
+- **Added foreign spellings:** Kuvert 0 and Fasson 0 in the bank, nothing to add. Porträt: the bank holds only `Porträts`, so `Porträts -> Portraits` is added (Wörterverzeichnis printed p. 282). Façon has no row, so the ç input question does not arise yet.
+- **Pralinee:** the rules text (PDF p. 41) still lists it as an ee-ending example, while the Wörterverzeichnis and the changes document strike it. Main dropped it from the struck list; this note records the conflict.
+- **The 7 unverified seed words:** the Wörterverzeichnis lists only the kept form for each (Katarrh, Myrrhe, Mayonnaise, Ketchup, Anchovis, Komplize, Vandalismus). That supports them but is not the 2011/2017 text, so verification stays an open row that blocks nothing.
