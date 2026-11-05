@@ -23,6 +23,7 @@ In German, a typed answer with a space inside it grades only if `data/de/togethe
 
 ## Open
 
+- ja dual_script (420 rows): derived from JMdict, so provisional under D-NOBYSA. Eric chose an auditor-signed replacement (2026-11-04): the ja auditor fills `reports/ja-dual-script-auditor-sheet.csv`, then `python3 tools/ortho/ja_dual_ingest.py <sheet> --auditor NAME` rewrites `data/ja/dual-script.tsv`.
 - Frigidär: neither it nor a replacement is in the Regelwerk, so it has no page; parked in `data/de/struck-variants.unverified.txt`.
 - ざつぎょ: quarantined as unsure until the ja auditor rules.
 - F7/F8 intake converter: waits for VOICE-CLARITY v1.1.
