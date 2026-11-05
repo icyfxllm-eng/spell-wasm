@@ -136,6 +136,8 @@ pub fn active_word_list(state: &AppState, tier: &str) -> Vec<String> {
     } else {
         words::tier_for(&state.lang, tier).iter().map(|s| s.to_string()).collect()
     };
+    // CC-EN-VARIANTS 3a: no space/hyphen English row at Easy or for Spell Jr.
+    let pool = if state.lang == MINE { pool } else { crate::kid_filter::without_splits_for_easy_and_jr(&state.lang, tier, state.kid, pool) };
     // Kid Mode "friendly words": drop age-inappropriate terms (the content layer
     // Kid Mode's tier cap doesn't cover). Built-in pools only — My Words is
     // parent-curated (and still runs the global profanity filter).
