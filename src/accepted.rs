@@ -107,10 +107,10 @@ mod tests {
     #[test]
     fn de_listed_splits_are_accepted_and_unlisted_splits_are_not() {
         use crate::norm::same_answer;
-        for (w, t) in [("sodass", "so dass"), ("weitgehend", "weit gehend"), ("dahingehend", "dahin gehend"), ("hierzulande", "hier zu Lande"), ("sodass", "  So   dass ")] {
+        for (w, t) in [("sodass", "so dass"), ("weitgehend", "weit gehend"), ("dahingehend", "dahin gehend"), ("hierzulande", "hier zu Lande"), ("sodass", "  So   dass "), ("kennenlernen", "kennen lernen"), ("sitzenbleiben", "sitzen bleiben")] {
             assert!(same_answer("de", t, w), "T15 {t} for {w}");
         }
-        for (w, t) in [("kennenlernen", "kennen lernen"), ("sodass", "s o dass"), ("weitgehend", "weitgeh end"), ("stattdessen", "statt dessen"), ("nachdem", "nach dem")] {
+        for (w, t) in [("sodass", "s o dass"), ("wieder", "wie der"), ("weitgehend", "weitgeh end"), ("stattdessen", "statt dessen"), ("nachdem", "nach dem")] {
             assert!(!same_answer("de", t, w), "T14 an unlisted split is wrong: {t} for {w}");
         }
         assert!(same_answer("de", "sodass ", "sodass") && same_answer("de", " sodass", "sodass"), "edge whitespace is trimmed, not a split");
@@ -119,9 +119,28 @@ mod tests {
     #[test]
     fn de_split_rule_is_normal_mode_and_german_only() {
         use crate::norm::{answer_matches_in, same_answer};
-        assert!(answer_matches_in("de", "kennen lernen", "kennenlernen", true), "T16 Kid Mode is untouched");
+        assert!(answer_matches_in("de", "wie der", "wieder", true), "T16 Spell Jr is untouched");
         assert!(same_answer("en", "ice cream", "icecream"), "T16 other languages keep the whitespace-free fold");
-        assert!(!answer_matches_in("de", "kennen lernen", "kennenlernen", false));
+        assert!(!answer_matches_in("de", "wie der", "wieder", false));
+    }
+
+    #[test]
+    fn de_stand_ins_are_close_at_medium_and_up_and_accepted_at_easy_and_spell_jr() {
+        use crate::norm::{answer_matches_in, de_near_miss, same_answer, DeNearMiss};
+        for (w, t, fix) in [("Straße", "Strasse", "ss → ß"), ("Mädchen", "Maedchen", "ae → ä"), ("Tür", "Tuer", "ue → ü"), ("schön", "schoen", "oe → ö")] {
+            assert!(!same_answer("de", t, w), "{t} is not correct at Medium+");
+            assert_eq!(de_near_miss(t, w), Some(DeNearMiss::Letters { fix: fix.into() }), "{t} is close");
+            assert!(answer_matches_in("de", t, w, true), "{t} is accepted in Spell Jr");
+            assert!(crate::norm::de_stand_in_accepted(t, w), "{t} is accepted at Easy");
+        }
+        assert_eq!(de_near_miss("kennen lernen", "kennenlernen"), Some(DeNearMiss::Split), "an unlisted split is close; this one is listed so same_answer accepts it first");
+        for (w, t) in [("Mädchen", "Madchen"), ("Straße", "Strase"), ("Bär", "Baer ")] {
+            let near = de_near_miss(t, w);
+            assert!(matches!(near, None | Some(DeNearMiss::Letters { .. })), "{t}");
+        }
+        assert_eq!(de_near_miss("Madchen", "Mädchen"), None, "dropping the dots is not a stand-in");
+        assert_eq!(de_near_miss("Mädchen", "Mädchen"), None, "correct is not close");
+        assert!(!answer_matches_in("en", "Maedchen", "Mädchen", true), "German only");
     }
 
     #[test]

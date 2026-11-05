@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Dein Konto löschen?",
   "acn.delete.body": "Dadurch werden dein Konto und alles, was wir dafür speichern, dauerhaft gelöscht. Der Fortschritt auf diesem Gerät bleibt erhalten. Ein App-Store-Kauf gehört zu deiner Apple-ID und geht nicht verloren. Sicherungen werden innerhalb von 35 Tagen gelöscht.",
   "acn.delete.confirm": "Löschen",
-  "acn.delete.failed": "Löschen nicht möglich. Prüfe deine Verbindung und versuche es erneut."
+  "acn.delete.failed": "Löschen nicht möglich. Prüfe deine Verbindung und versuche es erneut.",
+  "de.close.letters": "Fast — hier steht {fix}",
+  "de.close.split": "Fast — das schreibt man zusammen"
 }

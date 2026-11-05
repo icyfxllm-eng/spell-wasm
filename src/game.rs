@@ -2108,6 +2108,7 @@ pub fn next_word(app: &App) {
     // stale tone-only reading would route the next miss to the wrong queue.
     ZH_VERDICT.with(|c| *c.borrow_mut() = None);
     ZH_VIA_SURFACE.with(|c| c.set(false));
+    DE_CLOSE.with(|c| *c.borrow_mut() = None);
     // F4: the tone row follows the language and tier of the word just loaded.
     reflect_tone_row(app);
     // CC-CJK-INK F4: the write-it offer follows the same rule -- present only
@@ -2304,7 +2305,9 @@ pub fn submit_guess(app: &App) {
         // Normal fold, plus the data-driven accept-any homophone layer: a real
         // homophone of the prompt (audio can't carry b/v, silent h, seseo,
         // yeísmo) is accepted. Empty table for languages without a file -> no-op.
-        crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid) || en_variant || {
+        // Easy accepts the German umlaut / ß stand-ins; Spell Jr does through `answer_matches_in` (Eric 2026-11-04).
+        let de_easy = cur_lang == crate::consts::DE && app.borrow().cur_tier == "easy" && crate::norm::de_stand_in_accepted(&typed, &word);
+        crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid) || en_variant || de_easy || {
             let other = crate::homophones::accepts(&cur_lang, &word, &typed)
                 && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
             if other {
@@ -2313,6 +2316,9 @@ pub fn submit_guess(app: &App) {
             other
         }
     };
+    DE_CLOSE.with(|c| {
+        *c.borrow_mut() = if !correct && !impossible && cur_lang == crate::consts::DE { crate::norm::de_near_miss(&typed, &word) } else { None };
+    });
     // CC-LEARNING-ENGINE: the validated verdict, recorded at the single
     // submission path — typed channel, so skills update. Placement words
     // route to the placement recorder (decisive prior shifts) and close
@@ -3072,6 +3078,9 @@ thread_local! {
     /// would touch code that has nothing to do with Mandarin.
     static ZH_VERDICT: std::cell::RefCell<Option<crate::pinyin::WordVerdict>> =
         const { std::cell::RefCell::new(None) };
+    /// CC-ORTHO-SWEEP-DE-JA: a wrong German answer that is one named step from right (umlaut or ss stand-in, unlisted split).
+    /// Set by `submit_guess`, read by `on_wrong`, cleared with the previous word's verdict.
+    static DE_CLOSE: std::cell::RefCell<Option<crate::norm::DeNearMiss>> = const { std::cell::RefCell::new(None) };
 }
 
 /// CC-ZH-TONE F3 routing, Invariant 6: a word whose ONLY failures were tone
@@ -3216,6 +3225,21 @@ fn zh_tone_retry_available(app: &App) -> bool {
         v.borrow()
             .as_ref()
             .is_some_and(|d| crate::tone_drill::tier1_retry_earned(d, &tier, retry_used))
+    })
+}
+
+/// The i18n key and letter diff for a German close, when the free retry is still unspent.
+fn de_close_retry(app: &App) -> Option<(&'static str, String)> {
+    let (lang, retry_used, versus) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.aids.retry_used, s.versus.enabled)
+    };
+    if lang != crate::consts::DE || retry_used || versus {
+        return None;
+    }
+    DE_CLOSE.with(|c| match c.borrow().as_ref()? {
+        crate::norm::DeNearMiss::Letters { fix } => Some(("de.close.letters", fix.clone())),
+        crate::norm::DeNearMiss::Split => Some(("de.close.split", String::new())),
     })
 }
 
@@ -3449,6 +3473,17 @@ fn on_wrong(app: &App) {
         app.borrow_mut().aids.retry_used = true;
         crate::haptics::incorrect(app.borrow().kid);
         grant_retry(app, "zh.rev.toneRetry");
+        return;
+    }
+    // CC-ORTHO-SWEEP-DE-JA: a German "close" (umlaut or ss stand-in at Medium and up, an unlisted split) is NOT correct, but it
+    // holds the combo (CC-FEEDBACK D7): one free retry, nothing scored first, the letter diff on screen. The retry's own
+    // verdict is final. Like the zh tone retry it does not apply in a versus match, and Climb shields / extra attempts keep their rules above.
+    if let Some((key, fix)) = de_close_retry(app) {
+        app.borrow_mut().aids.retry_used = true;
+        crate::haptics::incorrect(app.borrow().kid);
+        grant_retry(app, key);
+        let msg = crate::i18n::t(key).replace("{fix}", &fix);
+        dom::set_text("feedback", &msg);
         return;
     }
     // build-54: the legacy 3-try mechanic is RETIRED. The base game is now one

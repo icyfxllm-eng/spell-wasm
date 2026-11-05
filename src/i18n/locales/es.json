@@ -1334,5 +1334,7 @@
   "acn.delete.title": "¿Eliminar tu cuenta?",
   "acn.delete.body": "Esto elimina de forma permanente tu cuenta y lo que guardamos para ella. El progreso de este dispositivo se queda. Una compra en la App Store pertenece a tu ID de Apple, así que no se pierde. Las copias de seguridad se borran en un plazo de 35 días.",
   "acn.delete.confirm": "Eliminar",
-  "acn.delete.failed": "No se pudo eliminar. Revisa tu conexión e inténtalo de nuevo."
+  "acn.delete.failed": "No se pudo eliminar. Revisa tu conexión e inténtalo de nuevo.",
+  "de.close.letters": "Casi — esta palabra se escribe con {fix}",
+  "de.close.split": "Casi — se escribe en una sola palabra"
 }

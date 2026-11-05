@@ -427,7 +427,9 @@
     "acn.delete.title",
     "acn.delete.body",
     "acn.delete.confirm",
-    "acn.delete.failed"
+    "acn.delete.failed",
+    "de.close.letters",
+    "de.close.split"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",

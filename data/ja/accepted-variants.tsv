@@ -1,13 +1,13 @@
 # CC-ORTHO-SWEEP-DE-JA F5 / D7: stored<TAB>accepted<TAB>source. Read by src/accepted.rs; the grader reads accepted variants from nowhere else.
-# Admitted only where ONE JMdict entry lists both readings (checked 2026-11-04). The census listed 4; づき/ずき are different words (suffixes) and are NOT here.
+# Source: 現代仮名遣い 本文 第2 and Eric's rulings (2026-11-04). JMdict is a CHECK ONLY (D-NOBYSA: never a source for shipped data): a pair is admitted only where one JMdict entry lists both readings (checked 2026-11-04). The census listed 4; づき/ずき are different words (suffixes) and are NOT here.
 # Both directions are listed so either form may be the stored one.
-きづく	きずく	JMdict_e same entry
-きずく	きづく	JMdict_e same entry
-づつ	ずつ	JMdict_e same entry
-ずつ	づつ	JMdict_e same entry
-なかんづく	なかんずく	JMdict_e same entry
-なかんずく	なかんづく	JMdict_e same entry
-めんどくさい	めんどうくさい	JMdict_e same entry (面倒臭い)
-めんどうくさい	めんどくさい	JMdict_e same entry (面倒臭い)
-かっこいい	かっこういい	JMdict_e same entry (格好いい)
-かっこういい	かっこいい	JMdict_e same entry (格好いい)
+きづく	きずく	現代仮名遣い 本文 第2 (Eric 2026-11-04); JMdict check only (same entry)
+きずく	きづく	現代仮名遣い 本文 第2 (Eric 2026-11-04); JMdict check only (same entry)
+づつ	ずつ	現代仮名遣い 本文 第2 (Eric 2026-11-04); JMdict check only (same entry)
+ずつ	づつ	現代仮名遣い 本文 第2 (Eric 2026-11-04); JMdict check only (same entry)
+なかんづく	なかんずく	現代仮名遣い 本文 第2 (Eric 2026-11-04); JMdict check only (same entry)
+なかんずく	なかんづく	現代仮名遣い 本文 第2 (Eric 2026-11-04); JMdict check only (same entry)
+めんどくさい	めんどうくさい	Eric 2026-11-04; JMdict check only (same entry)
+めんどうくさい	めんどくさい	Eric 2026-11-04; JMdict check only (same entry)
+かっこいい	かっこういい	Eric 2026-11-04; JMdict check only (same entry)
+かっこういい	かっこいい	Eric 2026-11-04; JMdict check only (same entry)

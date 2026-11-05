@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Usunąć konto?",
   "acn.delete.body": "To trwale usunie Twoje konto i to, co dla niego przechowujemy. Postęp na tym urządzeniu zostanie. Zakup w App Store należy do Twojego Apple ID, więc nie przepadnie. Kopie zapasowe są usuwane w ciągu 35 dni.",
   "acn.delete.confirm": "Usuń",
-  "acn.delete.failed": "Nie udało się usunąć. Sprawdź połączenie i spróbuj ponownie."
+  "acn.delete.failed": "Nie udało się usunąć. Sprawdź połączenie i spróbuj ponownie.",
+  "de.close.letters": "Prawie — to słowo pisze się z {fix}",
+  "de.close.split": "Prawie — to się pisze razem"
 }

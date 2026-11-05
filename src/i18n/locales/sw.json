@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Futa akaunti yako?",
   "acn.delete.body": "Hii inafuta kabisa akaunti yako na tunachohifadhi kwa ajili yake. Maendeleo kwenye kifaa hiki yanabaki. Ununuzi wa App Store umeunganishwa na Apple ID yako, kwa hivyo haupotei. Nakala rudufu hufutwa ndani ya siku 35.",
   "acn.delete.confirm": "Futa",
-  "acn.delete.failed": "Haikuweza kufuta. Angalia muunganisho wako ujaribu tena."
+  "acn.delete.failed": "Haikuweza kufuta. Angalia muunganisho wako ujaribu tena.",
+  "de.close.letters": "Karibu — neno hili huandikwa kwa {fix}",
+  "de.close.split": "Karibu — andika kama neno moja"
 }

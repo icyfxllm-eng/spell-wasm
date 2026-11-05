@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Supprimer votre compte ?",
   "acn.delete.body": "Cela supprime définitivement votre compte et ce que nous conservons pour lui. La progression sur cet appareil est conservée. Un achat sur l'App Store est lié à votre identifiant Apple, il n'est donc pas perdu. Les sauvegardes sont effacées sous 35 jours.",
   "acn.delete.confirm": "Supprimer",
-  "acn.delete.failed": "Suppression impossible. Vérifiez votre connexion et réessayez."
+  "acn.delete.failed": "Suppression impossible. Vérifiez votre connexion et réessayez.",
+  "de.close.letters": "Presque — ce mot s'écrit avec {fix}",
+  "de.close.split": "Presque — ça s'écrit en un seul mot"
 }

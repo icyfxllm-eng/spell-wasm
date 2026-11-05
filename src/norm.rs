@@ -6,7 +6,7 @@
 //!   per-locale keyboards exist: to type the correct accents.
 //! * [`fold_lenient`] — `fold_strict` plus accent-stripping (é→e, ñ→n) and the
 //!   folds for letters with no NFD decomposition (ß→ss, æ→ae, œ→oe, ł→l, ø→o,
-//!   ı→i). Accepts `cafe` for `café`. Kid Mode only — spelling confidence first,
+//!   ı→i). Accepts `cafe` for `café`. Spell Jr only — spelling confidence first,
 //!   diacritic discipline later.
 //!
 //! Both accept NFD or NFC input (they normalize to NFC first) and use full
@@ -69,13 +69,13 @@ pub fn fold_strict(s: &str) -> String {
         .collect()
 }
 
-/// Accent-lenient fold for Kid Mode: strip combining marks and map the letters
+/// Accent-lenient fold for Spell Jr: strip combining marks and map the letters
 /// that have no NFD decomposition down to A–Z-ish equivalents.
 pub fn fold_lenient(s: &str) -> String {
     let lowered: String = fold_apostrophes(s).nfc().collect::<String>().to_lowercase();
     // Silent marks go BEFORE the NFD pass, not after: NFD would decompose أ into
     // ا + U+0654, which sits inside the tashkeel range, and stripping it there
-    // would quietly make Kid Mode hamza-blind -- gutting Arabic's main trap
+    // would quietly make Spell Jr hamza-blind -- gutting Arabic's main trap
     // class for exactly the players least able to notice.
     let lowered: String = lowered.chars().filter(|c| !is_silent_mark(*c)).collect();
     let stripped: String = lowered.nfd().filter(|c| !('\u{0300}'..='\u{036f}').contains(c)).collect();
@@ -94,7 +94,7 @@ pub fn fold_lenient(s: &str) -> String {
         .collect()
 }
 
-/// Compare a typed answer to the target word. Kid Mode is accent-lenient;
+/// Compare a typed answer to the target word. Spell Jr is accent-lenient;
 /// normal mode is accent-strict.
 pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
     if kid {
@@ -102,6 +102,52 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
     } else {
         fold_strict(typed) == fold_strict(word)
     }
+}
+
+/// CC-ORTHO-SWEEP-DE-JA: the key under which German umlaut and ß stand-ins collapse: ä→ae, ö→oe, ü→ue, ß→ss, after [`fold_strict`].
+fn de_stand_in_key(s: &str) -> String {
+    fold_strict(s).chars().flat_map(|c| match c {
+        'ä' => vec!['a', 'e'],
+        'ö' => vec!['o', 'e'],
+        'ü' => vec!['u', 'e'],
+        'ß' => vec!['s', 's'],
+        c => vec![c],
+    }).collect()
+}
+
+/// A German answer that is not correct but is one small, named step from it.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum DeNearMiss {
+    /// ae/oe/ue for ä/ö/ü, or ss for ß. `fix` is the letter diff, e.g. `ae → ä, ss → ß`.
+    Letters { fix: String },
+    /// The right letters with a space inside that the Regelwerk does not list.
+    Split,
+}
+
+/// Is `typed` a [`DeNearMiss`] of `word`? `None` when it is not close, or already correct without a split.
+pub fn de_near_miss(typed: &str, word: &str) -> Option<DeNearMiss> {
+    let (t, w) = (fold_strict(typed), fold_strict(word));
+    if t == w {
+        let split = typed.trim().contains(char::is_whitespace) && !word.trim().contains(char::is_whitespace);
+        return split.then_some(DeNearMiss::Split);
+    }
+    if de_stand_in_key(typed) != de_stand_in_key(word) {
+        return None;
+    }
+    let stand = |c: char| match c { 'ä' => "ae", 'ö' => "oe", 'ü' => "ue", _ => "ss" };
+    let mut fix: Vec<String> = Vec::new();
+    for c in word.to_lowercase().chars().filter(|c| "äöüß".contains(*c)) {
+        let d = format!("{} → {}", stand(c), c);
+        if !fix.contains(&d) {
+            fix.push(d);
+        }
+    }
+    Some(DeNearMiss::Letters { fix: fix.join(", ") })
+}
+
+/// Spell Jr and Easy accept the stand-ins (Eric 2026-11-04, PLAYER-CONTRACT D2); Medium and up show them as "close".
+pub fn de_stand_in_accepted(typed: &str, word: &str) -> bool {
+    matches!(de_near_miss(typed, word), Some(DeNearMiss::Letters { .. }))
 }
 
 /// Strict (non-Kid) answer equality for a known language: [`fold_strict`], plus
@@ -114,7 +160,7 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
 /// stop matching.
 pub fn same_answer(lang: &str, typed: &str, word: &str) -> bool {
     // CC-ORTHO-SWEEP-DE-JA F9: in German a space inside the typed answer is a split, and a split grades only where the Regelwerk lists it
-    // (data/de/together-apart.tsv). Normal mode only: Kid Mode keeps the whitespace-free fold. Edge whitespace is not a split.
+    // (data/de/together-apart.tsv). Normal mode only: Spell Jr keeps the whitespace-free fold. Edge whitespace is not a split.
     if lang == crate::consts::DE && typed.trim().contains(char::is_whitespace) && !word.trim().contains(char::is_whitespace) {
         return crate::accepted::split_listed(word, typed);
     }
@@ -135,11 +181,12 @@ fn language_key_matches(lang: &str, typed: &str, word: &str) -> bool {
 /// in hand, so a per-language grading key is never skipped by one surface.
 pub fn answer_matches_in(lang: &str, typed: &str, word: &str, kid: bool) -> bool {
     if kid {
-        // Persian's key is orthography, not accent leniency, so Kid Mode needs it
+        // Persian's key is orthography, not accent leniency, so Spell Jr needs it
         // too: an Arabic yeh from the system keyboard is no more a misspelling
         // for a child than for an adult.
         fold_lenient(typed) == fold_lenient(word)
             || (matches!(lang, crate::consts::FA | crate::consts::JA) && language_key_matches(lang, typed, word))
+            || (lang == crate::consts::DE && de_stand_in_accepted(typed, word))
             || crate::accepted::accepts(lang, word, typed)
     } else {
         same_answer(lang, typed, word)
@@ -155,7 +202,7 @@ pub fn answer_matches_in(lang: &str, typed: &str, word: &str, kid: bool) -> bool
 /// punctuation the recognizer attaches (leading/trailing `.,!?;:"'…` and quotes),
 /// which is orthographic hygiene, not fuzzing — the *comparison* is still exact.
 /// Accent-strict like normal typed play (`café` ≠ `cafe`); Say-It is never
-/// offered in Kid Mode, so there is no lenient variant.
+/// offered in Spell Jr, so there is no lenient variant.
 pub fn spoken_matches(transcript: &str, word: &str) -> bool {
     let target = fold_strict(word);
     if target.is_empty() {
@@ -222,7 +269,7 @@ mod tests {
     }
 
     /// CC-PERSIAN-FOUNDATION F1/F2 reach the verdict: the canonicalizer is the
-    /// comparison for Persian, in both Kid Mode and normal play.
+    /// comparison for Persian, in both Spell Jr and normal play.
     #[test]
     fn fa_grades_through_the_canonicalizer() {
         for kid in [false, true] {
@@ -451,7 +498,7 @@ mod tests {
 
     #[test]
     fn spoken_is_accent_strict_like_typed_play() {
-        // café != cafe: Say-It uses the strict fold (never offered in Kid Mode).
+        // café != cafe: Say-It uses the strict fold (never offered in Spell Jr).
         assert!(spoken_matches("un caf\u{e9} por favor", "caf\u{e9}"));
         assert!(!spoken_matches("un cafe por favor", "caf\u{e9}"));
     }
@@ -496,7 +543,7 @@ mod tests {
         let marked = "\u{645}\u{64e}\u{62f}\u{652}\u{631}\u{64e}\u{633}\u{64e}\u{629}";
         assert_ne!(bare, marked, "inputs must differ before normalization");
         assert!(answer_matches(marked, bare, false), "vocalized spelling is the same spelling");
-        assert!(answer_matches(marked, bare, true), "and in Kid Mode too");
+        assert!(answer_matches(marked, bare, true), "and in Spell Jr too");
     }
 
     /// The other half of acceptance test 5: the marks are noise, the letters
@@ -512,7 +559,7 @@ mod tests {
         let with_hamza = "\u{623}\u{646}"; // أن
         let bare_alif = "\u{627}\u{646}"; // ان
         assert!(!answer_matches(bare_alif, with_hamza, false), "hamza seat stays graded");
-        assert!(!answer_matches(bare_alif, with_hamza, true), "including in Kid Mode");
+        assert!(!answer_matches(bare_alif, with_hamza, true), "including in Spell Jr");
 
         // ى vs ي likewise (trap class alif-maqsura-vs-yaa).
         assert!(!answer_matches("\u{639}\u{644}\u{64a}", "\u{639}\u{644}\u{649}", false));

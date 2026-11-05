@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Excluir sua conta?",
   "acn.delete.body": "Isso exclui permanentemente sua conta e o que guardamos para ela. O progresso neste dispositivo permanece. Uma compra na App Store pertence ao seu ID Apple, então não se perde. Os backups são apagados em até 35 dias.",
   "acn.delete.confirm": "Excluir",
-  "acn.delete.failed": "Não foi possível excluir. Verifique sua conexão e tente de novo."
+  "acn.delete.failed": "Não foi possível excluir. Verifique sua conexão e tente de novo.",
+  "de.close.letters": "Quase — esta palavra se escreve com {fix}",
+  "de.close.split": "Quase — escreve-se numa só palavra"
 }

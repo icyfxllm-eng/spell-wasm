@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Xóa tài khoản của bạn?",
   "acn.delete.body": "Thao tác này xóa vĩnh viễn tài khoản của bạn và dữ liệu chúng tôi lưu cho tài khoản. Tiến trình trên thiết bị này vẫn được giữ. Giao dịch mua trên App Store thuộc về Apple ID của bạn nên không bị mất. Bản sao lưu được xóa trong vòng 35 ngày.",
   "acn.delete.confirm": "Xóa",
-  "acn.delete.failed": "Không xóa được. Hãy kiểm tra kết nối và thử lại."
+  "acn.delete.failed": "Không xóa được. Hãy kiểm tra kết nối và thử lại.",
+  "de.close.letters": "Gần đúng — từ này viết với {fix}",
+  "de.close.split": "Gần đúng — viết liền thành một từ"
 }

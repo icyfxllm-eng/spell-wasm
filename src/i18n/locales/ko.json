@@ -1334,5 +1334,7 @@
   "acn.delete.title": "계정을 삭제할까요?",
   "acn.delete.body": "계정과 저희가 보관한 정보가 영구적으로 삭제됩니다. 이 기기의 진행 상황은 그대로 남습니다. App Store 구입 내역은 Apple ID에 연결되어 있어 사라지지 않습니다. 백업은 35일 이내에 삭제됩니다.",
   "acn.delete.confirm": "삭제",
-  "acn.delete.failed": "삭제하지 못했습니다. 연결을 확인하고 다시 시도하세요."
+  "acn.delete.failed": "삭제하지 못했습니다. 연결을 확인하고 다시 시도하세요.",
+  "de.close.letters": "거의 맞아요 — 이 단어는 {fix}(으)로 씁니다",
+  "de.close.split": "거의 맞아요 — 한 단어로 붙여 쓰세요"
 }

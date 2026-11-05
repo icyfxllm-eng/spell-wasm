@@ -168,7 +168,7 @@ for w in ja_words:
         if c in "－—‐一－" or "｡" <= c <= "ﾟ":
             flag("F6_lookalike_or_halfwidth_stored", "ja", t, w, f"stored U+{ord(c):04X}", "quarantine")
 S["F6_normalization_today"] = ("ja has no entry in norm.rs language_key_matches (only vi, fa); same_answer = fold_strict = NFC+lowercase+whitespace-drop; "
-    "Kid Mode fold_lenient additionally maps ß->ss and strips combining marks")
+    "Spell Jr fold_lenient additionally maps ß->ss and strips combining marks")
 
 # ============================================================ C7 de pairs
 vowel = set("aeiouäöü")

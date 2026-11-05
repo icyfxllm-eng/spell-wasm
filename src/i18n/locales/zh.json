@@ -1334,5 +1334,7 @@
   "acn.delete.title": "删除你的账号？",
   "acn.delete.body": "这将永久删除你的账号及我们为其保存的内容。此设备上的进度会保留。App Store 购买与你的 Apple ID 绑定，不会丢失。备份将在 35 天内清除。",
   "acn.delete.confirm": "删除",
-  "acn.delete.failed": "无法删除。请检查网络后重试。"
+  "acn.delete.failed": "无法删除。请检查网络后重试。",
+  "de.close.letters": "差一点 — 这个词要写成 {fix}",
+  "de.close.split": "差一点 — 这个词要连写成一个词"
 }

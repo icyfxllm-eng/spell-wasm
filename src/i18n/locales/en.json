@@ -1334,5 +1334,7 @@
   "acn.delete.title": "Delete your account?",
   "acn.delete.body": "This permanently deletes your account and what we hold for it. Progress on this device stays. An App Store purchase belongs to your Apple ID, so it is not lost. Backups are cleared within 35 days.",
   "acn.delete.confirm": "Delete",
-  "acn.delete.failed": "Couldn't delete. Check your connection and try again."
+  "acn.delete.failed": "Couldn't delete. Check your connection and try again.",
+  "de.close.letters": "Almost — this word is spelled with {fix}",
+  "de.close.split": "Almost — this is written as one word"
 }
