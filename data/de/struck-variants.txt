@@ -1,26 +1,32 @@
-# CC-ORTHO-SWEEP-DE-JA F1: spellings the Amtliches Regelwerk 2024 struck. One per line: form<TAB>Regelwerk page; matched case-insensitively.
-# Source: Rat für deutsche Rechtschreibung, "Aktualisiertes Amtliches Regelwerk der deutschen Rechtschreibung 2024 – Zusammenfassung der wesentlichen Änderungen" (rechtschreibrat.com/DOX/RfdR_Amtliches-Regelwerk_2024_UeberblickAenderungen.pdf), list of struck variants, p. 1. Read by the CC-EN-VARIANTS session (reports/de-regelwerk-diff.md on census/en-variants); this is the 10-page summary, not the Wörterverzeichnis, and the PDF is not held in the repo.
-# Seven seed words the summary does not carry (Katarr, Myrre, and the 2017 removals) are in struck-variants.unverified.txt, which nothing reads. The pre-1996 patterns are rules in tests/ortho/test_de_struck.py.
-Buklee	p. 1
-Busuki	p. 1
-Dekolletee	p. 1
-Dränage	p. 1
-Dublee	p. 1
-Exposee	p. 1
-Frappee	p. 1
-Frigidär	p. 1
-Glacee	p. 1
-Hämorriden	p. 1
-Jogurt	p. 1
-Katode	p. 1
-Kurtage	p. 1
-Kusine	p. 1
-Lymphdränage	p. 1
-Panter	p. 1
-photogen	p. 1
-Polonäse	p. 1
-Pralinee	p. 1
-Sorbett	p. 1
-Soufflee	p. 1
-Spagetti	p. 1
-Tunfisch	p. 1
+# CC-ORTHO-SWEEP-DE-JA F1: spellings that are NOT in the Amtliches Regelwerk 2024. One per line: form<TAB>page<TAB>the form the Wörterverzeichnis lists instead. Matched case-insensitively.
+# Source: Rat für deutsche Rechtschreibung, Amtliches Regelwerk der deutschen Rechtschreibung, aktualisierte Fassung 2024 (rechtschreibrat.com/DOX/RfdR_Amtliches-Regelwerk_2024.pdf, 348 PDF pages). Page = the printed page number of the Wörterverzeichnis entry for the listed form (PDF page = printed + 2). The struck form appears nowhere in the document;
+# the Wörterverzeichnis is not exhaustive, so absence plus the listed form is the evidence. 21 of these are also named as struck on p. 1 of the 2024 summary (Zusammenfassung der wesentlichen Änderungen).
+# Not here: Pralinee (the rule text, S. 39, lists it as valid) and Frigidär (the document lists neither it nor Frigidaire). The pre-1996 patterns are rules in tests/ortho/test_de_struck.py.
+Buklee	S. 186	Bukett, Bouquet
+Busuki	S. 184	Bouzouki
+Dekolletee	S. 194	Dekolleté
+Dränage	S. 199	Drainage
+Dublee	S. 198	Doublé
+Exposee	S. 208	Exposé
+Frappee	S. 216	Frappé
+Glacee	S. 223	Glacé
+Hämorriden	S. 231	Hämorrhoiden
+Jogurt	S. 244	Joghurt
+Katode	S. 248	Kathode
+Kurtage	S. 191	Courtage
+Kusine	S. 191	Cousin, Cousine
+Lymphdränage	S. 262	Lymphdrainage
+Panter	S. 278	Panther
+photogen	S. 215	fotogen
+Polonäse	S. 282	Polonaise
+Sorbett	S. 306	Sorbet
+Soufflee	S. 306	Soufflé
+Spagetti	S. 306	Spaghetti
+Tunfisch	S. 315	Thunfisch
+Katarr	S. 248	Katarrh
+Myrre	S. 268	Myrrhe
+Majonäse	S. 265	Mayonnaise
+Ketschup	S. 249	Ketchup
+Anschovis	S. 170	Anchovis
+Komplice	S. 252	Komplize
+Wandalismus	S. 324	Vandalismus

@@ -50,4 +50,4 @@ def test_struck_file_has_a_source_header():
 def test_every_struck_row_cites_a_page():
     for line in open(os.path.join(ROOT, "data/de/struck-variants.txt"), encoding="utf-8"):
         if line.strip() and not line.startswith("#"):
-            assert re.search(r"\tp\. \d+$", line.rstrip("\n")), line
+            assert re.search(r"\tS\. \d+\t", line.rstrip("\n")), line

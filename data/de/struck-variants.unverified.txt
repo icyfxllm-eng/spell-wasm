@@ -1,9 +1,3 @@
-# CC-ORTHO-SWEEP-DE-JA F1: seed words with NO Regelwerk page citation yet. Nothing reads this file; a word moves to struck-variants.txt only with a cited page.
-# Not in the 2024 summary (p. 1): Katarr, Myrre. 2017 removals, which the 2024 summary does not cover: Majonäse, Ketschup, Anschovis, Komplice, Wandalismus. Needs the Wörterverzeichnis or the 2017 edition.
-Katarr
-Myrre
-Majonäse
-Ketschup
-Anschovis
-Komplice
-Wandalismus
+# CC-ORTHO-SWEEP-DE-JA F1: seed words with NO Regelwerk page. Nothing reads this file.
+# Frigidär: the Regelwerk 2024 lists neither Frigidär nor a replacement spelling, so there is no page to cite.
+Frigidär
