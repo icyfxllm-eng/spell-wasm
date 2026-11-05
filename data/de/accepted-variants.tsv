@@ -1,18 +1,19 @@
 # CC-ORTHO-SWEEP-DE-JA F3 / D4: stored<TAB>accepted<TAB>source. The stored form is the one in the bank; the grader reads accepted variants only from here.
-# Source is the Regelwerk (Wörterverzeichnis double spellings, Eric 2026-11-04). Hunspell de_DE_frami accepts all four lemmas and is a CHECK only. Regelwerk page numbers are NOT filled in:
-# the Wörterverzeichnis is not in the repo and the 2024 summary does not list these. The rows are the lemma's inflection set (geographisch*, phantastisch*), not one inflected form.
+# Source is the Amtliches Regelwerk 2024 (WV = Wörterverzeichnis, rule = § 32(2) Variantenschreibungen; PDF page, printed page = PDF page - 2). Hunspell de_DE_frami agreed and is a CHECK only.
+# Rows are the lemma's inflection set (geographisch*, phantastisch*), plus Porträts, the only Porträt form in the bank (Portrait was added in 2024).
 # Left out: the 11 a~e pairs (Maerkte/Merkte, Saetze/Setzen are other words), names (Theresa, Hertha), a brand (Photoshop), and Panter/Spagetti, which the 2024 list strikes (Panther/Spaghetti are the only forms).
-Ghetto	Getto	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-Xylophon	Xylofon	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-geographisch	geografisch	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-geographische	geografische	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-geographischen	geografischen	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-geographischer	geografischer	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-geographischem	geografischem	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-geographisches	geografisches	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-fantastisch	phantastisch	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-fantastische	phantastische	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-fantastischen	phantastischen	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-fantastischer	phantastischer	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-fantastischem	phantastischem	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
-fantastisches	phantastisches	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+Ghetto	Getto	Regelwerk 2024: WV PDF p.225 "Ghetto, Getto"; § 32(2) PDF p.54
+Xylophon	Xylofon	Regelwerk 2024: WV PDF p.339 "Xylofon, Xylophon"; § 32(2) PDF p.53
+geographisch	geografisch	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); no own WV entry for the adjective
+geographische	geografische	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); no own WV entry for the adjective
+geographischen	geografischen	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); no own WV entry for the adjective
+geographischer	geografischer	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); no own WV entry for the adjective
+geographischem	geografischem	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); no own WV entry for the adjective
+geographisches	geografisches	Regelwerk 2024: WV PDF p.224 "Geografie, Geographie"; § 32(2) PDF p.53 (-graph- - -graf-); no own WV entry for the adjective
+fantastisch	phantastisch	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+fantastische	phantastische	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+fantastischen	phantastischen	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+fantastischer	phantastischer	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+fantastischem	phantastischem	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+fantastisches	phantastisches	Regelwerk 2024: WV PDF p.213 and p.282 "fantastisch, phantastisch"; § 32(2) PDF p.53
+Porträts	Portraits	Regelwerk 2024: WV PDF p.284 "Portrait, Porträt" (added foreign spelling, UE p.1); plural follows the lemma
