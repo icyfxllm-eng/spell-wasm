@@ -1,8 +1,8 @@
 {
  "lang": "de",
  "source": "expert",
- "bankHash": "0xDE5E0975B9685273",
- "expertRows": 2987,
+ "bankHash": "0x14461D0765BB2998",
+ "expertRows": 2986,
  "table": "exclusion_only",
  "removedPurity": 2,
  "removedSoundalike": 30,
@@ -548,7 +548,6 @@
   "Mitteleuropa",
   "Mobilfunk",
   "Modul",
-  "Mohr",
   "Moor",
   "Moos",
   "Moscheen",
