@@ -2,8 +2,8 @@
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xFEBA4D3C4A47E841
 #tier	medium	0xB347DE36850E5464
-#tier	hard	0x59753976B2DEB9E5
-#tier	expert	0x8F57AC077F9ABA79
+#tier	hard	0xF369F194D7749FCF
+#tier	expert	0x87401E757ABF001C
 あお	dictionary	JMdict_e
 あげる	dictionary	JMdict_e
 あさ	dictionary	JMdict_e
@@ -1222,7 +1222,6 @@
 いっかく	dictionary	JMdict_e
 いっかつ	dictionary	JMdict_e
 いっしき	dictionary	JMdict_e
-いっつも	pending	JMdict_e
 いでん	dictionary	JMdict_e
 いど	dictionary	JMdict_e
 いぬい	dictionary	JMdict_e
@@ -1456,16 +1455,10 @@
 きんめだる	pending	JMdict_e
 きんりん	dictionary	JMdict_e
 ぎおんさん	pending	JMdict_e
-ぎかわさき	pending	JMdict_e
-ぎけんどう	pending	JMdict_e
-ぎじぞうで	pending	JMdict_e
 ぎじん	dictionary	JMdict_e
 ぎそう	dictionary	JMdict_e
 ぎぞう	dictionary	JMdict_e
-ぎたかひろ	pending	JMdict_e
-ぎたゆうそうし	pending	JMdict_e
 ぎのう	dictionary	JMdict_e
-ぎはふりと	pending	JMdict_e
 ぎゅうにく	dictionary	JMdict_e
 ぎょうざ	dictionary	JMdict_e
 ぎょうれつ	dictionary	JMdict_e
@@ -1628,7 +1621,6 @@
 さくさく	dictionary	JMdict_e
 さくてい	dictionary	JMdict_e
 さくや	dictionary	JMdict_e
-さざえさん	pending	JMdict_e
 さし	dictionary	JMdict_e
 さす	dictionary	JMdict_e
 さた	dictionary	JMdict_e
@@ -1647,15 +1639,10 @@
 さんちゅう	dictionary	JMdict_e
 さんちょう	dictionary	JMdict_e
 ざいあく	dictionary	JMdict_e
-ざいしりつ	pending	JMdict_e
-ざいじょうほう	pending	JMdict_e
 ざいたく	dictionary	JMdict_e
 ざいむ	dictionary	JMdict_e
 ざいむしょう	dictionary	JMdict_e
-ざぐるまん	pending	JMdict_e
 ざせつ	dictionary	JMdict_e
-ざつぎょ	pending	JMdict_e
-ざとちょう	pending	JMdict_e
 ざひょう	dictionary	JMdict_e
 ざわちゅうべえ	pending	JMdict_e
 ざんしん	dictionary	JMdict_e
@@ -1835,7 +1822,6 @@
 すず	dictionary	JMdict_e
 すた	pending	JMdict_e
 すっきり	dictionary	JMdict_e
-すっごい	dictionary	JMdict_e
 すっごく	dictionary	JMdict_e
 すてき	dictionary	JMdict_e
 すむ	dictionary	JMdict_e
@@ -2041,14 +2027,12 @@
 つら	dictionary	JMdict_e
 つんでれ	dictionary	JMdict_e
 つんのめる	dictionary	JMdict_e
-づのおかといい	pending	JMdict_e
 ていげん	dictionary	JMdict_e
 ていしゃ	dictionary	JMdict_e
 ていしょう	dictionary	JMdict_e
 ていすう	dictionary	JMdict_e
 ていせい	dictionary	JMdict_e
 ていめい	dictionary	JMdict_e
-てぇ	pending	JMdict_e
 てえ	dictionary	JMdict_e
 てきおう	dictionary	JMdict_e
 てきかく	dictionary	JMdict_e
@@ -2117,7 +2101,6 @@
 どしゃ	dictionary	JMdict_e
 どぼく	dictionary	JMdict_e
 どや	dictionary	JMdict_e
-どらえもん	pending	JMdict_e
 どり	dictionary	JMdict_e
 ないしん	dictionary	JMdict_e
 ないそう	dictionary	JMdict_e
@@ -2152,7 +2135,6 @@
 にしにほん	dictionary	JMdict_e
 にっかん	dictionary	JMdict_e
 にっし	dictionary	JMdict_e
-にってれ	pending	JMdict_e
 にのみや	dictionary	JMdict_e
 にほんかい	dictionary	JMdict_e
 にまつわる	pending	JMdict_e
@@ -2175,7 +2157,6 @@
 のうぜんかずら	dictionary	JMdict_e
 のうみん	dictionary	JMdict_e
 のうやく	dictionary	JMdict_e
-のぎざか	pending	JMdict_e
 のけ	pending	JMdict_e
 のだ	dictionary	JMdict_e
 のりくみ	dictionary	JMdict_e
@@ -2264,10 +2245,8 @@
 ひょうしょう	dictionary	JMdict_e
 ひれい	dictionary	JMdict_e
 ひんしゅ	dictionary	JMdict_e
-びさひもまさみ	pending	JMdict_e
 びたいかい	pending	JMdict_e
 びょうとう	dictionary	JMdict_e
-びるらじお	pending	JMdict_e
 びんじょう	dictionary	JMdict_e
 ぴゃくごじゅう	pending	JMdict_e
 ふうとう	dictionary	JMdict_e
@@ -2320,7 +2299,6 @@
 ぶんぷ	dictionary	JMdict_e
 ぶんれつ	dictionary	JMdict_e
 ぷいぷいい	pending	JMdict_e
-ぷくちゃん	pending	JMdict_e
 ぷりぱら	pending	JMdict_e
 へいあん	dictionary	JMdict_e
 へいこう	dictionary	JMdict_e
@@ -2698,7 +2676,6 @@
 いまひとつ	dictionary	JMdict_e
 いまや	dictionary	JMdict_e
 いみじくも	dictionary	JMdict_e
-いやぁ	dictionary	JMdict_e
 いやがる	dictionary	JMdict_e
 いやし	dictionary	JMdict_e
 いやらしい	dictionary	JMdict_e
@@ -2751,7 +2728,6 @@
 うらない	dictionary	JMdict_e
 うりきれ	dictionary	JMdict_e
 うるさく	pending	JMdict_e
-うるとらまん	pending	JMdict_e
 うれしく	pending	JMdict_e
 うれる	dictionary	JMdict_e
 うろ	dictionary	JMdict_e
@@ -3089,10 +3065,8 @@
 きんこ	dictionary	JMdict_e
 きんせん	dictionary	JMdict_e
 ぎくしゃく	dictionary	JMdict_e
-ぎじもんだい	pending	JMdict_e
 ぎちょう	dictionary	JMdict_e
 ぎふ	dictionary	JMdict_e
-ぎゅうといい	pending	JMdict_e
 ぎゅうにゅう	dictionary	JMdict_e
 ぎょうしゅ	dictionary	JMdict_e
 ぎょうせい	dictionary	JMdict_e
@@ -3340,16 +3314,12 @@
 さんど	dictionary	JMdict_e
 さんぴ	dictionary	JMdict_e
 ざい	dictionary	JMdict_e
-ざじゅうおり	pending	JMdict_e
 ざっくり	dictionary	JMdict_e
 ざっし	dictionary	JMdict_e
 ざつ	dictionary	JMdict_e
-ざなみのみこと	pending	JMdict_e
 ざん	dictionary	JMdict_e
 ざんぎゃく	dictionary	JMdict_e
-ざんじんじゃ	pending	JMdict_e
 ざんてい	dictionary	JMdict_e
-ざんてつどう	pending	JMdict_e
 ざんまい	dictionary	JMdict_e
 しあげ	dictionary	JMdict_e
 しいな	dictionary	JMdict_e
@@ -3822,10 +3792,7 @@
 つよい	dictionary	JMdict_e
 つよみ	dictionary	JMdict_e
 つん	pending	JMdict_e
-づがわしりつ	pending	JMdict_e
 ずつ	dictionary	JMdict_e
-づみみずはら	pending	JMdict_e
-づらく	pending	JMdict_e
 てい	dictionary	JMdict_e
 ていおん	dictionary	JMdict_e
 ていがく	dictionary	JMdict_e
@@ -3845,7 +3812,6 @@
 てら	dictionary	JMdict_e
 てらし	pending	JMdict_e
 てらす	dictionary	JMdict_e
-てれびあさひ	pending	JMdict_e
 てんか	dictionary	JMdict_e
 てんき	dictionary	JMdict_e
 てんし	dictionary	JMdict_e
@@ -3940,7 +3906,6 @@
 とりまとめ	dictionary	JMdict_e
 とりもどし	pending	JMdict_e
 とろ	dictionary	JMdict_e
-とんねるず	pending	JMdict_e
 どうかん	dictionary	JMdict_e
 どうこう	dictionary	JMdict_e
 どうせい	dictionary	JMdict_e
@@ -4041,7 +4006,6 @@
 にっぽう	dictionary	JMdict_e
 にない	dictionary	JMdict_e
 にほんけいざいしんぶん	dictionary	JMdict_e
-にほんてれび	pending	JMdict_e
 にやにや	dictionary	JMdict_e
 にゅうしょう	dictionary	JMdict_e
 にょうぼう	dictionary	JMdict_e
@@ -4219,8 +4183,6 @@
 ぱちんこ	dictionary	JMdict_e
 ぱっち	dictionary	JMdict_e
 ぱっと	dictionary	JMdict_e
-ぱみゅぱみゅの	pending	JMdict_e
-ぱれっとの	pending	JMdict_e
 ぱんぱん	dictionary	JMdict_e
 ひえ	dictionary	JMdict_e
 ひか	dictionary	JMdict_e
@@ -4298,7 +4260,6 @@
 びじゅつかん	dictionary	JMdict_e
 びどめしとも	pending	JMdict_e
 びのしくみで	pending	JMdict_e
-びのにゃんこ	pending	JMdict_e
 びょう	dictionary	JMdict_e
 びら	dictionary	JMdict_e
 ぴっかぴか	dictionary	JMdict_e
@@ -4373,8 +4334,6 @@
 ぶんげい	dictionary	JMdict_e
 ぶんたん	dictionary	JMdict_e
 ぶんみゃく	dictionary	JMdict_e
-ぷせとねでぶ	pending	JMdict_e
-ぷよはすべて	pending	JMdict_e
 へいめん	dictionary	JMdict_e
 へえ	dictionary	JMdict_e
 へき	dictionary	JMdict_e
@@ -4398,7 +4357,6 @@
 べんち	dictionary	JMdict_e
 べんぴ	dictionary	JMdict_e
 ぺえあらあで	pending	JMdict_e
-ぺきのりせい	pending	JMdict_e
 ほうかつ	dictionary	JMdict_e
 ほうじ	dictionary	JMdict_e
 ほうじょう	dictionary	JMdict_e

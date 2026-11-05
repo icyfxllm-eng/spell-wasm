@@ -39,7 +39,7 @@ export const KNOWN_GAPS = {
   ar: { chars: 'أؤإئ', why: 'hamza carriers; أ alone appears 586 times. A real hole — the review must add them.' },
   fr: { chars: 'œ', why: 'the oe ligature, 9 occurrences. Needs a spoken name ("o e lie" or similar) from a speaker.' },
   hi: { chars: 'ञ', why: 'a nasal. Real, small. (ङ left the list when CC-BANK-PURITY Phase A quarantined the rows that needed it.)' },
-  ja: { chars: 'ぁぃぇ', why: 'small kana (ぅ ぉ ゎ left the list when CC-BANK-PURITY Phase A quarantined the rows that needed them; ゔ left when CC-ORTHO-SWEEP-DE-JA quarantined えゔぁ, a name). Spoken as "small a" etc.; the draft has no convention for it.' },
+  ja: { chars: 'ぁぃ', why: 'small kana (ぅ ぉ ゎ left the list when CC-BANK-PURITY Phase A quarantined the rows that needed them; ゔ and ぇ left when CC-ORTHO-SWEEP-DE-JA quarantined the names えゔぁ, じぇしか, みしぇる). Spoken as "small a" etc.; the draft has no convention for it.' },
   vi: {
     chars: 'fjwzàáãèéìíòóõùúýĩũạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷ',
     why: 'the largest real hole. `diacritics` is EMPTY, so every toned vowel is unspeakable and a Vietnamese player can say base letters only. f/j/w/z are loanword letters the alphabet lacks. This one needs a scheme (letter + tone name), not just entries.',
