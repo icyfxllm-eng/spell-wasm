@@ -22,7 +22,7 @@ def struck():
     out = set()
     for line in open(os.path.join(ROOT, "data/de/struck-variants.txt"), encoding="utf-8"):
         if line.strip() and not line.startswith("#"):
-            out.add(line.strip().lower())
+            out.add(line.split("\t")[0].strip().lower())
     return out
 
 
@@ -45,3 +45,9 @@ def test_no_pre_reform_pattern_is_active():
 def test_struck_file_has_a_source_header():
     head = open(os.path.join(ROOT, "data/de/struck-variants.txt"), encoding="utf-8").read().splitlines()[:3]
     assert any("Source" in l for l in head)
+
+
+def test_every_struck_row_cites_a_page():
+    for line in open(os.path.join(ROOT, "data/de/struck-variants.txt"), encoding="utf-8"):
+        if line.strip() and not line.startswith("#"):
+            assert re.search(r"\tp\. \d+$", line.rstrip("\n")), line

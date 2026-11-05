@@ -1,8 +1,18 @@
 # CC-ORTHO-SWEEP-DE-JA F3 / D4: stored<TAB>accepted<TAB>source. The stored form is the one in the bank; the grader reads accepted variants only from here.
-# Admitted: Hunspell de_DE_frami accepts both (census F3), the pair is not on data/de/struck-variants.txt, and it is not a name, a brand or a different word.
-# Left out of the 23 census candidates: the 11 a~e pairs (Maerkte/Merkte, Saetze/Setzen are other words), names (Theresa, Hertha), a brand (Photoshop),
-# and Panther/Spaghetti, which the 2024 struck list removes. STILL TO CONFIRM against the Regelwerk word list (not held locally): the four below.
-Ghetto	Getto	de_DE_frami accepts both
-Xylophon	Xylofon	de_DE_frami accepts both
-geographische	geografische	de_DE_frami accepts both
-fantastischen	phantastischen	de_DE_frami accepts both
+# Source is the Regelwerk (Wörterverzeichnis double spellings, Eric 2026-11-04). Hunspell de_DE_frami accepts all four lemmas and is a CHECK only. Regelwerk page numbers are NOT filled in:
+# the Wörterverzeichnis is not in the repo and the 2024 summary does not list these. The rows are the lemma's inflection set (geographisch*, phantastisch*), not one inflected form.
+# Left out: the 11 a~e pairs (Maerkte/Merkte, Saetze/Setzen are other words), names (Theresa, Hertha), a brand (Photoshop), and Panter/Spagetti, which the 2024 list strikes (Panther/Spaghetti are the only forms).
+Ghetto	Getto	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+Xylophon	Xylofon	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+geographisch	geografisch	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+geographische	geografische	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+geographischen	geografischen	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+geographischer	geografischer	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+geographischem	geografischem	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+geographisches	geografisches	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+fantastisch	phantastisch	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+fantastische	phantastische	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+fantastischen	phantastischen	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+fantastischer	phantastischer	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+fantastischem	phantastischem	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check
+fantastisches	phantastisches	Regelwerk 2024 Wörterverzeichnis (page pending); Hunspell de_DE_frami check

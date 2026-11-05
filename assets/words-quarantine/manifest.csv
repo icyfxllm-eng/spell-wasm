@@ -9424,3 +9424,190 @@ ja,きづい,expert,592,misspelled_nonstandard,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 
 ja,ぢみち,expert,1462,misspelled_nonstandard,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04): reading not in JMdict; JMdict has じみち,2026-11-04
 ja,おおた,expert,305,proper_noun,CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04): reading not in JMdict; a surname; JMdict has おうた only,2026-11-04
 ja,づき,expert,1522,fragment,"CC-ORTHO-SWEEP-DE-JA v1 F5 (Eric 2026-11-04, 現代仮名遣い 本文 第2): standalone づき is the rendaku suffix of 付き (JMdict 1583630, noun/suffix 'furnished with; including'), a bound fragment, not a headword",2026-11-04
+ja,おいし,medium,81,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,いとし,expert,161,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,うっとうし,expert,221,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,うらやまし,expert,245,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,かわいらし,expert,528,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,くるし,expert,703,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,すばらし,expert,1186,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,ひとし,expert,2039,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,むずかし,expert,2446,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,やさし,expert,2582,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い; Eric 2026-11-04,2026-11-04
+ja,っぱなし,medium,630,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,ぎふしりつ,hard,425,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,くっつい,hard,453,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,ぐつたくもあり,hard,480,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,ざわいして,hard,685,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,すくなから,hard,894,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,ぎふけんどう,expert,652,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,ざきけんりつ,expert,964,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,すすま,expert,1172,fragment,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string; Eric 2026-11-04,2026-11-04
+ja,ちつ,hard,1095,profanity,"CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar, not for a children's bank; Eric 2026-11-04",2026-11-04
+ja,ばばあ,hard,1421,profanity,"CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar, not for a children's bank; Eric 2026-11-04",2026-11-04
+ja,きちがい,expert,582,profanity,"CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar, not for a children's bank; Eric 2026-11-04",2026-11-04
+ja,しこしこ,expert,1000,profanity,"CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar, not for a children's bank; Eric 2026-11-04",2026-11-04
+ja,あきはばら,hard,16,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,あさくさ,hard,25,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,あさひかわ,hard,26,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,あまくさ,hard,44,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,いまばり,hard,108,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,えどがわ,hard,162,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,おだわら,hard,210,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,きたかみ,hard,343,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,きりしま,hard,391,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,くまがや,hard,457,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,こうりやま,hard,548,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,さがみはら,hard,632,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,しながわ,hard,729,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,たからづか,hard,1024,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,たまがわ,hard,1045,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,とよしま,hard,1237,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,にしのみや,hard,1312,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ふくやま,hard,1497,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,よこすか,hard,1886,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,あきば,expert,14,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,いつくしま,expert,156,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,おぐら,expert,316,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,おばま,expert,363,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,しもきたざわ,expert,1032,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,しんじゅく,expert,1093,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,つくば,expert,1480,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ぬまづ,expert,1798,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ねりま,expert,1818,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ひがしあじあ,expert,2004,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ひたちなか,expert,2027,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ひだか,expert,2028,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ふくま,expert,2125,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,ふしみ,expert,2135,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,まつど,expert,2335,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,みうら,expert,2378,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,みしま,expert,2390,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,みなとみらい,expert,2413,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,みなみあふりか,expert,2414,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: place name; Eric 2026-11-04,2026-11-04
+ja,あきやま,hard,17,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あべ,hard,42,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ありむら,hard,55,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ありよし,hard,56,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あれっくす,hard,60,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あんでぃ,hard,68,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あんとにお,hard,69,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,いえやす,hard,74,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うぃるそん,hard,119,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うえすぎ,hard,121,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うえはら,hard,123,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うたがわ,hard,129,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,えりざべす,hard,168,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,おおくぼ,hard,185,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,おおにし,hard,187,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,おがさわら,hard,194,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,かどかわ,hard,283,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,かるろす,hard,298,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,きたむら,hard,345,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,きのした,hard,351,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,きむ,hard,353,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,きゃさりん,hard,356,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,くろさき,hard,473,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,こいずみ,hard,529,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,さかもと,hard,631,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,さくらい,hard,636,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,さの,hard,645,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,じぇしか,hard,829,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,じょんそん,hard,873,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,すがわら,hard,890,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,そろもん,hard,1001,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,たかし,hard,1022,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,たきざわ,hard,1026,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,たけしま,hard,1027,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,たけなか,hard,1028,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,だいすけ,hard,1062,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,つかもと,hard,1148,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,なかはら,hard,1277,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ながおか,hard,1280,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,にしむら,hard,1313,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,はとやま,hard,1374,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,はまさき,hard,1382,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,はんざわ,hard,1397,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ぱとりっく,hard,1432,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ひできち,hard,1449,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ひの,hard,1456,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ふぃりっぷ,hard,1484,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ふじさわ,hard,1505,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ふじわら,hard,1508,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ふらんしす,hard,1523,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まえかわ,hard,1644,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まつした,hard,1657,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まつしま,hard,1658,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,みしぇる,hard,1674,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,むらかみ,hard,1704,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,やまざき,hard,1765,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ゆい,hard,1810,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,よしかわ,hard,1889,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,よしもと,hard,1890,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,らいあん,hard,1902,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あきもと,expert,15,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あきら,expert,16,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あさの,expert,29,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,あそう,expert,34,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,いけだ,expert,123,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,いしだ,expert,124,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,いわさき,expert,187,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うえだ,expert,203,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うちだ,expert,219,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うの,expert,236,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,うめだ,expert,242,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,えゔぁ,expert,285,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,おかだ,expert,313,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,おざわ,expert,324,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,かざま,expert,456,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,かすが,expert,464,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,かねこ,expert,500,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,きょうごく,expert,618,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,きよし,expert,630,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,くりす,expert,700,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,くろだ,expert,711,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,こいけ,expert,775,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,さかた,expert,892,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,さがわ,expert,905,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ささき,expert,919,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,さとみ,expert,931,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,しのだ,expert,1020,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,しらい,expert,1075,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,しんいちろう,expert,1083,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,しんたろう,expert,1096,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,しんのすけ,expert,1101,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,じぇふ,expert,1109,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,じゅんいち,expert,1136,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,すぎた,expert,1159,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,すずか,expert,1176,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,ぜるだ,expert,1257,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,たかだ,expert,1325,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,たぐち,expert,1331,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,だいき,expert,1389,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,つとむ,expert,1497,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,つよし,expert,1516,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,てぃむ,expert,1529,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,なおと,expert,1693,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,なかの,expert,1698,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,にしだ,expert,1764,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,にしの,expert,1765,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,はせがわ,expert,1890,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,はねだ,expert,1921,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,はるき,expert,1935,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まえだ,expert,2300,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まつい,expert,2333,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まりお,expert,2361,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,まるこ,expert,2364,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,みずの,expert,2397,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,みほ,expert,2419,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,みやた,expert,2426,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,むらた,expert,2463,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,もにか,expert,2530,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,やすし,expert,2584,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,やすだ,expert,2585,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,よしの,expert,2830,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,りさ,expert,2880,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,るいす,expert,2902,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,れな,expert,2918,proper_noun,CC-ORTHO-SWEEP-DE-JA v1.1: personal name; Eric 2026-11-04,2026-11-04
+ja,かっこういい,expert,487,accepted_variant,CC-ORTHO-SWEEP-DE-JA v1.1: now an accepted variant of the stored form; Eric 2026-11-04,2026-11-04
+ja,めんどうくさい,expert,2501,accepted_variant,CC-ORTHO-SWEEP-DE-JA v1.1: now an accepted variant of the stored form; Eric 2026-11-04,2026-11-04

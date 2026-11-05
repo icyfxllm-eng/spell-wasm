@@ -237,3 +237,188 @@ ja,きづい,misspelled_nonstandard,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA F5: kan
 ja,ぢみち,misspelled_nonstandard,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA F5: kana-rule check, JMdict has じみち
 ja,おおた,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA F5: kana-rule check, a surname; JMdict has おうた only
 ja,づき,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA F5: bound suffix of 付き (JMdict 1583630), not a standalone word
+ja,おいし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,くるし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,むずかし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,やさし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,すばらし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,かわいらし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,いとし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,ひとし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,うらやまし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,うっとうし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: adjective stem missing its final い
+ja,っぱなし,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,くっつい,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,すすま,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,すくなから,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,ぐつたくもあり,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,ざきけんりつ,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,ぎふしりつ,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,ぎふけんどう,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,ざわいして,fragment,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: fragment of a longer string
+ja,きちがい,profanity,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar
+ja,ばばあ,profanity,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar
+ja,しこしこ,profanity,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar
+ja,ちつ,profanity,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: slur / vulgar
+ja,あきはばら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,あさくさ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,あさひかわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,あまくさ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,いまばり,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,おだわら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,くまがや,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,こうりやま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,さがみはら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,しながわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,しんじゅく,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,たからづか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,たまがわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,つくば,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ひたちなか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ひがしあじあ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ねりま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,みなとみらい,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,みなみあふりか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,よこすか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,まつど,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ぬまづ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,にしのみや,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,えどがわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,きりしま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,しもきたざわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ふしみ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ひだか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,とよしま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,きたかみ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ふくやま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,ふくま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,みうら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,みしま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,おばま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,おぐら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,いつくしま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,あきば,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: place name
+ja,あべ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あきやま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ありむら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ありよし,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,いえやす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うえすぎ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うえはら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うたがわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,おおくぼ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,おおにし,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,おがさわら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,かどかわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,きたむら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,きのした,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,きむ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,くろさき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,こいずみ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,さかもと,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,さくらい,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,すがわら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,たかし,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,たきざわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,たけしま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,たけなか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,だいすけ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,つかもと,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,なかはら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ながおか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,にしむら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,はとやま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,はまさき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,はんざわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ひできち,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ふじさわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ふじわら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まえかわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まつした,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まつしま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,むらかみ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,やまざき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,よしかわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,よしもと,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あきもと,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あきら,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あさの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あそう,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,いけだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,いしだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,いわさき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うえだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うちだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うめだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,おかだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,おざわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,かざま,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,かすが,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,かねこ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,きよし,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,きょうごく,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,くろだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,こいけ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ささき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,さとみ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,さかた,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,さがわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,しのだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,しらい,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,しんいちろう,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,しんたろう,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,しんのすけ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,じゅんいち,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,すぎた,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,すずか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ぜるだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,たかだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,たぐち,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,だいき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,つとむ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,つよし,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,てぃむ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,なおと,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,なかの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,にしだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,にしの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,はせがわ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,はねだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,はるき,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まえだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まつい,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まりお,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,まるこ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,みずの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,みほ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,みやた,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,むらた,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,もにか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,やすし,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,やすだ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,よしの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,りさ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,れな,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,るいす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ゆい,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,さの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ひの,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あんとにお,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,えりざべす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,かるろす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,きゃさりん,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,じぇしか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,じょんそん,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ふぃりっぷ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ふらんしす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,らいあん,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,うぃるそん,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,みしぇる,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,ぱとりっく,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,そろもん,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あんでぃ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,あれっくす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,くりす,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,じぇふ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
+ja,えゔぁ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1: personal name
