@@ -225,7 +225,12 @@ fn exclusion_only_opens_and_respects_floor() {
 fn exclusion_only_never_enables_cues() {
     for lang in GATED_LANGS.iter().chain(HELD_LANGS.iter()) {
         assert_eq!(crate::soundalikes::soundalikes(lang).status, "missing", "{lang}: cues must stay off");
-        assert!(crate::soundalikes::sets_of_kind(lang, &["true", "accent"]).is_empty(), "{lang}");
+        // The only sets a gated language may hold are curated seed sets (kind "true",
+        // generator null: CC-SENSE-CUE v1.2 seed-only path). They feed accept-both grading;
+        // every cue/bonus consumer still gates on status "verified".
+        let t = crate::soundalikes::soundalikes(lang);
+        assert!(t.generator.is_none() || t.sets.is_empty(), "{lang}: a generated table would enable cues");
+        assert!(crate::soundalikes::sets_of_kind(lang, &["accent"]).is_empty(), "{lang}");
     }
 }
 

@@ -205,7 +205,7 @@ mod tests {
     #[test]
     fn german_seed_sets_are_accepted_while_the_table_stays_missing() {
         // CC-SENSE-CUE v1.2: de has no generator, but its curated seed pairs grade
-        // accept-both, and the table stays "missing" so Impossible stays locked.
+        // accept-both, and the table stays "missing" (German Impossible runs on its own exclusion data).
         for (a, b) in [("wahren", "waren"), ("wider", "wieder"), ("stadt", "statt"), ("endstand", "entstand"), ("booten", "boten"),
             ("reist", "reißt"), ("leeren", "lehren"), ("fielen", "vielen"), ("Ligen", "liegen"), ("Rad", "Rat"), ("Tod", "tot"),
             ("Lid", "Lied"), ("seid", "seit"), ("Wal", "Wahl"), ("Stiel", "Stil"), ("Miene", "Mine"), ("mehr", "Meer"),
