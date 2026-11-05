@@ -15,7 +15,7 @@ The spec text was pasted in chat on 2026-11-04 and is not in the repo; this file
 | de lists | Source is the Amtliches Regelwerk 2024 (full PDF), every row cites a printed page. The Wörterverzeichnis is not exhaustive: F3/F10 cover only variants it lists; F9 covers listed together/apart entries only, no rule-inferred splits. | `data/de/struck-variants.txt`, `data/de/accepted-variants.tsv`, `data/de/together-apart.tsv` |
 | D11 | CC-IMPOSSIBLE-COMPLETE D-C4 is **unsigned**: lowercase grading everywhere. If signed: Impossible-only case grading. | no change |
 
-## F9 in practice (code is on branch `ortho-f9-split`, cbd59cd2; NOT on main until Eric says go)
+## F9 in practice (merged to main with Eric's go, 2026-11-04)
 
 In German, a typed answer with a space inside it grades only if `data/de/together-apart.tsv` lists it for the stored word (`accepted::split_listed`). Before this change `fold_strict` dropped all whitespace, so `kennen lernen` graded equal to `kennenlernen` and so did any split. Four bank words have a listed split: dahingehend, hierzulande, sodass, weitgehend. Tests: `accepted::tests::de_listed_splits_are_accepted_and_unlisted_splits_are_not` (T14, T15) and `de_split_rule_is_normal_mode_and_german_only` (T16).
 
