@@ -199,6 +199,8 @@ Resolutions are in `docs/CC-ORTHO-SWEEP-ALL-resolutions.md`. Every moved row is 
 
 931 zh rows are single syllables. Applying the rule as written ("drop a monosyllable unless its toned key is unique in the bank"; the second list, the 现代汉语常用词表, is not in the repo and no new dictionaries are allowed) drops **505 rows (8.2% of zh)**. That is over your 500-row line and over the 2% quarantine line. Nothing was dropped. By tier: easy 76, medium 89, hard 147, expert 193. The other 426 monosyllables have a unique key and stay. Per-row list: `reports/ortho-census/c7-zh.csv`, check `F-zh-1` (rows whose finding says "shared with N other bank rows" with N above 0).
 
+**Decision (Eric, 2026-11-05): D7 not applied.** The 505 rows are tagged `monosyllable_shared_key` in `assets/words/purity/monosyllable-shared-key/zh.tsv`; nothing is quarantined. Apply D7 only if a character-typed zh mode ships, and revisit then with the 现代汉语常用词表 cross-check.
+
 ## C6 and D-LIC
 - `assets/words/LICENSES.md`: "as recorded" is now "confirmed 2026-11-05", the open verification note is replaced, and D-LIC is written into the file. `grep -ri "unknown\|as recorded" assets/words/LICENSES.md` returns nothing.
 - `data/<lang>/SOURCES.md` for es, fil, ko, vi, zh are unfilled templates (every version and attribution cell is "TODO"). Sources that fail D-LIC as written there:
