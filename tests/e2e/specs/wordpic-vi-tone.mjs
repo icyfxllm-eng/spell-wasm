@@ -35,7 +35,9 @@ async function typeVi(page, word) {
     const tone = nfd.find((m) => TONES.includes(m));
     const letter = nfd.filter((m) => !TONES.includes(m)).join('').normalize('NFC');
     const base = letter.normalize('NFD')[0];
-    if (letter === base || letter === ' ') {
+    if (letter === 'đ') {
+      await longPress(page, 'd', 'đ'); // đ has no key of its own: it is the long-press of d (it does not decompose, so base === letter)
+    } else if (letter === base || letter === ' ') {
       await page.click(`#gameKeyboard .kb-key[data-k="${letter}"]`);
     } else {
       await longPress(page, base === 'd' ? 'd' : base, letter);

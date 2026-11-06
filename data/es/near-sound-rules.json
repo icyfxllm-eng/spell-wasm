@@ -1,0 +1,32 @@
+{
+  "$doc": "CC-ORTHO-SWEEP-ALL: near-sound rule ids for CC-VOICE-CLARITY Phase D intake. A near-sound is a miss, never accepted (VOICE-CLARITY D1). No per-language intake exists in the repo yet (only de and ja have near-sound-candidates.tsv), so this file is the intake.",
+  "lang": "es",
+  "rules": [
+    {
+      "id": "es_r_rr",
+      "description": "pero/perro, caro/carro: single and trilled r",
+      "examples": [
+        [
+          "pero",
+          "perro"
+        ],
+        [
+          "caro",
+          "carro"
+        ]
+      ],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "id": "es_n_ny",
+      "description": "n/ñ: ano/año",
+      "examples": [
+        [
+          "ano",
+          "año"
+        ]
+      ],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    }
+  ]
+}

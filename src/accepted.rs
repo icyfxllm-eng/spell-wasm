@@ -22,6 +22,7 @@ const EN: &str = include_str!("../data/en/accepted-variants.tsv");
 const JA: &str = include_str!("../data/ja/accepted-variants.tsv");
 const JA_DUAL: &str = include_str!("../data/ja/dual-script.tsv");
 // CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05): the one-row-per-word cleanups. Same one-way format as de and ja.
+const ES: &str = include_str!("../data/es/accepted-variants.tsv");
 const FR: &str = include_str!("../data/fr/accepted-variants.tsv");
 const PT: &str = include_str!("../data/pt/accepted-variants.tsv");
 const VI: &str = include_str!("../data/vi/accepted-variants.tsv");
@@ -39,7 +40,7 @@ fn table() -> &'static HashMap<&'static str, HashMap<String, Vec<&'static str>>>
         let mut all = HashMap::new();
         for (lang, text) in [
             (crate::consts::DE, DE), (crate::consts::JA, JA), (crate::consts::EN, EN),
-            (crate::consts::FR, FR), (crate::consts::PT, PT), (crate::consts::VI, VI), (crate::consts::FIL, FIL), (crate::consts::HI, HI),
+            (crate::consts::ES, ES), (crate::consts::FR, FR), (crate::consts::PT, PT), (crate::consts::VI, VI), (crate::consts::FIL, FIL), (crate::consts::HI, HI),
         ] {
             let mut m: HashMap<String, Vec<&'static str>> = HashMap::new();
             for line in rows(text) {
@@ -199,7 +200,7 @@ mod tests {
 
     #[test]
     fn every_new_variant_row_cites_a_rule_and_resolves_to_one_stored_row() {
-        for (name, text) in [("fr", FR), ("pt", PT), ("vi", VI), ("fil", FIL), ("hi", HI)] {
+        for (name, text) in [("es", ES), ("fr", FR), ("pt", PT), ("vi", VI), ("fil", FIL), ("hi", HI)] {
             let mut seen = HashSet::new();
             for line in rows(text) {
                 let f: Vec<&str> = line.split('\t').collect();

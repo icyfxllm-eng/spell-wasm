@@ -1,0 +1,32 @@
+{
+  "$doc": "CC-ORTHO-SWEEP-ALL: near-sound rule ids for CC-VOICE-CLARITY Phase D intake. A near-sound is a miss, never accepted (VOICE-CLARITY D1). No per-language intake exists in the repo yet (only de and ja have near-sound-candidates.tsv), so this file is the intake.",
+  "lang": "pt",
+  "rules": [
+    {
+      "id": "pt_open_closed_vowel",
+      "description": "pode/pôde, por/pôr: open against closed vowel, distinct and easy to blur",
+      "examples": [
+        [
+          "pode",
+          "pôde"
+        ],
+        [
+          "por",
+          "pôr"
+        ]
+      ],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "id": "pt_ao_am",
+      "description": "ão/am",
+      "examples": [
+        [
+          "falarão",
+          "falaram"
+        ]
+      ],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    }
+  ]
+}

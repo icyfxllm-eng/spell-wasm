@@ -2307,7 +2307,19 @@ pub fn submit_guess(app: &App) {
         // yeísmo) is accepted. Empty table for languages without a file -> no-op.
         // Easy accepts the German umlaut / ß stand-ins; Spell Jr does through `answer_matches_in` (Eric 2026-11-04).
         let de_easy = cur_lang == crate::consts::DE && app.borrow().cur_tier == "easy" && crate::norm::de_stand_in_accepted(&typed, &word);
-        crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid) || en_variant || de_easy || {
+        // CC-ORTHO-SWEEP-ALL: a language whose profile flag is on is graded by its profile; flag off (the default) is the
+        // line above it replaced, byte for byte.
+        let profile_ok = crate::flags::ortho_profile(&cur_lang)
+            && crate::ortho_profile::profile(&cur_lang).is_some_and(|p| {
+                let tier = app.borrow().cur_tier.clone();
+                crate::ortho_profile::verdict(&p, &word, &typed, &tier, kid, &|w| crate::ortho_profile::is_bank_row(&cur_lang, w)).is_correct()
+            });
+        let current_ok = if crate::flags::ortho_profile(&cur_lang) && crate::ortho_profile::profile(&cur_lang).is_some() {
+            profile_ok
+        } else {
+            crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid)
+        };
+        current_ok || en_variant || de_easy || {
             let other = crate::homophones::accepts(&cur_lang, &word, &typed)
                 && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
             if other {

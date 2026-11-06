@@ -5,3 +5,8 @@ para	pára	AO90 Base IX (acentos gráficos): pre-reform pára loses its accent	a
 deem	dêem	AO90 Base IX (acentos gráficos): pre-reform dêem loses its circumflex	ao90_legacy
 fato	facto	AO90 Base IV (sequências consonânticas): European facto, Brazilian fato	pt_eu
 seção	secção	AO90 Base IV (sequências consonânticas): European secção, Brazilian seção	pt_eu
+fenômeno	fenómeno	AO90 Base XI (facultatividades de acentuação): circumflex or acute on e/o before m/n	pt_eu
+bebê	bebé	AO90 Base XI (facultatividades de acentuação): bebê or bebé	pt_eu
+recepção	receção	AO90 Base IV (sequências consonânticas): the p of pc is written in Brazil, dropped in Portugal	pt_eu
+aspecto	aspeto	AO90 Base IV (sequências consonânticas): the c of ct is written in Brazil, dropped in Portugal	pt_eu
+contato	contacto	AO90 Base IV (sequências consonânticas): the c of ct is dropped in Brazil, kept in Portugal	pt_eu

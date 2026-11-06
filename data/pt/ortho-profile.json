@@ -1,0 +1,43 @@
+{
+  "lang": "pt",
+  "normalize": [
+    "nfc",
+    "casefold",
+    "trim",
+    "collapse_spaces"
+  ],
+  "stand_ins": [],
+  "letters_not_marks": [
+    "ç"
+  ],
+  "variants_file": "data/pt/accepted-variants.tsv",
+  "citation_form": {
+    "rule": "pt-lemma",
+    "description": "Dictionary headword: nouns masculine singular, verbs infinitive. No plurals, conjugations or clitic forms."
+  },
+  "script_allow": {
+    "script": "Latin",
+    "extra_code_points": "áàâãçéêíóôõúü"
+  },
+  "voice": {
+    "provider": "google",
+    "voice_id": "pt-BR-Neural2-B",
+    "region_tag": "pt-BR"
+  },
+  "sound_alike": {
+    "generator": "rules",
+    "rule_ids": [
+      "pt_sibilant",
+      "pt_chx",
+      "pt_h",
+      "pt_gj",
+      "pt_unstressed",
+      "pt_lu_final"
+    ]
+  },
+  "near_sound_rule_ids": [
+    "pt_open_closed_vowel",
+    "pt_ao_am"
+  ],
+  "keyboard_notes": "ã õ ç ê ô by long-press. Stored form is Brazilian AO90; European spellings the agreement leaves open are accepted through the variants file (Eric 2026-11-05: pre-reform pára and dêem too). ç omitted is another letter (caça/caca), not a slip."
+}

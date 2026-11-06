@@ -94,6 +94,7 @@ mod dom;
 pub mod editor;
 mod enrich;
 pub mod entitlements;
+mod ortho_profile; // CC-ORTHO-SWEEP-ALL F0: per-language orthography profiles, data only, behind ortho_profile_<lang> flags
 mod accepted; // CC-ORTHO-SWEEP-DE-JA F3/F5: accepted spelling variants (de/ja), data files only
 mod ja_canon; // CC-ORTHO-SWEEP-DE-JA F6: half-width katakana key
 mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; Persian answer grading)

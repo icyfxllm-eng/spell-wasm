@@ -1,0 +1,199 @@
+{
+  "$doc": "CC-ORTHO-SWEEP-ALL: generator rules and seed pairs handed to CC-SENSE-CUE (it owns the table, its status and the read API). Nothing here changes grading. kind true = identical sound in this voice; accent = differs for some speakers or in some voices, never accepted as a homophone.",
+  "lang": "fr",
+  "voice_id": "fr-FR-Neural2-F",
+  "status": "missing: no generator yet (SENSE-CUE builds key_fr); rules and seeds staged",
+  "rules": [
+    {
+      "id": "fr_g2p",
+      "kind": "true",
+      "description": "rule-based grapheme-to-phoneme plus voice loopback; a dictionary is a check only"
+    },
+    {
+      "id": "fr_in_un",
+      "kind": "accent",
+      "description": "brin/brun, empreinte/emprunte: merged in Paris, distinct elsewhere; accent, no bonus, no acceptance (SENSE-CUE v1.2)"
+    }
+  ],
+  "seeds": [
+    {
+      "words": [
+        "vers",
+        "vert",
+        "verre",
+        "ver"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "sang",
+        "sans",
+        "cent"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "foi",
+        "fois",
+        "foie"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "pain",
+        "pin"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "saint",
+        "sein",
+        "sain"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "dans",
+        "dent"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "compte",
+        "conte",
+        "comte"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "mère",
+        "mer",
+        "maire"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "père",
+        "pair",
+        "paire"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "chant",
+        "champ"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cou",
+        "coup",
+        "coût"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "voie",
+        "voix"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "air",
+        "aire",
+        "ère"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cane",
+        "canne"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cygne",
+        "signe"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "mètre",
+        "maître"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "tante",
+        "tente"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cour",
+        "cours",
+        "court"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "ancre",
+        "encre"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "auteur",
+        "hauteur"
+      ],
+      "rule": "fr_g2p",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "brin",
+        "brun"
+      ],
+      "rule": "fr_in_un",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    }
+  ]
+}

@@ -68,6 +68,14 @@ pub fn en_retier() -> bool {
     resolve(stored("en_retier").as_deref(), true)
 }
 
+/// CC-ORTHO-SWEEP-ALL F0.6 -- grade this language through its orthography profile (`data/<lang>/ortho-profile.json`)
+/// instead of the current rules. One flag per language, **default OFF**: off is today's grading byte for byte (I11).
+/// Flipped on per language by a build, after the golden file passes and the Gig B sheet returns; never by a server
+/// file. The signed kill file can still switch it off (`ortho_profile_<lang>`).
+pub fn ortho_profile(lang: &str) -> bool {
+    resolve(stored(&format!("ortho_profile_{lang}")).as_deref(), false)
+}
+
 /// CC-CLIP-REPORT -- the "Can't tell" step in the rescue panel: the player says
 /// a clip was unintelligible, the round is voided (streak untouched, no miss),
 /// and a standard player's report is queued. **Default OFF**; see

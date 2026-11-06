@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ortho-profile.schema.json",
+  "title": "CC-ORTHO-SWEEP-ALL F0.1 orthography profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lang",
+    "normalize",
+    "stand_ins",
+    "letters_not_marks",
+    "variants_file",
+    "citation_form",
+    "script_allow",
+    "voice",
+    "sound_alike",
+    "near_sound_rule_ids",
+    "keyboard_notes"
+  ],
+  "properties": {
+    "lang": {
+      "type": "string"
+    },
+    "normalize": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "nfc",
+          "nfkc_halfwidth",
+          "strip_zwj_zwnj",
+          "collapse_spaces",
+          "trim",
+          "casefold",
+          "fold_apostrophe",
+          "fold_yo",
+          "fold_tone_placement",
+          "fold_pinyin",
+          "script_convert"
+        ]
+      }
+    },
+    "stand_ins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pattern",
+          "replacement",
+          "accepted_tiers",
+          "above"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "replacement": {
+            "type": "string"
+          },
+          "accepted_tiers": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "easy",
+                "medium",
+                "hard",
+                "expert"
+              ]
+            }
+          },
+          "above": {
+            "enum": [
+              "close"
+            ]
+          }
+        }
+      }
+    },
+    "letters_not_marks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "variants_file": {
+      "type": "string"
+    },
+    "citation_form": {
+      "type": "object",
+      "required": [
+        "rule",
+        "description"
+      ]
+    },
+    "script_allow": {
+      "type": "object",
+      "required": [
+        "script"
+      ]
+    },
+    "voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "voice_id",
+        "region_tag"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "voice_id": {
+          "type": "string"
+        },
+        "region_tag": {
+          "type": "string"
+        }
+      }
+    },
+    "sound_alike": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generator",
+        "rule_ids"
+      ],
+      "properties": {
+        "generator": {
+          "enum": [
+            "rules",
+            "dictionary",
+            "loopback_only",
+            "none"
+          ]
+        },
+        "rule_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "near_sound_rule_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "keyboard_notes": {
+      "type": "string"
+    }
+  }
+}

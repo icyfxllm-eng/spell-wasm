@@ -311,3 +311,11 @@ Full per-row table with tier and reason: `reports/ortho-census/quarantine-batch1
 3. The pt count (4 changed, not 3) and the lalake tier gate.
 4. NOTICES.md shows CC BY-SA definition sources already in the app; D-LIC as written bans them.
 5. The e2e half of the gate has not been run on this branch.
+
+## Phase 1 proper: es, fr, pt (2026-11-06)
+
+Built: src/ortho_profile.rs (data-driven, no language branches), data/{es,fr,pt}/ortho-profile.json, schema + tools/ortho/profile_check.py, accepted-variants with sources + tools/ortho/provenance-gate.py (selftest plants a BY-SA row), golden files tests/ortho/golden/{es,fr,pt}.tsv (214 / 338 / 325 rows, every lane at least 30), sound-alike and near-sound rule files for SENSE-CUE / VOICE-CLARITY, auditor addendum and Gig B sheets (reports/ortho-gigb-*.csv). The three ortho_profile flags ship OFF (test asserts it); with a flag off the old grading path runs unchanged.
+
+Gate: cargo test green (1,667 lib). E2E app 597/614 before one fix, which makes the vi picture test correct: it typed d-bar as a direct tap although it is the long-press of d (removing two vi bank rows changed the first picture word from "tung" to one containing d-bar, exposing the latent bug). Remaining red, none from this change: 15 online-room specs need target/debug/spell-server (cargo build -p spell-server --features test-modes) and A13.3 needs a signed kill document; site boardgame_wall (ar) fails identically on clean origin/main; site picture-wall failed once in the gate and passes on rerun (timing).
+
+Open for Eric: es casa/caza and cocer/coser (Spain voice makes them accent pairs; table still lists them true), es periodo/periodo-accented and video/video-accented duplicate rows, fr and pt tables missing (seeds are pending_table), close-feedback strings for non-German languages not wired, hi vs hy, fil lalake tier gate, NOTICES.md BY-SA wording, soundalike_loopback.py drops demoted sets.

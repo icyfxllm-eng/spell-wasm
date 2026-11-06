@@ -1,0 +1,57 @@
+{
+  "lang": "fr",
+  "normalize": [
+    "nfc",
+    "casefold",
+    "trim",
+    "collapse_spaces",
+    "fold_apostrophe"
+  ],
+  "stand_ins": [
+    {
+      "pattern": "oe",
+      "replacement": "œ",
+      "accepted_tiers": [
+        "easy"
+      ],
+      "above": "close"
+    },
+    {
+      "pattern": "ae",
+      "replacement": "æ",
+      "accepted_tiers": [
+        "easy"
+      ],
+      "above": "close"
+    }
+  ],
+  "letters_not_marks": [],
+  "variants_file": "data/fr/accepted-variants.tsv",
+  "citation_form": {
+    "rule": "fr-lemma",
+    "description": "Dictionary headword: nouns singular, adjectives masculine singular, verbs infinitive. No elided forms (l'eau), no plurals, no conjugations."
+  },
+  "script_allow": {
+    "script": "Latin",
+    "extra_code_points": "àâæçéèêëîïôœùûüÿ",
+    "note": "The build filter drops apostrophes and hyphens, so the bank holds neither (non-goal this sweep, Eric 2026-11-05)."
+  },
+  "voice": {
+    "provider": "google",
+    "voice_id": "fr-FR-Neural2-F",
+    "region_tag": "fr-FR"
+  },
+  "sound_alike": {
+    "generator": "rules",
+    "rule_ids": [
+      "fr_g2p",
+      "fr_in_un"
+    ]
+  },
+  "near_sound_rule_ids": [
+    "fr_e_open_closed",
+    "fr_final_silent",
+    "fr_on_an"
+  ],
+  "keyboard_notes": "Five accented vowels and ç by long-press. oe and ae for œ and æ are the stand-ins French writers use (most keyboards lack œ): accepted on Easy and Spell Jr, close above. The French rectifications of 1990 are accepted both ways through the variants file."
+}

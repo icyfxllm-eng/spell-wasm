@@ -1,0 +1,18 @@
+# CC-ORTHO-SWEEP-ALL F0.5 / D-NOBYSA: licences and sources that oblige the shipper beyond attribution. One case-insensitive substring per line.
+# A shipped variant row or pair row may not name any of these as its source. They may appear only in a checked_by column.
+CC BY-SA
+CC-BY-SA
+BY-SA
+ShareAlike
+Share-Alike
+GPL
+LGPL
+CC BY-NC
+CC-BY-NC
+NonCommercial
+Lexique
+OpenCorpora
+CC-CEDICT
+Wiktionary
+kaikki
+JMdict

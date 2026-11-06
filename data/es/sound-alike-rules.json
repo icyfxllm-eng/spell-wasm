@@ -1,0 +1,187 @@
+{
+  "$doc": "CC-ORTHO-SWEEP-ALL: generator rules and seed pairs handed to CC-SENSE-CUE (it owns the table, its status and the read API). Nothing here changes grading. kind true = identical sound in this voice; accent = differs for some speakers or in some voices, never accepted as a homophone.",
+  "lang": "es",
+  "voice_id": "es-ES-Neural2-G",
+  "status": "table verified (7 true sets) by CC-SENSE-CUE; es_scz and the tilde rule need a re-check against the Spain voice",
+  "rules": [
+    {
+      "id": "es_bv",
+      "kind": "true",
+      "description": "b and v are one phoneme"
+    },
+    {
+      "id": "es_h",
+      "kind": "true",
+      "description": "h is silent"
+    },
+    {
+      "id": "es_lly",
+      "kind": "true",
+      "description": "ll and y merge (yeismo); true for the es-ES-Neural2-G voice"
+    },
+    {
+      "id": "es_scz",
+      "kind": "accent",
+      "description": "c/z against s. The Spain voice distinguishes them (distincion), so casa/caza is NOT a same-sound pair here; it would be true for a seseante voice"
+    },
+    {
+      "id": "es_tilde_only",
+      "kind": "true",
+      "description": "a pair that differs only by a written tilde sounds the same in isolation (tu/tú, el/él, si/sí)"
+    }
+  ],
+  "seeds": [
+    {
+      "words": [
+        "botar",
+        "votar"
+      ],
+      "rule": "es_bv",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "baca",
+        "vaca"
+      ],
+      "rule": "es_bv",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "bello",
+        "vello"
+      ],
+      "rule": "es_bv",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "hola",
+        "ola"
+      ],
+      "rule": "es_h",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "hecho",
+        "echo"
+      ],
+      "rule": "es_h",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "hasta",
+        "asta"
+      ],
+      "rule": "es_h",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "haya",
+        "halla"
+      ],
+      "rule": "es_lly",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cayó",
+        "calló"
+      ],
+      "rule": "es_lly",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "valla",
+        "vaya"
+      ],
+      "rule": "es_lly",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "casa",
+        "caza"
+      ],
+      "rule": "es_scz",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cocer",
+        "coser"
+      ],
+      "rule": "es_scz",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "abrasar",
+        "abrazar"
+      ],
+      "rule": "es_scz",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "tu",
+        "tú"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "el",
+        "él"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "si",
+        "sí"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "mas",
+        "más"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "se",
+        "sé"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "de",
+        "dé"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "te",
+        "té"
+      ],
+      "rule": "es_tilde_only",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    }
+  ]
+}

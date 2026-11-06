@@ -1,0 +1,44 @@
+{
+  "lang": "es",
+  "normalize": [
+    "nfc",
+    "casefold",
+    "trim",
+    "collapse_spaces"
+  ],
+  "stand_ins": [],
+  "letters_not_marks": [
+    "ñ"
+  ],
+  "variants_file": "data/es/accepted-variants.tsv",
+  "citation_form": {
+    "rule": "es-lemma",
+    "description": "Dictionary headword: nouns and adjectives masculine singular, verbs infinitive. No plurals, conjugations, clitic forms or diminutives unless they are headwords."
+  },
+  "script_allow": {
+    "script": "Latin",
+    "extra_code_points": "áéíóúüñ",
+    "excluded": "¿¡",
+    "note": "Answers never contain ¿ or ¡."
+  },
+  "voice": {
+    "provider": "google",
+    "voice_id": "es-ES-Neural2-G",
+    "region_tag": "es-ES"
+  },
+  "sound_alike": {
+    "generator": "rules",
+    "rule_ids": [
+      "es_bv",
+      "es_h",
+      "es_lly",
+      "es_scz",
+      "es_tilde_only"
+    ]
+  },
+  "near_sound_rule_ids": [
+    "es_r_rr",
+    "es_n_ny"
+  ],
+  "keyboard_notes": "Tilde and ñ by long-press (CC-SPELL-KEYBOARD). Capital letters fold. ¿ ¡ never appear in an answer. Eric 2026-11-05: the voice is from Spain, so es_scz (c/z against s) is an accent rule, not a true homophone rule."
+}

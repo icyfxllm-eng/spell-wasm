@@ -52,6 +52,7 @@ export const ALLOW = [
   { file: 'src/pinyin.rs', has: 'matches!(tier, "easy" | "medium")', why: 'D4 grading rule (surface tones accepted), not access' },
   { file: 'src/learner.rs', has: 'for tier in ["easy", "medium"]', why: 'placement set, already inside the Spell Jr tiers' },
   { file: 'src/online_spelloff.rs', has: '=> s.level.clone()', why: 'match tier from level; Online Spell-Off is hidden from Spell Jr' },
+  { file: 'src/ortho_profile.rs', has: '["easy", "medium", "hard", "expert"]', why: 'CC-ORTHO-SWEEP-ALL: is the typed form itself a bank row (whole-bank lookup, the web build has no word_index); serves nothing' },
   { file: 'src/word_index.rs', has: 'for tier in [', why: 'whole-bank lookup index for answer checking; serves nothing' },
   { file: 'src/spelldoku/wordmode.rs', has: '=> Some(&[("', why: 'F12 vocabulary band mix of a Word Mode board; which boards a player may play comes from play::allowed and experience' },
   { file: 'src/spelldoku/wordmode.rs', has: 'for band in [', why: 'finds the bank band of a word the player saved; serves nothing' },

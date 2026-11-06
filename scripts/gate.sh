@@ -154,6 +154,9 @@ node scripts/e2e-sleep-ratchet.mjs --selftest || { echo "GATE FAIL: e2e sleep ra
 echo "== gate: bank purity — every row has a verdict, no unchecked profanity (CC-BANK-PURITY F6)"
 python3 tools/bank/purity_gate.py || { echo "GATE FAIL: bank purity"; exit 1; }
 python3 tools/bank/purity_gate.py --selftest || { echo "GATE FAIL: purity-gate selftest — the gate no longer bites"; exit 1; }
+python3 tools/ortho/profile_check.py || { echo "GATE FAIL: orthography profiles (CC-ORTHO-SWEEP-ALL F0.1)"; exit 1; }
+python3 tools/ortho/provenance-gate.py || { echo "GATE FAIL: variant/seed provenance (D-NOBYSA)"; exit 1; }
+python3 tools/ortho/provenance-gate.py --selftest || { echo "GATE FAIL: provenance-gate selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
 python3 tools/build_collisions.py --check || { echo "GATE FAIL: collision tables"; exit 1; }

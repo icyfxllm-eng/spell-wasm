@@ -1,0 +1,34 @@
+{
+  "$doc": "CC-ORTHO-SWEEP-ALL: near-sound rule ids for CC-VOICE-CLARITY Phase D intake. A near-sound is a miss, never accepted (VOICE-CLARITY D1). No per-language intake exists in the repo yet (only de and ja have near-sound-candidates.tsv), so this file is the intake.",
+  "lang": "fr",
+  "rules": [
+    {
+      "id": "fr_e_open_closed",
+      "description": "é/è in open syllables: poignée/poignet",
+      "examples": [
+        [
+          "poignée",
+          "poignet"
+        ]
+      ],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "id": "fr_final_silent",
+      "description": "pairs that differ only by a silent final consonant",
+      "examples": [],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "id": "fr_on_an",
+      "description": "on/an nasals",
+      "examples": [
+        [
+          "pont",
+          "pan"
+        ]
+      ],
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    }
+  ]
+}

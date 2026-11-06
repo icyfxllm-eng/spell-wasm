@@ -1,0 +1,208 @@
+{
+  "$doc": "CC-ORTHO-SWEEP-ALL: generator rules and seed pairs handed to CC-SENSE-CUE (it owns the table, its status and the read API). Nothing here changes grading. kind true = identical sound in this voice; accent = differs for some speakers or in some voices, never accepted as a homophone.",
+  "lang": "pt",
+  "voice_id": "pt-BR-Neural2-B",
+  "status": "missing: no generator yet (SENSE-CUE builds key_pt); rules and seeds staged",
+  "rules": [
+    {
+      "id": "pt_sibilant",
+      "kind": "true",
+      "description": "s, ss, ç, c, sc, x, z in sibilant positions"
+    },
+    {
+      "id": "pt_chx",
+      "kind": "true",
+      "description": "ch and x as /ʃ/"
+    },
+    {
+      "id": "pt_h",
+      "kind": "true",
+      "description": "h is silent"
+    },
+    {
+      "id": "pt_gj",
+      "kind": "true",
+      "description": "g before e/i and j"
+    },
+    {
+      "id": "pt_unstressed",
+      "kind": "accent",
+      "description": "unstressed e/i and o/u in the Brazilian voice; kept accent until the loopback measures it"
+    },
+    {
+      "id": "pt_lu_final",
+      "kind": "accent",
+      "description": "final l as /w/ (mal/mau) in the Brazilian voice"
+    }
+  ],
+  "seeds": [
+    {
+      "words": [
+        "caça",
+        "cassa"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cozer",
+        "coser"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cesta",
+        "sexta"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "chá",
+        "xá"
+      ],
+      "rule": "pt_chx",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cheque",
+        "xeque"
+      ],
+      "rule": "pt_chx",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "concerto",
+        "conserto"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "acento",
+        "assento"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "senso",
+        "censo"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "sessão",
+        "cessão"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "tachar",
+        "taxar"
+      ],
+      "rule": "pt_chx",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "hora",
+        "ora"
+      ],
+      "rule": "pt_h",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cela",
+        "sela"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "espiar",
+        "expiar"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "laço",
+        "lasso"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cerrar",
+        "serrar"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "paço",
+        "passo"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "cinto",
+        "sinto"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "ruço",
+        "russo"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "apreçar",
+        "apressar"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "incipiente",
+        "insipiente"
+      ],
+      "rule": "pt_sibilant",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    },
+    {
+      "words": [
+        "mal",
+        "mau"
+      ],
+      "rule": "pt_lu_final",
+      "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+    }
+  ]
+}
