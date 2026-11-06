@@ -2,3 +2,4 @@
 # One-way, as de and ja: the stored form is the bank row; the accepted form grades as correct at every tier. Read by src/accepted.rs only.
 # A variant is a spelling of the SAME word, never a near-sound. Every row cites the rule that makes it correct.
 lalaki	lalake	KWF Ortograpiyang Pambansa 2014: e/i in final syllables (legacy lalake)	legacy_vowel
+lalaking	lalakeng	KWF Ortograpiyang Pambansa 2014: e/i in final syllables (legacy lalake, with the -ng ligature)	legacy_vowel

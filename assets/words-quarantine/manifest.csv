@@ -9690,3 +9690,6 @@ hi,जबरदस्त,hard,306,variant_duplicate,"CC-ORTHO-SWEEP-ALL: no-nukt
 pt,secção,hard,1109,variant_duplicate,"CC-ORTHO-SWEEP-ALL: European spelling of seção, already a row; seção kept, secção an accepted variant; Eric 2026-11-05",2026-11-05
 zh,hu2li2|狐狸,expert,2272,duplicate_hanzi,"CC-ORTHO-SWEEP-ALL: same hanzi as hu2li5|狐狸 (hú·li, neutral second syllable is the standard reading); Eric 2026-11-05",2026-11-05
 zh,you3zhu4|有着,medium,274,duplicate_hanzi,CC-ORTHO-SWEEP-ALL: same hanzi as you3zhe5|有着 (着 is neutral zhe5 here); Eric 2026-11-05,2026-11-05
+es,periodo,hard,179,variant_duplicate,"CC-ORTHO-SWEEP-ALL: two rows for one word; período kept (RAE preferred), periodo an accepted variant; Eric 2026-11-06",2026-11-06
+es,video,medium,325,variant_duplicate,"CC-ORTHO-SWEEP-ALL: two rows for one word; vídeo kept (RAE preferred), video an accepted variant; Eric 2026-11-06",2026-11-06
+fil,lalakeng,hard,1142,variant_duplicate,"CC-ORTHO-SWEEP-ALL: legacy vowel spelling of lalaking (inflected lalake/lalaki); lalaking kept, lalakeng an accepted variant; Eric 2026-11-06",2026-11-06

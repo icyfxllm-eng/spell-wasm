@@ -12,7 +12,7 @@ const LAUNCH = ['en', 'es', 'ru', 'fr', 'de', 'pt', 'pl', 'fil'];
 // reason: CC-AUDIO-CLARITY C10 took five other-variety words out of the
 // English bank, so the pool those 500 seeds draw from is a different pool.
 // Re-pinned 2026-10-07 with src/wordsearch/tests.rs (CC-BANK-PURITY Phase A, on Eric's instruction).
-const GOLDEN = '0xfde8d0a000cf50ba';  // re-pinned 2026-11-05 with src/wordsearch/tests.rs (CC-ORTHO-SWEEP-ALL bank cleanups) — see the reason there
+const GOLDEN = '0x6750999235664b88';  // re-pinned 2026-11-06 with src/wordsearch/tests.rs (CC-ORTHO-SWEEP-ALL es/fil follow-up cleanups) — see the reason there
 
 const board = (page) => page.evaluate(() => JSON.parse(window.__spelltest.spellSearchBoard() || 'null'));
 

@@ -1,8 +1,8 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xA68FEC14C4C54483
-#tier	medium	0x5E221B66C40F6706
-#tier	hard	0xDAB7CC5B29D7EF86
+#tier	medium	0xAC6ECD5A8EEF01EA
+#tier	hard	0x90BEB728F004956B
 #tier	expert	0x338467808974F94A
 abrigo	dictionary	es_ES
 abrir	dictionary	es_ES
@@ -596,7 +596,6 @@ fiesta	dictionary	es_ES
 perdió	dictionary	es_ES
 goles	dictionary	es_ES
 vuelve	dictionary	es_ES
-video	dictionary	es_ES
 china	dictionary	es_ES
 quiere	dictionary	es_ES
 torre	dictionary	es_ES
@@ -1450,7 +1449,6 @@ similar	dictionary	es_ES
 episodio	dictionary	es_ES
 cultura	dictionary	es_ES
 revista	dictionary	es_ES
-periodo	dictionary	es_ES
 terminó	dictionary	es_ES
 tuvieron	dictionary	es_ES
 diversas	dictionary	es_ES

@@ -82,6 +82,25 @@ def audio(word, lang):
     return a
 
 
+def carry_forward(measured, previous, voice):
+    """Keep prior results for sets this run did not measure (a set demoted from kind "true" is no longer iterated, so
+    rewriting the file from `measured` alone silently dropped it). Only when the voice is unchanged: a result belongs to
+    the voice it was measured against, and a stale one would read as verified for a voice it never heard."""
+    if not previous or previous.get("voice") != voice:
+        return dict(measured)
+    kept = {k: v for k, v in previous.get("sets", {}).items() if k not in measured}
+    return {**kept, **measured}
+
+
+def _selftest():
+    prev = {"voice": "v1", "sets": {"a": {"flag": None}, "demoted": {"flag": None}}}
+    got = carry_forward({"a": {"flag": "x"}, "b": {"flag": None}}, prev, "v1")
+    assert set(got) == {"a", "b", "demoted"} and got["a"]["flag"] == "x", got
+    assert set(carry_forward({"a": {}}, prev, "v2")) == {"a"}, "a changed voice must not inherit old results"
+    assert carry_forward({"a": {}}, None, "v1") == {"a": {}}
+    print("soundalike_loopback selftest ok")
+
+
 def run(lang):
     feats = {}
 
@@ -118,6 +137,11 @@ def run(lang):
             else:
                 sets[s["setId"]] = {"members": ms, "worst": round(worst, 4), "worstPair": pair,
                                     "flag": "voice-may-distinguish" if worst > bar else None}
+    try:
+        previous = json.loads(STORE(lang).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        previous = None
+    sets = carry_forward(sets, previous, layer1_voices().get(lang))
     store = {
         "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; "
                 "read by tools/build_collisions.py. Never changes a set's kind.",
@@ -135,5 +159,12 @@ def run(lang):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--lang", required=True, choices=sorted(CONTROLS))
-    run(ap.parse_args().lang)
+    ap.add_argument("--lang", choices=sorted(CONTROLS))
+    ap.add_argument("--selftest", action="store_true")
+    a = ap.parse_args()
+    if a.selftest:
+        _selftest()
+    elif a.lang:
+        run(a.lang)
+    else:
+        ap.error("--lang is required")

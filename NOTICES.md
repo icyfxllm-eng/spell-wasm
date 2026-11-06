@@ -64,6 +64,14 @@ the Wiktionary-derived glosses for every other language. This line named only
 CC-CEDICT until 2026-10-08, when JMdict became the Japanese source and made the
 omission visible; Wiktionary was always covered and never listed.
 
+Scope of the BY-SA sources above: they feed the definitions layer only. The spelling
+data the orthography profiles read for es, fr, pt, pl, ru, vi, ko, fil, zh, sw and hi
+(accepted-variant rows and sound-alike pairs) cites only CC BY, MIT, Apache-2.0, BSD,
+the Unicode licence, official rule texts with hand-authored pairs, or native-speaker
+auditors, and tools/ortho/provenance-gate.py fails the build on a BY-SA, GPL, NC or
+unknown source (CC-ORTHO-SWEEP-ALL D-LIC). This note says nothing about word banks
+built before that rule; the Persian bank, for one, is built from Wiktionary lemmas.
+
 ## Japanese (ja)
 - **JMdict** (EDRDG) — Japanese-English dictionary, the source of the ja
   definitions. Extracted by `scripts/build-ja-glosses.py` into

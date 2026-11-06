@@ -226,7 +226,11 @@ fn wordgrid_property_10k() {
 /// Vietnamese typo, one Vietnamese, one Filipino and seven Hindi variant rows and two Chinese same-hanzi rows left the banks (moved,
 /// never deleted), three Portuguese rows were respelled to the BR AO90 form, and eight Swahili ng' rows joined. These 500 seeds draw
 /// differently. Hold this pin back to the previous value if that sweep is reversed.
-pub const GOLDEN: u64 = 0xfde8_d0a0_00cf_50ba;
+///
+/// Re-pinned 2026-11-06, from 0xfde8_d0a0_00cf_50ba, by CC-ORTHO-SWEEP-ALL (Eric): Spanish periodo and video and Filipino lalakeng
+/// left the banks (moved, never deleted; the accented/standard rows stay). These 500 seeds draw differently. Hold this pin back to
+/// the previous value if that follow-up is reversed.
+pub const GOLDEN: u64 = 0x6750_9992_3566_4b88;
 
 #[test]
 fn wordgrid_determinism() {

@@ -1,5 +1,7 @@
 # CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05): accepted spelling variants for Spanish. stored<TAB>accepted<TAB>source<TAB>kind
 # One-way, as de and ja. Stored = the bank row. Every row cites its rule.
-# NOT listed, on purpose: periodo/período and video/vídeo are BOTH bank rows (two rows for one word); a variant row would resolve to two rows (I2). They need a one-row cleanup first.
+# periodo/período and video/vídeo were two bank rows each; the bare forms were quarantined 2026-11-06 and are listed below.
 guion	guión	RAE, Ortografía de la lengua española (2010): guion and truhan are monosyllables for spelling purposes and take no tilde; guión stays correct (pre-2010 form)	rae2010
 cardíaco	cardiaco	RAE, Ortografía de la lengua española (2010): both cardiaco and cardíaco are correct (dual accentuation of the hiatus)	dual
+período	periodo	RAE, Diccionario de la lengua española: both forms are valid (período is the standard form; periodo is the accepted alternative)	dual
+vídeo	video	RAE, Diccionario de la lengua española: both forms are valid (vídeo is the Spain form, video is used in the Americas)	dual

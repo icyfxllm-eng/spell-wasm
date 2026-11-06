@@ -44,12 +44,12 @@ homophone	joven	jovkn	medium	es-ES-Neural2-G	miss	control: one letter changed, n
 homophone	apoyaba	apkyaba	expert	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 homophone	metros	mktros	medium	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 homophone	autores	autkres	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
-homophone	tienden	tkenden	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
-homophone	plana	pkana	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
+homophone	tiene	tkene	medium	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
+homophone	planas	pkanas	expert	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 homophone	digna	digka	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
-homophone	áreas	áreks	medium	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
-homophone	reveló	rkveló	medium	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
-homophone	reserva	rekerva	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
+homophone	ébola	éboka	expert	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
+homophone	revise	rkvise	expert	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
+homophone	reseña	rekeña	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 homophone	evalúa	ekalúa	expert	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 variant	guion	guión	easy	es-ES-Neural2-G	correct	listed variant
 variant	guion	guion	easy	es-ES-Neural2-G	correct	the stored form
@@ -81,6 +81,36 @@ variant	cardíaco	cardiacx	expert	es-ES-Neural2-G	miss	an unlisted spelling
 variant	cardíaco	cardiaco	jr	es-ES-Neural2-G	correct	listed variant
 variant	cardíaco	cardíaco	jr	es-ES-Neural2-G	correct	the stored form
 variant	cardíaco	cardiacx	jr	es-ES-Neural2-G	miss	an unlisted spelling
+variant	período	periodo	easy	es-ES-Neural2-G	correct	listed variant
+variant	período	período	easy	es-ES-Neural2-G	correct	the stored form
+variant	período	periodx	easy	es-ES-Neural2-G	miss	an unlisted spelling
+variant	período	periodo	medium	es-ES-Neural2-G	correct	listed variant
+variant	período	período	medium	es-ES-Neural2-G	correct	the stored form
+variant	período	periodx	medium	es-ES-Neural2-G	miss	an unlisted spelling
+variant	período	periodo	hard	es-ES-Neural2-G	correct	listed variant
+variant	período	período	hard	es-ES-Neural2-G	correct	the stored form
+variant	período	periodx	hard	es-ES-Neural2-G	miss	an unlisted spelling
+variant	período	periodo	expert	es-ES-Neural2-G	correct	listed variant
+variant	período	período	expert	es-ES-Neural2-G	correct	the stored form
+variant	período	periodx	expert	es-ES-Neural2-G	miss	an unlisted spelling
+variant	período	periodo	jr	es-ES-Neural2-G	correct	listed variant
+variant	período	período	jr	es-ES-Neural2-G	correct	the stored form
+variant	período	periodx	jr	es-ES-Neural2-G	miss	an unlisted spelling
+variant	vídeo	video	easy	es-ES-Neural2-G	correct	listed variant
+variant	vídeo	vídeo	easy	es-ES-Neural2-G	correct	the stored form
+variant	vídeo	videx	easy	es-ES-Neural2-G	miss	an unlisted spelling
+variant	vídeo	video	medium	es-ES-Neural2-G	correct	listed variant
+variant	vídeo	vídeo	medium	es-ES-Neural2-G	correct	the stored form
+variant	vídeo	videx	medium	es-ES-Neural2-G	miss	an unlisted spelling
+variant	vídeo	video	hard	es-ES-Neural2-G	correct	listed variant
+variant	vídeo	vídeo	hard	es-ES-Neural2-G	correct	the stored form
+variant	vídeo	videx	hard	es-ES-Neural2-G	miss	an unlisted spelling
+variant	vídeo	video	expert	es-ES-Neural2-G	correct	listed variant
+variant	vídeo	vídeo	expert	es-ES-Neural2-G	correct	the stored form
+variant	vídeo	videx	expert	es-ES-Neural2-G	miss	an unlisted spelling
+variant	vídeo	video	jr	es-ES-Neural2-G	correct	listed variant
+variant	vídeo	vídeo	jr	es-ES-Neural2-G	correct	the stored form
+variant	vídeo	videx	jr	es-ES-Neural2-G	miss	an unlisted spelling
 friction	resolución	resolucion	expert	es-ES-Neural2-G	close	marks left out
 friction	resolución	resolucion	jr	es-ES-Neural2-G	correct	marks left out
 friction	sorprendió	sorprendio	hard	es-ES-Neural2-G	close	marks left out
@@ -195,9 +225,9 @@ friction	agregan	agregan	expert	es-ES-Neural2-G	correct	NFD input grades as NFC
 friction	novela	NOVELA	medium	es-ES-Neural2-G	correct	capital letters fold
 friction	novela	 novela 	medium	es-ES-Neural2-G	correct	edge spaces are trimmed
 friction	novela	novela	medium	es-ES-Neural2-G	correct	NFD input grades as NFC
-friction	solicita	SOLICITA	hard	es-ES-Neural2-G	correct	capital letters fold
-friction	solicita	 solicita 	hard	es-ES-Neural2-G	correct	edge spaces are trimmed
-friction	solicita	solicita	hard	es-ES-Neural2-G	correct	NFD input grades as NFC
+friction	solicitan	SOLICITAN	expert	es-ES-Neural2-G	correct	capital letters fold
+friction	solicitan	 solicitan 	expert	es-ES-Neural2-G	correct	edge spaces are trimmed
+friction	solicitan	solicitan	expert	es-ES-Neural2-G	correct	NFD input grades as NFC
 friction	contarte	CONTARTE	expert	es-ES-Neural2-G	correct	capital letters fold
 friction	contarte	 contarte 	expert	es-ES-Neural2-G	correct	edge spaces are trimmed
 friction	contarte	contarte	expert	es-ES-Neural2-G	correct	NFD input grades as NFC
