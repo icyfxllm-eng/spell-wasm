@@ -1,0 +1,171 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+ko/easy/9,ko,easy,강한,F-ko-cit,looks derived from row '강' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/182,ko,easy,약한,F-ko-cit,looks derived from row '약' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/296,ko,easy,같은,F-ko-cit,looks derived from row '같다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/302,ko,easy,많은,F-ko-cit,looks derived from row '많다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/316,ko,easy,하지만,F-ko-cit,looks derived from row '하지' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/318,ko,easy,하고,F-ko-cit,looks derived from row '하다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/319,ko,easy,이를,F-ko-cit,looks derived from row '이다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/322,ko,easy,같이,F-ko-cit,looks derived from row '같다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/328,ko,easy,이에,F-ko-cit,looks derived from row '이다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/331,ko,easy,많이,F-ko-cit,looks derived from row '많다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/336,ko,easy,주로,F-ko-cit,looks derived from row '주' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/338,ko,easy,않은,F-ko-cit,looks derived from row '않다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/340,ko,easy,따라서,F-ko-cit,looks derived from row '따라' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/354,ko,easy,하며,F-ko-cit,looks derived from row '하다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/361,ko,easy,있을,F-ko-cit,looks derived from row '있다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/363,ko,easy,이라고,F-ko-cit,looks derived from row '이라' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/368,ko,easy,없이,F-ko-cit,looks derived from row '없다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/380,ko,easy,바로,F-ko-cit,looks derived from row '바다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/390,ko,easy,보고,F-ko-cit,looks derived from row '보다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/392,ko,easy,결과,F-ko-cit,looks derived from row '결' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/429,ko,easy,가능한,F-ko-cit,looks derived from row '가능하다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/445,ko,easy,관련된,F-ko-cit,looks derived from row '관련' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/455,ko,easy,필요한,F-ko-cit,looks derived from row '필요' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/459,ko,easy,실제로,F-ko-cit,looks derived from row '실제' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/464,ko,easy,최고,F-ko-cit,looks derived from row '최다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/481,ko,easy,강력한,F-ko-cit,looks derived from row '강력' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/483,ko,easy,않을,F-ko-cit,looks derived from row '않다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/500,ko,easy,반면,F-ko-cit,looks derived from row '반' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/523,ko,easy,새로,F-ko-cit,looks derived from row '새' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/534,ko,easy,길이,F-ko-cit,looks derived from row '길' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/556,ko,easy,개인,F-ko-cit,looks derived from row '개' (heuristic),quarantine via PURITY ledger if approved
+ko/medium/65,ko,medium,신고,F-ko-cit,looks derived from row '신' (heuristic),quarantine via PURITY ledger if approved
+ko/medium/174,ko,medium,문서,F-ko-cit,looks derived from row '문' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/348,ko,hard,사도,F-ko-cit,looks derived from row '사다' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/376,ko,hard,주한,F-ko-cit,looks derived from row '주' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/445,ko,hard,중국인,F-ko-cit,looks derived from row '중국' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/533,ko,hard,결의,F-ko-cit,looks derived from row '결' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/557,ko,hard,사면,F-ko-cit,looks derived from row '사다' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/603,ko,hard,피할,F-ko-cit,looks derived from row '피' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/640,ko,hard,오만,F-ko-cit,looks derived from row '오다' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/709,ko,hard,시가,F-ko-cit,looks derived from row '시' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/778,ko,hard,보인,F-ko-cit,looks derived from row '보다' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/792,ko,hard,오이,F-ko-cit,looks derived from row '오다' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/814,ko,hard,커서,F-ko-cit,looks derived from row '커' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/852,ko,hard,솔로,F-ko-cit,looks derived from row '솔' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/860,ko,hard,이어서,F-ko-cit,looks derived from row '이어' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/861,ko,hard,이이,F-ko-cit,looks derived from row '이다' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/877,ko,hard,피로,F-ko-cit,looks derived from row '피' (heuristic),quarantine via PURITY ledger if approved
+ko/hard/932,ko,hard,창의,F-ko-cit,looks derived from row '창' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/11,ko,expert,어린이,F-ko-cit,looks derived from row '어린' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/103,ko,expert,풀이,F-ko-cit,looks derived from row '풀' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/201,ko,expert,하인,F-ko-cit,looks derived from row '하다' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/219,ko,expert,달인,F-ko-cit,looks derived from row '달' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/338,ko,expert,싸인,F-ko-cit,looks derived from row '싸' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/526,ko,expert,영국인,F-ko-cit,looks derived from row '영국' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/612,ko,expert,연고,F-ko-cit,looks derived from row '연' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/633,ko,expert,이의,F-ko-cit,looks derived from row '이다' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/660,ko,expert,공과,F-ko-cit,looks derived from row '공' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/672,ko,expert,더욱이,F-ko-cit,looks derived from row '더욱' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/792,ko,expert,성명서,F-ko-cit,looks derived from row '성명' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/797,ko,expert,쓰인,F-ko-cit,looks derived from row '쓰다' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/812,ko,expert,원서,F-ko-cit,looks derived from row '원' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/871,ko,expert,반도,F-ko-cit,looks derived from row '반' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/906,ko,expert,음악가,F-ko-cit,looks derived from row '음악' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/977,ko,expert,연한,F-ko-cit,looks derived from row '연' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/1044,ko,expert,묘한,F-ko-cit,looks derived from row '묘' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/1046,ko,expert,문과,F-ko-cit,looks derived from row '문' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/1054,ko,expert,비만,F-ko-cit,looks derived from row '비' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/1061,ko,expert,선의,F-ko-cit,looks derived from row '선' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/1126,ko,expert,따를,F-ko-cit,looks derived from row '따' (heuristic),quarantine via PURITY ledger if approved
+ko/expert/1432,ko,expert,사서,F-ko-cit,looks derived from row '사다' (heuristic),quarantine via PURITY ledger if approved
+ko/easy/9,ko,easy,강한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/15,ko,easy,검은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/56,ko,easy,늙은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/59,ko,easy,단단한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/79,ko,easy,따뜻한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/81,ko,easy,뜨거운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/119,ko,easy,부드러운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/139,ko,easy,새로운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/158,ko,easy,쉬운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/161,ko,easy,시원한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/182,ko,easy,약한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/184,ko,easy,어두운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/214,ko,easy,은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/228,ko,easy,작은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/234,ko,easy,젖은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/237,ko,easy,좋은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/248,ko,easy,짧은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/257,ko,easy,추운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/293,ko,easy,대한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/296,ko,easy,같은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/297,ko,easy,또한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/302,ko,easy,많은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/307,ko,easy,또는,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/311,ko,easy,위한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/317,ko,easy,이러한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/332,ko,easy,다양한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/335,ko,easy,높은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/338,ko,easy,않은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/346,ko,easy,중요한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/349,ko,easy,관한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/366,ko,easy,의한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/371,ko,easy,혹은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/386,ko,easy,받은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/411,ko,easy,포함한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/416,ko,easy,사용할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/425,ko,easy,위치한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/427,ko,easy,수많은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/429,ko,easy,가능한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/437,ko,easy,못한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/438,ko,easy,비슷한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/442,ko,easy,낮은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/445,ko,easy,관련된,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/449,ko,easy,비롯한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/455,ko,easy,필요한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/468,ko,easy,가까운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/471,ko,easy,인한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/473,ko,easy,유일한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/474,ko,easy,가는,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/481,ko,easy,강력한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/507,ko,easy,제외한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/509,ko,easy,유명한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/512,ko,easy,적은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/521,ko,easy,죽은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/525,ko,easy,깊은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/529,ko,easy,넓은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/531,ko,easy,동일한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/535,ko,easy,사용한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/537,ko,easy,젊은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/538,ko,easy,통한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/542,ko,easy,거대한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/easy/548,ko,easy,그러한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/medium/49,ko,medium,자연스러운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/medium/54,ko,medium,어마어마한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/medium/61,ko,medium,갑작스러운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/112,ko,hard,당할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/123,ko,hard,분할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/159,ko,hard,구할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/218,ko,hard,가벼운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/268,ko,hard,흔한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/376,ko,hard,주한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/407,ko,hard,더운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/603,ko,hard,피할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/616,ko,hard,김정은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/618,ko,hard,더러운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/664,ko,hard,편한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/693,ko,hard,무거운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/739,ko,hard,취한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/786,ko,hard,실은,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/hard/889,ko,hard,남한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/120,ko,expert,고운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/144,ko,expert,만한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/168,ko,expert,아쉬운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/174,ko,expert,유한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/320,ko,expert,반가운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/386,ko,expert,고마운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/547,ko,expert,취할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/564,ko,expert,구운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/712,ko,expert,여운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/753,ko,expert,구한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/773,ko,expert,매운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/860,ko,expert,두꺼운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/895,ko,expert,싸운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/896,ko,expert,안타까운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/977,ko,expert,연한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/993,ko,expert,접한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/1006,ko,expert,키운,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/1044,ko,expert,묘한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/1068,ko,expert,악한,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review
+ko/expert/1370,ko,expert,토할,F-ko-cit,"inflection pattern, lemma not in bank (heuristic)",review

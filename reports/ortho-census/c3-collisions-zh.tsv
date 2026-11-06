@@ -1,0 +1,255 @@
+normalized	row_ids	stored	tiers
+ai1	zh/hard/440 zh/hard/815 zh/hard/897 zh/expert/1777	ai1|埃 | ai1|哎 | ai1|唉 | ai1|挨	hard,hard,hard,expert
+an4	zh/medium/411 zh/hard/834 zh/expert/2528	an4|案 | an4|暗 | an4|岸	medium,hard,expert
+ba1	zh/easy/2 zh/expert/1272	ba1|八 | ba1|扒	easy,expert
+ban1	zh/easy/5 zh/easy/6	ban1|搬 | ban1|班	easy,easy
+ban4	zh/medium/405 zh/expert/301	ban4|半 | ban4|伴	medium,expert
+bei4	zh/medium/562 zh/hard/1801	bei4|倍 | bei4|贝	medium,hard
+bi4	zh/hard/1443 zh/expert/642	bi4|闭 | bi4|避	hard,expert
+bian1	zh/medium/853 zh/medium/940	bian1|边 | bian1|编	medium,medium
+bu4	zh/easy/14 zh/medium/802	bu4|不 | bu4|布	easy,medium
+bu4bian4	zh/hard/733 zh/expert/657	bu4bian4|不变 | bu4bian4|不便	hard,expert
+bu4fu2	zh/expert/1346 zh/expert/2938	bu4fu2|不服 | bu4fu2|不符	expert,expert
+bu4jian4	zh/expert/143 zh/expert/1333	bu4jian4|不见 | bu4jian4|部件	expert,expert
+cai2	zh/hard/1351 zh/expert/731	cai2|财 | cai2|材	hard,expert
+cai3	zh/hard/488 zh/hard/1250 zh/hard/1847	cai3|采 | cai3|踩 | cai3|彩	hard,hard,hard
+cang1	zh/expert/944 zh/expert/1680	cang1|仓 | cang1|舱	expert,expert
+ce4	zh/hard/1776 zh/expert/2130	ce4|测 | ce4|策	hard,expert
+cha2	zh/easy/16 zh/medium/498 zh/expert/2984	cha2|茶 | cha2|查 | cha2|察	easy,medium,expert
+chang2	zh/easy/280 zh/expert/2525	chang2|长 | chang2|尝	easy,expert
+chao1	zh/medium/480 zh/expert/863	chao1|超 | chao1|抄	medium,expert
+chen2	zh/medium/481 zh/expert/1823	chen2|陈 | chen2|臣	medium,expert
+cheng2	zh/hard/631 zh/hard/955 zh/hard/1761	cheng2|程 | cheng2|乘 | cheng2|承	hard,hard,hard
+chi2	zh/hard/1253 zh/expert/2114	chi2|迟 | chi2|池	hard,expert
+chou2	zh/expert/1669 zh/expert/2030	chou2|筹 | chou2|仇	expert,expert
+chuan2	zh/easy/21 zh/medium/321	chuan2|船 | chuan2|传	easy,medium
+ci2	zh/easy/25 zh/expert/1187 zh/expert/1836	ci2|词 | ci2|茨 | ci2|辞	easy,expert,expert
+cui1	zh/expert/1382 zh/expert/2348	cui1|崔 | cui1|催	expert,expert
+da4bu4fen4	zh/medium/451 zh/expert/1491	da4bu4fen4|大部分 | da4bu4fen4|大部份	medium,expert
+dai4	zh/easy/31 zh/medium/518 zh/expert/1190 zh/expert/1194	dai4|带 | dai4|待 | dai4|袋 | dai4|贷	easy,medium,expert,expert
+dan1	zh/medium/353 zh/hard/1720 zh/expert/463	dan1|单 | dan1|丹 | dan1|担	medium,hard,expert
+dang4	zh/hard/460 zh/expert/1188	dang4|档 | dang4|荡	hard,expert
+di4yi1bu4	zh/expert/1177 zh/expert/1551	di4yi1bu4|第一部 | di4yi1bu4|第一步	expert,expert
+dian3	zh/easy/37 zh/expert/953	dian3|点 | dian3|典	easy,expert
+dian4	zh/easy/40 zh/medium/283 zh/expert/1115	dian4|店 | dian4|电 | dian4|垫	easy,medium,expert
+diao4	zh/medium/491 zh/medium/714	diao4|掉 | diao4|调	medium,medium
+du2	zh/easy/44 zh/hard/845	du2|读 | du2|独	easy,hard
+du3	zh/hard/349 zh/expert/697	du3|赌 | du3|堵	hard,expert
+du4	zh/medium/356 zh/expert/2575	du4|度 | du4|渡	medium,expert
+e4	zh/expert/1375 zh/expert/2768	e4|呃 | e4|鳄	expert,expert
+fa1sheng1	zh/hard/2 zh/hard/1041	fa1sheng1|发生 | fa1sheng1|发声	hard,hard
+fan3ying4	zh/medium/486 zh/hard/155	fan3ying4|反映 | fan3ying4|反应	medium,hard
+fang1	zh/easy/50 zh/expert/838	fang1|方 | fang1|坊	easy,expert
+fei1	zh/medium/621 zh/expert/1254	fei1|飞 | fei1|妃	medium,expert
+fei4	zh/medium/793 zh/hard/824	fei4|费 | fei4|废	medium,hard
+fen1wei2	zh/hard/239 zh/hard/1236	fen1wei2|分为 | fen1wei2|氛围	hard,hard
+feng1	zh/easy/54 zh/expert/2634	feng1|风 | feng1|丰	easy,expert
+fu2	zh/hard/925 zh/hard/1273 zh/hard/1752 zh/expert/2486	fu2|服 | fu2|佛 | fu2|幅 | fu2|伏	hard,hard,hard,expert
+fu4	zh/easy/56 zh/medium/565 zh/hard/761 zh/hard/877 zh/hard/1239 zh/expert/2223	fu4|付 | fu4|复 | fu4|富 | fu4|附 | fu4|父 | fu4|妇	easy,medium,hard,hard,hard,expert
+gan1	zh/expert/1414 zh/expert/1786	gan1|甘 | gan1|杆	expert,expert
+gan3	zh/medium/681 zh/medium/869	gan3|敢 | gan3|感	medium,medium
+ge1	zh/easy/59 zh/expert/690 zh/expert/2698	ge1|歌 | ge1|咯 | ge1|戈	easy,expert,expert
+ge2	zh/medium/454 zh/hard/572	ge2|格 | ge2|隔	medium,hard
+gong1shi4	zh/hard/585 zh/expert/1946	gong1shi4|公式 | gong1shi4|攻势	hard,expert
+gong1yuan2	zh/hard/229 zh/hard/964	gong1yuan2|公园 | gong1yuan2|公元	hard,hard
+gu3	zh/medium/791 zh/expert/1855	gu3|股 | gu3|鼓	medium,expert
+gu4	zh/medium/610 zh/expert/791 zh/expert/2619	gu4|故 | gu4|顾 | gu4|雇	medium,expert,expert
+guan1	zh/easy/68 zh/medium/421 zh/expert/956	guan1|关 | guan1|官 | guan1|冠	easy,medium,expert
+he1	zh/medium/336 zh/expert/829	he1|喝 | he1|呵	medium,expert
+he2	zh/easy/78 zh/medium/511 zh/expert/504 zh/expert/754	he2|河 | he2|合 | he2|荷 | he2|盒	easy,medium,expert,expert
+he4	zh/expert/778 zh/expert/1570	he4|贺 | he4|赫	expert,expert
+hei1	zh/easy/80 zh/expert/2061	hei1|黑 | hei1|嘿	easy,expert
+hong2	zh/easy/81 zh/expert/651	hong2|红 | hong2|鸿	easy,expert
+hou4	zh/easy/82 zh/expert/2192	hou4|后 | hou4|候	easy,expert
+hu1	zh/expert/830 zh/expert/1867	hu1|呼 | hu1|乎	expert,expert
+hu2	zh/easy/84 zh/hard/344	hu2|湖 | hu2|胡	easy,hard
+hua4	zh/medium/420 zh/medium/499	hua4|化 | hua4|画	medium,medium
+huang2	zh/easy/87 zh/expert/2435	huang2|黄 | huang2|皇	easy,expert
+hui1	zh/easy/88 zh/expert/864	hui1|灰 | hui1|挥	easy,expert
+hui4	zh/hard/1071 zh/expert/1507	hui4|汇 | hui4|惠	hard,expert
+ji1	zh/medium/926 zh/expert/1255	ji1|基 | ji1|姬	medium,expert
+ji2	zh/medium/497 zh/hard/1082 zh/hard/1345	ji2|极 | ji2|籍 | ji2|藉	medium,hard,hard
+ji2du4	zh/hard/1405 zh/expert/843	ji2du4|极度 | ji2du4|嫉妒	hard,expert
+ji2li4	zh/expert/1530 zh/expert/2811	ji2li4|极力 | ji2li4|吉利	expert,expert
+ji2qi2	zh/medium/242 zh/hard/391	ji2qi2|及其 | ji2qi2|极其	medium,hard
+ji4	zh/medium/666 zh/hard/443 zh/hard/534 zh/hard/935 zh/hard/1465 zh/expert/588 zh/expert/1065 zh/expert/2760	ji4|记 | ji4|寄 | ji4|暨 | ji4|祭 | ji4|剂 | ji4|技 | ji4|际 | ji4|迹	medium,hard,hard,hard,hard,expert,expert,expert
+ji4shu4	zh/hard/83 zh/expert/1567	ji4shu4|技术 | ji4shu4|记述	hard,expert
+jia1	zh/hard/1747 zh/hard/1823 zh/expert/972	jia1|夹 | jia1|佳 | jia1|嘉	hard,hard,expert
+jia3	zh/hard/473 zh/hard/872	jia3|甲 | jia3|贾	hard,hard
+jia4	zh/hard/1215 zh/expert/2166	jia4|嫁 | jia4|驾	hard,expert
+jian1	zh/medium/404 zh/expert/2234	jian1|兼 | jian1|尖	medium,expert
+jian3	zh/hard/500 zh/hard/1394 zh/expert/1959	jian3|减 | jian3|捡 | jian3|检	hard,hard,expert
+jian3cha2	zh/medium/81 zh/hard/707	jian3cha2|检查 | jian3cha2|检察	medium,hard
+jian4	zh/easy/95 zh/hard/788 zh/expert/633 zh/expert/670 zh/expert/2922	jian4|建 | jian4|舰 | jian4|贱 | jian4|健 | jian4|鉴	easy,hard,expert,expert,expert
+jiang1	zh/hard/541 zh/expert/2224	jiang1|江 | jiang1|姜	hard,expert
+jiao3	zh/easy/96 zh/hard/285	jiao3|脚 | jiao3|角	easy,hard
+jie1	zh/medium/386 zh/medium/430 zh/medium/492	jie1|皆 | jie1|街 | jie1|接	medium,medium,medium
+jie4	zh/expert/1391 zh/expert/2182	jie4|戒 | jie4|介	expert,expert
+jie4kou3	zh/hard/1726 zh/expert/2908	jie4kou3|借口 | jie4kou3|藉口	hard,expert
+jin1	zh/easy/103 zh/medium/370 zh/expert/1646 zh/expert/2267	jin1|金 | jin1|今 | jin1|斤 | jin1|津	easy,medium,expert,expert
+jin4	zh/hard/1278 zh/hard/1605 zh/expert/1525	jin4|劲 | jin4|禁 | jin4|晋	hard,hard,expert
+jing1li4	zh/hard/143 zh/hard/1084	jing1li4|经历 | jing1li4|精力	hard,hard
+jing3	zh/easy/106 zh/expert/772 zh/expert/1288 zh/expert/2012	jing3|井 | jing3|警 | jing3|景 | jing3|颈	easy,expert,expert,expert
+jing4	zh/hard/1211 zh/hard/1543 zh/expert/1146 zh/expert/1702	jing4|境 | jing4|净 | jing4|敬 | jing4|静	hard,hard,expert,expert
+jiu3	zh/easy/107 zh/easy/108 zh/medium/369	jiu3|九 | jiu3|酒 | jiu3|久	easy,easy,medium
+jiu4	zh/medium/325 zh/medium/423	jiu4|旧 | jiu4|救	medium,medium
+ju4	zh/medium/923 zh/hard/873 zh/expert/2492	ju4|具 | ju4|距 | ju4|俱	medium,hard,expert
+ke1	zh/medium/388 zh/hard/1444 zh/expert/2563	ke1|科 | ke1|颗 | ke1|柯	medium,hard,expert
+ke4	zh/medium/440 zh/expert/678	ke4|克 | ke4|刻	medium,expert
+ke4fu2	zh/hard/741 zh/expert/1263	ke4fu2|克服 | ke4fu2|客服	hard,expert
+kuai4	zh/easy/112 zh/medium/450	kuai4|快 | kuai4|块	easy,medium
+li2	zh/medium/314 zh/expert/1652	li2|离 | li2|梨	medium,expert
+liang2	zh/easy/124 zh/hard/996 zh/hard/1506 zh/expert/1425	liang2|凉 | liang2|梁 | liang2|粮 | liang2|良	easy,hard,hard,expert
+liang4	zh/medium/526 zh/hard/1454	liang4|量 | liang4|亮	medium,hard
+liao2	zh/hard/1792 zh/expert/449 zh/expert/1692	liao2|聊 | liao2|寮 | liao2|辽	hard,expert,expert
+lin2	zh/medium/810 zh/hard/362	lin2|林 | lin2|临	medium,hard
+lin2jin4	zh/hard/797 zh/expert/1352	lin2jin4|邻近 | lin2jin4|临近	hard,expert
+ling3	zh/medium/555 zh/hard/763	ling3|领 | ling3|岭	medium,hard
+long2	zh/medium/667 zh/expert/1700	long2|龙 | long2|隆	medium,expert
+lu4	zh/easy/127 zh/hard/950 zh/hard/1095 zh/expert/2169	lu4|路 | lu4|陆 | lu4|露 | lu4|鹿	easy,hard,hard,expert
+lü3	zh/hard/1580 zh/expert/1898	lv3|旅 | lv3|吕	hard,expert
+lü3xing2	zh/easy/128 zh/hard/1136	lv3xing2|旅行 | lv3xing2|履行	easy,hard
+lü4	zh/easy/129 zh/medium/733	lv4|绿 | lv4|率	easy,medium
+ma3li4ya4	zh/expert/749 zh/expert/1798	ma3li4ya4|玛丽亚 | ma3li4ya4|玛利亚	expert,expert
+mai2	zh/hard/1832 zh/expert/2929	mai2|埋 | mai2|霾	hard,expert
+mai4	zh/easy/132 zh/hard/656 zh/expert/1062	mai4|卖 | mai4|麦 | mai4|迈	easy,hard,expert
+man4	zh/easy/133 zh/hard/1584	man4|慢 | man4|曼	easy,hard
+mei2	zh/hard/1586 zh/hard/1870	mei2|梅 | mei2|枚	hard,hard
+mo2	zh/expert/358 zh/expert/383 zh/expert/719 zh/expert/2283	mo2|模 | mo2|膜 | mo2|摩 | mo2|磨	expert,expert,expert,expert
+mu3	zh/hard/539 zh/hard/685 zh/hard/1269	mu3|母 | mu3|姆 | mu3|亩	hard,hard,hard
+mu4	zh/hard/773 zh/hard/1560 zh/expert/1626	mu4|木 | mu4|墓 | mu4|幕	hard,hard,expert
+na4	zh/hard/1657 zh/expert/1112	na4|娜 | na4|呐	hard,expert
+nai4	zh/expert/1906 zh/expert/2902	nai4|奈 | nai4|耐	expert,expert
+nong2	zh/hard/305 zh/expert/1655	nong2|农 | nong2|浓	hard,expert
+o1	zh/hard/376 zh/hard/1208	o1|喔 | o1|噢	hard,hard
+pao4	zh/hard/780 zh/hard/1598	pao4|泡 | pao4|炮	hard,hard
+pian1	zh/medium/734 zh/hard/1459	pian1|篇 | pian1|偏	medium,hard
+pian4	zh/medium/557 zh/medium/614	pian4|骗 | pian4|片	medium,medium
+ping2	zh/medium/844 zh/hard/790 zh/expert/438 zh/expert/1921	ping2|平 | ping2|评 | ping2|坪 | ping2|屏	medium,hard,expert,expert
+qi3	zh/expert/849 zh/expert/1374 zh/expert/2184	qi3|岂 | qi3|启 | qi3|企	expert,expert,expert
+qi4	zh/medium/934 zh/expert/579	qi4|气 | qi4|弃	medium,expert
+qian1	zh/easy/161 zh/hard/875 zh/expert/2272 zh/expert/2923	qian1|千 | qian1|迁 | qian1|牵 | qian1|铅	easy,hard,expert,expert
+qian2	zh/easy/162 zh/easy/163	qian2|前 | qian2|钱	easy,easy
+qiang1	zh/medium/519 zh/expert/2599	qiang1|枪 | qiang1|腔	medium,expert
+qiao2	zh/easy/166 zh/hard/1636	qiao2|桥 | qiao2|乔	easy,hard
+qin2	zh/expert/371 zh/expert/901	qin2|琴 | qin2|秦	expert,expert
+qing1	zh/medium/576 zh/medium/943 zh/expert/1226	qing1|清 | qing1|轻 | qing1|倾	medium,medium,expert
+qu1	zh/hard/835 zh/expert/921	qu1|曲 | qu1|趋	hard,expert
+qu3	zh/easy/168 zh/hard/758	qu3|取 | qu3|娶	easy,hard
+quan2li4	zh/hard/1112 zh/expert/115	quan2li4|全力 | quan2li4|权力	hard,expert
+ren2shi4	zh/hard/1821 zh/expert/103	ren2shi4|人事 | ren2shi4|人士	hard,expert
+san4bu4	zh/expert/1014 zh/expert/2254	san4bu4|散布 | san4bu4|散步	expert,expert
+sha1	zh/easy/177 zh/expert/771	sha1|沙 | sha1|莎	easy,expert
+shan1	zh/easy/178 zh/expert/1097	shan1|山 | shan1|删	easy,expert
+shan4	zh/hard/507 zh/expert/342	shan4|善 | shan4|扇	hard,expert
+shang4xian4	zh/hard/1447 zh/expert/1342	shang4xian4|上线 | shang4xian4|上限	hard,expert
+shen1	zh/medium/613 zh/expert/2579	shen1|深 | shen1|申	medium,expert
+shen1chu4	zh/expert/1657 zh/expert/2608	shen1chu4|深处 | shen1chu4|身处	expert,expert
+shen1hou4	zh/expert/395 zh/expert/1164	shen1hou4|身后 | shen1hou4|深厚	expert,expert
+shen2	zh/easy/182 zh/hard/957	shen2|神 | shen2|什	easy,hard
+shen3	zh/hard/1049 zh/expert/2572	shen3|审 | shen3|沈	hard,expert
+sheng4	zh/hard/306 zh/expert/2730	sheng4|剩 | sheng4|盛	hard,expert
+shi1	zh/easy/186 zh/medium/408 zh/hard/441 zh/hard/1579 zh/expert/2527	shi1|诗 | shi1|师 | shi1|失 | shi1|施 | shi1|尸	easy,medium,hard,hard,expert
+shi2	zh/easy/190 zh/medium/700 zh/hard/294 zh/hard/791	shi2|十 | shi2|实 | shi2|食 | shi2|识	easy,medium,hard,hard
+shi2hua4	zh/expert/2231 zh/expert/2439	shi2hua4|实话 | shi2hua4|石化	expert,expert
+shi2li4	zh/medium/678 zh/expert/2229	shi2li4|实力 | shi2li4|实例	medium,expert
+shi2wu4	zh/easy/189 zh/expert/2070	shi2wu4|食物 | shi2wu4|实物	easy,expert
+shi3	zh/medium/375 zh/hard/902	shi3|史 | shi3|始	medium,hard
+shi4	zh/medium/735 zh/medium/775 zh/hard/378 zh/hard/968 zh/hard/1457 zh/expert/521 zh/expert/2761	shi4|视 | shi4|室 | shi4|士 | shi4|势 | shi4|似 | shi4|释 | shi4|适	medium,medium,hard,hard,hard,expert,expert
+shi4nei4	zh/hard/1659 zh/expert/2387	shi4nei4|室内 | shi4nei4|市内	hard,expert
+shi4wu4	zh/medium/482 zh/medium/921	shi4wu4|事务 | shi4wu4|事物	medium,medium
+shou3	zh/easy/194 zh/medium/944 zh/hard/686	shou3|手 | shou3|首 | shou3|守	easy,medium,hard
+shou3wei4	zh/hard/1624 zh/expert/1911	shou3wei4|首位 | shou3wei4|守卫	hard,expert
+shu1	zh/easy/195 zh/medium/917	shu1|书 | shu1|输	easy,medium
+shu4	zh/easy/197 zh/expert/2005	shu4|树 | shu4|述	easy,expert
+si4	zh/easy/201 zh/hard/601	si4|四 | si4|寺	easy,hard
+sui4	zh/hard/1441 zh/expert/618	sui4|遂 | sui4|碎	hard,expert
+suo3	zh/hard/652 zh/hard/1507	suo3|锁 | suo3|索	hard,hard
+tang2	zh/easy/205 zh/hard/313 zh/hard/753	tang2|糖 | tang2|堂 | tang2|唐	easy,hard,hard
+ti3zhi4	zh/medium/351 zh/expert/545	ti3zhi4|体制 | ti3zhi4|体质	medium,expert
+tian1	zh/easy/207 zh/expert/1793	tian1|天 | tian1|添	easy,expert
+tian2	zh/easy/208 zh/hard/1785	tian2|田 | tian2|甜	easy,hard
+tie1	zh/medium/504 zh/expert/2237	tie1|贴 | tie1|帖	medium,expert
+ting1	zh/medium/838 zh/expert/1660	ting1|厅 | ting1|町	medium,expert
+ting2	zh/easy/212 zh/expert/1872	ting2|停 | ting2|亭	easy,expert
+tong3	zh/hard/554 zh/expert/1026 zh/expert/2702	tong3|统 | tong3|桶 | tong3|捅	hard,expert,expert
+tou2	zh/easy/214 zh/medium/548	tou2|头 | tou2|投	easy,medium
+tu2xing2	zh/expert/694 zh/expert/1932	tu2xing2|图形 | tu2xing2|徒刑	expert,expert
+wan2	zh/easy/220 zh/expert/2635	wan2|玩 | wan2|丸	easy,expert
+wei2	zh/hard/1652 zh/expert/403	wei2|围 | wei2|韦	hard,expert
+wei3	zh/hard/960 zh/hard/1293 zh/hard/1481	wei3|伪 | wei3|委 | wei3|尾	hard,hard,hard
+wei4	zh/hard/375 zh/hard/896 zh/hard/1202 zh/expert/391 zh/expert/906 zh/expert/1070	wei4|喂 | wei4|味 | wei4|卫 | wei4|谓 | wei4|胃 | wei4|魏	hard,hard,hard,expert,expert,expert
+wen2	zh/medium/360 zh/hard/799	wen2|文 | wen2|闻	medium,hard
+wu2	zh/hard/1121 zh/hard/1468	wu2|吴 | wu2|吾	hard,hard
+wu2xu1	zh/hard/1864 zh/expert/2548	wu2xu1|无需 | wu2xu1|无须	hard,expert
+wu4	zh/medium/786 zh/hard/1710 zh/hard/1733 zh/expert/512 zh/expert/1371	wu4|物 | wu4|雾 | wu4|务 | wu4|误 | wu4|勿	medium,hard,hard,expert,expert
+xi1	zh/easy/225 zh/hard/596 zh/hard/765 zh/expert/2085	xi1|西 | xi1|吸 | xi1|希 | xi1|息	easy,hard,hard,expert
+xi2	zh/hard/907 zh/hard/1189 zh/expert/2140	xi2|席 | xi2|习 | xi2|袭	hard,hard,expert
+xia4	zh/easy/227 zh/easy/228	xia4|下 | xia4|夏	easy,easy
+xian2	zh/expert/523 zh/expert/1502	xian2|闲 | xian2|弦	expert,expert
+xian4	zh/easy/230 zh/hard/570	xian4|线 | xian4|限	easy,hard
+xiang3qi3	zh/medium/903 zh/expert/2666	xiang3qi3|想起 | xiang3qi3|响起	medium,expert
+xiang4	zh/medium/302 zh/medium/736	xiang4|项 | xiang4|象	medium,medium
+xiao1	zh/hard/1874 zh/expert/2617	xiao1|消 | xiao1|销	hard,expert
+xiao4	zh/hard/1324 zh/expert/905	xiao4|校 | xiao4|肖	hard,expert
+xie2	zh/hard/1356 zh/expert/519 zh/expert/1601 zh/expert/1781 zh/expert/2860	xie2|鞋 | xie2|邪 | xie2|协 | xie2|携 | xie2|斜	hard,expert,expert,expert,expert
+xin1	zh/easy/236 zh/easy/237 zh/expert/1573	xin1|心 | xin1|新 | xin1|辛	easy,easy,expert
+xin1li3	zh/medium/533 zh/hard/171	xin1li3|心里 | xin1li3|心理	medium,hard
+xing1	zh/easy/240 zh/hard/1113	xing1|星 | xing1|兴	easy,hard
+xiong1	zh/hard/940 zh/expert/811	xiong1|胸 | xiong1|凶	hard,expert
+xu4	zh/hard/1085 zh/expert/1770 zh/expert/2506	xu4|续 | xu4|恤 | xu4|叙	hard,expert,expert
+ya1	zh/easy/248 zh/expert/2401	ya1|鸭 | ya1|押	easy,expert
+yan2	zh/easy/252 zh/medium/459 zh/hard/1263 zh/expert/1131 zh/expert/2584	yan2|盐 | yan2|言 | yan2|严 | yan2|岩 | yan2|研	easy,medium,hard,expert,expert
+yan2ge2	zh/medium/583 zh/expert/2877	yan2ge2|严格 | yan2ge2|沿革	medium,expert
+yang2	zh/hard/1807 zh/expert/712 zh/expert/882	yang2|阳 | yang2|扬 | yang2|洋	hard,expert,expert
+yao4	zh/easy/255 zh/easy/256	yao4|药 | yao4|要	easy,easy
+ye4	zh/easy/258 zh/easy/259 zh/medium/831 zh/expert/2723	ye4|夜 | ye4|页 | ye4|业 | ye4|液	easy,easy,medium,expert
+yi1ban1	zh/medium/104 zh/expert/2628	yi1ban1|一般 | yi1ban1|一班	medium,expert
+yi1bu4	zh/medium/558 zh/medium/624	yi1bu4|一步 | yi1bu4|一部	medium,medium
+yi1ju4	zh/medium/304 zh/medium/623	yi1ju4|依据 | yi1ju4|一句	medium,medium
+yi1sheng1	zh/medium/920 zh/hard/579	yi1sheng1|一生 | yi1sheng1|一声	medium,hard
+yi1shi4	zh/hard/1628 zh/expert/2017	yi1shi4|一是 | yi1shi4|一世	hard,expert
+yi1ye4	zh/hard/1529 zh/expert/1858	yi1ye4|一夜 | yi1ye4|一页	hard,expert
+yi2	zh/hard/630 zh/expert/1801 zh/expert/1914 zh/expert/2664	yi2|移 | yi2|疑 | yi2|宜 | yi2|咦	hard,expert,expert,expert
+yi3	zh/expert/1219 zh/expert/2281	yi3|乙 | yi3|矣	expert,expert
+yi4	zh/medium/720 zh/medium/779 zh/hard/412 zh/hard/521 zh/hard/789 zh/hard/1611 zh/hard/1887 zh/expert/1183 zh/expert/1266	yi4|义 | yi4|意 | yi4|译 | yi4|异 | yi4|裔 | yi4|议 | yi4|艺 | yi4|翼 | yi4|役	medium,medium,hard,hard,hard,hard,hard,expert,expert
+yi4yuan2	zh/medium/439 zh/expert/244	yi4yuan2|亿元 | yi4yuan2|议员	medium,expert
+ying1	zh/medium/818 zh/expert/2932	ying1|英 | ying1|鹰	medium,expert
+yong3	zh/expert/1099 zh/expert/1656	yong3|勇 | yong3|涌	expert,expert
+you3li4	zh/hard/330 zh/hard/390	you3li4|有利 | you3li4|有力	hard,hard
+you3ren2	zh/medium/52 zh/expert/683	you3ren2|有人 | you3ren2|友人	medium,expert
+yu2	zh/easy/271 zh/expert/2578	yu2|鱼 | yu2|瑜	easy,expert
+yu3	zh/easy/272 zh/medium/365 zh/expert/2636	yu3|雨 | yu3|语 | yu3|予	easy,medium,expert
+yu4	zh/hard/1254 zh/expert/439 zh/expert/646	yu4|遇 | yu4|域 | yu4|预	hard,expert,expert
+yu4ding4	zh/hard/576 zh/expert/1067	yu4ding4|预定 | yu4ding4|预订	hard,expert
+yu4jian4	zh/hard/565 zh/expert/2475	yu4jian4|遇见 | yu4jian4|预见	hard,expert
+yuan2	zh/easy/273 zh/hard/438 zh/expert/2138	yuan2|圆 | yuan2|园 | yuan2|袁	easy,hard,expert
+yuan2xing2	zh/expert/1729 zh/expert/1742	yuan2xing2|原型 | yuan2xing2|圆形	expert,expert
+yue4	zh/easy/275 zh/expert/1554	yue4|月 | yue4|粤	easy,expert
+zang4	zh/expert/622 zh/expert/2749	zang4|脏 | zang4|葬	expert,expert
+zao1	zh/medium/368 zh/expert/496	zao1|遭 | zao1|糟	medium,expert
+ze2	zh/expert/393 zh/expert/742	ze2|责 | ze2|泽	expert,expert
+zhai4	zh/expert/422 zh/expert/1381	zhai4|债 | zhai4|寨	expert,expert
+zhan1	zh/expert/761 zh/expert/1159	zhan1|粘 | zhan1|沾	expert,expert
+zhan4you3	zh/hard/592 zh/expert/585	zhan4you3|占有 | zhan4you3|战友	hard,expert
+zhang3	zh/hard/619 zh/expert/1514	zhang3|涨 | zhang3|掌	hard,expert
+zhang4	zh/hard/1140 zh/expert/777	zhang4|帐 | zhang4|账	hard,expert
+zhao4	zh/medium/708 zh/expert/2290 zh/expert/2952	zhao4|照 | zhao4|罩 | zhao4|兆	medium,expert,expert
+zhe2	zh/hard/1308 zh/expert/1610	zhe2|折 | zhe2|哲	hard,expert
+zhen1cha2	zh/expert/803 zh/expert/1464	zhen1cha2|侦查 | zhen1cha2|侦察	expert,expert
+zhen4	zh/easy/283 zh/expert/729 zh/expert/2320 zh/expert/2470	zhen4|镇 | zhen4|朕 | zhen4|震 | zhen4|阵	easy,expert,expert,expert
+zheng4	zh/hard/770 zh/hard/1880	zheng4|政 | zheng4|症	hard,hard
+zheng4shi4	zh/medium/538 zh/hard/183 zh/expert/2871	zheng4shi4|正是 | zheng4shi4|正式 | zheng4shi4|正视	medium,hard,expert
+zhi1	zh/medium/789 zh/expert/500	zhi1|知 | zhi1|织	medium,expert
+zhi2wu4	zh/easy/285 zh/medium/941	zhi2wu4|植物 | zhi2wu4|职务	easy,medium
+zhi4yu2	zh/expert/176 zh/expert/1819	zhi4yu2|至于 | zhi4yu2|置于	expert,expert
+zhong1	zh/hard/1426 zh/expert/1633	zhong1|终 | zhong1|忠	hard,expert
+zhong1zhi3	zh/hard/482 zh/expert/1351	zhong1zhi3|终止 | zhong1zhi3|中止	hard,expert
+zhou1	zh/medium/355 zh/hard/1873	zhou1|周 | zhou1|洲	medium,hard
+zhu1	zh/easy/289 zh/hard/1321 zh/hard/1350	zhu1|猪 | zhu1|朱 | zhu1|诸	easy,hard,hard
+zhu3yi4	zh/medium/437 zh/hard/1919	zhu3yi4|主义 | zhu3yi4|主意	medium,hard
+zhu4	zh/medium/344 zh/medium/465 zh/medium/575 zh/hard/674 zh/expert/1552 zh/expert/2263	zhu4|著 | zhu4|驻 | zhu4|注 | zhu4|助 | zhu4|筑 | zhu4|柱	medium,medium,medium,hard,expert,expert
+zi4wei4	zh/expert/1053 zh/expert/1563	zi4wei4|自慰 | zi4wei4|自卫	expert,expert
+zui4	zh/medium/790 zh/hard/1805	zui4|罪 | zui4|醉	medium,hard
+zuo4	zh/easy/296 zh/medium/322 zh/medium/728	zuo4|做 | zuo4|坐 | zuo4|座	easy,medium,medium
+zuo4chu1	zh/medium/220 zh/medium/627	zuo4chu1|作出 | zuo4chu1|做出	medium,medium

@@ -1,0 +1,525 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+fil/easy/69,fil,easy,doon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/easy/178,fil,easy,noon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/easy/184,fil,easy,pader,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/easy/213,fil,easy,sining,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/21,fil,medium,noong,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/26,fil,medium,naging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/44,fil,medium,maging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/53,fil,medium,dating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/55,fil,medium,huling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/58,fil,medium,muling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/110,fil,medium,tuwing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/133,fil,medium,galing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/190,fil,medium,ating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/194,fil,medium,kanser,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/214,fil,medium,puting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/236,fil,medium,aking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/238,fil,medium,haring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/266,fil,medium,maling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/273,fil,medium,totoo,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/278,fil,medium,gawing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/295,fil,medium,uring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/319,fil,medium,nating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/323,fil,medium,piling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/333,fil,medium,laging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/410,fil,medium,kasing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/435,fil,medium,labing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/470,fil,medium,lider,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/478,fil,medium,order,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/488,fil,medium,paring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/513,fil,medium,lahing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/550,fil,medium,aming,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/571,fil,medium,singsing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/13,fil,hard,saging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/15,fil,hard,titser,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/18,fil,hard,drayber,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/21,fil,hard,kambing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/34,fil,hard,maaaring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/35,fil,hard,maraming,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/42,fil,hard,malaking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/44,fil,hard,mayroong,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/46,fil,hard,pagiging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/63,fil,hard,mayroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/70,fil,hard,sariling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/88,fil,hard,tanging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/95,fil,hard,magiging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/99,fil,hard,karakter,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/101,fil,hard,dumating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/115,fil,hard,nagiging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/131,fil,hard,nasabing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/133,fil,hard,madaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/156,fil,hard,maaring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/169,fil,hard,maikling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/173,fil,hard,lalaking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/177,fil,hard,gawaing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/217,fil,hard,bahaging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/247,fil,hard,awiting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/258,fil,hard,kaunting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/270,fil,hard,panloob,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/302,fil,hard,palaging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/324,fil,hard,manonood,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/325,fil,hard,mabuting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/410,fil,hard,totoong,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/412,fil,hard,layuning,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/416,fil,hard,gusaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/492,fil,hard,salaping,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/497,fil,hard,pagkaing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/586,fil,hard,supling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/640,fil,hard,darating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/647,fil,hard,sinabing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/672,fil,hard,lupaing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/688,fil,hard,kalooban,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/691,fil,hard,magaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/737,fil,hard,lasing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/798,fil,hard,hiniling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/803,fil,hard,mapapanood,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/816,fil,hard,saring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/819,fil,hard,bading,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/841,fil,hard,napapanood,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/889,fil,hard,ipinagkaloob,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/922,fil,hard,masasabing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/944,fil,hard,pampook,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/980,fil,hard,naroroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/1053,fil,hard,saloobin,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/1064,fil,hard,tinedyer,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/1081,fil,hard,gumaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/1125,fil,hard,masining,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/hard/1128,fil,hard,facebook,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/4,fil,expert,dingding,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/19,fil,expert,damdaming,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/22,fil,expert,kompyuter,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/48,fil,expert,pangunahing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/61,fil,expert,nagkaroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/65,fil,expert,pinakamalaking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/69,fil,expert,itinuturing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/82,fil,expert,pagkakaroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/93,fil,expert,magkaroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/121,fil,expert,malalaking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/122,fil,expert,natatanging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/132,fil,expert,sinasabing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/158,fil,expert,matinding,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/173,fil,expert,pagdating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/226,fil,expert,nananatiling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/234,fil,expert,pangyayaring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/252,fil,expert,inilathala,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/272,fil,expert,nanatiling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/320,fil,expert,nagsisilbing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/404,fil,expert,magkakaroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/408,fil,expert,nagsasabing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/450,fil,expert,pinakamaraming,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/455,fil,expert,nagkakaroon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/483,fil,expert,kalahating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/509,fil,expert,nanggaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/514,fil,expert,unti-unting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/531,fil,expert,nagsilbing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/538,fil,expert,panginoon,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/539,fil,expert,itinuring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/578,fil,expert,sandaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/630,fil,expert,sari-saring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/721,fil,expert,kinaroroonan,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/724,fil,expert,napakalaking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/746,fil,expert,tungkuling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/758,fil,expert,nakarating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/824,fil,expert,gagawing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/827,fil,expert,ginoong,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/867,fil,expert,babaing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/880,fil,expert,kapiling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/888,fil,expert,malikhaing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/894,fil,expert,nanggagaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/917,fil,expert,angking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/981,fil,expert,humiling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/994,fil,expert,lumalaking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1058,fil,expert,starstruck,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1061,fil,expert,usaping,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1086,fil,expert,katha,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1119,fil,expert,pinanood,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1152,fil,expert,marating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1168,fil,expert,piniling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1189,fil,expert,dolphy,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1244,fil,expert,washington,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1258,fil,expert,inilibing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1299,fil,expert,poster,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1365,fil,expert,ugaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1368,fil,expert,bayaning,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1396,fil,expert,mananatiling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1406,fil,expert,paggising,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1435,fil,expert,bossing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1463,fil,expert,prodyuser,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1503,fil,expert,paghahambing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1519,fil,expert,kathang-isip,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1550,fil,expert,ihahambing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1755,fil,expert,naglathala,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1787,fil,expert,magagaling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1836,fil,expert,helikopter,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1870,fil,expert,lathalain,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1916,fil,expert,pinagkalooban,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/expert/1977,fil,expert,inihambing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/easy/16,fil,easy,babae,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/easy/132,fil,easy,lalaki,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/medium/176,fil,medium,lalake,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/medium/322,fil,medium,kwento,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/medium/558,fil,medium,pwede,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/hard/845,fil,hard,nyan,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/easy/16,fil,easy,babae,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/38,fil,easy,bibig,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/91,fil,easy,ibenta,F-fil-cit,looks derived from row 'benta' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/98,fil,easy,ipadala,F-fil-cit,looks derived from row 'padala' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/100,fil,easy,isara,F-fil-cit,looks derived from row 'sara' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/108,fil,easy,itulak,F-fil-cit,looks derived from row 'tulak' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/132,fil,easy,lalaki,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/149,fil,easy,mabilis,F-fil-cit,looks derived from row 'bilis' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/153,fil,easy,madilim,F-fil-cit,looks derived from row 'dilim' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/155,fil,easy,mahina,F-fil-cit,looks derived from row 'hina' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/160,fil,easy,malakas,F-fil-cit,looks derived from row 'lakas' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/162,fil,easy,malamig,F-fil-cit,looks derived from row 'lamig' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/187,fil,easy,pahina,F-fil-cit,looks derived from row 'hina' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/188,fil,easy,pamilya,F-fil-cit,looks derived from row 'milya' (heuristic),quarantine via PURITY ledger if approved
+fil/easy/244,fil,easy,umaga,F-fil-cit,looks derived from row 'aga' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/50,fil,medium,ilalim,F-fil-cit,looks derived from row 'lalim' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/90,fil,medium,katao,F-fil-cit,looks derived from row 'tao' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/96,fil,medium,marami,F-fil-cit,looks derived from row 'rami' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/104,fil,medium,nanalo,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/127,fil,medium,titik,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/176,fil,medium,lalake,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/188,fil,medium,bababa,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/208,fil,medium,tatak,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/270,fil,medium,iilang,F-fil-cit,looks derived from row 'ilang' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/273,fil,medium,totoo,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/361,fil,medium,maaga,F-fil-cit,looks derived from row 'aga' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/365,fil,medium,palaro,F-fil-cit,looks derived from row 'laro' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/386,fil,medium,babala,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/394,fil,medium,ilabas,F-fil-cit,looks derived from row 'labas' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/397,fil,medium,makati,F-fil-cit,looks derived from row 'kati' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/447,fil,medium,mamaya,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/487,fil,medium,naisip,F-fil-cit,looks derived from row 'isip' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/495,fil,medium,papuri,F-fil-cit,looks derived from row 'puri' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/504,fil,medium,umiral,F-fil-cit,looks derived from row 'iral' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/507,fil,medium,isulat,F-fil-cit,looks derived from row 'sulat' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/562,fil,medium,ilegal,F-fil-cit,looks derived from row 'legal' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/568,fil,medium,tatay,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/574,fil,medium,magsalita,F-fil-cit,looks derived from row 'salita' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/576,fil,medium,katas,F-fil-cit,looks derived from row 'tas' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/598,fil,medium,patas,F-fil-cit,looks derived from row 'tas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/31,fil,hard,kanilang,F-fil-cit,looks derived from row 'nilang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/36,fil,hard,kaniyang,F-fil-cit,looks derived from row 'niyang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/37,fil,hard,pangalan,F-fil-cit,looks derived from row 'ngalan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/43,fil,hard,kabilang,F-fil-cit,looks derived from row 'bilang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/49,fil,hard,paggamit,F-fil-cit,looks derived from row 'gamit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/50,fil,hard,katulad,F-fil-cit,looks derived from row 'tulad' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/52,fil,hard,matapos,F-fil-cit,looks derived from row 'tapos' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/56,fil,hard,malapit,F-fil-cit,looks derived from row 'lapit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/58,fil,hard,inilabas,F-fil-cit,looks derived from row 'nilabas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/59,fil,hard,palabas,F-fil-cit,looks derived from row 'labas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/78,fil,hard,malawak,F-fil-cit,looks derived from row 'lawak' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/81,fil,hard,babaeng,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/92,fil,hard,patuloy,F-fil-cit,looks derived from row 'tuloy' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/96,fil,hard,isinulat,F-fil-cit,looks derived from row 'sinulat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/109,fil,hard,mahigit,F-fil-cit,looks derived from row 'higit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/117,fil,hard,patungo,F-fil-cit,looks derived from row 'tungo' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/124,fil,hard,nakilala,F-fil-cit,looks derived from row 'kilala' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/130,fil,hard,pagganap,F-fil-cit,looks derived from row 'ganap' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/137,fil,hard,mahusay,F-fil-cit,looks derived from row 'husay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/142,fil,hard,susunod,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/144,fil,hard,kasunod,F-fil-cit,looks derived from row 'sunod' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/145,fil,hard,naganap,F-fil-cit,looks derived from row 'ganap' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/151,fil,hard,ibinigay,F-fil-cit,looks derived from row 'binigay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/173,fil,hard,lalaking,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/185,fil,hard,paglabas,F-fil-cit,looks derived from row 'labas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/194,fil,hard,papunta,F-fil-cit,looks derived from row 'punta' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/195,fil,hard,mahabang,F-fil-cit,looks derived from row 'habang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/196,fil,hard,naunang,F-fil-cit,looks derived from row 'unang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/197,fil,hard,nagtapos,F-fil-cit,looks derived from row 'tapos' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/200,fil,hard,paggamot,F-fil-cit,looks derived from row 'gamot' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/209,fil,hard,mahalaga,F-fil-cit,looks derived from row 'halaga' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/213,fil,hard,paglikha,F-fil-cit,looks derived from row 'likha' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/214,fil,hard,malinaw,F-fil-cit,looks derived from row 'linaw' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/215,fil,hard,natapos,F-fil-cit,looks derived from row 'tapos' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/227,fil,hard,kalapit,F-fil-cit,looks derived from row 'lapit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/232,fil,hard,pagsulat,F-fil-cit,looks derived from row 'sulat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/237,fil,hard,naglabas,F-fil-cit,looks derived from row 'labas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/245,fil,hard,nagdulot,F-fil-cit,looks derived from row 'dulot' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/261,fil,hard,inilagay,F-fil-cit,looks derived from row 'ilagay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/262,fil,hard,matagal,F-fil-cit,looks derived from row 'tagal' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/264,fil,hard,sasakyan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/276,fil,hard,umaabot,F-fil-cit,looks derived from row 'aabot' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/279,fil,hard,pagpatay,F-fil-cit,looks derived from row 'patay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/280,fil,hard,malamang,F-fil-cit,looks derived from row 'lamang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/282,fil,hard,kalaban,F-fil-cit,looks derived from row 'laban' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/286,fil,hard,malaman,F-fil-cit,looks derived from row 'laman' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/291,fil,hard,nagtatag,F-fil-cit,looks derived from row 'tatag' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/292,fil,hard,mamatay,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/293,fil,hard,nanatili,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/295,fil,hard,matatag,F-fil-cit,looks derived from row 'tatag' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/302,fil,hard,palaging,F-fil-cit,looks derived from row 'laging' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/314,fil,hard,inilipat,F-fil-cit,looks derived from row 'ilipat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/317,fil,hard,palarong,F-fil-cit,looks derived from row 'larong' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/347,fil,hard,nagbago,F-fil-cit,looks derived from row 'bago' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/359,fil,hard,malalim,F-fil-cit,looks derived from row 'lalim' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/360,fil,hard,patinig,F-fil-cit,looks derived from row 'tinig' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/368,fil,hard,paggalaw,F-fil-cit,looks derived from row 'galaw' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/369,fil,hard,pagkilos,F-fil-cit,looks derived from row 'kilos' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/386,fil,hard,kasabay,F-fil-cit,looks derived from row 'sabay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/389,fil,hard,isinama,F-fil-cit,looks derived from row 'sinama' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/395,fil,hard,magamit,F-fil-cit,looks derived from row 'gamit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/409,fil,hard,paunang,F-fil-cit,looks derived from row 'unang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/410,fil,hard,totoong,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/411,fil,hard,iskolar,F-fil-cit,looks derived from row 'skolar' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/439,fil,hard,ilarawan,F-fil-cit,looks derived from row 'larawan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/443,fil,hard,mabigat,F-fil-cit,looks derived from row 'bigat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/462,fil,hard,naglaro,F-fil-cit,looks derived from row 'laro' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/467,fil,hard,kalihim,F-fil-cit,looks derived from row 'lihim' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/480,fil,hard,katulong,F-fil-cit,looks derived from row 'tulong' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/482,fil,hard,nabuhay,F-fil-cit,looks derived from row 'buhay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/490,fil,hard,nagtagal,F-fil-cit,looks derived from row 'tagal' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/509,fil,hard,mabuhay,F-fil-cit,looks derived from row 'buhay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/513,fil,hard,kaisipan,F-fil-cit,looks derived from row 'isipan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/521,fil,hard,matanda,F-fil-cit,looks derived from row 'tanda' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/522,fil,hard,matibay,F-fil-cit,looks derived from row 'tibay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/526,fil,hard,makilala,F-fil-cit,looks derived from row 'kilala' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/527,fil,hard,nabigyan,F-fil-cit,looks derived from row 'bigyan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/528,fil,hard,nalaman,F-fil-cit,looks derived from row 'laman' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/533,fil,hard,katauhan,F-fil-cit,looks derived from row 'tauhan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/541,fil,hard,katinig,F-fil-cit,looks derived from row 'tinig' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/542,fil,hard,kawalang,F-fil-cit,looks derived from row 'walang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/560,fil,hard,papasok,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/563,fil,hard,mayaman,F-fil-cit,looks derived from row 'yaman' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/564,fil,hard,nagpasya,F-fil-cit,looks derived from row 'pasya' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/572,fil,hard,gagawin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/582,fil,hard,mayamang,F-fil-cit,looks derived from row 'yamang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/594,fil,hard,nagpunta,F-fil-cit,looks derived from row 'punta' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/596,fil,hard,napatay,F-fil-cit,looks derived from row 'patay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/603,fil,hard,umakyat,F-fil-cit,looks derived from row 'akyat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/608,fil,hard,nagsulat,F-fil-cit,looks derived from row 'sulat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/624,fil,hard,makapal,F-fil-cit,looks derived from row 'kapal' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/637,fil,hard,nagawang,F-fil-cit,looks derived from row 'gawang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/644,fil,hard,naisulat,F-fil-cit,looks derived from row 'isulat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/648,fil,hard,iligtas,F-fil-cit,looks derived from row 'ligtas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/664,fil,hard,pagtakbo,F-fil-cit,looks derived from row 'takbo' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/668,fil,hard,kakaiba,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/674,fil,hard,nailabas,F-fil-cit,looks derived from row 'ilabas' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/678,fil,hard,pagbasa,F-fil-cit,looks derived from row 'basa' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/691,fil,hard,magaling,F-fil-cit,looks derived from row 'galing' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/692,fil,hard,nagbunga,F-fil-cit,looks derived from row 'bunga' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/693,fil,hard,paglaban,F-fil-cit,looks derived from row 'laban' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/700,fil,hard,magdulot,F-fil-cit,looks derived from row 'dulot' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/706,fil,hard,papaano,F-fil-cit,looks derived from row 'paano' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/711,fil,hard,kausapin,F-fil-cit,looks derived from row 'usapin' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/714,fil,hard,mabasa,F-fil-cit,looks derived from row 'basa' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/716,fil,hard,nagalit,F-fil-cit,looks derived from row 'galit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/727,fil,hard,tutulong,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/739,fil,hard,magsulat,F-fil-cit,looks derived from row 'sulat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/741,fil,hard,matamis,F-fil-cit,looks derived from row 'tamis' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/754,fil,hard,ituloy,F-fil-cit,looks derived from row 'tuloy' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/759,fil,hard,mapanganib,F-fil-cit,looks derived from row 'panganib' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/765,fil,hard,pinagdaanan,F-fil-cit,looks derived from row 'daanan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/772,fil,hard,coco,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/781,fil,hard,mapigilan,F-fil-cit,looks derived from row 'pigilan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/815,fil,hard,pipiliin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/827,fil,hard,katapat,F-fil-cit,looks derived from row 'tapat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/838,fil,hard,mapansin,F-fil-cit,looks derived from row 'pansin' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/852,fil,hard,tatanggapin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/867,fil,hard,maisip,F-fil-cit,looks derived from row 'isip' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/868,fil,hard,mananatili,F-fil-cit,looks derived from row 'nanatili' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/874,fil,hard,pagbisita,F-fil-cit,looks derived from row 'bisita' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/892,fil,hard,mabigyan,F-fil-cit,looks derived from row 'bigyan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/893,fil,hard,maglakad,F-fil-cit,looks derived from row 'lakad' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/913,fil,hard,lalagyan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/914,fil,hard,lalakeng,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/918,fil,hard,magmahal,F-fil-cit,looks derived from row 'mahal' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/938,fil,hard,napansin,F-fil-cit,looks derived from row 'pansin' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/964,fil,hard,napunta,F-fil-cit,looks derived from row 'punta' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/966,fil,hard,patunay,F-fil-cit,looks derived from row 'tunay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/973,fil,hard,naghari,F-fil-cit,looks derived from row 'hari' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/977,fil,hard,matapang,F-fil-cit,looks derived from row 'tapang' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/981,fil,hard,pagdaan,F-fil-cit,looks derived from row 'daan' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/988,fil,hard,maganap,F-fil-cit,looks derived from row 'ganap' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1010,fil,hard,nakasama,F-fil-cit,looks derived from row 'kasama' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1035,fil,hard,pabalat,F-fil-cit,looks derived from row 'balat' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1047,fil,hard,babalik,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1049,fil,hard,maglaro,F-fil-cit,looks derived from row 'laro' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1051,fil,hard,nagsanhi,F-fil-cit,looks derived from row 'sanhi' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1086,fil,hard,nalikha,F-fil-cit,looks derived from row 'likha' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1110,fil,hard,kakampi,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1113,fil,hard,magtapos,F-fil-cit,looks derived from row 'tapos' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1125,fil,hard,masining,F-fil-cit,looks derived from row 'sining' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1127,fil,hard,pabahay,F-fil-cit,looks derived from row 'bahay' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1133,fil,hard,kagawad,F-fil-cit,looks derived from row 'gawad' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1136,fil,hard,naibalik,F-fil-cit,looks derived from row 'ibalik' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1137,fil,hard,paghawak,F-fil-cit,looks derived from row 'hawak' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1138,fil,hard,paputok,F-fil-cit,looks derived from row 'putok' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1151,fil,hard,nananaig,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1152,fil,hard,pagpunta,F-fil-cit,looks derived from row 'punta' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1153,fil,hard,pagsayaw,F-fil-cit,looks derived from row 'sayaw' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1168,fil,hard,ibibigay,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1173,fil,hard,pahilaga,F-fil-cit,looks derived from row 'hilaga' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1182,fil,hard,kaklase,F-fil-cit,looks derived from row 'klase' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1185,fil,hard,makasama,F-fil-cit,looks derived from row 'kasama' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1187,fil,hard,masakit,F-fil-cit,looks derived from row 'sakit' (heuristic),quarantine via PURITY ledger if approved
+fil/hard/1190,fil,hard,nagamit,F-fil-cit,looks derived from row 'gamit' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/7,fil,expert,magulang,F-fil-cit,looks derived from row 'gulang' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/62,fil,expert,lalawigan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/64,fil,expert,nagsimula,F-fil-cit,looks derived from row 'simula' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/89,fil,expert,mahalagang,F-fil-cit,looks derived from row 'halagang' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/99,fil,expert,matagumpay,F-fil-cit,looks derived from row 'tagumpay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/102,fil,expert,mamamayan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/121,fil,expert,malalaking,F-fil-cit,looks derived from row 'lalaking' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/124,fil,expert,kakayahan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/127,fil,expert,kaugnayan,F-fil-cit,looks derived from row 'ugnayan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/134,fil,expert,pagkakaiba,F-fil-cit,looks derived from row 'kakaiba' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/160,fil,expert,natagpuan,F-fil-cit,looks derived from row 'tagpuan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/167,fil,expert,kakayahang,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/170,fil,expert,kinakailangan,F-fil-cit,looks derived from row 'kailangan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/173,fil,expert,pagdating,F-fil-cit,looks derived from row 'dating' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/194,fil,expert,nagpatuloy,F-fil-cit,looks derived from row 'patuloy' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/210,fil,expert,ipinalabas,F-fil-cit,looks derived from row 'pinalabas' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/214,fil,expert,inilarawan,F-fil-cit,looks derived from row 'ilarawan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/226,fil,expert,nananatiling,F-fil-cit,looks derived from row 'nanatiling' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/237,fil,expert,sasakyang,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/243,fil,expert,pagkilala,F-fil-cit,looks derived from row 'kilala' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/272,fil,expert,nanatiling,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/288,fil,expert,malubhang,F-fil-cit,looks derived from row 'lubhang' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/291,fil,expert,maliwanag,F-fil-cit,looks derived from row 'liwanag' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/297,fil,expert,kinakatawan,F-fil-cit,looks derived from row 'katawan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/300,fil,expert,pagbabalik,F-fil-cit,looks derived from row 'babalik' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/314,fil,expert,nagtrabaho,F-fil-cit,looks derived from row 'trabaho' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/323,fil,expert,kakaibang,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/325,fil,expert,pagsasama,F-fil-cit,looks derived from row 'sasama' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/355,fil,expert,ipinapakita,F-fil-cit,looks derived from row 'pinapakita' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/370,fil,expert,kamag-anak,F-fil-cit,looks derived from row 'mag-anak' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/372,fil,expert,matandang,F-fil-cit,looks derived from row 'tandang' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/376,fil,expert,kinalaman,F-fil-cit,looks derived from row 'laman' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/437,fil,expert,ibinibigay,F-fil-cit,looks derived from row 'binibigay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/454,fil,expert,magtrabaho,F-fil-cit,looks derived from row 'trabaho' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/471,fil,expert,nagresulta,F-fil-cit,looks derived from row 'resulta' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/485,fil,expert,magkakaibang,F-fil-cit,looks derived from row 'kakaibang' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/494,fil,expert,kasangkot,F-fil-cit,looks derived from row 'sangkot' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/501,fil,expert,patungkol,F-fil-cit,looks derived from row 'tungkol' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/505,fil,expert,paliwanag,F-fil-cit,looks derived from row 'liwanag' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/507,fil,expert,gagamitin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/509,fil,expert,nanggaling,F-fil-cit,looks derived from row 'galing' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/519,fil,expert,nakumpleto,F-fil-cit,looks derived from row 'kumpleto' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/541,fil,expert,nagpadala,F-fil-cit,looks derived from row 'padala' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/551,fil,expert,nananatili,F-fil-cit,looks derived from row 'nanatili' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/553,fil,expert,pagtingin,F-fil-cit,looks derived from row 'tingin' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/559,fil,expert,magkasama,F-fil-cit,looks derived from row 'kasama' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/567,fil,expert,pagbigkas,F-fil-cit,looks derived from row 'bigkas' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/573,fil,expert,ipinangalan,F-fil-cit,looks derived from row 'pinangalan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/574,fil,expert,magkatulad,F-fil-cit,looks derived from row 'katulad' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/596,fil,expert,gaganapin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/598,fil,expert,makatulong,F-fil-cit,looks derived from row 'katulong' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/599,fil,expert,mamamahayag,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/614,fil,expert,nasugatan,F-fil-cit,looks derived from row 'sugatan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/625,fil,expert,nagtagumpay,F-fil-cit,looks derived from row 'tagumpay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/647,fil,expert,kaparehong,F-fil-cit,looks derived from row 'parehong' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/661,fil,expert,magsimula,F-fil-cit,looks derived from row 'simula' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/667,fil,expert,kinalalagyan,F-fil-cit,looks derived from row 'lalagyan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/685,fil,expert,namamatay,F-fil-cit,looks derived from row 'mamatay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/700,fil,expert,nakatulong,F-fil-cit,looks derived from row 'katulong' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/703,fil,expert,paglilipat,F-fil-cit,looks derived from row 'lilipat' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/709,fil,expert,kasamahan,F-fil-cit,looks derived from row 'samahan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/723,fil,expert,nagpahayag,F-fil-cit,looks derived from row 'pahayag' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/735,fil,expert,kalipunan,F-fil-cit,looks derived from row 'lipunan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/753,fil,expert,ipaliwanag,F-fil-cit,looks derived from row 'liwanag' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/757,fil,expert,naglingkod,F-fil-cit,looks derived from row 'lingkod' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/761,fil,expert,papalapit,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/767,fil,expert,sasagutin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/784,fil,expert,kaka,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/794,fil,expert,makumpleto,F-fil-cit,looks derived from row 'kumpleto' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/810,fil,expert,sisihin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/824,fil,expert,gagawing,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/826,fil,expert,gigil,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/832,fil,expert,ipinasok,F-fil-cit,looks derived from row 'pinasok' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/834,fil,expert,kinalabasan,F-fil-cit,looks derived from row 'labasan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/836,fil,expert,maibalik,F-fil-cit,looks derived from row 'ibalik' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/841,fil,expert,matatanggap,F-fil-cit,looks derived from row 'tatanggap' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/853,fil,expert,sasama,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/857,fil,expert,sisimulan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/867,fil,expert,babaing,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/874,fil,expert,inamin,F-fil-cit,looks derived from row 'namin' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/878,fil,expert,kakainin,F-fil-cit,looks derived from row 'kainin' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/880,fil,expert,kapiling,F-fil-cit,looks derived from row 'piling' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/885,fil,expert,mahawakan,F-fil-cit,looks derived from row 'hawakan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/889,fil,expert,matulungan,F-fil-cit,looks derived from row 'tulungan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/891,fil,expert,maubos,F-fil-cit,looks derived from row 'ubos' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/892,fil,expert,naghiwalay,F-fil-cit,looks derived from row 'hiwalay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/895,fil,expert,naubos,F-fil-cit,looks derived from row 'ubos' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/900,fil,expert,paglaganap,F-fil-cit,looks derived from row 'laganap' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/911,fil,expert,tatag,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/947,fil,expert,matuloy,F-fil-cit,looks derived from row 'tuloy' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/949,fil,expert,nagbabalik,F-fil-cit,looks derived from row 'babalik' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/959,fil,expert,pagkontrol,F-fil-cit,looks derived from row 'kontrol' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/960,fil,expert,pagsagot,F-fil-cit,looks derived from row 'sagot' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/982,fil,expert,isasama,F-fil-cit,looks derived from row 'sasama' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/983,fil,expert,kabilis,F-fil-cit,looks derived from row 'bilis' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/996,fil,expert,masagot,F-fil-cit,looks derived from row 'sagot' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1024,fil,expert,gugustuhin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1034,fil,expert,magbukas,F-fil-cit,looks derived from row 'bukas' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1035,fil,expert,magdasal,F-fil-cit,looks derived from row 'dasal' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1045,fil,expert,napalitan,F-fil-cit,looks derived from row 'palitan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1062,fil,expert,aaminin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1066,fil,expert,babalikan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1068,fil,expert,bibilhin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1072,fil,expert,hihigit,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1076,fil,expert,ihatid,F-fil-cit,looks derived from row 'hatid' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1085,fil,expert,kapantay,F-fil-cit,looks derived from row 'pantay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1130,fil,expert,tutulungan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1131,fil,expert,umuuwi,F-fil-cit,looks derived from row 'uuwi' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1144,fil,expert,lalapit,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1145,fil,expert,magdagdag,F-fil-cit,looks derived from row 'dagdag' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1148,fil,expert,makinis,F-fil-cit,looks derived from row 'kinis' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1172,fil,expert,sasagot,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1174,fil,expert,tatawagin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1199,fil,expert,kadiliman,F-fil-cit,looks derived from row 'diliman' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1200,fil,expert,kapareho,F-fil-cit,looks derived from row 'pareho' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1215,fil,expert,matapat,F-fil-cit,looks derived from row 'tapat' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1221,fil,expert,nagmahal,F-fil-cit,looks derived from row 'mahal' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1227,fil,expert,pabango,F-fil-cit,looks derived from row 'bango' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1228,fil,expert,pagtapos,F-fil-cit,looks derived from row 'tapos' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1240,fil,expert,susubukan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1248,fil,expert,babagsak,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1250,fil,expert,gaganda,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1265,fil,expert,lala,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1273,fil,expert,malalaki,F-fil-cit,looks derived from row 'lalaki' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1283,fil,expert,napigilan,F-fil-cit,looks derived from row 'pigilan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1291,fil,expert,pagtigil,F-fil-cit,looks derived from row 'tigil' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1292,fil,expert,palihim,F-fil-cit,looks derived from row 'lihim' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1322,fil,expert,isalin,F-fil-cit,looks derived from row 'salin' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1337,fil,expert,nagsasama,F-fil-cit,looks derived from row 'sasama' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1340,fil,expert,pagbukas,F-fil-cit,looks derived from row 'bukas' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1387,fil,expert,lilipat,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1390,fil,expert,magbabalik,F-fil-cit,looks derived from row 'babalik' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1395,fil,expert,maisagawa,F-fil-cit,looks derived from row 'isagawa' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1396,fil,expert,mananatiling,F-fil-cit,looks derived from row 'nanatiling' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1403,fil,expert,natanong,F-fil-cit,looks derived from row 'tanong' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1408,fil,expert,pagtanda,F-fil-cit,looks derived from row 'tanda' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1412,fil,expert,pananatili,F-fil-cit,looks derived from row 'nanatili' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1424,fil,expert,tatagal,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1493,fil,expert,lalamunan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1515,fil,expert,pagtulong,F-fil-cit,looks derived from row 'tulong' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1520,fil,expert,makapangyarihan,F-fil-cit,looks derived from row 'kapangyarihan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1529,fil,expert,magkapatid,F-fil-cit,looks derived from row 'kapatid' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1556,fil,expert,magkaibigan,F-fil-cit,looks derived from row 'kaibigan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1599,fil,expert,mamamatay,F-fil-cit,looks derived from row 'mamatay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1609,fil,expert,nagdagdag,F-fil-cit,looks derived from row 'dagdag' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1620,fil,expert,magpatuloy,F-fil-cit,looks derived from row 'patuloy' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1631,fil,expert,magpadala,F-fil-cit,looks derived from row 'padala' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1662,fil,expert,inimbento,F-fil-cit,looks derived from row 'imbento' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1688,fil,expert,nagsalita,F-fil-cit,looks derived from row 'salita' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1700,fil,expert,maglingkod,F-fil-cit,looks derived from row 'lingkod' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1709,fil,expert,alalahanin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1729,fil,expert,babasahin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1789,fil,expert,magkapareho,F-fil-cit,looks derived from row 'kapareho' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1805,fil,expert,papatayin,F-fil-cit,looks derived from row 'patayin' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1825,fil,expert,pagproseso,F-fil-cit,looks derived from row 'proseso' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1871,fil,expert,magtagumpay,F-fil-cit,looks derived from row 'tagumpay' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1897,fil,expert,kakayanan,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1901,fil,expert,kasabihan,F-fil-cit,looks derived from row 'sabihan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1913,fil,expert,natatanggap,F-fil-cit,looks derived from row 'tatanggap' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1915,fil,expert,pakahulugan,F-fil-cit,looks derived from row 'kahulugan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1916,fil,expert,pinagkalooban,F-fil-cit,looks derived from row 'kalooban' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1952,fil,expert,makasalanan,F-fil-cit,looks derived from row 'kasalanan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1965,fil,expert,sasabihin,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1968,fil,expert,tatanggap,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1987,fil,expert,mapalitan,F-fil-cit,looks derived from row 'palitan' (heuristic),quarantine via PURITY ledger if approved
+fil/expert/1988,fil,expert,naglarawan,F-fil-cit,looks derived from row 'larawan' (heuristic),quarantine via PURITY ledger if approved

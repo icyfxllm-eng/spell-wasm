@@ -1,0 +1,152 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+hi/easy/183,hi,easy,बर्फ,F-hi-4,"nukta/no-nukta pair stored: बर्फ, बर्फ़",one row plus variant
+hi/easy/184,hi,easy,बर्फ़,F-hi-4,"nukta/no-nukta pair stored: बर्फ, बर्फ़",one row plus variant
+hi/medium/79,hi,medium,अंग्रेजी,F-hi-4,"nukta/no-nukta pair stored: अंग्रेजी, अंग्रेज़ी",one row plus variant
+hi/medium/481,hi,medium,अंग्रेज़ी,F-hi-4,"nukta/no-nukta pair stored: अंग्रेजी, अंग्रेज़ी",one row plus variant
+hi/medium/185,hi,medium,डिजाइन,F-hi-4,"nukta/no-nukta pair stored: डिजाइन, डिज़ाइन",one row plus variant
+hi/medium/576,hi,medium,डिज़ाइन,F-hi-4,"nukta/no-nukta pair stored: डिजाइन, डिज़ाइन",one row plus variant
+hi/medium/215,hi,medium,फरवरी,F-hi-4,"nukta/no-nukta pair stored: फरवरी, फ़रवरी",one row plus variant
+hi/medium/706,hi,medium,फ़रवरी,F-hi-4,"nukta/no-nukta pair stored: फरवरी, फ़रवरी",one row plus variant
+hi/hard/83,hi,hard,अफगानिस्तान,F-hi-4,"nukta/no-nukta pair stored: अफगानिस्तान, अफ़ग़ानिस्तान",one row plus variant
+hi/hard/375,hi,hard,अफ़ग़ानिस्तान,F-hi-4,"nukta/no-nukta pair stored: अफगानिस्तान, अफ़ग़ानिस्तान",one row plus variant
+hi/hard/301,hi,hard,जबरदस्त,F-hi-4,"nukta/no-nukta pair stored: जबरदस्त, ज़बरदस्त",one row plus variant
+hi/hard/511,hi,hard,ज़बरदस्त,F-hi-4,"nukta/no-nukta pair stored: जबरदस्त, ज़बरदस्त",one row plus variant
+hi/hard/371,hi,hard,स्विट्जरलैंड,F-hi-4,"nukta/no-nukta pair stored: स्विट्जरलैंड, स्विट्ज़रलैंड",one row plus variant
+hi/hard/491,hi,hard,स्विट्ज़रलैंड,F-hi-4,"nukta/no-nukta pair stored: स्विट्जरलैंड, स्विट्ज़रलैंड",one row plus variant
+hi/easy/60,hi,easy,गर्मी,F-hi-cit,looks derived from row 'गर्म' (heuristic),quarantine via PURITY ledger if approved
+hi/easy/74,hi,easy,चाँदी,F-hi-cit,looks derived from row 'चाँद' (heuristic),quarantine via PURITY ledger if approved
+hi/easy/239,hi,easy,लड़की,F-hi-cit,looks derived from row 'लड़का' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/33,hi,medium,क्षेत्रों,F-hi-cit,looks derived from row 'क्षेत्र' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/61,hi,medium,अमेरिकी,F-hi-cit,looks derived from row 'अमेरिका' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/79,hi,medium,अंग्रेजी,F-hi-cit,looks derived from row 'अंग्रेज' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/95,hi,medium,उत्तरी,F-hi-cit,looks derived from row 'उत्तर' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/100,hi,medium,पश्चिमी,F-hi-cit,looks derived from row 'पश्चिम' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/147,hi,medium,सदस्यों,F-hi-cit,looks derived from row 'सदस्य' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/148,hi,medium,सरकारी,F-hi-cit,looks derived from row 'सरकार' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/163,hi,medium,अधिकारी,F-hi-cit,looks derived from row 'अधिकार' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/194,hi,medium,दक्षिणी,F-hi-cit,looks derived from row 'दक्षिण' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/264,hi,medium,समस्याओं,F-hi-cit,looks derived from row 'समस्या' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/266,hi,medium,प्रभावी,F-hi-cit,looks derived from row 'प्रभाव' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/269,hi,medium,जर्मनी,F-hi-cit,looks derived from row 'जर्मन' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/316,hi,medium,विद्वानों,F-hi-cit,looks derived from row 'विद्वान' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/317,hi,medium,पदार्थों,F-hi-cit,looks derived from row 'पदार्थ' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/323,hi,medium,अंग्रेजों,F-hi-cit,looks derived from row 'अंग्रेज' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/333,hi,medium,उपकरणों,F-hi-cit,looks derived from row 'उपकरण' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/359,hi,medium,तकनीकी,F-hi-cit,looks derived from row 'तकनीक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/368,hi,medium,उपयोगी,F-hi-cit,looks derived from row 'उपयोग' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/395,hi,medium,अधिकारों,F-hi-cit,looks derived from row 'अधिकार' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/396,hi,medium,मुसलमानों,F-hi-cit,looks derived from row 'मुसलमान' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/409,hi,medium,उत्पादों,F-hi-cit,looks derived from row 'उत्पाद' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/417,hi,medium,समुद्री,F-hi-cit,looks derived from row 'समुद्र' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/423,hi,medium,सिद्धांतों,F-hi-cit,looks derived from row 'सिद्धांत' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/436,hi,medium,पुस्तकों,F-hi-cit,looks derived from row 'पुस्तक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/440,hi,medium,इस्लामी,F-hi-cit,looks derived from row 'इस्लाम' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/452,hi,medium,कलाकारों,F-hi-cit,looks derived from row 'कलाकार' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/473,hi,medium,संगठनों,F-hi-cit,looks derived from row 'संगठन' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/487,hi,medium,संस्थानों,F-hi-cit,looks derived from row 'संस्थान' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/540,hi,medium,शुरुआती,F-hi-cit,looks derived from row 'शुरुआत' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/546,hi,medium,जानवरों,F-hi-cit,looks derived from row 'जानवर' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/552,hi,medium,प्रयासों,F-hi-cit,looks derived from row 'प्रयास' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/559,hi,medium,पुस्तकें,F-hi-cit,looks derived from row 'पुस्तक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/564,hi,medium,व्यापारी,F-hi-cit,looks derived from row 'व्यापार' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/569,hi,medium,ग्राहकों,F-hi-cit,looks derived from row 'ग्राहक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/577,hi,medium,नागरिकों,F-hi-cit,looks derived from row 'नागरिक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/581,hi,medium,समझौते,F-hi-cit,looks derived from row 'समझौता' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/588,hi,medium,पर्यटकों,F-hi-cit,looks derived from row 'पर्यटक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/591,hi,medium,मनुष्यों,F-hi-cit,looks derived from row 'मनुष्य' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/598,hi,medium,राष्ट्रों,F-hi-cit,looks derived from row 'राष्ट्र' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/600,hi,medium,वैज्ञानिकों,F-hi-cit,looks derived from row 'वैज्ञानिक' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/604,hi,medium,महाराजा,F-hi-cit,looks derived from row 'महाराज' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/607,hi,medium,लक्षणों,F-hi-cit,looks derived from row 'लक्षण' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/613,hi,medium,परिवारों,F-hi-cit,looks derived from row 'परिवार' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/627,hi,medium,विशेषताओं,F-hi-cit,looks derived from row 'विशेषता' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/654,hi,medium,उद्योगों,F-hi-cit,looks derived from row 'उद्योग' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/662,hi,medium,पाकिस्तानी,F-hi-cit,looks derived from row 'पाकिस्तान' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/679,hi,medium,अफ्रीकी,F-hi-cit,looks derived from row 'अफ्रीका' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/682,hi,medium,परिणामों,F-hi-cit,looks derived from row 'परिणाम' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/685,hi,medium,संसाधनों,F-hi-cit,looks derived from row 'संसाधन' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/691,hi,medium,प्रभावों,F-hi-cit,looks derived from row 'प्रभाव' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/709,hi,medium,सहयोगी,F-hi-cit,looks derived from row 'सहयोग' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/732,hi,medium,बल्लेबाजी,F-hi-cit,looks derived from row 'बल्लेबाज' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/737,hi,medium,अमरीकी,F-hi-cit,looks derived from row 'अमरीका' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/738,hi,medium,कविताओं,F-hi-cit,looks derived from row 'कविता' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/739,hi,medium,कहलाते,F-hi-cit,looks derived from row 'कहलाता' (heuristic),quarantine via PURITY ledger if approved
+hi/medium/757,hi,medium,समुदायों,F-hi-cit,looks derived from row 'समुदाय' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/4,hi,hard,आवश्यकता,F-hi-cit,looks derived from row 'आवश्यक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/9,hi,hard,स्वतंत्रता,F-hi-cit,looks derived from row 'स्वतंत्र' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/32,hi,hard,कार्यक्रमों,F-hi-cit,looks derived from row 'कार्यक्रम' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/52,hi,hard,उत्तराधिकारी,F-hi-cit,looks derived from row 'उत्तराधिकार' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/59,hi,hard,आवश्यकताओं,F-hi-cit,looks derived from row 'आवश्यकता' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/63,hi,hard,प्रक्रियाओं,F-hi-cit,looks derived from row 'प्रक्रिया' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/66,hi,hard,लोकप्रियता,F-hi-cit,looks derived from row 'लोकप्रिय' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/71,hi,hard,परियोजनाओं,F-hi-cit,looks derived from row 'परियोजना' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/93,hi,hard,अध्यक्षता,F-hi-cit,looks derived from row 'अध्यक्ष' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/98,hi,hard,वास्तविकता,F-hi-cit,looks derived from row 'वास्तविक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/101,hi,hard,परिवर्तनों,F-hi-cit,looks derived from row 'परिवर्तन' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/104,hi,hard,अनुप्रयोगों,F-hi-cit,looks derived from row 'अनुप्रयोग' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/112,hi,hard,प्रदर्शनी,F-hi-cit,looks derived from row 'प्रदर्शन' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/118,hi,hard,इतिहासकारों,F-hi-cit,looks derived from row 'इतिहासकार' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/127,hi,hard,प्रतियोगिताओं,F-hi-cit,looks derived from row 'प्रतियोगिता' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/142,hi,hard,विशेषज्ञता,F-hi-cit,looks derived from row 'विशेषज्ञ' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/147,hi,hard,राष्ट्रवादी,F-hi-cit,looks derived from row 'राष्ट्रवाद' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/157,hi,hard,प्राथमिकता,F-hi-cit,looks derived from row 'प्राथमिक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/159,hi,hard,उपलब्धता,F-hi-cit,looks derived from row 'उपलब्ध' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/160,hi,hard,कार्यकर्ताओं,F-hi-cit,looks derived from row 'कार्यकर्ता' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/174,hi,hard,उपभोक्ताओं,F-hi-cit,looks derived from row 'उपभोक्ता' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/184,hi,hard,स्वतन्त्रता,F-hi-cit,looks derived from row 'स्वतन्त्र' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/188,hi,hard,प्रदर्शनों,F-hi-cit,looks derived from row 'प्रदर्शन' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/210,hi,hard,प्रतिस्पर्धी,F-hi-cit,looks derived from row 'प्रतिस्पर्धा' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/226,hi,hard,परम्पराओं,F-hi-cit,looks derived from row 'परम्परा' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/240,hi,hard,संवेदनशीलता,F-hi-cit,looks derived from row 'संवेदनशील' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/242,hi,hard,उम्मीदवारों,F-hi-cit,looks derived from row 'उम्मीदवार' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/260,hi,hard,प्रयोगशालाओं,F-hi-cit,looks derived from row 'प्रयोगशाला' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/262,hi,hard,अर्थशास्त्री,F-hi-cit,looks derived from row 'अर्थशास्त्र' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/284,hi,hard,पाठ्यक्रमों,F-hi-cit,looks derived from row 'पाठ्यक्रम' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/285,hi,hard,पारिस्थितिकी,F-hi-cit,looks derived from row 'पारिस्थितिक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/297,hi,hard,उत्कृष्टता,F-hi-cit,looks derived from row 'उत्कृष्ट' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/309,hi,hard,मनोवैज्ञानिकों,F-hi-cit,looks derived from row 'मनोवैज्ञानिक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/329,hi,hard,यथार्थवादी,F-hi-cit,looks derived from row 'यथार्थवाद' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/341,hi,hard,पुस्तकालयों,F-hi-cit,looks derived from row 'पुस्तकालय' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/342,hi,hard,प्रतिबद्धता,F-hi-cit,looks derived from row 'प्रतिबद्ध' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/343,hi,hard,प्रसन्नता,F-hi-cit,looks derived from row 'प्रसन्न' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/350,hi,hard,हिन्दुस्तानी,F-hi-cit,looks derived from row 'हिन्दुस्तान' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/353,hi,hard,इलेक्ट्रानों,F-hi-cit,looks derived from row 'इलेक्ट्रान' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/376,hi,hard,अल्पसंख्यकों,F-hi-cit,looks derived from row 'अल्पसंख्यक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/380,hi,hard,क्रियाकलापों,F-hi-cit,looks derived from row 'क्रियाकलाप' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/388,hi,hard,प्रतिक्रियाओं,F-hi-cit,looks derived from row 'प्रतिक्रिया' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/392,hi,hard,राष्ट्रीयता,F-hi-cit,looks derived from row 'राष्ट्रीय' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/398,hi,hard,साहित्यकारों,F-hi-cit,looks derived from row 'साहित्यकार' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/424,hi,hard,साम्राज्यवादी,F-hi-cit,looks derived from row 'साम्राज्यवाद' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/459,hi,hard,आध्यात्मिकता,F-hi-cit,looks derived from row 'आध्यात्मिक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/482,hi,hard,वाद्ययंत्रों,F-hi-cit,looks derived from row 'वाद्ययंत्र' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/483,hi,hard,विश्वसनीयता,F-hi-cit,looks derived from row 'विश्वसनीय' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/520,hi,hard,प्रतिरक्षी,F-hi-cit,looks derived from row 'प्रतिरक्षा' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/588,hi,hard,रचनात्मकता,F-hi-cit,looks derived from row 'रचनात्मक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/589,hi,hard,राजनीतिज्ञों,F-hi-cit,looks derived from row 'राजनीतिज्ञ' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/597,hi,hard,स्वयंसेवकों,F-hi-cit,looks derived from row 'स्वयंसेवक' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/627,hi,hard,तीर्थयात्री,F-hi-cit,looks derived from row 'तीर्थयात्रा' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/650,hi,hard,महाविद्यालयों,F-hi-cit,looks derived from row 'महाविद्यालय' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/667,hi,hard,अनिवार्यता,F-hi-cit,looks derived from row 'अनिवार्य' (heuristic),quarantine via PURITY ledger if approved
+hi/hard/716,hi,hard,प्रतिष्ठानों,F-hi-cit,looks derived from row 'प्रतिष्ठान' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/8,hi,expert,विश्वविद्यालयों,F-hi-cit,looks derived from row 'विश्वविद्यालय' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/40,hi,expert,उत्तरदायित्वों,F-hi-cit,looks derived from row 'उत्तरदायित्व' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/46,hi,expert,आत्मनिर्भरता,F-hi-cit,looks derived from row 'आत्मनिर्भर' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/52,hi,expert,परिवर्तनशीलता,F-hi-cit,looks derived from row 'परिवर्तनशील' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/74,hi,expert,प्रतिबद्धताओं,F-hi-cit,looks derived from row 'प्रतिबद्धता' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/85,hi,expert,धर्मनिरपेक्षता,F-hi-cit,looks derived from row 'धर्मनिरपेक्ष' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/103,hi,expert,अतियथार्थवादी,F-hi-cit,looks derived from row 'अतियथार्थवाद' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/107,hi,expert,अपहरणकर्ताओं,F-hi-cit,looks derived from row 'अपहरणकर्ता' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/119,hi,expert,दक्षिणपश्चिमी,F-hi-cit,looks derived from row 'दक्षिणपश्चिम' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/120,hi,expert,दर्शनशास्त्री,F-hi-cit,looks derived from row 'दर्शनशास्त्र' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/126,hi,expert,प्रतिस्पर्द्धी,F-hi-cit,looks derived from row 'प्रतिस्पर्द्धा' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/128,hi,expert,प्रतीकात्मकता,F-hi-cit,looks derived from row 'प्रतीकात्मक' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/171,hi,expert,उत्परिवर्तनों,F-hi-cit,looks derived from row 'उत्परिवर्तन' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/215,hi,expert,रसायनशास्त्री,F-hi-cit,looks derived from row 'रसायनशास्त्र' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/219,hi,expert,वर्णनात्मकता,F-hi-cit,looks derived from row 'वर्णनात्मक' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/225,hi,expert,संकटग्रस्तता,F-hi-cit,looks derived from row 'संकटग्रस्त' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/241,hi,expert,अंतर्राष्ट्रीयता,F-hi-cit,looks derived from row 'अंतर्राष्ट्रीय' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/254,hi,expert,अपराधविज्ञानी,F-hi-cit,looks derived from row 'अपराधविज्ञान' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/257,hi,expert,अप्रत्याशितता,F-hi-cit,looks derived from row 'अप्रत्याशित' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/266,hi,expert,अवसादग्रस्तता,F-hi-cit,looks derived from row 'अवसादग्रस्त' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/272,hi,expert,आघातवर्धनीयता,F-hi-cit,looks derived from row 'आघातवर्धनीय' (heuristic),quarantine via PURITY ledger if approved
+hi/expert/286,hi,expert,उत्तरपश्चिमी,F-hi-cit,looks derived from row 'उत्तरपश्चिम' (heuristic),quarantine via PURITY ledger if approved

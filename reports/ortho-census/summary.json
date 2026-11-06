@@ -1,0 +1,559 @@
+{
+ "es": {
+  "rows": 6267,
+  "by_tier": {
+   "easy": 268,
+   "medium": 1000,
+   "hard": 2000,
+   "expert": 2999
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "noncitation_derived_from_other_row": 2249,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 35.9,
+  "noncitation_samples": [
+   "amigo <- amiga",
+   "cuanto <- cuanta",
+   "indica <- indicar",
+   "malas <- malo",
+   "mayoría <- mayor",
+   "usuarios <- usuario",
+   "llevaron <- lleva",
+   "errores <- error",
+   "columnas <- columna",
+   "compromisos <- compromiso",
+   "muero <- muere",
+   "separado <- separa",
+   "diferencias <- diferencia",
+   "estuvieron <- estuvo",
+   "cantado <- canto",
+   "subimos <- subir",
+   "sonando <- sonar",
+   "acompañadas <- acompañado",
+   "sostenida <- sostener",
+   "especializada <- especializado"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "checks": {
+   "F-es-cit": 2249
+  },
+  "check_pct_of_rows": {
+   "F-es-cit": 35.9
+  }
+ },
+ "fr": {
+  "rows": 6272,
+  "by_tier": {
+   "easy": 279,
+   "medium": 1000,
+   "hard": 2000,
+   "expert": 2993
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "noncitation_derived_from_other_row": 1863,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 29.7,
+  "noncitation_samples": [
+   "bouche <- boucher",
+   "portes <- porte",
+   "sœurs <- sœur",
+   "souvenirs <- souvenir",
+   "troupes <- troupe",
+   "domaines <- domaine",
+   "sociaux <- social",
+   "apporte <- apporter",
+   "arrives <- arrive",
+   "signalé <- signal",
+   "intellectuels <- intellectuel",
+   "terminée <- termine",
+   "professionnels <- professionnel",
+   "représentants <- représentant",
+   "appareils <- appareil",
+   "estimait <- estime",
+   "nuisibles <- nuisible",
+   "tarés <- taré",
+   "sembles <- semble",
+   "composent <- compose"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "checks": {
+   "F-fr-3": 8,
+   "F-fr-cit": 1863
+  },
+  "check_pct_of_rows": {
+   "F-fr-3": 0.1,
+   "F-fr-cit": 29.7
+  }
+ },
+ "pt": {
+  "rows": 6259,
+  "by_tier": {
+   "easy": 272,
+   "medium": 1000,
+   "hard": 2000,
+   "expert": 2987
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "noncitation_derived_from_other_row": 2398,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 38.3,
+  "noncitation_samples": [
+   "amigo <- amiga",
+   "plano <- plana",
+   "muita <- muito",
+   "viram <- virar",
+   "processo <- processar",
+   "passaram <- passo",
+   "decisões <- decisão",
+   "entrega <- entregar",
+   "bocado <- boca",
+   "reduzida <- reduzir",
+   "fábricas <- fábrica",
+   "oriente <- oriental",
+   "documentos <- documento",
+   "financeira <- financeiro",
+   "prefeita <- prefeito",
+   "canada <- canal",
+   "apoios <- apoio",
+   "cortados <- cortar",
+   "excluída <- excluído",
+   "estimativas <- estimativa"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "checks": {
+   "F-pt-1": 3,
+   "F-pt-2": 9,
+   "F-pt-cit": 2398
+  },
+  "check_pct_of_rows": {
+   "F-pt-1": 0.0,
+   "F-pt-2": 0.1,
+   "F-pt-cit": 38.3
+  }
+ },
+ "pl": {
+  "rows": 6211,
+  "by_tier": {
+   "easy": 267,
+   "medium": 949,
+   "hard": 2000,
+   "expert": 2995
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "noncitation_derived_from_other_row": 1687,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 27.2,
+  "noncitation_samples": [
+   "biały <- białe",
+   "filmu <- film",
+   "edycji <- edycja",
+   "zawodu <- zawody",
+   "rodzaju <- rodzaj",
+   "wynikiem <- wyniki",
+   "systemem <- system",
+   "obecnych <- obecny",
+   "inteligencji <- inteligencja",
+   "przykładów <- przykład",
+   "elity <- elita",
+   "składała <- składa",
+   "literatury <- literatura",
+   "wojskowego <- wojskowe",
+   "dodatkowych <- dodatkowo",
+   "wyszedłem <- wyszedł",
+   "olimpijskiego <- olimpijskie",
+   "możliwym <- możliwa",
+   "techniką <- technik",
+   "potwory <- potwora"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "checks": {
+   "F-pl-2": 150,
+   "F-pl-cit": 1687
+  },
+  "check_pct_of_rows": {
+   "F-pl-2": 2.4,
+   "F-pl-cit": 27.2
+  }
+ },
+ "ru": {
+  "rows": 6830,
+  "by_tier": {
+   "easy": 833,
+   "medium": 1000,
+   "hard": 1999,
+   "expert": 2998
+  },
+  "collision_groups": 28,
+  "collision_rows": 56,
+  "collision_pct": 0.82,
+  "noncitation_derived_from_other_row": 2654,
+  "noncitation_pattern_only": 106,
+  "noncitation_pct": 40.4,
+  "noncitation_samples": [
+   "большой <- больше",
+   "идеи <- идея",
+   "начале <- начал",
+   "данные <- данный",
+   "музыку <- музыка",
+   "лицом <- лиц",
+   "компании <- компания",
+   "выборах <- выбор",
+   "сыграла <- сыграл",
+   "способом <- способ",
+   "посла <- после",
+   "совместной <- совместно",
+   "входила <- входил",
+   "национального <- национальный",
+   "московской <- московский",
+   "российского <- российской",
+   "готовили <- готовился",
+   "голые <- гол",
+   "федеральные <- федеральной",
+   "остановили <- остановился",
+   "состоится (pattern)",
+   "смеется (pattern)",
+   "относятся (pattern)",
+   "производится (pattern)",
+   "снимается (pattern)"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "ru_rows_with_yo": 64,
+  "ru_f1": "could not run: no ё-headword dictionary in the repo; src/ru_stress_data.rs holds 973 stress entries only",
+  "checks": {
+   "F-ru-cit": 2760,
+   "F-ru-coll": 56
+  },
+  "check_pct_of_rows": {
+   "F-ru-cit": 40.4,
+   "F-ru-coll": 0.8
+  }
+ },
+ "vi": {
+  "rows": 5601,
+  "by_tier": {
+   "easy": 774,
+   "medium": 832,
+   "hard": 1497,
+   "expert": 2498
+  },
+  "collision_groups": 1,
+  "collision_rows": 2,
+  "collision_pct": 0.04,
+  "noncitation_derived_from_other_row": 0,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 0.0,
+  "noncitation_samples": [],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {
+   "space": 4413
+  },
+  "outside_samples": [],
+  "not_nfc": 0,
+  "vi_multisyllable": 4413,
+  "checks": {
+   "F-vi-2": 2,
+   "F-vi-3": 2,
+   "F-vi-coll": 2
+  },
+  "check_pct_of_rows": {
+   "F-vi-2": 0.0,
+   "F-vi-3": 0.0,
+   "F-vi-coll": 0.0
+  }
+ },
+ "ko": {
+  "rows": 3163,
+  "by_tier": {
+   "easy": 558,
+   "medium": 217,
+   "hard": 933,
+   "expert": 1455
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "noncitation_derived_from_other_row": 71,
+  "noncitation_pattern_only": 99,
+  "noncitation_pct": 5.4,
+  "noncitation_samples": [
+   "강한 <- 강",
+   "많은 <- 많다",
+   "같이 <- 같다",
+   "주로 <- 주",
+   "있을 <- 있다",
+   "바로 <- 바다",
+   "관련된 <- 관련",
+   "최고 <- 최다",
+   "새로 <- 새",
+   "신고 <- 신",
+   "중국인 <- 중국",
+   "오만 <- 오다",
+   "오이 <- 오다",
+   "이이 <- 이다",
+   "어린이 <- 어린",
+   "싸인 <- 싸",
+   "이의 <- 이다",
+   "쓰인 <- 쓰다",
+   "음악가 <- 음악",
+   "비만 <- 비",
+   "강한 (pattern)",
+   "같은 (pattern)",
+   "비슷한 (pattern)",
+   "거대한 (pattern)",
+   "고운 (pattern)"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "ko_ends_in_da": 51,
+  "ko_dual_standard_in_bank": [
+   "손자",
+   "마을"
+  ],
+  "checks": {
+   "F-ko-cit": 170
+  },
+  "check_pct_of_rows": {
+   "F-ko-cit": 5.4
+  }
+ },
+ "fil": {
+  "rows": 4035,
+  "by_tier": {
+   "easy": 247,
+   "medium": 600,
+   "hard": 1200,
+   "expert": 1988
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "noncitation_derived_from_other_row": 362,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 9.0,
+  "noncitation_samples": [
+   "babae <- reduplication",
+   "nanalo <- reduplication",
+   "tatay <- reduplication",
+   "mahigit <- higit",
+   "malinaw <- linaw",
+   "palaging <- laging",
+   "katulong <- tulong",
+   "nagpunta <- punta",
+   "mabasa <- basa",
+   "maglakad <- lakad",
+   "masining <- sining",
+   "mahalagang <- halagang",
+   "malubhang <- lubhang",
+   "gagamitin <- reduplication",
+   "namamatay <- mamatay",
+   "matatanggap <- tatanggap",
+   "isasama <- sasama",
+   "sasagot <- reduplication",
+   "pagbukas <- bukas",
+   "inimbento <- imbento"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {
+   "hyphen": 67
+  },
+  "outside_samples": [],
+  "not_nfc": 0,
+  "fil_hyphen_rows": 67,
+  "checks": {
+   "F-fil-1": 156,
+   "F-fil-3": 6,
+   "F-fil-cit": 362
+  },
+  "check_pct_of_rows": {
+   "F-fil-1": 3.9,
+   "F-fil-3": 0.1,
+   "F-fil-cit": 9.0
+  }
+ },
+ "zh": {
+  "rows": 6182,
+  "by_tier": {
+   "easy": 296,
+   "medium": 944,
+   "hard": 1958,
+   "expert": 2984
+  },
+  "collision_groups": 254,
+  "collision_rows": 626,
+  "collision_pct": 10.13,
+  "zh_hanzi_collision_groups": 2,
+  "noncitation_derived_from_other_row": 0,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 0.0,
+  "noncitation_samples": [],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "zh_monosyllabic_rows": 931,
+  "zh_pinyin_key_set_sizes": {
+   "1": 5556,
+   "2": 187,
+   "3": 39,
+   "4": 17,
+   "6": 3,
+   "5": 5,
+   "8": 1,
+   "9": 1,
+   "7": 1
+  },
+  "zh_pinyin_key_sets_by_tier": {
+   "easy": 72,
+   "medium": 94,
+   "hard": 132,
+   "expert": 179
+  },
+  "zh_tone3_sandhi_applied": false,
+  "checks": {
+   "F-zh-1": 931,
+   "F-zh-coll": 626
+  },
+  "check_pct_of_rows": {
+   "F-zh-1": 15.1,
+   "F-zh-coll": 10.1
+  }
+ },
+ "sw": {
+  "rows": 2818,
+  "by_tier": {
+   "easy": 262,
+   "medium": 673,
+   "hard": 1200,
+   "expert": 683
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "sw_ku_infinitives": 400,
+  "noncitation_derived_from_other_row": 295,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 10.5,
+  "noncitation_samples": [
+   "ukubwa <- tensed-verb-pattern",
+   "wanaweza <- tensed-verb-pattern",
+   "wamebaki <- tensed-verb-pattern",
+   "ulianza <- tensed-verb-pattern",
+   "waliuawa <- tensed-verb-pattern",
+   "mtaalamu <- tensed-verb-pattern",
+   "mmenyuko <- tensed-verb-pattern",
+   "ulikua <- tensed-verb-pattern",
+   "anahitaji <- tensed-verb-pattern",
+   "alimaliza <- tensed-verb-pattern",
+   "unatokana <- tensed-verb-pattern",
+   "wanafunzi <- tensed-verb-pattern",
+   "alipokuwa <- tensed-verb-pattern",
+   "aliteuliwa <- tensed-verb-pattern",
+   "walishindwa <- tensed-verb-pattern",
+   "wanapaswa <- tensed-verb-pattern",
+   "alihudhuria <- tensed-verb-pattern",
+   "alikamatwa <- tensed-verb-pattern",
+   "unachukua <- tensed-verb-pattern",
+   "aliyokuwa <- tensed-verb-pattern"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "sw_ng_apostrophe_rows": 0,
+  "sw_ngn_without_apostrophe_candidates": 9,
+  "checks": {
+   "F-sw-3": 29,
+   "F-sw-cit": 295
+  },
+  "check_pct_of_rows": {
+   "F-sw-3": 1.0,
+   "F-sw-cit": 10.5
+  }
+ },
+ "hi": {
+  "rows": 2095,
+  "by_tier": {
+   "easy": 292,
+   "medium": 776,
+   "hard": 740,
+   "expert": 287
+  },
+  "collision_groups": 0,
+  "collision_rows": 0,
+  "collision_pct": 0.0,
+  "hi_infinitive_rows": 45,
+  "noncitation_derived_from_other_row": 137,
+  "noncitation_pattern_only": 0,
+  "noncitation_pct": 6.5,
+  "noncitation_samples": [
+   "गर्मी <- गर्म",
+   "उत्तरी <- उत्तर",
+   "प्रभावी <- प्रभाव",
+   "उपयोगी <- उपयोग",
+   "इस्लामी <- इस्लाम",
+   "पुस्तकें <- पुस्तक",
+   "राष्ट्रों <- राष्ट्र",
+   "उद्योगों <- उद्योग",
+   "बल्लेबाजी <- बल्लेबाज",
+   "कार्यक्रमों <- कार्यक्रम",
+   "वास्तविकता <- वास्तविक",
+   "राष्ट्रवादी <- राष्ट्रवाद",
+   "प्रतिस्पर्धी <- प्रतिस्पर्धा",
+   "पारिस्थितिकी <- पारिस्थितिक",
+   "प्रसन्नता <- प्रसन्न",
+   "साहित्यकारों <- साहित्यकार",
+   "राजनीतिज्ञों <- राजनीतिज्ञ",
+   "उत्तरदायित्वों <- उत्तरदायित्व",
+   "दक्षिणपश्चिमी <- दक्षिणपश्चिम",
+   "संकटग्रस्तता <- संकटग्रस्त"
+  ],
+  "outside_allowlist_rows": 0,
+  "outside_allowlist_chars": {},
+  "special": {},
+  "outside_samples": [],
+  "not_nfc": 0,
+  "checks": {
+   "F-hi-4": 14,
+   "F-hi-cit": 137
+  },
+  "check_pct_of_rows": {
+   "F-hi-4": 0.7,
+   "F-hi-cit": 6.5
+  }
+ }
+}

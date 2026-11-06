@@ -1,0 +1,7 @@
+row_id,lang,tier,stored_answer,check_id,finding,proposed_action
+vi/easy/633,vi,easy,được,F-vi-2,tone-placement duplicate of đựơc,keep one row
+vi/easy/634,vi,easy,đựơc,F-vi-2,tone-placement duplicate of được,keep one row
+vi/easy/28,vi,easy,hí,F-vi-3,both i and y forms stored: hí/hý,one row plus iy variant
+vi/easy/29,vi,easy,hý,F-vi-3,both i and y forms stored: hí/hý,one row plus iy variant
+vi/easy/633,vi,easy,được,F-vi-coll,normalized form coincides with vi/easy/634,review
+vi/easy/634,vi,easy,đựơc,F-vi-coll,normalized form coincides with vi/easy/633,review
