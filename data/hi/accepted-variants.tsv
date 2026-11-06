@@ -1,0 +1,10 @@
+# CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05): accepted spelling variants for Hindi. stored<TAB>accepted<TAB>source<TAB>kind
+# One-way, as de and ja: the stored form is the bank row; the accepted form grades as correct at every tier. Read by src/accepted.rs only.
+# A variant is a spelling of the SAME word, never a near-sound. Every row cites the rule that makes it correct.
+बर्फ़	बर्फ	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan
+अंग्रेज़ी	अंग्रेजी	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan
+डिज़ाइन	डिजाइन	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan
+फ़रवरी	फरवरी	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan
+अफ़ग़ानिस्तान	अफगानिस्तान	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan
+स्विट्ज़रलैंड	स्विट्जरलैंड	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan
+ज़बरदस्त	जबरदस्त	Central Hindi Directorate, देवनागरी लिपि तथा हिंदी वर्तनी का मानकीकरण: nukta on Perso-Arabic and English loans is optional	nukta_loan

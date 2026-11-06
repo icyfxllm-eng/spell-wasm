@@ -42,7 +42,9 @@ CHAIN = {
     "fr": lambda s: collapse(nfc(fold_apos(s)).casefold()),
     "pt": lambda s: collapse(nfc(s).casefold()),
     "pl": lambda s: collapse(nfc(s).casefold()),
-    "ru": lambda s: collapse(nfc(s).casefold().replace("ё", "е")),
+    # CC-ORTHO-SWEEP-ALL S3: the yo fold is one-way and acts on the TYPED side only (typed е matches stored ё), so the
+    # stored-side chain used for I1 keeps ё and е apart. `RU_YO` below reports the rows a two-way fold would merge.
+    "ru": lambda s: collapse(nfc(s).casefold()),
     "vi": lambda s: n_vi_tone(collapse(nfc(s).casefold())),
     "ko": lambda s: collapse(nfc(s)),
     "fil": lambda s: collapse(nfc(fold_apos(s)).casefold()),
@@ -181,7 +183,9 @@ def main():
         # C3 collisions
         groups = defaultdict(list)
         for r in rows:
-            key = (PY(r["ans"]) if lang == "zh" else CHAIN[lang](r["ans"]))
+            # zh I1 carve-out (Eric, 2026-11-05): rows with the same toned pinyin and different hanzi are homophones,
+            # exempt; identical hanzi is a collision. So the I1 key for zh is the hanzi side.
+            key = (r["disp"] if lang == "zh" else CHAIN[lang](r["ans"]))
             groups[key].append(r)
         coll = [g for g in groups.values() if len(g) > 1]
         S["collision_groups"] = len(coll); S["collision_rows"] = sum(len(g) for g in coll)
@@ -189,9 +193,16 @@ def main():
         with open(os.path.join(OUT, f"c3-collisions-{lang}.tsv"), "w", encoding="utf-8") as f:
             f.write("normalized\trow_ids\tstored\ttiers\n")
             for g in sorted(coll, key=lambda g: g[0]["ans"]):
-                f.write("\t".join([CHAIN[lang](g[0]["ans"]) if lang != "zh" else PY(g[0]["ans"]),
+                f.write("\t".join([CHAIN[lang](g[0]["ans"]) if lang != "zh" else g[0]["disp"],
                                    " ".join(x["id"] for x in g), " | ".join(x["raw"] for x in g), ",".join(x["tier"] for x in g)]) + "\n")
+        if lang == "ru":
+            yo = defaultdict(list)
+            for r in rows: yo[r["ans"].casefold().replace("ё", "е")].append(r)
+            S["ru_yo_pairs_both_kept"] = sum(1 for g in yo.values() if len(g) > 1)
         if lang == "zh":
+            pk = defaultdict(list)
+            for r in rows: pk[PY(r["ans"])].append(r)
+            S["zh_pinyin_homophone_groups_exempt"] = sum(1 for g in pk.values() if len({x["disp"] for x in g}) > 1)
             hz = defaultdict(list)
             for r in rows: hz[r["disp"]].append(r)
             S["zh_hanzi_collision_groups"] = sum(1 for g in hz.values() if len(g) > 1)
@@ -305,9 +316,9 @@ def main():
                 elif re.search(r"[A-Za-z0-9\s\.,!?，。！？、；：]", r["disp"]): add(r, "F-zh-3", "Latin/punctuation in hanzi side", "quarantine")
                 if r["disp"] and any(c in TRAD_ONLY for c in r["disp"]): add(r, "F-zh-2", "Traditional-only character in a Simplified bank", "review")
             set_sizes = defaultdict(Counter)
-            for k, g in groups.items(): set_sizes["all"][len(g)] += 1
+            for g in pk.values(): set_sizes["all"][len(g)] += 1
             S["zh_pinyin_key_set_sizes"] = dict(set_sizes["all"])
-            S["zh_pinyin_key_sets_by_tier"] = {t: sum(1 for g in groups.values() if len(g) > 1 and any(x["tier"] == t for x in g)) for t in TIERS}
+            S["zh_pinyin_key_sets_by_tier"] = {t: sum(1 for g in pk.values() if len(g) > 1 and any(x["tier"] == t for x in g)) for t in TIERS}
             S["zh_tone3_sandhi_applied"] = False
         if L == "sw":
             for r in rows:

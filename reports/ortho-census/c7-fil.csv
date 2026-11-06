@@ -11,26 +11,26 @@ fil/medium/55,fil,medium,huling,F-fil-1,English-looking spelling (heuristic),che
 fil/medium/58,fil,medium,muling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
 fil/medium/110,fil,medium,tuwing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
 fil/medium/133,fil,medium,galing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/190,fil,medium,ating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/194,fil,medium,kanser,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/214,fil,medium,puting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/236,fil,medium,aking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/238,fil,medium,haring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/266,fil,medium,maling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/273,fil,medium,totoo,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/278,fil,medium,gawing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/295,fil,medium,uring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/319,fil,medium,nating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/323,fil,medium,piling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/333,fil,medium,laging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/410,fil,medium,kasing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/435,fil,medium,labing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/470,fil,medium,lider,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/478,fil,medium,order,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/488,fil,medium,paring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/513,fil,medium,lahing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/550,fil,medium,aming,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
-fil/medium/571,fil,medium,singsing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/189,fil,medium,ating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/193,fil,medium,kanser,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/213,fil,medium,puting,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/235,fil,medium,aking,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/237,fil,medium,haring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/265,fil,medium,maling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/272,fil,medium,totoo,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/277,fil,medium,gawing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/294,fil,medium,uring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/318,fil,medium,nating,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/322,fil,medium,piling,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/332,fil,medium,laging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/409,fil,medium,kasing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/434,fil,medium,labing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/469,fil,medium,lider,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/477,fil,medium,order,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/487,fil,medium,paring,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/512,fil,medium,lahing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/549,fil,medium,aming,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
+fil/medium/570,fil,medium,singsing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
 fil/hard/13,fil,hard,saging,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
 fil/hard/15,fil,hard,titser,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
 fil/hard/18,fil,hard,drayber,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
@@ -157,9 +157,8 @@ fil/expert/1916,fil,expert,pinagkalooban,F-fil-1,English-looking spelling (heuri
 fil/expert/1977,fil,expert,inihambing,F-fil-1,English-looking spelling (heuristic),check against Filipinized-loan rule
 fil/easy/16,fil,easy,babae,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
 fil/easy/132,fil,easy,lalaki,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
-fil/medium/176,fil,medium,lalake,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
-fil/medium/322,fil,medium,kwento,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
-fil/medium/558,fil,medium,pwede,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/medium/321,fil,medium,kwento,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
+fil/medium/557,fil,medium,pwede,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
 fil/hard/845,fil,hard,nyan,F-fil-3,r-/contracted/legacy form stored,"store KWF form, accept the other"
 fil/easy/16,fil,easy,babae,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
 fil/easy/38,fil,easy,bibig,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
@@ -181,26 +180,25 @@ fil/medium/90,fil,medium,katao,F-fil-cit,looks derived from row 'tao' (heuristic
 fil/medium/96,fil,medium,marami,F-fil-cit,looks derived from row 'rami' (heuristic),quarantine via PURITY ledger if approved
 fil/medium/104,fil,medium,nanalo,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
 fil/medium/127,fil,medium,titik,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/176,fil,medium,lalake,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/188,fil,medium,bababa,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/208,fil,medium,tatak,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/270,fil,medium,iilang,F-fil-cit,looks derived from row 'ilang' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/273,fil,medium,totoo,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/361,fil,medium,maaga,F-fil-cit,looks derived from row 'aga' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/365,fil,medium,palaro,F-fil-cit,looks derived from row 'laro' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/386,fil,medium,babala,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/394,fil,medium,ilabas,F-fil-cit,looks derived from row 'labas' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/397,fil,medium,makati,F-fil-cit,looks derived from row 'kati' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/447,fil,medium,mamaya,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/487,fil,medium,naisip,F-fil-cit,looks derived from row 'isip' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/495,fil,medium,papuri,F-fil-cit,looks derived from row 'puri' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/504,fil,medium,umiral,F-fil-cit,looks derived from row 'iral' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/507,fil,medium,isulat,F-fil-cit,looks derived from row 'sulat' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/562,fil,medium,ilegal,F-fil-cit,looks derived from row 'legal' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/568,fil,medium,tatay,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/574,fil,medium,magsalita,F-fil-cit,looks derived from row 'salita' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/576,fil,medium,katas,F-fil-cit,looks derived from row 'tas' (heuristic),quarantine via PURITY ledger if approved
-fil/medium/598,fil,medium,patas,F-fil-cit,looks derived from row 'tas' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/187,fil,medium,bababa,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/207,fil,medium,tatak,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/269,fil,medium,iilang,F-fil-cit,looks derived from row 'ilang' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/272,fil,medium,totoo,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/360,fil,medium,maaga,F-fil-cit,looks derived from row 'aga' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/364,fil,medium,palaro,F-fil-cit,looks derived from row 'laro' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/385,fil,medium,babala,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/393,fil,medium,ilabas,F-fil-cit,looks derived from row 'labas' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/396,fil,medium,makati,F-fil-cit,looks derived from row 'kati' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/446,fil,medium,mamaya,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/486,fil,medium,naisip,F-fil-cit,looks derived from row 'isip' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/494,fil,medium,papuri,F-fil-cit,looks derived from row 'puri' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/503,fil,medium,umiral,F-fil-cit,looks derived from row 'iral' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/506,fil,medium,isulat,F-fil-cit,looks derived from row 'sulat' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/561,fil,medium,ilegal,F-fil-cit,looks derived from row 'legal' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/567,fil,medium,tatay,F-fil-cit,looks derived from row 'reduplication' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/573,fil,medium,magsalita,F-fil-cit,looks derived from row 'salita' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/575,fil,medium,katas,F-fil-cit,looks derived from row 'tas' (heuristic),quarantine via PURITY ledger if approved
+fil/medium/597,fil,medium,patas,F-fil-cit,looks derived from row 'tas' (heuristic),quarantine via PURITY ledger if approved
 fil/hard/31,fil,hard,kanilang,F-fil-cit,looks derived from row 'nilang' (heuristic),quarantine via PURITY ledger if approved
 fil/hard/36,fil,hard,kaniyang,F-fil-cit,looks derived from row 'niyang' (heuristic),quarantine via PURITY ledger if approved
 fil/hard/37,fil,hard,pangalan,F-fil-cit,looks derived from row 'ngalan' (heuristic),quarantine via PURITY ledger if approved

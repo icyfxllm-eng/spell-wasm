@@ -1,0 +1,7 @@
+# CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05): accepted spelling variants for Portuguese. stored<TAB>accepted<TAB>source<TAB>kind
+# One-way, as de and ja: the stored form is the bank row; the accepted form grades as correct at every tier. Read by src/accepted.rs only.
+# A variant is a spelling of the SAME word, never a near-sound. Every row cites the rule that makes it correct.
+para	pára	AO90 Base IX (acentos gráficos): pre-reform pára loses its accent	ao90_legacy
+deem	dêem	AO90 Base IX (acentos gráficos): pre-reform dêem loses its circumflex	ao90_legacy
+fato	facto	AO90 Base IV (sequências consonânticas): European facto, Brazilian fato	pt_eu
+seção	secção	AO90 Base IV (sequências consonânticas): European secção, Brazilian seção	pt_eu

@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xE8914CE7E4C51434
-#tier	medium	0x5DB9D17E8F8999B6
-#tier	hard	0x45D4F326DCF48535
-#tier	expert	0xBDE2E027BC0B82D0
+#tier	medium	0x932252ACFD21763C
+#tier	hard	0xCD35FE543BAC25F9
+#tier	expert	0x32EA7A6C19ED39D3
 afya	dictionary	sw_TZ
 amani	dictionary	sw_TZ
 andika	dictionary	sw_TZ
@@ -939,6 +939,7 @@ mnyororo	dictionary	sw_TZ
 tengeneza	dictionary	sw_TZ
 plastiki	dictionary	sw_TZ
 kiangazi	dictionary	sw_TZ
+mng'ao	dictionary	sw_TZ
 wasemaji	dictionary	sw_TZ
 ilikuwa	dictionary	sw_TZ
 wapatao	dictionary	sw_TZ
@@ -2139,6 +2140,11 @@ kumpatia	dictionary	sw_TZ
 machifu	dictionary	sw_TZ
 mhudumu	dictionary	sw_TZ
 mikondo	dictionary	sw_TZ
+ng'ombe	dictionary	sw_TZ
+ng'ambo	dictionary	sw_TZ
+kung'aa	dictionary	sw_TZ
+mng'aro	dictionary	sw_TZ
+king'ora	dictionary	sw_TZ
 kufuatana	dictionary	sw_TZ
 uainishaji	pending	sw_TZ
 imehesabiwa	pending	sw_TZ
@@ -2822,3 +2828,5 @@ yafuatayo	dictionary	sw_TZ
 yanaonekana	dictionary	sw_TZ
 akaanzisha	dictionary	sw_TZ
 alihusika	dictionary	sw_TZ
+kung'amua	dictionary	sw_TZ
+kunung'unika	dictionary	sw_TZ

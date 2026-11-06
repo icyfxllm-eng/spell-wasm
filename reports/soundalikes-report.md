@@ -6,19 +6,19 @@ CC-SENSE-CUE v1.1 F8. Regenerate with `python3 tools/soundalikes_report.py`.
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | en | verified | yes | build_collisions.key_en@1 | 3,157 | 252 | 27 | 19 | 36 | 277 | 306 | pass |
 | es | verified | yes | build_collisions.key_es@1 | 6,266 | 7 | 0 | 0 | 1 | 9 | 9 | pass |
-| fr | missing | yes | - | 6,272 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| fr | missing | yes | - | 6,271 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | de | missing | yes | - | 6,258 | 22 | 0 | 0 | 0 | 22 | 22 | not runnable |
-| pt | missing | yes | - | 6,259 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| pt | missing | yes | - | 6,258 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | pl | missing | yes | - | 6,210 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| vi | missing | yes | - | 1,188 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| vi | missing | yes | - | 1,186 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | ko | missing | yes | - | 3,163 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | ja | missing | yes | - | 4,745 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| fil | missing | yes | - | 4,035 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| fil | missing | yes | - | 4,034 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | zh | missing | yes | - | 5,810 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| ru | verified | yes | build_collisions.key_ru@1 | 6,830 | 29 | 4 | 2 | 4 | 58 | 66 | pass |
+| ru | verified | yes | build_collisions.key_ru@1 | 6,808 | 8 | 4 | 1 | 5 | 16 | 24 | pass |
 | ar | missing | yes | - | 6,279 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| sw | missing | yes | - | 2,818 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| hi | missing | yes | - | 2,095 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| sw | missing | yes | - | 2,826 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| hi | missing | yes | - | 2,088 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | fa | missing | yes | - | 8,340 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | en+retier | verified | yes | build_collisions.key_en@1+retier | 4,366 | 272 | 28 | 19 | 39 | 304 | 334 | pass |
 

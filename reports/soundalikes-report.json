@@ -127,7 +127,7 @@
    "voiceMatchesLayer1": true
   },
   "fil": {
-   "bankRows": 4035,
+   "bankRows": 4034,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -144,7 +144,7 @@
    "voiceMatchesLayer1": true
   },
   "fr": {
-   "bankRows": 6272,
+   "bankRows": 6271,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -161,7 +161,7 @@
    "voiceMatchesLayer1": true
   },
   "hi": {
-   "bankRows": 2095,
+   "bankRows": 2088,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -229,7 +229,7 @@
    "voiceMatchesLayer1": true
   },
   "pt": {
-   "bankRows": 6259,
+   "bankRows": 6258,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -246,15 +246,15 @@
    "voiceMatchesLayer1": true
   },
   "ru": {
-   "bankRows": 6830,
-   "bonusEligibleBankWords": 58,
-   "confirmedSets": 2,
+   "bankRows": 6808,
+   "bonusEligibleBankWords": 16,
+   "confirmedSets": 1,
    "generator": "build_collisions.key_ru@1",
-   "impossibleFilterRemoves": 66,
-   "impossibleFilterRemovesExpert": 3,
-   "loopbackFlags": 4,
+   "impossibleFilterRemoves": 24,
+   "impossibleFilterRemovesExpert": 1,
+   "loopbackFlags": 5,
    "proof": {
-    "equalKeyGroups": 33,
+    "equalKeyGroups": 12,
     "noneByConstructionEligible": false,
     "passes": true,
     "ran": true,
@@ -263,14 +263,14 @@
    },
    "sets": {
     "accent": 4,
-    "true": 29
+    "true": 8
    },
    "status": "verified",
    "voice": "ru-RU-Wavenet-A",
    "voiceMatchesLayer1": true
   },
   "sw": {
-   "bankRows": 2818,
+   "bankRows": 2826,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,
@@ -287,7 +287,7 @@
    "voiceMatchesLayer1": true
   },
   "vi": {
-   "bankRows": 1188,
+   "bankRows": 1186,
    "bonusEligibleBankWords": 0,
    "confirmedSets": 0,
    "generator": null,

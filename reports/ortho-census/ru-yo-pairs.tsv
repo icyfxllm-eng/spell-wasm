@@ -1,0 +1,29 @@
+yo_row	e_row	verdict
+боёв	боев	quarantine боев: yo_duplicate
+ведёт	ведет	quarantine ведет: yo_duplicate
+всё	все	keep both: different words
+всём	всем	keep both: different words
+вёл	вел	quarantine вел: yo_duplicate
+даёт	дает	quarantine дает: yo_duplicate
+ещё	еще	quarantine еще: yo_duplicate
+её	ее	quarantine ее: yo_duplicate
+идёт	идет	quarantine идет: yo_duplicate
+лёд	лед	quarantine лед: yo_duplicate
+населённых	населенных	quarantine населенных: yo_duplicate
+неё	нее	quarantine нее: yo_duplicate
+нём	нем	keep both: different words
+объём	объем	quarantine объем: yo_duplicate
+остаётся	остается	quarantine остается: yo_duplicate
+перёд	перед	keep both: different words
+провёл	провел	quarantine провел: yo_duplicate
+путём	путем	quarantine путем: yo_duplicate
+самолёт	самолет	quarantine самолет: yo_duplicate
+своё	свое	quarantine свое: yo_duplicate
+своём	своем	quarantine своем: yo_duplicate
+счёт	счет	quarantine счет: yo_duplicate
+трёх	трех	quarantine трех: yo_duplicate
+узнаёт	узнает	keep both: different words
+ушёл	ушел	quarantine ушел: yo_duplicate
+чём	чем	keep both: different words
+четырёх	четырех	quarantine четырех: yo_duplicate
+чёрный	черный	quarantine черный: yo_duplicate

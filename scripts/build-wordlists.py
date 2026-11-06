@@ -290,6 +290,10 @@ def build():
                            # Same shape as the fil hyphen beside it: a
                            # per-language orthographic character, not a loophole.
                            or (code == "vi" and c == " ")
+                           # sw: ng' is a letter (ng'ombe, ng'ambo, kung'aa). CC-ORTHO-SWEEP-ALL S5 (Eric,
+                           # 2026-11-05). U+0027 only: the bank stores the straight form and norm.rs folds the
+                           # curly ones on both sides. Same shape as the fil hyphen: a per-language letter.
+                           or (code == "sw" and c == "'")
                            or (code == "fa" and c == "‌") for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue

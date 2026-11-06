@@ -3,7 +3,7 @@
 Run 2026-11-05 on `origin/main` bf2342c0 (worktree `spell-ortho-census`, branch `census/ortho-all`). Read-only over banks, grader and profiles.
 Script: `tools/ortho_census.py`. Raw output: `reports/ortho-census/` (`summary.json`, `c3-collisions-<lang>.tsv`, `c7-<lang>.csv`).
 
-**Status: HALT.** Six stop-and-ask conditions fired (next section). Nothing was edited and no phase was started.
+**Status (updated 2026-11-05, after Eric's resolutions): Phase 1 cleanups applied on `census/ortho-all`; one stop-and-ask open (D7, zh monosyllables). The original census text below is kept as run; the section "Resolutions applied" at the end supersedes it where they differ.**
 
 ## Stop-and-ask conditions that fired
 
@@ -187,3 +187,125 @@ Seven things the spec should settle before Phase 1:
 7. C6 and C8 need a human or network pass.
 
 HALT. Phases 1 to 5 are not started.
+
+
+---
+
+# Resolutions applied (Eric, 2026-11-05)
+
+Resolutions are in `docs/CC-ORTHO-SWEEP-ALL-resolutions.md`. Every moved row is in `reports/ortho-census/quarantine-batch1.tsv` and in `assets/words-quarantine/manifest.csv`; signed rows are in `tools/bank/purity_overrides.csv`. Rows are moved, never deleted. Batch script: `tools/ortho/sweep_all_batch1.py`.
+
+## Open: D7 zh monosyllables. STOP, not applied
+
+931 zh rows are single syllables. Applying the rule as written ("drop a monosyllable unless its toned key is unique in the bank"; the second list, the 现代汉语常用词表, is not in the repo and no new dictionaries are allowed) drops **505 rows (8.2% of zh)**. That is over your 500-row line and over the 2% quarantine line. Nothing was dropped. By tier: easy 76, medium 89, hard 147, expert 193. The other 426 monosyllables have a unique key and stay. Per-row list: `reports/ortho-census/c7-zh.csv`, check `F-zh-1` (rows whose finding says "shared with N other bank rows" with N above 0).
+
+## C6 and D-LIC
+- `assets/words/LICENSES.md`: "as recorded" is now "confirmed 2026-11-05", the open verification note is replaced, and D-LIC is written into the file. `grep -ri "unknown\|as recorded" assets/words/LICENSES.md` returns nothing.
+- `data/<lang>/SOURCES.md` for es, fil, ko, vi, zh are unfilled templates (every version and attribution cell is "TODO"). Sources that fail D-LIC as written there:
+
+| Lang | Source | Why it fails |
+|---|---|---|
+| es | kaikki.org Wiktionary (word stories) | CC BY-SA 4.0. The template says it must not ship until you approve an attribution approach. |
+| fil | "license-verified GitHub Tagalog lists" | licence "per repo", never recorded |
+| fil | kaikki.org Wiktionary (tl) | CC BY-SA |
+| ko | NIKL 한국어 학습용 어휘 | "verify redistribution", never recorded |
+| ko | 우리말샘 | CC BY-SA |
+| ko | kaikki.org Wiktionary (ko) | CC BY-SA |
+| vi | Hunspell Vietnamese wordlist | "verify variant", never recorded |
+| vi | kaikki.org Wiktionary (vi) | CC BY-SA |
+| vi | wordfreq (vi) | "verify", never recorded |
+| zh | CC-CEDICT | CC BY-SA 4.0 |
+| zh | HSK word lists | "official list", licence not stated |
+| zh | wordfreq / SUBTLEX-CH | SUBTLEX is research-licensed (not permissive) |
+
+  The Leipzig Tagalog line ("research, verify redistribution") now passes under your C6 ruling.
+- A wider problem outside this task's scope, not touched: `NOTICES.md` says the definitions the app shows are served from CC BY-SA sources (Wiktionary glosses for every language, CC-CEDICT, JMdict, KANJIDIC2, and the hermitdave FrequencyWords list). Under D-LIC those do not ship. I did not remove anything. Whether they are "shipped data under assets/" or server-side material served from `backend/` is your call.
+- GPL/LGPL Hunspell dictionaries are still used by `tools/bank/gen_ledger.py` for PURITY verdicts. That is a cross-check, consistent with D-LIC ("never a source of rows"). I used the pt_BR and sw_TZ ones the same way below.
+
+## S2: inflected candidates
+No row was quarantined on the C4 heuristic. 11,906 rows are tagged `inflected_candidate` in `assets/words/purity/inflected-candidates/<lang>.tsv` (es 2,249; fr 1,862; pt 2,400; pl 1,687; ru 2,746; ko 170; fil 361; sw 295; hi 136). **Deviation:** the tag lives in a sibling file, not in the ledger itself, because the ledger's verdict set is closed (`dictionary | exception | pending`) and `tools/bank/purity_gate.py` rejects anything else. Changing the gate is a signed-file change. I7 is now "no auditor-confirmed inflected form". Bank floors untouched.
+
+## S3: Russian ё/е, all 28 pairs
+`src/norm.rs` `yo_one_way`: typed е matches stored ё, typed ё never matches stored е; Spell Jr is unchanged (it strips accents both ways, D14). 22 same-word е-rows are quarantined as `yo_duplicate` (0.32% of ru). 6 pairs are different words and both rows stay.
+
+| ё row | е row | Verdict |
+|---|---|---|
+| боёв | боев | quarantine боев |
+| ведёт | ведет | quarantine ведет |
+| всё | все | keep both: different words |
+| всём | всем | keep both: different words |
+| вёл | вел | quarantine вел |
+| даёт | дает | quarantine дает |
+| ещё | еще | quarantine еще |
+| её | ее | quarantine ее |
+| идёт | идет | quarantine идет |
+| лёд | лед | quarantine лед |
+| населённых | населенных | quarantine населенных |
+| неё | нее | quarantine нее |
+| нём | нем | keep both: different words (нём is "in him", нем is "mute") |
+| объём | объем | quarantine объем |
+| остаётся | остается | quarantine остается |
+| перёд | перед | keep both: different words |
+| провёл | провел | quarantine провел |
+| путём | путем | quarantine путем |
+| самолёт | самолет | quarantine самолет |
+| своё | свое | quarantine свое |
+| своём | своем | quarantine своем |
+| счёт | счет | quarantine счет |
+| трёх | трех | quarantine трех |
+| узнаёт | узнает | keep both: different words (imperfective vs perfective) |
+| ушёл | ушел | quarantine ушел |
+| чём | чем | keep both: different words |
+| четырёх | четырех | quarantine четырех |
+| чёрный | черный | quarantine черный |
+
+Side effects: in 21 of the 22 pairs the kept ё row sits in the same or an easier tier than the quarantined е row, so nothing gets harder. The exception is населенных (Hard), whose ё partner населённых is Expert; I did not retier anything (tier assignments are a non-goal). The ru sound-alike table fell from 33 sets to 12, because the e/ё pairs no longer both exist. Since the typed-side fold now accepts е for ё, the six kept pairs behave as follows: typing все for target всё is correct, and typing всё for target все is not. Typing "нем" for target нём is therefore correct too.
+
+## S5: Swahili apostrophe
+- `assets/keyboards/sw.json` and the matching `SW` layout in `src/keyboard.rs` now end the last row with an apostrophe key (the same shape as the Filipino hyphen key).
+- `scripts/build-wordlists.py` keeps U+0027 for sw only.
+- Eight ng' rows were added from the Leipzig `swa_wikipedia_2021_100K` corpus (curly forms folded), each confirmed by Hunspell sw_TZ as a cross-check only: ng'ombe, ng'ambo, kung'aa, mng'aro, king'ora (hard), mng'ao (medium), kung'amua, kunung'unika (expert). They are singular nouns or ku- infinitives. Ledger lines are `dictionary sw_TZ`. Other corpus ng' forms were skipped: plurals, tensed verbs, and words Hunspell sw_TZ does not list.
+- The F2 note in `src/norm.rs` now says sw spends the apostrophe as a letter. `fold_apostrophes` maps the curly forms and deletes nothing, so it does not break ng' grading. Tests: ng'ombe is correct typed with U+0027, U+2019 and U+2018; ngombe is not.
+- Not done: audio for the eight new words is not warmed in the cache (server task), and fr stays a non-goal.
+
+## zh I1 carve-out
+Same toned pinyin with different hanzi is exempt (254 groups, up to nine rows). The two groups with identical hanzi are fixed: `hu2li2|狐狸` and `you3zhu4|有着` are quarantined as `duplicate_hanzi`, keeping the standard readings hú·li and yǒu·zhe. The census script now measures zh I1 on the hanzi side.
+
+## Row cleanups
+- fr: événement quarantined, évènement (the 1990 form) kept, événement an accepted variant.
+- vi: đựơc quarantined (`misspelled_nonstandard`). hí kept, hý quarantined and accepted. **Assumption:** you did not say which side to keep for hí/hý. I kept the i form. Change it if you want y.
+- fil: lalake quarantined, lalaki kept, lalake accepted.
+- hi: the seven no-nukta rows quarantined; the nukta rows kept; the no-nukta spellings accepted.
+- pt: **I changed four rows, not three.** The resolution says "the 3 pre-AO90 / PT-PT forms"; the census found pára, dêem, facto and secção as real cases, and the third F-pt-1 hit (sequência) is correct AO90, so I left it. pára became para, dêem became deem, facto became fato (renamed in place, tiers kept, gloss and definition rows re-keyed), and secção was quarantined as a duplicate of seção. The old forms are accepted variants. This contradicts the earlier D-pt1 line ("pre-AO90 forms are close, not correct"); I followed the resolution. The renamed deem was `pending` in the ledger; Hunspell pt_BR accepts it, so I set it to `dictionary` and removed it from the grandfathered list. The other watch-list hits (comboio, rapariga) are lexical regionalisms, not spelling variants; untouched.
+- Variant files: new `data/{fr,pt,vi,fil,hi}/accepted-variants.tsv`, wired into `src/accepted.rs` (same one-way format as de and ja). Every row has a source: Rectifications 1990, AO90 Base IV / IX, KWF 2014, Central Hindi Directorate, and for vi the 1984 Ministry of Education spelling rule (Quyết định 240/QĐ). I did not verify any citation text against the source this session (no network lookups allowed), and the vi decision number in particular is from memory. **Deviation:** the variant mechanism has no tier gate, so the Filipino legacy form lalake is accepted at every tier. The original spec accepted it at Easy and Spell Jr only.
+
+## Tests and gates
+- `cargo test` (lib): baseline before any change 1,657 passed, 0 failed. After the cleanups the derived artifacts needed regeneration, which I did by their documented commands: the Guardian purity file, `tools/build_collisions.py` (sound-alike tables), `tools/soundalikes_report.py`, `tools/impossible/build_exclusion.py` and `build_pools.py`, and the Spell Search golden digest (re-pinned from 0x81bb_1d05_6e8b_1863 to 0xfde8_d0a0_00cf_50ba with a reason beside it, and the same constant in `tests/e2e/specs/spell-search.mjs`).
+- ru sound-alike table: regenerating it dropped it from `verified` to `missing` because the quarantine created a new set ([лет, лёд]) that had no voice-loopback result, and that emptied Russian's Impossible pool. I re-ran `tools/soundalike_loopback.py --lang ru` against the local server (clips from the warmed cache; same calibration bar 0.6495; 8 true sets measured, 2 flagged `voice-may-distinguish`, down from 7 of 34). That tool only measures currently-true sets, so it dropped the four sets an auditor had demoted to accent (всем/всём, перед/перёд, узнает/узнаёт, чем/чём), and `build_collisions.py` still requires an entry for them. I copied their 2026-10-17 entries back from the previous file. The tool should keep demoted sets' entries; that is a latent bug, not fixed here. The two flagged sets go to the auditor sheet as usual.
+- Final result: `cargo test`, all targets, 0 failed (lib: 1,661 passed, 27 ignored; baseline 1,657 plus my 4 new tests).
+- New tests: `ru_yo_fold_is_one_way`, `sw_ng_apostrophe_is_a_letter_and_curly_forms_fold_to_it`, `ortho_sweep_all_cleanup_variants_grade_both_spellings_of_one_row`, `every_new_variant_row_cites_a_rule_and_resolves_to_one_stored_row`.
+- Gate checks run and passing: purity gate, collision tables, soundalikes report, Impossible pools and exclusions, composite pins, ru identity, lexicon load, sound-alike API. **Not run:** the e2e/Playwright half of `scripts/gate.sh` and the wasm build, so the e2e golden edit is unverified.
+
+## I1 after the changes
+`tools/ortho_census.py` re-run: I1 = 0 for all eleven languages under the rules above (ru measured under the one-way fold, zh on identical hanzi).
+
+## Quarantined or moved rows (36 moved, 3 renamed, 8 added)
+| Lang | Class | Rows |
+|---|---|---|
+| ru | yo_duplicate | 22 (list above) |
+| fr | variant_duplicate | événement |
+| vi | misspelled_nonstandard | đựơc |
+| vi | variant_duplicate | hý |
+| fil | variant_duplicate | lalake |
+| hi | variant_duplicate | बर्फ, अंग्रेजी, डिजाइन, फरवरी, अफगानिस्तान, स्विट्जरलैंड, जबरदस्त |
+| pt | variant_duplicate | secção |
+| zh | duplicate_hanzi | hu2li2\|狐狸, you3zhu4\|有着 |
+
+Full per-row table with tier and reason: `reports/ortho-census/quarantine-batch1.tsv`. No language lost more than 0.4% of its rows.
+
+## Still open for you
+1. D7: drop 505 zh monosyllables, drop fewer, or change the rule?
+2. hí versus hý: confirm the i form.
+3. The pt count (4 changed, not 3) and the lalake tier gate.
+4. NOTICES.md shows CC BY-SA definition sources already in the app; D-LIC as written bans them.
+5. The e2e half of the gate has not been run on this branch.

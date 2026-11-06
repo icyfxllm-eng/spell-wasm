@@ -21,6 +21,12 @@ const DE_SPLIT: &str = include_str!("../data/de/together-apart.tsv");
 const EN: &str = include_str!("../data/en/accepted-variants.tsv");
 const JA: &str = include_str!("../data/ja/accepted-variants.tsv");
 const JA_DUAL: &str = include_str!("../data/ja/dual-script.tsv");
+// CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05): the one-row-per-word cleanups. Same one-way format as de and ja.
+const FR: &str = include_str!("../data/fr/accepted-variants.tsv");
+const PT: &str = include_str!("../data/pt/accepted-variants.tsv");
+const VI: &str = include_str!("../data/vi/accepted-variants.tsv");
+const FIL: &str = include_str!("../data/fil/accepted-variants.tsv");
+const HI: &str = include_str!("../data/hi/accepted-variants.tsv");
 
 fn rows(text: &'static str) -> impl Iterator<Item = &'static str> {
     text.lines().filter(|l| !l.trim().is_empty() && !l.starts_with('#'))
@@ -31,7 +37,10 @@ fn table() -> &'static HashMap<&'static str, HashMap<String, Vec<&'static str>>>
     static T: OnceLock<HashMap<&'static str, HashMap<String, Vec<&'static str>>>> = OnceLock::new();
     T.get_or_init(|| {
         let mut all = HashMap::new();
-        for (lang, text) in [(crate::consts::DE, DE), (crate::consts::JA, JA), (crate::consts::EN, EN)] {
+        for (lang, text) in [
+            (crate::consts::DE, DE), (crate::consts::JA, JA), (crate::consts::EN, EN),
+            (crate::consts::FR, FR), (crate::consts::PT, PT), (crate::consts::VI, VI), (crate::consts::FIL, FIL), (crate::consts::HI, HI),
+        ] {
             let mut m: HashMap<String, Vec<&'static str>> = HashMap::new();
             for line in rows(text) {
                 let mut it = line.split('\t');
@@ -165,5 +174,38 @@ mod tests {
         assert!(accepts("ja", "おおかみ", "オオカミ"));
         assert!(!accepts("ja", "ありがとう", "アリガトウ"), "not a dual_script row");
         assert!(!accepts("en", "cat", "CAT"));
+    }
+
+    #[test]
+    fn ortho_sweep_all_cleanup_variants_grade_both_spellings_of_one_row() {
+        // fr: the 1990 form is stored, the traditional form is accepted
+        assert!(accepts("fr", "évènement", "événement"));
+        // pt: the stored form is Brazilian AO90; the pre-reform and European forms are accepted
+        assert!(accepts("pt", "para", "pára"));
+        assert!(accepts("pt", "deem", "dêem"));
+        assert!(accepts("pt", "fato", "facto"));
+        assert!(accepts("pt", "seção", "secção"));
+        // vi, fil
+        assert!(accepts("vi", "hí", "hý"));
+        assert!(accepts("fil", "lalaki", "lalake"));
+        // hi: the nukta row is stored, the no-nukta spelling is accepted
+        assert!(crate::norm::same_answer("hi", "जरूर", "जरूर"));
+        let nuk = alternates("hi", "बर्फ़");
+        assert_eq!(nuk.len(), 1, "one accepted spelling for the nukta row");
+        // a variant never leaks across languages or onto another word
+        assert!(!accepts("es", "para", "pára"));
+        assert!(!accepts("fr", "évènement", "evenement"));
+    }
+
+    #[test]
+    fn every_new_variant_row_cites_a_rule_and_resolves_to_one_stored_row() {
+        for (name, text) in [("fr", FR), ("pt", PT), ("vi", VI), ("fil", FIL), ("hi", HI)] {
+            let mut seen = HashSet::new();
+            for line in rows(text) {
+                let f: Vec<&str> = line.split('\t').collect();
+                assert!(f.len() >= 4 && !f[2].trim().is_empty(), "{name}: row without a source: {line}");
+                assert!(seen.insert(fold_strict(f[1])), "{name}: accepted spelling {} resolves to two rows", f[1]);
+            }
+        }
     }
 }

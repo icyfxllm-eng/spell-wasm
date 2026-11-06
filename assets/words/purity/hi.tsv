@@ -1,8 +1,8 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
-#tier	easy	0x17074829AD0D8508
-#tier	medium	0x1676B0550924ABA6
-#tier	hard	0x1C1D13772B8D10C6
+#tier	easy	0x67600672BDCC84D5
+#tier	medium	0x838BBE8CB22C23B5
+#tier	hard	0x8EB9D0224A2FC287
 #tier	expert	0x91DCEF97E863495F
 अँधेरा	dictionary	hi_IN
 अंगूठी	dictionary	hi_IN
@@ -186,7 +186,6 @@
 बड़ा	dictionary	hi_IN
 बतख	dictionary	hi_IN
 बनाना	dictionary	hi_IN
-बर्फ	dictionary	hi_IN
 बर्फ़	dictionary	hi_IN
 बस	dictionary	hi_IN
 बहन	dictionary	hi_IN
@@ -374,7 +373,6 @@
 संस्करण	dictionary	hi_IN
 संगठन	dictionary	hi_IN
 जनसंख्या	dictionary	hi_IN
-अंग्रेजी	dictionary	hi_IN
 जानकारी	dictionary	hi_IN
 उद्देश्य	dictionary	hi_IN
 प्रस्तुत	dictionary	hi_IN
@@ -480,7 +478,6 @@
 लक्ष्य	dictionary	hi_IN
 सक्रिय	dictionary	hi_IN
 अनुवाद	dictionary	hi_IN
-डिजाइन	dictionary	hi_IN
 समस्या	dictionary	hi_IN
 यूरोपीय	dictionary	hi_IN
 सक्षम	dictionary	hi_IN
@@ -510,7 +507,6 @@
 बेहतर	dictionary	hi_IN
 प्रधान	dictionary	hi_IN
 तापमान	dictionary	hi_IN
-फरवरी	dictionary	hi_IN
 सितंबर	dictionary	hi_IN
 आक्रमण	dictionary	hi_IN
 नेटवर्क	dictionary	hi_IN
@@ -1154,7 +1150,6 @@
 कार्यकर्ता	dictionary	hi_IN
 कैलिफोर्निया	dictionary	hi_IN
 रचनात्मक	dictionary	hi_IN
-अफगानिस्तान	dictionary	hi_IN
 प्रशिक्षित	dictionary	hi_IN
 अनुप्रयोग	dictionary	hi_IN
 अर्थशास्त्र	dictionary	hi_IN
@@ -1372,7 +1367,6 @@
 एयरलाइंस	dictionary	hi_IN
 किशोरावस्था	dictionary	hi_IN
 चक्रवर्ती	dictionary	hi_IN
-जबरदस्त	dictionary	hi_IN
 जिम्मेदारियों	dictionary	hi_IN
 ट्रेडमार्क	dictionary	hi_IN
 त्रावणकोर	dictionary	hi_IN
@@ -1442,7 +1436,6 @@
 विश्वकर्मा	dictionary	hi_IN
 सुव्यवस्थित	dictionary	hi_IN
 स्पाइवेयर	dictionary	hi_IN
-स्विट्जरलैंड	dictionary	hi_IN
 हिन्दुस्तान	dictionary	hi_IN
 हीमोग्लोबिन	dictionary	hi_IN
 अनुपलब्ध	dictionary	hi_IN

@@ -221,7 +221,12 @@ fn wordgrid_property_10k() {
 /// ear) quarantined through CC-BANK-PURITY as dictation_unfair. The row left
 /// the bank, so these 500 seeds draw differently. Hold this pin back to the
 /// previous value if that quarantine is reversed.
-pub const GOLDEN: u64 = 0x81bb_1d05_6e8b_1863;
+///
+/// Re-pinned 2026-11-05, from 0x81bb_1d05_6e8b_1863, by CC-ORTHO-SWEEP-ALL (Eric): 22 Russian yo_duplicate rows, one French, one
+/// Vietnamese typo, one Vietnamese, one Filipino and seven Hindi variant rows and two Chinese same-hanzi rows left the banks (moved,
+/// never deleted), three Portuguese rows were respelled to the BR AO90 form, and eight Swahili ng' rows joined. These 500 seeds draw
+/// differently. Hold this pin back to the previous value if that sweep is reversed.
+pub const GOLDEN: u64 = 0xfde8_d0a0_00cf_50ba;
 
 #[test]
 fn wordgrid_determinism() {

@@ -1,7 +1,7 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xBC8AE493088A110D
-#tier	medium	0x039EC0C061DDFAA8
+#tier	medium	0xC94F9900458F432A
 #tier	hard	0xBF4BAF36303EE2B9
 #tier	expert	0xCF4A769557C64852
 abo	dictionary	kaikki-tagalog
@@ -426,7 +426,6 @@ makita	dictionary	kaikki-tagalog
 nagawa	dictionary	kaikki-tagalog
 drama	dictionary	kaikki-tagalog
 kinuha	dictionary	kaikki-tagalog
-lalake	dictionary	kaikki-tagalog
 bumuo	dictionary	kaikki-tagalog
 klima	dictionary	kaikki-tagalog
 nobela	dictionary	kaikki-tagalog

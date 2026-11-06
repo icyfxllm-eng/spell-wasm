@@ -53,8 +53,11 @@ fn is_silent_mark(c: char) -> bool {
 /// modifier-letter apostrophe a keyboard, recognizer or pasted document emits fold to U+0027, the form every
 /// stored answer uses. Runs BEFORE NFC, on both the typed and the stored side, so the comparison is like-for-like.
 ///
-/// No lineup language spends these marks as letters (no bank, keyboard layout or key holds one), which the census
-/// checked (reports/en-variants-census.md). U+02BB (okina) is deliberately NOT here: it is a letter where it occurs.
+/// Swahili spends the apostrophe as a letter (ng' in ng'ombe, ng'ambo, kung'aa): the sw keyboard has an apostrophe
+/// key and the sw bank holds such words since CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05). This fold maps the curly forms to
+/// U+0027 and deletes nothing, so ng'ombe typed with U+2019 grades as ng'ombe and ngombe (apostrophe omitted) does not.
+/// No other lineup language spends these marks as letters (reports/en-variants-census.md, reports/ortho-census-all.md).
+/// U+02BB (okina) is deliberately NOT here: it is a letter where it occurs.
 pub fn fold_apostrophes(s: &str) -> String {
     s.chars().map(|c| if matches!(c, '\u{2019}' | '\u{02BC}' | '\u{2018}') { '\'' } else { c }).collect()
 }
@@ -167,12 +170,23 @@ pub fn same_answer(lang: &str, typed: &str, word: &str) -> bool {
     fold_strict(typed) == fold_strict(word) || language_key_matches(lang, typed, word) || crate::accepted::accepts(lang, word, typed)
 }
 
+/// Typed е for stored ё. False when the typed answer contains ё itself (it must then match exactly, which the
+/// caller has already tried).
+fn yo_one_way(typed: &str, word: &str) -> bool {
+    let t = fold_strict(typed);
+    !t.contains('\u{451}') && fold_strict(word).replace('\u{451}', "\u{435}") == t
+}
+
 fn language_key_matches(lang: &str, typed: &str, word: &str) -> bool {
     match lang {
         crate::consts::VI => crate::viet::answer_key(typed) == crate::viet::answer_key(word),
         crate::consts::FA => crate::fa_canon::match_key(typed) == crate::fa_canon::match_key(word),
         // CC-ORTHO-SWEEP-DE-JA: half-width katakana is full-width; no other width is folded.
         crate::consts::JA => crate::ja_canon::match_key(typed) == crate::ja_canon::match_key(word),
+        // CC-ORTHO-SWEEP-ALL S3 (Eric, 2026-11-05): the ё fold is one-way. Russian print writes е for ё, so a typed е
+        // matches a stored ё (все for всё); a typed ё never matches a stored е, because that is a letter the stored
+        // word does not have.
+        crate::consts::RU => yo_one_way(typed, word),
         _ => false,
     }
 }
@@ -625,5 +639,31 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn ru_yo_fold_is_one_way() {
+        // typed е matches stored ё; typed ё does not match stored е
+        assert!(same_answer("ru", "все", "всё"), "все is accepted for всё");
+        assert!(same_answer("ru", "ещё", "ещё"));
+        assert!(same_answer("ru", "еще", "ещё"));
+        assert!(!same_answer("ru", "всё", "все"), "всё is rejected for все");
+        assert!(!same_answer("ru", "ещё", "еще"));
+        // NFD input: е + combining diaeresis is ё
+        assert!(same_answer("ru", "еще\u{308}", "ещё"), "NFD ё grades as ё");
+        assert!(!same_answer("ru", "еще\u{308}", "еще"), "NFD ё is still ё, so it does not match stored е");
+        assert!(same_answer("ru", "ё", "ё"));
+        // the fold is Russian only
+        assert!(!same_answer("en", "e", "\u{451}"));
+    }
+
+    #[test]
+    fn sw_ng_apostrophe_is_a_letter_and_curly_forms_fold_to_it() {
+        assert!(same_answer("sw", "ng'ombe", "ng'ombe"));
+        assert!(same_answer("sw", "ng\u{2019}ombe", "ng'ombe"), "U+2019 grades as U+0027");
+        assert!(same_answer("sw", "ng\u{2018}ombe", "ng'ombe"));
+        assert!(same_answer("sw", "kung\u{2019}aa", "kung'aa"));
+        assert!(!same_answer("sw", "ngombe", "ng'ombe"), "omitting the apostrophe is not correct");
+        assert!(!same_answer("sw", "ng'ombe", "ngombe"));
     }
 }

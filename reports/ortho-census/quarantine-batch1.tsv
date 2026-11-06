@@ -1,0 +1,48 @@
+lang	word	tier	class	reason
+ru	боев	easy	yo_duplicate	same word as боёв; the yo row is kept
+ru	ведет	hard	yo_duplicate	same word as ведёт; the yo row is kept
+ru	вел	easy	yo_duplicate	same word as вёл; the yo row is kept
+ru	дает	easy	yo_duplicate	same word as даёт; the yo row is kept
+ru	еще	easy	yo_duplicate	same word as ещё; the yo row is kept
+ru	ее	easy	yo_duplicate	same word as её; the yo row is kept
+ru	идет	easy	yo_duplicate	same word as идёт; the yo row is kept
+ru	лед	hard	yo_duplicate	same word as лёд; the yo row is kept
+ru	населенных	hard	yo_duplicate	same word as населённых; the yo row is kept
+ru	нее	easy	yo_duplicate	same word as неё; the yo row is kept
+ru	объем	medium	yo_duplicate	same word as объём; the yo row is kept
+ru	остается	hard	yo_duplicate	same word as остаётся; the yo row is kept
+ru	провел	medium	yo_duplicate	same word as провёл; the yo row is kept
+ru	путем	medium	yo_duplicate	same word as путём; the yo row is kept
+ru	самолет	hard	yo_duplicate	same word as самолёт; the yo row is kept
+ru	свое	easy	yo_duplicate	same word as своё; the yo row is kept
+ru	своем	medium	yo_duplicate	same word as своём; the yo row is kept
+ru	счет	easy	yo_duplicate	same word as счёт; the yo row is kept
+ru	трех	easy	yo_duplicate	same word as трёх; the yo row is kept
+ru	ушел	easy	yo_duplicate	same word as ушёл; the yo row is kept
+ru	четырех	expert	yo_duplicate	same word as четырёх; the yo row is kept
+ru	черный	medium	yo_duplicate	same word as чёрный; the yo row is kept
+fr	événement	expert	variant_duplicate	traditional form of évènement; the 1990 form is kept (Rectifications 1990), the other is an accepted variant
+vi	đựơc	easy	misspelled_nonstandard	typo for được (ơ and the dot transposed); được is kept
+vi	hý	easy	variant_duplicate	i/y variant of hí; hí kept (assumed: i form), hý an accepted variant
+fil	lalake	medium	variant_duplicate	legacy vowel spelling of lalaki; the KWF form is kept, lalake an accepted variant
+hi	बर्फ	easy	variant_duplicate	no-nukta spelling of बर्फ़; the nukta row is kept (Central Hindi Directorate), बर्फ an accepted variant
+hi	अंग्रेजी	medium	variant_duplicate	no-nukta spelling of अंग्रेज़ी; the nukta row is kept (Central Hindi Directorate), अंग्रेजी an accepted variant
+hi	डिजाइन	medium	variant_duplicate	no-nukta spelling of डिज़ाइन; the nukta row is kept (Central Hindi Directorate), डिजाइन an accepted variant
+hi	फरवरी	medium	variant_duplicate	no-nukta spelling of फ़रवरी; the nukta row is kept (Central Hindi Directorate), फरवरी an accepted variant
+hi	अफगानिस्तान	hard	variant_duplicate	no-nukta spelling of अफ़ग़ानिस्तान; the nukta row is kept (Central Hindi Directorate), अफगानिस्तान an accepted variant
+hi	स्विट्जरलैंड	hard	variant_duplicate	no-nukta spelling of स्विट्ज़रलैंड; the nukta row is kept (Central Hindi Directorate), स्विट्जरलैंड an accepted variant
+hi	जबरदस्त	hard	variant_duplicate	no-nukta spelling of ज़बरदस्त; the nukta row is kept (Central Hindi Directorate), जबरदस्त an accepted variant
+pt	pára	hard	renamed_to_para	stored form becomes BR AO90; the old form is an accepted variant
+pt	dêem	hard	renamed_to_deem	stored form becomes BR AO90; the old form is an accepted variant
+pt	facto	medium	renamed_to_fato	stored form becomes BR AO90; the old form is an accepted variant
+pt	secção	hard	variant_duplicate	European spelling of seção, already a row; seção kept, secção an accepted variant
+zh	hu2li2|狐狸	expert	duplicate_hanzi	same hanzi as hu2li5|狐狸 (hú·li, neutral second syllable is the standard reading)
+zh	you3zhu4|有着	medium	duplicate_hanzi	same hanzi as you3zhe5|有着 (着 is neutral zhe5 here)
+sw	ng'ombe	hard	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 106, curly forms folded); Hunspell sw_TZ confirms
+sw	ng'ambo	hard	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 56, curly forms folded); Hunspell sw_TZ confirms
+sw	kung'aa	hard	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 17, curly forms folded); Hunspell sw_TZ confirms
+sw	kung'amua	expert	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 3, curly forms folded); Hunspell sw_TZ confirms
+sw	kunung'unika	expert	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 5, curly forms folded); Hunspell sw_TZ confirms
+sw	mng'ao	medium	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 6, curly forms folded); Hunspell sw_TZ confirms
+sw	mng'aro	hard	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 9, curly forms folded); Hunspell sw_TZ confirms
+sw	king'ora	hard	added	ng' row from Leipzig swa_wikipedia_2021_100K (freq 5, curly forms folded); Hunspell sw_TZ confirms

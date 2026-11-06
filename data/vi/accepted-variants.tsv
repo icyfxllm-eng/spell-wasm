@@ -1,0 +1,4 @@
+# CC-ORTHO-SWEEP-ALL (Eric, 2026-11-05): accepted spelling variants for Vietnamese. stored<TAB>accepted<TAB>source<TAB>kind
+# One-way, as de and ja: the stored form is the bank row; the accepted form grades as correct at every tier. Read by src/accepted.rs only.
+# A variant is a spelling of the SAME word, never a near-sound. Every row cites the rule that makes it correct.
+hí	hý	Quy định chính tả tiếng Việt, Bộ Giáo dục (Quyết định 240/QĐ, 1984): i/y	iy

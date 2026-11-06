@@ -1,8 +1,8 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0x43B6ADB49C0431DF
-#tier	medium	0xF0A7D853113E1B89
-#tier	hard	0x100A7AB9079B6723
+#tier	medium	0x31FC5DD321982F27
+#tier	hard	0x02955BA3FE30A3B7
 #tier	expert	0xBBFC6D446E8FE7D0
 abrir	dictionary	pt_BR
 agora	dictionary	pt_BR
@@ -1174,7 +1174,7 @@ poeta	dictionary	pt_BR
 round	dictionary	pt_BR
 serve	dictionary	pt_BR
 índios	dictionary	pt_BR
-facto	dictionary	pt_BR
+fato	dictionary	pt_BR
 poemas	dictionary	pt_BR
 sonora	dictionary	pt_BR
 árabe	dictionary	pt_BR
@@ -2338,7 +2338,6 @@ provocou	dictionary	pt_BR
 publicamente	dictionary	pt_BR
 quartel	dictionary	pt_BR
 quintal	dictionary	pt_BR
-secção	dictionary	pt_BR
 sofrido	dictionary	pt_BR
 sumiu	dictionary	pt_BR
 tanque	dictionary	pt_BR
@@ -2787,7 +2786,7 @@ procurado	dictionary	pt_BR
 profundas	dictionary	pt_BR
 proibida	dictionary	pt_BR
 propriamente	dictionary	pt_BR
-pára	dictionary	pt_BR
+para	dictionary	pt_BR
 reforçar	dictionary	pt_BR
 refúgio	dictionary	pt_BR
 reitor	dictionary	pt_BR
@@ -2860,7 +2859,7 @@ difusão	dictionary	pt_BR
 diretrizes	dictionary	pt_BR
 dispostos	dictionary	pt_BR
 doar	dictionary	pt_BR
-dêem	pending	pt_BR
+deem	dictionary	pt_BR
 emissoras	dictionary	pt_BR
 entendido	dictionary	pt_BR
 enxergar	dictionary	pt_BR

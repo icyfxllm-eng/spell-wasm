@@ -9,7 +9,7 @@ file records where the data comes from and under what terms it ships.
 | Data | Source | License | Notes |
 |------|--------|---------|-------|
 | Word banks — hand-authored core | **Original curation** for this app | Owned — ships freely | The Easy tiers are substantially this core. 16 locale directories under `assets/words/`. |
-| Word banks — corpus volume (14 locales) | **Leipzig Corpora Collection** (wortschatz-leipzig.de), Wikipedia editions | **CC BY 4.0** (as recorded — see the verification note) | Build input only, cached under `.corpus-cache/` and never redistributed; only the filtered word lists ship. Pinned corpora listed below. |
+| Word banks — corpus volume (14 locales) | **Leipzig Corpora Collection** (wortschatz-leipzig.de), Wikipedia editions | **CC BY 4.0** (confirmed 2026-11-05, see the verification note) | Build input only, cached under `.corpus-cache/` and never redistributed; only the filtered word lists ship. Pinned corpora listed below. |
 | Keyboard layouts (`assets/keyboards/*.json`) | Original | Owned | Single source of truth for the runtime keyboard **and** the charset gate. |
 | Exclusion roots (`assets/words/exclusions/_roots.txt`) | Seeded from `src/profanity.rs` | Owned | Extend per-language from LDNOOBW (see below). |
 
@@ -60,20 +60,30 @@ retrieval date, which is first-hand confirmation of what the text is. Spot-check
 2026-10-07: en spans 2009-03-10 to 2016-08-20, es 2011-01-19 to 2021-05-20, fil
 2007-03-11 to 2021-05-20.
 
-### Verification note (open)
+### Verification note (confirmed 2026-11-05)
 
-The CC BY 4.0 term above is carried from `NOTICES.md` and from
-`scripts/build-bigbank.py`, which both state it. It could **not** be confirmed
-against wortschatz-leipzig.de on 2026-10-07 because that site is behind
-proof-of-work anti-bot protection, and the corpus archives contain no licence
-file. Two things are therefore still worth a human check:
+Eric confirmed 2026-11-05 that the Leipzig **downloads** are CC BY per
+wortschatz.uni-leipzig.de/en/usage. The web portal and apps are CC BY-NC; this
+project used downloads only, so the NC terms do not apply to the word lists.
+The citation Leipzig asks for stays in `NOTICES.md`.
 
-* The Leipzig terms page, to confirm CC BY 4.0 and the citation they ask for.
-* Whether the Wikipedia underlay matters. The corpus text is Wikipedia, which is
-  CC BY-SA, while Leipzig distributes the collection as CC BY. For single common
-  words the question is probably moot — a word list is facts rather than
-  expression, and no sentence or phrasing is redistributed — but this file
-  should not be the place that decides it.
+One question stays open and is not decided here: the corpus text is Wikipedia
+(CC BY-SA) while Leipzig distributes the collection as CC BY. For single common
+words the question is probably moot, since a word list is facts rather than
+expression and no sentence is redistributed, but this file is not the place that
+decides it.
+
+### D-LIC (CC-ORTHO-SWEEP-ALL, Eric, 2026-11-05)
+
+Shipped data (anything under `assets/`) may derive only from CC BY, MIT,
+Apache-2.0, BSD, the Unicode licence, official rule texts with pairs written by
+hand, or the auditors' work. Banned from shipped data: BY-SA, GPL/LGPL, any NC
+licence, and any source whose licence has not been confirmed. A source with an
+unconfirmed licence does not ship. Build-time tools may use any permissive
+licence; their output is not shipped code. pypinyin (MIT) and OpenCC
+(Apache-2.0) are allowed as build-time tools. Lexique 3, OpenCorpora, CC-CEDICT
+(for variants) and copyleft Hunspell dictionaries are manual cross-checks only
+and never a source of rows.
 
 `NOTICES.md` is the canonical third-party attribution record for this project and
 should be read alongside this file. Note that it is a repository document: it is

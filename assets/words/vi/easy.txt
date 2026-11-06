@@ -26,7 +26,6 @@ hoa
 hua
 hè
 hí
-hý
 hẹ
 hỷ
 loi
@@ -631,7 +630,6 @@ rưởi
 rượu
 vườn
 được
-đựơc
 và
 của
 là

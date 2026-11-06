@@ -896,7 +896,7 @@ poeta
 round
 serve
 índios
-facto
+fato
 poemas
 sonora
 árabe

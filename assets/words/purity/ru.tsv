@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
-#tier	easy	0xF46F5AF0DB4EC754
-#tier	medium	0x3F91A00637CB678D
-#tier	hard	0xDADC99827DAE5945
-#tier	expert	0xD6400A95E1520686
+#tier	easy	0xE5F2FD24DD4279A6
+#tier	medium	0xC5865107FF8A1FBE
+#tier	hard	0x446AFB6033648380
+#tier	expert	0x2673FC8ED729698A
 автобус	dictionary	ru_RU
 бежать	dictionary	ru_RU
 белый	dictionary	ru_RU
@@ -430,13 +430,11 @@
 счёт	dictionary	ru_RU
 тоже	dictionary	ru_RU
 пяти	dictionary	ru_RU
-еще	dictionary	ru_RU
 матч	dictionary	ru_RU
 силу	dictionary	ru_RU
 мест	dictionary	ru_RU
 дело	dictionary	ru_RU
 храм	dictionary	ru_RU
-ее	dictionary	ru_RU
 моря	dictionary	ru_RU
 весь	dictionary	ru_RU
 меня	dictionary	ru_RU
@@ -476,7 +474,6 @@
 лиге	dictionary	ru_RU
 шоу	dictionary	ru_RU
 лиги	dictionary	ru_RU
-трех	dictionary	ru_RU
 цели	dictionary	ru_RU
 бою	dictionary	ru_RU
 полк	dictionary	ru_RU
@@ -541,7 +538,6 @@
 вёл	dictionary	ru_RU
 делу	dictionary	ru_RU
 про	dictionary	ru_RU
-счет	dictionary	ru_RU
 туда	dictionary	ru_RU
 виду	dictionary	ru_RU
 зоне	dictionary	ru_RU
@@ -566,7 +562,6 @@
 лицо	dictionary	ru_RU
 окна	dictionary	ru_RU
 сад	dictionary	ru_RU
-свое	dictionary	ru_RU
 ночи	dictionary	ru_RU
 род	dictionary	ru_RU
 царя	dictionary	ru_RU
@@ -665,7 +660,6 @@
 бога	dictionary	ru_RU
 базу	dictionary	ru_RU
 жену	dictionary	ru_RU
-идет	dictionary	ru_RU
 мяча	dictionary	ru_RU
 сбор	dictionary	ru_RU
 югу	dictionary	ru_RU
@@ -722,7 +716,6 @@
 ясно	dictionary	ru_RU
 боб	dictionary	ru_RU
 взят	dictionary	ru_RU
-дает	dictionary	ru_RU
 дано	dictionary	ru_RU
 мой	dictionary	ru_RU
 риск	dictionary	ru_RU
@@ -764,7 +757,6 @@
 хуже	dictionary	ru_RU
 шаг	dictionary	ru_RU
 яиц	dictionary	ru_RU
-вел	dictionary	ru_RU
 воли	dictionary	ru_RU
 днём	dictionary	ru_RU
 миль	dictionary	ru_RU
@@ -787,7 +779,6 @@
 само	dictionary	ru_RU
 скот	dictionary	ru_RU
 тел	dictionary	ru_RU
-ушел	dictionary	ru_RU
 этаж	dictionary	ru_RU
 луны	dictionary	ru_RU
 англ	dictionary	ru_RU
@@ -805,7 +796,6 @@
 слой	dictionary	ru_RU
 теле	dictionary	ru_RU
 угла	dictionary	ru_RU
-боев	dictionary	ru_RU
 вала	dictionary	ru_RU
 вину	dictionary	ru_RU
 воле	dictionary	ru_RU
@@ -815,7 +805,6 @@
 кому	dictionary	ru_RU
 масс	dictionary	ru_RU
 моя	dictionary	ru_RU
-нее	dictionary	ru_RU
 окон	dictionary	ru_RU
 расы	dictionary	ru_RU
 ряду	dictionary	ru_RU
@@ -1303,7 +1292,6 @@
 потери	dictionary	ru_RU
 языков	dictionary	ru_RU
 новая	dictionary	ru_RU
-провел	dictionary	ru_RU
 стихи	dictionary	ru_RU
 турнир	dictionary	ru_RU
 всеми	dictionary	ru_RU
@@ -1353,7 +1341,6 @@
 головы	dictionary	ru_RU
 длиной	dictionary	ru_RU
 каждые	dictionary	ru_RU
-своем	dictionary	ru_RU
 спасти	dictionary	ru_RU
 битвы	dictionary	ru_RU
 методы	dictionary	ru_RU
@@ -1632,13 +1619,11 @@
 любишь	dictionary	ru_RU
 моем	dictionary	ru_RU
 ненавижу	dictionary	ru_RU
-объем	dictionary	ru_RU
 ответить	dictionary	ru_RU
 оценка	dictionary	ru_RU
 пить	dictionary	ru_RU
 понимать	dictionary	ru_RU
 правил	dictionary	ru_RU
-путем	dictionary	ru_RU
 словами	dictionary	ru_RU
 удачи	dictionary	ru_RU
 анализ	dictionary	ru_RU
@@ -1758,7 +1743,6 @@
 рок	dictionary	ru_RU
 следующей	dictionary	ru_RU
 слушать	dictionary	ru_RU
-черный	dictionary	ru_RU
 вера	dictionary	ru_RU
 верю	dictionary	ru_RU
 вечно	dictionary	ru_RU
@@ -2495,7 +2479,6 @@
 морских	dictionary	ru_RU
 объекты	dictionary	ru_RU
 оставив	dictionary	ru_RU
-остается	dictionary	ru_RU
 островов	dictionary	ru_RU
 посёлке	dictionary	ru_RU
 провели	dictionary	ru_RU
@@ -2738,7 +2721,6 @@
 кредита	dictionary	ru_RU
 ларри	pending	ru_RU
 легенда	dictionary	ru_RU
-лед	dictionary	ru_RU
 ленты	dictionary	ru_RU
 лучшему	dictionary	ru_RU
 львов	dictionary	ru_RU
@@ -3087,7 +3069,6 @@
 миссис	dictionary	ru_RU
 называемый	dictionary	ru_RU
 народы	dictionary	ru_RU
-населенных	dictionary	ru_RU
 недолго	dictionary	ru_RU
 ненависти	dictionary	ru_RU
 номере	dictionary	ru_RU
@@ -3173,7 +3154,6 @@
 близок	dictionary	ru_RU
 будущий	dictionary	ru_RU
 важна	dictionary	ru_RU
-ведет	dictionary	ru_RU
 владеет	dictionary	ru_RU
 вложений	dictionary	ru_RU
 внести	dictionary	ru_RU
@@ -3491,7 +3471,6 @@
 рассчитывать	dictionary	ru_RU
 расширить	dictionary	ru_RU
 русскими	dictionary	ru_RU
-самолет	dictionary	ru_RU
 свободных	dictionary	ru_RU
 сельское	dictionary	ru_RU
 скажут	dictionary	ru_RU
@@ -5668,7 +5647,6 @@
 центральную	dictionary	ru_RU
 центральные	dictionary	ru_RU
 церковью	dictionary	ru_RU
-четырех	dictionary	ru_RU
 читай	dictionary	ru_RU
 экология	dictionary	ru_RU
 электрической	dictionary	ru_RU

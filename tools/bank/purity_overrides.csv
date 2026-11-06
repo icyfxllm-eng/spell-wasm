@@ -465,3 +465,39 @@ ja,ぷよはすべて,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1 batc
 ja,びのにゃんこ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1 batch 2: also a fragment (trailing particle or split text); Eric 2026-11-04
 ja,ぷせとねでぶ,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1 batch 2: also a fragment (trailing particle or split text); Eric 2026-11-04
 ja,のぎざか,proper_noun,Eric 2026-11-04,CC-ORTHO-SWEEP-DE-JA v1.1 batch 2: character/brand name; Eric 2026-11-04
+ru,боев,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as боёв; the yo row is kept; Eric 2026-11-05
+ru,ведет,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as ведёт; the yo row is kept; Eric 2026-11-05
+ru,вел,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as вёл; the yo row is kept; Eric 2026-11-05
+ru,дает,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as даёт; the yo row is kept; Eric 2026-11-05
+ru,еще,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as ещё; the yo row is kept; Eric 2026-11-05
+ru,ее,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as её; the yo row is kept; Eric 2026-11-05
+ru,идет,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as идёт; the yo row is kept; Eric 2026-11-05
+ru,лед,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as лёд; the yo row is kept; Eric 2026-11-05
+ru,населенных,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as населённых; the yo row is kept; Eric 2026-11-05
+ru,нее,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as неё; the yo row is kept; Eric 2026-11-05
+ru,объем,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as объём; the yo row is kept; Eric 2026-11-05
+ru,остается,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as остаётся; the yo row is kept; Eric 2026-11-05
+ru,провел,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as провёл; the yo row is kept; Eric 2026-11-05
+ru,путем,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as путём; the yo row is kept; Eric 2026-11-05
+ru,самолет,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as самолёт; the yo row is kept; Eric 2026-11-05
+ru,свое,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as своё; the yo row is kept; Eric 2026-11-05
+ru,своем,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as своём; the yo row is kept; Eric 2026-11-05
+ru,счет,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as счёт; the yo row is kept; Eric 2026-11-05
+ru,трех,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as трёх; the yo row is kept; Eric 2026-11-05
+ru,ушел,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as ушёл; the yo row is kept; Eric 2026-11-05
+ru,четырех,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as четырёх; the yo row is kept; Eric 2026-11-05
+ru,черный,yo_duplicate,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same word as чёрный; the yo row is kept; Eric 2026-11-05
+fr,événement,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: traditional form of évènement; the 1990 form is kept (Rectifications 1990), the other is an accepted variant; Eric 2026-11-05"
+vi,đựơc,misspelled_nonstandard,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: typo for được (ơ and the dot transposed); được is kept; Eric 2026-11-05
+vi,hý,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: i/y variant of hí; hí kept (assumed: i form), hý an accepted variant; Eric 2026-11-05"
+fil,lalake,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: legacy vowel spelling of lalaki; the KWF form is kept, lalake an accepted variant; Eric 2026-11-05"
+hi,बर्फ,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of बर्फ़; the nukta row is kept (Central Hindi Directorate), बर्फ an accepted variant; Eric 2026-11-05"
+hi,अंग्रेजी,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of अंग्रेज़ी; the nukta row is kept (Central Hindi Directorate), अंग्रेजी an accepted variant; Eric 2026-11-05"
+hi,डिजाइन,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of डिज़ाइन; the nukta row is kept (Central Hindi Directorate), डिजाइन an accepted variant; Eric 2026-11-05"
+hi,फरवरी,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of फ़रवरी; the nukta row is kept (Central Hindi Directorate), फरवरी an accepted variant; Eric 2026-11-05"
+hi,अफगानिस्तान,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of अफ़ग़ानिस्तान; the nukta row is kept (Central Hindi Directorate), अफगानिस्तान an accepted variant; Eric 2026-11-05"
+hi,स्विट्जरलैंड,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of स्विट्ज़रलैंड; the nukta row is kept (Central Hindi Directorate), स्विट्जरलैंड an accepted variant; Eric 2026-11-05"
+hi,जबरदस्त,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: no-nukta spelling of ज़बरदस्त; the nukta row is kept (Central Hindi Directorate), जबरदस्त an accepted variant; Eric 2026-11-05"
+pt,secção,variant_duplicate,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: European spelling of seção, already a row; seção kept, secção an accepted variant; Eric 2026-11-05"
+zh,hu2li2|狐狸,duplicate_hanzi,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: same hanzi as hu2li5|狐狸 (hú·li, neutral second syllable is the standard reading); Eric 2026-11-05"
+zh,you3zhu4|有着,duplicate_hanzi,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same hanzi as you3zhe5|有着 (着 is neutral zhe5 here); Eric 2026-11-05

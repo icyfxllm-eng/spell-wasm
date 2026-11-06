@@ -1060,7 +1060,6 @@ provocou
 publicamente
 quartel
 quintal
-secção
 sofrido
 sumiu
 tanque
@@ -1509,7 +1508,7 @@ procurado
 profundas
 proibida
 propriamente
-pára
+para
 reforçar
 refúgio
 reitor
@@ -1582,7 +1581,7 @@ difusão
 diretrizes
 dispostos
 doar
-dêem
+deem
 emissoras
 entendido
 enxergar
