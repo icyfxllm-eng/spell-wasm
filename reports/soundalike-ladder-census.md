@@ -5,7 +5,7 @@ Run 2026-11-07, read-only, on branch `census/ortho-all` (416e2d24, unpushed). No
 ## Stop-and-ask items found
 
 1. **D1 names es-419, which was withdrawn.** The spec says "es-419 per CC-ORTHO-FIX-FIL-ROMANCE D1". Eric withdrew that on 2026-11-06 ("keep the Spain voice"); the server voice is `es-ES-Neural2-G` and the es table is verified for it. I probed that voice. Unless told otherwise the ladder uses es-ES-Neural2-G.
-2. **F3 cannot be met for seven of the eight languages with what is on this machine** (C3 below). kaikki IPA is cached locally for fil only (plus en, ru, fa, outside this job). Without it nothing in fr, pt, pl, sw, ko or vi can pass F3, so they would stop at machine_checked until the dumps are fetched. Fetching is a download of untrusted files and needs your yes.
+2. **sw cannot reach provisional on IPA** (C3: 8.1% of its bank has IPA). The other six languages have usable coverage after the 2026-11-07 fetch. Decision needed: cap sw at machine_checked in v1, or exempt it by a closed seed rule list.
 3. **The loopback needs same-sound and different-sound controls per language**, and only en, es and ru have them (`tools/soundalike_loopback.py` CONTROLS). Its bar is calibrated on them. For fr, pt, pl, fil, sw, ko and vi I would have to author the control pairs, and a bad "same" control moves the bar. Proposal: pick controls from the closed seed lists (fr ou/où-type, pt, pl ó/u and rz/ż, ko batchim) and list them in the report for your review.
 
 ## C1: table status, seeds, staged rules
@@ -40,14 +40,21 @@ Four easy and four expert bank words per language, fetched through the Mac's ser
 
 "Northern (Hanoi)" for vi cannot be confirmed from the repo or the voice name; it needs a listening check or a voice-catalogue lookup. The sw voice is Tanzanian (sw-TZ). No language failed to render, so the voice stop condition has not fired.
 
-## C3: kaikki IPA coverage of the banks
+## C3: kaikki IPA coverage of the banks (updated 2026-11-07, after the fetch)
 
-Local kaikki caches: fil (Tagalog), en, ru, fa. None for fr, pt, pl, ko, vi, sw. The repo's `lexicon.jsonl` files are 160-200-line curated samples with `pron: null`, not usable. Hunspell dictionaries exist for pt, pl, sw (spelling only, no IPA).
+Eric approved fetching the six missing dumps (about 2.5 GB, kaikki.org, one `kaikki.org-dictionary-<Language>.jsonl` each). They sit in the session scratchpad, not in the repo, and are a check signal only. Coverage = bank rows whose exact word has an `ipa` entry in at least one `sounds` record.
 
-| Lang | Rows with IPA |
-|---|---|
-| fil | 63.0% overall (Easy 98.8%, Medium 81.4%, Hard 62.4%, Expert 53.4%) |
-| fr, pt, pl, sw, ko, vi | no dump on this machine: 0% available. Coverage unknown until fetched |
+| Lang | Dump entries | Rows with IPA, all tiers | Easy | Medium | Hard | Expert |
+|---|---|---|---|---|---|---|
+| fr | 404,127 | 76.9% | 100% | 89% | 78% | 70% |
+| pt | 447,028 | 67.1% | 100% | 88% | 67% | 57% |
+| pl | 200,176 | 65.7% | 100% | 89% | 69% | 53% |
+| fil | (cached earlier, 40,398) | 63.0% | 98.8% | 81.4% | 62.4% | 53.4% |
+| ko | 64,457 | 73.2% | 83% | 90% | 78% | 63% |
+| vi | 52,167 | 77.4% | 90% | 85% | 80% | 70% |
+| **sw** | 21,723 | **8.1%** | 32% | 11% | 5% | 2% |
+
+What this means for F3 (machine_checked AND key, IPA and loopback all agree): a set can only reach provisional if every member has IPA. For fr, pt, pl, fil, ko and vi the lower tiers are well covered, so the sets most useful for the ladder (Easy and Medium words) can qualify; Expert-only sets mostly cannot. **sw is effectively capped at machine_checked** unless the closed seed rule list exempts it, because 92% of its bank has no IPA. Note also that an entry having IPA does not mean the IPA is the Standard-language reading; I would compare only the first IPA string and treat any dialect-tagged variants as non-matching.
 
 ## Not touched
 
