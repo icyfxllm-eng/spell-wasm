@@ -190,6 +190,12 @@ pub fn open(app: &App) {
     // same cap, same reset rules as core spelling. Unranked (D4): no
     // leaderboard posting, no climb-band movement.
     let climb = tier == "climb";
+    // CC-LAUNCH-EN, Eric 2026-11-07: anything that climbs past Easy is paid, so the
+    // Climb variant follows the main Climb's gate. A kid profile is never locked (D24).
+    if climb && !crate::play_hub::mode_open(kid, &lang, crate::entitlements::GameMode::Climb) {
+        crate::paywall::open(app);
+        return;
+    }
     CLIMB.with(|c| c.set(climb));
     if climb {
         tier = "medium".to_string();

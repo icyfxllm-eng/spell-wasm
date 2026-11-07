@@ -620,7 +620,17 @@ mod tests {
     const DELIBERATELY_DARK: &[(&str, &str)] = &[
         ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
         ("quickbee_draw", "CC-QUICKBEE-DRAW Phase A (Eric, 2026-10-15): ships dark; every language flag defaults off and the run loop is Phase B"),
+        ("def_match", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off, online-only"),
+        ("spelluzzle", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off until a device-pass verdict is recorded"),
+        ("photo_list", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off until Complete can be bought (D4)"),
+        ("progress_report", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off until Complete can be bought (D4)"),
     ];
+
+    /// Every parent-premium entitlement, so a dark mode that also needs one
+    /// (photo_list, progress_report) is judged on its flag alone.
+    fn all_premium() -> Vec<String> {
+        ["photo_ocr", "multiple_profiles", "progress_reports"].map(String::from).to_vec()
+    }
 
     /// A deliberately dark mode is dark by DEFAULT only: its flag has a real
     /// arm, so turning it on tiles it on device, and leaving it off does not.
@@ -635,10 +645,10 @@ mod tests {
             // A mode that lists languages is judged in one of them.
             let lang = all.iter().find(|m| m.id == *id).and_then(|m| m.languages.as_ref()).and_then(|l| l.first().cloned()).unwrap_or_else(|| "en".to_string());
             crate::flags::set_test_override(None);
-            let off = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), lang: lang.clone(), ..ctx() }));
+            let off = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), lang: lang.clone(), premium: all_premium(), ..ctx() }));
             assert!(!off.contains(&id.to_string()), "{id} tiles on device with its flag at the default ({why})");
             crate::flags::set_test_override(Some("on"));
-            let on = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), lang: lang.clone(), ..ctx() }));
+            let on = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), lang: lang.clone(), premium: all_premium(), ..ctx() }));
             crate::flags::set_test_override(None);
             assert!(on.contains(&id.to_string()), "{id} does not tile on device with its flag on — got {on:?}");
         }

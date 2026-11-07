@@ -21,38 +21,38 @@
   },
   "attempts_shields": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "bee_sim": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "boardBoosts": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "boardgame": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "boardStreak": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "boardStretch": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "calendar": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "cant_tell": {
     "default": "false",
@@ -60,19 +60,19 @@
     "note": ""
   },
   "def_match": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; online-only (needs /api/defpool)"
   },
   "en_retier": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; 1,210 words with no settled regrading; returns with EN-EXPERT-GROWTH"
   },
   "ghost_racing": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "guardian_report_days": {
     "default": "false",
@@ -96,8 +96,8 @@
   },
   "impostor": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "keyboard_constellation": {
     "default": "false",
@@ -116,23 +116,23 @@
   },
   "learner_insight": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "learner_select": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "learner_surfaces": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "letter_forge": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "offline_packs": {
     "default": "false",
@@ -160,9 +160,9 @@
     "note": ""
   },
   "photo_list": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "pick_queue_a": {
     "default": "false",
@@ -186,13 +186,13 @@
   },
   "practice": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "progress_report": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "quickbee_draw_ja": {
     "default": "false",
@@ -211,8 +211,8 @@
   },
   "randospell": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "randospell_call": {
     "default": "false",
@@ -261,8 +261,8 @@
   },
   "randospell_marathon": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "randospell_npc": {
     "default": "false",
@@ -281,8 +281,8 @@
   },
   "reports": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "sd_tier_mode": {
     "default": "false",
@@ -290,79 +290,79 @@
     "note": ""
   },
   "spell_aloud": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "spell_cross": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "spell_search": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "spelldoku": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "spelluzzle": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; no recorded device-pass verdict (on only if Eric writes one line here that E1-E6 passed)"
   },
   "spelluzzle_{lang}": {
-    "default": "lang == \"en\"",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_duel": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_expedition": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_mywords": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_par": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_pencil": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_ripple": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "spelluzzle_strip": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off; follows spelluzzle (v1.1 never recorded as passed)"
   },
   "streak_focal": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "syllable_replay": {
-    "default": "true",
-    "ship": null,
-    "note": ""
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-07: off (flags-recs.md)"
   },
   "translate": {
     "default": "false",
@@ -421,13 +421,13 @@
   },
   "word_chains": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "word_picture": {
     "default": "true",
-    "ship": null,
-    "note": ""
+    "ship": true,
+    "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "word_stories": {
     "default": "false",

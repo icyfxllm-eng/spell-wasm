@@ -1042,7 +1042,9 @@ mod tests {
         p.paths[fi].focal = true;
 
         crate::surface_hooks::streak_set(&[]);
-        crate::flags::set_test_override(None); // real defaults: flag ON
+        // streak_focal ships off (CC-LAUNCH-EN table, Eric 2026-11-07); the
+        // mechanism must still work when it is turned on.
+        crate::flags::set_test_override(Some("on"));
         let (base, _, _) = layout_feed(&p, "en", 7, &[]);
         let slots = slots_for_lang(&p, "en");
         let fslot = slots.iter().position(|s| s.path_idx == fi).unwrap();

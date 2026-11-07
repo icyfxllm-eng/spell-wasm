@@ -1229,7 +1229,14 @@ mod tests {
     fn kid_gating() {
         assert!(!kid_ok(picture("mona").unwrap(), "en", 1), "expert never kid");
         assert!(!kid_ok(picture("eiffel").unwrap(), "en", 1), "hard never kid");
-        assert!(kid_ok(picture("smiley").unwrap(), "en", 1), "easy smiley kid-ok");
+        // An Easy, kid-flagged picture is kid-ok exactly when its whole word feed
+        // passes the kid filter. On the legacy English bank (what a kid profile
+        // reads) smiley's seed-1 feed holds "gun" and "died", so it is refused --
+        // the filter doing its job. CC-LAUNCH-EN turned en.retier off (Eric
+        // 2026-11-07); the old assertion only held on the re-tiered bank.
+        let smiley = picture("smiley").unwrap();
+        let clean = word_feed(smiley, "en", 1, &[]).iter().all(|w| crate::kid_filter::kid_allowed("en", w));
+        assert_eq!(kid_ok(smiley, "en", 1), clean, "kid_ok follows the kid filter");
     }
 }
 

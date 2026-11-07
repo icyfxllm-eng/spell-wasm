@@ -48,9 +48,12 @@ fn repetition_sim_normal_200_draws_legacy_bank() {
 
 #[test]
 fn repetition_sim_normal_200_draws_retier_bank() {
-    crate::flags::set_test_override(None); // en_retier defaults ON
+    // The re-tiered bank is off for the release (Eric 2026-11-07) but must stay
+    // sound for when EN-EXPERT-GROWTH turns it back on.
+    crate::flags::set_test_override(Some("on"));
     assert!(crate::flags::en_retier());
     check_bank("retier", crate::words::en_tier);
+    crate::flags::set_test_override(None);
 }
 
 /// A7.1: 30 consecutive dates, standard and Little Speller: no word twice.

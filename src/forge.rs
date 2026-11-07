@@ -310,7 +310,10 @@ pub fn forge_ready_open(exp: crate::experience::Experience, lang: &str, open: &[
 /// the screen says the mode is unavailable.
 pub fn preview_min_pool(lang: &str) -> usize {
     match lang {
-        "en" => 15,
+        // CC-LAUNCH-EN (Eric 2026-11-07, en.retier off): the legacy English Easy
+        // list holds no seven-letter pangram (calibrate: cands 0), so there is no
+        // Easy-only English board to deal. It was 15 on the re-tiered bank.
+        "en" => 0,
         "ru" => 10,
         "fil" | "sw" | "ko" => 10,
         "de" => 9,
@@ -729,7 +732,10 @@ mod diag {
                 }
             }
         }
-        assert!(forge_ready_open(Experience::Standard, "en", &preview));
+        // en.retier is off for the release: the legacy Easy list holds no pangram,
+        // so a free English player is told the mode is unavailable rather than dealt
+        // a broken board.
+        assert!(!forge_ready_open(Experience::Standard, "en", &preview));
     }
 
     /// The measurement behind preview_min_pool() (CC-LAUNCH-EN D21).

@@ -95,7 +95,7 @@ pub fn set_test_override(v: Option<&str>) {
 /// **TestFlight 1 (CC-IMPOSSIBLE-LAUNCH Feature 6, Eric 2026-10-19): default ON.**
 /// The signed kill file (`killflags`) can still switch it off with the name `en_retier`.
 pub fn en_retier() -> bool {
-    resolve(stored("en_retier").as_deref(), true)
+    resolve(stored("en_retier").as_deref(), false)
 }
 
 /// CC-GUARDIAN-REPORT v1.1 -- Report Days: the parent chooses which weekdays a
@@ -137,18 +137,18 @@ pub fn impossible_mix() -> bool {
 
 /// F6 "Spell Racing in The Climb" (formerly Ghost racing) — race your best local run. Cross-platform.
 pub fn ghost_racing() -> bool {
-    resolve(stored("ghost_racing").as_deref(), true)
+    resolve(stored("ghost_racing").as_deref(), false)
 }
 
 /// F7 "Syllable replay on misses" — the "hear it slowly" affordance on the
 /// reveal / spaced-repetition surface (es-only).
 pub fn syllable_replay() -> bool {
-    resolve(stored("syllable_replay").as_deref(), true)
+    resolve(stored("syllable_replay").as_deref(), false)
 }
 
 /// F1 "Photo-to-word-list" — VisionKit OCR of a handout; iOS-only, hidden in Kid Mode.
 pub fn photo_list() -> bool {
-    resolve(stored("photo_list").as_deref(), true)
+    resolve(stored("photo_list").as_deref(), false)
 }
 
 /// CC-LETTER-FORGE — the honeycomb word-finding mode. **Default ON** since Eric
@@ -200,7 +200,7 @@ pub fn boardgame() -> bool {
 #[cfg(not(feature = "web"))]
 pub fn board_stretch() -> bool {
     // TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
-    resolve(stored("boardStretch").as_deref(), true)
+    resolve(stored("boardStretch").as_deref(), false)
 }
 
 /// CC-SPELLUZZLE v1 F13 -- the rune cipher puzzle. **Default ON** (Eric, 2026-10-09:
@@ -209,7 +209,7 @@ pub fn board_stretch() -> bool {
 /// out with the mode on the site build.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle() -> bool {
-    resolve(stored("spelluzzle").as_deref(), true)
+    resolve(stored("spelluzzle").as_deref(), false)
 }
 
 /// CC-SPELLUZZLE v1.1 F22 -- pencil runes (F16), the rune strip (F17) and the ripple (F18).
@@ -218,22 +218,22 @@ pub fn spelluzzle() -> bool {
 /// = 'on'` (and `_strip`, `_ripple`).
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_pencil() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_pencil").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_pencil").as_deref(), false)
 }
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_strip() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_strip").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_strip").as_deref(), false)
 }
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_ripple() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_ripple").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_ripple").as_deref(), false)
 }
 
 /// CC-SPELLUZZLE v1.1 F15 -- Par boards. **Default ON** (device pass, 2026-10-10), requires `spelluzzle` (D25).
 /// `localStorage['spell_flag_spelluzzle_par'] = 'on'`.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_par() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_par").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_par").as_deref(), false)
 }
 
 /// CC-SPELLUZZLE v1.1 F19 -- Expeditions, and F21 -- My Words boards. **Default ON** (device pass, 2026-10-10), each
@@ -241,25 +241,25 @@ pub fn spelluzzle_par() -> bool {
 /// `...spelluzzle_mywords`.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_expedition() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_expedition").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_expedition").as_deref(), false)
 }
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_mywords() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_mywords").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_mywords").as_deref(), false)
 }
 
 /// CC-SPELLUZZLE v1.1 F20 -- Rune Duel. **Default ON** (device pass, 2026-10-10), requires `spelluzzle` (D25).
 /// `localStorage['spell_flag_spelluzzle_duel'] = 'on'`.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_duel() -> bool {
-    spelluzzle() && resolve(stored("spelluzzle_duel").as_deref(), true)
+    spelluzzle() && resolve(stored("spelluzzle_duel").as_deref(), false)
 }
 
 /// F13: one flag per language, so a language can be pulled on its own. English is the
 /// only one built; the others stay off, and F12 keeps ko zh ja ar hi out whatever this says.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle_lang(lang: &str) -> bool {
-    resolve(stored(&format!("spelluzzle_{lang}")).as_deref(), lang == "en")
+    resolve(stored(&format!("spelluzzle_{lang}")).as_deref(), false)
 }
 
 /// CC-BOARD-GAME-POLISH v1 Feature 2 (D-P16) -- boost tiles in the Board Game. **Default ON**.
@@ -268,7 +268,7 @@ pub fn spelluzzle_lang(lang: &str) -> bool {
 #[cfg(not(feature = "web"))]
 pub fn board_boosts() -> bool {
     // TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
-    resolve(stored("boardBoosts").as_deref(), true)
+    resolve(stored("boardBoosts").as_deref(), false)
 }
 
 /// CC-BOARD-GAME-POLISH v1 Feature 3 (D-P16) -- the hot streak. **Default ON**.
@@ -277,7 +277,7 @@ pub fn board_boosts() -> bool {
 #[cfg(not(feature = "web"))]
 pub fn board_streak() -> bool {
     // TestFlight default ON (D-P25, Oct 9 2026); set back to false before a public release.
-    resolve(stored("boardStreak").as_deref(), true)
+    resolve(stored("boardStreak").as_deref(), false)
 }
 
 /// CC-RANDOSPELL v1 F9 -- the dice-driven spelling mode. **Default ON** for the
@@ -466,7 +466,7 @@ pub fn accounts_family() -> bool {
 /// flag + on-device speech availability both hold, so on the web/Android it stays
 /// a no-op. Override off with `localStorage['spell_flag_spell_aloud'] = '0'`.
 pub fn spell_aloud() -> bool {
-    resolve(stored("spell_aloud").as_deref(), true)
+    resolve(stored("spell_aloud").as_deref(), false)
 }
 
 /// CC-ATTEMPTS-SHIELDS — the extra-attempts toggle (normal mode) + shields (The
@@ -506,7 +506,7 @@ pub fn offline_packs() -> bool {
 /// entry is coming_soon (teaser only) until P3 lands the playable loop, so the
 /// flag currently just lets the teaser tile render.
 pub fn def_match() -> bool {
-    resolve(stored("def_match").as_deref(), true)
+    resolve(stored("def_match").as_deref(), false)
 }
 
 /// CC-WORD-PICTURE v5 — calligram mode. Default ON: the registry gates
@@ -541,7 +541,7 @@ pub fn reports() -> bool {
 /// other Your Words rows: the gate that matters is the registry's (adult-only,
 /// Complete, consumer edition), not a switch.
 pub fn progress_report() -> bool {
-    resolve(stored("progress_report").as_deref(), true)
+    resolve(stored("progress_report").as_deref(), false)
 }
 
 pub fn calendar() -> bool {
@@ -601,7 +601,7 @@ pub fn learner_select() -> bool {
 /// differs only in WHICH legal word lands on the focal slot. Override
 /// off with `localStorage['spell_flag_streak_focal'] = 'off'`.
 pub fn streak_focal() -> bool {
-    resolve(stored("streak_focal").as_deref(), true)
+    resolve(stored("streak_focal").as_deref(), false)
 }
 
 /// CC-LEARNING-ENGINE L2 feature 6 — the in-game pattern insight, one
@@ -962,35 +962,37 @@ mod tests {
     #[test]
     fn defaults_match_the_integration_build() {
         set_test_override(None);
-        assert!(ghost_racing() && syllable_replay() && photo_list());
+        // CC-LAUNCH-EN flag table (Eric 2026-11-07): all three ship off.
+        assert!(!ghost_racing() && !syllable_replay() && !photo_list());
         assert!(!word_stories(), "F5 ships dark");
         assert!(!translate(), "Translate Phase A ships dark until Phase B");
         set_test_override(Some("on"));
         assert!(translate(), "and the override turns it on");
-        set_test_override(Some("off"));
-        assert!(!ghost_racing());
+        set_test_override(Some("on"));
+        assert!(ghost_racing());
         set_test_override(None);
     }
 
     #[test]
     fn is_on_honors_each_flag_default() {
         set_test_override(None);
-        // Same defaults the Tools hub renders each switch from.
-        assert!(is_on("ghost_racing") && is_on("syllable_replay"));
-        assert!(is_on("photo_list") && is_on("spell_aloud") && is_on("attempts_shields"));
+        // Same defaults the Tools hub renders each switch from (CC-LAUNCH-EN table).
+        assert!(!is_on("ghost_racing") && !is_on("syllable_replay"));
+        assert!(!is_on("photo_list") && !is_on("spell_aloud") && is_on("attempts_shields"));
         assert!(!is_on("word_stories") && !is_on("online_spelloff"));
         assert!(!is_on("unknown_flag"), "unknown names read as off");
         set_test_override(Some("off"));
-        assert!(!is_on("ghost_racing"));
+        assert!(!is_on("attempts_shields"));
         set_test_override(None);
     }
 
     #[cfg(not(feature = "web"))]
     #[test]
-    fn board_game_rule_flags_default_on_for_testflight() {
-        // D-P25 (Oct 9 2026). Absent storage reads the default; "off" is the kill-switch.
+    fn board_game_rule_flags_default_off_for_release() {
+        // D-P25 (Oct 9 2026) said set these back before a public release; the
+        // CC-LAUNCH-EN flag table did (Eric 2026-11-07).
         set_test_override(None);
-        assert!(board_stretch() && board_boosts() && board_streak(), "TestFlight default ON; set back before a public release");
+        assert!(!board_stretch() && !board_boosts() && !board_streak(), "off for the public release");
         assert!(!resolve(Some("off"), true), "spell_flag_<name>=off kills each rule");
     }
 
