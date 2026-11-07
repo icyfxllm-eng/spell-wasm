@@ -15,3 +15,9 @@ Status: SIGNED by Eric 2026-11-07 ("both"). The v1.1 spec body (G-D1a, G-D23..G-
 - **G-D27 reference.** "G-D12's value" means v1 **G-D18**: the practice list stays at 10 words per language. (v1 G-D12 is the empty-week no-ping rule, which F6 keeps.)
 - **A13 scope.** The static date-math check covers the Guardian report path only. The CC-GUARDIAN-DASH files (`reports::week_over_week`, `guardian_dash.rs`) are excluded by name: they are Sunday-based, count journal mastery, and rerouting them would change DASH output and break A2. The ping's timing and empty-window check still come from `window()`; only the digest body's mastered count keeps its own math.
 - **G-D26 vs MIN_GROUP.** G-D26 (at least 4 attempts and at least 2 misses per type) applies **on top of** v1's `MIN_GROUP = 3` distinct missed words per group (G-D17). Both must hold for a type to show. G-D26 does not replace the floor, so default-schedule output stays byte-identical to v1 (A2).
+
+## Phase A (490fb34a) decisions, SIGNED by Eric 2026-11-07 ("Approve both")
+
+- **G-D25 is kept by a forced report day, not a clamp.** When an edit would leave more than 7 days between report days, `window()` adds a boundary on the 7th day after the previous one. A clamped start would drop attempts and break invariant 1 (A1).
+- **F4 fallback shows attempt count and accuracy**, not "session count": the learner does not track sessions, and F4 may add no new signal. The words for it, "Not enough practice yet to spot patterns." and "No practice this period.", land with the screen (Phase B/D) as keys in all 15 locales, translated, not English placeholders. The model already carries the facts (`Report::days`).
+- A13 allows `Date::now` (a clock read) and `Date::new` (formatting) in the UI; all other date arithmetic on the report path lives in `report_days.rs`.
