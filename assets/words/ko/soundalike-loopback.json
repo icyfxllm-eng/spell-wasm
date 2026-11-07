@@ -1,0 +1,67 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.6484,
+  "controls": {
+   "different": [
+    [
+     "사과",
+     "학교"
+    ],
+    [
+     "나무",
+     "바다"
+    ]
+   ],
+   "same": [
+    [
+     "낮",
+     "낫"
+    ],
+    [
+     "밭",
+     "밧"
+    ],
+    [
+     "부엌",
+     "부억"
+    ],
+    [
+     "낱",
+     "낯"
+    ]
+   ]
+  },
+  "differentCeiling": 0.9417,
+  "sameSoundFloor": 0.5751
+ },
+ "lang": "ko",
+ "measured": "2026-11-07",
+ "sets": {
+  "ko:1d616290f243": {
+   "flag": null,
+   "members": [
+    "입",
+    "잎"
+   ],
+   "worst": 0.4701,
+   "worstPair": [
+    "입",
+    "잎"
+   ]
+  },
+  "ko:74e9a63d515b": {
+   "flag": null,
+   "members": [
+    "빗",
+    "빛"
+   ],
+   "worst": 0.5213,
+   "worstPair": [
+    "빗",
+    "빛"
+   ]
+  }
+ },
+ "voice": "ko-KR-Wavenet-D"
+}

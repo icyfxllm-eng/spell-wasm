@@ -33,7 +33,7 @@ def collect(dump, words, lang):
             continue
         for x in d.get("sounds", []):
             ipa = x.get("ipa")
-            if not ipa or not ipa.startswith("/"):
+            if not ipa or not ipa.startswith(("/", "[") if lang == "ko" else "/"):   # ko entries carry narrow [..] transcriptions only
                 continue
             tags = x.get("tags") or []
             if lang == "pt" and "Brazil" not in tags:

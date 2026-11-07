@@ -164,6 +164,27 @@ def key_sw(word):
     return s       # no squeeze: mm is a syllabic nasal (mmoja is not moja), and doubled vowels are long vowels
 
 
+# ----------------------------------------------------------------------------- Korean
+_T_REP = {1: 1, 2: 1, 3: 1, 4: 4, 5: 4, 6: 4, 7: 7, 8: 8, 9: 1, 10: 16, 11: 8, 12: 8, 13: 8, 14: 17, 15: 8, 16: 16,
+          17: 17, 18: 17, 19: 7, 20: 7, 21: 21, 22: 7, 23: 7, 24: 1, 25: 7, 26: 17, 27: 7}
+# Jongseong index -> one of the 7 representative finals: g(1) n(4) d(7) l(8) m(16) b(17) ng(21)
+
+
+def key_ko(word):
+    """Korean: batchim neutralization to the 7 representative finals (낮=낟=낫=낯=낱). A final consonant followed by a vowel-initial
+    syllable (liaison: 꽃이, 낮이) is pronounced as itself, so it is kept: liaison across syllables is an accent question, not a true
+    merger. Assimilation (국물 -> 궁물) and vowel mergers (ㅐ/ㅔ) are not applied: fewer merges, never wrong ones."""
+    out, sy = [], [c for c in nfc(word) if 0xAC00 <= ord(c) <= 0xD7A3]
+    for i, c in enumerate(sy):
+        n = ord(c) - 0xAC00
+        L, V, T = n // 588, (n % 588) // 28, n % 28
+        nxt_vowel = i + 1 < len(sy) and (ord(sy[i + 1]) - 0xAC00) // 588 == 11
+        if T and not nxt_vowel:
+            T = _T_REP.get(T, T)
+        out.append((L, V, T))
+    return ".".join(f"{L}-{V}-{T}" for L, V, T in out)
+
+
 # ----------------------------------------------------------------------------- tests
 # Pairs that must share a key: the staged closed-list seeds that this key is meant to derive (a missing merge is a
 # false negative, reported, not wrong), and pairs the key must NEVER merge (a merge would be a wrong accept-any set).
@@ -175,6 +196,7 @@ MUST_MERGE = {
            ("góra", "gura"), ("mur", "mór"), ("tuż", "tusz")],
     "fil": [("kasa", "casa"), ("kilo", "quilo"), ("sine", "cine"), ("kuwarto", "cuwarto"), ("taksi", "taxi"), ("senyor", "señor"), ("fotograpiya", "photograpiya"), ("kamatis", "kammatis")],
     "sw": [("dhahabu", "zahabu"), ("thelathini", "selasini"), ("khabari", "habari"), ("ghali", "gali")],
+    "ko": [("낮", "낫"), ("낮", "낯"), ("낫", "낱"), ("꽃", "꼳"), ("밭", "밧"), ("빛", "빗"), ("옷", "옫"), ("부엌", "부억")],
     "pt": [("caça", "cassa"), ("cozer", "coser"), ("chá", "xá"), ("cheque", "xeque"), ("concerto", "conserto"), ("acento", "assento"),
            ("senso", "censo"), ("sessão", "cessão"), ("hora", "ora"), ("cela", "sela"), ("espiar", "expiar"), ("laço", "lasso"),
            ("cerrar", "serrar"), ("paço", "passo"), ("cinto", "sinto"), ("ruço", "russo"), ("apreçar", "apressar")],
@@ -189,11 +211,12 @@ MUST_NOT_MERGE = {
     "fil": [("bata", "beta"), ("lalaki", "lalake"), ("dito", "rito"), ("pilipino", "filipino"), ("baso", "vaso"), ("bote", "buti"), ("mano", "manu"), ("ako", "aku"),
             ("kama", "gama"), ("aso", "asu"), ("tama", "tana"), ("bata", "bat"), ("mata", "mataa")],
     "sw": [("ng'ombe", "ngombe"), ("mama", "mana"), ("lala", "rara"), ("baba", "mbaba"), ("chai", "shai"), ("kata", "gata"), ("pika", "bika"), ("mtu", "mtoto"), ("mmoja", "moja"), ("saa", "sa"), ("nyama", "nama")],
+    "ko": [("낮이", "낫이"), ("꽃이", "꼿이"), ("밭이", "밧이"), ("강", "간"), ("감", "간"), ("집", "직"), ("달", "담"), ("발", "밥"), ("사", "싸"), ("가", "카"), ("개", "게"), ("산", "삼")],
     "pt": [("mal", "mau"), ("pode", "pôde"), ("avó", "avô"), ("caça", "casa"), ("assar", "azar"), ("por", "pôr"), ("pera", "pêra"),
            ("ouço", "ouso"), ("são", "sou"), ("lã", "la"), ("pão", "pau"), ("mãe", "me"), ("vá", "vê"), ("rio", "rico"), ("caro", "carro"),
            ("cura", "curra"), ("ara", "arra"), ("gato", "jato")],
 }
-KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil, "sw": key_sw}
+KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil, "sw": key_sw, "ko": key_ko}
 
 
 def selftest():
@@ -206,7 +229,7 @@ def selftest():
             if fn(a) != fn(b):
                 print(f"MISS {lang}: {a}={fn(a)!r} {b}={fn(b)!r} (a seed the key does not derive: it stays a seed, not a rule-derived set)")
         # keys are stable, non-empty for real words, and never contain spaces
-        for w in ("casa", "maison", "você", "élève"):
+        for w in (("사과", "학교") if lang == "ko" else ("casa", "maison", "você", "élève")):
             k = fn(w)
             if not k or " " in k:
                 print(f"FAIL {lang}: key of {w} is {k!r}"); bad += 1

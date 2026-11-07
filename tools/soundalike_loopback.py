@@ -60,6 +60,8 @@ CONTROLS = {
            "different": [("kot", "mleko"), ("dom", "okno")]},
     "fil": {"same": [("taksi", "taxi"), ("sine", "cine"), ("kilo", "quilo"), ("senyor", "señor")],
             "different": [("bahay", "aso"), ("tubig", "kamatis")]},
+    "ko": {"same": [("낮", "낫"), ("밭", "밧"), ("부엌", "부억"), ("낱", "낯")],
+           "different": [("사과", "학교"), ("나무", "바다")]},
 }
 STORE = lambda lang: ROOT / "assets" / "words" / lang / "soundalike-loopback.json"
 
