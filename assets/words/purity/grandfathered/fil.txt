@@ -106,7 +106,6 @@ sariling
 paggawa
 tinawag
 kabuuang
-babaeng
 bansang
 kilalang
 ganitong
@@ -281,7 +280,6 @@ paghinga
 pwersang
 bihirang
 fakultad
-kimikal
 mukhang
 mundong
 nagawang

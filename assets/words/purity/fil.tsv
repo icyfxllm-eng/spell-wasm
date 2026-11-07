@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xBC8AE493088A110D
-#tier	medium	0xE061EA1722C08D76
-#tier	hard	0x1E2BAE942A6D197C
-#tier	expert	0x442A9D18774FDDC6
+#tier	medium	0xB8E9B647BD429759
+#tier	hard	0x78F955A7CC38D20B
+#tier	expert	0xE20FFB5DBFEEB23E
 abo	dictionary	kaikki-tagalog
 alak	dictionary	kaikki-tagalog
 alam	dictionary	kaikki-tagalog
@@ -482,7 +482,6 @@ natin	dictionary	kaikki-tagalog
 trono	dictionary	kaikki-tagalog
 lebel	dictionary	kaikki-tagalog
 lubos	dictionary	kaikki-tagalog
-estilo	dictionary	kaikki-tagalog
 ninuno	dictionary	kaikki-tagalog
 pareho	dictionary	kaikki-tagalog
 aking	pending	kaikki-tagalog
@@ -929,7 +928,6 @@ dahilan	dictionary	kaikki-tagalog
 malawak	dictionary	kaikki-tagalog
 kabuuang	pending	kaikki-tagalog
 gamitin	dictionary	kaikki-tagalog
-babaeng	pending	kaikki-tagalog
 larangan	dictionary	kaikki-tagalog
 bansang	pending	kaikki-tagalog
 kilalang	pending	kaikki-tagalog
@@ -989,7 +987,6 @@ mahusay	dictionary	kaikki-tagalog
 bandang	pending	kaikki-tagalog
 istasyon	dictionary	kaikki-tagalog
 disenyo	dictionary	kaikki-tagalog
-estasyon	dictionary	kaikki-tagalog
 susunod	dictionary	kaikki-tagalog
 koponan	dictionary	kaikki-tagalog
 kasunod	pending	kaikki-tagalog
@@ -1014,7 +1011,6 @@ publiko	dictionary	kaikki-tagalog
 nilikha	pending	kaikki-tagalog
 griyego	dictionary	kaikki-tagalog
 gobyerno	dictionary	kaikki-tagalog
-kumpanya	dictionary	kaikki-tagalog
 lumikha	dictionary	kaikki-tagalog
 gumagawa	dictionary	kaikki-tagalog
 maikling	pending	kaikki-tagalog
@@ -1481,7 +1477,6 @@ epektibo	dictionary	kaikki-tagalog
 fakultad	pending	kaikki-tagalog
 gerilya	dictionary	kaikki-tagalog
 kasuotan	dictionary	kaikki-tagalog
-kimikal	pending	kaikki-tagalog
 mukhang	pending	kaikki-tagalog
 mundong	pending	kaikki-tagalog
 nagawang	pending	kaikki-tagalog
@@ -1926,7 +1921,6 @@ tenyente	dictionary	kaikki-tagalog
 tiyuhin	dictionary	kaikki-tagalog
 prinsesa	dictionary	kaikki-tagalog
 binaril	dictionary	kaikki-tagalog
-espirito	dictionary	kaikki-tagalog
 gumaling	dictionary	kaikki-tagalog
 hektarya	dictionary	kaikki-tagalog
 kabiguan	dictionary	kaikki-tagalog
@@ -2377,7 +2371,6 @@ nominasyon	pending	kaikki-tagalog
 pangatlong	pending	kaikki-tagalog
 residente	dictionary	kaikki-tagalog
 sitwasyon	dictionary	kaikki-tagalog
-tradisyunal	dictionary	kaikki-tagalog
 ginampanan	dictionary	kaikki-tagalog
 nagtatampok	pending	kaikki-tagalog
 talampakan	dictionary	kaikki-tagalog
@@ -2497,7 +2490,6 @@ panghimpapawid	dictionary	kaikki-tagalog
 pinakamaraming	pending	kaikki-tagalog
 tagasunod	dictionary	kaikki-tagalog
 kontinente	dictionary	kaikki-tagalog
-kumpetisyon	dictionary	kaikki-tagalog
 magtrabaho	dictionary	kaikki-tagalog
 nagkakaroon	dictionary	kaikki-tagalog
 nakasalalay	pending	kaikki-tagalog
@@ -2700,7 +2692,6 @@ responsable	dictionary	kaikki-tagalog
 binibigkas	pending	kaikki-tagalog
 ekonomiko	dictionary	kaikki-tagalog
 elementong	pending	kaikki-tagalog
-estruktura	dictionary	kaikki-tagalog
 indibiduwal	dictionary	kaikki-tagalog
 kabundukan	pending	kaikki-tagalog
 kapistahan	pending	kaikki-tagalog
@@ -2864,7 +2855,6 @@ yamang	dictionary	kaikki-tagalog
 bangsamoro	pending	kaikki-tagalog
 bantayan	dictionary	kaikki-tagalog
 bilin	dictionary	kaikki-tagalog
-dae	dictionary	kaikki-tagalog
 diwata	dictionary	kaikki-tagalog
 ebidensya	dictionary	kaikki-tagalog
 ekonomiyang	pending	kaikki-tagalog
@@ -3064,7 +3054,6 @@ asang	pending	kaikki-tagalog
 aswang	dictionary	kaikki-tagalog
 baguhan	dictionary	kaikki-tagalog
 baranggay	dictionary	kaikki-tagalog
-dai	dictionary	kaikki-tagalog
 dokumentong	pending	kaikki-tagalog
 gawan	dictionary	kaikki-tagalog
 gugustuhin	pending	kaikki-tagalog
@@ -3688,7 +3677,6 @@ inhinyeriya	dictionary	kaikki-tagalog
 isaalang-alang	dictionary	kaikki-tagalog
 katatagan	dictionary	kaikki-tagalog
 konstruksyon	dictionary	kaikki-tagalog
-kumbinasyon	dictionary	kaikki-tagalog
 magpakamatay	dictionary	kaikki-tagalog
 magsisimula	dictionary	kaikki-tagalog
 malalakas	dictionary	kaikki-tagalog
@@ -3881,7 +3869,6 @@ diyametro	dictionary	kaikki-tagalog
 ekonomiks	dictionary	kaikki-tagalog
 helikopter	dictionary	kaikki-tagalog
 hinahawakan	dictionary	kaikki-tagalog
-inhenyeriya	dictionary	kaikki-tagalog
 ipinahiwatig	dictionary	kaikki-tagalog
 kanlungan	dictionary	kaikki-tagalog
 kasingkahulugan	dictionary	kaikki-tagalog
@@ -3978,7 +3965,6 @@ akusasyon	dictionary	kaikki-tagalog
 binabantayan	dictionary	kaikki-tagalog
 binibigay	dictionary	kaikki-tagalog
 dahan-dahan	dictionary	kaikki-tagalog
-eskultura	dictionary	kaikki-tagalog
 ginagamot	dictionary	kaikki-tagalog
 ginamitan	dictionary	kaikki-tagalog
 heometriya	dictionary	kaikki-tagalog

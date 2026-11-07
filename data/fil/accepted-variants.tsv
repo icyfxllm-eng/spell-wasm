@@ -2,9 +2,15 @@
 # One-way, as de and ja: the stored form is the bank row; the accepted form grades as correct at every tier. Read by src/accepted.rs only.
 # A variant is a spelling of the SAME word, never a near-sound. Every row cites the rule that makes it correct.
 lalaki	lalake	KWF Ortograpiyang Pambansa 2014: e/i in final syllables (legacy lalake)	legacy_vowel
-lalaking	lalakeng	KWF Ortograpiyang Pambansa 2014: e/i in final syllables (legacy lalake, with the -ng ligature)	legacy_vowel
-babaeng	babaing	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form is the more frequent in Leipzig tgl_wikipedia_2021_100K (CC BY 4.0), 412 vs 26	e_i_o_u
-kabuuan	kabuoan	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form is the more frequent in Leipzig tgl_wikipedia_2021_100K (CC BY 4.0), 238 vs 28	e_i_o_u
-koponan	kuponan	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form is the more frequent in Leipzig tgl_wikipedia_2021_100K (CC BY 4.0), 258 vs 60	e_i_o_u
 legal	ligal	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form is the more frequent in Leipzig tgl_wikipedia_2021_100K (CC BY 4.0), 122 vs 38	e_i_o_u
 politiko	pulitiko	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form is the more frequent in Leipzig tgl_wikipedia_2021_100K (CC BY 4.0), 111 vs 28	e_i_o_u
+istasyon	estasyon	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+istilo	estilo	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+istruktura	estruktura	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+iskultura	eskultura	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+kemikal	kimikal	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+kompanya	kumpanya	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+kombinasyon	kumbinasyon	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+kompetisyon	kumpetisyon	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+tradisyonal	tradisyunal	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u
+inhinyeriya	inhenyeriya	KWF Ortograpiyang Pambansa 2014: e/i and o/u alternate in Filipino spellings; the kept form follows the fil reviewer's verdict sheet (2026-11-06)	e_i_o_u

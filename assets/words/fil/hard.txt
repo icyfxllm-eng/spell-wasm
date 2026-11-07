@@ -78,7 +78,6 @@ dahilan
 malawak
 kabuuang
 gamitin
-babaeng
 larangan
 bansang
 kilalang
@@ -138,7 +137,6 @@ mahusay
 bandang
 istasyon
 disenyo
-estasyon
 susunod
 koponan
 kasunod
@@ -163,7 +161,6 @@ publiko
 nilikha
 griyego
 gobyerno
-kumpanya
 lumikha
 gumagawa
 maikling
@@ -630,7 +627,6 @@ epektibo
 fakultad
 gerilya
 kasuotan
-kimikal
 mukhang
 mundong
 nagawang
@@ -1075,7 +1071,6 @@ tenyente
 tiyuhin
 prinsesa
 binaril
-espirito
 gumaling
 hektarya
 kabiguan

@@ -330,7 +330,6 @@ nominasyon
 pangatlong
 residente
 sitwasyon
-tradisyunal
 ginampanan
 nagtatampok
 talampakan
@@ -450,7 +449,6 @@ panghimpapawid
 pinakamaraming
 tagasunod
 kontinente
-kumpetisyon
 magtrabaho
 nagkakaroon
 nakasalalay
@@ -653,7 +651,6 @@ responsable
 binibigkas
 ekonomiko
 elementong
-estruktura
 indibiduwal
 kabundukan
 kapistahan
@@ -817,7 +814,6 @@ yamang
 bangsamoro
 bantayan
 bilin
-dae
 diwata
 ebidensya
 ekonomiyang
@@ -1017,7 +1013,6 @@ asang
 aswang
 baguhan
 baranggay
-dai
 dokumentong
 gawan
 gugustuhin
@@ -1641,7 +1636,6 @@ inhinyeriya
 isaalang-alang
 katatagan
 konstruksyon
-kumbinasyon
 magpakamatay
 magsisimula
 malalakas
@@ -1834,7 +1828,6 @@ diyametro
 ekonomiks
 helikopter
 hinahawakan
-inhenyeriya
 ipinahiwatig
 kanlungan
 kasingkahulugan
@@ -1931,7 +1924,6 @@ akusasyon
 binabantayan
 binibigay
 dahan-dahan
-eskultura
 ginagamot
 ginamitan
 heometriya

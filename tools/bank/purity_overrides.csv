@@ -503,9 +503,23 @@ zh,hu2li2|狐狸,duplicate_hanzi,Eric 2026-11-05,"CC-ORTHO-SWEEP-ALL: same hanzi
 zh,you3zhu4|有着,duplicate_hanzi,Eric 2026-11-05,CC-ORTHO-SWEEP-ALL: same hanzi as you3zhe5|有着 (着 is neutral zhe5 here); Eric 2026-11-05
 es,periodo,variant_duplicate,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: two rows for one word; período kept (RAE preferred), periodo an accepted variant; Eric 2026-11-06"
 es,video,variant_duplicate,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: two rows for one word; vídeo kept (RAE preferred), video an accepted variant; Eric 2026-11-06"
-fil,lalakeng,variant_duplicate,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: legacy vowel spelling of lalaking (inflected lalake/lalaki); lalaking kept, lalakeng an accepted variant; Eric 2026-11-06"
-fil,babaing,variant_duplicate,Eric 2026-11-06,CC-ORTHO-SWEEP-ALL: same word as babaeng; babaeng kept (more frequent: 412 vs 26 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06
-fil,kabuoan,variant_duplicate,Eric 2026-11-06,CC-ORTHO-SWEEP-ALL: same word as kabuuan; kabuuan kept (more frequent: 238 vs 28 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06
-fil,kuponan,variant_duplicate,Eric 2026-11-06,CC-ORTHO-SWEEP-ALL: same word as koponan; koponan kept (more frequent: 258 vs 60 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06
+fil,lalakeng,not_a_dictionary_headword,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: lalaki plus the -ng linker (old spelling), not a headword; lalaki is stored; Eric 2026-11-06 (fil reviewer sheet)"
+fil,babaing,not_a_dictionary_headword,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: babae plus the -ng linker (old spelling), not a headword; babae is stored; Eric 2026-11-06 (fil reviewer sheet)"
+fil,kabuoan,misspelled_nonstandard,Eric 2026-11-06,CC-ORTHO-SWEEP-ALL: misspelling of kabuuan: buo plus a suffix becomes -uu- (2014 rules); Eric 2026-11-06 (fil reviewer sheet)
+fil,kuponan,misspelled_nonstandard,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: almost certainly a misspelling of koponan, not a variant; Eric 2026-11-06 (fil reviewer sheet)"
 fil,ligal,variant_duplicate,Eric 2026-11-06,CC-ORTHO-SWEEP-ALL: same word as legal; legal kept (more frequent: 122 vs 38 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06
 fil,pulitiko,variant_duplicate,Eric 2026-11-06,CC-ORTHO-SWEEP-ALL: same word as politiko; politiko kept (more frequent: 111 vs 28 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06
+fil,estasyon,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as istasyon; istasyon kept per the reviewer sheet, estasyon an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,estilo,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as istilo; istilo kept per the reviewer sheet, estilo an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,estruktura,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as istruktura; istruktura kept per the reviewer sheet, estruktura an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,eskultura,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as iskultura; iskultura kept per the reviewer sheet, eskultura an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,kimikal,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as kemikal; kemikal kept per the reviewer sheet, kimikal an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,kumpanya,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as kompanya; kompanya kept per the reviewer sheet, kumpanya an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,kumbinasyon,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as kombinasyon; kombinasyon kept per the reviewer sheet, kumbinasyon an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,kumpetisyon,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as kompetisyon; kompetisyon kept per the reviewer sheet, kumpetisyon an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,tradisyunal,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as tradisyonal; tradisyonal kept per the reviewer sheet, tradisyunal an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,inhenyeriya,variant_duplicate,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: same word as inhinyeriya; inhinyeriya kept per the reviewer sheet, inhenyeriya an accepted variant; Eric 2026-11-06 (fil reviewer sheet)"
+fil,espirito,misspelled_nonstandard,Eric 2026-11-06 (fil reviewer sheet),CC-ORTHO-SWEEP-ALL: espiritu is the Filipino standard (Espiritu Santo); espirito is the Spanish/Portuguese spelling; Eric 2026-11-06 (fil reviewer sheet)
+fil,babaeng,not_a_dictionary_headword,Eric 2026-11-06 (fil reviewer sheet),"CC-ORTHO-SWEEP-ALL: babae plus the -ng linker, not a headword; babae is stored; Eric 2026-11-06 (fil reviewer sheet)"
+fil,dae,wrong_language_other,Eric 2026-11-06 (fil reviewer sheet),CC-ORTHO-SWEEP-ALL: not a Tagalog/Filipino word (reviewer: corpus leakage); Eric 2026-11-06 (fil reviewer sheet)
+fil,dai,wrong_language_other,Eric 2026-11-06 (fil reviewer sheet),CC-ORTHO-SWEEP-ALL: not a Tagalog/Filipino word; dai is Bikol 'not' (reviewer: corpus leakage); Eric 2026-11-06 (fil reviewer sheet)
