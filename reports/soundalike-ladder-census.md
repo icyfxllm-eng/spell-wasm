@@ -59,3 +59,8 @@ What this means for F3 (machine_checked AND key, IPA and loopback all agree): a 
 ## Not touched
 
 Production grading, en, de, the build-56 path, and the ortho flags. No kaikki or Wiktionary IPA is in any shipped file; the grep test the done-when asks for does not exist yet.
+
+## Decisions recorded 2026-11-07
+
+- **sw is capped at machine_checked for v1** (Eric): 8.1% IPA coverage cannot support the F3 triple. Reason code for every sw set: `no_ipa_coverage`.
+- Open, defaults I will use unless told otherwise: the ladder keeps `es-ES-Neural2-G` (es-419 was withdrawn on 2026-11-06); loopback controls for fr, pt, pl, fil, sw, ko and vi come from the closed seed lists and are listed in each language's status report for review; the vi voice is not confirmed northern and is flagged in its report.
