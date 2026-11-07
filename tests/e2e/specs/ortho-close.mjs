@@ -14,9 +14,11 @@ async function serve(page) {
     await clickSettled(page, '#setupDone').catch(() => {});
     await page.evaluate(() => { window.__ortho_fixed = true; });
   }
+  const prev = await page.evaluate(() => window.__ortho_prev || '');
   await page.click('#orbWrap');
-  await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
-  return page.evaluate(() => window.__spelltest.currentWord());
+  // wait for a NEW word (not the one just answered), instead of sleeping while the app moves on
+  await page.waitForFunction((p) => { const w = window.__spelltest.currentWord(); return !!w && w !== p; }, prev, { timeout: 5000 });
+  return page.evaluate(() => (window.__ortho_prev = window.__spelltest.currentWord()));
 }
 async function submit(page, text) {
   await typeOnKeyboard(page, text);
@@ -31,18 +33,27 @@ async function accentedWord(page) {
     const w = await serve(page);
     if (strip(w) !== w && !w.includes(' ')) return w;
     await submit(page, w);                       // answer it right to move on
-    await page.waitForTimeout(150);
   }
   throw new Error('no accented es word in 60 serves');
+}
+
+/** Leave the accent out of an accented word. A word whose bare form is an accepted variant (vídeo/video, RAE: both valid) scores
+ *  correct by design and is no slip, so move on to the next accented word. */
+async function slip(page) {
+  for (let i = 0; i < 10; i++) {
+    const w = await accentedWord(page);
+    await submit(page, strip(w));
+    const f = await feedback(page);
+    if (!/\bgood\b/.test(f.cls)) return { w, f };
+  }
+  throw new Error('every accented word tried was an accepted variant');
 }
 
 export async function run(browser, base, suite) {
   await suite.test('flag on: leaving the accent out shows the letter fix and a free retry', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'es', init: FLAG_ON });
     try {
-      const w = await accentedWord(page);
-      await submit(page, strip(w));
-      const f = await feedback(page);
+      const { w, f } = await slip(page);
       assert(f.text.includes('→'), `no letter fix on screen for ${w} typed ${strip(w)}: ${JSON.stringify(f)}`);
       assert(!(await page.$('#feedback .reveal')), `the word was revealed (scored as a miss) on the first try: ${JSON.stringify(f)}`);
       assert(f.text.includes('Casi'), `not the close line: ${JSON.stringify(f)}`);
@@ -52,9 +63,7 @@ export async function run(browser, base, suite) {
   await suite.test('flag off (default): the same slip is an ordinary miss with no fix line', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
-      const w = await accentedWord(page);
-      await submit(page, strip(w));
-      const f = await feedback(page);
+      const { w, f } = await slip(page);
       assert(!f.text.includes('→'), `a fix line showed with the flag off: ${JSON.stringify(f)}`);
       assert(!!(await page.$('#feedback .reveal')), `flag off: the miss did not reveal the word: ${JSON.stringify(f)}`);
     } finally { await ctx.close(); }
