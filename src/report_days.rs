@@ -6,9 +6,12 @@
 //! Pure: no clock reads, no storage, no DOM. The flag is `guardian.reportDays`;
 //! nothing here is reached with the flag off, so v1 output cannot move (A2).
 
+#[cfg(not(feature = "web"))]
 use std::collections::BTreeMap;
 
+#[cfg(not(feature = "web"))] // WordType lives in guardian_report, app only (D9)
 use crate::guardian_report::{primary_type, BankView, WordType};
+#[cfg(not(feature = "web"))]
 use crate::learner_query::{LearnerQuery, ProfileId};
 
 pub const DAY_S: i64 = 86_400;
@@ -445,6 +448,7 @@ pub fn passes_gate(attempts: u32, misses: u32) -> bool {
 
 /// What one language did in a window: counts of eligible attempts (Speech,
 /// Impossible, and attempts without their CR-1 instant and class never count).
+#[cfg(not(feature = "web"))]
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct LangStats {
     pub attempts: u32,
@@ -452,6 +456,7 @@ pub struct LangStats {
     pub by_type: BTreeMap<WordType, (u32, u32)>,
 }
 
+#[cfg(not(feature = "web"))]
 pub fn lang_stats(
     q: &dyn LearnerQuery,
     profile: ProfileId,
@@ -478,6 +483,7 @@ pub fn lang_stats(
 }
 
 /// A rate line a delta may be drawn on (F5): rates only, never raw counts.
+#[cfg(not(feature = "web"))]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum DeltaLine {
     /// Share of attempts that were not misses.
@@ -487,6 +493,7 @@ pub enum DeltaLine {
 }
 
 /// "vs last report": percentage points, current minus previous.
+#[cfg(not(feature = "web"))]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Delta {
     pub lang: String,
@@ -495,12 +502,14 @@ pub struct Delta {
 }
 
 /// Round-half-up integer percent of `n / d`.
+#[cfg(not(feature = "web"))]
 fn pct(n: u32, d: u32) -> i32 {
     ((200 * u64::from(n) + u64::from(d)) / (2 * u64::from(d))) as i32
 }
 
 /// F5: deltas only where BOTH windows pass G-D26 for that line; otherwise the
 /// line is omitted, not shown as zero or a dash.
+#[cfg(not(feature = "web"))]
 pub fn deltas(lang: &str, cur: &LangStats, prev: &LangStats) -> Vec<Delta> {
     let mut out = Vec::new();
     if passes_gate(cur.attempts, cur.misses) && passes_gate(prev.attempts, prev.misses) {
@@ -530,6 +539,8 @@ pub struct DaysInfo {
     /// Every language's word types were hidden by G-D26 (or none existed):
     /// the report falls back to count and accuracy, never a hinted type.
     pub not_enough: bool,
+    /// Filled by guardian_report, which the web build does not compile.
+    #[cfg(not(feature = "web"))]
     pub deltas: Vec<Delta>,
 }
 
@@ -868,6 +879,7 @@ pub(crate) mod tests {
         assert_eq!((report.start_s, report.end_s), (w.start_s, w.end_s), "the ping and the report agree");
     }
 
+    #[cfg(not(feature = "web"))]
     fn stats(attempts: u32, misses: u32, ty: Option<(WordType, u32, u32)>) -> LangStats {
         LangStats { attempts, misses, by_type: ty.map(|(t, a, m)| (t, (a, m))).into_iter().collect() }
     }
@@ -882,6 +894,7 @@ pub(crate) mod tests {
 
     /// A8: the previous window is below the gate, the current above: no delta,
     /// not a zero and not a dash. And rates, not counts, are compared.
+    #[cfg(not(feature = "web"))]
     #[test]
     fn a_delta_needs_both_windows_to_pass_the_gate() {
         let t = WordType::Tier(1);

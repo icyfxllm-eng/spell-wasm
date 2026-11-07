@@ -196,6 +196,7 @@ mod credits; // CC-HUMAN-AUDIO F7 — generated attribution screen
 mod human_audio; // CC-HUMAN-AUDIO F5/F6 — bundled verified recordings
 mod packs;
 mod reports;
+#[cfg(not(feature = "web"))]
 mod report_days_store; // CC-GUARDIAN-REPORT v1.1: the schedule's one write door
 mod report_days; // CC-GUARDIAN-REPORT v1.1: window(), the zone and calendar primitives, F4/F5
 mod reports_share; // CC-REPORTS-SHARE v1: the pure parent-report composer
