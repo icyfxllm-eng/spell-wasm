@@ -2109,6 +2109,7 @@ pub fn next_word(app: &App) {
     ZH_VERDICT.with(|c| *c.borrow_mut() = None);
     ZH_VIA_SURFACE.with(|c| c.set(false));
     DE_CLOSE.with(|c| *c.borrow_mut() = None);
+    ORTHO_CLOSE.with(|c| *c.borrow_mut() = None);
     // F4: the tone row follows the language and tier of the word just loaded.
     reflect_tone_row(app);
     // CC-CJK-INK F4: the write-it offer follows the same rule -- present only
@@ -2309,18 +2310,28 @@ pub fn submit_guess(app: &App) {
         let de_easy = cur_lang == crate::consts::DE && app.borrow().cur_tier == "easy" && crate::norm::de_stand_in_accepted(&typed, &word);
         // CC-ORTHO-SWEEP-ALL: a language whose profile flag is on is graded by its profile; flag off (the default) is the
         // line above it replaced, byte for byte.
-        let profile_ok = crate::flags::ortho_profile(&cur_lang)
-            && crate::ortho_profile::profile(&cur_lang).is_some_and(|p| {
+        ORTHO_CLOSE.with(|c| *c.borrow_mut() = None);
+        let profile_out = if crate::flags::ortho_profile(&cur_lang) {
+            crate::ortho_profile::profile(&cur_lang).map(|p| {
                 let tier = app.borrow().cur_tier.clone();
-                crate::ortho_profile::verdict(&p, &word, &typed, &tier, kid, &|w| crate::ortho_profile::is_bank_row(&cur_lang, w)).is_correct()
-            });
-        let current_ok = if crate::flags::ortho_profile(&cur_lang) && crate::ortho_profile::profile(&cur_lang).is_some() {
+                crate::ortho_profile::verdict(&p, &word, &typed, &tier, kid, &|w| crate::ortho_profile::is_bank_row(&cur_lang, w))
+            })
+        } else {
+            None
+        };
+        let profile_ok = profile_out.as_ref().is_some_and(|o| o.is_correct());
+        // F4: a same-sound accent-only real word (es te/té, fr ou/où) is another sense of the prompt, correct at every tier.
+        let profile_sense = profile_out.is_some() && crate::ortho_profile::other_sense(&cur_lang, &word, &typed);
+        if let Some(crate::ortho_profile::Outcome::Close { fix }) = &profile_out {
+            ORTHO_CLOSE.with(|c| *c.borrow_mut() = Some(fix.clone()));
+        }
+        let current_ok = if profile_out.is_some() {
             profile_ok
         } else {
             crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid)
         };
         current_ok || en_variant || de_easy || {
-            let other = crate::homophones::accepts(&cur_lang, &word, &typed)
+            let other = (profile_sense || crate::homophones::accepts(&cur_lang, &word, &typed))
                 && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
             if other {
                 VALID_OTHER_SENSE.with(|c| c.set(true));
@@ -2331,6 +2342,10 @@ pub fn submit_guess(app: &App) {
     DE_CLOSE.with(|c| {
         *c.borrow_mut() = if !correct && !impossible && cur_lang == crate::consts::DE { crate::norm::de_near_miss(&typed, &word) } else { None };
     });
+    // An answer that ended up correct (e.g. a same-sound sense) is not a close, whatever the profile said first.
+    if correct || impossible {
+        ORTHO_CLOSE.with(|c| *c.borrow_mut() = None);
+    }
     // CC-LEARNING-ENGINE: the validated verdict, recorded at the single
     // submission path — typed channel, so skills update. Placement words
     // route to the placement recorder (decisive prior shifts) and close
@@ -3093,6 +3108,9 @@ thread_local! {
     /// CC-ORTHO-SWEEP-DE-JA: a wrong German answer that is one named step from right (umlaut or ss stand-in, unlisted split).
     /// Set by `submit_guess`, read by `on_wrong`, cleared with the previous word's verdict.
     static DE_CLOSE: std::cell::RefCell<Option<crate::norm::DeNearMiss>> = const { std::cell::RefCell::new(None) };
+    /// CC-ORTHO-FIX-FIL-ROMANCE F2: the letter diff of an es/fr/pt answer the profile calls close (accent left out, wrong
+    /// or extra). Set only while that language's profile flag is on; same life cycle as `DE_CLOSE`.
+    static ORTHO_CLOSE: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
 }
 
 /// CC-ZH-TONE F3 routing, Invariant 6: a word whose ONLY failures were tone
@@ -3246,8 +3264,12 @@ fn de_close_retry(app: &App) -> Option<(&'static str, String)> {
         let s = app.borrow();
         (s.cur_lang.clone(), s.aids.retry_used, s.versus.enabled)
     };
-    if lang != crate::consts::DE || retry_used || versus {
+    if retry_used || versus {
         return None;
+    }
+    if lang != crate::consts::DE {
+        // F2: es/fr/pt reuse the German letter-diff feedback (same strings, no new UI); the key keeps its German name.
+        return ORTHO_CLOSE.with(|c| c.borrow().clone()).map(|fix| ("de.close.letters", fix));
     }
     DE_CLOSE.with(|c| match c.borrow().as_ref()? {
         crate::norm::DeNearMiss::Letters { fix } => Some(("de.close.letters", fix.clone())),

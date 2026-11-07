@@ -337,7 +337,584 @@ friction	sœur	soeur	medium	fr-FR-Neural2-F	close	oe/ae stand-in for œ/æ
 friction	sœur	soeur	hard	fr-FR-Neural2-F	close	oe/ae stand-in for œ/æ
 friction	sœur	soeur	expert	fr-FR-Neural2-F	close	oe/ae stand-in for œ/æ
 friction	sœur	soeur	jr	fr-FR-Neural2-F	correct	oe/ae stand-in for œ/æ
-friction	classé	classe	medium	fr-FR-Neural2-F	miss	different sound
-friction	classé	classe	jr	fr-FR-Neural2-F	miss	different sound
-friction	classe	classé	easy	fr-FR-Neural2-F	miss	different sound
-friction	classe	classé	jr	fr-FR-Neural2-F	miss	different sound
+collision	ou	où	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	ou	où	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	ou	où	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	ou	où	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	ou	où	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	où	ou	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	où	ou	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	où	ou	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	où	ou	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	où	ou	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	a	à	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	a	à	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	a	à	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	a	à	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	a	à	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	à	a	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	à	a	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	à	a	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	à	a	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	à	a	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	la	là	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	la	là	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	la	là	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	la	là	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	la	là	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	là	la	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	là	la	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sur	sûr	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sur	sûr	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sur	sûr	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sur	sûr	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sur	sûr	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sûr	sur	easy	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sûr	sur	medium	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sûr	sur	hard	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sûr	sur	expert	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sûr	sur	jr	fr-FR-Neural2-F	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	pêche	péché	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pêche	péché	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	péché	pêche	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	péché	pêche	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	abandonne	abandonné	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	abandonne	abandonné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	abandonné	abandonne	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	abandonné	abandonne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	absorbe	absorbé	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	absorbe	absorbé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	absorbé	absorbe	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	absorbé	absorbe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	accompagne	accompagné	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	accompagne	accompagné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	accompagné	accompagne	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	accompagné	accompagne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	affirme	affirmé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	affirme	affirmé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	affirmé	affirme	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	affirmé	affirme	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ajoute	ajouté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ajoute	ajouté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ajouté	ajoute	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ajouté	ajoute	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	allie	allié	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	allie	allié	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	allié	allie	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	allié	allie	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	annonce	annoncé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	annonce	annoncé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	annoncé	annonce	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	annoncé	annonce	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrange	arrangé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrange	arrangé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrangé	arrange	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrangé	arrange	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrive	arrivé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrive	arrivé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrivé	arrive	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	arrivé	arrive	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	augmente	augmenté	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	augmente	augmenté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	augmenté	augmente	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	augmenté	augmente	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capture	capturé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capture	capturé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capturé	capture	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capturé	capture	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	change	changé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	change	changé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	changé	change	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	changé	change	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	charge	chargé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	charge	chargé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chargé	charge	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chargé	charge	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	charges	chargés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	charges	chargés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chargés	charges	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chargés	charges	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chute	chuté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chute	chuté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chuté	chute	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chuté	chute	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	cible	ciblé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	cible	ciblé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ciblé	cible	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ciblé	cible	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classe	classé	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classe	classé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classé	classe	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classé	classe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classes	classés	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classes	classés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classés	classes	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	classés	classes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	collabore	collaboré	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	collabore	collaboré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	collaboré	collabore	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	collaboré	collabore	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commandes	commandés	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commandes	commandés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commandés	commandes	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commandés	commandes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commence	commencé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commence	commencé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commencé	commence	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	commencé	commence	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	compare	comparé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	compare	comparé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	comparé	compare	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	comparé	compare	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	compose	composé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	compose	composé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	composé	compose	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	composé	compose	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	comte	comté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	comte	comté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	comté	comte	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	comté	comte	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concentre	concentré	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concentre	concentré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concentré	concentre	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concentré	concentre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concerne	concerné	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concerne	concerné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concerné	concerne	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	concerné	concerne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consacre	consacré	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consacre	consacré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consacré	consacre	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consacré	consacre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	conserve	conservé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	conserve	conservé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	conservé	conserve	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	conservé	conserve	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	considère	considéré	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	considère	considéré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	considéré	considère	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	considéré	considère	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	constitue	constitué	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	constitue	constitué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	constitué	constitue	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	constitué	constitue	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consulte	consulté	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consulte	consulté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consulté	consulte	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	consulté	consulte	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	contribue	contribué	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	contribue	contribué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	contribué	contribue	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	contribué	contribue	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	couche	couché	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	couche	couché	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	couché	couche	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	couché	couche	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	côtes	côtés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	côtes	côtés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	côtés	côtes	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	côtés	côtes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	demande	demandé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	demande	demandé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	demandé	demande	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	demandé	demande	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	dirige	dirigé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	dirige	dirigé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	dirigé	dirige	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	dirigé	dirige	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	discute	discuté	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	discute	discuté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	discuté	discute	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	discuté	discute	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donne	donné	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donne	donné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donné	donne	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donné	donne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donnes	donnés	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donnes	donnés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donnés	donnes	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	donnés	donnes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	débute	débuté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	débute	débuté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	débuté	débute	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	débuté	débute	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	décide	décidé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	décide	décidé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	décidé	décide	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	décidé	décide	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	déclare	déclaré	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	déclare	déclaré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	déclaré	déclare	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	déclaré	déclare	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	désigne	désigné	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	désigne	désigné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	désigné	désigne	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	désigné	désigne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	développe	développé	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	développe	développé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	développé	développe	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	développé	développe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	effectue	effectué	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	effectue	effectué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	effectué	effectue	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	effectué	effectue	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	empêche	empêché	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	empêche	empêché	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	empêché	empêche	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	empêché	empêche	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	enregistre	enregistré	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	enregistre	enregistré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	enregistré	enregistre	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	enregistré	enregistre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ferme	fermé	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ferme	fermé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fermé	ferme	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fermé	ferme	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	figure	figuré	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	figure	figuré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	figuré	figure	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	figuré	figure	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	finances	financés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	finances	financés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	financés	finances	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	financés	finances	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fonde	fondé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fonde	fondé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fondé	fonde	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fondé	fonde	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forcement	forcément	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forcement	forcément	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forcément	forcement	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forcément	forcement	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forme	formé	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forme	formé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formé	forme	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formé	forme	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formes	formés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formes	formés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formés	formes	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formés	formes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fosses	fossés	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fosses	fossés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fossés	fosses	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fossés	fosses	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gagne	gagné	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gagne	gagné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gagné	gagne	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gagné	gagne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	glace	glacé	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	glace	glacé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	glacé	glace	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	glacé	glace	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gâche	gâché	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gâche	gâché	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gâché	gâche	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	gâché	gâche	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	honore	honoré	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	honore	honoré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	honoré	honore	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	honoré	honore	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	indique	indiqué	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	indique	indiqué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	indiqué	indique	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	indiqué	indique	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inquiète	inquiété	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inquiète	inquiété	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inquiété	inquiète	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inquiété	inquiète	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	laisse	laissé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	laisse	laissé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	laissé	laisse	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	laissé	laisse	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	lance	lancé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	lance	lancé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	lancé	lance	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	lancé	lance	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	limite	limité	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	limite	limité	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	limité	limite	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	limité	limite	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marche	marché	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marche	marché	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marché	marche	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marché	marche	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marie	marié	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marie	marié	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marié	marie	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marié	marie	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marque	marqué	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marque	marqué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marqué	marque	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marqué	marque	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	menace	menacé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	menace	menacé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	menacé	menace	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	menacé	menace	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mentionne	mentionné	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mentionne	mentionné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mentionné	mentionne	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mentionné	mentionne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mobilise	mobilisé	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mobilise	mobilisé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mobilisé	mobilise	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mobilisé	mobilise	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	montre	montré	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	montre	montré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	montré	montre	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	montré	montre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nomme	nommé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nomme	nommé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nommé	nomme	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nommé	nomme	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	notre	nôtre	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	notre	nôtre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nôtre	notre	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nôtre	notre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nécessite	nécessité	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nécessite	nécessité	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nécessité	nécessite	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	nécessité	nécessite	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	occupe	occupé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	occupe	occupé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	occupé	occupe	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	occupé	occupe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	organise	organisé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	organise	organisé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	organisé	organise	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	organisé	organise	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	participe	participé	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	participe	participé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	participé	participe	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	participé	participe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	passe	passé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	passe	passé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	passé	passe	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	passé	passe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	place	placé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	place	placé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	placé	place	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	placé	place	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	places	placés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	places	placés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	placés	places	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	placés	places	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	plaque	plaqué	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	plaque	plaqué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	plaqué	plaque	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	plaqué	plaque	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porte	porté	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porte	porté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porté	porte	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porté	porte	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	possède	possédé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	possède	possédé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	possédé	possède	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	possédé	possède	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pousses	poussés	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pousses	poussés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	poussés	pousses	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	poussés	pousses	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	presse	pressé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	presse	pressé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pressé	presse	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pressé	presse	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	profite	profité	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	profite	profité	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	profité	profite	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	profité	profite	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	propose	proposé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	propose	proposé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	proposé	propose	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	proposé	propose	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	précise	précisé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	précise	précisé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	précisé	précise	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	précisé	précise	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	préfère	préféré	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	préfère	préféré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	préféré	préfère	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	préféré	préfère	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présente	présenté	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présente	présenté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présenté	présente	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présenté	présente	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présentes	présentés	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présentes	présentés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présentés	présentes	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	présentés	présentes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	prête	prêté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	prête	prêté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	prêté	prête	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	prêté	prête	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publie	publié	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publie	publié	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publié	publie	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publié	publie	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quitte	quitté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quitte	quitté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quitté	quitte	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quitté	quitte	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recherche	recherché	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recherche	recherché	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recherché	recherche	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recherché	recherche	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	refuse	refusé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	refuse	refusé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	refusé	refuse	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	refusé	refuse	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remplace	remplacé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remplace	remplacé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remplacé	remplace	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remplacé	remplace	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remporte	remporté	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remporte	remporté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remporté	remporte	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	remporté	remporte	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	rencontre	rencontré	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	rencontre	rencontré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	rencontré	rencontre	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	rencontré	rencontre	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	représente	représenté	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	représente	représenté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	représenté	représente	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	représenté	représente	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	reste	resté	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	reste	resté	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	resté	reste	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	resté	reste	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	restes	restés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	restes	restés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	restés	restes	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	restés	restes	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retire	retiré	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retire	retiré	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retiré	retire	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retiré	retire	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retourne	retourné	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retourne	retourné	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retourné	retourne	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retourné	retourne	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retrouve	retrouvé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retrouve	retrouvé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retrouvé	retrouve	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	retrouvé	retrouve	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalise	réalisé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalise	réalisé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalisé	réalise	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalisé	réalise	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalises	réalisés	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalises	réalisés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalisés	réalises	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	réalisés	réalises	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	signe	signé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	signe	signé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	signé	signe	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	signé	signe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	situe	situé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	situe	situé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	situé	situe	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	situé	situe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	souhaite	souhaité	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	souhaite	souhaité	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	souhaité	souhaite	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	souhaité	souhaite	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	sépare	séparé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	sépare	séparé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	séparé	sépare	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	séparé	sépare	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	taille	taillé	easy	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	taille	taillé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	taillé	taille	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	taillé	taille	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	termine	terminé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	termine	terminé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	terminé	termine	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	terminé	termine	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	tombe	tombé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	tombe	tombé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	tombé	tombe	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	tombé	tombe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	torture	torturé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	torture	torturé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	torturé	torture	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	torturé	torture	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trace	tracé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trace	tracé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	tracé	trace	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	tracé	trace	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	traite	traité	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	traite	traité	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	traité	traite	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	traité	traite	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	transforme	transformé	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	transforme	transformé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	transformé	transforme	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	transformé	transforme	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	travaille	travaillé	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	travaille	travaillé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	travaillé	travaille	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	travaillé	travaille	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trouve	trouvé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trouve	trouvé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trouvé	trouve	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trouvé	trouve	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilise	utilisé	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilise	utilisé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilisé	utilise	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilisé	utilise	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilises	utilisés	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilises	utilisés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilisés	utilises	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	utilisés	utilises	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	visite	visité	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	visite	visité	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	visité	visite	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	visité	visite	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élevé	élève	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élevé	élève	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élève	élevé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élève	élevé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élevés	élèves	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élevés	élèves	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élèves	élevés	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	élèves	élevés	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	équipe	équipé	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	équipe	équipé	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	équipé	équipe	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	équipé	équipe	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	étudie	étudié	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	étudie	étudié	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	étudié	étudie	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	étudié	étudie	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évolue	évolué	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évolue	évolué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évolué	évolue	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évolué	évolue	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évoque	évoqué	medium	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évoque	évoqué	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évoqué	évoque	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évoqué	évoque	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évènements	événements	hard	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	évènements	événements	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	événements	évènements	expert	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	événements	évènements	jr	fr-FR-Neural2-F	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+friction	élève	éléve	easy	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	élève	éléve	medium	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	élève	éléve	hard	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	élève	éléve	expert	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	élève	éléve	jr	fr-FR-Neural2-F	correct	F5 wrong-direction or extra accent
+friction	été	ete	easy	fr-FR-Neural2-F	close	marks left out
+friction	été	ete	medium	fr-FR-Neural2-F	close	marks left out
+friction	été	ete	hard	fr-FR-Neural2-F	close	marks left out
+friction	été	ete	expert	fr-FR-Neural2-F	close	marks left out
+friction	été	ete	jr	fr-FR-Neural2-F	correct	marks left out
+friction	cœur	coeur	easy	fr-FR-Neural2-F	correct	F5 wrong-direction or extra accent
+friction	cœur	coeur	medium	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	cœur	coeur	hard	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	cœur	coeur	expert	fr-FR-Neural2-F	close	F5 wrong-direction or extra accent
+friction	cœur	coeur	jr	fr-FR-Neural2-F	correct	F5 wrong-direction or extra accent
+collision	où	ou	easy	fr-FR-Neural2-F	correct_other_sense	done-when row
+collision	où	ou	medium	fr-FR-Neural2-F	correct_other_sense	done-when row
+collision	où	ou	hard	fr-FR-Neural2-F	correct_other_sense	done-when row
+collision	où	ou	expert	fr-FR-Neural2-F	correct_other_sense	done-when row
+collision	où	ou	jr	fr-FR-Neural2-F	correct_other_sense	done-when row

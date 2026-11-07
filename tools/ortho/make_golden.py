@@ -49,8 +49,18 @@ def table_pairs(lang):
                 if a != b: pairs.add((a, b))
     return pairs
 
+def collisions(lang):
+    p = f"{REPO}/data/{lang}/accent-collisions.tsv"
+    out = []
+    for l in open(p, encoding="utf-8").read().split("\n"):
+        if l and not l.startswith("#"):
+            a, b, snd = l.split("\t")[:3]
+            out.append((a, b, snd))
+    return out
+
 def build(lang):
-    B = bank(lang); V = VOICE[lang]; keep = KEEP[lang]
+    B = bank(lang); COLL = collisions(lang)
+    REAL = set(B) | {w for a, b, _ in COLL for w in (a, b)}; V = VOICE[lang]; keep = KEEP[lang]
     rows = []
     add = lambda lane, tgt, typed, tier, exp, note="": rows.append((lane, tgt, typed, tier, V, exp, note))
     rnd = random.Random(f"ortho-golden-{lang}")
@@ -66,7 +76,7 @@ def build(lang):
                 tier = B.get(a, "medium")
                 if kind[rule] == "accent":
                     note = f"{rule} is an accent rule for the {V} voice: not a homophone pair"
-                    if (a, b) in tp: add("homophone", a, b, tier, "pending_table", note + "; the current SENSE-CUE table still lists it as a true set (it was built for a seseante voice)")
+                    if (a, b) in tp: add("homophone", a, b, tier, "correct_other_sense", note + "; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)")
                     else: add("homophone", a, b, tier, "miss", note)
                 elif (a, b) in tp: add("homophone", a, b, tier, "correct_other_sense")
                 else: add("homophone", a, b, tier, "pending_table", "pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)")
@@ -94,7 +104,7 @@ def build(lang):
         for tier in (t, "jr"):
             if st_all == w:
                 continue
-            row = st_all in B
+            row = st_all in REAL
             if tier == "jr": exp = "miss" if row else "correct"
             else:
                 exp = "miss" if row else "close"
@@ -105,7 +115,7 @@ def build(lang):
         letter_rows = sorted(w for w in B if keep in w and " " not in w)
         for w in rnd.sample(letter_rows, min(10, len(letter_rows))):
             typed = strip(w, "").replace(keep, base)
-            row = typed in B
+            row = typed in REAL
             add("friction", w, typed, B[w], "miss", f"{keep} is a letter, not a mark")
             add("friction", w, typed, "jr", "miss" if row else "correct", f"{keep} is a mark for Spell Jr" + (" (typed form is itself a bank row)" if row else ""))
     for w in rnd.sample(sorted(B), 12):
@@ -121,20 +131,31 @@ def build(lang):
                 elif tier in ("easy", "jr"): exp = "correct"
                 else: exp = "close"
                 add("friction", w, typed, tier, exp, "oe/ae stand-in for œ/æ")
-    # Eric 2026-11-06 (CC-ORTHO-FIX-FIL-ROMANCE 3): real accent-only pairs from the banks. The table decides same-sound pairs;
-    # pending_table = the spec answer (correct as valid_other_sense) waits on SENSE-CUE holding the pair. Different sound = miss.
-    for a, b, exp, note in {
-        "es": [("dónde", "donde", "pending_table", "tilde-only, same sound: the es sound-alike table decides (it holds no tilde-only pairs yet)"),
-               ("donde", "dónde", "pending_table", "tilde-only, same sound: the table decides"),
-               ("quién", "quien", "pending_table", "tilde-only, same sound: the table decides"),
-               ("quien", "quién", "pending_table", "tilde-only, same sound: the table decides")],
-        "fr": [("classé", "classe", "miss", "different sound"), ("classe", "classé", "miss", "different sound")],
-        "pt": [("porquê", "porque", "pending_table", "the table decides; pair tagged for the Gig B Same sound? column"),
-               ("porque", "porquê", "pending_table", "the table decides; pair tagged for the Gig B Same sound? column")],
-    }.get(lang, []):
-        if nfc(a) in B and nfc(b) in B:
-            for tier in (B[nfc(a)], "jr"):
-                add("friction", a, b, tier, exp, note)
+    # CC-ORTHO-FIX-FIL-ROMANCE F3/F4: every accent-only collision pair. Same sound = correct as another sense at every tier
+    # (the F4 list); different sound = a miss at every tier including Spell Jr (the typed form is a real word).
+    for a, b, snd in COLL:
+        for x, y in ((a, b), (b, a)):
+            tiers = (B[nfc(x)] if nfc(x) in B else "medium", "jr")
+            if nfc(x) not in B:
+                tiers = ("easy", "medium", "hard", "expert", "jr")
+            for tier in tiers:
+                if snd == "same": add("collision", x, y, tier, "correct_other_sense", "same-sound accent-only pair, a real word: another sense")
+                else: add("collision", x, y, tier, "miss", "different-sound accent-only pair: a real word is never a slip, Spell Jr included")
+    # F5 wrong-direction and extra accents (the typed form is not a real word): close at Easy-Expert, correct in Jr
+    F5 = {"es": [("árbol", "arból"), ("árbol", "arbol")], "fr": [("élève", "éléve"), ("été", "ete"), ("cœur", "coeur")],
+          "pt": [("você", "vocé"), ("você", "voce")]}
+    for tgt, typed in F5[lang]:
+        for tier in TIERS + ["jr"]:
+            if tier == "jr": exp = "correct"
+            elif typed == "coeur": exp = "correct" if tier == "easy" else "close"
+            else: exp = "close"
+            add("friction", tgt, typed, tier, exp, "F5 wrong-direction or extra accent" if typed not in (strip(tgt, keep),) else "marks left out")
+    # the done-when rows that need a not-bank target
+    DW = {"es": [("año", "ano"), ("té", "te"), ("está", "esta")], "fr": [("où", "ou")], "pt": [("caça", "caca")]}
+    for tgt, typed in DW[lang]:
+        for tier in TIERS + ["jr"]:
+            snd = [c[2] for c in COLL if {nfc(c[0]), nfc(c[1])} == {tgt, typed}]
+            add("collision", tgt, typed, tier, "correct_other_sense" if snd == ["same"] else "miss", "done-when row")
     return rows
 
 for lang in ("es", "fr", "pt"):

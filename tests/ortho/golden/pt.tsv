@@ -324,7 +324,124 @@ friction	poderíamos	poderíamos	hard	pt-BR-Neural2-B	correct	NFD input grades 
 friction	contratos	CONTRATOS	expert	pt-BR-Neural2-B	correct	capital letters fold
 friction	contratos	 contratos 	expert	pt-BR-Neural2-B	correct	edge spaces are trimmed
 friction	contratos	contratos	expert	pt-BR-Neural2-B	correct	NFD input grades as NFC
-friction	porquê	porque	medium	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
-friction	porquê	porque	jr	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
-friction	porque	porquê	medium	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
-friction	porque	porquê	jr	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
+collision	porque	porquê	medium	pt-BR-Neural2-B	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	porque	porquê	jr	pt-BR-Neural2-B	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	porquê	porque	medium	pt-BR-Neural2-B	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	porquê	porque	jr	pt-BR-Neural2-B	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	avo	avó	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avo	avó	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avo	avó	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avo	avó	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avo	avó	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avo	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avo	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avo	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avo	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avo	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avô	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avô	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avô	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avô	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avó	avô	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avô	avó	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avô	avó	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avô	avó	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avô	avó	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	avô	avó	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caca	caça	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caca	caça	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caca	caça	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caca	caça	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caca	caça	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caça	caca	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caça	caca	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caça	caca	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caça	caca	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	caça	caca	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	assembleia	assembléia	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	assembleia	assembléia	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	assembléia	assembleia	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	assembléia	assembleia	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chama	chamá	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chama	chamá	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chamá	chama	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	chamá	chama	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	distancia	distância	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	distancia	distância	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	distância	distancia	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	distância	distancia	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	duvidas	dúvidas	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	duvidas	dúvidas	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	dúvidas	duvidas	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	dúvidas	duvidas	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estreia	estréia	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estreia	estréia	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estréia	estreia	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estréia	estreia	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forca	força	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	forca	força	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	força	forca	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	força	forca	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formula	fórmula	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	formula	fórmula	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fórmula	formula	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fórmula	formula	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mantém	mantêm	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mantém	mantêm	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mantêm	mantém	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	mantêm	mantém	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	medico	médico	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	medico	médico	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	médico	medico	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	médico	medico	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	musica	música	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	musica	música	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	música	musica	easy	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	música	musica	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	negocio	negócio	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	negocio	negócio	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	negócio	negocio	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	negócio	negocio	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	noticias	notícias	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	noticias	notícias	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	notícias	noticias	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	notícias	noticias	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	papeis	papéis	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	papeis	papéis	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	papéis	papeis	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	papéis	papeis	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publico	público	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publico	público	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	público	publico	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	público	publico	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recebe	recebê	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recebe	recebê	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recebê	recebe	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	recebê	recebe	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vera	verá	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vera	verá	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	verá	vera	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	verá	vera	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vitima	vítima	expert	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vitima	vítima	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vítima	vitima	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vítima	vitima	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vos	vós	medium	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vos	vós	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vós	vos	hard	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	vós	vos	jr	pt-BR-Neural2-B	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+friction	você	vocé	easy	pt-BR-Neural2-B	close	F5 wrong-direction or extra accent
+friction	você	vocé	medium	pt-BR-Neural2-B	close	F5 wrong-direction or extra accent
+friction	você	vocé	hard	pt-BR-Neural2-B	close	F5 wrong-direction or extra accent
+friction	você	vocé	expert	pt-BR-Neural2-B	close	F5 wrong-direction or extra accent
+friction	você	vocé	jr	pt-BR-Neural2-B	correct	F5 wrong-direction or extra accent
+friction	você	voce	easy	pt-BR-Neural2-B	close	marks left out
+friction	você	voce	medium	pt-BR-Neural2-B	close	marks left out
+friction	você	voce	hard	pt-BR-Neural2-B	close	marks left out
+friction	você	voce	expert	pt-BR-Neural2-B	close	marks left out
+friction	você	voce	jr	pt-BR-Neural2-B	correct	marks left out
+collision	caça	caca	easy	pt-BR-Neural2-B	miss	done-when row
+collision	caça	caca	medium	pt-BR-Neural2-B	miss	done-when row
+collision	caça	caca	hard	pt-BR-Neural2-B	miss	done-when row
+collision	caça	caca	expert	pt-BR-Neural2-B	miss	done-when row
+collision	caça	caca	jr	pt-BR-Neural2-B	miss	done-when row

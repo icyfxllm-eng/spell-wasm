@@ -17,10 +17,10 @@ homophone	cayó	calló	medium	es-ES-Neural2-G	pending_table	pair not in the SENS
 homophone	calló	cayó	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
 homophone	valla	vaya	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
 homophone	vaya	valla	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	casa	caza	easy	es-ES-Neural2-G	pending_table	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the current SENSE-CUE table still lists it as a true set (it was built for a seseante voice)
-homophone	caza	casa	medium	es-ES-Neural2-G	pending_table	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the current SENSE-CUE table still lists it as a true set (it was built for a seseante voice)
-homophone	cocer	coser	medium	es-ES-Neural2-G	pending_table	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the current SENSE-CUE table still lists it as a true set (it was built for a seseante voice)
-homophone	coser	cocer	medium	es-ES-Neural2-G	pending_table	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the current SENSE-CUE table still lists it as a true set (it was built for a seseante voice)
+homophone	casa	caza	easy	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
+homophone	caza	casa	medium	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
+homophone	cocer	coser	medium	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
+homophone	coser	cocer	medium	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
 homophone	abrasar	abrazar	medium	es-ES-Neural2-G	miss	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair
 homophone	abrazar	abrasar	medium	es-ES-Neural2-G	miss	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair
 homophone	tu	tú	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
@@ -243,11 +243,314 @@ friction	china	china	medium	es-ES-Neural2-G	correct	NFD input grades as NFC
 friction	hayan	HAYAN	medium	es-ES-Neural2-G	correct	capital letters fold
 friction	hayan	 hayan 	medium	es-ES-Neural2-G	correct	edge spaces are trimmed
 friction	hayan	hayan	medium	es-ES-Neural2-G	correct	NFD input grades as NFC
-friction	dónde	donde	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the es sound-alike table decides (it holds no tilde-only pairs yet)
-friction	dónde	donde	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the es sound-alike table decides (it holds no tilde-only pairs yet)
-friction	donde	dónde	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
-friction	donde	dónde	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
-friction	quién	quien	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
-friction	quién	quien	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
-friction	quien	quién	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
-friction	quien	quién	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
+collision	donde	dónde	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	donde	dónde	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dónde	donde	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dónde	donde	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	quien	quién	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	quien	quién	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	quién	quien	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	quién	quien	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	te	té	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	te	té	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	te	té	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	te	té	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	te	té	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	té	te	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	té	te	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	si	sí	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	si	sí	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	si	sí	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	si	sí	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	si	sí	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sí	si	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sí	si	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sí	si	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sí	si	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sí	si	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tu	tú	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tu	tú	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tu	tú	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tu	tú	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tu	tú	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tú	tu	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tú	tu	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tú	tu	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tú	tu	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	tú	tu	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	el	él	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	el	él	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	el	él	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	el	él	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	el	él	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	él	el	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	él	el	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	él	el	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	él	el	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	él	el	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mas	más	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mas	más	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mas	más	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mas	más	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mas	más	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	más	mas	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	más	mas	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	más	mas	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	más	mas	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	más	mas	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mi	mí	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mi	mí	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mi	mí	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mi	mí	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mi	mí	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mí	mi	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mí	mi	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mí	mi	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mí	mi	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	mí	mi	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	se	sé	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	se	sé	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	se	sé	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	se	sé	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	se	sé	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sé	se	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sé	se	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sé	se	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sé	se	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	sé	se	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	de	dé	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	de	dé	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	de	dé	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	de	dé	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	de	dé	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dé	de	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dé	de	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dé	de	hard	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dé	de	expert	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	dé	de	jr	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair, a real word: another sense
+collision	esta	está	easy	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	esta	está	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	esta	está	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	esta	está	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	esta	está	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	está	esta	easy	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	está	esta	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	está	esta	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	está	esta	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	está	esta	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ano	año	easy	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ano	año	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ano	año	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ano	año	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ano	año	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	año	ano	easy	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	año	ano	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	acepto	aceptó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	acepto	aceptó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	aceptó	acepto	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	aceptó	acepto	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	acorde	acordé	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	acorde	acordé	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	acordé	acorde	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	acordé	acorde	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	amplia	amplía	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	amplia	amplía	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	amplía	amplia	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	amplía	amplia	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animo	animó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animo	animó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animó	animo	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animó	animo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animo	ánimo	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animo	ánimo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ánimo	animo	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ánimo	animo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animó	ánimo	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	animó	ánimo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ánimo	animó	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	ánimo	animó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	aumento	aumentó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	aumento	aumentó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	aumentó	aumento	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	aumentó	aumento	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	cambio	cambió	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	cambio	cambió	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	cambió	cambio	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	cambió	cambio	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capitulo	capítulo	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capitulo	capítulo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capítulo	capitulo	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	capítulo	capitulo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	centro	centró	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	centro	centró	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	centró	centro	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	centró	centro	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	completo	completó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	completo	completó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	completó	completo	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	completó	completo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	continua	continúa	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	continua	continúa	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	continúa	continua	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	continúa	continua	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	costo	costó	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	costo	costó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	costó	costo	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	costó	costo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	criticas	críticas	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	criticas	críticas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	críticas	criticas	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	críticas	criticas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desarrollo	desarrolló	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desarrollo	desarrolló	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desarrolló	desarrollo	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desarrolló	desarrollo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desempeño	desempeñó	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desempeño	desempeñó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desempeñó	desempeño	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	desempeñó	desempeño	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	diseño	diseñó	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	diseño	diseñó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	diseñó	diseño	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	diseñó	diseño	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estreno	estrenó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estreno	estrenó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estrenó	estreno	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estrenó	estreno	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estudie	estudié	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estudie	estudié	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estudié	estudie	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	estudié	estudie	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fracaso	fracasó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fracaso	fracasó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fracasó	fracaso	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	fracasó	fracaso	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	hacia	hacía	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	hacia	hacía	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	hacía	hacia	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	hacía	hacia	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	incremento	incrementó	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	incremento	incrementó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	incrementó	incremento	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	incrementó	incremento	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inicio	inició	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inicio	inició	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inició	inicio	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	inició	inicio	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	intento	intentó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	intento	intentó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	intentó	intento	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	intentó	intento	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	lideres	líderes	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	lideres	líderes	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	líderes	lideres	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	líderes	lideres	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	maquinas	máquinas	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	maquinas	máquinas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	máquinas	maquinas	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	máquinas	maquinas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marco	marcó	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marco	marcó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marcó	marco	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	marcó	marco	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	motivo	motivó	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	motivo	motivó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	motivó	motivo	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	motivó	motivo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	musica	música	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	musica	música	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	música	musica	easy	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	música	musica	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porque	porqué	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porque	porqué	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porqué	porque	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	porqué	porque	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	practica	práctica	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	practica	práctica	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	práctica	practica	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	práctica	practica	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	practicas	prácticas	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	practicas	prácticas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	prácticas	practicas	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	prácticas	practicas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	presento	presentó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	presento	presentó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	presentó	presento	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	presentó	presento	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publica	pública	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publica	pública	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pública	publica	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	pública	publica	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publicas	públicas	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publicas	públicas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	públicas	publicas	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	públicas	publicas	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publicó	público	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	publicó	público	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	público	publicó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	público	publicó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quedo	quedó	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quedo	quedó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quedó	quedo	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	quedó	quedo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	registro	registró	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	registro	registró	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	registró	registro	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	registró	registro	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	regreso	regresó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	regreso	regresó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	regresó	regreso	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	regresó	regreso	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	salio	salió	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	salio	salió	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	salió	salio	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	salió	salio	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	serian	serían	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	serian	serían	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	serían	serian	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	serían	serian	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	terminó	término	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	terminó	término	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	término	terminó	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	término	terminó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	titulo	título	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	titulo	título	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	título	titulo	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	título	titulo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trabajo	trabajó	easy	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trabajo	trabajó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trabajó	trabajo	hard	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trabajó	trabajo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trato	trató	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trato	trató	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trató	trato	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	trató	trato	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	viajo	viajó	expert	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	viajo	viajó	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	viajó	viajo	medium	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+collision	viajó	viajo	jr	es-ES-Neural2-G	miss	different-sound accent-only pair: a real word is never a slip, Spell Jr included
+friction	árbol	arból	easy	es-ES-Neural2-G	close	F5 wrong-direction or extra accent
+friction	árbol	arból	medium	es-ES-Neural2-G	close	F5 wrong-direction or extra accent
+friction	árbol	arból	hard	es-ES-Neural2-G	close	F5 wrong-direction or extra accent
+friction	árbol	arból	expert	es-ES-Neural2-G	close	F5 wrong-direction or extra accent
+friction	árbol	arból	jr	es-ES-Neural2-G	correct	F5 wrong-direction or extra accent
+friction	árbol	arbol	easy	es-ES-Neural2-G	close	marks left out
+friction	árbol	arbol	medium	es-ES-Neural2-G	close	marks left out
+friction	árbol	arbol	hard	es-ES-Neural2-G	close	marks left out
+friction	árbol	arbol	expert	es-ES-Neural2-G	close	marks left out
+friction	árbol	arbol	jr	es-ES-Neural2-G	correct	marks left out
+collision	año	ano	easy	es-ES-Neural2-G	miss	done-when row
+collision	año	ano	medium	es-ES-Neural2-G	miss	done-when row
+collision	año	ano	hard	es-ES-Neural2-G	miss	done-when row
+collision	año	ano	expert	es-ES-Neural2-G	miss	done-when row
+collision	año	ano	jr	es-ES-Neural2-G	miss	done-when row
+collision	té	te	easy	es-ES-Neural2-G	correct_other_sense	done-when row
+collision	té	te	medium	es-ES-Neural2-G	correct_other_sense	done-when row
+collision	té	te	hard	es-ES-Neural2-G	correct_other_sense	done-when row
+collision	té	te	expert	es-ES-Neural2-G	correct_other_sense	done-when row
+collision	té	te	jr	es-ES-Neural2-G	correct_other_sense	done-when row
+collision	está	esta	easy	es-ES-Neural2-G	miss	done-when row
+collision	está	esta	medium	es-ES-Neural2-G	miss	done-when row
+collision	está	esta	hard	es-ES-Neural2-G	miss	done-when row
+collision	está	esta	expert	es-ES-Neural2-G	miss	done-when row
+collision	está	esta	jr	es-ES-Neural2-G	miss	done-when row
