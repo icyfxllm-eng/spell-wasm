@@ -78,3 +78,7 @@ Groups that differ only by a mark, n-tilde, c-cedilla or oe/ae, listed in report
 3. How to give sunod-sunod its Easy/Jr-only rule (variants have no tier column; fil has no profile or close text).
 4. Which real pairs to use for the done-when rows, since most example words are not bank rows.
 5. The stale Misses/My Words entries for quarantined forms.
+
+## Resolutions
+
+- **D1 (Eric, 2026-11-06): keep the Spain voice (es-ES-Neural2-G).** D1's es-419 default is withdrawn. No cache-key change, no re-warm, the es sound-alike table stays verified for the voice. casa/caza and cocer/coser stay in the table as they are (the loopback measured both as alike on this voice). Still open: stop-and-asks 2 to 5 above.
