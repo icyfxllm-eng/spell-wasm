@@ -16,10 +16,12 @@ fil	kimikal	kemikal	quarantine:variant_duplicate;variant
 fil	kumbinasyon	kombinasyon	quarantine:variant_duplicate;variant
 fil	kumpanya	kompanya	quarantine:variant_duplicate;variant
 fil	kumpetisyon	kompetisyon	quarantine:variant_duplicate;variant
+fil	kumplikado	komplikado	quarantine:variant_duplicate;variant
 fil	kuponan	koponan	quarantine:misspelled_nonstandard;explicit
 fil	lalake	lalaki	quarantine:variant_duplicate;variant
 fil	lalakeng		quarantine:not_a_dictionary_headword;hidden
 fil	ligal	legal	quarantine:variant_duplicate;variant
+fil	pulitika	politika	quarantine:variant_duplicate;variant
 fil	pulitiko	politiko	quarantine:variant_duplicate;variant
 fil	sunud-sunod	sunod-sunod	quarantine:misspelled_nonstandard;explicit
 fil	tradisyunal	tradisyonal	quarantine:variant_duplicate;variant

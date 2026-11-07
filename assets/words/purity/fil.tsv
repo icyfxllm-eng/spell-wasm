@@ -2,8 +2,8 @@
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xBC8AE493088A110D
 #tier	medium	0xB8E9B647BD429759
-#tier	hard	0x78F955A7CC38D20B
-#tier	expert	0xDB89872948E6136F
+#tier	hard	0x99CC1A8BF851A723
+#tier	expert	0x5FF61C490DB0A040
 abo	dictionary	kaikki-tagalog
 alak	dictionary	kaikki-tagalog
 alam	dictionary	kaikki-tagalog
@@ -1808,7 +1808,6 @@ mungkahi	dictionary	kaikki-tagalog
 napunta	dictionary	kaikki-tagalog
 patnugot	dictionary	kaikki-tagalog
 patunay	dictionary	kaikki-tagalog
-pulitika	dictionary	kaikki-tagalog
 sumabog	dictionary	kaikki-tagalog
 bayarin	dictionary	kaikki-tagalog
 direkta	dictionary	kaikki-tagalog
@@ -3828,7 +3827,6 @@ propesyon	dictionary	kaikki-tagalog
 sekundarya	dictionary	kaikki-tagalog
 homosekswal	dictionary	kaikki-tagalog
 intelektwal	dictionary	kaikki-tagalog
-kumplikado	dictionary	kaikki-tagalog
 magdudulot	dictionary	kaikki-tagalog
 magtatapos	dictionary	kaikki-tagalog
 mananalita	dictionary	kaikki-tagalog

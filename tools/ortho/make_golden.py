@@ -39,11 +39,11 @@ def variants(lang):
     return [l.split("\t")[:2] for l in open(p, encoding="utf-8").read().split("\n") if l and not l.startswith("#")]
 
 def table_pairs(lang):
-    d = json.load(open(f"{REPO}/assets/words/{lang}/soundalikes.json", encoding="utf-8"))
+    import sys
+    sys.path.insert(0, f"{REPO}/tools")
+    from soundalikes import sets_of_kind    # the one reader (CC-SENSE-CUE v1.1 I1)
     pairs = set()
-    for s in d["sets"]:
-        if s["kind"] != "true": continue
-        ms = [m["memberId"] for m in s["members"]]
+    for ms in sets_of_kind(lang, ("true",)):
         for a in ms:
             for b in ms:
                 if a != b: pairs.add((a, b))

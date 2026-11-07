@@ -125,3 +125,9 @@ cargo test: 1,675 lib tests pass, plus the golden files (es 252, fr 342, pt 329 
 - **es_scz:** casa/caza clears the bar by only 0.008. I changed its rule from "accent" to "true" with that margin written into the description, since the table and the done-when already grade it correct both ways. A native Spain ear on the Gig B "Same sound in your accent?" column still decides.
 - **Grading side effect, flag off:** the table feeds `homophones::accepts`, so with the profile flag off, a prompt of dónde now also accepts donde (and quien/quién), as another sense. That is what your amendment asked for, but it is a live change in es.
 - Golden: the tilde monosyllables (te/té etc.) are now labelled correct_other_sense through the F4 list. 18 `pending_table` rows remain, all lexical pairs with one member outside the bank (hola/ola, hecho/echo, baca/vaca...). I did not add them to the seed: that would widen es grading without an auditor. F7 for es still HOLDS OFF on those 18 and on the in-app close check.
+
+## Filipino leftovers, 2026-11-06
+
+- komplikado←kumplikado and politika←pulitika merged (left form stored, right quarantined and accepted at every tier) by `tools/ortho/sweep_all_batch6.py`; saved-word map regenerated (67 rows, fil 24); generated files re-emitted.
+- `assets/words/purity/native-confirm/fil.tsv`: needs_native_confirm tags for komplikado, politika, politiko, kompanya, istilo, inhinyeriya, legal, sunod-sunod. Tags only, no grading change.
+- The first full gate run failed at soundalike-api-check because `make_golden.py` read the table file directly; it now uses `tools/soundalikes.py`. Golden output unchanged.

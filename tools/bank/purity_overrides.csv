@@ -524,3 +524,5 @@ fil,babaeng,not_a_dictionary_headword,Eric 2026-11-06 (fil reviewer sheet),"CC-O
 fil,dae,wrong_language_other,Eric 2026-11-06 (fil reviewer sheet),CC-ORTHO-SWEEP-ALL: not a Tagalog/Filipino word (reviewer: corpus leakage); Eric 2026-11-06 (fil reviewer sheet)
 fil,dai,wrong_language_other,Eric 2026-11-06 (fil reviewer sheet),CC-ORTHO-SWEEP-ALL: not a Tagalog/Filipino word; dai is Bikol 'not' (reviewer: corpus leakage); Eric 2026-11-06 (fil reviewer sheet)
 fil,sunud-sunod,misspelled_nonstandard,Eric 2026-11-06,"CC-ORTHO-SWEEP-ALL: old spelling; the 2014 rules keep the o in repeated roots, so sunod-sunod is standard; not accepted, to become a close-list entry in Phase B; Eric 2026-11-06"
+fil,kumplikado,variant_duplicate,Eric 2026-11-06 (CC-ORTHO-FIX F1),"CC-ORTHO-SWEEP-ALL: same word as komplikado; komplikado kept (the left form is stored), kumplikado an accepted variant; Eric 2026-11-06 (CC-ORTHO-FIX F1)"
+fil,pulitika,variant_duplicate,Eric 2026-11-06 (CC-ORTHO-FIX F1),"CC-ORTHO-SWEEP-ALL: same word as politika; politika kept (the left form is stored), pulitika an accepted variant; Eric 2026-11-06 (CC-ORTHO-FIX F1)"
