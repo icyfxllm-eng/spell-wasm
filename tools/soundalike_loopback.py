@@ -50,6 +50,12 @@ CONTROLS = {
     # Final devoicing: pairs every Russian listener hears as one word.
     "ru": {"same": [("пруд", "прут"), ("код", "кот"), ("луг", "лук")],
            "different": [("дом", "окно"), ("стол", "рыба")]},
+    # CC-SOUNDALIKE-LADDER controls come from the closed seed lists (data/<lang>/sound-alike-rules.json), which a native
+    # speaker confirms on the Gig B sheet; the "different" pairs are unrelated everyday words.
+    "fr": {"same": [("sang", "sans"), ("cou", "coup"), ("saint", "sein"), ("chant", "champ")],
+           "different": [("chat", "maison"), ("pain", "bureau")]},
+    "pt": {"same": [("hora", "ora"), ("cela", "sela"), ("cinto", "sinto"), ("cheque", "xeque")],
+           "different": [("mesa", "janela"), ("carro", "livro")]},
 }
 STORE = lambda lang: ROOT / "assets" / "words" / lang / "soundalike-loopback.json"
 

@@ -68,6 +68,13 @@ pub fn en_retier() -> bool {
     resolve(stored("en_retier").as_deref(), true)
 }
 
+/// CC-SOUNDALIKE-LADDER F3/F5 -- read `provisional` sound-alike sets for grading. **Default OFF**: production (the App Store build)
+/// grades only `verified` sets. TestFlight and Theme Lab builds flip it on in their release branch, like any other flag. The signed
+/// kill file can still switch it off (`soundalike_provisional`).
+pub fn soundalike_provisional() -> bool {
+    resolve(stored("soundalike_provisional").as_deref(), false)
+}
+
 /// CC-ORTHO-SWEEP-ALL F0.6 -- grade this language through its orthography profile (`data/<lang>/ortho-profile.json`)
 /// instead of the current rules. One flag per language, **default OFF**: off is today's grading byte for byte (I11).
 /// Flipped on per language by a build, after the golden file passes and the Gig B sheet returns; never by a server

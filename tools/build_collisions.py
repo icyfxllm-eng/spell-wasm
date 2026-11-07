@@ -60,7 +60,9 @@ TIERS = ("EASY", "MEDIUM", "HARD", "EXPERT")
 
 # Extra tables: English's re-tier table (served only while en.retier is on).
 VARIANTS = [("en", "retier")]
-GENERATORS = {"en": "build_collisions.key_en@1", "es": "build_collisions.key_es@1", "ru": "build_collisions.key_ru@1"}
+GENERATORS = {"en": "build_collisions.key_en@1", "es": "build_collisions.key_es@1", "ru": "build_collisions.key_ru@1",
+              "fr": "soundalike_keys.key_fr@1", "pt": "soundalike_keys.key_pt@1"}
+LADDER = ("fr", "pt")        # CC-SOUNDALIKE-LADDER: built by tools/soundalike_ladder.py
 
 
 def table_doc(lang, sets, words, variant=None, accent=()):
@@ -460,6 +462,10 @@ def raw_groups(lang, variant=None):
 
 
 def build(lang, variant=None):
+    if lang in LADDER:
+        import soundalike_ladder
+        soundalike_ladder.build(lang)
+        return
     # Before anything reads an input. key_en() returns None when cmudict is
     # absent, and the old path then printed a note and RETURNED -- a silent
     # skip rather than a silent shrink, but silent either way, and the caller

@@ -47,6 +47,19 @@ pub struct SoundalikeSet {
     /// "red" typed for "read" is not). Empty = symmetric.
     #[serde(rename = "targetOnly", default)]
     pub target_only: Vec<String>,
+    /// CC-SOUNDALIKE-LADDER: a set the ladder built carries its status; a legacy set (en, es, ru, de) has none and is
+    /// always readable, so those languages grade exactly as before.
+    #[serde(default)]
+    pub ladder: Option<Ladder>,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Clone, Deserialize)]
+pub struct Ladder {
+    /// missing | machine_checked | provisional | verified
+    pub status: String,
+    #[serde(default)]
+    pub reason: Option<String>,
 }
 
 #[allow(dead_code)]
@@ -107,7 +120,9 @@ fn active(lang: &str) -> (String, Option<&'static str>) {
 /// The cache key of the table `lang` reads right now. `crate::homophones`
 /// keys its own derived cache on this, so a flag flip cannot serve a stale map.
 pub fn active_key(lang: &str) -> String {
-    active(lang).0
+    let k = active(lang).0;
+    // Only a language with ladder sets reads differently when the provisional flag flips.
+    if crate::flags::soundalike_provisional() && soundalikes(lang).sets.iter().any(|s| s.ladder.is_some()) { format!("{k}+prov") } else { k }
 }
 
 fn missing(lang: &str) -> Table {
@@ -150,10 +165,31 @@ pub fn status_for_voice(lang: &str, voice: &str) -> &'static str {
     }
 }
 
+/// Is this set readable for grading? Legacy sets (no ladder object) always are. A ladder set is readable only when it is
+/// `verified`, or `provisional` while `flags::soundalike_provisional()` is on (TestFlight and Theme Lab builds; the flag
+/// defaults OFF, so production grades every non-verified set exactly as it did before the ladder existed).
+fn grading_allows(s: &SoundalikeSet) -> bool {
+    match &s.ladder {
+        None => true,
+        Some(l) => l.status == "verified" || (l.status == "provisional" && crate::flags::soundalike_provisional()),
+    }
+}
+
 /// Member lists of every set whose kind is in `kinds`. SENSE-CUE grading reads
-/// `&["true"]`; CC-IMPOSSIBLE reads `&["true", "accent"]`.
+/// `&["true"]`; CC-IMPOSSIBLE reads `&["true", "accent"]`. Ladder sets are filtered by [`grading_allows`].
 pub fn sets_of_kind(lang: &str, kinds: &[&str]) -> Vec<&'static SoundalikeSet> {
-    soundalikes(lang).sets.iter().filter(|s| kinds.contains(&s.kind.as_str())).collect()
+    soundalikes(lang).sets.iter().filter(|s| kinds.contains(&s.kind.as_str()) && grading_allows(s)).collect()
+}
+
+/// The sets an EXCLUSION use may read (Impossible exclusion, Spell Jr exclusion): everything the ladder has machine-checked.
+/// Never use this for grading or cues.
+#[allow(dead_code)]
+pub fn sets_for_exclusion(lang: &str, kinds: &[&str]) -> Vec<&'static SoundalikeSet> {
+    soundalikes(lang)
+        .sets
+        .iter()
+        .filter(|s| kinds.contains(&s.kind.as_str()) && s.ladder.as_ref().is_none_or(|l| l.status != "missing"))
+        .collect()
 }
 
 #[cfg(test)]
@@ -238,6 +274,36 @@ mod tests {
         crate::flags::set_test_override(Some("on"));
         assert_eq!(active_key("es"), "es");
         crate::flags::set_test_override(None);
+    }
+
+    /// CC-SOUNDALIKE-LADDER: production grades every non-verified ladder set exactly as before the ladder (not at all); the
+    /// provisional flag, which only TestFlight / Theme Lab builds turn on, adds provisional sets; exclusion reads machine_checked.
+    #[test]
+    fn ladder_status_gates_every_reader() {
+        let t = soundalikes("pt");
+        assert_eq!(t.status, "missing", "a ladder language stays missing until Gig B: cues and the bonus stay off");
+        let prov: Vec<&SoundalikeSet> = t.sets.iter().filter(|s| s.ladder.as_ref().is_some_and(|l| l.status == "provisional")).collect();
+        let mc: Vec<&SoundalikeSet> = t.sets.iter().filter(|s| s.ladder.as_ref().is_some_and(|l| l.status == "machine_checked")).collect();
+        assert!(!prov.is_empty() && !mc.is_empty(), "pt should hold provisional and machine_checked sets");
+        assert!(t.sets.iter().all(|s| s.ladder.as_ref().is_some_and(|l| l.status != "verified")), "no set is verified without a Gig B yes");
+        // production: nothing from the ladder is readable for grading
+        crate::flags::set_test_override(Some("off"));
+        assert!(sets_of_kind("pt", &["true"]).is_empty(), "production reads no non-verified ladder set");
+        assert!(!crate::homophones::accepts("pt", "hora", "ora"), "production does not accept a provisional pair");
+        assert!(!crate::homophones::accepts("fr", "ou", "où"), "production does not accept fr ou/où through the table");
+        // a TestFlight / Theme Lab build: provisional only
+        crate::flags::set_test_override(Some("on"));
+        let on = sets_of_kind("pt", &["true"]);
+        assert_eq!(on.len(), prov.iter().filter(|s| s.kind == "true").count(), "the flag adds exactly the provisional sets");
+        assert!(crate::homophones::accepts("pt", "hora", "ora"), "a provisional pair is accepted when the flag is on");
+        assert!(!crate::homophones::accepts("pt", "cartas", "cartaz"), "a machine_checked pair is never accepted");
+        assert!(crate::homophones::accepts("fr", "ou", "où") && crate::homophones::accepts("fr", "où", "ou"), "fr ou/où: a closed-list pair, accepted in a TestFlight build");
+        crate::flags::set_test_override(None);
+        // exclusion reads machine_checked and provisional
+        assert!(sets_for_exclusion("pt", &["true"]).len() >= prov.len() + mc.iter().filter(|s| s.kind == "true").count());
+        // legacy languages are untouched
+        assert!(soundalikes("es").sets.iter().all(|s| s.ladder.is_none()));
+        assert!(crate::homophones::accepts("es", "botar", "votar"));
     }
 
     #[test]

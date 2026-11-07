@@ -20,8 +20,9 @@ export function soundalikes(lang, voice = null, root = '.') {
 
 /// Member-word lists of every set whose kind is in `kinds`. Grading, the bonus
 /// and audio exemptions read ['true']; CC-IMPOSSIBLE reads ['true', 'accent'].
-export function setsOfKind(lang, kinds = ['true'], voice = null, root = '.') {
+const LADDER_USES = { grading: ['verified'], testbuild: ['provisional', 'verified'], exclusion: ['machine_checked', 'provisional', 'verified'] };
+export function setsOfKind(lang, kinds = ['true'], voice = null, root = '.', use = 'grading') {
   return soundalikes(lang, voice, root)
-    .sets.filter((s) => kinds.includes(s.kind))
+    .sets.filter((s) => kinds.includes(s.kind) && (!s.ladder || LADDER_USES[use].includes(s.ladder.status)))
     .map((s) => s.members.map((m) => m.memberId));
 }

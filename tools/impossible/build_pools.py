@@ -132,7 +132,7 @@ def build(lang, root=ROOT):
     rp = REVIEWED / f"{lang}.json"
     reviewed = {nfc(w) for w in json.loads(rp.read_text(encoding="utf-8"))["excluded"]} if rp.exists() else set()
     awaiting = {nfc(w) for w in lines(root / "assets" / "words" / "purity" / "awaiting-c6" / f"{lang}.txt")}
-    members = {nfc(m).lower() for s in sa.sets_of_kind(lang, KINDS, root=root, variant=variant) for m in s}
+    members = {nfc(m).lower() for s in sa.sets_of_kind(lang, KINDS, root=root, variant=variant, use="exclusion") for m in s}
     pool = []
     for w in expert:
         if nfc(w) in awaiting:

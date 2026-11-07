@@ -12,7 +12,7 @@
     {
       "id": "pt_chx",
       "kind": "true",
-      "description": "ch and x as /ʃ/"
+      "description": "ch and x as the sh sound"
     },
     {
       "id": "pt_h",
@@ -32,7 +32,7 @@
     {
       "id": "pt_lu_final",
       "kind": "accent",
-      "description": "final l as /w/ (mal/mau) in the Brazilian voice"
+      "description": "final l as a w sound (mal/mau) in the Brazilian voice"
     }
   ],
   "seeds": [

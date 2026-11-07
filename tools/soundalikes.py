@@ -73,8 +73,22 @@ def member_words(s):
     return [m["memberId"] for m in s["members"]]
 
 
-def sets_of_kind(lang, kinds=("true",), voice=None, root=ROOT, variant=None):
+LADDER_USES = {
+    # CC-SOUNDALIKE-LADDER: which ladder statuses a consumer may read. A set with no `ladder` object is a legacy set and is
+    # always readable (en, es, ru, de are unchanged).
+    "grading": ("verified",),                                          # production accept-any
+    "testbuild": ("provisional", "verified"),                          # TestFlight and Theme Lab builds
+    "exclusion": ("machine_checked", "provisional", "verified"),       # Impossible exclusion, Jr exclusion
+}
+
+
+def ladder_allows(s, use="grading"):
+    ladder = s.get("ladder")
+    return ladder is None or ladder.get("status") in LADDER_USES[use]
+
+
+def sets_of_kind(lang, kinds=("true",), voice=None, root=ROOT, variant=None, use="grading"):
     """Member-word lists of every set whose kind is in `kinds`.
     SENSE-CUE grading, the bonus and audio exemptions read ("true",);
-    CC-IMPOSSIBLE reads ("true", "accent")."""
-    return [member_words(s) for s in soundalikes(lang, voice, root, variant)["sets"] if s["kind"] in kinds]
+    CC-IMPOSSIBLE reads ("true", "accent") with use="exclusion". `use` gates ladder sets (see LADDER_USES)."""
+    return [member_words(s) for s in soundalikes(lang, voice, root, variant)["sets"] if s["kind"] in kinds and ladder_allows(s, use)]

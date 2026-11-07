@@ -136,7 +136,7 @@ fn impossible_pool_subset_and_all_expert() {
 fn impossible_pool_no_soundalikes() {
     crate::flags::set_test_override(Some("on")); // en.retier on, so "en" reads the re-tier table
     for lang in POOL_LANGS {
-        let members: std::collections::HashSet<String> = crate::soundalikes::sets_of_kind(lang, &["true", "accent"])
+        let members: std::collections::HashSet<String> = crate::soundalikes::sets_for_exclusion(lang, &["true", "accent"])
             .iter()
             .flat_map(|s| s.members.iter().map(|m| m.member_id.to_lowercase()))
             .collect();
@@ -229,7 +229,11 @@ fn exclusion_only_never_enables_cues() {
         // generator null: CC-SENSE-CUE v1.2 seed-only path). They feed accept-both grading;
         // every cue/bonus consumer still gates on status "verified".
         let t = crate::soundalikes::soundalikes(lang);
-        assert!(t.generator.is_none() || t.sets.is_empty(), "{lang}: a generated table would enable cues");
+        // CC-SOUNDALIKE-LADDER: a ladder table (fr, pt) may be generated, but only while no set is verified and the status stays missing.
+        assert!(
+            t.generator.is_none() || t.sets.is_empty() || t.sets.iter().all(|s| s.ladder.as_ref().is_some_and(|l| l.status != "verified")),
+            "{lang}: a generated table would enable cues"
+        );
         assert!(crate::soundalikes::sets_of_kind(lang, &["accent"]).is_empty(), "{lang}");
     }
 }

@@ -1,0 +1,343 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.7023,
+  "controls": {
+   "different": [
+    [
+     "mesa",
+     "janela"
+    ],
+    [
+     "carro",
+     "livro"
+    ]
+   ],
+   "same": [
+    [
+     "hora",
+     "ora"
+    ],
+    [
+     "cela",
+     "sela"
+    ],
+    [
+     "cinto",
+     "sinto"
+    ],
+    [
+     "cheque",
+     "xeque"
+    ]
+   ]
+  },
+  "differentCeiling": 0.9305,
+  "sameSoundFloor": 0.6452
+ },
+ "lang": "pt",
+ "measured": "2026-11-07",
+ "sets": {
+  "pt:0184ebc5277a": {
+   "flag": null,
+   "members": [
+    "lasso",
+    "laço"
+   ],
+   "worst": 0.5634,
+   "worstPair": [
+    "lasso",
+    "laço"
+   ]
+  },
+  "pt:0ea7cc6afcef": {
+   "flag": null,
+   "members": [
+    "cesta",
+    "sexta"
+   ],
+   "worst": 0.6407,
+   "worstPair": [
+    "cesta",
+    "sexta"
+   ]
+  },
+  "pt:186b8caf37dc": {
+   "flag": null,
+   "members": [
+    "vos",
+    "voz"
+   ],
+   "worst": 0.6871,
+   "worstPair": [
+    "vos",
+    "voz"
+   ]
+  },
+  "pt:1d9f70fcfc3b": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "cartas",
+    "cartaz"
+   ],
+   "worst": 0.7452,
+   "worstPair": [
+    "cartas",
+    "cartaz"
+   ]
+  },
+  "pt:21d7db9e59e7": {
+   "flag": null,
+   "members": [
+    "espiar",
+    "expiar"
+   ],
+   "worst": 0.6567,
+   "worstPair": [
+    "espiar",
+    "expiar"
+   ]
+  },
+  "pt:25375720bdae": {
+   "flag": null,
+   "members": [
+    "cheque",
+    "xeque"
+   ],
+   "worst": 0.6009,
+   "worstPair": [
+    "cheque",
+    "xeque"
+   ]
+  },
+  "pt:34d12547c3bd": {
+   "flag": null,
+   "members": [
+    "acento",
+    "assento"
+   ],
+   "worst": 0.5392,
+   "worstPair": [
+    "acento",
+    "assento"
+   ]
+  },
+  "pt:40db872d41e1": {
+   "flag": null,
+   "members": [
+    "concelho",
+    "conselho"
+   ],
+   "worst": 0.5904,
+   "worstPair": [
+    "concelho",
+    "conselho"
+   ]
+  },
+  "pt:422cadeeff5d": {
+   "flag": null,
+   "members": [
+    "tachar",
+    "taxar"
+   ],
+   "worst": 0.6029,
+   "worstPair": [
+    "tachar",
+    "taxar"
+   ]
+  },
+  "pt:52e1e9b127c5": {
+   "flag": null,
+   "members": [
+    "cassa",
+    "caça"
+   ],
+   "worst": 0.608,
+   "worstPair": [
+    "cassa",
+    "caça"
+   ]
+  },
+  "pt:63ffdd8fb5b3": {
+   "flag": null,
+   "members": [
+    "cela",
+    "sela"
+   ],
+   "worst": 0.5994,
+   "worstPair": [
+    "cela",
+    "sela"
+   ]
+  },
+  "pt:655db904f786": {
+   "flag": null,
+   "members": [
+    "hora",
+    "ora"
+   ],
+   "worst": 0.6452,
+   "worstPair": [
+    "hora",
+    "ora"
+   ]
+  },
+  "pt:6af4beeda60a": {
+   "flag": null,
+   "members": [
+    "russo",
+    "ruço"
+   ],
+   "worst": 0.6231,
+   "worstPair": [
+    "russo",
+    "ruço"
+   ]
+  },
+  "pt:71e94925dfdc": {
+   "flag": null,
+   "members": [
+    "desce",
+    "desse"
+   ],
+   "worst": 0.6798,
+   "worstPair": [
+    "desce",
+    "desse"
+   ]
+  },
+  "pt:8154e6b90706": {
+   "flag": null,
+   "members": [
+    "passo",
+    "paço"
+   ],
+   "worst": 0.5935,
+   "worstPair": [
+    "passo",
+    "paço"
+   ]
+  },
+  "pt:8f688367ce4d": {
+   "flag": null,
+   "members": [
+    "concerto",
+    "conserto"
+   ],
+   "worst": 0.5692,
+   "worstPair": [
+    "concerto",
+    "conserto"
+   ]
+  },
+  "pt:9499fb8f01a4": {
+   "flag": null,
+   "members": [
+    "incipiente",
+    "insipiente"
+   ],
+   "worst": 0.5377,
+   "worstPair": [
+    "incipiente",
+    "insipiente"
+   ]
+  },
+  "pt:953359c478b4": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "coser",
+    "cozer"
+   ],
+   "worst": 0.7189,
+   "worstPair": [
+    "coser",
+    "cozer"
+   ]
+  },
+  "pt:9b1b82c09b27": {
+   "flag": null,
+   "members": [
+    "cessão",
+    "sessão"
+   ],
+   "worst": 0.6371,
+   "worstPair": [
+    "cessão",
+    "sessão"
+   ]
+  },
+  "pt:a296245643ce": {
+   "flag": null,
+   "members": [
+    "chá",
+    "xá"
+   ],
+   "worst": 0.5801,
+   "worstPair": [
+    "chá",
+    "xá"
+   ]
+  },
+  "pt:a2e8e6e8e1ea": {
+   "flag": null,
+   "members": [
+    "cinto",
+    "sinto"
+   ],
+   "worst": 0.5318,
+   "worstPair": [
+    "cinto",
+    "sinto"
+   ]
+  },
+  "pt:a92a45a10b21": {
+   "flag": null,
+   "members": [
+    "sessão",
+    "seção"
+   ],
+   "worst": 0.556,
+   "worstPair": [
+    "sessão",
+    "seção"
+   ]
+  },
+  "pt:b642d2d74ad0": {
+   "flag": null,
+   "members": [
+    "apressar",
+    "apreçar"
+   ],
+   "worst": 0.5786,
+   "worstPair": [
+    "apressar",
+    "apreçar"
+   ]
+  },
+  "pt:bbc5728853c6": {
+   "flag": null,
+   "members": [
+    "cerrar",
+    "serrar"
+   ],
+   "worst": 0.5853,
+   "worstPair": [
+    "cerrar",
+    "serrar"
+   ]
+  },
+  "pt:cb402c6459d9": {
+   "flag": null,
+   "members": [
+    "censo",
+    "senso"
+   ],
+   "worst": 0.5618,
+   "worstPair": [
+    "censo",
+    "senso"
+   ]
+  }
+ },
+ "voice": "pt-BR-Neural2-B"
+}

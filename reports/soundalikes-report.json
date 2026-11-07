@@ -145,17 +145,20 @@
   },
   "fr": {
    "bankRows": 6271,
-   "bonusEligibleBankWords": 0,
+   "bonusEligibleBankWords": 2499,
    "confirmedSets": 0,
-   "generator": null,
-   "impossibleFilterRemoves": 0,
-   "impossibleFilterRemovesExpert": 0,
-   "loopbackFlags": 0,
+   "generator": "soundalike_keys.key_fr@1",
+   "impossibleFilterRemoves": 2501,
+   "impossibleFilterRemovesExpert": 961,
+   "loopbackFlags": 83,
    "proof": {
     "ran": false,
     "reason": "no spoken-key generator for this language yet; cannot be proved safe"
    },
-   "sets": {},
+   "sets": {
+    "accent": 1,
+    "true": 1165
+   },
    "status": "missing",
    "voice": "fr-FR-Neural2-F",
    "voiceMatchesLayer1": true
@@ -230,17 +233,20 @@
   },
   "pt": {
    "bankRows": 6258,
-   "bonusEligibleBankWords": 0,
+   "bonusEligibleBankWords": 16,
    "confirmedSets": 0,
-   "generator": null,
-   "impossibleFilterRemoves": 0,
+   "generator": "soundalike_keys.key_pt@1",
+   "impossibleFilterRemoves": 17,
    "impossibleFilterRemovesExpert": 0,
-   "loopbackFlags": 0,
+   "loopbackFlags": 2,
    "proof": {
     "ran": false,
     "reason": "no spoken-key generator for this language yet; cannot be proved safe"
    },
-   "sets": {},
+   "sets": {
+    "accent": 1,
+    "true": 25
+   },
    "status": "missing",
    "voice": "pt-BR-Neural2-B",
    "voiceMatchesLayer1": true

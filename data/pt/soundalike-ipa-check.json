@@ -1,0 +1,32 @@
+{
+ "$doc": "CC-SOUNDALIKE-LADDER F3 check results. One word per set; no IPA is stored here. Written by tools/soundalike_ipa_check.py.",
+ "checked": "2026-11-07",
+ "lang": "pt",
+ "sets": {
+  "pt:0184ebc5277a": "agree",
+  "pt:0ea7cc6afcef": "agree",
+  "pt:186b8caf37dc": "differ",
+  "pt:1d9f70fcfc3b": "differ",
+  "pt:21d7db9e59e7": "agree",
+  "pt:25375720bdae": "agree",
+  "pt:34d12547c3bd": "agree",
+  "pt:40db872d41e1": "agree",
+  "pt:422cadeeff5d": "agree",
+  "pt:52e1e9b127c5": "agree",
+  "pt:63ffdd8fb5b3": "agree",
+  "pt:655db904f786": "agree",
+  "pt:6af4beeda60a": "agree",
+  "pt:71e94925dfdc": "agree",
+  "pt:8154e6b90706": "agree",
+  "pt:8f688367ce4d": "agree",
+  "pt:9499fb8f01a4": "missing",
+  "pt:953359c478b4": "agree",
+  "pt:9b1b82c09b27": "agree",
+  "pt:a296245643ce": "agree",
+  "pt:a2e8e6e8e1ea": "agree",
+  "pt:a92a45a10b21": "agree",
+  "pt:b642d2d74ad0": "agree",
+  "pt:bbc5728853c6": "agree",
+  "pt:cb402c6459d9": "agree"
+ }
+}
