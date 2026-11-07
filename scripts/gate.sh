@@ -158,6 +158,7 @@ python3 tools/ortho/profile_check.py || { echo "GATE FAIL: orthography profiles 
 python3 tools/ortho/provenance-gate.py || { echo "GATE FAIL: variant/seed provenance (D-NOBYSA)"; exit 1; }
 python3 tools/ortho/provenance-gate.py --selftest || { echo "GATE FAIL: provenance-gate selftest — the gate no longer bites"; exit 1; }
 python3 tools/ortho/build_saved_word_map.py --check || { echo "GATE FAIL: saved-word map is stale (CC-ORTHO-FIX-FIL-ROMANCE 4)"; exit 1; }
+python3 tools/ortho/build_accent_collisions.py --check >/dev/null || { echo "GATE FAIL: accent collisions or Jr exclusions are stale (CC-ORTHO-FIX-FIL-ROMANCE F3/F4)"; exit 1; }
 python3 tools/ortho/sync_zh_words_rs.py --check || { echo "GATE FAIL: src/words.rs ZH_* consts are stale against assets/words/zh"; exit 1; }
 
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
