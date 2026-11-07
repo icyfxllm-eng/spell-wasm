@@ -1,0 +1,20 @@
+lang	group	sound
+pt	musica(hard) | música(easy)	unknown: no table
+pt	porque(medium) | porquê(medium)	unknown: no table
+pt	forca(expert) | força(medium)	unknown: no table
+pt	recebe(medium) | recebê(expert)	unknown: no table
+pt	medico(expert) | médico(medium)	unknown: no table
+pt	mantém(medium) | mantêm(hard)	unknown: no table
+pt	chama(medium) | chamá(expert)	unknown: no table
+pt	papeis(expert) | papéis(medium)	unknown: no table
+pt	vitima(expert) | vítima(medium)	unknown: no table
+pt	vos(medium) | vós(hard)	unknown: no table
+pt	duvidas(expert) | dúvidas(medium)	unknown: no table
+pt	publico(hard) | público(hard)	unknown: no table
+pt	estreia(hard) | estréia(hard)	unknown: no table
+pt	negocio(expert) | negócio(hard)	unknown: no table
+pt	noticias(hard) | notícias(hard)	unknown: no table
+pt	vera(hard) | verá(hard)	unknown: no table
+pt	assembleia(expert) | assembléia(hard)	unknown: no table
+pt	formula(expert) | fórmula(hard)	unknown: no table
+pt	distancia(expert) | distância(expert)	unknown: no table
