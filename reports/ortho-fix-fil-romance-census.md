@@ -113,3 +113,8 @@ cargo test: 1,675 lib tests pass, plus the golden files (es 252, fr 342, pt 329 
 **Saved words.** The map now covers zh properly: hu2li2|狐狸 and you3zhu4|有着 (my sweep's two), plus the three forms the app served until now (you3zhu4|有著, ta1|牠, jie1zhu4|接著). 65 rows in total.
 
 **Checked.** cargo test 1,675 pass; zh-bank-sandhi-check, zh-grading-path-check, zh-audio-path-check, pinyin-inventory-check and pinyin-display-check pass; wasm app build passes; 71 e2e specs pass (gameplay, modes, impossible, quickbee-draw, keyboard, script-render, spell-search, review-queue, mywords-lists). Not checked: the zh audio cache and human-audio clips are keyed by reading, not by the hanzi, so I expect no change, but I did not look at any cached file.
+
+## Phase C (F6, F7), 2026-11-06
+
+- **F6 keyboard reach:** nothing to add. The existing `every_word_char_is_typeable` test pins that every character of every es/fr/pt bank word is reachable on the Spell keyboard (all passed in the Phase B full run), and census C5 flagged no letter. Still unchecked: the default device keyboard (OS-dependent) and whether a long-press counts as the "2 taps".
+- **F7 flag gates:** `python3 tools/ortho/f7_status.py` (es, then pt, then fr). All three HOLD OFF: es has a verified table but 30 golden rows still wait on it (tilde-only pairs te/té etc. are accepted by the interim same-sound list, not the table, and es_scz needs a re-check against the Spain voice); pt and fr have no sound-alike generator (a SENSE-CUE job). A pass would also need an in-app check that a player who misses only an accent sees the fix, which has not been run. Flags stay off.
