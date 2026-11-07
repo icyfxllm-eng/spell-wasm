@@ -9693,3 +9693,8 @@ zh,you3zhu4|有着,medium,274,duplicate_hanzi,CC-ORTHO-SWEEP-ALL: same hanzi as 
 es,periodo,hard,179,variant_duplicate,"CC-ORTHO-SWEEP-ALL: two rows for one word; período kept (RAE preferred), periodo an accepted variant; Eric 2026-11-06",2026-11-06
 es,video,medium,325,variant_duplicate,"CC-ORTHO-SWEEP-ALL: two rows for one word; vídeo kept (RAE preferred), video an accepted variant; Eric 2026-11-06",2026-11-06
 fil,lalakeng,hard,1142,variant_duplicate,"CC-ORTHO-SWEEP-ALL: legacy vowel spelling of lalaking (inflected lalake/lalaki); lalaking kept, lalakeng an accepted variant; Eric 2026-11-06",2026-11-06
+fil,babaing,expert,985,variant_duplicate,CC-ORTHO-SWEEP-ALL: same word as babaeng; babaeng kept (more frequent: 412 vs 26 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06,2026-11-06
+fil,kabuoan,hard,1344,variant_duplicate,CC-ORTHO-SWEEP-ALL: same word as kabuuan; kabuuan kept (more frequent: 238 vs 28 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06,2026-11-06
+fil,kuponan,hard,661,variant_duplicate,CC-ORTHO-SWEEP-ALL: same word as koponan; koponan kept (more frequent: 258 vs 60 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06,2026-11-06
+fil,ligal,medium,722,variant_duplicate,CC-ORTHO-SWEEP-ALL: same word as legal; legal kept (more frequent: 122 vs 38 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06,2026-11-06
+fil,pulitiko,hard,1352,variant_duplicate,CC-ORTHO-SWEEP-ALL: same word as politiko; politiko kept (more frequent: 111 vs 28 in Leipzig tgl_wikipedia_2021_100K); Eric 2026-11-06,2026-11-06

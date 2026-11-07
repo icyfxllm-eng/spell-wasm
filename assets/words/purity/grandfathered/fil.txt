@@ -275,7 +275,6 @@ kursong
 nagtamo
 nagtayo
 yugtong
-kuponan
 maglaon
 romanong
 paghinga
@@ -751,7 +750,6 @@ panganganak
 sigurong
 yatang
 aalay
-babaing
 kabaitan
 kadalas
 kapiling

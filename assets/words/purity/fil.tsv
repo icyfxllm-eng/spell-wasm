@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
 #tier	easy	0xBC8AE493088A110D
-#tier	medium	0xC94F9900458F432A
-#tier	hard	0x72CB5BEF967F9EBB
-#tier	expert	0xCF4A769557C64852
+#tier	medium	0xE061EA1722C08D76
+#tier	hard	0x1E2BAE942A6D197C
+#tier	expert	0x442A9D18774FDDC6
 abo	dictionary	kaikki-tagalog
 alak	dictionary	kaikki-tagalog
 alam	dictionary	kaikki-tagalog
@@ -845,7 +845,6 @@ multo	dictionary	kaikki-tagalog
 planta	dictionary	kaikki-tagalog
 ambag	dictionary	kaikki-tagalog
 hudyat	dictionary	kaikki-tagalog
-ligal	dictionary	kaikki-tagalog
 magaan	dictionary	kaikki-tagalog
 patas	dictionary	kaikki-tagalog
 pusod	dictionary	kaikki-tagalog
@@ -1463,7 +1462,6 @@ nagtayo	pending	kaikki-tagalog
 yugtong	pending	kaikki-tagalog
 pambansa	dictionary	kaikki-tagalog
 ahensiya	dictionary	kaikki-tagalog
-kuponan	pending	kaikki-tagalog
 maglaon	pending	kaikki-tagalog
 manatili	dictionary	kaikki-tagalog
 nabubuo	dictionary	kaikki-tagalog
@@ -1957,7 +1955,6 @@ emosyon	dictionary	kaikki-tagalog
 gradwado	dictionary	kaikki-tagalog
 humalili	dictionary	kaikki-tagalog
 iniinom	dictionary	kaikki-tagalog
-kabuoan	dictionary	kaikki-tagalog
 kakampi	dictionary	kaikki-tagalog
 kamalian	dictionary	kaikki-tagalog
 kinanta	dictionary	kaikki-tagalog
@@ -1965,7 +1962,6 @@ magtapos	dictionary	kaikki-tagalog
 naglagay	dictionary	kaikki-tagalog
 pagdaka	dictionary	kaikki-tagalog
 paghinto	dictionary	kaikki-tagalog
-pulitiko	dictionary	kaikki-tagalog
 sangkot	dictionary	kaikki-tagalog
 bandila	dictionary	kaikki-tagalog
 bayaran	dictionary	kaikki-tagalog
@@ -2915,7 +2911,6 @@ umibig	dictionary	kaikki-tagalog
 uy	dictionary	kaikki-tagalog
 yatang	pending	kaikki-tagalog
 aalay	pending	kaikki-tagalog
-babaing	pending	kaikki-tagalog
 delikado	dictionary	kaikki-tagalog
 gawad	dictionary	kaikki-tagalog
 hugot	dictionary	kaikki-tagalog

@@ -327,3 +327,7 @@ Open for Eric: es casa/caza and cocer/coser (Spain voice makes them accent pairs
 - NOTICES.md: BY-SA content IS shipped (definitions), so the note was extended, not reversed: BY-SA feeds definitions only; spelling data for the eleven sweep languages cites no BY-SA source. It states that earlier banks (Persian) are not covered by that rule.
 - tools/soundalike_loopback.py: carries forward prior results for sets it did not re-measure (demoted sets), only when the voice is unchanged; --selftest added and wired into the gate.
 - Regenerated: guardian-purity.json, es/fil soundalikes.json and report, wordsearch GOLDEN (re-pinned in both places). Not re-run: the full gate (its e2e half has the known environment failures listed above).
+
+## fil e/i, o/u same-word pairs (2026-11-06, Eric "go")
+
+Rule (tools/ortho/sweep_all_batch3.py): keep the spelling with at least 20 hits and at least 3x the other in Leipzig tgl_wikipedia_2021_100K (CC BY 4.0). Quarantined, with the kept form first: babaeng over babaing (412 vs 26), kabuuan over kabuoan (238 vs 28), koponan over kuponan (258 vs 60), legal over ligal (122 vs 38), politiko over pulitiko (111 vs 28). The loser of each is an accepted variant. 15 pairs under the bar are untouched and listed with counts in reports/ortho-fil-vowel-auditor-sheet.csv. Excluded as probably different words: bola/bula, noon/noong with nuon/nuong, pares/paris. Frequency is evidence of usage, not of the KWF-preferred form; the auditor may overrule any choice. Cargo test green (1,667); word-search digest unchanged.

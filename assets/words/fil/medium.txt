@@ -592,7 +592,6 @@ multo
 planta
 ambag
 hudyat
-ligal
 magaan
 patas
 pusod
