@@ -218,7 +218,20 @@ pub fn render_text(r: &Report, v: &Voice) -> String {
     if r.partial {
         out.push((v.t)("rshare.partial"));
     }
-    if r.sections.is_empty() {
+    // v1.1 (Report Days windows only): the closed lines. An empty window reads
+    // "No practice this period."; when every word type is hidden the report
+    // falls back to the attempt count and accuracy plus the not-enough line.
+    // A hidden type is never named, totalled or hinted at.
+    let days = r.days.as_ref();
+    if days.is_some_and(|d| d.empty) {
+        out.push(String::new());
+        out.push((v.t)("greport.noPractice"));
+    } else if let Some(d) = days.filter(|d| d.not_enough) {
+        // Counts, not a percentage: the signed prohibited lists ban "%".
+        out.push(String::new());
+        out.push(fill((v.t)("greport.days.summary"), &[("n", &d.attempts.to_string()), ("c", &d.correct.to_string())]));
+        out.push((v.t)("greport.notEnough"));
+    } else if r.sections.is_empty() {
         out.push(String::new());
         out.push((v.t)("rshare.empty"));
     }

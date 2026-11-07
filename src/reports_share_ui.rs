@@ -9,6 +9,7 @@
 use std::cell::Cell;
 
 use crate::guardian_report::{self as gr, GuardianInput, LiveBank, PingCopy};
+use crate::report_days::{self as rd, DaysState, WeekdaySet};
 use crate::learner_query::DEVICE;
 use crate::reports_share::{render_text, ComposeInput, DeviceZone, Report, Voice, Which};
 
@@ -18,6 +19,87 @@ thread_local! {
     static GATE_PASSED: Cell<bool> = const { Cell::new(false) };
     /// F7: the OS said no; the toggle reads off whatever was stored.
     static DENIED: Cell<bool> = const { Cell::new(false) };
+    /// Report Days (flag): the weekdays being picked, not yet saved.
+    static PENDING: Cell<u8> = const { Cell::new(0) };
+    /// The Custom chips were opened by hand.
+    static CUSTOM: Cell<bool> = const { Cell::new(false) };
+    /// The screen shows the read-only Last N days range, not the scheduled report.
+    static ON_DEMAND: Cell<bool> = const { Cell::new(false) };
+    static RANGE_N: Cell<u32> = const { Cell::new(7) };
+}
+
+fn days_on() -> bool {
+    crate::flags::guardian_report_days()
+}
+
+fn days_state() -> DaysState {
+    crate::report_days_store::load().unwrap_or_else(|| DaysState::default_at(now_s()))
+}
+
+/// The latest scheduled window. Seeing it marks it delivered (the pin for the
+/// next window); the on-demand range never comes through here (F7).
+fn scheduled_which() -> Which {
+    let mut st = days_state();
+    let w = st.view_latest(now_s(), &DeviceZone);
+    crate::report_days_store::save(&st);
+    w.map_or(Which::LastWeek, |w| w.which(false))
+}
+
+fn on_demand_which() -> Which {
+    rd::on_demand(now_s(), RANGE_N.with(Cell::get), &DeviceZone).map_or(Which::LastWeek, |w| w.which(true))
+}
+
+/// A weekday name in the UI language, through Intl (no copy to translate).
+fn weekday_label(w: u8) -> String {
+    let monday = crate::reports_share::days_from_civil(2026, 11, 2);
+    let date = js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(rd::day_noon_ms(monday + i64::from(w))));
+    let opts = js_sys::Object::new();
+    for (k, v) in [("weekday", "short"), ("timeZone", "UTC")] {
+        let _ = js_sys::Reflect::set(&opts, &wasm_bindgen::JsValue::from_str(k), &wasm_bindgen::JsValue::from_str(v));
+    }
+    date.to_locale_date_string(&crate::i18n::current(), &opts).into()
+}
+
+fn range_label() -> String {
+    match RANGE_N.with(Cell::get) {
+        1 => crate::i18n::t("greport.days.last1"),
+        n => crate::i18n::tp("greport.days.last", &[("n", &n.to_string())]),
+    }
+}
+
+fn render_days() {
+    let on = days_on();
+    crate::dom::toggle_class("rdaysBox", "btn-hide", !on);
+    crate::dom::toggle_class("rdaysLastN", "btn-hide", !on);
+    crate::dom::toggle_class("rshareNow", "btn-hide", on);
+    if !on {
+        return;
+    }
+    let pending = PENDING.with(Cell::get);
+    let preset = WeekdaySet::from_bits(pending).map(rd::preset_of);
+    let custom_open = CUSTOM.with(Cell::get) || matches!(preset, Some(rd::Preset::Custom) | None);
+    for (id, p) in [("rdaysWeekly", rd::Preset::Weekly), ("rdaysTwice", rd::Preset::TwiceAWeek), ("rdaysDaily", rd::Preset::Daily)] {
+        let _ = crate::dom::el(id).set_attribute("aria-pressed", if !custom_open && preset == Some(p) { "true" } else { "false" });
+    }
+    let _ = crate::dom::el("rdaysCustom").set_attribute("aria-pressed", if custom_open { "true" } else { "false" });
+    crate::dom::toggle_class("rdaysChips", "btn-hide", !custom_open);
+    for w in 0..7u8 {
+        let id = format!("rdaysD{w}");
+        crate::dom::set_text(&id, &weekday_label(w));
+        let _ = crate::dom::el(&id).set_attribute("aria-pressed", if pending & (1 << w) != 0 { "true" } else { "false" });
+    }
+    // A12: Save stays disabled while the set is empty.
+    if pending == 0 {
+        let _ = crate::dom::el("rdaysSave").set_attribute("disabled", "");
+    } else {
+        let _ = crate::dom::el("rdaysSave").remove_attribute("disabled");
+    }
+    crate::dom::set_text("rdaysNLabel", &range_label());
+    crate::dom::set_text("rdaysLastN", &range_label());
+    crate::dom::set_text("rshareLast", &crate::i18n::t("greport.days.latest"));
+    let od = ON_DEMAND.with(Cell::get);
+    crate::dom::toggle_class("rshareLast", "on", !od);
+    crate::dom::toggle_class("rdaysLastN", "on", od);
 }
 
 /// A date in the UI language, through Intl. Noon UTC, read back in UTC, so no
@@ -57,11 +139,17 @@ fn report_for(app: &crate::App, which: Which) -> Report {
     let q = crate::learner_query::live(&s);
     let langs = langs();
     let bank = LiveBank::default();
-    gr::compose(&GuardianInput {
+    let input = GuardianInput {
         base: ComposeInput { q: &q, profile: DEVICE, langs: &langs, now_s: now_s(), zone: &DeviceZone, which },
         bank: &bank,
         junior,
-    })
+    };
+    // Flag off: v1's composer, untouched. On: any window, with G-D26 applied.
+    if days_on() && matches!(which, Which::Span { .. }) {
+        gr::compose_days(&input, None)
+    } else {
+        gr::compose(&input)
+    }
 }
 
 fn text(r: &Report) -> String {
@@ -75,6 +163,7 @@ fn render(app: &crate::App) {
     crate::dom::set_text("rshareBody", &text(&report_for(app, which)));
     crate::dom::toggle_class("rshareLast", "on", which == Which::LastWeek);
     crate::dom::toggle_class("rshareNow", "on", which == Which::ThisWeek);
+    render_days();
     // Absent where it cannot run (Kid Mode, no share mechanism), not disabled.
     crate::dom::toggle_class("rshareShare", "btn-hide", !crate::share::available());
     render_ping();
@@ -176,7 +265,7 @@ fn add(app: &crate::App) -> Option<(String, String)> {
     for (lang, words) in &by_lang {
         // Several languages: one list each, told apart by language, not "(2)".
         let name = if by_lang.len() > 1 { format!("{base} · {}", crate::reports_share::lang_name(lang)) } else { base.clone() };
-        let id = match crate::word_lists::create_keyed(&mut lists, &gr::list_key(DEVICE, r.monday, lang), &name, now) {
+        let id = match crate::word_lists::create_keyed(&mut lists, &gr::list_key_span(DEVICE, r.monday, r.last_day, lang), &name, now) {
             crate::word_lists::Keyed::Existing(id) => id,
             crate::word_lists::Keyed::Created(id) => {
                 let entries: Vec<(String, String)> = words.iter().map(|w| (w.clone(), lang.to_string())).collect();
@@ -193,6 +282,65 @@ fn add(app: &crate::App) -> Option<(String, String)> {
     open.map(|id| (id, crate::i18n::t(if created { "greport.added" } else { "greport.already" })))
 }
 
+/// F1 and F7. Nothing here reaches the ping: a schedule edit's reschedule is
+/// Phase D (F8), and the on-demand range never touches state (A10).
+fn wire_days(app: &crate::App) {
+    for (id, days) in [("rdaysWeekly", WeekdaySet::WEEKLY), ("rdaysTwice", WeekdaySet::TWICE_A_WEEK), ("rdaysDaily", WeekdaySet::DAILY)] {
+        let a = app.clone();
+        crate::dom::on_click(id, move || {
+            CUSTOM.with(|c| c.set(false));
+            PENDING.with(|p| p.set(days.bits()));
+            render(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        crate::dom::on_click("rdaysCustom", move || {
+            CUSTOM.with(|c| c.set(true));
+            render(&a);
+        });
+    }
+    for w in 0..7u8 {
+        let a = app.clone();
+        crate::dom::on_click(&format!("rdaysD{w}"), move || {
+            CUSTOM.with(|c| c.set(true));
+            PENDING.with(|p| p.set(p.get() ^ (1 << w)));
+            render(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        crate::dom::on_click("rdaysSave", move || {
+            // The model refuses an empty set whatever the button says (A12).
+            let Some(days) = WeekdaySet::from_bits(PENDING.with(Cell::get)) else { return };
+            let mut st = days_state();
+            st.save(days, now_s());
+            crate::report_days_store::save(&st);
+            ON_DEMAND.with(|o| o.set(false));
+            WHICH.with(|w| w.set(scheduled_which()));
+            render(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        crate::dom::on::<web_sys::Event, _>("rdaysN", "input", move |_| {
+            let n = crate::dom::input("rdaysN").value().parse::<u32>().unwrap_or(7).clamp(1, 7);
+            RANGE_N.with(|r| r.set(n));
+            ON_DEMAND.with(|o| o.set(true));
+            WHICH.with(|w| w.set(on_demand_which()));
+            render(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        crate::dom::on_click("rdaysLastN", move || {
+            ON_DEMAND.with(|o| o.set(true));
+            WHICH.with(|w| w.set(on_demand_which()));
+            render(&a);
+        });
+    }
+}
+
 pub fn wire(app: &crate::App) {
     if !crate::dom::exists("rshareScrim") {
         return;
@@ -205,10 +353,15 @@ pub fn wire(app: &crate::App) {
             let which = crate::take_route()
                 .and_then(|h| gr::week_of_route(&h))
                 .filter(|m| *m <= this_monday)
-                .map_or(Which::LastWeek, |m| if m == this_monday - 7 { Which::LastWeek } else { Which::Week(m) });
+                .map(|m| if m == this_monday - 7 { Which::LastWeek } else { Which::Week(m) });
             let a = a.clone();
             crate::parent_gate_then(Box::new(move || {
                 GATE_PASSED.with(|g| g.set(true));
+                // Flag on, no deep link: the latest scheduled report.
+                ON_DEMAND.with(|o| o.set(false));
+                PENDING.with(|p| p.set(days_state().current().bits()));
+                CUSTOM.with(|c| c.set(false));
+                let which = which.unwrap_or_else(|| if days_on() { scheduled_which() } else { Which::LastWeek });
                 WHICH.with(|w| w.set(which));
                 render(&a);
                 crate::dom::add_class("rshareScrim", "show");
@@ -219,10 +372,12 @@ pub fn wire(app: &crate::App) {
     for (id, which) in [("rshareLast", Which::LastWeek), ("rshareNow", Which::ThisWeek)] {
         let a = app.clone();
         crate::dom::on_click(id, move || {
-            WHICH.with(|w| w.set(which));
+            ON_DEMAND.with(|o| o.set(false));
+            WHICH.with(|w| w.set(if days_on() && which == Which::LastWeek { scheduled_which() } else { which }));
             render(&a);
         });
     }
+    wire_days(app);
     {
         let a = app.clone();
         crate::dom::on_click("rshareShare", move || crate::share::share_text(&text(&report_for(&a, WHICH.with(Cell::get)))));

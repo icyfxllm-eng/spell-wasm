@@ -88,6 +88,7 @@ import * as telemetry from './specs/telemetry.mjs';
 import * as statsSheet from './specs/stats-sheet.mjs';
 import * as learnerSurfaces from './specs/learner-surfaces.mjs';
 import * as progressReport from './specs/progress-report.mjs';
+import * as reportDays from './specs/report-days.mjs';
 import * as learnerReset from './specs/learner-reset.mjs';
 import * as reviewQueue from './specs/review-queue.mjs';
 import * as inspector from './specs/inspector.mjs';
@@ -100,7 +101,7 @@ import * as onlineBoard from './specs/online-board.mjs';
 import * as accounts from './specs/accounts.mjs';
 
 const SPECS = [
-  ['drawer', drawerNav, placement, learnerSurfaces, learnerReset, progressReport],
+  ['drawer', drawerNav, placement, learnerSurfaces, learnerReset, progressReport, reportDays],
   ['stats-sheet', statsSheet],
   ['review-queue', reviewQueue],
   ['inspector', inspector],

@@ -429,7 +429,19 @@
     "acn.delete.confirm",
     "acn.delete.failed",
     "de.close.letters",
-    "de.close.split"
+    "de.close.split",
+    "greport.days.title",
+    "greport.days.weekly",
+    "greport.days.twice",
+    "greport.days.daily",
+    "greport.days.custom",
+    "greport.days.save",
+    "greport.days.last",
+    "greport.days.last1",
+    "greport.days.latest",
+    "greport.days.summary",
+    "greport.notEnough",
+    "greport.noPractice"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -839,7 +851,19 @@
       "greport.pingToggle",
       "greport.pingDenied",
       "rescue.cantTell",
-      "rescue.cantTellDone"
+      "rescue.cantTellDone",
+      "greport.days.title",
+      "greport.days.weekly",
+      "greport.days.twice",
+      "greport.days.daily",
+      "greport.days.custom",
+      "greport.days.save",
+      "greport.days.last",
+      "greport.days.last1",
+      "greport.days.latest",
+      "greport.days.summary",
+      "greport.notEnough",
+      "greport.noPractice"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -1237,7 +1261,19 @@
       "greport.pingToggle",
       "greport.pingDenied",
       "rescue.cantTell",
-      "rescue.cantTellDone"
+      "rescue.cantTellDone",
+      "greport.days.title",
+      "greport.days.weekly",
+      "greport.days.twice",
+      "greport.days.daily",
+      "greport.days.custom",
+      "greport.days.save",
+      "greport.days.last",
+      "greport.days.last1",
+      "greport.days.latest",
+      "greport.days.summary",
+      "greport.notEnough",
+      "greport.noPractice"
     ],
     "de": [
       "hub.group.spell_it",
@@ -1635,7 +1671,19 @@
       "greport.pingToggle",
       "greport.pingDenied",
       "rescue.cantTell",
-      "rescue.cantTellDone"
+      "rescue.cantTellDone",
+      "greport.days.title",
+      "greport.days.weekly",
+      "greport.days.twice",
+      "greport.days.daily",
+      "greport.days.custom",
+      "greport.days.save",
+      "greport.days.last",
+      "greport.days.last1",
+      "greport.days.latest",
+      "greport.days.summary",
+      "greport.notEnough",
+      "greport.noPractice"
     ],
     "pt": [
       "hub.group.spell_it",

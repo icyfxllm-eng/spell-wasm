@@ -1714,6 +1714,7 @@
 .rep-row.door{cursor:pointer}.rep-pips{letter-spacing:3px}.rep-head{margin:14px 0 4px;font-weight:600;opacity:.75}
 .rep-empty{opacity:.6;padding:8px 4px}.rep-modal{max-height:80vh;overflow-y:auto}
 .rshare-tabs{display:flex;gap:8px;margin:8px 0}.rshare-tabs .ghost{flex:1}.rshare-tabs .on{font-weight:700}
+.rdays{margin:6px 0 10px;text-align:start}.rdays h4{margin:4px 0}.rdays-presets,.rdays-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.rdays-presets .ghost,.rdays-chips .ghost{flex:1 1 auto;min-width:0}.rdays [aria-pressed="true"]{font-weight:700;outline:2px solid currentColor}.rdays-range{display:flex;flex-direction:column;gap:4px;margin-top:10px}.rdays-range input{width:100%}
 .rshare-body{white-space:pre-wrap;text-align:start;line-height:1.5;padding:8px 4px}
 #rsharePing.on{font-weight:700}#rsharePing.on::after{content:" \2713"}.rshare-note{font-size:13px;margin:6px 4px 0;text-align:start;opacity:.85}
 .pack-row{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
@@ -5216,7 +5217,22 @@
   <div class="scrim" id="rshareScrim">
     <div class="modal rep-modal">
       <h3 data-i18n="greport.name">Guardian Report</h3>
-      <div class="rshare-tabs"><button class="ghost" id="rshareLast" data-i18n="rshare.lastWeek">Last week</button><button class="ghost" id="rshareNow" data-i18n="rshare.partial">This week so far</button></div>
+      <div class="rshare-tabs"><button class="ghost" id="rshareLast" data-i18n="rshare.lastWeek">Last week</button><button class="ghost" id="rshareNow" data-i18n="rshare.partial">This week so far</button><button class="ghost btn-hide" id="rdaysLastN">Last 7 days</button></div>
+      <!-- CC-GUARDIAN-REPORT v1.1 Report Days (flag guardian_report_days, default off): which weekdays a report arrives, and the read-only Last N days range. -->
+      <div class="rdays btn-hide" id="rdaysBox">
+        <h4 data-i18n="greport.days.title">Report days</h4>
+        <div class="rdays-presets" role="group" aria-labelledby="rdaysHead">
+          <button class="ghost" id="rdaysWeekly" aria-pressed="false" data-i18n="greport.days.weekly">Weekly</button>
+          <button class="ghost" id="rdaysTwice" aria-pressed="false" data-i18n="greport.days.twice">Twice a week</button>
+          <button class="ghost" id="rdaysDaily" aria-pressed="false" data-i18n="greport.days.daily">Daily</button>
+          <button class="ghost" id="rdaysCustom" aria-pressed="false" data-i18n="greport.days.custom">Custom</button>
+        </div>
+        <div class="rdays-chips btn-hide" id="rdaysChips" role="group">
+          <button class="ghost" id="rdaysD0" aria-pressed="false">Mon</button><button class="ghost" id="rdaysD1" aria-pressed="false">Tue</button><button class="ghost" id="rdaysD2" aria-pressed="false">Wed</button><button class="ghost" id="rdaysD3" aria-pressed="false">Thu</button><button class="ghost" id="rdaysD4" aria-pressed="false">Fri</button><button class="ghost" id="rdaysD5" aria-pressed="false">Sat</button><button class="ghost" id="rdaysD6" aria-pressed="false">Sun</button>
+        </div>
+        <button class="btn btn-check" id="rdaysSave" disabled data-i18n="greport.days.save" style="width:100%;margin-top:8px">Save</button>
+        <label class="rdays-range"><span id="rdaysNLabel">Last 7 days</span><input type="range" id="rdaysN" min="1" max="7" step="1" value="7"></label>
+      </div>
       <div id="rshareBody" class="rshare-body"></div>
       <p class="rshare-note" id="rshareNote" role="status" hidden></p>
       <button class="btn btn-check" id="rshareAdd" data-i18n="greport.add" style="width:100%;margin-top:12px">Add to My Words</button>

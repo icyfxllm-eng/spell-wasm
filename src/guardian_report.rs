@@ -415,6 +415,17 @@ pub fn route_for(monday: i64) -> String {
     format!("#guardian-report?week={}", iso(monday))
 }
 
+/// The key for a report window of any length. A 7-day window keeps v1's key,
+/// so an existing list is still found; a shorter or longer one names both ends,
+/// so two windows that open on the same day never share a list.
+pub fn list_key_span(profile: ProfileId, first_day: i64, last_day: i64, lang: &str) -> String {
+    if last_day == first_day + 6 {
+        list_key(profile, first_day, lang)
+    } else {
+        format!("guardian:{}:{}..{}:{}", profile.0, iso(first_day), iso(last_day), lang)
+    }
+}
+
 /// The week a route's `?week=` names, if it names a Monday.
 pub fn week_of_route(hash: &str) -> Option<i64> {
     let q = hash.split_once('?')?.1;

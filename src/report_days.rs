@@ -282,6 +282,132 @@ pub fn window(now_s: i64, log: &ScheduleLog, zone: &dyn Zone, pinned_start_s: Op
     Some(Window { start_s, end_s, first_day: start_day, last_day: end_day - 1 })
 }
 
+// ------------------------------------------------- stored state (Phase B)
+
+/// The three presets, then Custom (F1).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Preset {
+    Weekly,
+    TwiceAWeek,
+    Daily,
+    Custom,
+}
+
+pub fn preset_of(days: WeekdaySet) -> Preset {
+    if days == WeekdaySet::WEEKLY {
+        Preset::Weekly
+    } else if days == WeekdaySet::TWICE_A_WEEK {
+        Preset::TwiceAWeek
+    } else if days == WeekdaySet::DAILY {
+        Preset::Daily
+    } else {
+        Preset::Custom
+    }
+}
+
+impl WeekdaySet {
+    pub fn bits(self) -> u8 {
+        self.0
+    }
+
+    /// From stored bits; `None` for an empty or out-of-range mask (A12).
+    pub fn from_bits(bits: u8) -> Option<WeekdaySet> {
+        (bits != 0 && bits < 0b1000_0000).then_some(WeekdaySet(bits))
+    }
+}
+
+/// What the device keeps for Report Days (F1): the schedule's edit history and
+/// the end of the latest scheduled report the parent has seen (the pin for
+/// `window`, A6). One profile today (the device); the key is per profile.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DaysState {
+    pub log: ScheduleLog,
+    pub delivered_end_s: Option<i64>,
+}
+
+/// A schedule's history is only ever needed back this far; the first entry is
+/// weekly, which is what a parent who never opened the setting has.
+const HISTORY_S: i64 = 60 * DAY_S;
+const MAX_ENTRIES: usize = 24;
+
+impl DaysState {
+    /// The default (G-D1a): Weekly, as v1 shipped it.
+    pub fn default_at(now_s: i64) -> DaysState {
+        DaysState { log: ScheduleLog::weekly_since(now_s - HISTORY_S), delivered_end_s: None }
+    }
+
+    pub fn current(&self) -> WeekdaySet {
+        self.log.entries().last().map_or(WeekdaySet::WEEKLY, |e| e.days)
+    }
+
+    /// F1 Save. Takes effect at the next new report day (G-D24). A no-op if
+    /// nothing changed, so a parent tapping Save twice leaves one edit.
+    pub fn save(&mut self, days: WeekdaySet, now_s: i64) {
+        if days != self.current() {
+            self.log.edit(days, now_s);
+            self.log.trim(MAX_ENTRIES);
+        }
+    }
+
+    /// The latest scheduled window, and the parent has now seen it: the stored
+    /// end moves forward (never back). Read-only for on-demand ranges, which
+    /// do not call this (F7, A10).
+    pub fn view_latest(&mut self, now_s: i64, zone: &dyn Zone) -> Option<Window> {
+        let w = window(now_s, &self.log, zone, self.delivered_end_s)?;
+        if self.delivered_end_s.is_none_or(|e| w.end_s > e) {
+            self.delivered_end_s = Some(w.end_s);
+        }
+        Some(w)
+    }
+
+    /// `v1;<delivered|->;<bits>@<t>,<bits>@<t>…`
+    pub fn encode(&self) -> String {
+        let entries: Vec<String> = self.log.entries().iter().map(|e| format!("{}@{}", e.days.bits(), e.changed_at_s)).collect();
+        let delivered = self.delivered_end_s.map_or("-".to_string(), |d| d.to_string());
+        format!("v1;{delivered};{}", entries.join(","))
+    }
+
+    /// `None` on anything unreadable or any empty weekday set: the caller then
+    /// uses the default, and an unreadable string is never trusted.
+    pub fn decode(s: &str) -> Option<DaysState> {
+        let mut parts = s.split(';');
+        if parts.next()? != "v1" {
+            return None;
+        }
+        let delivered_end_s = match parts.next()? {
+            "-" => None,
+            d => Some(d.parse().ok()?),
+        };
+        let mut entries = Vec::new();
+        for e in parts.next()?.split(',') {
+            let (bits, at) = e.split_once('@')?;
+            entries.push(ScheduleEntry { days: WeekdaySet::from_bits(bits.parse().ok()?)?, changed_at_s: at.parse().ok()? });
+        }
+        Some(DaysState { log: ScheduleLog::from_entries(entries)?, delivered_end_s })
+    }
+}
+
+impl ScheduleLog {
+    /// Keep the newest `keep` entries. The oldest kept one becomes the anchor.
+    fn trim(&mut self, keep: usize) {
+        if self.0.len() > keep {
+            self.0.drain(..self.0.len() - keep);
+        }
+    }
+}
+
+/// F7 — the on-demand range of the last `n` (1 to 7) local days, today
+/// included: from local midnight `n - 1` days ago to now. Read-only by
+/// construction: it takes no state, so it cannot move the schedule, mark a
+/// report delivered, or touch a ping (A10). `None` only for a zone gap.
+pub fn on_demand(now_s: i64, n: u32, zone: &dyn Zone) -> Option<Window> {
+    let n = i64::from(n.clamp(1, 7));
+    let today = local_day(now_s, zone);
+    let start_day = today - (n - 1);
+    let start_s = local_midnight_utc(start_day, zone);
+    (start_s < now_s).then_some(Window { start_s, end_s: now_s, first_day: start_day, last_day: today })
+}
+
 // ------------------------------------------------------- F4 / F5 rules
 
 /// G-D26: a word type shows only with at least this many attempts…
@@ -610,6 +736,71 @@ pub(crate) mod tests {
                 }
             }
         }
+    }
+
+    /// A12 (storage): a stored empty or garbled schedule is never trusted.
+    #[test]
+    fn stored_state_round_trips_and_rejects_an_empty_set() {
+        let mut st = DaysState::default_at(1_000_000_000);
+        st.save(WeekdaySet::DAILY, 1_000_100_000);
+        st.delivered_end_s = Some(1_000_050_000);
+        assert_eq!(DaysState::decode(&st.encode()), Some(st.clone()));
+        assert_eq!(DaysState::decode("v1;-;0@5"), None, "empty set");
+        assert_eq!(DaysState::decode("v1;-;128@5"), None, "out of range");
+        assert_eq!(DaysState::decode("v2;-;1@5"), None);
+        assert_eq!(DaysState::decode("v1;-;"), None);
+        assert_eq!(DaysState::decode("garbage"), None);
+        assert_eq!(preset_of(WeekdaySet::new(&[1, 2]).unwrap()), Preset::Custom);
+    }
+
+    /// A save of the same set is no edit, and the history stays bounded.
+    #[test]
+    fn saving_the_same_days_twice_is_one_edit() {
+        let mut st = DaysState::default_at(1_000_000_000);
+        st.save(WeekdaySet::DAILY, 1_000_001_000);
+        st.save(WeekdaySet::DAILY, 1_000_002_000);
+        assert_eq!(st.log.entries().len(), 2);
+        for i in 0..60 {
+            st.save(if i % 2 == 0 { WeekdaySet::WEEKLY } else { WeekdaySet::DAILY }, 1_000_003_000 + i * 10);
+        }
+        assert!(st.log.entries().len() <= 24);
+    }
+
+    /// A10: an on-demand range takes no state, so the schedule, the stored
+    /// end and (by extension) the ping cannot move; and it is 1 to 7 days.
+    #[test]
+    fn an_on_demand_range_changes_nothing() {
+        let z = UsDst(-5);
+        let now = at(2026, 10, 28, 15, 0, -4);
+        let mut st = DaysState::default_at(now);
+        let latest = st.view_latest(now, &z).unwrap();
+        let before = st.clone();
+        for n in 0..=9 {
+            let w = on_demand(now, n, &z).unwrap();
+            assert!((1..=7).contains(&w.days()), "n={n}: {w:?}");
+            assert_eq!((w.last_day, w.end_s), (local_day(now, &z), now));
+            assert_eq!(local_day_sec(w.start_s, &z).1, 0);
+        }
+        assert_eq!(on_demand(now, 3, &z).unwrap().days(), 3);
+        assert_eq!(st, before, "the schedule and the delivered mark are untouched");
+        assert_eq!(st.delivered_end_s, Some(latest.end_s));
+        // The scheduled window is the same after any number of ranges.
+        assert_eq!(st.view_latest(now, &z).unwrap(), latest);
+    }
+
+    /// Viewing marks delivery forward only; a re-view is not a new report.
+    #[test]
+    fn viewing_the_latest_report_marks_delivery_forward_only() {
+        let z = Fixed(0);
+        let now = at(2026, 10, 28, 9, 0, 0);
+        let mut st = DaysState::default_at(now);
+        let w = st.view_latest(now, &z).unwrap();
+        assert_eq!(st.delivered_end_s, Some(w.end_s));
+        let again = st.view_latest(now, &z).unwrap();
+        assert_eq!(again, w);
+        let later = st.view_latest(now + 7 * DAY_S, &z).unwrap();
+        assert_eq!(later.start_s, w.end_s, "the next report starts where the last one ended");
+        assert_eq!(st.delivered_end_s, Some(later.end_s));
     }
 
     fn stats(attempts: u32, misses: u32, ty: Option<(WordType, u32, u32)>) -> LangStats {

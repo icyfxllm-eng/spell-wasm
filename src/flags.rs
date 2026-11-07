@@ -68,6 +68,14 @@ pub fn en_retier() -> bool {
     resolve(stored("en_retier").as_deref(), true)
 }
 
+/// CC-GUARDIAN-REPORT v1.1 -- Report Days: the parent chooses which weekdays a
+/// report arrives, and the on-demand "Last N days" range. **Default OFF**: with
+/// it off the Guardian Report is v1 byte for byte (A2). Spec name
+/// `guardian.reportDays`; the key is `localStorage['spell_flag_guardian_report_days']`.
+pub fn guardian_report_days() -> bool {
+    resolve(stored("guardian_report_days").as_deref(), false)
+}
+
 /// CC-CLIP-REPORT -- the "Can't tell" step in the rescue panel: the player says
 /// a clip was unintelligible, the round is voided (streak untouched, no miss),
 /// and a standard player's report is queued. **Default OFF**; see
