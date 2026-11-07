@@ -108,6 +108,11 @@ pub struct Attempt {
     /// L0 CR-1: the word was served at Impossible rules (a level, not a mode).
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub impossible: bool,
+    /// CC-GUARDIAN-REPORT v1.1 G-D28: the device's offset from UTC when the
+    /// attempt was logged, in seconds east. Additive, no schema bump: None on
+    /// older entries, which then read in the device's current zone.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tz_off_s: Option<i32>,
 }
 
 /// L0 CR-1: an attempt's graded class, closed. `game::Outcome` minus
@@ -155,13 +160,19 @@ pub struct Tag {
 impl Attempt {
     /// Stamp the CR-1 fields. `day` is rederived from `ts`, so CR-I2 holds by
     /// construction; the caller's verdict must already agree with the class.
-    pub fn stamped(mut self, ts: u64, tag: Tag) -> Attempt {
+    pub fn stamped(self, ts: u64, tag: Tag) -> Attempt {
+        self.stamped_in(ts, tag, device_offset_s(ts))
+    }
+
+    /// [`stamped`](Self::stamped) with the zone offset (seconds east of UTC) named.
+    pub fn stamped_in(mut self, ts: u64, tag: Tag, tz_off_s: i32) -> Attempt {
         debug_assert_eq!(self.correct, tag.outcome.is_correct(), "CR-I1: {:?} vs correct={}", tag.outcome, self.correct);
         self.day = (ts / 86_400) as u32;
         self.ts = Some(ts);
         self.outcome = Some(tag.outcome);
         self.mode = Some(tag.mode.to_string());
         self.impossible = tag.impossible;
+        self.tz_off_s = Some(tz_off_s);
         self
     }
 }
@@ -595,6 +606,19 @@ pub fn now_s() -> u64 {
     (js_sys::Date::now() / 1000.0) as u64
 }
 
+/// G-D28: the device's UTC offset at `ts`, seconds east. Host tests see UTC,
+/// like `now_ms` in learner_query.
+#[cfg(target_arch = "wasm32")]
+pub fn device_offset_s(ts: u64) -> i32 {
+    let d = js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(ts as f64 * 1000.0));
+    // getTimezoneOffset is minutes WEST of UTC.
+    -(d.get_timezone_offset() as i32) * 60
+}
+#[cfg(not(target_arch = "wasm32"))]
+pub fn device_offset_s(_ts: u64) -> i32 {
+    0
+}
+
 const STORE_PREFIX: &str = "spell_learner_";
 /// Where unreadable bytes go before anything overwrites them (census C10).
 /// Same prefix, so every audit that polices `spell_learner_` covers it too.
@@ -805,6 +829,7 @@ pub fn attempt(lang: &str, word: &str, correct: bool, channel: Channel, typed: O
         outcome: None,
         mode: None,
         impossible: false,
+        tz_off_s: None,
     }
 }
 
@@ -1038,6 +1063,7 @@ pub fn apply_placement(state: &mut LearnerState, lang: &str, word: &str, correct
         outcome: None,
         mode: None,
         impossible: false,
+        tz_off_s: None,
     });
 }
 
@@ -1268,6 +1294,7 @@ mod tests {
             outcome: None,
             mode: None,
             impossible: false,
+            tz_off_s: None,
         });
         assert_eq!(st.skills.len(), 2);
         assert!(st.skills.iter().all(|s| s.mastery > BKT_PRIOR));
@@ -1289,6 +1316,7 @@ mod tests {
             outcome: None,
             mode: None,
             impossible: false,
+            tz_off_s: None,
         });
         assert!(st.skills.is_empty(), "speech must not touch skill state");
         assert_eq!(st.log.len(), 1, "...but the log keeps the evidence");
@@ -1309,6 +1337,7 @@ mod tests {
                 outcome: None,
                 mode: None,
                 impossible: false,
+                tz_off_s: None,
             });
         }
         assert_eq!(st.log.len(), LOG_CAP);
@@ -1338,6 +1367,7 @@ mod tests {
                     outcome: None,
                     mode: None,
                     impossible: false,
+                    tz_off_s: None,
                 });
             }
             serde_json::to_string(&st).unwrap()
@@ -1359,6 +1389,7 @@ mod tests {
                 outcome: None,
                 mode: None,
                 impossible: false,
+                tz_off_s: None,
             });
         }
         let due = st.due_skills(30);
@@ -1471,6 +1502,7 @@ mod tests {
             outcome: None,
             mode: None,
             impossible: false,
+            tz_off_s: None,
         });
         let json = serde_json::to_string(&st).unwrap();
         assert_eq!(load_state(&json).unwrap(), st);
@@ -1524,6 +1556,7 @@ mod bridge_tests {
                 outcome: None,
                 mode: None,
                 impossible: false,
+                tz_off_s: None,
             });
         }
         assert!(!st.skills.is_empty(), "typed attempts grew skills");
@@ -1538,6 +1571,7 @@ mod bridge_tests {
             outcome: None,
             mode: None,
             impossible: false,
+            tz_off_s: None,
         });
         assert_eq!(st.skills, before, "speech never moves a spelling skill");
         assert_eq!(st.log.len(), 4, "but it IS logged");
@@ -1724,6 +1758,7 @@ mod placement_tests {
             outcome: None,
             mode: None,
             impossible: false,
+            tz_off_s: None,
         });
         let s = st.skills.iter().find(|s| s.id == "silent_letters").unwrap();
         assert_eq!(s.mastery, bkt_update(BKT_PRIOR, true), "first update starts from the default prior");
@@ -1805,7 +1840,7 @@ mod guardian_tests {
         st.skills.push(skill("silent_letters", 0.2, 5, 3));
         st.skills.push(skill("doubled_consonant", 0.6, 2, 3)); // 18 days overdue at day 20
         for i in 0..6 {
-            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed, typed: None, ts: None, outcome: None, mode: None, impossible: false });
+            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed, typed: None, ts: None, outcome: None, mode: None, impossible: false, tz_off_s: None });
         }
         let r = guardian_report(&st, 20);
         assert_eq!(r.attempts, 6);
@@ -1822,7 +1857,7 @@ mod guardian_tests {
         st.skills.push(skill("silent_letters", 0.92, 30, 5));
         st.skills.push(skill("loanword_spelling", 0.85, 28, 4));
         for i in 0..10 {
-            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed, typed: None, ts: None, outcome: None, mode: None, impossible: false });
+            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed, typed: None, ts: None, outcome: None, mode: None, impossible: false, tz_off_s: None });
         }
         let r = guardian_report(&st, 25);
         assert_eq!(r.correct, 10);
@@ -1941,6 +1976,20 @@ mod cr1_tests {
         let class = if trap.channel == Channel::Trap { OutcomeClass::Trap } else { OutcomeClass::of(trap.correct) };
         assert_eq!(class, OutcomeClass::Trap);
         assert_eq!(trap.stamped(1, Tag { outcome: class, mode: mode_id::SPELL_SEARCH, impossible: false }).outcome, Some(OutcomeClass::Trap));
+    }
+
+    /// G-D28: the offset the attempt was logged under travels with it, survives a
+    /// round trip, and a pre-field entry reads back as None (no schema bump).
+    #[test]
+    fn the_logging_offset_is_stored_with_the_attempt() {
+        let tag = Tag { outcome: OutcomeClass::Correct, mode: mode_id::STANDARD, impossible: false };
+        let a = attempt("en", "cat", true, Channel::Typed, None, 0).stamped_in(1_761_436_799, tag, -5 * 3600);
+        assert_eq!(a.tz_off_s, Some(-18_000));
+        let back: Attempt = serde_json::from_str(&serde_json::to_string(&a).unwrap()).unwrap();
+        assert_eq!(back.tz_off_s, Some(-18_000));
+        let st = load_state(PRE_CR1).unwrap();
+        assert!(st.log.iter().all(|a| a.tz_off_s.is_none()));
+        assert!(!serde_json::to_string(&st.log[1]).unwrap().contains("tz_off_s"));
     }
 
     /// An attempt with no CR-1 fields writes the bytes it always did.
