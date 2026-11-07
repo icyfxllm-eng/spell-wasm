@@ -62,6 +62,9 @@ CONTROLS = {
             "different": [("bahay", "aso"), ("tubig", "kamatis")]},
     "ko": {"same": [("낮", "낫"), ("밭", "밧"), ("부엌", "부억"), ("낱", "낯")],
            "different": [("사과", "학교"), ("나무", "바다")]},
+    # northern (Hanoi) readings; if the voice is not northern, d/gi will fail this control and the sets flag
+    "vi": {"same": [("da", "gia"), ("sa", "xa"), ("chanh", "tranh"), ("dì", "gì")],
+           "different": [("nhà", "cửa"), ("bàn", "ghế")]},
 }
 STORE = lambda lang: ROOT / "assets" / "words" / lang / "soundalike-loopback.json"
 

@@ -185,6 +185,34 @@ def key_ko(word):
     return ".".join(f"{L}-{V}-{T}" for L, V, T in out)
 
 
+# ----------------------------------------------------------------------------- Vietnamese (northern voice)
+_VI_V = "aăâeêioôơuưyàằầèềìòồờùừỳáắấéếíóốớúứýảẳẩẻểỉỏổởủửỷãẵẫẽễĩõỗỡũữỹạặậẹệịọộợụựỵ"
+_VI_I = "iíìỉĩị"
+_VI_Y = {"y": "i", "ý": "í", "ỳ": "ì", "ỷ": "ỉ", "ỹ": "ĩ", "ỵ": "ị"}
+
+
+def _key_vi_syllable(s):
+    # northern onsets: d=gi=r (z), s=x, ch=tr. Tones are part of the vowel letters and are never touched.
+    s = re.sub(rf"^gi(?=[{_VI_V}])", "d", s) if s[:2] == "gi" else s
+    s = re.sub(rf"^g(?=[{_VI_I}])", "d", s)
+    s = re.sub(r"^r", "d", s)
+    s = re.sub(r"^s", "x", s)
+    s = re.sub(r"^tr", "ch", s)
+    # a lone y after a consonant (hí/hý, kí/ký, lí/lý) is the same vowel as i; uy, ay, ây, oy... are different vowels
+    m = re.match(rf"^([^{_VI_V}]+)([{''.join(_VI_Y)}])$", s)
+    if m:
+        s = m.group(1) + _VI_Y[m.group(2)]
+    return s
+
+
+def key_vi(word):
+    """Vietnamese, northern voice (Hanoi): d, gi and r all start with the same sound, s=x, ch=tr, and a lone y after a consonant is i.
+    Tones are never merged (ma, má, mả, mã, mà, mạ stay six keys). Final consonants, vowels and the other onsets are left alone."""
+    parts = [p for p in re.split(r"[\s\-]+", nfc(word.lower())) if p]
+    parts = [re.sub(r"[^a-zđăâêôơưàáảãạằắẳẵặầấẩẫậèéẻẽẹềếểễệìíỉĩịòóỏõọồốổỗộờớởỡợùúủũụừứửữựỳýỷỹỵ]", "", p) for p in parts]
+    return ".".join(_key_vi_syllable(p) for p in parts if p)
+
+
 # ----------------------------------------------------------------------------- tests
 # Pairs that must share a key: the staged closed-list seeds that this key is meant to derive (a missing merge is a
 # false negative, reported, not wrong), and pairs the key must NEVER merge (a merge would be a wrong accept-any set).
@@ -197,6 +225,7 @@ MUST_MERGE = {
     "fil": [("kasa", "casa"), ("kilo", "quilo"), ("sine", "cine"), ("kuwarto", "cuwarto"), ("taksi", "taxi"), ("senyor", "señor"), ("fotograpiya", "photograpiya"), ("kamatis", "kammatis")],
     "sw": [("dhahabu", "zahabu"), ("thelathini", "selasini"), ("khabari", "habari"), ("ghali", "gali")],
     "ko": [("낮", "낫"), ("낮", "낯"), ("낫", "낱"), ("꽃", "꼳"), ("밭", "밧"), ("빛", "빗"), ("옷", "옫"), ("부엌", "부억")],
+    "vi": [("da", "gia"), ("da", "ra"), ("dì", "gì"), ("sa", "xa"), ("sách", "xách"), ("chơi", "trơi"), ("chân", "trân"), ("hí", "hý"), ("kì", "kỳ"), ("giữ", "dữ")],
     "pt": [("caça", "cassa"), ("cozer", "coser"), ("chá", "xá"), ("cheque", "xeque"), ("concerto", "conserto"), ("acento", "assento"),
            ("senso", "censo"), ("sessão", "cessão"), ("hora", "ora"), ("cela", "sela"), ("espiar", "expiar"), ("laço", "lasso"),
            ("cerrar", "serrar"), ("paço", "passo"), ("cinto", "sinto"), ("ruço", "russo"), ("apreçar", "apressar")],
@@ -212,11 +241,12 @@ MUST_NOT_MERGE = {
             ("kama", "gama"), ("aso", "asu"), ("tama", "tana"), ("bata", "bat"), ("mata", "mataa")],
     "sw": [("ng'ombe", "ngombe"), ("mama", "mana"), ("lala", "rara"), ("baba", "mbaba"), ("chai", "shai"), ("kata", "gata"), ("pika", "bika"), ("mtu", "mtoto"), ("mmoja", "moja"), ("saa", "sa"), ("nyama", "nama")],
     "ko": [("낮이", "낫이"), ("꽃이", "꼿이"), ("밭이", "밧이"), ("강", "간"), ("감", "간"), ("집", "직"), ("달", "담"), ("발", "밥"), ("사", "싸"), ("가", "카"), ("개", "게"), ("산", "삼")],
+    "vi": [("ma", "má"), ("ma", "mà"), ("má", "mả"), ("mã", "mạ"), ("đa", "da"), ("tai", "tay"), ("ai", "ay"), ("ba", "pa"), ("ca", "ka"), ("lan", "nan"), ("nga", "ga"), ("thi", "ti"), ("sa", "ta"), ("chi", "ci")],
     "pt": [("mal", "mau"), ("pode", "pôde"), ("avó", "avô"), ("caça", "casa"), ("assar", "azar"), ("por", "pôr"), ("pera", "pêra"),
            ("ouço", "ouso"), ("são", "sou"), ("lã", "la"), ("pão", "pau"), ("mãe", "me"), ("vá", "vê"), ("rio", "rico"), ("caro", "carro"),
            ("cura", "curra"), ("ara", "arra"), ("gato", "jato")],
 }
-KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil, "sw": key_sw, "ko": key_ko}
+KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil, "sw": key_sw, "ko": key_ko, "vi": key_vi}
 
 
 def selftest():
@@ -229,7 +259,7 @@ def selftest():
             if fn(a) != fn(b):
                 print(f"MISS {lang}: {a}={fn(a)!r} {b}={fn(b)!r} (a seed the key does not derive: it stays a seed, not a rule-derived set)")
         # keys are stable, non-empty for real words, and never contain spaces
-        for w in (("사과", "학교") if lang == "ko" else ("casa", "maison", "você", "élève")):
+        for w in (("사과", "학교") if lang == "ko" else ("ma", "gia") if lang == "vi" else ("casa", "maison", "você", "élève")):
             k = fn(w)
             if not k or " " in k:
                 print(f"FAIL {lang}: key of {w} is {k!r}"); bad += 1

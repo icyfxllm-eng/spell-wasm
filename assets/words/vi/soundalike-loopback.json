@@ -1,0 +1,548 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.6506,
+  "controls": {
+   "different": [
+    [
+     "nhà",
+     "cửa"
+    ],
+    [
+     "bàn",
+     "ghế"
+    ]
+   ],
+   "same": [
+    [
+     "da",
+     "gia"
+    ],
+    [
+     "sa",
+     "xa"
+    ],
+    [
+     "chanh",
+     "tranh"
+    ],
+    [
+     "dì",
+     "gì"
+    ]
+   ]
+  },
+  "differentCeiling": 0.8239,
+  "sameSoundFloor": 0.6073
+ },
+ "lang": "vi",
+ "measured": "2026-11-07",
+ "sets": {
+  "vi:00b17f23a174": {
+   "flag": null,
+   "members": [
+    "chống",
+    "trống"
+   ],
+   "worst": 0.5535,
+   "worstPair": [
+    "chống",
+    "trống"
+   ]
+  },
+  "vi:02f435e3e7cb": {
+   "flag": null,
+   "members": [
+    "chinh",
+    "trinh"
+   ],
+   "worst": 0.5032,
+   "worstPair": [
+    "chinh",
+    "trinh"
+   ]
+  },
+  "vi:05c8b4767613": {
+   "flag": null,
+   "members": [
+    "sán",
+    "xán"
+   ],
+   "worst": 0.6117,
+   "worstPair": [
+    "sán",
+    "xán"
+   ]
+  },
+  "vi:0e1f473c7cc6": {
+   "flag": null,
+   "members": [
+    "chưởng",
+    "trưởng"
+   ],
+   "worst": 0.5369,
+   "worstPair": [
+    "chưởng",
+    "trưởng"
+   ]
+  },
+  "vi:18380d3f7c56": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "chệch",
+    "trệch"
+   ],
+   "worst": 0.6923,
+   "worstPair": [
+    "chệch",
+    "trệch"
+   ]
+  },
+  "vi:22f37b833e51": {
+   "flag": null,
+   "members": [
+    "chương",
+    "trương"
+   ],
+   "worst": 0.4911,
+   "worstPair": [
+    "chương",
+    "trương"
+   ]
+  },
+  "vi:23c683861d51": {
+   "flag": null,
+   "members": [
+    "dành",
+    "giành"
+   ],
+   "worst": 0.4533,
+   "worstPair": [
+    "dành",
+    "giành"
+   ]
+  },
+  "vi:2508d675acb0": {
+   "flag": null,
+   "members": [
+    "chứng",
+    "trứng"
+   ],
+   "worst": 0.5017,
+   "worstPair": [
+    "chứng",
+    "trứng"
+   ]
+  },
+  "vi:2e0fba44c616": {
+   "flag": null,
+   "members": [
+    "chùng",
+    "trùng"
+   ],
+   "worst": 0.4976,
+   "worstPair": [
+    "chùng",
+    "trùng"
+   ]
+  },
+  "vi:346691778687": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "chích",
+    "trích"
+   ],
+   "worst": 0.6912,
+   "worstPair": [
+    "chích",
+    "trích"
+   ]
+  },
+  "vi:46e518baa0c1": {
+   "flag": null,
+   "members": [
+    "chung",
+    "trung"
+   ],
+   "worst": 0.4899,
+   "worstPair": [
+    "chung",
+    "trung"
+   ]
+  },
+  "vi:54946f13f705": {
+   "flag": null,
+   "members": [
+    "sương",
+    "xương"
+   ],
+   "worst": 0.5369,
+   "worstPair": [
+    "sương",
+    "xương"
+   ]
+  },
+  "vi:5ba13659a4a8": {
+   "flag": null,
+   "members": [
+    "sướng",
+    "xướng"
+   ],
+   "worst": 0.575,
+   "worstPair": [
+    "sướng",
+    "xướng"
+   ]
+  },
+  "vi:604a7a3f318a": {
+   "flag": null,
+   "members": [
+    "chăng",
+    "trăng"
+   ],
+   "worst": 0.5415,
+   "worstPair": [
+    "chăng",
+    "trăng"
+   ]
+  },
+  "vi:6158b9f699de": {
+   "flag": null,
+   "members": [
+    "chanh",
+    "tranh"
+   ],
+   "worst": 0.5178,
+   "worstPair": [
+    "chanh",
+    "tranh"
+   ]
+  },
+  "vi:63b4e08f57c6": {
+   "flag": null,
+   "members": [
+    "da",
+    "ra"
+   ],
+   "worst": 0.484,
+   "worstPair": [
+    "da",
+    "ra"
+   ]
+  },
+  "vi:705811f092bc": {
+   "flag": null,
+   "members": [
+    "chồng",
+    "trồng"
+   ],
+   "worst": 0.4961,
+   "worstPair": [
+    "chồng",
+    "trồng"
+   ]
+  },
+  "vi:7487fbf5c97c": {
+   "flag": null,
+   "members": [
+    "chình",
+    "trình"
+   ],
+   "worst": 0.5643,
+   "worstPair": [
+    "chình",
+    "trình"
+   ]
+  },
+  "vi:7dc6264b99d5": {
+   "flag": null,
+   "members": [
+    "chiều",
+    "triều"
+   ],
+   "worst": 0.4812,
+   "worstPair": [
+    "chiều",
+    "triều"
+   ]
+  },
+  "vi:7f8560b40479": {
+   "flag": null,
+   "members": [
+    "chông",
+    "trông"
+   ],
+   "worst": 0.5971,
+   "worstPair": [
+    "chông",
+    "trông"
+   ]
+  },
+  "vi:8d2e408ca01f": {
+   "flag": null,
+   "members": [
+    "dễ",
+    "rễ"
+   ],
+   "worst": 0.6073,
+   "worstPair": [
+    "dễ",
+    "rễ"
+   ]
+  },
+  "vi:8fd85ce3d6f9": {
+   "flag": null,
+   "members": [
+    "chưng",
+    "trưng"
+   ],
+   "worst": 0.5435,
+   "worstPair": [
+    "chưng",
+    "trưng"
+   ]
+  },
+  "vi:9203ce3cbcf9": {
+   "flag": null,
+   "members": [
+    "dấy",
+    "giấy"
+   ],
+   "worst": 0.5147,
+   "worstPair": [
+    "dấy",
+    "giấy"
+   ]
+  },
+  "vi:961c748aa720": {
+   "flag": null,
+   "members": [
+    "lì",
+    "lỳ"
+   ],
+   "worst": 0.469,
+   "worstPair": [
+    "lì",
+    "lỳ"
+   ]
+  },
+  "vi:96a72d0a747c": {
+   "flag": null,
+   "members": [
+    "giáng",
+    "ráng"
+   ],
+   "worst": 0.5663,
+   "worstPair": [
+    "giáng",
+    "ráng"
+   ]
+  },
+  "vi:9c35a4858e04": {
+   "flag": null,
+   "members": [
+    "chàng",
+    "tràng"
+   ],
+   "worst": 0.4748,
+   "worstPair": [
+    "chàng",
+    "tràng"
+   ]
+  },
+  "vi:a2bcd1f03610": {
+   "flag": null,
+   "members": [
+    "giống",
+    "rống"
+   ],
+   "worst": 0.514,
+   "worstPair": [
+    "giống",
+    "rống"
+   ]
+  },
+  "vi:a3dffbd743fe": {
+   "flag": null,
+   "members": [
+    "dường",
+    "giường"
+   ],
+   "worst": 0.4589,
+   "worstPair": [
+    "dường",
+    "giường"
+   ]
+  },
+  "vi:a596e2f280ac": {
+   "flag": null,
+   "members": [
+    "chuyện",
+    "truyện"
+   ],
+   "worst": 0.5536,
+   "worstPair": [
+    "chuyện",
+    "truyện"
+   ]
+  },
+  "vi:a84f1fe2ade1": {
+   "flag": null,
+   "members": [
+    "chúng",
+    "trúng"
+   ],
+   "worst": 0.5235,
+   "worstPair": [
+    "chúng",
+    "trúng"
+   ]
+  },
+  "vi:b381f9947092": {
+   "flag": null,
+   "members": [
+    "chảo",
+    "trảo"
+   ],
+   "worst": 0.5313,
+   "worstPair": [
+    "chảo",
+    "trảo"
+   ]
+  },
+  "vi:bb48270be98e": {
+   "flag": null,
+   "members": [
+    "chướng",
+    "trướng"
+   ],
+   "worst": 0.4415,
+   "worstPair": [
+    "chướng",
+    "trướng"
+   ]
+  },
+  "vi:bd381336ae42": {
+   "flag": null,
+   "members": [
+    "gì",
+    "rì"
+   ],
+   "worst": 0.4726,
+   "worstPair": [
+    "gì",
+    "rì"
+   ]
+  },
+  "vi:beca821433d7": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "chóc",
+    "tróc"
+   ],
+   "worst": 0.674,
+   "worstPair": [
+    "chóc",
+    "tróc"
+   ]
+  },
+  "vi:ce30d8460add": {
+   "flag": null,
+   "members": [
+    "chuyền",
+    "truyền"
+   ],
+   "worst": 0.5356,
+   "worstPair": [
+    "chuyền",
+    "truyền"
+   ]
+  },
+  "vi:cef5d5e4ec7c": {
+   "flag": null,
+   "members": [
+    "chầu",
+    "trầu"
+   ],
+   "worst": 0.5191,
+   "worstPair": [
+    "chầu",
+    "trầu"
+   ]
+  },
+  "vi:d27ae6405bd1": {
+   "flag": null,
+   "members": [
+    "dương",
+    "giương",
+    "rương"
+   ],
+   "worst": 0.5959,
+   "worstPair": [
+    "dương",
+    "giương"
+   ]
+  },
+  "vi:d2f739084201": {
+   "flag": null,
+   "members": [
+    "chánh",
+    "tránh"
+   ],
+   "worst": 0.4463,
+   "worstPair": [
+    "chánh",
+    "tránh"
+   ]
+  },
+  "vi:f0633c8a83e2": {
+   "flag": null,
+   "members": [
+    "giăng",
+    "răng"
+   ],
+   "worst": 0.4459,
+   "worstPair": [
+    "giăng",
+    "răng"
+   ]
+  },
+  "vi:f58dfa14655b": {
+   "flag": null,
+   "members": [
+    "dùng",
+    "rùng"
+   ],
+   "worst": 0.4816,
+   "worstPair": [
+    "dùng",
+    "rùng"
+   ]
+  },
+  "vi:f784ac6a5c96": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "sắt",
+    "xắt"
+   ],
+   "worst": 0.6946,
+   "worstPair": [
+    "sắt",
+    "xắt"
+   ]
+  },
+  "vi:f89d22d770f5": {
+   "flag": null,
+   "members": [
+    "dừng",
+    "rừng"
+   ],
+   "worst": 0.5044,
+   "worstPair": [
+    "dừng",
+    "rừng"
+   ]
+  }
+ },
+ "voice": "vi-VN-Wavenet-A"
+}
