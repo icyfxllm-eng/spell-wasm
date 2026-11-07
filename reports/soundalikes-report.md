@@ -9,15 +9,15 @@ CC-SENSE-CUE v1.1 F8. Regenerate with `python3 tools/soundalikes_report.py`.
 | fr | missing | yes | soundalike_keys.key_fr@1 | 6,271 | 1165 | 1 | 0 | 83 | 2499 | 2501 | not runnable |
 | de | missing | yes | - | 6,258 | 22 | 0 | 0 | 0 | 22 | 22 | not runnable |
 | pt | missing | yes | soundalike_keys.key_pt@1 | 6,258 | 25 | 1 | 0 | 2 | 16 | 17 | not runnable |
-| pl | missing | yes | - | 6,210 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| vi | missing | yes | - | 1,186 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| ko | missing | yes | - | 3,163 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| pl | missing | yes | soundalike_keys.key_pl@1 | 6,210 | 3 | 0 | 0 | 1 | 6 | 6 | not runnable |
+| vi | missing | yes | soundalike_keys.key_vi@1 | 1,186 | 42 | 0 | 0 | 4 | 85 | 85 | not runnable |
+| ko | missing | yes | soundalike_keys.key_ko@1 | 3,163 | 2 | 0 | 0 | 0 | 4 | 4 | not runnable |
 | ja | missing | yes | - | 4,745 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| fil | missing | yes | - | 4,011 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| fil | missing | yes | soundalike_keys.key_fil@1 | 4,011 | 3 | 0 | 0 | 0 | 6 | 6 | not runnable |
 | zh | missing | yes | - | 5,808 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | ru | verified | yes | build_collisions.key_ru@1 | 6,808 | 8 | 4 | 1 | 5 | 16 | 24 | pass |
 | ar | missing | yes | - | 6,279 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
-| sw | missing | yes | - | 2,826 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
+| sw | missing | yes | soundalike_keys.key_sw@1 | 2,826 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | hi | missing | yes | - | 2,088 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | fa | missing | yes | - | 8,340 | 0 | 0 | 0 | 0 | 0 | 0 | not runnable |
 | en+retier | verified | yes | build_collisions.key_en@1+retier | 4,366 | 272 | 28 | 19 | 39 | 304 | 334 | pass |
