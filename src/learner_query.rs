@@ -589,6 +589,7 @@ mod tests {
             outcome: None,
             mode: None,
             impossible: false,
+            tz_off_s: None,
         });
         let s = &st.skills[0];
         let v = skills_of(&st, 30);
