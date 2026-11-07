@@ -1,0 +1,79 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.7559,
+  "controls": {
+   "different": [
+    [
+     "bahay",
+     "aso"
+    ],
+    [
+     "tubig",
+     "kamatis"
+    ]
+   ],
+   "same": [
+    [
+     "taksi",
+     "taxi"
+    ],
+    [
+     "sine",
+     "cine"
+    ],
+    [
+     "kilo",
+     "quilo"
+    ],
+    [
+     "senyor",
+     "señor"
+    ]
+   ]
+  },
+  "differentCeiling": 0.974,
+  "sameSoundFloor": 0.7014
+ },
+ "lang": "fil",
+ "measured": "2026-11-07",
+ "sets": {
+  "fil:393fded5ede1": {
+   "flag": null,
+   "members": [
+    "hangang",
+    "hanggang"
+   ],
+   "worst": 0.6994,
+   "worstPair": [
+    "hangang",
+    "hanggang"
+   ]
+  },
+  "fil:82a6d6194eb4": {
+   "flag": null,
+   "members": [
+    "ika-anim",
+    "ikaanim"
+   ],
+   "worst": 0.5786,
+   "worstPair": [
+    "ika-anim",
+    "ikaanim"
+   ]
+  },
+  "fil:b3b23e82bc05": {
+   "flag": null,
+   "members": [
+    "barangay",
+    "baranggay"
+   ],
+   "worst": 0.5168,
+   "worstPair": [
+    "barangay",
+    "baranggay"
+   ]
+  }
+ },
+ "voice": "fil-PH-Wavenet-A"
+}
