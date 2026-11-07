@@ -1,0 +1,150 @@
+=== en
+Guardian Report
+10-19 – 2026-10-25
+
+English
+Word types
+Medium words (3): cat, sun, dog
+Working on (3): cat, dog, sun
+New this week (1): thorough
+Practice list (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== ar
+تقرير ولي الأمر
+10-19 – 2026-10-25
+
+English
+أنواع الكلمات
+كلمات متوسطة (3): cat, sun, dog
+قيد التدرّب (3): cat, dog, sun
+جديدة هذا الأسبوع (1): thorough
+قائمة التدريب (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== de
+Elternbericht
+10-19 – 2026-10-25
+
+English
+Worttypen
+Mittlere Wörter (3): cat, sun, dog
+Wird geübt (3): cat, dog, sun
+Neu diese Woche (1): thorough
+Übungsliste (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== es
+Informe para familias
+10-19 – 2026-10-25
+
+English
+Tipos de palabras
+Palabras de nivel medio (3): cat, sun, dog
+Practicando (3): cat, dog, sun
+Nuevas esta semana (1): thorough
+Lista de práctica (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== fil
+Ulat para sa Magulang
+10-19 – 2026-10-25
+
+English
+Mga uri ng salita
+Katamtamang salita (3): cat, sun, dog
+Pinag-aaralan (3): cat, dog, sun
+Bago ngayong linggo (1): thorough
+Listahan ng pagsasanay (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== fr
+Rapport parents
+10-19 – 2026-10-25
+
+English
+Types de mots
+Mots moyens (3): cat, sun, dog
+En cours (3): cat, dog, sun
+Nouveaux cette semaine (1): thorough
+Liste d’entraînement (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== hi
+अभिभावक रिपोर्ट
+10-19 – 2026-10-25
+
+English
+शब्दों के प्रकार
+मध्यम शब्द (3): cat, sun, dog
+अभ्यास जारी (3): cat, dog, sun
+इस हफ़्ते नए (1): thorough
+अभ्यास सूची (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== ja
+保護者レポート
+10-19 – 2026-10-25
+
+English
+単語のタイプ
+ふつうの単語 (3): cat, sun, dog
+練習中 (3): cat, dog, sun
+今週の新しい単語 (1): thorough
+練習リスト (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== ko
+보호자 리포트
+10-19 – 2026-10-25
+
+English
+단어 유형
+보통 단어 (3): cat, sun, dog
+연습 중 (3): cat, dog, sun
+이번 주 새 단어 (1): thorough
+연습 목록 (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== pl
+Raport dla rodzica
+10-19 – 2026-10-25
+
+English
+Rodzaje słów
+Średnie słowa (3): cat, sun, dog
+W trakcie nauki (3): cat, dog, sun
+Nowe w tym tygodniu (1): thorough
+Lista ćwiczeń (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== pt
+Relatório para a família
+10-19 – 2026-10-25
+
+English
+Tipos de palavras
+Palavras médias (3): cat, sun, dog
+Praticando (3): cat, dog, sun
+Novas esta semana (1): thorough
+Lista de prática (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== ru
+Отчёт для родителей
+10-19 – 2026-10-25
+
+English
+Типы слов
+Средние слова (3): cat, sun, dog
+В работе (3): cat, dog, sun
+Новое на этой неделе (1): thorough
+Список для тренировки (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== sw
+Ripoti ya Mzazi
+10-19 – 2026-10-25
+
+English
+Aina za maneno
+Maneno ya wastani (3): cat, sun, dog
+Yanafanyiwa mazoezi (3): cat, dog, sun
+Mapya wiki hii (1): thorough
+Orodha ya mazoezi (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== vi
+Báo cáo cho phụ huynh
+10-19 – 2026-10-25
+
+English
+Các loại từ
+Từ trung bình (3): cat, sun, dog
+Đang luyện (3): cat, dog, sun
+Mới tuần này (1): thorough
+Danh sách luyện tập (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box
+=== zh
+家长报告
+10-19 – 2026-10-25
+
+English
+单词类型
+中等单词 (3): cat, sun, dog
+练习中 (3): cat, dog, sun
+本周新词 (1): thorough
+练习列表 (10): cat, sun, dog, leg, hat, fox, owl, cup, pen, box

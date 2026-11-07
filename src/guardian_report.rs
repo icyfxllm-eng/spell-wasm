@@ -850,6 +850,24 @@ mod tests {
         assert!(first.starts_with(head), "{first}");
     }
 
+    /// CC-GUARDIAN-REPORT v1.1 A2: the v1 Guardian fixture, rendered in every
+    /// locale, is byte-for-byte the stored golden. Regenerate only with
+    /// GUARDIAN_GOLDEN_WRITE=1 and Eric's say-so: a diff here means v1 output moved.
+    #[test]
+    fn the_v1_fixture_matches_the_stored_golden() {
+        let (fake, bank) = fixture();
+        let r = run(&fake, &bank, false);
+        let mut out = String::new();
+        for lang in LOCALES {
+            out.push_str(&format!("=== {lang}\n{}\n", render_in(&r, lang)));
+        }
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/golden/guardian_v1_fixture.txt");
+        if std::env::var("GUARDIAN_GOLDEN_WRITE").is_ok() {
+            std::fs::write(path, &out).unwrap();
+        }
+        assert_eq!(out, std::fs::read_to_string(path).unwrap(), "v1 Guardian output changed");
+    }
+
     /// A11 / I13: every registry label renders from a key every locale holds,
     /// and the renderer refuses any key outside the pools.
     #[test]
