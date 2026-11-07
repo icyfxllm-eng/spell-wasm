@@ -568,7 +568,7 @@ mod tests {
         let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
         let mut offenders = Vec::new();
         let mut stack = vec![root.join("src"), root.join("workers"), root.join("backend"), root.join("tests"), root.join("scripts")];
-        let mut files: Vec<std::path::PathBuf> = ["index.html", "audio-native.js", "native-language-kit.js", "sw.js", "telemetry-schema.js"]
+        let mut files: Vec<std::path::PathBuf> = ["index.html", "audio-native.js", "native-language-kit.js", "store-native.js", "sw.js", "telemetry-schema.js"]
             .iter()
             .map(|f| root.join(f))
             .collect();

@@ -18,7 +18,11 @@ const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_previe
   'voiceSpellDiag', 'devDiagBar', 'spell_diag_bar', 'diag: ',
   // CC-THEMES-COSMOS census: nor the Test entitlements switch, which granted
   // Complete to any player who tapped the logo five times.
-  'devEntitlements', 'spell_dev_entitlements'];
+  'devEntitlements', 'spell_dev_entitlements',
+  // CC-LAUNCH-EN item 3: nor the local flag-override reader, which let
+  // localStorage switch on any flag. Release reads only defaults, the kill file
+  // and the Tools screen's player flags (src/flags.rs PLAYER_FLAGS).
+  'spell_flag_override:'];
 // CC-THEMES-COSMOS T-D10 / AT-T2: nor is the Theme Lab -- its menu row, its
 // stored preview, its stylesheet and its chip. Otherwise any player could tap
 // the logo five times and wear every earned theme. The one build allowed to

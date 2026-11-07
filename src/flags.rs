@@ -25,13 +25,43 @@ fn resolve(stored: Option<&str>, default: bool) -> bool {
     }
 }
 
+/// CC-LAUNCH-EN item 3: the flags a PLAYER sets, from the Tools screen
+/// (`tools_hub::TOOLS`). They are preferences that happen to live in the flag
+/// table, so a release build keeps reading the player's choice for these. Every
+/// other flag is a build decision, and a release build reads only its compiled
+/// default and the kill file. `tools_flags_are_player_flags` keeps this list
+/// and the Tools screen identical.
+pub const PLAYER_FLAGS: &[&str] =
+    &["syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "attempts_shields"];
+
+/// Whether this build lets local storage override a non-player flag. Dev and
+/// test builds do (the e2e suite and the dev door rely on it). Release builds
+/// do not: the override branch is compiled out, and
+/// `scripts/seam-absence-check.mjs` checks that its marker is absent.
+pub const LOCAL_OVERRIDES: bool = cfg!(any(feature = "dev_preview", feature = "testseam"));
+
 #[cfg(not(test))]
 fn stored(name: &str) -> Option<String> {
     // F4: the signed kill-only file can switch a flag OFF and nothing else (src/killflags.rs).
     if crate::killflags::is_killed(name) {
         return Some("off".to_string());
     }
-    storage::get_raw(&format!("spell_flag_{name}"))
+    if PLAYER_FLAGS.contains(&name) {
+        return storage::get_raw(&format!("spell_flag_{name}"));
+    }
+    local_override(name)
+}
+
+#[cfg(all(not(test), any(feature = "dev_preview", feature = "testseam")))]
+fn local_override(name: &str) -> Option<String> {
+    // The marker string is what the release seam check greps for.
+    storage::get_raw(&format!("spell_flag_override:{name}"))
+        .or_else(|| storage::get_raw(&format!("spell_flag_{name}")))
+}
+
+#[cfg(all(not(test), not(any(feature = "dev_preview", feature = "testseam"))))]
+fn local_override(_name: &str) -> Option<String> {
+    None
 }
 
 #[cfg(test)]

@@ -120,7 +120,7 @@ pub(crate) fn launch_for(id: &str) -> Option<&'static str> {
 /// features stay testable on the floor device (the override is consumer-build
 /// only, and dev and test builds only: see `dev_grant`).
 pub fn live_entitlements() -> entitlements::EntitlementSet {
-    entitlements::resolve_entitlements(false, &[], dev_grant())
+    entitlements::resolve_entitlements(crate::entitlements_adapter::owned(), &[], dev_grant())
 }
 
 /// The dev-door grant. Compiled into dev and test builds only: the door is in

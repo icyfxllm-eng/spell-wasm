@@ -1,0 +1,51 @@
+{
+  "identifier" : "5C1E7A2B",
+  "nonRenewingSubscriptions" : [ ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : true,
+      "internalID" : "6A11E001",
+      "localizations" : [
+        { "description" : "Every English tier and mode.", "displayName" : "SpellGame English", "locale" : "en_US" }
+      ],
+      "productID" : "net.spellgame.english",
+      "referenceName" : "SpellGame English",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "12.99",
+      "familyShareable" : true,
+      "internalID" : "6A11E002",
+      "localizations" : [
+        { "description" : "English, parent features, and every language we add.", "displayName" : "SpellGame Complete", "locale" : "en_US" }
+      ],
+      "productID" : "net.spellgame.complete",
+      "referenceName" : "SpellGame Complete",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "7.99",
+      "familyShareable" : true,
+      "internalID" : "6A11E003",
+      "localizations" : [
+        { "description" : "Upgrade SpellGame English to Complete.", "displayName" : "Upgrade to Complete", "locale" : "en_US" }
+      ],
+      "productID" : "net.spellgame.complete_upgrade",
+      "referenceName" : "SpellGame Complete Upgrade",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "0",
+    "_askToBuyEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [ ]
+  },
+  "subscriptionGroups" : [ ],
+  "version" : { "major" : 3, "minor" : 0 }
+}

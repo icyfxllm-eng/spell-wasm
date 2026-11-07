@@ -1,0 +1,437 @@
+{
+  "accounts_enabled": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "accounts_family": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "accounts_online_gate": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "accounts_sync": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "attempts_shields": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "bee_sim": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "boardBoosts": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "boardgame": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "boardStreak": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "boardStretch": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "calendar": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "cant_tell": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "def_match": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "en_retier": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "ghost_racing": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "guardian_report_days": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "impossible": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "impossible_{lang}": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "impossible_mix": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "impostor": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "keyboard_constellation": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "keyboard_flight": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "keyboard_react": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "learner_insight": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "learner_select": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "learner_surfaces": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "letter_forge": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "offline_packs": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "online_boardgame": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "online_enabled": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "online_kids": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "online_spelloff": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "photo_list": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "pick_queue_a": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "pick_queue_b": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "pick_queue_c": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "pick_queue_d": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "practice": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "progress_report": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "quickbee_draw_ja": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "quickbee_draw_ko": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "quickbee_draw_zh": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "randospell_call": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_daily": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_doubles": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_ear": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_fx": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_h2h": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_heat": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_jr": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_lastcall": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_marathon": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "randospell_npc": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_steal": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "randospell_stretch": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "reports": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "sd_tier_mode": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "spell_aloud": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spell_cross": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spell_search": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelldoku": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_{lang}": {
+    "default": "lang == \"en\"",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_duel": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_expedition": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_mywords": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_par": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_pencil": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_ripple": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "spelluzzle_strip": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "streak_focal": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "syllable_replay": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "translate": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_accents": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_cards": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_celebrate": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_feedback": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_haptics": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_icons": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_orb": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_sound": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_themes": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "visual_type": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  },
+  "word_chains": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "word_picture": {
+    "default": "true",
+    "ship": null,
+    "note": ""
+  },
+  "word_stories": {
+    "default": "false",
+    "ship": false,
+    "note": ""
+  }
+}

@@ -46,7 +46,7 @@ fn fixture(lang: &str, n: usize) -> &'static Pool {
 
 fn all_full() -> &'static EntitlementSet {
     static FULL: OnceLock<EntitlementSet> = OnceLock::new();
-    FULL.get_or_init(|| resolve_entitlements(true, &[], false))
+    FULL.get_or_init(|| resolve_entitlements(crate::entitlements::Owned::COMPLETE, &[], false))
 }
 
 fn yes(_: &str) -> bool {
@@ -269,7 +269,7 @@ fn reason_codes() {
     // A free English-only profile: Mix comes with Complete, not "needs two languages".
     assert_eq!(run(|i| i.entitlements = &free, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::NeedsComplete));
     // A regional grant is an owned language; one passing language is still not two.
-    let grant = resolve_entitlements(false, &["es"], false);
+    let grant = resolve_entitlements(crate::entitlements::Owned::NONE, &["es"], false);
     let only_es = |l: &str| l == "es";
     assert_eq!(
         run(|i| { i.entitlements = &grant; i.lang_flag = &only_es; }, |i| mix_status(Surface::Normal, i)),
@@ -284,6 +284,7 @@ fn reason_codes() {
     // Stable codes.
     for (r, code) in [
         (LockReason::NeedsComplete, "needs_complete"),
+        (LockReason::NeedsEnglish, "needs_english"),
         (LockReason::NeedsTwoLanguages, "needs_two_languages"),
         (LockReason::ProfileBlocked, "profile_blocked"),
         (LockReason::FlagOff, "flag_off"),
@@ -305,8 +306,9 @@ fn defaults_offer_nothing() {
     assert_eq!(run(|i| i.mix_flag = false, |i| mix_status(Surface::Normal, i)), MixStatus::Locked(LockReason::FlagOff));
 }
 
-/// v1 F11: a language below Full access is locked "Unlock with SpellGame
-/// Complete"; English is Full on the free tier.
+/// v1 F11: a language below Full access is locked with the product that
+/// unlocks it. CC-LAUNCH-EN item 2: English is Preview on the free tier, so it
+/// locks "Comes with SpellGame English"; owning English opens it.
 #[test]
 fn entitlement_gate() {
     let free = free_tier();
@@ -314,7 +316,11 @@ fn entitlement_gate() {
     let got = |lang: &str| run(|i| i.entitlements = ent, |i| lang_availability(lang, i));
     assert_eq!(got("es"), Availability::Locked(LockReason::NeedsComplete));
     assert_eq!(got("ru"), Availability::Locked(LockReason::NeedsComplete));
-    assert!(matches!(got("en"), Availability::Available(n) if n >= FLOOR));
+    assert_eq!(got("en"), Availability::Locked(LockReason::NeedsEnglish));
+    let english = resolve_entitlements(crate::entitlements::Owned::ENGLISH, &[], false);
+    let got_en = run(|i| i.entitlements = &english, |i| lang_availability("en", i));
+    assert!(matches!(got_en, Availability::Available(n) if n >= FLOOR));
+    assert_eq!(run(|i| i.entitlements = &english, |i| lang_availability("es", i)), Availability::Locked(LockReason::NeedsComplete));
 }
 
 /// v1.2 X10 `mix_english_needs_retier`: en.retier off, English contributes
@@ -346,7 +352,8 @@ fn mix_unavailable_languages_excluded() {
     let thin = fixture("ru", 149);
     let thin_ru = |l: &str| if l == "ru" { Some(thin) } else { pool(l) };
     assert_eq!(run(|i| i.pools = &thin_ru, langs), without_ru());
-    let grant = resolve_entitlements(false, &["es"], false);
+    // English is owned (a grant never reaches it, D2), plus a regional es grant.
+    let grant = resolve_entitlements(crate::entitlements::Owned::ENGLISH, &["es"], false);
     assert_eq!(run(|i| i.entitlements = &grant, langs), vec!["en", "es"]);
     assert!(run(|i| i.lang_flag = &no_ru, |i| mix_pool(i)).iter().all(|(l, _)| *l != "ru"));
 }
@@ -515,6 +522,11 @@ fn picker_entries_follow_the_gates() {
     let free = free_tier();
     assert_eq!(
         run(|i| i.entitlements = &free, |i| engine::picker_entries("en", i)),
+        vec![(engine::LEVEL, Some(LockReason::NeedsEnglish)), (engine::MIX_LEVEL, Some(LockReason::NeedsComplete))]
+    );
+    let english = resolve_entitlements(crate::entitlements::Owned::ENGLISH, &[], false);
+    assert_eq!(
+        run(|i| i.entitlements = &english, |i| engine::picker_entries("en", i)),
         vec![(engine::LEVEL, None), (engine::MIX_LEVEL, Some(LockReason::NeedsComplete))]
     );
     assert_eq!(
@@ -523,7 +535,7 @@ fn picker_entries_follow_the_gates() {
     );
     assert_eq!(run(|_| {}, |i| engine::picker_entries("hi", i))[0], (engine::LEVEL, Some(LockReason::NoExclusionGate)));
     assert_eq!(run(|_| {}, |i| engine::picker_entries("zh", i))[0], (engine::LEVEL, Some(LockReason::NoDrawnEntry)));
-    for r in [LockReason::NeedsComplete, LockReason::NeedsTwoLanguages, LockReason::PoolBelowFloor, LockReason::NoExclusionGate, LockReason::NoDrawnEntry] {
+    for r in [LockReason::NeedsComplete, LockReason::NeedsEnglish, LockReason::NeedsTwoLanguages, LockReason::PoolBelowFloor, LockReason::NoExclusionGate, LockReason::NoDrawnEntry] {
         assert!(engine::lock_copy_key(r).starts_with("impossible.lock."));
     }
 }

@@ -823,7 +823,7 @@
         "ios",
         "web"
       ],
-      "entitlementLevel": "full",
+      "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-ONBOARD-JR F4: junior plays Jr Daily — Easy + Medium, its own seed namespace. Core: never a hub tile.",

@@ -110,5 +110,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 class MainViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(NativeLanguageKitPlugin())
+        bridge?.registerPluginInstance(SpellStorePlugin())
     }
 }

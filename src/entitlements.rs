@@ -48,6 +48,72 @@ use crate::consts::{Edition, BUILTIN_LANGS, EN};
 #[cfg(not(feature = "education"))]
 pub const COMPLETE_PRODUCT_ID: &str = "net.spellgame.complete";
 
+/// CC-LAUNCH-EN D10: the English unlock. Raises English to `Full` and nothing
+/// else -- it NEVER sets Complete (I4.1). Same education rule as Complete.
+#[cfg(not(feature = "education"))]
+pub const ENGLISH_PRODUCT_ID: &str = "net.spellgame.english";
+
+/// CC-LAUNCH-EN D5/D10: the English-owner's path to Complete. Owning it IS
+/// owning Complete; it exists only so the upgrade costs the difference and no
+/// path to Complete costs more than Complete itself.
+#[cfg(not(feature = "education"))]
+pub const COMPLETE_UPGRADE_PRODUCT_ID: &str = "net.spellgame.complete_upgrade";
+
+/// Every product the purchase adapter asks StoreKit for, in sheet order. The
+/// adapter loads exactly these and nothing else, so a product added in App Store
+/// Connect but not here can never grant anything.
+#[cfg(not(feature = "education"))]
+pub const PRODUCT_IDS: [&str; 3] = [ENGLISH_PRODUCT_ID, COMPLETE_PRODUCT_ID, COMPLETE_UPGRADE_PRODUCT_ID];
+
+/// What the player owns, as verified purchases (CC-LAUNCH-EN F4). The purchase
+/// adapter builds this from `Transaction.currentEntitlements` via
+/// [`owned_from_product_ids`] and from nowhere else (I4.4).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct Owned {
+    /// `net.spellgame.english`.
+    pub english: bool,
+    /// `net.spellgame.complete` or `net.spellgame.complete_upgrade`.
+    pub complete: bool,
+}
+
+impl Owned {
+    /// Owns nothing: the free tier.
+    pub const NONE: Owned = Owned { english: false, complete: false };
+    /// Owns Complete (either route to it).
+    pub const COMPLETE: Owned = Owned { english: false, complete: true };
+    /// Owns English only.
+    pub const ENGLISH: Owned = Owned { english: true, complete: false };
+}
+
+/// Map verified product ids onto [`Owned`]. Unknown ids are ignored, so a stray
+/// or future product can never raise access by accident.
+pub fn owned_from_product_ids(ids: &[&str]) -> Owned {
+    let mut o = Owned::NONE;
+    #[cfg(not(feature = "education"))]
+    for &id in ids {
+        match id {
+            ENGLISH_PRODUCT_ID => o.english = true,
+            COMPLETE_PRODUCT_ID | COMPLETE_UPGRADE_PRODUCT_ID => o.complete = true,
+            _ => {}
+        }
+    }
+    #[cfg(feature = "education")]
+    let _ = ids;
+    o
+}
+
+/// Which Complete product a purchase sheet may offer (I4.3, D5): the upgrade iff
+/// English is owned and Complete is not; full Complete iff neither is owned;
+/// nothing once Complete is owned. Never both, so nobody pays twice for English.
+#[cfg(not(feature = "education"))]
+pub fn complete_offer(o: Owned) -> Option<&'static str> {
+    match (o.english, o.complete) {
+        (_, true) => None,
+        (true, false) => Some(COMPLETE_UPGRADE_PRODUCT_ID),
+        (false, false) => Some(COMPLETE_PRODUCT_ID),
+    }
+}
+
 // CC-MYWORDS-LISTS D6 (Eric, 2026-09-17: "no free limit"): the custom-list cap
 // is gone. It counted LISTS -- the very thing dated lists multiply, roughly one
 // a week -- it was declared here and enforced nowhere, and organizing saved
@@ -61,8 +127,8 @@ pub enum AccessLevel {
     /// Not accessible at all.
     None,
     /// FREE_TIER taster: standard mode, first difficulty tier only (see
-    /// [`preview_allows`]). Excludes Daily, The Climb, ghost racing, Little
-    /// Speller.
+    /// [`preview_allows`]). Includes the Daily (D19); excludes The Climb and
+    /// ghost racing. Little Speller is outside this map and free.
     Preview,
     /// Everything for that language: all tiers + all modes.
     Full,
@@ -116,17 +182,15 @@ impl EntitlementSet {
 /// to; it is a builder fn only because a `BTreeMap` cannot be a `const`.
 ///
 /// It grants:
-/// - **English at `Full`** — the base free language: standard mode, all
-///   difficulties, Daily, The Climb (Little Speller / earn-only shields /
-///   achievements / widgets / etymology cards ride along outside this map).
-/// - **`Preview` for every OTHER shipped language** — the taster (see
-///   [`preview_allows`]).
+/// - **`Preview` for every shipped language, English included** — one rule
+///   (CC-LAUNCH-EN item 2): Easy tier in standard mode plus the Daily Challenge
+///   (D19), see [`preview_allows`]. Little Speller rides outside this map and is
+///   free (D1). This reverses the July 2026 "English Full free forever" ruling.
 /// - parent-premium entitlements all OFF.
 pub fn free_tier() -> EntitlementSet {
     let mut languages = BTreeMap::new();
     for (code, _, _, _) in BUILTIN_LANGS {
-        let level = if code == EN { AccessLevel::Full } else { AccessLevel::Preview };
-        languages.insert(code, level);
+        languages.insert(code, AccessLevel::Preview);
     }
     let mut set = EntitlementSet {
         languages,
@@ -144,29 +208,30 @@ pub fn free_tier() -> EntitlementSet {
     set
 }
 
-/// **THE resolver.** Union of `FREE_TIER ∪ regional_grants ∪ (COMPLETE if
-/// purchased)`, resolved to an [`EntitlementSet`].
+/// **THE resolver.** Union of `FREE_TIER ∪ regional_grants ∪ (ENGLISH if owned)
+/// ∪ (COMPLETE if owned)`, resolved to an [`EntitlementSet`].
 ///
 /// Semantics:
 /// - **Union only, nothing subtracts.** Purchase never overrides a grant, nor
 ///   vice-versa; adding any input can only *raise* access (monotonic).
 /// - **Per-language: `max` level.** `regional_grants` raise the named languages
-///   to `Full`; `purchased` raises *every* language to `Full`. `max` means a
+///   to `Full` -- never English (D2); owning English raises English alone;
+///   owning Complete raises *every* language to `Full`. `max` means a
 ///   language granted regionally AND owned via purchase is simply `Full` (no
 ///   double count).
 /// - **`audit_override`**: when `true`, resolve EVERYTHING to maximum (all
 ///   languages `Full`, all parent-premium on, custom lists unlimited) with no
 ///   purchase surface — Feature 9. It is an explicit input, not a scattered flag.
 ///
-/// `purchased` — a *verified* Complete purchase (the adapter does verification).
+/// `owned` — *verified* purchases (the adapter does verification).
 /// `regional_grants` — SpellGame language codes granted Full for the user's
 /// region (from [`regional_grants_for_country`]); unknown codes are ignored.
 pub fn resolve_entitlements(
-    purchased: bool,
+    owned: Owned,
     regional_grants: &[&str],
     audit_override: bool,
 ) -> EntitlementSet {
-    resolve_for_edition(crate::consts::EDITION, purchased, regional_grants, audit_override)
+    resolve_for_edition(crate::consts::EDITION, owned, regional_grants, audit_override)
 }
 
 /// The resolver with the edition injected (CC-EDITIONS F2).
@@ -178,7 +243,7 @@ pub fn resolve_entitlements(
 /// ever check the edition it happened to be compiled as, which is no check at all.
 pub fn resolve_for_edition(
     edition: Edition,
-    purchased: bool,
+    owned: Owned,
     regional_grants: &[&str],
     audit_override: bool,
 ) -> EntitlementSet {
@@ -196,6 +261,12 @@ pub fn resolve_for_edition(
 
         // Regional grants raise the named languages to Full (union via max).
         for &lang in regional_grants {
+            // D2: English is excluded from the regional grant. It is sold on
+            // its own; a grant that handed it out would make the English SKU a
+            // lie in its home countries.
+            if lang == EN {
+                continue;
+            }
             if let Some(level) = set.languages.get_mut(lang) {
                 *level = (*level).max(AccessLevel::Full);
             }
@@ -205,7 +276,12 @@ pub fn resolve_for_edition(
 
         // COMPLETE purchase: every language to Full + the parent-premium set.
         // Still a union — `max`/OR — so it can only add.
-        if purchased {
+        if owned.english {
+            if let Some(level) = set.languages.get_mut(EN) {
+                *level = (*level).max(AccessLevel::Full);
+            }
+        }
+        if owned.complete {
             raise_to_complete(&mut set);
         }
         set
@@ -238,10 +314,9 @@ pub fn resolve_for_edition(
 /// audit gates") and D3(b) (rtlRequired stays blocked) hold by construction
 /// rather than by a second list that could drift out of step.
 ///
-/// Worth stating plainly, because it surprises: TODAY this changes no language
-/// level at all. English is the only audit-passed language and FREE_TIER already
-/// gives it Full, so education's language grants are byte-identical to
-/// consumer's. Everything else is ComingSoon — audit-gated-off — and D3(a) says
+/// Worth stating plainly: since CC-LAUNCH-EN dropped English to Preview in
+/// FREE_TIER, this raises English to Full in education; schools never see a
+/// purchase. Everything else is ComingSoon — audit-gated-off — and D3(a) says
 /// those stay exactly as in consumer. What education actually buys today is the
 /// parent-premium set and the absence of purchase surfaces. That is not a bug in
 /// this function; it is what "editions never bypass audit gates" MEANS while
@@ -313,18 +388,18 @@ pub fn preview_max_tier(lang: &str) -> u32 {
 /// Whether FREE_TIER **Preview** allows `(lang, mode, tier)` — the ONE helper the
 /// frontend calls so there is no per-screen access logic.
 ///
-/// Preview = **standard mode**, difficulty tiers `1..=preview_max_tier(lang)`.
-/// It EXCLUDES Daily Challenge, The Climb, ghost racing, and Little Speller —
-/// those require `Full` for that language, so Preview always denies them.
+/// Preview = **standard mode**, difficulty tiers `1..=preview_max_tier(lang)`,
+/// plus the **Daily Challenge** (CC-LAUNCH-EN D19: the daily hook stays free).
+/// It EXCLUDES The Climb and ghost racing -- those require `Full`.
 ///
 /// `tier` is the 1-based difficulty index (1 = first/easiest tier).
 pub fn preview_allows(lang: &str, mode: GameMode, tier: u32) -> bool {
     match mode {
         GameMode::Standard => tier >= 1 && tier <= preview_max_tier(lang),
+        // D19: the Daily is free at every level.
+        GameMode::Daily => true,
         // Every premium mode is Full-only; Preview never reaches them.
-        GameMode::Daily
-        | GameMode::Climb
-        | GameMode::GhostRace => false,
+        GameMode::Climb | GameMode::GhostRace => false,
     }
 }
 
@@ -363,7 +438,8 @@ mod tests {
     /// so explicitly — inheriting the build's edition would make them silently
     /// assert nothing in an education build.
     fn resolve_consumer(p: bool, g: &[&str], a: bool) -> EntitlementSet {
-        resolve_for_edition(Edition::Consumer, p, g, a)
+        let o = if p { Owned::COMPLETE } else { Owned::NONE };
+        resolve_for_edition(Edition::Consumer, o, g, a)
     }
 
     fn all_langs() -> Vec<&'static str> {
@@ -388,12 +464,9 @@ mod tests {
     fn no_purchase_no_grants_is_free_tier() {
         let got = resolve_consumer(false, &[], false);
         assert_eq!(got, free_tier());
-        // English Full, every other language Preview.
-        assert_eq!(got.lang_level("en"), AccessLevel::Full);
+        // CC-LAUNCH-EN item 2: one rule, English included -- every language Preview.
         for lang in resolvable_langs() {
-            if lang != "en" {
-                assert_eq!(got.lang_level(lang), AccessLevel::Preview, "{lang} should be Preview");
-            }
+            assert_eq!(got.lang_level(lang), AccessLevel::Preview, "{lang} should be Preview");
         }
         // D2: the FREE_TIER Preview floor does not reach an RTL-blocked language.
         for lang in rtl_blocked_langs() {
@@ -415,7 +488,8 @@ mod tests {
             for grants in &grant_cases {
                 let ent = resolve_consumer(purchased, grants, false);
                 for &lang in &langs {
-                    let expected = if purchased || grants.contains(&lang) || lang == "en" {
+                    // D2: a grant never reaches English.
+                    let expected = if purchased || (grants.contains(&lang) && lang != "en") {
                         AccessLevel::Full
                     } else {
                         AccessLevel::Preview
@@ -463,15 +537,77 @@ mod tests {
 
     // ---- Preview constants / helpers (Feature 11) ----
     #[test]
-    fn preview_is_standard_first_tier_only() {
+    fn preview_is_standard_first_tier_plus_daily() {
         for lang in all_langs() {
             assert!(preview_allows(lang, GameMode::Standard, 1), "{lang} tier1 standard ok");
             assert!(!preview_allows(lang, GameMode::Standard, 2), "{lang} tier2 gated");
+            // D19: the Daily is free.
+            assert!(preview_allows(lang, GameMode::Daily, 1), "{lang} Daily is free");
             // Preview NEVER leaks into premium modes.
-            for m in [GameMode::Daily, GameMode::Climb, GameMode::GhostRace] {
+            for m in [GameMode::Climb, GameMode::GhostRace] {
                 assert!(!preview_allows(lang, m, 1), "{lang} {m:?} must be Full-only");
             }
         }
+    }
+
+    // ---- CC-LAUNCH-EN F4: the three products ----
+    fn resolve_owned(o: Owned) -> EntitlementSet {
+        resolve_for_edition(Edition::Consumer, o, &[], false)
+    }
+
+    /// A4.1 / I4.1: English raises English alone, never Complete.
+    #[test]
+    fn english_purchase_is_english_only() {
+        let o = owned_from_product_ids(&[ENGLISH_PRODUCT_ID]);
+        assert_eq!(o, Owned::ENGLISH);
+        let ent = resolve_owned(o);
+        assert_eq!(ent.lang_level("en"), AccessLevel::Full);
+        for lang in resolvable_langs().into_iter().filter(|l| *l != "en") {
+            assert_eq!(ent.lang_level(lang), AccessLevel::Preview, "{lang} stays Preview");
+        }
+        assert!(!ent.photo_ocr && !ent.multiple_profiles && !ent.progress_reports);
+    }
+
+    /// A4.2 / A4.3 / I4.2: either route to Complete opens everything.
+    #[test]
+    fn complete_and_upgrade_are_complete() {
+        let full = resolve_owned(Owned::COMPLETE);
+        for ids in [
+            &[COMPLETE_PRODUCT_ID][..],
+            &[ENGLISH_PRODUCT_ID, COMPLETE_UPGRADE_PRODUCT_ID][..],
+            &[COMPLETE_UPGRADE_PRODUCT_ID][..],
+            &[ENGLISH_PRODUCT_ID, COMPLETE_PRODUCT_ID][..],
+        ] {
+            let o = owned_from_product_ids(ids);
+            assert!(o.complete, "{ids:?}");
+            let ent = resolve_owned(o);
+            assert_eq!(ent, full, "{ids:?} resolves to Complete");
+            assert_eq!(ent.lang_level("en"), AccessLevel::Full);
+        }
+    }
+
+    /// I4.4: unknown ids add nothing.
+    #[test]
+    fn unknown_products_grant_nothing() {
+        let o = owned_from_product_ids(&["net.spellgame.pro", "", "net.spellgame.complete.x"]);
+        assert_eq!(o, Owned::NONE);
+        assert_eq!(resolve_owned(o), free_tier());
+    }
+
+    /// I4.3 / D5: upgrade iff english and not complete; complete iff neither.
+    #[test]
+    fn offer_matrix() {
+        assert_eq!(complete_offer(Owned::NONE), Some(COMPLETE_PRODUCT_ID));
+        assert_eq!(complete_offer(Owned::ENGLISH), Some(COMPLETE_UPGRADE_PRODUCT_ID));
+        assert_eq!(complete_offer(Owned::COMPLETE), None);
+        assert_eq!(complete_offer(Owned { english: true, complete: true }), None);
+    }
+
+    /// D2: English is never in the regional grant, whatever the map says.
+    #[test]
+    fn grant_never_reaches_english() {
+        let ent = resolve_for_edition(Edition::Consumer, Owned::NONE, &["en", "de"], false);
+        assert_eq!(ent.lang_level("en"), AccessLevel::Preview);
     }
 
     #[test]
@@ -550,25 +686,35 @@ mod prop_tests {
         BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect()
     }
 
+    fn own(complete: bool) -> Owned {
+        Owned { english: false, complete }
+    }
+
     // The core invariant: adding ANY input never removes an entitlement.
     proptest! {
         #[test]
         fn union_is_monotonic(
             purchased in any::<bool>(),
             add_purchase in any::<bool>(),
+            english in any::<bool>(),
+            add_english in any::<bool>(),
             grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
             extra_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
         ) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
 
-            let base = resolve_entitlements(purchased, &grants, false);
+            let base = resolve_entitlements(Owned { english, complete: purchased }, &grants, false);
 
             // A superset of inputs: keep all grants, add more, and possibly turn
             // purchase on. Never remove anything.
             let mut more = grants.clone();
             for &i in &extra_idxs { more.push(pool[i]); }
-            let bigger = resolve_entitlements(purchased || add_purchase, &more, false);
+            let bigger = resolve_entitlements(
+                Owned { english: english || add_english, complete: purchased || add_purchase },
+                &more,
+                false,
+            );
 
             // Every per-language level can only rise.
             for &lang in &pool {
@@ -598,8 +744,8 @@ mod prop_tests {
         ) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
-            let con = resolve_for_edition(Edition::Consumer, purchased, &grants, audit);
-            let edu = resolve_for_edition(Edition::Education, purchased, &grants, audit);
+            let con = resolve_for_edition(Edition::Consumer, own(purchased), &grants, audit);
+            let edu = resolve_for_edition(Edition::Education, own(purchased), &grants, audit);
             for &lang in &pool {
                 if !is_active_lang(lang) || rtl_blocked(lang) {
                     prop_assert!(
@@ -620,7 +766,7 @@ mod prop_tests {
         ) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
-            let edu = resolve_for_edition(Edition::Education, purchased, &grants, false);
+            let edu = resolve_for_edition(Edition::Education, own(purchased), &grants, false);
             for &lang in &pool {
                 if is_active_lang(lang) {
                     prop_assert_eq!(edu.lang_level(lang), AccessLevel::Full, "{} audit-passed -> Full in education", lang);
@@ -648,8 +794,8 @@ mod prop_tests {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
             prop_assert_eq!(
-                resolve_for_edition(Edition::Consumer, purchased, &grants, audit),
-                resolve_entitlements(purchased, &grants, audit),
+                resolve_for_edition(Edition::Consumer, own(purchased), &grants, audit),
+                resolve_entitlements(own(purchased), &grants, audit),
                 "the default build IS the consumer edition",
             );
         }
@@ -664,8 +810,8 @@ mod prop_tests {
         ) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
-            let con = resolve_for_edition(Edition::Consumer, purchased, &grants, audit);
-            let edu = resolve_for_edition(Edition::Education, purchased, &grants, audit);
+            let con = resolve_for_edition(Edition::Consumer, own(purchased), &grants, audit);
+            let edu = resolve_for_edition(Edition::Education, own(purchased), &grants, audit);
             for &lang in pool.iter().filter(|l| rtl_blocked(l)) {
                 prop_assert_eq!(con.lang_level(lang), AccessLevel::None, "{} blocked in consumer", lang);
                 prop_assert_eq!(edu.lang_level(lang), AccessLevel::None, "{} blocked in education", lang);
@@ -682,8 +828,8 @@ mod prop_tests {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
             prop_assert_eq!(
-                resolve_for_edition(Edition::Education, purchased, &grants, true),
-                resolve_for_edition(Edition::Education, purchased, &grants, false),
+                resolve_for_edition(Edition::Education, own(purchased), &grants, true),
+                resolve_for_edition(Edition::Education, own(purchased), &grants, false),
                 "audit_override must change nothing in education",
             );
         }
@@ -701,8 +847,8 @@ mod prop_tests {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
             prop_assert_eq!(
-                resolve_for_edition(Edition::Education, purchased, &grants, audit),
-                resolve_entitlements(purchased, &grants, audit),
+                resolve_for_edition(Edition::Education, own(purchased), &grants, audit),
+                resolve_entitlements(own(purchased), &grants, audit),
                 "an --features education build IS the education edition",
             );
         }
@@ -710,7 +856,7 @@ mod prop_tests {
         fn audit_dominates(purchased in any::<bool>(), grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6)) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
-            let audit = resolve_for_edition(Edition::Consumer, purchased, &grants, true);
+            let audit = resolve_for_edition(Edition::Consumer, own(purchased), &grants, true);
             for &lang in &pool {
                 let expected = if crate::consts::rtl_blocked(lang) { AccessLevel::None } else { AccessLevel::Full };
                 prop_assert_eq!(audit.lang_level(lang), expected);

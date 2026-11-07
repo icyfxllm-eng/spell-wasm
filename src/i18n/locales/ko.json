@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "아직 손글씨 기록이 없어요.",
   "impossible.mix.notice": "불가능 믹스: {langs}의 단어. 다음에 어느 것이든 나올 수 있어요. 계속할까요?",
   "impossible.lock.needs_complete": "SpellGame Complete에 포함",
+  "impossible.lock.needs_english": "SpellGame English에 포함",
   "impossible.lock.needs_two_languages": "불가능 언어가 2개 필요해요",
   "impossible.lock.pool_below_floor": "아직 단어가 부족해요",
   "impossible.lock.no_exclusion_gate": "이 언어는 아직 준비 중이에요",

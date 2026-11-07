@@ -1,0 +1,48 @@
+# CC-LAUNCH-EN item 5: the App Store reviewer walkthrough (A3.2, A1.3, A12.1).
+#
+# It walks the path an App Reviewer takes on a clean install, and it uses NO
+# dev door. Nothing here taps the logo five times or sets a test entitlement,
+# so it runs against the release binary as shipped.
+#
+# Status 2026-11-07: this is the acceptance contract. It goes green only once
+# Phase A ships the paywall (ids paywall, paywallRestore, paywallClose) and
+# Phase B ships the English-only language registry. Until then the steps below
+# that depend on them fail, and that failure is correct.
+#
+# The five older flows in .maestro/ all need "Test entitlements" on (the dev
+# door), which release binaries no longer contain (d2a7ed32). They stay dev-build
+# flows and are excluded from the release gate.
+#
+# Prereqs: a booted simulator, the release build installed, and the StoreKit
+# configuration ios/App/App/StoreKit/SpellGame.storekit selected in the scheme.
+# Run:  maestro test maestro/release/reviewer-walkthrough.yaml
+appId: net.spellgame.app
+---
+- clearState
+- launchApp
+# A12.1: a playable screen or a plain message, never an endless spinner.
+- extendedWaitUntil:
+    visible:
+      id: "orb"
+    timeout: 3000
+# Free preview: an Easy word plays with no purchase.
+- tapOn:
+    id: "orb"
+- assertVisible: "your spelling"
+# A3.2: every language picker offers English and nothing else.
+- tapOn:
+    id: "langSel"
+- assertVisible: "English"
+- assertNotVisible: "Español"
+- assertNotVisible: "Français"
+- assertNotVisible: "Deutsch"
+- back
+# D11: opening a locked tier shows the adult gate, then the paywall.
+- tapOn:
+    id: "levelSel"
+- tapOn: "Medium"
+- assertVisible:
+    id: "parentGate"
+- back
+# A1.3: the Guardian Report row is visible and locked, behind the adult gate.
+- assertNotVisible: "Coming soon"

@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "Brak jeszcze rozegranych rund.",
   "impossible.mix.notice": "Mix Niemożliwy: słowa z {langs}. Każde może wypaść jako następne. Kontynuować?",
   "impossible.lock.needs_complete": "W zestawie SpellGame Complete",
+  "impossible.lock.needs_english": "W zestawie SpellGame English",
   "impossible.lock.needs_two_languages": "Wymaga dwóch języków na poziomie Niemożliwy",
   "impossible.lock.pool_below_floor": "Za mało słów",
   "impossible.lock.no_exclusion_gate": "Jeszcze niegotowe w tym języku",

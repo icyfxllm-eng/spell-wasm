@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "还没有手写成绩。",
   "impossible.mix.notice": "不可能混合：来自{langs}的单词。下一个可能是其中任何一种。继续吗？",
   "impossible.lock.needs_complete": "随 SpellGame Complete 提供",
+  "impossible.lock.needs_english": "随 SpellGame English 提供",
   "impossible.lock.needs_two_languages": "需要两种不可能语言",
   "impossible.lock.pool_below_floor": "单词数量还不够",
   "impossible.lock.no_exclusion_gate": "该语言暂未就绪",

@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "Chưa có lượt vẽ nào.",
   "impossible.mix.notice": "Hỗn hợp Bất khả thi: từ vựng từ {langs}. Từ nào cũng có thể xuất hiện tiếp theo. Tiếp tục?",
   "impossible.lock.needs_complete": "Có trong SpellGame Complete",
+  "impossible.lock.needs_english": "Có trong SpellGame English",
   "impossible.lock.needs_two_languages": "Cần hai ngôn ngữ Bất khả thi",
   "impossible.lock.pool_below_floor": "Chưa đủ từ",
   "impossible.lock.no_exclusion_gate": "Ngôn ngữ này chưa sẵn sàng",

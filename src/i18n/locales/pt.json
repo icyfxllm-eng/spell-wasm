@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "Ainda não há partidas desenhadas.",
   "impossible.mix.notice": "Mix Impossível: palavras de {langs}. Qualquer uma pode aparecer a seguir. Continuar?",
   "impossible.lock.needs_complete": "Incluído no SpellGame Complete",
+  "impossible.lock.needs_english": "Incluído no SpellGame English",
   "impossible.lock.needs_two_languages": "Requer dois idiomas em Impossível",
   "impossible.lock.pool_below_floor": "Ainda não há palavras suficientes",
   "impossible.lock.no_exclusion_gate": "Ainda não está pronto neste idioma",

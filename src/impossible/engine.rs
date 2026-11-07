@@ -150,7 +150,7 @@ pub fn picker_entries(study_lang: &str, i: &Inputs) -> Vec<PickerEntry> {
     let mut out = Vec::new();
     match lang_availability(study_lang, i) {
         Availability::Available(_) => out.push((LEVEL, None)),
-        Availability::Locked(r @ (PoolBelowFloor | NoExclusionGate | NoDrawnEntry | NeedsComplete)) => out.push((LEVEL, Some(r))),
+        Availability::Locked(r @ (PoolBelowFloor | NoExclusionGate | NoDrawnEntry | NeedsComplete | NeedsEnglish)) => out.push((LEVEL, Some(r))),
         _ => {}
     }
     match mix_status(Surface::Normal, i) {
@@ -166,6 +166,7 @@ pub fn lock_copy_key(r: super::LockReason) -> &'static str {
     use super::LockReason::*;
     match r {
         NeedsComplete => "impossible.lock.needs_complete",
+        NeedsEnglish => "impossible.lock.needs_english",
         NeedsTwoLanguages => "impossible.lock.needs_two_languages",
         PoolBelowFloor => "impossible.lock.pool_below_floor",
         NoExclusionGate => "impossible.lock.no_exclusion_gate",

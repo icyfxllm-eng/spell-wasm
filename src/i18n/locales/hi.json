@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "अभी तक कोई चित्रित राउंड नहीं।",
   "impossible.mix.notice": "असंभव मिक्स: {langs} के शब्द। इनमें से कोई भी अगला आ सकता है। जारी रखें?",
   "impossible.lock.needs_complete": "SpellGame Complete के साथ मिलता है",
+  "impossible.lock.needs_english": "SpellGame English के साथ मिलता है",
   "impossible.lock.needs_two_languages": "दो असंभव भाषाएँ चाहिए",
   "impossible.lock.pool_below_floor": "अभी पर्याप्त शब्द नहीं हैं",
   "impossible.lock.no_exclusion_gate": "इस भाषा में अभी तैयार नहीं है",

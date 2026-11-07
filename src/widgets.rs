@@ -33,7 +33,7 @@ pub fn write_snapshot(s: &crate::model::AppState) {
         .find(|(c, _)| *c == daily_lang)
         .map(|(_, info)| info.name.to_string())
         .unwrap_or_default();
-    let ent = crate::entitlements::resolve_entitlements(false, &[], false);
+    let ent = crate::entitlements::resolve_entitlements(crate::entitlements::Owned::NONE, &[], false);
     let entitled: Vec<String> = crate::consts::BUILTIN_LANGS
         .iter()
         .filter(|(c, _, st, _)| {

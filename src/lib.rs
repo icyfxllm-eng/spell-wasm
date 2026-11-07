@@ -94,6 +94,9 @@ mod dom;
 pub mod editor;
 mod enrich;
 pub mod entitlements;
+pub mod entitlements_adapter;
+#[cfg(test)]
+mod repetition_sim;
 mod accepted; // CC-ORTHO-SWEEP-DE-JA F3/F5: accepted spelling variants (de/ja), data files only
 mod ja_canon; // CC-ORTHO-SWEEP-DE-JA F6: half-width katakana key
 mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; Persian answer grading)
@@ -289,6 +292,8 @@ pub fn start() -> Result<(), JsValue> {
     // F4: the cached, re-verified kill list is in force before any flag is read; the refresh is silent.
     killflags::init();
     wasm_bindgen_futures::spawn_local(killflags::refresh());
+    // CC-LAUNCH-EN F4: read what StoreKit says is owned, and listen for changes.
+    entitlements_adapter::init();
 
     let mut state = AppState::default();
     settings::load_prefs(&mut state);

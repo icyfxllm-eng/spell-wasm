@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "لا توجد جولات رسم بعد.",
   "impossible.mix.notice": "المزيج المستحيل: كلمات من {langs}. قد تظهر أي منها بعد ذلك. هل تتابع؟",
   "impossible.lock.needs_complete": "يأتي مع SpellGame Complete",
+  "impossible.lock.needs_english": "يأتي مع SpellGame English",
   "impossible.lock.needs_two_languages": "يحتاج إلى لغتين في وضع المستحيل",
   "impossible.lock.pool_below_floor": "لا توجد كلمات كافية بعد",
   "impossible.lock.no_exclusion_gate": "غير جاهز بهذه اللغة بعد",

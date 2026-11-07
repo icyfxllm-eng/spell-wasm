@@ -116,6 +116,9 @@ pub enum LockReason {
     /// The player does not own the language (v1 F11), or, for Mix, owns no language
     /// beyond free English: "Comes with SpellGame Complete".
     NeedsComplete,
+    /// CC-LAUNCH-EN item 2: English is below Full, and owning English (or
+    /// Complete) unlocks it: "Comes with SpellGame English".
+    NeedsEnglish,
     /// Mix only: the player owns two or more languages but fewer than two pass their gates.
     NeedsTwoLanguages,
     /// Spell Jr / Kid profile (v1 I3, I7).
@@ -132,6 +135,7 @@ impl LockReason {
             LockReason::NoExclusionGate => "language_locked:no_exclusion_gate",
             LockReason::NoDrawnEntry => "language_locked:no_drawn_entry",
             LockReason::NeedsComplete => "needs_complete",
+            LockReason::NeedsEnglish => "needs_english",
             LockReason::NeedsTwoLanguages => "needs_two_languages",
             LockReason::ProfileBlocked => "profile_blocked",
             LockReason::FlagOff => "flag_off",
@@ -200,7 +204,9 @@ pub fn lang_availability(lang: &str, i: &Inputs) -> Availability {
         return Availability::Locked(LockReason::PoolBelowFloor);
     }
     if i.entitlements.lang_level(lang) != AccessLevel::Full {
-        return Availability::Locked(LockReason::NeedsComplete);
+        // English is sold on its own (D10); every other language rides Complete.
+        let r = if lang == crate::consts::EN { LockReason::NeedsEnglish } else { LockReason::NeedsComplete };
+        return Availability::Locked(r);
     }
     Availability::Available(p.words.len())
 }
@@ -247,8 +253,8 @@ pub fn mix_status(surface: Surface, i: &Inputs) -> MixStatus {
     if !i.master || !i.mix_flag {
         return MixStatus::Locked(LockReason::FlagOff);
     }
-    // F3 / D-C5: Mix is a Complete feature. English is Full on the free tier, so "owns
-    // Complete" means a Full language beyond English (regional grants count).
+    // F3 / D-C5: Mix is a Complete feature, so "owns Complete" means a Full language
+    // beyond English (regional grants count; they never reach English, D2).
     if !registry_langs().any(|l| l != "en" && i.entitlements.lang_level(l) == AccessLevel::Full) {
         return MixStatus::Locked(LockReason::NeedsComplete);
     }

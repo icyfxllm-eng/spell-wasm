@@ -129,3 +129,19 @@ fn apply_reflect(app: &App, flag: &str) {
         _ => {}
     }
 }
+
+#[cfg(test)]
+mod launch_en_tests {
+    /// CC-LAUNCH-EN item 3: a release build reads local storage only for the
+    /// flags a player sets here, so this screen and `flags::PLAYER_FLAGS` must
+    /// name exactly the same flags. If they drift, a Tools switch goes dead in
+    /// release, or a build flag becomes player-settable.
+    #[test]
+    fn tools_flags_are_player_flags() {
+        let mut tools: Vec<&str> = super::TOOLS.iter().map(|t| t.flag).collect();
+        let mut player: Vec<&str> = crate::flags::PLAYER_FLAGS.to_vec();
+        tools.sort();
+        player.sort();
+        assert_eq!(tools, player);
+    }
+}

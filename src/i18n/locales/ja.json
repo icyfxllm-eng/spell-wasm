@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "手書きのランはまだありません。",
   "impossible.mix.notice": "不可能ミックス：{langs}の単語。次はどれが出るかわかりません。続けますか？",
   "impossible.lock.needs_complete": "SpellGame Completeに含まれます",
+  "impossible.lock.needs_english": "SpellGame Englishに含まれます",
   "impossible.lock.needs_two_languages": "不可能の言語が2つ必要です",
   "impossible.lock.pool_below_floor": "単語がまだ足りません",
   "impossible.lock.no_exclusion_gate": "この言語ではまだ準備中です",

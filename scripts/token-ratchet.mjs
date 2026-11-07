@@ -171,7 +171,7 @@ export function scanRepo(root = ROOT) {
     files.push([`${page} <style>`, r]);
   }
   // CC-ECLIPSE-HOTFIX I3: the shipped JS and index.html's inline scripts.
-  for (const js of ['audio-native.js', 'native-language-kit.js', 'telemetry-schema.js', 'sw.js', 'ocr-shim.js']) {
+  for (const js of ['audio-native.js', 'native-language-kit.js', 'store-native.js', 'telemetry-schema.js', 'sw.js', 'ocr-shim.js']) {
     const r = scanJs(readFileSync(join(root, js), 'utf8'));
     if (r.raw.length || r.exempt) files.push([js, r]);
   }

@@ -1174,6 +1174,7 @@
   "qbd.boardEmpty": "Wala pang laro ng pagguhit.",
   "impossible.mix.notice": "Halong Imposible: mga salita mula sa {langs}. Alinman sa mga ito ang puwedeng lumabas. Magpatuloy?",
   "impossible.lock.needs_complete": "Kasama sa SpellGame Complete",
+  "impossible.lock.needs_english": "Kasama sa SpellGame English",
   "impossible.lock.needs_two_languages": "Kailangan ng dalawang wika sa Imposible",
   "impossible.lock.pool_below_floor": "Kulang pa ang mga salita",
   "impossible.lock.no_exclusion_gate": "Hindi pa handa sa wikang ito",
