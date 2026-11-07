@@ -59,4 +59,8 @@ ru	черный	чёрный	quarantine:yo_duplicate;ru_yo_pair
 ru	четырех	четырёх	quarantine:yo_duplicate;ru_yo_pair
 vi	hý	hí	quarantine:variant_duplicate;variant
 vi	đựơc	được	quarantine:misspelled_nonstandard;explicit
+zh	hu2li2|狐狸	hu2li5|狐狸	quarantine:duplicate_hanzi;explicit
+zh	jie1zhu4|接著	jie1zhu4|接着	served_until_words_rs_resync;explicit
+zh	ta1|牠	ta1|它	served_until_words_rs_resync;explicit
 zh	you3zhu4|有着	you3zhe5|有着	quarantine:duplicate_hanzi;explicit
+zh	you3zhu4|有著	you3zhe5|有着	served_until_words_rs_resync;explicit

@@ -16,10 +16,13 @@ SCOPE = "fil es fr pt vi hi ru zh".split()
 TAG = "CC-ORTHO-SWEEP-ALL:"
 TIERS = "easy medium hard expert".split()
 PT_RENAMED = [("pára", "para"), ("dêem", "deem"), ("facto", "fato")]
+# zh forms the app served until tools/ortho/sync_zh_words_rs.py re-emitted words.rs from the assets (the purity sweep had changed the assets only)
+ZH_RENAMED = [("you3zhu4|有著", "you3zhe5|有着"), ("ta1|牠", "ta1|它"), ("jie1zhu4|接著", "jie1zhu4|接着")]
 EXPLICIT = {  # misspelling twins that have no variant row
     ("vi", "đựơc"): "được", ("fil", "kuponan"): "koponan", ("fil", "kabuoan"): "kabuuan",
     ("fil", "espirito"): "espiritu", ("fil", "sunud-sunod"): "sunod-sunod",
     ("zh", "hu2li2|狐狸"): "hu2li5|狐狸", ("zh", "you3zhu4|有着"): "you3zhe5|有着",
+    ("zh", "you3zhu4|有著"): "you3zhe5|有着", ("zh", "ta1|牠"): "ta1|它", ("zh", "jie1zhu4|接著"): "jie1zhu4|接着",
 }
 
 def bank(lang):
@@ -42,6 +45,7 @@ def build():
     for r in csv.reader(open(f"{REPO}/assets/words-quarantine/manifest.csv", encoding="utf-8")):
         if len(r) > 5 and r[0] in SCOPE and r[5].startswith(TAG): old[(r[0], nfc(r[1]))] = f"quarantine:{r[4]}"
     for o, n in PT_RENAMED: old[("pt", nfc(o))] = "renamed_in_place"
+    for o, n in ZH_RENAMED: old[("zh", nfc(o))] = "served_until_words_rs_resync"
     twin = {}  # (lang, old) -> set of news
     def add(l, o, n, why):
         twin.setdefault((l, nfc(o)), {})[nfc(n)] = why

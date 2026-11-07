@@ -11,8 +11,8 @@
 //
 // The tagger pre-fills; a human confirms. See the 50-word audit fixture.
 //
-// 5888 none, 185 third-third, 26 bu, 83 yi.
-pub const SANDHI: [(&str, &str, &str); 6182] = [
+// 5886 none, 185 third-third, 26 bu, 83 yi.
+pub const SANDHI: [(&str, &str, &str); 6180] = [
     ("a1er3|阿尔", "a1er3", "none"),
     ("a1fu4han4|阿富汗", "a1fu4han4", "none"),
     ("a1gen1ting2|阿根廷", "a1gen1ting2", "none"),
@@ -1803,7 +1803,6 @@ pub const SANDHI: [(&str, &str, &str); 6182] = [
     ("hu1sheng1|呼声", "hu1sheng1", "none"),
     ("hu1|乎", "hu1", "none"),
     ("hu1|呼", "hu1", "none"),
-    ("hu2li2|狐狸", "hu2li2", "none"),
     ("hu2li5|狐狸", "hu2li5", "none"),
     ("hu2nan2sheng3|湖南省", "hu2nan2sheng3", "none"),
     ("hu2shuo1ba1dao4|胡说八道", "hu2shuo1ba1dao4", "none"),
@@ -2196,7 +2195,7 @@ pub const SANDHI: [(&str, &str, &str); 6182] = [
     ("jie1shou4|接受", "jie1shou4", "none"),
     ("jie1wen3|接吻", "jie1wen3", "none"),
     ("jie1zhong3|接种", "jie1zhong3", "none"),
-    ("jie1zhu4|接著", "jie1zhu4", "none"),
+    ("jie1zhu4|接着", "jie1zhu4", "none"),
     ("jie1|接", "jie1", "none"),
     ("jie1|皆", "jie1", "none"),
     ("jie1|街", "jie1", "none"),
@@ -4241,7 +4240,7 @@ pub const SANDHI: [(&str, &str, &str); 6182] = [
     ("ta1jia1|他家", "ta1jia1", "none"),
     ("ta1men5|它们", "ta1men5", "none"),
     ("ta1ren2|他人", "ta1ren2", "none"),
-    ("ta1|牠", "ta1", "none"),
+    ("ta1|它", "ta1", "none"),
     ("ta4shang4|踏上", "ta4shang4", "none"),
     ("tai1er2|胎儿", "tai1er2", "none"),
     ("tai2ci2|台词", "tai2ci2", "none"),
@@ -5479,7 +5478,6 @@ pub const SANDHI: [(&str, &str, &str); 6182] = [
     ("you3yong4|有用", "you3yong4", "none"),
     ("you3zhe5|有着", "you3zhe5", "none"),
     ("you3zhu4yu2|有助于", "you3zhu4yu2", "none"),
-    ("you3zhu4|有著", "you3zhu4", "none"),
     ("you4ce4|右侧", "you4ce4", "none"),
     ("you4cheng1|又称", "you4cheng1", "none"),
     ("you4er2yuan2|幼儿园", "you4er2yuan2", "none"),
