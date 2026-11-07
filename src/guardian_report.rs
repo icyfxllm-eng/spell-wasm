@@ -347,6 +347,27 @@ pub fn profile_week(input: &GuardianInput, monday: i64) -> ProfileWeek {
     }
 }
 
+/// CC-GUARDIAN-REPORT v1.1 F6/F8: one profile's window, for the ping. Any
+/// logged attempt with an instant in `[start, end)` is a session; the counts
+/// are the Report Days composer's own (G-D26 applied). A window with no
+/// attempt is `ProfileWeek::default()`, which `ping` turns into no ping.
+pub fn profile_window(input: &GuardianInput, w: &crate::report_days::Window) -> ProfileWeek {
+    let base = ComposeInput { which: w.which(false), ..input.base };
+    let inp = GuardianInput { base, bank: input.bank, junior: input.junior };
+    let sessions = input.base.langs.iter().any(|lang| {
+        input.base.q.attempt_detail_log(input.base.profile, lang).iter().any(|a| a.ts.is_some_and(|t| (w.start_s..w.end_s).contains(&(t as i64))))
+    });
+    if !sessions {
+        return ProfileWeek::default();
+    }
+    let r = compose_days(&inp, None);
+    ProfileWeek {
+        sessions,
+        practice: r.sections.iter().map(|s| s.practice.len()).sum(),
+        mastered: r.sections.iter().map(|s| s.mastered.len()).sum(),
+    }
+}
+
 /// Which copy the one weekly notification carries (I11). `Guardian` where the
 /// report row is reachable; `Digest` is CC-GUARDIAN-DASH F2's count line for
 /// a device where it is not, through the same scheduler (Phase D merge).
@@ -370,6 +391,18 @@ pub struct Ping {
 /// F7: the one notification for the Monday `ping_monday`, from each profile's
 /// week before it. No profile with a session = no ping (G-D12).
 pub fn ping(copy: PingCopy, ping_monday: i64, weeks: &[ProfileWeek], t: &dyn Fn(&str) -> String) -> Option<Ping> {
+    build_ping(copy, ping_monday, Some(route_for(ping_monday - 7)), weeks, t)
+}
+
+/// CC-GUARDIAN-REPORT v1.1 F8: the notification for a report day of a parent-
+/// chosen schedule. Same copy as `ping`, same rules (counts only, no word, no
+/// name, no profile with a session = no ping); the route names no week, so
+/// the tap lands on the latest scheduled report, through the adult gate.
+pub fn ping_for_day(copy: PingCopy, day: i64, weeks: &[ProfileWeek], t: &dyn Fn(&str) -> String) -> Option<Ping> {
+    build_ping(copy, day, Some("#guardian-report".to_string()), weeks, t)
+}
+
+fn build_ping(copy: PingCopy, ping_monday: i64, guardian_route: Option<String>, weeks: &[ProfileWeek], t: &dyn Fn(&str) -> String) -> Option<Ping> {
     let active: Vec<&ProfileWeek> = weeks.iter().filter(|w| w.sessions).collect();
     if active.is_empty() {
         return None;
@@ -385,7 +418,7 @@ pub fn ping(copy: PingCopy, ping_monday: i64, weeks: &[ProfileWeek], t: &dyn Fn(
         }
     };
     let (title, route) = match copy {
-        PingCopy::Guardian => (t("greport.name"), Some(route_for(ping_monday - 7))),
+        PingCopy::Guardian => (t("greport.name"), guardian_route),
         PingCopy::Digest => (t("gdash.title"), None),
     };
     Some(Ping { date: rs::civil(ping_monday), title, body, route })
@@ -1087,6 +1120,65 @@ mod tests {
                     for w in words.iter().map(String::as_str).chain(names) {
                         let hit = payload.split(|c: char| !c.is_alphanumeric()).any(|tok| tok == w.to_lowercase());
                         assert!(!hit, "{lang} {copy:?} payload carries {w}: {payload}");
+                    }
+                }
+            }
+        }
+    }
+
+    /// v1.1 A9: a window with zero attempts schedules no ping, and the report
+    /// for it reads "No practice this period." (F6).
+    #[test]
+    fn an_empty_window_pings_nothing_and_reads_quiet() {
+        use crate::report_days::{next_ping_window, ScheduleEntry, ScheduleLog, WeekdaySet};
+        let (fake, bank) = fixture();
+        let quiet = Fake::default();
+        let log = ScheduleLog::from_entries(vec![ScheduleEntry { days: WeekdaySet::DAILY, changed_at_s: at(2026, 9, 1, 0, 0, 0, -4) }]).unwrap();
+        // Wed Oct 21 15:00: the next ping is Thu 08:00, for the window Wed..Thu.
+        let now = at(2026, 10, 21, 15, 0, 0, -4);
+        let w = next_ping_window(now, &log, &Indianapolis, PING_HOUR).unwrap();
+        let input = |q: &dyn crate::learner_query::LearnerQuery| ProfileWeek { ..profile_window(&GuardianInput { base: ComposeInput { q, profile: DEVICE, langs: &["en"], now_s: now, zone: &Indianapolis, which: Which::LastWeek }, bank: &bank, junior: false }, &w) };
+        assert_eq!(input(&quiet), ProfileWeek::default());
+        assert_eq!(ping_for_day(PingCopy::Guardian, w.last_day + 1, &[input(&quiet)], &t_en), None, "no attempt, no ping");
+        // Practice on Wed makes the Thursday ping real.
+        let wed = Fake { details: vec![det("cat", Some(at(2026, 10, 21, 9, 0, 0, -4)), Some(OutcomeClass::Misspelled))], ..Fake::default() };
+        let busy = input(&wed);
+        assert!(busy.sessions);
+        let p = ping_for_day(PingCopy::Guardian, w.last_day + 1, &[busy], &t_en).unwrap();
+        assert_eq!(p.date, (2026, 10, 22));
+        assert_eq!(p.route.as_deref(), Some("#guardian-report"));
+        // The report for the quiet window says so, in every locale.
+        let r = compose_days(
+            &GuardianInput { base: ComposeInput { q: &quiet, profile: DEVICE, langs: &["en"], now_s: now, zone: &Indianapolis, which: w.which(false) }, bank: &bank, junior: false },
+            None,
+        );
+        assert!(r.days.as_ref().unwrap().empty);
+        for lang in LOCALES {
+            let text = render_in(&r, lang);
+            assert!(text.contains(&locale(lang)["greport.noPractice"].as_str().unwrap().to_string()), "{lang}: {text}");
+        }
+        let _ = fake;
+    }
+
+    /// v1.1 A11: no day-schedule notification, in any locale, carries a bank
+    /// word or a profile name (G-D9, I7), for every schedule and both copies.
+    #[test]
+    fn no_report_day_payload_carries_a_word_or_a_name() {
+        let (fake, bank) = fixture();
+        let names = ["Maya", "Sam", "Léa"];
+        let words: Vec<String> = bank.tiers.keys().cloned().chain(fake.details.iter().map(|d| d.word.clone())).collect();
+        for lang in LOCALES {
+            let loc = locale(lang);
+            let t = |k: &str| loc.get(k).and_then(|v| v.as_str()).unwrap_or_else(|| panic!("{lang} lacks {k}")).to_string();
+            for copy in [PingCopy::Guardian, PingCopy::Digest] {
+                for weeks in [vec![ProfileWeek { sessions: true, practice: 8, mastered: 3 }], vec![ProfileWeek { sessions: true, practice: 1, mastered: 0 }], vec![ProfileWeek { sessions: true, ..Default::default() }; 2]] {
+                    for day in [monday_of(OCT19), monday_of(OCT19) + 3, monday_of(OCT19) + 6] {
+                        let p = ping_for_day(copy, day, &weeks, &t).unwrap();
+                        let payload = format!("{}\n{}\n{}", p.title, p.body, p.route.unwrap_or_default()).to_lowercase();
+                        for w in words.iter().map(String::as_str).chain(names) {
+                            let hit = payload.split(|c: char| !c.is_alphanumeric()).any(|tok| tok == w.to_lowercase());
+                            assert!(!hit, "{lang} {copy:?} payload carries {w}: {payload}");
+                        }
                     }
                 }
             }

@@ -216,6 +216,62 @@ impl Window {
     }
 }
 
+/// Every report day from the schedule's anchor (or, for a single-entry log,
+/// the last fortnight) up to local day `until_day`: the days a report window
+/// ends on. Natural ones come from the schedule in force at that midnight; a
+/// forced one is added when 7 days have passed since the previous (G-D25).
+fn boundary_days(log: &ScheduleLog, zone: &dyn Zone, now_day: i64, until_day: i64) -> Vec<i64> {
+    let first = log.0[0];
+    // The chain starts on the first entry's report day at or before its edit.
+    let mut anchor = local_day(first.changed_at_s, zone);
+    for _ in 0..7 {
+        if first.days.contains(weekday(anchor)) {
+            break;
+        }
+        anchor -= 1;
+    }
+    // One entry: boundaries are periodic and independent of history, so only
+    // the last fortnight need be walked. Several: walk from the anchor.
+    let mut from = anchor;
+    if log.0.len() == 1 && now_day - 14 > anchor {
+        from = now_day - 14;
+        while !first.days.contains(weekday(from)) {
+            from -= 1;
+        }
+    }
+    let mut out: Vec<i64> = Vec::new();
+    let mut d = from;
+    while d <= until_day {
+        let mid = local_midnight_utc(d, zone);
+        let natural = log.in_force(mid).contains(weekday(d));
+        let forced = out.last().is_some_and(|l| d - l >= 7);
+        if out.is_empty() || natural || forced {
+            out.push(d);
+        }
+        d += 1;
+    }
+    out
+}
+
+/// F8 — the window the next notification reports on: it ends on the first
+/// report day whose `hour`:00 local is after `now_s`, and starts on the report
+/// day before it. It covers play so far, which is what the ping counts (F6:
+/// none in it, no ping). Pure; the ping's reschedule triggers are the UI's.
+pub fn next_ping_window(now_s: i64, log: &ScheduleLog, zone: &dyn Zone, hour: u32) -> Option<Window> {
+    let now_day = local_day(now_s, zone);
+    let days = boundary_days(log, zone, now_day, now_day + 9);
+    let at = |d: i64| local_midnight_utc(d, zone) + i64::from(hour) * 3600;
+    let i = days.iter().position(|d| at(*d) > now_s)?;
+    let end_day = days[i];
+    let start_day = if i > 0 { days[i - 1] } else { end_day - 7 };
+    Some(Window {
+        start_s: local_midnight_utc(start_day, zone),
+        end_s: local_midnight_utc(end_day, zone),
+        first_day: start_day,
+        last_day: end_day - 1,
+    })
+}
+
 /// F2 — the latest closed scheduled window at `now_s`; `None` before the
 /// schedule's first report day. Pure.
 ///
@@ -234,42 +290,8 @@ impl Window {
 /// hours off it; within a day of the computed start the stored instant wins,
 /// so no attempt is dropped or counted twice (A6).
 pub fn window(now_s: i64, log: &ScheduleLog, zone: &dyn Zone, pinned_start_s: Option<i64>) -> Option<Window> {
-    let first = log.0[0];
     let now_day = local_day(now_s, zone);
-    // The chain starts on the first entry's report day at or before its edit.
-    let mut anchor = local_day(first.changed_at_s, zone);
-    for _ in 0..7 {
-        if first.days.contains(weekday(anchor)) {
-            break;
-        }
-        anchor -= 1;
-    }
-    // One entry: boundaries are periodic and independent of history, so only
-    // the last fortnight need be walked. Several: walk from the anchor.
-    let mut from = anchor;
-    if log.0.len() == 1 && now_day - 14 > anchor {
-        from = now_day - 14;
-        while !first.days.contains(weekday(from)) {
-            from -= 1;
-        }
-    }
-
-    let mut ends: Vec<i64> = Vec::new();
-    let mut last_boundary: Option<i64> = None;
-    let mut d = from;
-    while d <= now_day {
-        let mid = local_midnight_utc(d, zone);
-        if mid > now_s {
-            break;
-        }
-        let natural = log.in_force(mid).contains(weekday(d));
-        let forced = last_boundary.is_some_and(|l| d - l >= 7);
-        if last_boundary.is_none() || natural || forced {
-            ends.push(d);
-            last_boundary = Some(d);
-        }
-        d += 1;
-    }
+    let ends: Vec<i64> = boundary_days(log, zone, now_day, now_day).into_iter().filter(|d| local_midnight_utc(*d, zone) <= now_s).collect();
     let end_day = *ends.last()?;
     let start_day = if ends.len() >= 2 { ends[ends.len() - 2] } else { end_day - 7 };
     let mut start_s = local_midnight_utc(start_day, zone);
@@ -815,6 +837,35 @@ pub(crate) mod tests {
         let later = st.view_latest(now + 7 * DAY_S, &z).unwrap();
         assert_eq!(later.start_s, w.end_s, "the next report starts where the last one ended");
         assert_eq!(st.delivered_end_s, Some(later.end_s));
+    }
+
+    /// F8: the next notification covers the window that ends on the next report
+    /// day at 08:00, however the schedule falls.
+    #[test]
+    fn the_next_ping_ends_on_the_next_report_day_at_eight() {
+        let z = UsDst(-5);
+        let mon = ScheduleLog::from_entries(vec![ScheduleEntry { days: WeekdaySet::WEEKLY, changed_at_s: at(2026, 9, 1, 0, 0, -4) }]).unwrap();
+        // Wed Oct 21: the window ending Mon Oct 26 opened Mon Oct 19.
+        let w = next_ping_window(at(2026, 10, 21, 15, 0, -4), &mon, &z, 8).unwrap();
+        assert_eq!((ymd(w.first_day), ymd(w.last_day + 1)), ((2026, 10, 19), (2026, 10, 26)));
+        // Mon 07:59 is before the ping: still that report day. 08:00 is not.
+        let w = next_ping_window(at(2026, 10, 26, 7, 59, -4), &mon, &z, 8).unwrap();
+        assert_eq!(ymd(w.last_day + 1), (2026, 10, 26));
+        let w = next_ping_window(at(2026, 10, 26, 8, 0, -4), &mon, &z, 8).unwrap();
+        assert_eq!((ymd(w.first_day), ymd(w.last_day + 1)), ((2026, 10, 26), (2026, 11, 2)));
+        // Daily: tomorrow morning, one day.
+        let daily = ScheduleLog::from_entries(vec![ScheduleEntry { days: WeekdaySet::DAILY, changed_at_s: at(2026, 9, 1, 0, 0, -4) }]).unwrap();
+        let w = next_ping_window(at(2026, 10, 21, 15, 0, -4), &daily, &z, 8).unwrap();
+        assert_eq!((ymd(w.first_day), w.days()), ((2026, 10, 21), 1));
+        assert_eq!(ymd(w.last_day + 1), (2026, 10, 22));
+        // Across an edit: weekly -> daily on Wed 14:00 -> the next ping is Thu
+        // morning for Mon..Thu, the same window the report will show.
+        let mut log = mon.clone();
+        log.edit(WeekdaySet::DAILY, at(2026, 10, 21, 14, 0, -4));
+        let w = next_ping_window(at(2026, 10, 21, 15, 0, -4), &log, &z, 8).unwrap();
+        assert_eq!((ymd(w.first_day), ymd(w.last_day + 1)), ((2026, 10, 19), (2026, 10, 22)));
+        let report = window(at(2026, 10, 22, 8, 0, -4), &log, &z, None).unwrap();
+        assert_eq!((report.start_s, report.end_s), (w.start_s, w.end_s), "the ping and the report agree");
     }
 
     fn stats(attempts: u32, misses: u32, ty: Option<(WordType, u32, u32)>) -> LangStats {

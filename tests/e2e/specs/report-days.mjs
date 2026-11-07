@@ -6,6 +6,33 @@
 // days" range leaves the stored schedule byte for byte alone (A10).
 import { openApp, assert, domSettled } from '../harness.mjs';
 
+/** A recording stand-in for @capacitor/local-notifications (see progress-report.mjs). */
+const fakeNotifications = `
+  window.Capacitor = window.Capacitor || {};
+  window.Capacitor.Plugins = window.Capacitor.Plugins || {};
+  window.__notif = { scheduled: [], pending: {}, listeners: {} };
+  window.Capacitor.Plugins.LocalNotifications = {
+    requestPermissions: async () => ({ display: 'granted' }),
+    checkPermissions: async () => ({ display: 'granted' }),
+    schedule: async (a) => { const n = window.__notif; for (const x of a.notifications) { n.pending[x.id] = JSON.parse(JSON.stringify(x)); n.scheduled.push(n.pending[x.id]); } },
+    cancel: async (a) => { for (const x of a.notifications) delete window.__notif.pending[x.id]; },
+    registerActionTypes: async () => {},
+    addListener: async (name, fn) => { window.__notif.listeners[name] = fn; },
+  };`;
+
+/** One CR-1 miss logged just now ("because" is an English Hard bank row). */
+const learnerNow = () => {
+  const ts = Math.floor(Date.now() / 1000);
+  return `localStorage.setItem('spell_learner_en', ${JSON.stringify(JSON.stringify({
+    version: 2, lang: 'en', skills: [], placed: true,
+    log: [{ day: Math.floor(ts / 86400), word: 'because', skills: [], correct: false, channel: 'typed', typed: 'becuase', ts, outcome: 'misspelled', mode: 'standard' }],
+  }))});`;
+};
+const asNative = (page) => page.evaluate(() => {
+  window.SpellNativeLang = window.SpellNativeLang || {};
+  window.SpellNativeLang.nativePlatform = () => true;
+});
+
 const KEY = 'spell_report_days_v1';
 const shown = (page, id) => page.evaluate((i) => document.getElementById(i).classList.contains('show'), id);
 const visible = (page, id) => page.evaluate((i) => !document.getElementById(i).classList.contains('btn-hide'), id);
@@ -77,6 +104,47 @@ export async function run(browser, base, suite) {
       assert(label === 'Last 3 days', `range label: ${label}`);
       assert((await stored(page)) === before, 'the on-demand range must not touch the stored schedule');
       assert(errors.length === 0, `page errors: ${errors.join(' | ')}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('report days: a daily schedule pings tomorrow 08:00 with counts only; a quiet window pings nothing; an edit moves it (A9, A11, F8)', async () => {
+    const flags = "localStorage.setItem('spell_dev_entitlements', 'on'); localStorage.setItem('spell_flag_guardian_report_days', 'on');";
+    // Practice today, daily schedule.
+    let { ctx, page } = await openApp(browser, base, { lang: 'en', init: flags + learnerNow() + fakeNotifications });
+    try {
+      await asNative(page);
+      await openReport(page);
+      await click(page, 'rdaysDaily');
+      await click(page, 'rdaysSave');
+      await page.evaluate(() => document.getElementById('rsharePing').click());
+      await domSettled(page);
+      const pending = await page.evaluate(() => Object.values(window.__notif.pending));
+      assert(pending.length === 1 && pending[0].id === 3, `want the one notification, got ${JSON.stringify(pending)}`);
+      const p = pending[0];
+      const at = new Date(p.schedule.at);
+      const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+      assert(at.getHours() === 8 && at.getMinutes() === 0 && at > new Date() && at.getDate() === tomorrow.getDate(), `fires ${at}`);
+      assert(p.extra.route === '#guardian-report' && p.body === 'Guardian Report ready · 1 practice word', `payload: ${JSON.stringify(p)}`);
+      for (const w of ['because', 'becuase']) assert(!JSON.stringify(p).toLowerCase().includes(w), `the payload carries ${w}`);
+      // An edit reschedules: back to Weekly puts the ping on the next Monday.
+      await click(page, 'rdaysWeekly');
+      await click(page, 'rdaysSave');
+      const moved = await page.evaluate(() => Object.values(window.__notif.pending).map((x) => x.schedule.at));
+      assert(moved.length <= 1, `at most one pending, got ${moved.length}`);
+      if (moved.length === 1) assert(new Date(moved[0]).getDay() === 1, `weekly pings on a Monday, got ${new Date(moved[0])}`);
+    } finally { await ctx.close(); }
+    // No practice at all: nothing is scheduled.
+    ({ ctx, page } = await openApp(browser, base, { lang: 'en', init: flags + fakeNotifications }));
+    try {
+      await asNative(page);
+      await openReport(page);
+      await click(page, 'rdaysDaily');
+      await click(page, 'rdaysSave');
+      await page.evaluate(() => document.getElementById('rsharePing').click());
+      await domSettled(page);
+      assert((await page.evaluate(() => Object.keys(window.__notif.pending).length)) === 0, 'a quiet window must schedule nothing (F6)');
+      const body = await page.evaluate(() => document.getElementById('rshareBody').textContent);
+      assert(body.includes('No practice this period.'), `a quiet report reads quiet: ${body}`);
     } finally { await ctx.close(); }
   });
 }

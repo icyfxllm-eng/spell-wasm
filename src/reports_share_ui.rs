@@ -206,6 +206,32 @@ pub fn refresh_ping(app: &crate::App) {
     let ctx = crate::play_hub::ctx(app);
     let reachable = crate::modes::catalog(&crate::modes::all(), &ctx).iter().any(|m| m.id == "progress_report");
     let copy = if reachable { PingCopy::Guardian } else { PingCopy::Digest };
+    // Report Days (flag): the next report day of the parent's schedule, and the
+    // window that ends on it. Nothing in it = nothing scheduled (F6). A schedule
+    // edit, a foreground and a session end all come through here (F8), and the
+    // zone is read fresh each time, so a changed zone is picked up too.
+    if days_on() {
+        let log = days_state().log;
+        let Some(w) = rd::next_ping_window(now_s(), &log, &DeviceZone, gr::PING_HOUR) else {
+            crate::notifications::guardian_ping(None);
+            return;
+        };
+        let week = {
+            let s = app.borrow();
+            let q = crate::learner_query::live(&s);
+            let langs = langs();
+            let bank = LiveBank::default();
+            let input = GuardianInput {
+                base: ComposeInput { q: &q, profile: DEVICE, langs: &langs, now_s: now_s(), zone: &DeviceZone, which: Which::LastWeek },
+                bank: &bank,
+                junior: ctx.audience == crate::experience::Audience::Junior,
+            };
+            gr::profile_window(&input, &w)
+        };
+        let t = |k: &str| crate::i18n::t(k);
+        crate::notifications::guardian_ping(gr::ping_for_day(copy, w.last_day + 1, &[week], &t).as_ref());
+        return;
+    }
     let ping_monday = gr::next_ping_monday(now_s(), &DeviceZone);
     let week = {
         let s = app.borrow();
@@ -283,7 +309,7 @@ fn add(app: &crate::App) -> Option<(String, String)> {
 }
 
 /// F1 and F7. Nothing here reaches the ping: a schedule edit's reschedule is
-/// Phase D (F8), and the on-demand range never touches state (A10).
+/// F8 (Phase D): a Save reschedules the ping; the on-demand range never touches state (A10).
 fn wire_days(app: &crate::App) {
     for (id, days) in [("rdaysWeekly", WeekdaySet::WEEKLY), ("rdaysTwice", WeekdaySet::TWICE_A_WEEK), ("rdaysDaily", WeekdaySet::DAILY)] {
         let a = app.clone();
@@ -319,6 +345,8 @@ fn wire_days(app: &crate::App) {
             ON_DEMAND.with(|o| o.set(false));
             WHICH.with(|w| w.set(scheduled_which()));
             render(&a);
+            // F8: a schedule edit moves the next ping.
+            refresh_ping(&a);
         });
     }
     {
