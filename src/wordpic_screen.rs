@@ -362,8 +362,13 @@ fn allowed(app: &App, p: &wordpic::Picture, lang: &str) -> bool {
         return false;
     }
     let ent = crate::play_hub::live_entitlements();
-    let full = matches!(ent.lang_level(lang), crate::entitlements::AccessLevel::Full);
-    full || wordpic::manifest().free.contains(&p.id)
+    entitled(ent.lang_level(lang), kid, wordpic::manifest().free.contains(&p.id))
+}
+
+/// D16 + CC-LAUNCH-EN D24: the free trio at PREVIEW, everything with Complete,
+/// and everything for a Little Speller (kid) profile, which is never locked.
+fn entitled(level: crate::entitlements::AccessLevel, kid: bool, free: bool) -> bool {
+    kid || level == crate::entitlements::AccessLevel::Full || free
 }
 
 
@@ -3261,5 +3266,22 @@ fn wordpic_tag(correct: bool) -> crate::learner::Tag {
         outcome: crate::learner::OutcomeClass::of(correct),
         mode: crate::learner::mode_id::WORD_PICTURE,
         impossible: false,
+    }
+}
+
+#[cfg(test)]
+mod launch_en_gate_tests {
+    use super::entitled;
+    use crate::entitlements::AccessLevel;
+
+    /// CC-LAUNCH-EN D16 / D24: a standard player at Preview gets the free trio
+    /// only; Full gets everything; a kid at Preview gets everything.
+    #[test]
+    fn a_kid_is_never_locked_out_of_a_picture() {
+        assert!(entitled(AccessLevel::Preview, false, true));
+        assert!(!entitled(AccessLevel::Preview, false, false));
+        assert!(entitled(AccessLevel::Full, false, false));
+        assert!(entitled(AccessLevel::Preview, true, false), "D24");
+        assert!(entitled(AccessLevel::None, true, false), "D24");
     }
 }

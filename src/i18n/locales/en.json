@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Delete",
   "acn.delete.failed": "Couldn't delete. Check your connection and try again.",
   "de.close.letters": "Almost — this word is spelled with {fix}",
-  "de.close.split": "Almost — this is written as one word"
+  "de.close.split": "Almost — this is written as one word",
+  "paywall.title": "Unlock more spelling",
+  "paywall.body": "Medium, Hard and Expert words, The Climb, and every level of every game.",
+  "paywall.buy": "Buy · {price}",
+  "paywall.restore": "Restore Purchases",
+  "paywall.close": "Not now",
+  "paywall.retry": "Try again",
+  "paywall.priceError": "Couldn't load prices. Check your connection.",
+  "paywall.getApp": "Unlocks are in the SpellGame app for iPhone.",
+  "paywall.pending": "Waiting for a grown-up to approve.",
+  "paywall.done": "Unlocked. Thank you!",
+  "paywall.restoreNone": "No purchases to restore.",
+  "paywall.failed": "The purchase didn't go through. Nothing was charged.",
+  "complete.includesFutureLanguages": "Complete includes every language we add."
 }

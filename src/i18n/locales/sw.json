@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Futa",
   "acn.delete.failed": "Haikuweza kufuta. Angalia muunganisho wako ujaribu tena.",
   "de.close.letters": "Karibu — neno hili huandikwa kwa {fix}",
-  "de.close.split": "Karibu — andika kama neno moja"
+  "de.close.split": "Karibu — andika kama neno moja",
+  "paywall.title": "Fungua tahajia zaidi",
+  "paywall.body": "Maneno ya viwango vya Kati, Kigumu na Mtaalamu, The Climb, na kila kiwango cha kila mchezo.",
+  "paywall.buy": "Nunua · {price}",
+  "paywall.restore": "Rejesha Ununuzi",
+  "paywall.close": "Si sasa",
+  "paywall.retry": "Jaribu tena",
+  "paywall.priceError": "Imeshindwa kupakia bei. Angalia muunganisho wako.",
+  "paywall.getApp": "Ufunguzi unapatikana kwenye programu ya SpellGame ya iPhone.",
+  "paywall.pending": "Inasubiri idhini ya mtu mzima.",
+  "paywall.done": "Imefunguliwa. Asante!",
+  "paywall.restoreNone": "Hakuna ununuzi wa kurejesha.",
+  "paywall.failed": "Ununuzi haukukamilika. Hakuna kilichotozwa.",
+  "complete.includesFutureLanguages": "Complete inajumuisha kila lugha tutakayoongeza."
 }

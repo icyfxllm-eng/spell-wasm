@@ -194,14 +194,14 @@ pub fn open(app: &App) {
     if climb {
         tier = "medium".to_string();
     }
-    // Entitlement depth (acceptance #9): clamp to the deepest allowed tier.
-    let level = crate::play_hub::live_entitlements().lang_level(&lang);
-    let allowed = defmatch::allowed_tiers(level);
-    if allowed.is_empty() {
-        return;
-    }
-    if !allowed.contains(&tier.as_str()) {
-        tier = allowed.last().unwrap().to_string();
+    // Entitlement depth (acceptance #9): clamp to the deepest open tier.
+    // CC-LAUNCH-EN D24: the shared gate, so a kid profile is never clamped
+    // here (the Jr ceiling below still applies).
+    let open = crate::play_hub::open_tiers(kid, &lang);
+    let Some(clamped) = defmatch::clamp_tier(&tier, &open) else { return };
+    if clamped != tier {
+        // CC-LAUNCH-EN D21: paywall hook
+        tier = clamped.to_string();
     }
     let tier = defmatch::effective_tier(&tier, kid).to_string();
 

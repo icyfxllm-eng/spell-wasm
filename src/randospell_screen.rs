@@ -273,6 +273,13 @@ fn level_of(lang: &str) -> crate::entitlements::AccessLevel {
     crate::play_hub::live_entitlements().lang_level(lang)
 }
 
+/// D10: the Daily is one shared game, so a standard player needs the full bank.
+/// CC-LAUNCH-EN D24: a Little Speller is never locked out, so a kid gets the
+/// Daily kind wherever it is otherwise available.
+fn daily_open(kid: bool, level: crate::entitlements::AccessLevel) -> bool {
+    kid || level == crate::entitlements::AccessLevel::Full
+}
+
 /// The tiers this player may pool and pick: Full owns every allowed tier,
 /// Preview the first, and Jr follows its own policy (free, D10).
 fn owned_tiers(lang: &str) -> Vec<usize> {
@@ -319,7 +326,7 @@ fn render_setup() {
     // D10: Daily is one shared game for everyone, so it needs the full bank:
     // a Preview player (first tier only) would see different words. Absent, not locked.
     let offered: Vec<Kind> =
-        Kind::ALL.iter().copied().filter(|k| k.enabled() && (*k != Kind::Daily || level == crate::entitlements::AccessLevel::Full)).collect();
+        Kind::ALL.iter().copied().filter(|k| k.enabled() && (*k != Kind::Daily || daily_open(kid, level))).collect();
     if !offered.contains(&kind) {
         KIND.with(|m| m.set(Kind::Sprint));
     }
@@ -415,8 +422,8 @@ fn start() {
         return;
     }
     let kind = KIND.with(Cell::get);
-    if kind == Kind::Daily && level != crate::entitlements::AccessLevel::Full {
-        return; // D10: Daily needs the full bank
+    if kind == Kind::Daily && !daily_open(kid, level) {
+        return; // D10: Daily needs the full bank (CC-LAUNCH-EN D24: not for a kid)
     }
     // Jr has no tier choice: it pools Easy and Medium and prefers the easier.
     let mut tier = if kid { 0 } else { TIER.with(Cell::get) };
@@ -1783,6 +1790,16 @@ pub fn seam_score(n: u32) {
 
 #[cfg(test)]
 mod tests {
+    /// CC-LAUNCH-EN D10 / D24: the Daily kind needs Full for a standard player
+    /// and is never locked for a kid.
+    #[test]
+    fn the_daily_kind_is_kid_exempt() {
+        use crate::entitlements::AccessLevel;
+        assert!(!super::daily_open(false, AccessLevel::Preview));
+        assert!(super::daily_open(false, AccessLevel::Full));
+        assert!(super::daily_open(true, AccessLevel::Preview), "D24");
+    }
+
     /// The mode adds no telemetry (I9 of the spec's isolation, and the pattern
     /// Board Game's I15 set).
     #[test]

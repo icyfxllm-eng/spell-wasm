@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Burahin",
   "acn.delete.failed": "Hindi mabura. Suriin ang koneksyon at subukan ulit.",
   "de.close.letters": "Malapit na — ang salitang ito ay isinusulat nang may {fix}",
-  "de.close.split": "Malapit na — isulat ito bilang isang salita"
+  "de.close.split": "Malapit na — isulat ito bilang isang salita",
+  "paywall.title": "I-unlock ang mas maraming spelling",
+  "paywall.body": "Mga salitang Medium, Hard at Expert, The Climb, at bawat level ng bawat laro.",
+  "paywall.buy": "Bilhin · {price}",
+  "paywall.restore": "I-restore ang mga Binili",
+  "paywall.close": "Hindi muna",
+  "paywall.retry": "Subukan ulit",
+  "paywall.priceError": "Hindi ma-load ang mga presyo. Tingnan ang iyong koneksyon.",
+  "paywall.getApp": "Nasa SpellGame app para sa iPhone ang mga unlock.",
+  "paywall.pending": "Naghihintay ng pahintulot ng isang nakatatanda.",
+  "paywall.done": "Na-unlock na. Salamat!",
+  "paywall.restoreNone": "Walang binili na maire-restore.",
+  "paywall.failed": "Hindi natuloy ang pagbili. Walang siningil.",
+  "complete.includesFutureLanguages": "Kasama sa Complete ang bawat wikang idaragdag namin."
 }

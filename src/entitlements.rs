@@ -403,6 +403,57 @@ pub fn preview_allows(lang: &str, mode: GameMode, tier: u32) -> bool {
     }
 }
 
+/// The four difficulty tiers, easiest first. Index + 1 is the 1-based tier
+/// number [`preview_allows`] takes.
+pub const TIERS: [&str; 4] = ["easy", "medium", "hard", "expert"];
+
+/// 1-based tier number for a tier name, `None` for anything that is not one of
+/// the four difficulty tiers (climb, impossible, a custom source).
+pub fn tier_number(tier: &str) -> Option<u32> {
+    TIERS.iter().position(|t| *t == tier).map(|i| i as u32 + 1)
+}
+
+/// CC-LAUNCH-EN D21 / D24: may this player play `tier` of `lang`? THE question
+/// every word-serving surface asks, so no screen keeps its own tier lock.
+///
+/// - A Little Speller (kid) profile is free at every difficulty (D1, D24).
+/// - `Full` opens every tier.
+/// - `Preview` opens the tiers [`preview_allows`] gives standard mode, which is Easy.
+/// - `None` opens nothing.
+///
+/// A name that is not a difficulty tier is open at Full only, so an unknown
+/// source can never widen Preview.
+pub fn tier_open(level: AccessLevel, kid: bool, lang: &str, tier: &str) -> bool {
+    if kid {
+        return true;
+    }
+    match level {
+        AccessLevel::Full => true,
+        AccessLevel::Preview => tier_number(tier).is_some_and(|n| preview_allows(lang, GameMode::Standard, n)),
+        AccessLevel::None => false,
+    }
+}
+
+/// The difficulty tiers [`tier_open`] allows, easiest first. Never empty for a
+/// player who can play the language at all, because Preview always keeps Easy.
+pub fn open_tiers(level: AccessLevel, kid: bool, lang: &str) -> Vec<&'static str> {
+    TIERS.iter().copied().filter(|t| tier_open(level, kid, lang, t)).collect()
+}
+
+/// CC-LAUNCH-EN D19 / D24: may this player enter `mode` in `lang` at all? The
+/// Daily is open at Preview, while the Climb and ghost racing need Full. A kid
+/// profile is never locked out.
+pub fn mode_open(level: AccessLevel, kid: bool, lang: &str, mode: GameMode) -> bool {
+    if kid {
+        return true;
+    }
+    match level {
+        AccessLevel::Full => true,
+        AccessLevel::Preview => preview_allows(lang, mode, 1),
+        AccessLevel::None => false,
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Feature 2 — country → language map (single source of truth, bundled)
 // ---------------------------------------------------------------------------
@@ -548,6 +599,41 @@ mod tests {
                 assert!(!preview_allows(lang, m, 1), "{lang} {m:?} must be Full-only");
             }
         }
+    }
+
+    // ---- CC-LAUNCH-EN D21 / D24: the shared tier gate ----
+    #[test]
+    fn tier_gate_matrix() {
+        use AccessLevel::*;
+        for t in TIERS {
+            assert!(tier_open(Full, false, "en", t), "Full opens {t}");
+            assert!(tier_open(Preview, true, "en", t), "a kid is free at {t}");
+            assert!(tier_open(None, true, "en", t), "a kid is never locked");
+            assert!(!tier_open(None, false, "en", t));
+        }
+        assert!(tier_open(Preview, false, "en", "easy"));
+        for t in ["medium", "hard", "expert"] {
+            assert!(!tier_open(Preview, false, "en", t), "Preview locks {t}");
+        }
+        // A non-tier name never widens Preview.
+        for t in ["climb", "impossible", "", "mine"] {
+            assert!(!tier_open(Preview, false, "en", t), "{t:?}");
+            assert!(tier_open(Full, false, "en", t));
+        }
+        assert_eq!(open_tiers(Preview, false, "en"), vec!["easy"]);
+        assert_eq!(open_tiers(Full, false, "en"), TIERS.to_vec());
+        assert_eq!(open_tiers(Preview, true, "en"), TIERS.to_vec());
+    }
+
+    #[test]
+    fn mode_gate_matrix() {
+        use AccessLevel::*;
+        assert!(mode_open(Preview, false, "en", GameMode::Daily), "D19");
+        assert!(mode_open(Preview, false, "en", GameMode::Standard));
+        assert!(!mode_open(Preview, false, "en", GameMode::Climb));
+        assert!(!mode_open(Preview, false, "en", GameMode::GhostRace));
+        assert!(mode_open(Preview, true, "en", GameMode::Climb), "D24");
+        assert!(mode_open(Full, false, "en", GameMode::Climb));
     }
 
     // ---- CC-LAUNCH-EN F4: the three products ----

@@ -162,6 +162,13 @@ pub fn allowed_tiers(level: crate::entitlements::AccessLevel) -> &'static [&'sta
     }
 }
 
+/// CC-LAUNCH-EN D21 / D24: the tier to serve when `requested` is asked for and
+/// only the `open` tiers (`play_hub::open_tiers`) may be: the request if open,
+/// else the deepest open tier; `None` when nothing is open.
+pub fn clamp_tier(requested: &str, open: &[&'static str]) -> Option<&'static str> {
+    open.iter().copied().find(|t| *t == requested).or_else(|| open.last().copied())
+}
+
 /// The Spell Jr tier ceiling (Invariant 6): the UI can ask, the engine
 /// refuses. CC-ONBOARD-JR: the answer comes from `experience::serve_tier`, the
 /// one authority, so this mode cannot drift from the others.
@@ -563,6 +570,14 @@ mod tests {
     #[test]
     fn entitlement_tier_depth() {
         use crate::entitlements::AccessLevel;
+        // CC-LAUNCH-EN D21 / D24: the shared gate's clamp.
+        use crate::entitlements::open_tiers;
+        assert_eq!(clamp_tier("hard", &open_tiers(AccessLevel::Preview, false, "en")), Some("easy"));
+        assert_eq!(clamp_tier("hard", &open_tiers(AccessLevel::Full, false, "en")), Some("hard"));
+        assert_eq!(clamp_tier("hard", &open_tiers(AccessLevel::Preview, true, "en")), Some("hard"), "D24: a kid is not clamped");
+        assert_eq!(clamp_tier("hard", &open_tiers(AccessLevel::None, false, "en")), None);
+        assert_eq!(effective_tier(clamp_tier("expert", &open_tiers(AccessLevel::Preview, true, "en")).unwrap(), true),
+                   effective_tier("expert", true), "the Jr ceiling still applies");
         assert_eq!(allowed_tiers(AccessLevel::Preview), &["easy"]);
         assert_eq!(allowed_tiers(AccessLevel::Full), &["easy", "medium", "hard", "expert"]);
         assert!(allowed_tiers(AccessLevel::None).is_empty());

@@ -15,7 +15,7 @@ use crate::wordcross::layout::Grid;
 use crate::wordcross::serve::{self, params, Cross};
 use crate::wordsearch::gen::Tier;
 use crate::wordsearch::ledger::Ledger;
-use crate::wordsearch::lexicon::{eligible, graphemes, tiers_for};
+use crate::wordsearch::lexicon::{eligible, graphemes, tiers_open};
 use crate::wordsearch::{lock_in_attempt, trap_attempt};
 use crate::wordsearch_ui::LEDGER_KEY;
 use crate::{dom, i18n, i18n::t, App};
@@ -78,8 +78,15 @@ fn note(s: &str) {
     dom::set_text("xwNote", s);
 }
 
+/// CC-LAUNCH-EN D21 / D24: the tiers on offer. A tier this player may not play
+/// is not offered, and a stale pick of one falls back to the first open tier.
+// CC-LAUNCH-EN D21: paywall hook
+fn offered(lang: &str, kid: bool) -> Vec<Tier> {
+    tiers_open(lang, kid, &crate::play_hub::open_tiers(kid, lang))
+}
+
 fn fill_picker(kid: bool, lang: &str) {
-    let opts: String = tiers_for(lang, kid)
+    let opts: String = offered(lang, kid)
         .into_iter()
         .map(|t| format!("<option value=\"{}\">{}</option>", t.id(), dom::escape_html(&tier_label(t))))
         .collect();
@@ -88,8 +95,8 @@ fn fill_picker(kid: bool, lang: &str) {
 
 fn picked_tier(kid: bool, lang: &str) -> Tier {
     Tier::from_id(&dom::select("xwPick").value())
-        .filter(|t| tiers_for(lang, kid).contains(t))
-        .or_else(|| tiers_for(lang, kid).first().copied())
+        .filter(|t| offered(lang, kid).contains(t))
+        .or_else(|| offered(lang, kid).first().copied())
         .unwrap_or(Tier::Jr)
 }
 

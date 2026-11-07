@@ -101,6 +101,11 @@ fn experience() -> crate::experience::Experience {
     crate::experience::of_kid(JUNIOR.with(Cell::get))
 }
 
+/// CC-LAUNCH-EN D21 / D24: the tiers this player may be dealt from.
+fn open_tiers(lang: &str) -> Vec<&'static str> {
+    crate::play_hub::open_tiers(JUNIOR.with(Cell::get), lang)
+}
+
 pub fn open(app: &App) {
     crate::telemetry::set_mode(crate::telemetry::schema::Mode::WordChains);
     let lang = app.borrow().lang.clone();
@@ -132,7 +137,7 @@ pub fn open(app: &App) {
         .unwrap_or('a')
         .to_string();
     let used = BTreeSet::new();
-    let opener = chains::pass_draw_for(experience(), &lang, &first, &used, SEED.with(Cell::get));
+    let opener = chains::pass_draw_open(experience(), &lang, &first, &used, SEED.with(Cell::get), &open_tiers(&lang));
     match opener {
         Some(w) => {
             let h = chains::hook(&lang, &w).unwrap_or(first);
@@ -342,7 +347,7 @@ fn pass() {
     let hook = HOOK.with(|h| h.borrow().clone());
     let used = USED.with(|u| u.borrow().clone());
     let seed = SEED.with(Cell::get).wrapping_add(CHAIN.with(|c| c.borrow().len() as u64));
-    match chains::pass_draw_for(experience(), &lang, &hook, &used, seed) {
+    match chains::pass_draw_open(experience(), &lang, &hook, &used, seed, &open_tiers(&lang)) {
         Some(w) => {
             let h = chains::hook(&lang, &w).unwrap_or_default();
             PASSES.with(|c| c.set(c.get() + 1));

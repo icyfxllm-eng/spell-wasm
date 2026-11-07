@@ -184,6 +184,23 @@ pub fn word_at<'c>(c: &'c Curriculum, pos: usize, progress: &'c Progress) -> Opt
     }
 }
 
+/// CC-LAUNCH-EN D21 / D24 — where the run ends for a player who may play only
+/// the `open` tiers (`play_hub::open_tiers`). The 20 first-contact words are
+/// the guided introduction and always run. The 5-word graduation lap is bank
+/// words (English's are all Medium), so it runs only when the tier of every one
+/// of them is open; otherwise the run ends at the ceremony, after word 20. A
+/// word that is in no bank tier is not a locked tier's word. A kid's open list
+/// is every tier, so Little Speller always runs all 25.
+pub fn run_end(lang: &str, c: &Curriculum, open: &[&str]) -> usize {
+    let lap_open = c.difficult.iter().all(|w| {
+        crate::entitlements::TIERS
+            .iter()
+            .find(|t| crate::words::tier_for(lang, t).iter().any(|e| e == w))
+            .is_none_or(|t| open.contains(t))
+    });
+    if lap_open { TOTAL } else { FIRST_CONTACT }
+}
+
 /// The trap-class entry owning position `pos` (trap blocks run from each
 /// entry's firstWord to the next entry's). Graduation words map to the class
 /// they close out (one difficult word per introduced trap, D10).
@@ -609,6 +626,21 @@ mod tests {
                 assert!(t.len() <= TRAY_MAX.max(units(code, w).len()), "{code}/{w}: tray oversize");
             }
         }
+    }
+
+    /// CC-LAUNCH-EN D21 / D24 — at Preview English's all-Medium graduation lap
+    /// is not served (the run ends at word 20); Full and a kid at Preview run
+    /// all 25.
+    #[test]
+    fn preview_ends_before_a_locked_graduation_lap() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        let c = curriculum("en").unwrap();
+        assert_eq!(run_end("en", c, &open_tiers(AccessLevel::Preview, false, "en")), FIRST_CONTACT);
+        assert_eq!(run_end("en", c, &open_tiers(AccessLevel::Full, false, "en")), TOTAL);
+        assert_eq!(run_end("en", c, &open_tiers(AccessLevel::Preview, true, "en")), TOTAL);
+        // fr's lap is all Easy, so Preview keeps it.
+        let fr = curriculum("fr").unwrap();
+        assert_eq!(run_end("fr", fr, &open_tiers(AccessLevel::Preview, false, "fr")), TOTAL);
     }
 
     /// ko tiles assemble into real blocks through the repo IME (I8).

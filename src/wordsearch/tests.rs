@@ -10,7 +10,7 @@ use super::confusion::{self, decoys, edits, has_decoys};
 use super::gen::{hash, judge, path, Hit, Puzzle, Tier, DIRS};
 use super::hint::passes;
 use super::ledger::{daily_gap, fits, Ledger, WINDOW_DAYS, WINDOW_PUZZLES};
-use super::lexicon::{eligible, graphemes, pool, pool_floor, tiers_for, Lexicon, LANGS};
+use super::lexicon::{eligible, graphemes, pool, pool_floor, tiers_for, tiers_open, Lexicon, LANGS};
 use super::serve::{self, bank, from_list, key};
 use crate::spelldoku::rng::{fnv, Rng};
 
@@ -359,6 +359,20 @@ fn wordgrid_stats_parity() {
     assert_eq!(trap.channel, Channel::Trap);
     assert!(!trap.correct && trap.typed.as_deref() == Some("recieve") && trap.word == "receive");
     assert_eq!(trap.skills, base.skills, "and exercises the same skills");
+}
+
+/// CC-LAUNCH-EN D21 / D24: at Preview a standard player is offered Easy only;
+/// Full is `tiers_for`, and a kid at Preview still gets Jr.
+#[test]
+fn preview_offers_easy_only() {
+    use crate::entitlements::{open_tiers, AccessLevel};
+    for lang in LANGS {
+        let preview = open_tiers(AccessLevel::Preview, false, lang);
+        assert_eq!(tiers_open(lang, false, &preview), vec![Tier::Easy], "{lang}");
+        assert_eq!(tiers_open(lang, false, &open_tiers(AccessLevel::Full, false, lang)), tiers_for(lang, false), "{lang}");
+        assert_eq!(tiers_open(lang, true, &open_tiers(AccessLevel::Preview, true, lang)), tiers_for(lang, true), "{lang}");
+    }
+    assert!(tiers_open("ko", false, &["easy"]).is_empty(), "an ineligible language stays absent");
 }
 
 /// Test 12. An under-13 player reaches Jr only: → ↓, no decoys.

@@ -204,7 +204,7 @@ fn effective_tier(s: &AppState) -> String {
     } else {
         s.level.clone()
     };
-    clamp_base_tier(s.kid, tier)
+    entitled_tier(s, clamp_base_tier(s.kid, tier))
 }
 
 /// CC-ONBOARD-JR I5 — the base game's tier after the experience decides.
@@ -963,13 +963,48 @@ pub fn build_source_options(app: &App) {
     update_setup_chip(app);
 }
 
+/// CC-LAUNCH-EN D11 / D21: is `level` (a tier name or "climb") locked for this
+/// player? Only built-in study languages are gated. My Words and the misses
+/// review are the player's own words. A kid profile is never locked (D24).
+pub fn level_locked(app: &App, level: &str) -> bool {
+    let s = app.borrow();
+    level_locked_for(&s, level)
+}
+
+fn level_locked_for(s: &AppState, level: &str) -> bool {
+    if s.kid || !crate::consts::is_active_lang(&s.lang) {
+        return false;
+    }
+    if level == "climb" {
+        return !crate::play_hub::mode_open(s.kid, &s.lang, crate::entitlements::GameMode::Climb);
+    }
+    crate::entitlements::tier_number(level).is_some() && !crate::play_hub::tier_open(s.kid, &s.lang, level)
+}
+
+/// CC-LAUNCH-EN D21: never SERVE a tier the player does not own, whatever the
+/// selector or a stored level says. Locked serves fall back to Easy.
+fn entitled_tier(s: &AppState, tier: String) -> String {
+    if s.kid || !crate::consts::is_active_lang(&s.lang) || crate::play_hub::tier_open(s.kid, &s.lang, &tier) {
+        tier
+    } else {
+        "easy".to_string()
+    }
+}
+
 pub fn build_level_options(app: &App) {
     let offered = offered_levels(crate::experience::of_kid(app.borrow().kid));
+    // D11: a locked entry stays selectable so a tap can open the paywall; its
+    // label says which product unlocks it.
+    let lock_note = crate::i18n::t(crate::impossible::engine::lock_copy_key(crate::impossible::LockReason::NeedsEnglish));
     let mut opts: String = offered
         .iter()
         .map(|v| {
             let label = crate::i18n::t(&format!("level.{v}"));
-            format!("<option value=\"{v}\">{label}</option>")
+            if level_locked(app, v) {
+                format!("<option value=\"{v}\" data-locked=\"1\">{label} \u{2014} {}</option>", dom::escape_html(&lock_note))
+            } else {
+                format!("<option value=\"{v}\">{label}</option>")
+            }
         })
         .collect();
     // CC-IMPOSSIBLE-COMPLETE F3/F5/F6: Impossible and Mix, only when their gates say so. A flag
@@ -998,6 +1033,11 @@ pub fn build_level_options(app: &App) {
         let mut s = app.borrow_mut();
         if !offered.contains(&s.level.as_str()) && !impossible_open.contains(&s.level.as_str()) {
             s.level = "medium".to_string();
+        }
+        // D21: a stored level the player no longer owns (a refund, or a level
+        // saved before English was paid) falls back to Easy.
+        if level_locked_for(&s, &s.level.clone()) {
+            s.level = "easy".to_string();
         }
     }
     dom::select("levelSel").set_value(&app.borrow().level);
@@ -1954,6 +1994,7 @@ pub fn next_word(app: &App) {
             // CC-ONBOARD-JR I5: enforced where the word is chosen, not only in
             // the selector — the UI may ask for Hard, the engine does not serve it.
             let tier = clamp_base_tier(s.kid, tier);
+            let tier = entitled_tier(&s, tier);
             s.cur_tier = tier.clone();
             let pool = active_word_list(&s, &tier);
             if !pool.is_empty() {
@@ -5292,5 +5333,54 @@ mod cant_tell_tests {
         for other in ["", "none", "web-speech", "anything else"] {
             assert_eq!(clip_source(other), ClipSource::Other, "{other:?}");
         }
+    }
+}
+
+#[cfg(test)]
+mod launch_en_gate_tests {
+    //! CC-LAUNCH-EN D11 / D21 / D24 at the engine. Under cargo test the live
+    //! entitlements are the free tier (StoreKit owns nothing), so English is Preview.
+    use super::*;
+
+    fn player(kid: bool, lang: &str, level: &str) -> AppState {
+        AppState { kid, lang: lang.into(), level: level.into(), ..AppState::default() }
+    }
+
+    #[test]
+    fn free_standard_player_is_served_easy_only() {
+        for t in ["medium", "hard", "expert"] {
+            let s = player(false, "en", t);
+            assert!(level_locked_for(&s, t), "{t} is locked at Preview");
+            assert_eq!(entitled_tier(&s, t.to_string()), "easy", "a locked {t} serves Easy");
+        }
+        let s = player(false, "en", "easy");
+        assert!(!level_locked_for(&s, "easy"));
+        assert_eq!(entitled_tier(&s, "easy".into()), "easy");
+        // The Climb needs English (D19 keeps only the Daily free).
+        assert!(level_locked_for(&player(false, "en", "climb"), "climb"));
+    }
+
+    #[test]
+    fn little_speller_is_never_locked() {
+        for t in ["easy", "medium", "hard", "expert", "climb"] {
+            let s = player(true, "en", t);
+            assert!(!level_locked_for(&s, t), "D24: kid {t}");
+            assert_eq!(entitled_tier(&s, t.to_string()), t);
+        }
+    }
+
+    #[test]
+    fn my_words_is_the_players_own() {
+        let s = player(false, crate::consts::MINE, "hard");
+        assert!(!level_locked_for(&s, "hard"));
+        assert_eq!(entitled_tier(&s, "hard".into()), "hard");
+    }
+
+    #[test]
+    fn the_default_climb_level_falls_to_easy_when_locked() {
+        // AppState::default() starts on the Climb; a free player is served Easy.
+        let s = AppState { lang: "en".into(), ..AppState::default() };
+        assert_eq!(s.level, "climb");
+        assert_eq!(effective_tier(&s), "easy");
     }
 }

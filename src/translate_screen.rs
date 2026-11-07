@@ -206,8 +206,10 @@ pub enum SpellVerdict {
 /// (D3, signed). Anything else is an honest decline, never a silent drop.
 pub fn spell_it_verdict(exp: Experience, level: AccessLevel, lang: &str, entry: &str) -> SpellVerdict {
     let Some(tier) = bank_tier_of(lang, entry) else { return SpellVerdict::Decline };
-    if exp == Experience::Junior && !junior_legal(lang, entry) {
-        return SpellVerdict::Decline;
+    if exp == Experience::Junior {
+        // CC-LAUNCH-EN D24: a Little Speller is free at every difficulty, so a
+        // Jr-legal word serves whatever the language's access level.
+        return if junior_legal(lang, entry) { SpellVerdict::Serve } else { SpellVerdict::Decline };
     }
     if level == AccessLevel::Full {
         return SpellVerdict::Serve;
@@ -450,6 +452,12 @@ mod tests {
                    "an unowned language serves only its preview tier");
         assert_eq!(spell_it_verdict(Experience::Standard, AccessLevel::Preview, "es", easy_word), SpellVerdict::Serve);
         assert_eq!(spell_it_verdict(Experience::Standard, AccessLevel::Full, "es", "not-a-bank-word"), SpellVerdict::Decline);
+        // CC-LAUNCH-EN D24: a Jr-legal word above the preview tier serves a
+        // Little Speller at Preview; the Jr band still refuses Expert.
+        let jr_medium = crate::words::tier_for("en", TIERS[1]).iter().find(|w| junior_legal("en", w)).expect("a kid-safe en Medium word");
+        assert_eq!(spell_it_verdict(Experience::Junior, AccessLevel::Preview, "en", jr_medium), SpellVerdict::Serve);
+        assert_eq!(spell_it_verdict(Experience::Standard, AccessLevel::Preview, "en", jr_medium), SpellVerdict::Decline);
+        assert_eq!(spell_it_verdict(Experience::Junior, AccessLevel::Preview, "es", hard_word), SpellVerdict::Decline);
     }
 
     /// Eric, 2026-09-13: English lookup reaches all four tiers. Every English

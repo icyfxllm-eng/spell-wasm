@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Löschen",
   "acn.delete.failed": "Löschen nicht möglich. Prüfe deine Verbindung und versuche es erneut.",
   "de.close.letters": "Fast — hier steht {fix}",
-  "de.close.split": "Fast — das schreibt man zusammen"
+  "de.close.split": "Fast — das schreibt man zusammen",
+  "paywall.title": "Mehr Rechtschreibung freischalten",
+  "paywall.body": "Wörter für Mittel, Schwer und Experte, The Climb und jede Stufe jedes Spiels.",
+  "paywall.buy": "Kaufen · {price}",
+  "paywall.restore": "Käufe wiederherstellen",
+  "paywall.close": "Nicht jetzt",
+  "paywall.retry": "Erneut versuchen",
+  "paywall.priceError": "Preise konnten nicht geladen werden. Prüfe deine Verbindung.",
+  "paywall.getApp": "Freischaltungen gibt es in der SpellGame-App für iPhone.",
+  "paywall.pending": "Warte auf die Zustimmung eines Erwachsenen.",
+  "paywall.done": "Freigeschaltet. Danke!",
+  "paywall.restoreNone": "Keine Käufe zum Wiederherstellen.",
+  "paywall.failed": "Der Kauf hat nicht geklappt. Es wurde nichts berechnet.",
+  "complete.includesFutureLanguages": "Complete enthält jede Sprache, die wir hinzufügen."
 }

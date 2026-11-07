@@ -156,8 +156,12 @@ fn configs(kid: bool, lang: &str) -> Vec<(usize, Tier)> {
         (9, Tier::Expert),
     ];
     let frag = table::load(lang).is_some_and(|t| crate::spelldoku::bind::number_symbols(&t, 9).0.fragments_possible());
+    // CC-LAUNCH-EN D21 / D24: a board tier above what this player may play is
+    // not offered (a kid's open list is every tier).
+    let open = crate::play_hub::open_tiers(kid, lang);
     all.into_iter()
         .filter(|&(n, tier)| play::allowed(kid, n, tier))
+        .filter(|&(_, tier)| tiermode::board_open(tier, &open))
         // Hard and Expert need a necessary fragment. Their boards are Word
         // Mode (D12), where bank words make fragments; a language whose number
         // words cannot make one still falls back no further than Medium.
@@ -194,6 +198,7 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     let lang = app.borrow().lang.clone();
     let kid = app.borrow().kid;
     if !configs(kid, &lang).contains(&(n, tier)) {
+        // CC-LAUNCH-EN D21: paywall hook (a locked tier is refused here too).
         return false; // F7, and Hard/Expert only where fragments exist
     }
     let Some(tbl) = table::load(&lang).filter(|t| t.servable_for(n, build())) else { return false };
@@ -287,15 +292,17 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     // v1.3 F9/D-T4: Tier Mode indexes DIGITS, so it rides Number Mode only, and
     // only where F5's depth rule holds. Anything else serves the board as before.
     let want = reading();
+    // CC-LAUNCH-EN D21 / D24: Tier Mode only where its whole span is open.
+    let open = crate::play_hub::open_tiers(kid, &lang);
     let session = match (want, &board.mode) {
         (Reading::Off, _) | (_, Mode::Words(_)) => None,
         // F6: Reading B IS a 4x4 board of four tier badges. Asked for on any
         // other size, or on a Jr board (D-T5, enforced in Session::new), the
         // setting degrades to Reading A rather than refusing to deal.
-        (Reading::Symbols, _) if n == 4 && !kid && tiermode::symbols_available(&lang) => {
+        (Reading::Symbols, _) if n == 4 && !kid && tiermode::symbols_available(&lang) && tiermode::span_open(tier, true, &open) => {
             Some(tiermode::Session::with_ledger(&lang, tier, kid, true, base, window(), today()))
         }
-        (Reading::Numbers, _) | (Reading::Symbols, _) if tiermode::available(&lang, tier) => {
+        (Reading::Numbers, _) | (Reading::Symbols, _) if tiermode::available(&lang, tier) && tiermode::span_open(tier, false, &open) => {
             Some(tiermode::Session::with_ledger(&lang, tier, kid, false, base, window(), today()))
         }
         _ => None,

@@ -95,6 +95,7 @@ pub mod editor;
 mod enrich;
 pub mod entitlements;
 pub mod entitlements_adapter;
+pub mod paywall;
 #[cfg(test)]
 mod repetition_sim;
 mod accepted; // CC-ORTHO-SWEEP-DE-JA F3/F5: accepted spelling variants (de/ja), data files only
@@ -502,6 +503,16 @@ fn wire(app: &App) {
     wire_stats_board_modal(app);
     wire_versus(app);
     wire_age_gate(app);
+    // CC-LAUNCH-EN F4: the paywall, and a redraw whenever StoreKit changes what is owned.
+    paywall::wire(app);
+    {
+        let a = app.clone();
+        let cb = wasm_bindgen::closure::Closure::<dyn FnMut()>::new(move || paywall::refresh_after_change(&a));
+        if let Some(w) = web_sys::window() {
+            let _ = w.add_event_listener_with_callback(entitlements_adapter::CHANGED_EVENT, wasm_bindgen::JsCast::unchecked_ref(cb.as_ref()));
+        }
+        cb.forget();
+    }
     keyboard::setup(app);
     climb::setup(app);
     // Online Spell Off (async 1v1) — no entry unless flag on + signed in + not kid.
@@ -1236,6 +1247,14 @@ fn wire_source_level(app: &App) {
             if crate::impossible::engine::is_mix(&dom::select("levelSel").value()) && !game::mix_notice_accepted() {
                 let prev = a.borrow().level.clone();
                 dom::select("levelSel").set_value(&prev);
+                return;
+            }
+            // CC-LAUNCH-EN D11: a locked tier or the locked Climb stays unselected and
+            // opens the paywall (adult gate first). A kid profile is never locked (D24).
+            if game::level_locked(&a, &dom::select("levelSel").value()) {
+                let prev = a.borrow().level.clone();
+                dom::select("levelSel").set_value(&prev);
+                paywall::open(&a);
                 return;
             }
             a.borrow_mut().level = dom::select("levelSel").value();

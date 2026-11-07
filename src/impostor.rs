@@ -537,27 +537,24 @@ pub fn set_of_ten(lang: &str, seed: u64, tier: Tier) -> Vec<Round> {
 /// bank tiers the resolver allows for this mode, kid-safe entries only, in a
 /// stable order so a seed deals the same set on every device (I2).
 fn junior_vocabulary(lang: &str) -> Vec<&'static str> {
-    let mut v: Vec<&'static str> =
-        crate::experience::allowed_tiers(crate::experience::Experience::Junior, "impostor")
-            .iter()
-            .flat_map(|t| crate::words::tier_for(lang, t).iter().copied())
-            .filter(|w| crate::kid_filter::kid_allowed(lang, w))
-            .collect();
+    vocabulary_in(lang, &crate::experience::allowed_tiers(crate::experience::Experience::Junior, "impostor"), true)
+}
+
+/// The bank words of `tiers`, kid-safe only when `kid_only`, sorted and
+/// deduplicated so a seed deals the same set on every device (I2).
+fn vocabulary_in(lang: &str, tiers: &[&str], kid_only: bool) -> Vec<&'static str> {
+    let mut v: Vec<&'static str> = tiers
+        .iter()
+        .flat_map(|t| crate::words::tier_for(lang, t).iter().copied())
+        .filter(|w| !kid_only || crate::kid_filter::kid_allowed(lang, w))
+        .collect();
     v.sort_unstable();
     v.dedup();
     v
 }
 
-/// `set_of_ten` for `exp`. Standard is exactly `set_of_ten`: the real word may
-/// come from anywhere in the vocabulary and the tier shapes the fakes. The
-/// inventory found that a Spell Jr set did the same, so the one card a child is
-/// asked to trust could be an Expert word; a Spell Jr set now builds its real
-/// words from `junior_vocabulary` only.
-pub fn set_of_ten_for(exp: crate::experience::Experience, lang: &str, seed: u64, tier: Tier) -> Vec<Round> {
-    if exp == crate::experience::Experience::Standard {
-        return set_of_ten(lang, seed, tier);
-    }
-    let vocab = junior_vocabulary(lang);
+/// Ten rounds whose real words come from `vocab`.
+fn set_from(lang: &str, vocab: &[&str], seed: u64, tier: Tier) -> Vec<Round> {
     if vocab.is_empty() {
         return Vec::new();
     }
@@ -573,6 +570,29 @@ pub fn set_of_ten_for(exp: crate::experience::Experience, lang: &str, seed: u64,
     out
 }
 
+/// CC-LAUNCH-EN D21 / D24 — `set_of_ten_for` for a player who may play only the
+/// `open` tiers (`play_hub::open_tiers`). With every tier open it is exactly
+/// `set_of_ten_for`, and a kid's open list is every tier. A standard player at
+/// Preview gets real words from the open tiers only.
+pub fn set_of_ten_open(exp: crate::experience::Experience, lang: &str, seed: u64, tier: Tier, open: &[&str]) -> Vec<Round> {
+    if exp != crate::experience::Experience::Standard || crate::experience::TIERS.iter().all(|t| open.contains(t)) {
+        return set_of_ten_for(exp, lang, seed, tier);
+    }
+    set_from(lang, &vocabulary_in(lang, open, false), seed, tier)
+}
+
+/// `set_of_ten` for `exp`. Standard is exactly `set_of_ten`: the real word may
+/// come from anywhere in the vocabulary and the tier shapes the fakes. The
+/// inventory found that a Spell Jr set did the same, so the one card a child is
+/// asked to trust could be an Expert word; a Spell Jr set now builds its real
+/// words from `junior_vocabulary` only.
+pub fn set_of_ten_for(exp: crate::experience::Experience, lang: &str, seed: u64, tier: Tier) -> Vec<Round> {
+    if exp == crate::experience::Experience::Standard {
+        return set_of_ten(lang, seed, tier);
+    }
+    set_from(lang, &junior_vocabulary(lang), seed, tier)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -580,6 +600,29 @@ mod tests {
     const LANGS: [&str; 15] = [
         "en", "es", "fr", "de", "pt", "pl", "ru", "vi", "fil", "sw", "ja", "ko", "zh", "hi", "ar",
     ];
+
+    /// CC-LAUNCH-EN D21 / D24 — at Preview every real card a standard set deals
+    /// is an Easy word; Full and a kid at Preview deal exactly as before.
+    #[test]
+    fn preview_real_cards_are_easy() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        use crate::experience::Experience;
+        let preview = open_tiers(AccessLevel::Preview, false, "en");
+        let easy: std::collections::HashSet<String> =
+            vocabulary_in("en", &["easy"], false).iter().map(|w| fold_strict(w.split('|').next().unwrap_or(w))).collect();
+        for seed in 0..3u64 {
+            let set = set_of_ten_open(Experience::Standard, "en", seed, Tier::Easy, &preview);
+            assert_eq!(set.len(), 10, "a Preview set deals short");
+            for r in &set {
+                assert!(easy.contains(&r.word), "a Preview real card {:?} is not an Easy word", r.word);
+            }
+            let full = open_tiers(AccessLevel::Full, false, "en");
+            assert_eq!(set_of_ten_open(Experience::Standard, "en", seed, Tier::Easy, &full), set_of_ten("en", seed, Tier::Easy));
+            let kid = open_tiers(AccessLevel::Preview, true, "en");
+            assert_eq!(set_of_ten_open(Experience::Junior, "en", seed, Tier::Easy, &kid),
+                       set_of_ten_for(Experience::Junior, "en", seed, Tier::Easy));
+        }
+    }
 
     /// CC-ONBOARD-JR I5 + D8 (Done 10) — every real card a Spell Jr set deals
     /// is a kid-safe Easy or Medium word. It lives here, beside the deal it

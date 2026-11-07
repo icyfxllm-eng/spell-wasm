@@ -231,7 +231,8 @@ pub fn open(app: &App) {
     bump();
     UI.with(|u| *u.borrow_mut() = None);
     let lex = lexicon(&lang);
-    let tiers: Vec<Tier> = offer::tiers_for(&lang, kid).into_iter().filter(|t| lex.as_ref().is_some_and(|l| seeds::usable(l, *t))).collect();
+    let open = open_tiers(&lang, kid);
+    let tiers: Vec<Tier> = offer::tiers_for(&lang, kid).into_iter().filter(|t| offer::tier_open(*t, &open) && lex.as_ref().is_some_and(|l| seeds::usable(l, *t))).collect();
     // I11: nothing for a language that is not offered. The registry already hides the row.
     let Some(&tier) = tiers.first() else { return };
     CTX.with(|c| *c.borrow_mut() = (lang.clone(), kid, tier));
@@ -271,17 +272,18 @@ fn streak_now(kid: bool) -> u32 {
 /// F22: the board types this start screen can offer right now. Classic always; Par when its flag is
 /// on and verified Par boards exist for a tier the profile may open (I11: absent, never locked).
 fn offered_types(lex: &Lexicon, lang: &str, kid: bool) -> Vec<BoardType> {
+    let open = open_tiers(lang, kid);
     let mut v = vec![BoardType::Classic];
-    if flags::spelluzzle_par() && [Tier::Hard, Tier::Expert].iter().any(|t| offer::par_offered(lang, kid, *t) && !seeds::par_records(lex, *t).is_empty()) {
+    if flags::spelluzzle_par() && [Tier::Hard, Tier::Expert].iter().any(|t| offer::par_offered(lang, kid, *t) && offer::tier_open(*t, &open) && !seeds::par_records(lex, *t).is_empty()) {
         v.push(BoardType::Par);
     }
-    if flags::spelluzzle_expedition() && [Tier::Medium, Tier::Hard, Tier::Expert].iter().any(|t| offer::expedition_offered(lang, kid, *t) && !seeds::run_records(lex, *t).is_empty()) {
+    if flags::spelluzzle_expedition() && [Tier::Medium, Tier::Hard, Tier::Expert].iter().any(|t| offer::expedition_offered(lang, kid, *t) && offer::tier_open(*t, &open) && !seeds::run_records(lex, *t).is_empty()) {
         v.push(BoardType::Expedition);
     }
     if flags::spelluzzle_mywords() && !my_lists(lang, kid).is_empty() {
         v.push(BoardType::MyWords);
     }
-    if flags::spelluzzle_duel() && offer::duel_offered(lang, kid, Tier::Easy) {
+    if flags::spelluzzle_duel() && offer::duel_offered(lang, kid, Tier::Easy) && offer::tier_open(Tier::Easy, &open) {
         v.push(BoardType::Duel);
     }
     v
@@ -319,15 +321,23 @@ fn my_lists(lang: &str, kid: bool) -> Vec<(String, String, Vec<String>)> {
     out
 }
 
+/// CC-LAUNCH-EN D21 / D24: the tiers this player may be served.
+fn open_tiers(lang: &str, kid: bool) -> Vec<&'static str> {
+    crate::play_hub::open_tiers(kid, lang)
+}
+
 fn tiers_for_type(lex: &Lexicon, lang: &str, kid: bool, ty: BoardType) -> Vec<Tier> {
-    match ty {
+    let open = open_tiers(lang, kid);
+    let tiers: Vec<Tier> = match ty {
         BoardType::Classic => offer::tiers_for(lang, kid).into_iter().filter(|t| seeds::usable(lex, *t)).collect(),
         BoardType::Par => [Tier::Hard, Tier::Expert].into_iter().filter(|t| offer::par_offered(lang, kid, *t) && !seeds::par_records(lex, *t).is_empty()).collect(),
         BoardType::Expedition => [Tier::Medium, Tier::Hard, Tier::Expert].into_iter().filter(|t| offer::expedition_offered(lang, kid, *t) && !seeds::run_records(lex, *t).is_empty()).collect(),
         // F21: a My Words board has no tier of its own.
         BoardType::MyWords => Vec::new(),
         BoardType::Duel => [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert].into_iter().filter(|t| offer::duel_offered(lang, kid, *t)).collect(),
-    }
+    };
+    // CC-LAUNCH-EN D21: a locked tier is absent from every board type.
+    tiers.into_iter().filter(|t| offer::tier_open(*t, &open)).collect()
 }
 
 fn render_setup() {
@@ -472,6 +482,10 @@ fn load_history(lang: &str, kid: bool) -> History {
 /// the same board, else draw a new one. Resume replaces; it never appends.
 fn begin(tier: Tier, allow_resume: bool) {
     let (lang, kid, _) = CTX.with(|c| c.borrow().clone());
+    if !offer::tier_open(tier, &open_tiers(&lang, kid)) {
+        // CC-LAUNCH-EN D21: paywall hook
+        return;
+    }
     let Some(lex) = lexicon(&lang) else { return };
     let profile = store::profile(kid);
     let token = bump();

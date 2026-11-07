@@ -14,6 +14,12 @@
 //! * `long_band` (D25): the longest decile of the Expert pool by graphemes,
 //!   floor of 20.
 //! * `record` (D19): the words a game actually drew, written once.
+//! * `gate_open` / `supply_open` (CC-LAUNCH-EN D21 / D24): the same for a
+//!   player who may play only some tiers. At Preview every tile tier draws
+//!   distinct Easy words, so a board keeps its shape and serves nothing
+//!   locked. A kid's open list is every tier, so Spell Jr never narrows. (The
+//!   Impossible pool below has its own entitlement check; the tier pools had
+//!   none until this.)
 
 use std::collections::BTreeSet;
 
@@ -93,6 +99,85 @@ pub fn gate(lang: &str, v: Variant) -> Result<(), Short> {
         }
     }
     Ok(())
+}
+
+/// CC-LAUNCH-EN D21: the bank tier tile tier `tier` draws from when only
+/// `open` tiers may serve: itself if open, else the deepest open tier below it.
+fn source_tier(tier: Tier, open: &[&str]) -> Option<Tier> {
+    Tier::ALL[..=tier.ix()].iter().rev().copied().find(|t| open.contains(&t.name()))
+}
+
+fn all_open(open: &[&str]) -> bool {
+    crate::experience::TIERS.iter().all(|t| open.contains(t))
+}
+
+/// CC-LAUNCH-EN D21 / D24 — `gate` for a player who may play only the `open`
+/// tiers. With every tier open it is exactly `gate`. Otherwise each open bank
+/// tier must hold the minimum for every tile tier it stands in for, and the
+/// Long Word band (cut from the deepest open tier) must clear its floor.
+pub fn gate_open(lang: &str, v: Variant, open: &[&str]) -> Result<(), Short> {
+    let kid = v == Variant::Jr;
+    if kid || all_open(open) {
+        return gate(lang, v);
+    }
+    let mut need: Vec<(Tier, usize)> = Vec::new();
+    for tier in tiers_of(v) {
+        let Some(src) = source_tier(tier, open) else {
+            return Err(Short { tier, have: 0, need: min_pool(v) });
+        };
+        match need.iter_mut().find(|(t, _)| *t == src) {
+            Some((_, n)) => *n += min_pool(v),
+            None => need.push((src, min_pool(v))),
+        }
+    }
+    for (tier, n) in need {
+        let have = bank(lang, tier, kid).len();
+        if have < n {
+            return Err(Short { tier, have, need: n });
+        }
+    }
+    if v.cfg().has_traps() {
+        let src = source_tier(Tier::Expert, open).unwrap_or(Tier::Easy);
+        let have = long_band(&bank(lang, src, kid)).len();
+        if have < LONG_WORD_FLOOR {
+            return Err(Short { tier: src, have, need: LONG_WORD_FLOOR });
+        }
+    }
+    Ok(())
+}
+
+/// CC-LAUNCH-EN D21 / D24 — `supply` for a player who may play only the `open`
+/// tiers. With every tier open (or for Spell Jr) it is exactly `supply`. At
+/// Preview each locked tile tier draws from the deepest open tier below it,
+/// never repeating a word an earlier tier already holds, under its own ledger
+/// key so `record` stays in step; the Long Word band is cut from that tier too.
+pub fn supply_open(lang: &str, v: Variant, ledger: &Ledger, day: u32, seed: u64, open: &[&str]) -> Result<Supply, Short> {
+    if v == Variant::Jr || all_open(open) {
+        return supply(lang, v, ledger, day, seed);
+    }
+    gate_open(lang, v, open)?;
+    let need = min_pool(v);
+    let mut rng = Rng::new(seed ^ 0xB0A4_D5B1);
+    let mut pools = TierPools::default();
+    let mut relaxed = 0;
+    let mut taken: BTreeSet<String> = BTreeSet::new();
+    for tier in tiers_of(v) {
+        let src = source_tier(tier, open).expect("gate_open found a source");
+        let all = bank(lang, src, false);
+        let mut picked: Vec<String> = Vec::new();
+        let fresh = |_: &[String], w: &str| !taken.contains(w);
+        relaxed += ledger.select(&ledger_key(lang, tier), &all, &mut picked, need, day, &mut rng, &fresh);
+        taken.extend(picked.iter().cloned());
+        pools.tiers[tier.ix()] = picked;
+    }
+    if v.cfg().has_traps() {
+        let src = source_tier(Tier::Expert, open).unwrap_or(Tier::Easy);
+        let band = long_band(&bank(lang, src, false));
+        let key = ledger_key(lang, Tier::Expert);
+        let fresh: Vec<String> = band.iter().filter(|w| !ledger.holds(&key, w, day)).cloned().collect();
+        pools.long_word = if fresh.len() >= LONG_WORD_FLOOR { fresh } else { band };
+    }
+    Ok(Supply { pools, relaxed })
 }
 
 /// D25: the longest decile of `expert` by graphemes (never `chars().count()`),
@@ -303,6 +388,43 @@ mod tests {
         let sup = supply("en", Variant::Jr, &led, 50, 3).unwrap();
         assert!(sup.relaxed > 0);
         assert!(sup.pools.tiers[Tier::Easy.ix()].len() >= min_pool(Variant::Jr));
+    }
+
+    /// CC-LAUNCH-EN D21 / D24 — at Preview every tile tier and the Long Word
+    /// band hold distinct Easy words; Full and a kid at Preview are `supply`.
+    #[test]
+    fn preview_pools_are_easy_only() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        let preview = open_tiers(AccessLevel::Preview, false, "en");
+        let easy: BTreeSet<String> = bank("en", Tier::Easy, false).into_iter().collect();
+        for v in [Variant::Full, Variant::Sprint] {
+            assert!(gate_open("en", v, &preview).is_ok(), "{v:?}");
+            let sup = supply_open("en", v, &Ledger::default(), 1, 7, &preview).unwrap();
+            let mut seen = BTreeSet::new();
+            for t in tiers_of(v) {
+                let pool = &sup.pools.tiers[t.ix()];
+                assert_eq!(pool.len(), min_pool(v), "{v:?} {t:?}");
+                for w in pool {
+                    assert!(easy.contains(w), "{v:?} {t:?}: {w} is not an Easy word");
+                    assert!(seen.insert(w.clone()), "{v:?}: {w} is in two tile tiers");
+                }
+            }
+            assert!(sup.pools.long_word.len() >= LONG_WORD_FLOOR);
+            assert!(sup.pools.long_word.iter().all(|w| easy.contains(w)));
+            let full = open_tiers(AccessLevel::Full, false, "en");
+            let a = supply_open("en", v, &Ledger::default(), 1, 7, &full).unwrap();
+            let b = supply("en", v, &Ledger::default(), 1, 7).unwrap();
+            assert_eq!((a.pools.tiers, a.pools.long_word, a.relaxed), (b.pools.tiers, b.pools.long_word, b.relaxed));
+        }
+        let kid = open_tiers(AccessLevel::Preview, true, "en");
+        let a = supply_open("en", Variant::Jr, &Ledger::default(), 1, 7, &kid).unwrap();
+        let b = supply("en", Variant::Jr, &Ledger::default(), 1, 7).unwrap();
+        assert_eq!(a.pools.tiers, b.pools.tiers, "a kid at Preview changed");
+        // A Preview game plays: the engine accepts the narrowed pools.
+        let v = Variant::Full;
+        let sup = supply_open("en", v, &Ledger::default(), 1, 7, &preview).unwrap();
+        let cfg = GameConfig::solo(v, Difficulty::Normal, 3, 0, "en", false, crate::boardgame_grade::grade);
+        assert!(new_game(7, cfg, sup.pools).is_ok());
     }
 
     #[test]

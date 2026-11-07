@@ -2841,6 +2841,9 @@
      sit ABOVE full-screen surfaces (Translate, My Words), or a grown-up cannot
      answer the question the app just asked. */
   #parentScrim,#ageScrim{z-index:80}
+  #paywallScrim{z-index:70}
+  #paywallProducts{display:grid;gap:10px;margin:12px 0}
+  #paywallProducts .pw-note{margin:0;font-size:.9em;opacity:.8}
   .lists-screen{position:fixed;inset:0;background:var(--bg,var(--palette-mode-screen-bg));z-index:60;display:none;overflow:auto;min-height:0;
     padding:max(12px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom));color:var(--ink);--ink-on-bg:var(--ink);--muted-on-bg:var(--muted);--control-border-on-bg:var(--control-border)}
   .lists-screen.show{display:block}
@@ -4617,6 +4620,21 @@
       <div class="row">
         <button class="btn btn-icon" id="parentCancel" data-i18n="parent.cancel" style="flex:1;border-radius:12px">Cancel</button>
         <button class="btn btn-check" id="parentSubmit" data-i18n="parent.check">Check</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC-LAUNCH-EN F4 / D11: the paywall. Reached only through the adult gate,
+       never from a Little Speller profile (D24). Prices come from StoreKit. -->
+  <div class="scrim" id="paywallScrim">
+    <div class="modal" id="paywall" role="dialog" aria-modal="true" aria-labelledby="paywallTitle">
+      <h3 id="paywallTitle" data-i18n="paywall.title">Unlock more spelling</h3>
+      <p data-i18n="paywall.body">Medium, Hard and Expert words, The Climb, and every level of every game.</p>
+      <div id="paywallProducts"></div>
+      <p class="dob-err" id="paywallStatus" role="status" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="paywallClose" data-i18n="paywall.close" style="flex:1;border-radius:12px">Not now</button>
+        <button class="btn btn-icon" id="paywallRestore" data-i18n="paywall.restore" style="flex:1;border-radius:12px">Restore Purchases</button>
       </div>
     </div>
   </div>

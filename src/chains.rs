@@ -390,6 +390,9 @@ thread_local! {
     /// kid filter is the expensive part and Pass is a tap the player waits on.
     static JUNIOR_SET: std::cell::RefCell<std::collections::HashMap<String, std::rc::Rc<std::collections::HashSet<String>>>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+    /// CC-LAUNCH-EN D21: `open_set`'s memo, keyed by language and open tiers.
+    static OPEN_SET: std::cell::RefCell<std::collections::HashMap<String, std::rc::Rc<std::collections::HashSet<String>>>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
 /// CC-ONBOARD-JR I5 + D8 — the words a Spell Jr chain may be DEALT: the bank
@@ -433,12 +436,84 @@ pub fn pass_draw_for(
     draw(lang, all, seed)
 }
 
+/// CC-LAUNCH-EN D21 / D24 — `pass_draw_for` for a player who may play only the
+/// `open` tiers (`play_hub::open_tiers`). With every tier open it is exactly
+/// `pass_draw_for`; a kid's open list is every tier, so a Spell Jr chain keeps
+/// its own Easy + Medium ceiling. A standard player at Preview is DEALT only
+/// open-tier words (and may still type any valid word, as a Spell Jr player
+/// may). An open pool that runs dry ends the chain, the Spell Jr rule.
+pub fn pass_draw_open(
+    exp: crate::experience::Experience,
+    lang: &str,
+    hook_unit: &str,
+    used: &BTreeSet<String>,
+    seed: u64,
+    open: &[&str],
+) -> Option<String> {
+    if exp != crate::experience::Experience::Standard || crate::experience::TIERS.iter().all(|t| open.contains(t)) {
+        return pass_draw_for(exp, lang, hook_unit, used, seed);
+    }
+    let set = open_set(lang, open);
+    let all: Vec<String> = successors(lang, hook_unit, used).into_iter().filter(|w| set.contains(w)).collect();
+    draw(lang, all, seed)
+}
+
+/// CC-LAUNCH-EN D21 — the words a standard chain may deal when only `open`
+/// tiers are, folded as `junior_set` folds them.
+fn open_set(lang: &str, open: &[&str]) -> std::rc::Rc<std::collections::HashSet<String>> {
+    let key = format!("{lang}|{}", open.join(","));
+    if let Some(hit) = OPEN_SET.with(|m| m.borrow().get(&key).cloned()) {
+        return hit;
+    }
+    let set: std::collections::HashSet<String> = open
+        .iter()
+        .flat_map(|t| crate::words::tier_for(lang, t).iter().copied())
+        // zh-ok(grading): builds the dealable set for chain lookup; no typed input
+        // reaches it
+        .map(|w| crate::norm::fold_strict(w.split('|').next().unwrap_or(w)))
+        .collect();
+    let rc = std::rc::Rc::new(set);
+    OPEN_SET.with(|m| m.borrow_mut().insert(key, rc.clone()));
+    rc
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn no_used() -> BTreeSet<String> {
         BTreeSet::new()
+    }
+
+    /// CC-LAUNCH-EN D21 / D24 — at Preview a standard chain deals only Easy
+    /// words; Full and a kid at Preview deal exactly as before.
+    #[test]
+    fn a_preview_chain_deals_only_open_tier_words() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        use crate::experience::Experience;
+        let preview = open_tiers(AccessLevel::Preview, false, "en");
+        let full = open_tiers(AccessLevel::Full, false, "en");
+        let kid = open_tiers(AccessLevel::Preview, true, "en");
+        let easy = open_set("en", &["easy"]);
+        let mut dealt = 0;
+        for run in 0..8u64 {
+            let mut used = BTreeSet::new();
+            let mut hook_unit = "a".to_string();
+            for step in 0..25u64 {
+                let seed = run * 977 + step;
+                assert_eq!(pass_draw_open(Experience::Standard, "en", &hook_unit, &used, seed, &full),
+                           pass_draw("en", &hook_unit, &used, seed), "Full changed");
+                assert_eq!(pass_draw_open(Experience::Junior, "en", &hook_unit, &used, seed, &kid),
+                           pass_draw_for(Experience::Junior, "en", &hook_unit, &used, seed), "a kid at Preview changed");
+                let Some(w) = pass_draw_open(Experience::Standard, "en", &hook_unit, &used, seed, &preview) else { break };
+                assert!(easy.contains(&w), "a Preview chain dealt {w:?}, not an Easy word");
+                dealt += 1;
+                let Some(h) = hook("en", &w) else { break };
+                used.insert(w);
+                hook_unit = h;
+            }
+        }
+        assert!(dealt > 0, "a Preview chain dealt nothing at all");
     }
 
     /// CC-ONBOARD-JR I5 + D8 — every word a Spell Jr chain DEALS is a kid-safe

@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "حذف",
   "acn.delete.failed": "تعذر الحذف. تحقق من اتصالك وحاول مرة أخرى.",
   "de.close.letters": "قريب — تُكتب هذه الكلمة بـ {fix}",
-  "de.close.split": "قريب — تُكتب كلمة واحدة"
+  "de.close.split": "قريب — تُكتب كلمة واحدة",
+  "paywall.title": "افتح المزيد من التهجئة",
+  "paywall.body": "كلمات المستويات المتوسط والصعب والخبير، وThe Climb، وكل مستوى في كل لعبة.",
+  "paywall.buy": "شراء · {price}",
+  "paywall.restore": "استعادة المشتريات",
+  "paywall.close": "ليس الآن",
+  "paywall.retry": "حاول مجددًا",
+  "paywall.priceError": "تعذّر تحميل الأسعار. تحقّق من اتصالك.",
+  "paywall.getApp": "فتح الميزات متاح في تطبيق SpellGame على iPhone.",
+  "paywall.pending": "في انتظار موافقة شخص بالغ.",
+  "paywall.done": "تم الفتح. شكرًا!",
+  "paywall.restoreNone": "لا توجد مشتريات لاستعادتها.",
+  "paywall.failed": "لم تكتمل عملية الشراء. لم يُخصم أي مبلغ.",
+  "complete.includesFutureLanguages": "يشمل Complete كل لغة نضيفها."
 }

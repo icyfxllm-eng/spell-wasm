@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Удалить",
   "acn.delete.failed": "Не удалось удалить. Проверьте подключение и попробуйте снова.",
   "de.close.letters": "Почти — это слово пишется с {fix}",
-  "de.close.split": "Почти — это слово пишется слитно"
+  "de.close.split": "Почти — это слово пишется слитно",
+  "paywall.title": "Открой больше заданий",
+  "paywall.body": "Слова уровней «Средний», «Сложный» и «Эксперт», The Climb и все уровни каждой игры.",
+  "paywall.buy": "Купить · {price}",
+  "paywall.restore": "Восстановить покупки",
+  "paywall.close": "Не сейчас",
+  "paywall.retry": "Повторить",
+  "paywall.priceError": "Не удалось загрузить цены. Проверь подключение.",
+  "paywall.getApp": "Покупки доступны в приложении SpellGame для iPhone.",
+  "paywall.pending": "Ждём одобрения взрослого.",
+  "paywall.done": "Открыто. Спасибо!",
+  "paywall.restoreNone": "Нет покупок для восстановления.",
+  "paywall.failed": "Покупка не прошла. Деньги не списаны.",
+  "complete.includesFutureLanguages": "Complete включает все языки, которые мы добавим."
 }

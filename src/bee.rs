@@ -62,9 +62,18 @@ fn mix(seed: u64) -> u64 {
 /// The tier round `n` draws from, respecting D6's Spell Jr ceiling — which
 /// `experience::serve_tier` decides (CC-ONBOARD-JR), not this file.
 pub fn tier_for_round(n: u32, kid: bool) -> &'static str {
+    tier_for_round_open(n, kid, &crate::experience::TIERS)
+}
+
+/// CC-LAUNCH-EN D21 / D24 — `tier_for_round` for a player who may play only the
+/// `open` tiers (`play_hub::open_tiers`): the ladder climbs only through open
+/// rungs, so at Preview every round is an Easy round and the bee runs its full
+/// length on Easy words. A kid's open list is every tier, so Spell Jr keeps
+/// its own ceiling and nothing else.
+pub fn tier_for_round_open(n: u32, kid: bool, open: &[&str]) -> &'static str {
     let mut t = "easy";
     for (from, name) in LADDER {
-        if n >= from {
+        if n >= from && open.contains(&name) {
             t = name;
         }
     }
@@ -133,10 +142,15 @@ fn elimination_round(seed: u64, who: u64, skill: u32) -> Option<u32> {
 /// Drawn from the tier the round calls for. A tier that runs dry ends the bee,
 /// which is D1's "word-pool exhaustion" arm rather than an error.
 pub fn words(lang: &str, seed: u64, rounds: u32, kid: bool) -> Vec<String> {
+    words_open(lang, seed, rounds, kid, &crate::experience::TIERS)
+}
+
+/// CC-LAUNCH-EN D21 / D24 — `words` drawn through [`tier_for_round_open`].
+pub fn words_open(lang: &str, seed: u64, rounds: u32, kid: bool, open: &[&str]) -> Vec<String> {
     let mut used: BTreeSet<String> = BTreeSet::new();
     let mut out = Vec::new();
     for n in 1..=rounds {
-        let tier = tier_for_round(n, kid);
+        let tier = tier_for_round_open(n, kid, open);
         let full = crate::words::tier_for(lang, tier);
         // CC-ONBOARD-JR D8: a Spell Jr bee draws kid-safe words only. No
         // fallback to the unfiltered tier — a pool the filter empties ends the
@@ -216,6 +230,29 @@ mod tests {
         for n in 1..=12 {
             let t = tier_for_round(n, true);
             assert!(t == "easy" || t == "medium", "round {n} gave kids {t}");
+        }
+    }
+
+    /// CC-LAUNCH-EN D21 / D24 — at Preview every round is an Easy round and the
+    /// bee still runs its full length; Full and a kid at Preview are unchanged.
+    #[test]
+    fn a_preview_bee_stays_on_easy() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        let preview = open_tiers(AccessLevel::Preview, false, "en");
+        let full = open_tiers(AccessLevel::Full, false, "en");
+        let kid = open_tiers(AccessLevel::Preview, true, "en");
+        for n in 1..=12 {
+            assert_eq!(tier_for_round_open(n, false, &preview), "easy", "round {n}");
+            assert_eq!(tier_for_round_open(n, false, &full), tier_for_round(n, false), "round {n}: Full changed");
+            assert_eq!(tier_for_round_open(n, true, &kid), tier_for_round(n, true), "round {n}: a kid at Preview changed");
+        }
+        let easy = crate::words::tier_for("en", "easy");
+        for seed in 0..5u64 {
+            let ws = words_open("en", seed, 12, false, &preview);
+            assert_eq!(ws.len(), 12, "a Preview bee ended early");
+            assert!(ws.iter().all(|w| easy.contains(&w.as_str())), "a Preview bee served a non-Easy word: {ws:?}");
+            assert_eq!(words_open("en", seed, 12, false, &full), words("en", seed, 12, false));
+            assert_eq!(words_open("en", seed, 12, true, &kid), words("en", seed, 12, true));
         }
     }
 

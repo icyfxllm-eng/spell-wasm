@@ -292,7 +292,8 @@ pub fn open(app: &App) {
 fn refresh_gate() {
     let (lang, kid) = LANG.with(|l| l.borrow().clone());
     let sprint = SETUP.with(|s| s.borrow().sprint);
-    let ok = pools::gate(&lang, pools::variant_for(kid, sprint)).is_ok();
+    // CC-LAUNCH-EN D21 / D24: at Preview the board is built from open tiers.
+    let ok = pools::gate_open(&lang, pools::variant_for(kid, sprint), &crate::play_hub::open_tiers(kid, &lang)).is_ok();
     GATE.with(|g| g.set(ok));
     dom::set_text("bgNote", &if ok { String::new() } else { i18n::t("bg.soon") });
     dom::set_disabled("bgStart", !ok);
@@ -421,7 +422,7 @@ fn start() {
     let ledger = load_ledger();
     let d = day();
     let variant = pools::variant_for(kid, s.sprint);
-    let Ok(mut sup) = pools::supply(&lang, variant, &ledger, d, seed) else {
+    let Ok(mut sup) = pools::supply_open(&lang, variant, &ledger, d, seed, &crate::play_hub::open_tiers(kid, &lang)) else {
         dom::set_text("bgNote", &i18n::t("bg.soon"));
         return;
     };

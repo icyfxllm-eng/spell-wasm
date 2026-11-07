@@ -291,6 +291,34 @@ pub fn forge_ready_for(exp: crate::experience::Experience, lang: &str) -> bool {
     forge_ready(lang) && (exp == crate::experience::Experience::Standard || junior_min_pool(lang) >= 8)
 }
 
+/// CC-LAUNCH-EN D21 — `forge_ready_for` when only the `open` tiers may serve.
+/// A standard player at Preview must clear the same floor of eight from the
+/// open tiers alone; with every tier open this is exactly `forge_ready_for`.
+pub fn forge_ready_open(exp: crate::experience::Experience, lang: &str, open: &[&str]) -> bool {
+    let narrowed = exp == crate::experience::Experience::Standard
+        && crate::experience::TIERS.iter().any(|t| !open.contains(t));
+    forge_ready_for(exp, lang) && (!narrowed || preview_min_pool(lang) >= 8)
+}
+
+/// CC-LAUNCH-EN D21 — the pool gate for a Preview board, whose letters and
+/// pool come from Easy only. Measured by `calibrate_preview_min_pool` at the
+/// screen's walk (512) the way `junior_min_pool` was, kept at or a step below
+/// each ceiling and never above the standard gate. Ceilings measured
+/// 2026-11-07: en 17, ru 16, fil 11, sw 11, ko 11, de 10, es 9, fr 8, pt 7,
+/// zh 7, pl 3, hi 2; ar, vi and ja have no Easy-only pangram. Zero means no
+/// Easy-only board is worth dealing (below forge_ready's floor of eight), and
+/// the screen says the mode is unavailable.
+pub fn preview_min_pool(lang: &str) -> usize {
+    match lang {
+        "en" => 15,
+        "ru" => 10,
+        "fil" | "sw" | "ko" => 10,
+        "de" => 9,
+        "es" | "fr" => 8,
+        _ => 0,
+    }
+}
+
 /// Kept for callers that want D2's literal number.
 pub const MIN_POOL: usize = 20;
 
@@ -326,11 +354,31 @@ pub fn generate_for(
     seed: u64,
     walk_limit: u32,
 ) -> Option<(Puzzle, Vec<String>, u32)> {
-    let tiers = crate::experience::allowed_tiers(exp, "letter_forge");
+    generate_open(exp, lang, seed, walk_limit, &crate::experience::TIERS)
+}
+
+/// CC-LAUNCH-EN D21 / D24 — `generate_for` for a player who may play only the
+/// `open` tiers (`play_hub::open_tiers`). With every tier open it is exactly
+/// `generate_for`, and a Spell Jr board is never narrowed (a kid's `open` is
+/// every tier). A standard player at Preview gets a board whose letters AND
+/// pool come from the open tiers alone, at [`preview_min_pool`].
+pub fn generate_open(
+    exp: crate::experience::Experience,
+    lang: &str,
+    seed: u64,
+    walk_limit: u32,
+    open: &[&str],
+) -> Option<(Puzzle, Vec<String>, u32)> {
+    let tiers: Vec<&str> =
+        crate::experience::allowed_tiers(exp, "letter_forge").into_iter().filter(|t| open.contains(t)).collect();
     let (gate, kid_only) = match exp {
+        crate::experience::Experience::Standard if tiers.len() < crate::experience::TIERS.len() => (preview_min_pool(lang), false),
         crate::experience::Experience::Standard => (min_pool(lang), false),
         crate::experience::Experience::Junior => (junior_min_pool(lang), true),
     };
+    if tiers.is_empty() {
+        return None;
+    }
     generate_in(lang, seed, walk_limit, gate, &tiers, kid_only)
 }
 
@@ -576,8 +624,12 @@ mod diag {
     /// (letters, centre), so each distinct board is sized once and the walk is
     /// a lookup — a year of boards in milliseconds instead of minutes.
     fn junior_floor(lang: &str, walk: u32) -> (usize, usize) {
-        let tiers = &crate::experience::TIERS[..2];
-        let cands = pangram_candidates(lang, tiers, true);
+        floor_in(lang, &crate::experience::TIERS[..2], true, walk)
+    }
+
+    /// `junior_floor` over any tier set (CC-LAUNCH-EN D21: Preview is Easy only).
+    fn floor_in(lang: &str, tiers: &[&str], kid_only: bool, walk: u32) -> (usize, usize) {
+        let cands = pangram_candidates(lang, tiers, kid_only);
         if cands.is_empty() {
             return (0, 0);
         }
@@ -593,7 +645,7 @@ mod diag {
                         let ui = (next_u64(&mut st) % units.len() as u64) as usize;
                         *sized.entry((ci, ui)).or_insert_with(|| {
                             let p = Puzzle { units: units.clone(), centre: units[ui].clone(), seed: 0 };
-                            pool_in(lang, &p, tiers, true).len()
+                            pool_in(lang, &p, tiers, kid_only).len()
                         })
                     })
                     .max()
@@ -642,6 +694,52 @@ mod diag {
                 assert!(floor < 8 || !forge_ready(lang),
                         "{lang}: Easy + Medium sustains a board of {floor} every day, yet Spell Jr is refused one");
             }
+        }
+    }
+
+    /// CC-LAUNCH-EN D21 / D24 — a Preview board (Easy open only) holds only
+    /// Easy words and generates on every day of a year wherever it is offered;
+    /// Full and a kid's open list (every tier) are exactly `generate_for`.
+    #[test]
+    fn preview_boards_hold_only_open_tier_words() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        use crate::experience::{Experience, TIERS};
+        let preview = open_tiers(AccessLevel::Preview, false, "en");
+        assert_eq!(preview, vec!["easy"]);
+        for lang in JR_LANGS {
+            let (_, floor) = floor_in(lang, &TIERS[..1], false, 512);
+            if forge_ready_open(Experience::Standard, lang, &preview) {
+                assert!(floor >= preview_min_pool(lang), "{lang}: preview gate {} but some day holds only {floor}", preview_min_pool(lang));
+                assert!(preview_min_pool(lang) <= min_pool(lang), "{lang}: preview gate above the standard gate");
+            }
+            let easy: BTreeSet<String> = decomposed_in(lang, &TIERS[..1], false).iter().map(|(w, _, _)| w.clone()).collect();
+            for seed in (0..6u64).map(|d| d.wrapping_mul(0x9E3779B9)) {
+                if forge_ready_open(Experience::Standard, lang, &preview) {
+                    let (_, words, _) = generate_open(Experience::Standard, lang, seed, 512, &preview)
+                        .unwrap_or_else(|| panic!("{lang}: no preview board for seed {seed}"));
+                    for w in &words {
+                        assert!(easy.contains(w), "{lang}: a Preview board holds {w:?}, which is not an Easy word");
+                    }
+                }
+                let full = open_tiers(AccessLevel::Full, false, lang);
+                assert_eq!(generate_open(Experience::Standard, lang, seed, 64, &full), generate(lang, seed, 64), "{lang}: Full changed");
+                let kid = open_tiers(AccessLevel::Preview, true, lang);
+                if forge_ready_for(Experience::Junior, lang) {
+                    assert_eq!(generate_open(Experience::Junior, lang, seed, 64, &kid), generate_for(Experience::Junior, lang, seed, 64), "{lang}: a kid at Preview changed");
+                }
+            }
+        }
+        assert!(forge_ready_open(Experience::Standard, "en", &preview));
+    }
+
+    /// The measurement behind preview_min_pool() (CC-LAUNCH-EN D21).
+    #[test]
+    #[ignore]
+    fn calibrate_preview_min_pool() {
+        for lang in JR_LANGS {
+            let (cands, w512) = floor_in(lang, &crate::experience::TIERS[..1], false, 512);
+            println!("PREVIEW_CEILING {lang:4} cands={cands:5} walk512={w512:3} preview_gate={} standard_gate={}",
+                     preview_min_pool(lang), min_pool(lang));
         }
     }
 

@@ -77,6 +77,9 @@ fn daily_seed(lang: &str) -> u64 {
 thread_local! {
     /// CC-ONBOARD-JR: the board on screen is a Spell Jr board. Set at open.
     static JUNIOR: std::cell::Cell<bool> = std::cell::Cell::new(false);
+    /// CC-LAUNCH-EN D21: today's board is the narrowed Preview board, which is
+    /// a different board from the Full one and so keeps its own progress.
+    static PREVIEW: std::cell::Cell<bool> = std::cell::Cell::new(false);
 }
 
 /// Junior and standard boards differ, so their found-word lists must not mix.
@@ -84,6 +87,8 @@ thread_local! {
 fn save_key(lang: &str) -> String {
     if JUNIOR.with(|j| j.get()) {
         format!("spell_forge_jr_{lang}_{}", today())
+    } else if PREVIEW.with(|p| p.get()) {
+        format!("spell_forge_pv_{lang}_{}", today())
     } else {
         format!("spell_forge_{lang}_{}", today())
     }
@@ -144,16 +149,21 @@ pub fn open(app: &App) {
     // dealing a thin one. forge_ready is the engine's call, not the screen's.
     // CC-ONBOARD-JR: a Spell Jr board is its own board (Easy + Medium letters
     // and pool), with its own readiness and its own saved progress.
-    let exp = crate::experience::of_kid(app.borrow().kid);
+    let kid = app.borrow().kid;
+    let exp = crate::experience::of_kid(kid);
     JUNIOR.with(|j| j.set(exp == crate::experience::Experience::Junior));
-    if !forge::forge_ready_for(exp, &lang) {
+    // CC-LAUNCH-EN D21 / D24: a standard player at Preview gets a board built
+    // from the open tiers only; a kid's open list is every tier.
+    let open = crate::play_hub::open_tiers(kid, &lang);
+    PREVIEW.with(|p| p.set(open.len() < crate::experience::TIERS.len()));
+    if !forge::forge_ready_open(exp, &lang, &open) {
         dom::set_html("fgComb", "");
         dom::set_text("fgWord", "");
         dom::set_text("fgStatus", &i18n::t("forge.unavailable"));
         return;
     }
 
-    let Some((p, pool, _walk)) = forge::generate_for(exp, &lang, daily_seed(&lang), 512) else {
+    let Some((p, pool, _walk)) = forge::generate_open(exp, &lang, daily_seed(&lang), 512, &open) else {
         dom::set_html("fgComb", "");
         dom::set_text("fgWord", "");
         dom::set_text("fgStatus", &i18n::t("forge.unavailable"));

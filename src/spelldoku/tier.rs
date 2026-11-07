@@ -67,6 +67,24 @@ pub fn available(lang: &str, board: Tier) -> bool {
     span(board).iter().all(|t| wordmode::depth(lang, t) >= NEED_A)
 }
 
+/// CC-LAUNCH-EN D21 / D24: may a board of this tier be served to a player who
+/// may play only the `open` tiers (`play_hub::open_tiers`)? A kid's list is
+/// every tier, so Spell Jr is never narrowed here.
+pub fn board_open(board: Tier, open: &[&str]) -> bool {
+    open.contains(&board.id())
+}
+
+/// CC-LAUNCH-EN D21: may Tier Mode (Reading A) index this board's span for a
+/// player with these `open` tiers? The Easy row reaches Medium on digits 4, 8
+/// and 9, so at Preview an Easy board plays without Tier Mode rather than
+/// serve a Medium word. Reading B spans all four tiers, so it needs them all.
+pub fn span_open(board: Tier, symbols: bool, open: &[&str]) -> bool {
+    if symbols {
+        return crate::experience::TIERS.iter().all(|t| open.contains(t));
+    }
+    span(board).iter().all(|t| open.contains(t))
+}
+
 /// F6: Reading B needs all four tiers, and only four symbols of each.
 pub fn symbols_available(lang: &str) -> bool {
     crate::experience::TIERS.iter().all(|t| wordmode::depth(lang, t) >= NEED_B)
@@ -496,6 +514,25 @@ mod tests {
         let rest = &src[start..];
         let end = rest[from.len()..].find(to).map(|k| k + from.len()).unwrap_or(rest.len());
         &rest[..end]
+    }
+
+    /// CC-LAUNCH-EN D21 / D24 — at Preview only Easy boards are offered and
+    /// Tier Mode (whose Easy row reaches Medium) is off; Full and a kid at
+    /// Preview keep every board and every reading.
+    #[test]
+    fn preview_serves_easy_boards_without_tier_mode() {
+        use crate::entitlements::{open_tiers, AccessLevel};
+        let preview = open_tiers(AccessLevel::Preview, false, "en");
+        let full = open_tiers(AccessLevel::Full, false, "en");
+        let kid = open_tiers(AccessLevel::Preview, true, "en");
+        for board in [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert] {
+            assert_eq!(board_open(board, &preview), board == Tier::Easy, "{board:?}");
+            assert!(!span_open(board, false, &preview), "{board:?}: Tier Mode would serve past Easy");
+            assert!(!span_open(board, true, &preview));
+            for open in [&full, &kid] {
+                assert!(board_open(board, open) && span_open(board, false, open) && span_open(board, true, open), "{board:?}");
+            }
+        }
     }
 
     /// Done #4 / I-T1: the ladder is invisible to the generator, solver and

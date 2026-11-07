@@ -123,6 +123,22 @@ pub fn live_entitlements() -> entitlements::EntitlementSet {
     entitlements::resolve_entitlements(crate::entitlements_adapter::owned(), &[], dev_grant())
 }
 
+/// CC-LAUNCH-EN D21 / D24: the live tier gate. Every word-serving surface asks
+/// this, with the profile's kid flag and the language it is serving.
+pub fn tier_open(kid: bool, lang: &str, tier: &str) -> bool {
+    entitlements::tier_open(live_entitlements().lang_level(lang), kid, lang, tier)
+}
+
+/// The live tier list, easiest first (see [`entitlements::open_tiers`]).
+pub fn open_tiers(kid: bool, lang: &str) -> Vec<&'static str> {
+    entitlements::open_tiers(live_entitlements().lang_level(lang), kid, lang)
+}
+
+/// The live mode gate (see [`entitlements::mode_open`]).
+pub fn mode_open(kid: bool, lang: &str, mode: entitlements::GameMode) -> bool {
+    entitlements::mode_open(live_entitlements().lang_level(lang), kid, lang, mode)
+}
+
 /// The dev-door grant. Compiled into dev and test builds only: the door is in
 /// every binary, and TestFlight and the App Store ship the same one, so a
 /// storage switch here once let any player tap the logo five times and own

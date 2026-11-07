@@ -38,6 +38,14 @@ pub fn tiers_for(lang: &str, kid: bool) -> Vec<Tier> {
     }
 }
 
+/// CC-LAUNCH-EN D21 / D24: `tiers_for` narrowed to the tiers this player may
+/// play (`play_hub::open_tiers`). Spell Search and Spell Cross both pick from
+/// this. Jr is a kid's tier, and a kid's open list is every tier, so a kid is
+/// never narrowed; a standard player at Preview is offered Easy only.
+pub fn tiers_open(lang: &str, kid: bool, open: &[&str]) -> Vec<Tier> {
+    tiers_for(lang, kid).into_iter().filter(|t| *t == Tier::Jr || open.contains(&t.id())).collect()
+}
+
 /// NFC, lowercase, split into grapheme clusters: the unit a cell holds.
 pub fn graphemes(word: &str) -> Vec<String> {
     let w: String = word.to_lowercase().nfc().collect();

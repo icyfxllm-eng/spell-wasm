@@ -55,11 +55,9 @@ fn repetition_sim_normal_200_draws_retier_bank() {
 
 /// A7.1: 30 consecutive dates, standard and Little Speller: no word twice.
 ///
-/// FAILS on main as of 2026-11-07, and that is a real finding, not a test bug.
-/// daily::tier_slice_ns guards a cycle boundary against YESTERDAY only, so a
-/// word dealt near the end of one cycle can come back days into the next. The
-/// Little Speller Medium cycle is 158 days; "china" is dealt 2026-11-08 (day 153
-/// of a cycle) and again 2026-11-14 (day 1 of the next). The fix is Phase C (F7).
+/// It failed on main until CC-LAUNCH-EN D23 widened the Daily's cycle-boundary
+/// guard (daily::cycle_perm). Little Speller had been dealt "china" on
+/// 2026-11-08 and again on 2026-11-14.
 #[test]
 fn repetition_sim_daily_30_dates() {
     for kid in [false, true] {

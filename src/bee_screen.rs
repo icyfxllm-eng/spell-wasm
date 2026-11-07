@@ -130,7 +130,8 @@ fn open_at(app: &App, start: u32) {
     let seed = js_sys::Date::now() as u64;
     // Generated for the WHOLE ladder even when starting deeper, so round 4 of
     // a re-entry bee draws round 4's tier rather than the opening one.
-    let ws = bee::words(&lang, seed, MAX_ROUNDS, kid);
+    // CC-LAUNCH-EN D21 / D24: at Preview the ladder stays on Easy rounds.
+    let ws = bee::words_open(&lang, seed, MAX_ROUNDS, kid, &crate::play_hub::open_tiers(kid, &lang));
     let empty = ws.len() < start as usize;
     WORDS.with(|w| *w.borrow_mut() = ws);
     ROSTER.with(|r| *r.borrow_mut() = bee::roster(seed, FIELD));

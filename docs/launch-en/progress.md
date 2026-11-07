@@ -12,3 +12,11 @@
     - repetition_sim_daily_30_dates: a real cycle-boundary repeat in the Daily.
     - The reviewer walkthrough waits for the paywall and the English-only registry.
   - Not done: per-surface gating (the main picker, Climb and about ten side modes ignore entitlements), Little Speller exemptions, and the paywall UI with the adult gate and Restore.
+- 2026-11-07, Phase A, part 2 (branch launch-en/phase-a):
+  - One shared gate decides which tiers a player can play: entitlements::tier_open, open_tiers and mode_open, plus their live play_hub wrappers. Every tier-serving surface now asks it:
+    - the main picker, the serve path, Versus and the Climb;
+    - Letter Forge, Chains, Impostor, Bee, Spelldoku, Search, Cross, Spelluzzle, Board Game and Practice;
+    - Def Match, Word Picture, Translate and Randospell, which now exempt kid profiles (D24).
+  - The paywall (src/paywall.rs, #paywallScrim) opens only after the adult gate. Prices come from StoreKit, Restore is always on the sheet, and the web build shows "unlocks are in the app". A locked tier in the picker opens the paywall. A stored level the player no longer owns falls back to Easy.
+  - D23: the Daily's cycle-boundary guard now covers 30 days (daily::cycle_perm), and A7.1 passes.
+  - Paywall hooks are marked "CC-LAUNCH-EN D21: paywall hook" but are not yet wired in the side modes. In those modes a locked tier is simply not offered.

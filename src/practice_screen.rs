@@ -182,7 +182,11 @@ fn begin_pos(app: &App) {
     let lang = LANG.with(|l| l.borrow().clone());
     let Some(c) = practice::curriculum(&lang) else { return };
     let pos = POS.with(Cell::get);
-    if pos >= practice::TOTAL {
+    // CC-LAUNCH-EN D21 / D24: a graduation lap of locked-tier words is not
+    // served at Preview; the run ends at the ceremony (a kid runs all 25).
+    let end = practice::run_end(&lang, c, &crate::play_hub::open_tiers(app.borrow().kid, &lang));
+    if pos >= end {
+        // CC-LAUNCH-EN D21: paywall hook (when end < TOTAL)
         show_next();
         return;
     }

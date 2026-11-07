@@ -28,6 +28,15 @@ pub fn tiers_for(lang: &str, kid: bool) -> Vec<Tier> {
     ENABLED.iter().copied().filter(|t| *t != Tier::Jr).collect()
 }
 
+/// CC-LAUNCH-EN D21 / D24: may a player with these `open` tiers
+/// (`play_hub::open_tiers`) be served `tier`? Jr is a kid's tier and a kid's
+/// open list is every tier, so it is never narrowed. A standard player at
+/// Preview is served Easy only, so Par (Hard, Expert) and Expeditions (Medium
+/// up) are absent there, and a Duel is Easy.
+pub fn tier_open(tier: Tier, open: &[&str]) -> bool {
+    tier == Tier::Jr || open.contains(&tier.name())
+}
+
 /// F22: the board types a start screen can offer.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BoardType {

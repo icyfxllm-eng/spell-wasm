@@ -108,7 +108,8 @@ pub fn open(app: &App) {
     let tier = impostor::effective_tier(Tier::Easy, kid);
     let seed = js_sys::Date::now() as u64;
     // CC-ONBOARD-JR I5: a Spell Jr set's real words are Easy + Medium, kid-safe.
-    let set = impostor::set_of_ten_for(crate::experience::of_kid(kid), &lang, seed, tier);
+    // CC-LAUNCH-EN D21 / D24: at Preview the real words are open-tier words only.
+    let set = impostor::set_of_ten_open(crate::experience::of_kid(kid), &lang, seed, tier, &crate::play_hub::open_tiers(kid, &lang));
     let empty = set.is_empty();
     SET.with(|s| *s.borrow_mut() = set);
     if empty {

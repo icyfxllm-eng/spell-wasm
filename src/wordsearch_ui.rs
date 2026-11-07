@@ -13,7 +13,7 @@ use wasm_bindgen::JsCast;
 use crate::wordsearch::{lock_in_attempt, trap_attempt};
 use crate::wordsearch::gen::{hash, judge, path, Hit, Puzzle, Tier};
 use crate::wordsearch::ledger::Ledger;
-use crate::wordsearch::lexicon::{eligible, graphemes, tiers_for};
+use crate::wordsearch::lexicon::{eligible, graphemes, tiers_open};
 use crate::wordsearch::serve::{self, Served};
 use crate::wordsearch::hint;
 use crate::spelldoku::rng::Rng;
@@ -86,8 +86,15 @@ fn tier_label(tier: Tier) -> String {
     }
 }
 
+/// CC-LAUNCH-EN D21 / D24: the tiers on offer. A tier this player may not play
+/// is not offered, and a stale pick of one falls back to the first open tier.
+// CC-LAUNCH-EN D21: paywall hook
+fn offered(lang: &str, kid: bool) -> Vec<Tier> {
+    tiers_open(lang, kid, &crate::play_hub::open_tiers(kid, lang))
+}
+
 fn fill_picker(kid: bool, lang: &str) {
-    let opts: String = tiers_for(lang, kid)
+    let opts: String = offered(lang, kid)
         .into_iter()
         .map(|tier| format!("<option value=\"{}\">{}</option>", tier.id(), dom::escape_html(&tier_label(tier))))
         .collect();
@@ -97,8 +104,8 @@ fn fill_picker(kid: bool, lang: &str) {
 fn picked_tier(kid: bool, lang: &str) -> Tier {
     let v = dom::select("wsPick").value();
     Tier::from_id(&v)
-        .filter(|t| tiers_for(lang, kid).contains(t))
-        .or_else(|| tiers_for(lang, kid).first().copied())
+        .filter(|t| offered(lang, kid).contains(t))
+        .or_else(|| offered(lang, kid).first().copied())
         .unwrap_or(Tier::Jr)
 }
 

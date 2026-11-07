@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "हटाएँ",
   "acn.delete.failed": "हटाया नहीं जा सका। कनेक्शन जाँचकर फिर कोशिश करें।",
   "de.close.letters": "लगभग — यह शब्द {fix} के साथ लिखा जाता है",
-  "de.close.split": "लगभग — इसे एक ही शब्द में लिखें"
+  "de.close.split": "लगभग — इसे एक ही शब्द में लिखें",
+  "paywall.title": "और स्पेलिंग अनलॉक करें",
+  "paywall.body": "मध्यम, कठिन और विशेषज्ञ शब्द, The Climb, और हर खेल का हर स्तर।",
+  "paywall.buy": "खरीदें · {price}",
+  "paywall.restore": "खरीदारी बहाल करें",
+  "paywall.close": "अभी नहीं",
+  "paywall.retry": "फिर कोशिश करें",
+  "paywall.priceError": "कीमतें लोड नहीं हो सकीं। अपना कनेक्शन जांचें।",
+  "paywall.getApp": "अनलॉक iPhone के लिए SpellGame ऐप में हैं।",
+  "paywall.pending": "किसी बड़े की मंज़ूरी का इंतज़ार है।",
+  "paywall.done": "अनलॉक हो गया। धन्यवाद!",
+  "paywall.restoreNone": "बहाल करने के लिए कोई खरीदारी नहीं है।",
+  "paywall.failed": "खरीदारी पूरी नहीं हुई। कोई शुल्क नहीं लिया गया।",
+  "complete.includesFutureLanguages": "Complete में हमारी जोड़ी जाने वाली हर भाषा शामिल है।"
 }

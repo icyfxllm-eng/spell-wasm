@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Supprimer",
   "acn.delete.failed": "Suppression impossible. Vérifiez votre connexion et réessayez.",
   "de.close.letters": "Presque — ce mot s'écrit avec {fix}",
-  "de.close.split": "Presque — ça s'écrit en un seul mot"
+  "de.close.split": "Presque — ça s'écrit en un seul mot",
+  "paywall.title": "Débloquer plus d'orthographe",
+  "paywall.body": "Les mots Moyen, Difficile et Expert, The Climb et tous les niveaux de chaque jeu.",
+  "paywall.buy": "Acheter · {price}",
+  "paywall.restore": "Restaurer les achats",
+  "paywall.close": "Pas maintenant",
+  "paywall.retry": "Réessayer",
+  "paywall.priceError": "Impossible de charger les prix. Vérifie ta connexion.",
+  "paywall.getApp": "Les déblocages se trouvent dans l'app SpellGame pour iPhone.",
+  "paywall.pending": "En attente de l'accord d'un adulte.",
+  "paywall.done": "Débloqué. Merci !",
+  "paywall.restoreNone": "Aucun achat à restaurer.",
+  "paywall.failed": "L'achat n'a pas abouti. Rien n'a été facturé.",
+  "complete.includesFutureLanguages": "Complete inclut toutes les langues que nous ajoutons."
 }

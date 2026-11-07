@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "삭제",
   "acn.delete.failed": "삭제하지 못했습니다. 연결을 확인하고 다시 시도하세요.",
   "de.close.letters": "거의 맞아요 — 이 단어는 {fix}(으)로 씁니다",
-  "de.close.split": "거의 맞아요 — 한 단어로 붙여 쓰세요"
+  "de.close.split": "거의 맞아요 — 한 단어로 붙여 쓰세요",
+  "paywall.title": "더 많은 철자 연습 열기",
+  "paywall.body": "보통·어려움·전문가 단어, The Climb, 모든 게임의 모든 단계.",
+  "paywall.buy": "구입 · {price}",
+  "paywall.restore": "구입 항목 복원",
+  "paywall.close": "나중에",
+  "paywall.retry": "다시 시도",
+  "paywall.priceError": "가격을 불러오지 못했어요. 연결을 확인하세요.",
+  "paywall.getApp": "잠금 해제는 iPhone용 SpellGame 앱에서 할 수 있어요.",
+  "paywall.pending": "어른의 승인을 기다리는 중이에요.",
+  "paywall.done": "잠금 해제됐어요. 고마워요!",
+  "paywall.restoreNone": "복원할 구입 항목이 없어요.",
+  "paywall.failed": "구입이 완료되지 않았어요. 요금은 청구되지 않았어요.",
+  "complete.includesFutureLanguages": "Complete에는 앞으로 추가되는 모든 언어가 포함돼요."
 }

@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Excluir",
   "acn.delete.failed": "Não foi possível excluir. Verifique sua conexão e tente de novo.",
   "de.close.letters": "Quase — esta palavra se escreve com {fix}",
-  "de.close.split": "Quase — escreve-se numa só palavra"
+  "de.close.split": "Quase — escreve-se numa só palavra",
+  "paywall.title": "Desbloqueie mais ortografia",
+  "paywall.body": "Palavras dos níveis Médio, Difícil e Especialista, The Climb e todos os níveis de cada jogo.",
+  "paywall.buy": "Comprar · {price}",
+  "paywall.restore": "Restaurar compras",
+  "paywall.close": "Agora não",
+  "paywall.retry": "Tentar de novo",
+  "paywall.priceError": "Não foi possível carregar os preços. Verifique sua conexão.",
+  "paywall.getApp": "Os desbloqueios estão no app SpellGame para iPhone.",
+  "paywall.pending": "Aguardando a aprovação de um adulto.",
+  "paywall.done": "Desbloqueado. Obrigado!",
+  "paywall.restoreNone": "Nenhuma compra para restaurar.",
+  "paywall.failed": "A compra não foi concluída. Nada foi cobrado.",
+  "complete.includesFutureLanguages": "O Complete inclui todos os idiomas que adicionarmos."
 }

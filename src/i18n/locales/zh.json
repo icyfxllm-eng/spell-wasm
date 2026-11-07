@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "删除",
   "acn.delete.failed": "无法删除。请检查网络后重试。",
   "de.close.letters": "差一点 — 这个词要写成 {fix}",
-  "de.close.split": "差一点 — 这个词要连写成一个词"
+  "de.close.split": "差一点 — 这个词要连写成一个词",
+  "paywall.title": "解锁更多拼写练习",
+  "paywall.body": "中等、困难和专家级单词，The Climb，以及每个游戏的每个级别。",
+  "paywall.buy": "购买 · {price}",
+  "paywall.restore": "恢复购买",
+  "paywall.close": "以后再说",
+  "paywall.retry": "重试",
+  "paywall.priceError": "无法加载价格。请检查网络连接。",
+  "paywall.getApp": "请在 iPhone 版 SpellGame 应用中解锁。",
+  "paywall.pending": "正在等待大人批准。",
+  "paywall.done": "已解锁。谢谢！",
+  "paywall.restoreNone": "没有可恢复的购买项目。",
+  "paywall.failed": "购买未完成，未产生任何费用。",
+  "complete.includesFutureLanguages": "Complete 包含我们今后添加的所有语言。"
 }

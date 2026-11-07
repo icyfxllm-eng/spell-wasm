@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Usuń",
   "acn.delete.failed": "Nie udało się usunąć. Sprawdź połączenie i spróbuj ponownie.",
   "de.close.letters": "Prawie — to słowo pisze się z {fix}",
-  "de.close.split": "Prawie — to się pisze razem"
+  "de.close.split": "Prawie — to się pisze razem",
+  "paywall.title": "Odblokuj więcej ortografii",
+  "paywall.body": "Słowa na poziomach Średni, Trudny i Ekspert, The Climb i każdy poziom każdej gry.",
+  "paywall.buy": "Kup · {price}",
+  "paywall.restore": "Przywróć zakupy",
+  "paywall.close": "Nie teraz",
+  "paywall.retry": "Spróbuj ponownie",
+  "paywall.priceError": "Nie udało się wczytać cen. Sprawdź połączenie.",
+  "paywall.getApp": "Odblokowania są w aplikacji SpellGame na iPhone'a.",
+  "paywall.pending": "Czekamy na zgodę dorosłego.",
+  "paywall.done": "Odblokowano. Dziękujemy!",
+  "paywall.restoreNone": "Brak zakupów do przywrócenia.",
+  "paywall.failed": "Zakup się nie udał. Nic nie zostało pobrane.",
+  "complete.includesFutureLanguages": "Complete obejmuje każdy język, który dodamy."
 }

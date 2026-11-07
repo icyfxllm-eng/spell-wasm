@@ -32,6 +32,8 @@ const EXEMPT = new Set(['src/word_data.rs', 'src/word_data_en_retier.rs', 'src/e
 const TIER = /"(easy|medium|hard|expert)"/g;
 
 export const ALLOW = [
+  { file: 'src/entitlements.rs', has: 'pub const TIERS:', why: 'CC-LAUNCH-EN D21: the tier ORDER that the purchase gate (tier_open) numbers for preview_allows. It answers what the player OWNS; what an experience may be served still comes from experience::allowed_tiers, and every surface applies both' },
+  { file: 'src/repetition_sim.rs', has: 'for tier in ["easy", "medium", "hard"]', why: 'CC-LAUNCH-EN A7.2 test fixture: the tiers the 200-draw no-repeat simulation covers; decides no access' },
   { file: 'src/themes.rs', has: 'tier == "hard" || tier == "expert"', why: 'CC-VISUAL-ECLIPSE F9 / V-D19: Spelling Bee Stage counts correct answers at Hard or above -- a progress count toward a theme, never access' },
   { file: 'src/spelldoku/tier.rs', has: '(Tier::', why: 'CC-SPELLDOKU v1.3 F1: which difficulty band each digit of a Tier Mode board draws its word from -- vocabulary, not access; the boards a player may play still come from play::allowed and experience' },
   { file: 'src/spelluzzle/types.rs', has: 'Tier::Jr => &["easy"', why: 'CC-SPELLUZZLE F10: which bank bands a Spell Jr board draws its words from -- vocabulary, not access; the tiers a player may open come from spelluzzle::offer::tiers_for, and the registry\'s juniorPolicy through experience'},

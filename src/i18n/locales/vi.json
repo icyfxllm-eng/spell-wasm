@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "Xóa",
   "acn.delete.failed": "Không xóa được. Hãy kiểm tra kết nối và thử lại.",
   "de.close.letters": "Gần đúng — từ này viết với {fix}",
-  "de.close.split": "Gần đúng — viết liền thành một từ"
+  "de.close.split": "Gần đúng — viết liền thành một từ",
+  "paywall.title": "Mở khóa thêm bài đánh vần",
+  "paywall.body": "Từ cấp Trung bình, Khó và Chuyên gia, The Climb và mọi cấp độ của mọi trò chơi.",
+  "paywall.buy": "Mua · {price}",
+  "paywall.restore": "Khôi phục giao dịch mua",
+  "paywall.close": "Để sau",
+  "paywall.retry": "Thử lại",
+  "paywall.priceError": "Không tải được giá. Hãy kiểm tra kết nối.",
+  "paywall.getApp": "Mở khóa có trong ứng dụng SpellGame cho iPhone.",
+  "paywall.pending": "Đang chờ người lớn đồng ý.",
+  "paywall.done": "Đã mở khóa. Cảm ơn bạn!",
+  "paywall.restoreNone": "Không có giao dịch mua nào để khôi phục.",
+  "paywall.failed": "Giao dịch không thành công. Không bị tính phí.",
+  "complete.includesFutureLanguages": "Complete bao gồm mọi ngôn ngữ chúng tôi bổ sung."
 }

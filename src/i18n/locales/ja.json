@@ -1349,5 +1349,18 @@
   "acn.delete.confirm": "削除",
   "acn.delete.failed": "削除できませんでした。接続を確認してもう一度お試しください。",
   "de.close.letters": "惜しい — この語は {fix} で綴ります",
-  "de.close.split": "惜しい — 続けて一語で書きます"
+  "de.close.split": "惜しい — 続けて一語で書きます",
+  "paywall.title": "もっとスペル練習を解放",
+  "paywall.body": "中級・上級・エキスパートの単語、The Climb、すべてのゲームのすべてのレベル。",
+  "paywall.buy": "購入 · {price}",
+  "paywall.restore": "購入を復元",
+  "paywall.close": "あとで",
+  "paywall.retry": "再試行",
+  "paywall.priceError": "価格を読み込めませんでした。接続を確認してください。",
+  "paywall.getApp": "解放はiPhone用SpellGameアプリで行えます。",
+  "paywall.pending": "大人の承認を待っています。",
+  "paywall.done": "解放しました。ありがとう！",
+  "paywall.restoreNone": "復元できる購入はありません。",
+  "paywall.failed": "購入できませんでした。料金は請求されていません。",
+  "complete.includesFutureLanguages": "Completeには今後追加するすべての言語が含まれます。"
 }

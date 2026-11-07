@@ -1908,3 +1908,25 @@ fn duel_offering_and_gates() {
         }
     }
 }
+
+/// CC-LAUNCH-EN D21 / D24: at Preview a standard player is served Easy only, so
+/// Par and Expeditions are absent and a Duel is Easy; Full and a kid at Preview
+/// are unchanged.
+#[test]
+fn preview_serves_easy_only() {
+    use super::offer::{duel_offered, expedition_offered, par_offered, tier_open, tiers_for};
+    use crate::entitlements::{open_tiers, AccessLevel};
+    let preview = open_tiers(AccessLevel::Preview, false, "en");
+    let full = open_tiers(AccessLevel::Full, false, "en");
+    let kid = open_tiers(AccessLevel::Preview, true, "en");
+    let narrowed: Vec<Tier> = tiers_for("en", false).into_iter().filter(|t| tier_open(*t, &preview)).collect();
+    assert_eq!(narrowed, vec![Tier::Easy]);
+    assert_eq!(tiers_for("en", false).into_iter().filter(|t| tier_open(*t, &full)).collect::<Vec<_>>(), tiers_for("en", false));
+    assert_eq!(tiers_for("en", true).into_iter().filter(|t| tier_open(*t, &kid)).collect::<Vec<_>>(), vec![Tier::Jr]);
+    for t in Tier::ALL {
+        assert!(!(par_offered("en", false, t) && tier_open(t, &preview)), "Par {t:?} at Preview");
+        assert!(!(expedition_offered("en", false, t) && tier_open(t, &preview)), "Expedition {t:?} at Preview");
+        assert_eq!(duel_offered("en", false, t) && tier_open(t, &preview), t == Tier::Easy, "Duel {t:?} at Preview");
+        assert!(tier_open(t, &full) && tier_open(t, &kid), "{t:?}");
+    }
+}

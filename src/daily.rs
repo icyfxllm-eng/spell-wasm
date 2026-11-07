@@ -200,30 +200,98 @@ fn tier_slice_ns(ns: &str, lang: &str, tier: &str, pool: &[&str], w: usize, day_
     let l = (n / w).max(1) as i64; // days per cycle
     let ph = pool_hash(pool);
     let take = w.min(n);
-    let slice_for = |di: i64, salt: u32| -> Vec<usize> {
-        let cycle = di.div_euclid(l);
-        let day = di.rem_euclid(l) as usize;
-        let perm = permutation(n, walk_seed(ns, lang, tier, cycle, ph, salt));
-        let start = day * w;
-        perm[start..(start + take).min(n)].to_vec()
-    };
-    // Cycle-boundary guard: at day 0 a fresh shuffle could re-serve one of
-    // yesterday's words; re-derive with a salt until disjoint (cap 8, then accept).
-    let today = slice_for(day_idx, 0);
-    let day = day_idx.rem_euclid(l);
-    let chosen = if day == 0 && day_idx > 0 {
-        let yesterday: std::collections::HashSet<usize> = slice_for(day_idx - 1, 0).into_iter().collect();
-        let mut pick = today;
-        let mut salt = 1u32;
-        while salt <= 8 && pick.iter().any(|i| yesterday.contains(i)) {
-            pick = slice_for(day_idx, salt);
-            salt += 1;
+    let cycle = day_idx.div_euclid(l);
+    let day = day_idx.rem_euclid(l) as usize;
+    let perm = cycle_perm(ns, lang, tier, ph, n, w, cycle);
+    let start = day * w;
+    perm[start..(start + take).min(n)].iter().map(|&i| pool[i].to_string()).collect()
+}
+
+/// CC-LAUNCH-EN D23: how many days on each side of a cycle boundary the guard
+/// covers. It is thirty, or a third of the cycle on small pools, so the swap
+/// below always has enough clean words to draw from.
+fn boundary_days(cycle_days: usize) -> usize {
+    BOUNDARY_DAYS.min(cycle_days / 3)
+}
+
+const BOUNDARY_DAYS: usize = 30;
+
+/// One cycle's deal order: the cycle's shuffle, with the cycle-boundary guard
+/// (CC-LAUNCH-EN D23).
+///
+/// The old guard compared day 0 with yesterday only, so a word dealt late in one
+/// cycle could come back days into the next. Little Speller got "china" on
+/// 2026-11-08 and again on 2026-11-14.
+///
+/// With K days on each side of a boundary, the guard works like this:
+/// - The slots dealt in a cycle's last K days keep their raw shuffled order.
+/// - The slots dealt in the next cycle's first K days are cleared of any word
+///   from those last K days. Each such word swaps with the first clean word in
+///   the middle of the deck.
+///
+/// So no word repeats across a boundary within K days. Because the tail never
+/// moves, a cycle needs only its predecessor's raw shuffle and nothing earlier.
+/// Every cycle stays a full permutation, so no word repeats within a cycle
+/// either.
+fn cycle_perm(ns: &str, lang: &str, tier: &str, ph: u64, n: usize, w: usize, cycle: i64) -> Vec<usize> {
+    let mut perm = permutation(n, walk_seed(ns, lang, tier, cycle, ph, 0));
+    let dealt = (n / w).max(1) * w.min(n); // slots a cycle actually deals
+    let k = boundary_days(n / w.max(1)) * w;
+    if k == 0 || cycle <= 0 || dealt < 3 * k {
+        return perm;
+    }
+    let prev = permutation(n, walk_seed(ns, lang, tier, cycle - 1, ph, 0));
+    let prev_tail: std::collections::HashSet<usize> = prev[dealt - k..dealt].iter().copied().collect();
+    let mut donor = k; // the middle of the deck: [k, dealt - k)
+    for slot in 0..k {
+        if !prev_tail.contains(&perm[slot]) {
+            continue;
         }
-        pick
-    } else {
-        today
-    };
-    chosen.iter().map(|&i| pool[i].to_string()).collect()
+        while donor < dealt - k && prev_tail.contains(&perm[donor]) {
+            donor += 1;
+        }
+        if donor >= dealt - k {
+            break; // unreachable while dealt >= 3k; perm stays a permutation regardless
+        }
+        perm.swap(slot, donor);
+        donor += 1;
+    }
+    perm
+}
+
+#[cfg(test)]
+mod boundary_tests {
+    use super::*;
+
+    /// D23 / A7.1: for every tier pool size the Daily deals, no word repeats in
+    /// any window of up to 30 consecutive days, across several cycle boundaries.
+    #[test]
+    fn no_repeat_within_30_days_across_boundaries() {
+        for &(n, w) in &[(792usize, 5usize), (752, 5), (825, 2), (596, 3), (278, 2), (90, 3), (12, 2)] {
+            let pool: Vec<String> = (0..n).map(|i| format!("w{i:04}")).collect();
+            let refs: Vec<&str> = pool.iter().map(String::as_str).collect();
+            let l = (n / w) as i64;
+            let window = boundary_days(n / w) as i64;
+            let days: Vec<Vec<String>> = (0..l * 4).map(|d| tier_slice_ns("t", "en", "easy", &refs, w, d)).collect();
+            for start in 0..days.len() as i64 - window {
+                let mut seen = std::collections::HashSet::new();
+                for d in start..start + window.max(1) {
+                    for word in &days[d as usize] {
+                        assert!(seen.insert(word.clone()), "n={n} w={w}: {word} twice in days {start}..{}", start + window);
+                    }
+                }
+            }
+            // Still a full cycle walk: inside one cycle every word appears once.
+            for c in 1..4 {
+                let mut seen = std::collections::HashSet::new();
+                for d in c * l..(c + 1) * l {
+                    for word in &days[d as usize] {
+                        assert!(seen.insert(word.clone()), "n={n} w={w}: {word} twice in cycle {c}");
+                    }
+                }
+            }
+        }
+    }
 }
 
 /// Arc position (0-based) where the Expert finale begins: slots 9 and 10 (idx 8,
