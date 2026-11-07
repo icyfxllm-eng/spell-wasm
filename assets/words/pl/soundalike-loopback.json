@@ -1,0 +1,79 @@
+{
+ "$doc": "CC-SENSE-CUE v1.1 F5 loopback results (flag-only). Written by tools/soundalike_loopback.py; read by tools/build_collisions.py. Never changes a set's kind.",
+ "calibration": {
+  "bar": 0.6428,
+  "controls": {
+   "different": [
+    [
+     "kot",
+     "mleko"
+    ],
+    [
+     "dom",
+     "okno"
+    ]
+   ],
+   "same": [
+    [
+     "kot",
+     "kod"
+    ],
+    [
+     "może",
+     "morze"
+    ],
+    [
+     "grób",
+     "grup"
+    ],
+    [
+     "hart",
+     "chart"
+    ]
+   ]
+  },
+  "differentCeiling": 0.7796,
+  "sameSoundFloor": 0.6086
+ },
+ "lang": "pl",
+ "measured": "2026-11-07",
+ "sets": {
+  "pl:12efea179514": {
+   "flag": "voice-may-distinguish",
+   "members": [
+    "czynny",
+    "czyny"
+   ],
+   "worst": 0.6438,
+   "worstPair": [
+    "czynny",
+    "czyny"
+   ]
+  },
+  "pl:9bb8dc492963": {
+   "flag": null,
+   "members": [
+    "pad",
+    "pat"
+   ],
+   "worst": 0.5469,
+   "worstPair": [
+    "pad",
+    "pat"
+   ]
+  },
+  "pl:de1ea4cf200b": {
+   "flag": null,
+   "members": [
+    "rodzina",
+    "rodzinna"
+   ],
+   "worst": 0.6074,
+   "worstPair": [
+    "rodzina",
+    "rodzinna"
+   ]
+  }
+ },
+ "voice": "pl-PL-Wavenet-B"
+}

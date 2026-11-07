@@ -22,10 +22,10 @@ from soundalike_keys import KEYS
 from soundalikes import layer1_voices, set_id
 
 OUT = ROOT / "assets/words"
-LADDER_LANGS = ("fr", "pt")
+LADDER_LANGS = ("fr", "pt", "pl", "fil")
 nfc = lambda s: unicodedata.normalize("NFC", s)
 # F3: seeds from a closed rule list need only IPA + loopback (the spec names these for fr; es tilde is in accent-collisions.tsv)
-CLOSED_LIST = {"fr": [("ou", "où"), ("a", "à"), ("la", "là"), ("sur", "sûr")], "pt": []}
+CLOSED_LIST = {"fr": [("ou", "où"), ("a", "à"), ("la", "là"), ("sur", "sûr")], "pt": [], "pl": [], "fil": []}
 FR_INFLECT = re.compile(r"(ées?|és?|es|er|ez|ant|ent|e|s|x|t|d|z)$")
 
 

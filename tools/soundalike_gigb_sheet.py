@@ -34,7 +34,7 @@ def rows(lang):
 
 
 if __name__ == "__main__":
-    for lang in sys.argv[1:] or ["fr", "pt"]:
+    for lang in sys.argv[1:] or ["fr", "pt", "pl", "fil"]:
         data, skipped = rows(lang)
         p = ROOT / f"reports/soundalike-gigb-{lang}.csv"
         with open(p, "w", newline="", encoding="utf-8") as f:

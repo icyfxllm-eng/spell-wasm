@@ -19,6 +19,9 @@ const ALLOW = new Set([
   'tools/soundalikes.py',
   'scripts/lib/soundalikes.mjs',
   'tools/build_collisions.py',          // the generator writes the tables
+  'tools/soundalike_ladder.py',         // the ladder generator writes the ladder tables
+  'tools/soundalike_ipa_check.py',      // reads the ladder table's raw status to check IPA
+  'tools/soundalike_gigb_sheet.py',     // reads raw ladder status to sort the Gig B sheet
   'scripts/soundalike-api-check.mjs',   // names the patterns it forbids
 ]);
 const CODE = /\.(rs|py|mjs|js|cjs|sh|swift|kt|ts)$/;

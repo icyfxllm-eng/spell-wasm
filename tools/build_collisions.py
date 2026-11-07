@@ -61,8 +61,8 @@ TIERS = ("EASY", "MEDIUM", "HARD", "EXPERT")
 # Extra tables: English's re-tier table (served only while en.retier is on).
 VARIANTS = [("en", "retier")]
 GENERATORS = {"en": "build_collisions.key_en@1", "es": "build_collisions.key_es@1", "ru": "build_collisions.key_ru@1",
-              "fr": "soundalike_keys.key_fr@1", "pt": "soundalike_keys.key_pt@1"}
-LADDER = ("fr", "pt")        # CC-SOUNDALIKE-LADDER: built by tools/soundalike_ladder.py
+              "fr": "soundalike_keys.key_fr@1", "pt": "soundalike_keys.key_pt@1", "pl": "soundalike_keys.key_pl@1", "fil": "soundalike_keys.key_fil@1"}
+LADDER = ("fr", "pt", "pl", "fil")        # CC-SOUNDALIKE-LADDER: built by tools/soundalike_ladder.py
 
 
 def table_doc(lang, sets, words, variant=None, accent=()):

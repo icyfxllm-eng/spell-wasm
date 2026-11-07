@@ -56,6 +56,10 @@ CONTROLS = {
            "different": [("chat", "maison"), ("pain", "bureau")]},
     "pt": {"same": [("hora", "ora"), ("cela", "sela"), ("cinto", "sinto"), ("cheque", "xeque")],
            "different": [("mesa", "janela"), ("carro", "livro")]},
+    "pl": {"same": [("kot", "kod"), ("może", "morze"), ("grób", "grup"), ("hart", "chart")],
+           "different": [("kot", "mleko"), ("dom", "okno")]},
+    "fil": {"same": [("taksi", "taxi"), ("sine", "cine"), ("kilo", "quilo"), ("senyor", "señor")],
+            "different": [("bahay", "aso"), ("tubig", "kamatis")]},
 }
 STORE = lambda lang: ROOT / "assets" / "words" / lang / "soundalike-loopback.json"
 

@@ -113,6 +113,44 @@ def key_pt(word):
     return s
 
 
+# ----------------------------------------------------------------------------- Polish
+def key_pl(word):
+    """Polish: ó=u, rz=ż, ch=h are true (CC-SOUNDALIKE-LADDER key notes); word-final obstruents devoice (kot=kod). rz after a
+    voiceless consonant is sz (trzy, krzak). Nasals ą/ę, palatals and every other letter are left alone: fewer merges, never wrong ones."""
+    s = nfc(word.lower())
+    s = re.sub(r"[^a-ząćęłńóśźż]", "", s)
+    if not s:
+        return ""
+    s = s.replace("ch", "h")
+    s = re.sub(r"(?<=[ptkhcsf])rz", "sz", s).replace("rz", "ż")
+    s = s.replace("ó", "u")
+    s = re.sub(r"dż$", "cz", s)
+    s = re.sub(r"dź$", "ć", s)
+    s = re.sub(r"dz$", "c", s)
+    s = re.sub(r"ż$", "sz", s)
+    s = re.sub(r"ź$", "ś", s)
+    s = re.sub(r"(?<![sc])z$", "s", s)
+    s = s[:-1] + {"b": "p", "d": "t", "g": "k", "w": "f"}.get(s[-1], s[-1])
+    return _squeeze(s)
+
+
+# ----------------------------------------------------------------------------- Filipino
+def key_fil(word):
+    """Filipino is near-phonetic: the key is the normalized spelling plus a short list of spelling mergers for loan letters
+    (c=k/s, qu=k, ph=f, x=ks, ñ=ny, doubled letters). e/i, o/u, d/r, p/f and b/v are NOT merged: they are accent or
+    variant questions, handled by accepted-variants, never by an accept-any set."""
+    s = nfc(word.lower())
+    s = re.sub(r"[^a-zñáàâéèêíìîóòôúùû]", "", s)
+    s = s.translate(str.maketrans("áàâéèêíìîóòôúùû", "aaaeeeiiiooouuu"))
+    if not s:
+        return ""
+    s = s.replace("ñ", "ny").replace("ph", "f").replace("x", "ks")
+    s = re.sub(r"qu(?=[ei])", "k", s).replace("qu", "kw").replace("q", "k")
+    s = re.sub(r"c(?=[ei])", "s", s)
+    s = re.sub(r"c(?!h)", "k", s)
+    return _squeeze(s)
+
+
 # ----------------------------------------------------------------------------- tests
 # Pairs that must share a key: the staged closed-list seeds that this key is meant to derive (a missing merge is a
 # false negative, reported, not wrong), and pairs the key must NEVER merge (a merge would be a wrong accept-any set).
@@ -120,6 +158,9 @@ MUST_MERGE = {
     "fr": [("sang", "sans"), ("foi", "fois"), ("foi", "foie"), ("pain", "pin"), ("saint", "sein"), ("mère", "mer"), ("mère", "maire"),
            ("chant", "champ"), ("cou", "coup"), ("voie", "voix"), ("cane", "canne"), ("cygne", "signe"), ("ancre", "encre"),
            ("tante", "tente"), ("vers", "verre"), ("vert", "verre"), ("cour", "cours"), ("cour", "court"), ("air", "aire"), ("aimer", "aimé"), ("aimer", "aimez")],
+    "pl": [("kot", "kod"), ("może", "morze"), ("grób", "grup"), ("hart", "chart"), ("ług", "łuk"), ("żaba", "rzaba"), ("bóg", "buk"),
+           ("góra", "gura"), ("mur", "mór"), ("tuż", "tusz")],
+    "fil": [("kasa", "casa"), ("kilo", "quilo"), ("sine", "cine"), ("kuwarto", "cuwarto"), ("taksi", "taxi"), ("senyor", "señor"), ("fotograpiya", "photograpiya"), ("kamatis", "kammatis")],
     "pt": [("caça", "cassa"), ("cozer", "coser"), ("chá", "xá"), ("cheque", "xeque"), ("concerto", "conserto"), ("acento", "assento"),
            ("senso", "censo"), ("sessão", "cessão"), ("hora", "ora"), ("cela", "sela"), ("espiar", "expiar"), ("laço", "lasso"),
            ("cerrar", "serrar"), ("paço", "passo"), ("cinto", "sinto"), ("ruço", "russo"), ("apreçar", "apressar")],
@@ -128,11 +169,16 @@ MUST_NOT_MERGE = {
     "fr": [("brin", "brun"), ("empreinte", "emprunte"), ("pêche", "péché"), ("poisson", "poison"), ("dessus", "dessous"),
            ("pain", "pan"), ("son", "sang"), ("bon", "banc"), ("vin", "vent"), ("main", "mon"), ("mur", "mou"), ("rue", "roue"),
            ("peur", "pour"), ("lit", "lu"), ("guet", "jet"), ("fig", "fis"), ("annexe", "année"), ("sol", "sel"), ("dé", "de"), ("mal", "mol"), ("jeu", "jou"), ("rose", "rase")],
+    "pl": [("rok", "róg"), ("żar", "zar"), ("czas", "cas"), ("szal", "sal"), ("ćma", "cma"), ("świat", "swiat"), ("łapa", "lapa"),
+           ("koń", "kon"), ("są", "sa"), ("rzeka", "reka"), ("ból", "bol"), ("sól", "sol"), ("baba", "papa"), ("dom", "tom"),
+           ("bąk", "bak"), ("kura", "kora"), ("wąż", "waż"), ("rzeka", "zeka")],
+    "fil": [("bata", "beta"), ("lalaki", "lalake"), ("dito", "rito"), ("pilipino", "filipino"), ("baso", "vaso"), ("bote", "buti"), ("mano", "manu"), ("ako", "aku"),
+            ("kama", "gama"), ("aso", "asu"), ("tama", "tana"), ("bata", "bat"), ("mata", "mataa")],
     "pt": [("mal", "mau"), ("pode", "pôde"), ("avó", "avô"), ("caça", "casa"), ("assar", "azar"), ("por", "pôr"), ("pera", "pêra"),
            ("ouço", "ouso"), ("são", "sou"), ("lã", "la"), ("pão", "pau"), ("mãe", "me"), ("vá", "vê"), ("rio", "rico"), ("caro", "carro"),
            ("cura", "curra"), ("ara", "arra"), ("gato", "jato")],
 }
-KEYS = {"fr": key_fr, "pt": key_pt}
+KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil}
 
 
 def selftest():
@@ -157,4 +203,4 @@ if __name__ == "__main__":
     if "--selftest" in sys.argv:
         sys.exit(1 if selftest() else 0)
     for a in sys.argv[1:]:
-        print(a, "fr:", key_fr(a), "pt:", key_pt(a))
+        print(a, "fr:", key_fr(a), "pt:", key_pt(a), "pl:", key_pl(a))

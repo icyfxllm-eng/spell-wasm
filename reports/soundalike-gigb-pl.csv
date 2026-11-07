@@ -1,0 +1,4 @@
+lang,set_id,members,ladder_status,reason,origin,loopback_worst,loopback_flag,ipa_check,Same sound in your accent? (yes/no/unsure),Notes
+pl,pl:12efea179514,czynny / czyny,machine_checked,loopback_flag,key,0.6438,voice-may-distinguish,missing,,
+pl,pl:de1ea4cf200b,rodzina / rodzinna,machine_checked,ipa_missing,key,0.6074,,missing,,
+pl,pl:9bb8dc492963,pad / pat,provisional,,key,0.5469,,agree,,
