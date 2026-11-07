@@ -17,4 +17,4 @@ bar 0.756; 0 sets flagged. IPA source: kaikki Tagalog dump, check-only, not ship
 Disagreement rate: 0 of 3 by the key; 2 of 3 not promoted for missing IPA. n is too small to read as a key problem.
 
 ## Effects
-No production grading change; fil Impossible pool matches a fresh build. Gig B sheet: reports/soundalike-gigb-fil.csv (3 rows, not sent).
+No production grading change. The fil Impossible pool loses 1 word (baranggay, 1977 → 1930 available rows in the availability report), the intended F2 exclusion effect. Gig B sheet: reports/soundalike-gigb-fil.csv (3 rows, not sent).
