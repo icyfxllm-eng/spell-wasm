@@ -788,6 +788,20 @@ pub(crate) mod tests {
         assert_eq!(st.view_latest(now, &z).unwrap(), latest);
     }
 
+    /// The settings-truth manifest's effect test for the Last N days control:
+    /// N local days, today included, midnight to now.
+    #[test]
+    fn settings_effect_report_days_range() {
+        let z = Fixed(0);
+        let now = at(2026, 10, 28, 15, 0, 0);
+        for n in 1..=7u32 {
+            let w = on_demand(now, n, &z).unwrap();
+            assert_eq!(w.days(), i64::from(n));
+            assert_eq!(w.end_s, now);
+            assert_eq!(w.start_s, days_from_civil(2026, 10, 28) * DAY_S - (i64::from(n) - 1) * DAY_S);
+        }
+    }
+
     /// Viewing marks delivery forward only; a re-view is not a new report.
     #[test]
     fn viewing_the_latest_report_marks_delivery_forward_only() {

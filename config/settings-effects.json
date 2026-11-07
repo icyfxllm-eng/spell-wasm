@@ -294,6 +294,15 @@
       "test": "settings_effect_online_family",
       "suppressed_by": "rendered only for a kid while online_kids and online_enabled are on",
       "harness": "web"
+    },
+    {
+      "key": "rdaysN",
+      "surface": "report",
+      "state": "Last N days (1-7), read-only",
+      "effect": "the report window becomes the last N local days, today included, from local midnight to now; the stored schedule, the delivered mark and the ping are untouched",
+      "test": "settings_effect_report_days_range",
+      "suppressed_by": "guardian_report_days flag off: the whole Report days box is absent",
+      "harness": "web"
     }
   ],
   "_cut_note": "AUDITPASS F7: toolGhostToggle and toolSayItToggle were removed with Spell Racing and Say It. A control that no longer renders owes no effect test — the manifest shrinks with the UI, which is the `manifest subset of rendered` law doing its job rather than leaving a ghost entry behind."
