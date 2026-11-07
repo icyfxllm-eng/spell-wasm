@@ -9712,3 +9712,4 @@ fil,espirito,hard,1315,misspelled_nonstandard,CC-ORTHO-SWEEP-ALL: espiritu is th
 fil,babaeng,hard,84,not_a_dictionary_headword,"CC-ORTHO-SWEEP-ALL: babae plus the -ng linker, not a headword; babae is stored; Eric 2026-11-06 (fil reviewer sheet)",2026-11-06
 fil,dae,expert,914,wrong_language_other,CC-ORTHO-SWEEP-ALL: not a Tagalog/Filipino word (reviewer: corpus leakage); Eric 2026-11-06 (fil reviewer sheet),2026-11-06
 fil,dai,expert,1255,wrong_language_other,CC-ORTHO-SWEEP-ALL: not a Tagalog/Filipino word; dai is Bikol 'not' (reviewer: corpus leakage); Eric 2026-11-06 (fil reviewer sheet),2026-11-06
+fil,sunud-sunod,expert,2246,misspelled_nonstandard,"CC-ORTHO-SWEEP-ALL: old spelling; the 2014 rules keep the o in repeated roots, so sunod-sunod is standard; not accepted, to become a close-list entry in Phase B; Eric 2026-11-06",2026-11-06

@@ -607,6 +607,15 @@ pub fn load() -> Lists {
         }
     };
     WRITABLE.with(|w| w.set(writable));
+    let mut lists = lists;
+    // CC-ORTHO-FIX-FIL-ROMANCE 4a: rewrite words the sweeps renamed or merged. Idempotent; logged; never over a newer build's bytes.
+    if writable {
+        let log = crate::saved_words::rewrite_lists(&mut lists, js_sys::Date::now());
+        if !log.is_empty() {
+            store(&lists);
+            crate::saved_words::record(&log);
+        }
+    }
     lists
 }
 

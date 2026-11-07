@@ -37,12 +37,14 @@ pub fn load_custom(state: &mut AppState) {
         // Screen already-stored words too: a list saved before a term entered
         // the blocklist (or carried over from an older build) still gets
         // cleaned on load. Re-persist only if something was actually removed.
+        let log = crate::saved_words::rewrite_custom(&mut c); // CC-ORTHO-FIX-FIL-ROMANCE 4a
         let before = c.words.len();
         let (clean, blocked) = profanity::filter_allowed(c.words);
         c.words = clean;
         state.custom = c;
-        if blocked > 0 && before != state.custom.words.len() {
+        if (blocked > 0 && before != state.custom.words.len()) || !log.is_empty() {
             save_custom(state);
+            crate::saved_words::record(&log);
         }
     }
 }

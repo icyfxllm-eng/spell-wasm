@@ -1866,7 +1866,7 @@ pub fn next_word(app: &App) {
             if due.is_empty() {
                 let e = s.tone_drill[tone[0]].clone();
                 s.cur_lang = e.lang.clone();
-                s.word = e.word.clone();
+                s.word = crate::saved_words::resolve(&e.lang, &e.word); // 4c: graded through the current stored form
                 s.cur_tier = e.tier.clone();
                 crate::learner_query::note_serve(&e.word, crate::learner_query::NextWordReason::ToneDrill);
             } else {
@@ -1892,7 +1892,7 @@ pub fn next_word(app: &App) {
                 .unwrap_or(due[0]);
             let m = s.misses[pick].clone();
             s.cur_lang = m.lang.clone();
-            s.word = m.word.clone();
+            s.word = crate::saved_words::resolve(&m.lang, &m.word); // 4c: graded through the current stored form
             s.cur_tier = m.tier.clone();
             crate::learner_query::note_serve(&m.word, crate::learner_query::NextWordReason::DueReview);
             }

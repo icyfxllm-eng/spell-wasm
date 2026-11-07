@@ -4,7 +4,7 @@
  "voice": "fil-PH-Wavenet-A",
  "clipCacheVersion": "v4",
  "recogniser": "whisper.cpp ggml-small, one transcript per clip (top-1)",
- "expertRows": 1979,
+ "expertRows": 1978,
  "rulesNet": [
   "aabang",
   "aaminin",
@@ -42,16 +42,13 @@
   "pangngalan",
   "pinag-aaralan",
   "pinag-aralan",
-  "sunod-sunod",
-  "sunud-sunod",
   "umaalis",
   "umuunlad"
  ],
  "loopbackKeep": [
   "awtoridad",
   "nuon",
-  "pinansiyal",
-  "sunud-sunod"
+  "pinansiyal"
  ],
  "loopbackPartners": [
   "autoridad",
@@ -106,7 +103,6 @@
   "pinansiyal",
   "pinansyal",
   "sunod-sunod",
-  "sunud-sunod",
   "umaalis",
   "umuunlad"
  ]

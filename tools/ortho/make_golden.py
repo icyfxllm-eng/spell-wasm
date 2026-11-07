@@ -121,6 +121,20 @@ def build(lang):
                 elif tier in ("easy", "jr"): exp = "correct"
                 else: exp = "close"
                 add("friction", w, typed, tier, exp, "oe/ae stand-in for œ/æ")
+    # Eric 2026-11-06 (CC-ORTHO-FIX-FIL-ROMANCE 3): real accent-only pairs from the banks. The table decides same-sound pairs;
+    # pending_table = the spec answer (correct as valid_other_sense) waits on SENSE-CUE holding the pair. Different sound = miss.
+    for a, b, exp, note in {
+        "es": [("dónde", "donde", "pending_table", "tilde-only, same sound: the es sound-alike table decides (it holds no tilde-only pairs yet)"),
+               ("donde", "dónde", "pending_table", "tilde-only, same sound: the table decides"),
+               ("quién", "quien", "pending_table", "tilde-only, same sound: the table decides"),
+               ("quien", "quién", "pending_table", "tilde-only, same sound: the table decides")],
+        "fr": [("classé", "classe", "miss", "different sound"), ("classe", "classé", "miss", "different sound")],
+        "pt": [("porquê", "porque", "pending_table", "the table decides; pair tagged for the Gig B Same sound? column"),
+               ("porque", "porquê", "pending_table", "the table decides; pair tagged for the Gig B Same sound? column")],
+    }.get(lang, []):
+        if nfc(a) in B and nfc(b) in B:
+            for tier in (B[nfc(a)], "jr"):
+                add("friction", a, b, tier, exp, note)
     return rows
 
 for lang in ("es", "fr", "pt"):

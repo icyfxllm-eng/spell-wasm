@@ -324,3 +324,7 @@ friction	poderíamos	poderíamos	hard	pt-BR-Neural2-B	correct	NFD input grades 
 friction	contratos	CONTRATOS	expert	pt-BR-Neural2-B	correct	capital letters fold
 friction	contratos	 contratos 	expert	pt-BR-Neural2-B	correct	edge spaces are trimmed
 friction	contratos	contratos	expert	pt-BR-Neural2-B	correct	NFD input grades as NFC
+friction	porquê	porque	medium	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
+friction	porquê	porque	jr	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
+friction	porque	porquê	medium	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column
+friction	porque	porquê	jr	pt-BR-Neural2-B	pending_table	the table decides; pair tagged for the Gig B Same sound? column

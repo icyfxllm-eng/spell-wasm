@@ -82,3 +82,24 @@ Groups that differ only by a mark, n-tilde, c-cedilla or oe/ae, listed in report
 ## Resolutions
 
 - **D1 (Eric, 2026-11-06): keep the Spain voice (es-ES-Neural2-G).** D1's es-419 default is withdrawn. No cache-key change, no re-warm, the es sound-alike table stays verified for the voice. casa/caza and cocer/coser stay in the table as they are (the loopback measured both as alike on this voice). Still open: stop-and-asks 2 to 5 above.
+
+## Amended resolutions applied (Eric, 2026-11-06)
+
+1. **-ng linker rows:** the 220 rows whose root is also a row are tagged `linker_candidate` in assets/words/purity/linker-candidates/fil.tsv (tags only, none cut). babaeng, babaing and lalakeng stay cut. bank_floors.json untouched, nothing padded. **Filipino shortfall against the pool floors (not enforced while fil is unlaunched):** Easy 247 of 300 (-53), Medium 597 of 600 (-3), Hard 1,191 of 1,200 (-9), Expert 1,978 of 2,000 (-22). This blocks Filipino's launch, not this file.
+2. **sunud-sunod** quarantined as misspelled_nonstandard (tools/ortho/sweep_all_batch5.py); a miss for now. Add it to a close list when Phase B generalizes close feedback. The "Easy and Jr only" clause is struck.
+3. **Golden rows** added from real bank pairs, graded by the profile function against the real bank lookup: es donde/dónde and quien/quién both ways are `pending_table` (the spec answer is correct as valid_other_sense; the es sound-alike table holds no tilde-only pairs yet, so today the profile says miss and the table is not asked); fr classe/classé both ways are `miss`; pt porque/porquê both ways are `pending_table` and tagged for the Gig B "Same sound in your accent?" column (data/{es,pt}/sound-alike-rules.json gigb_pairs, reports/ortho-gigb-*.csv). No bank row added.
+4. **Saved words** (src/saved_words.rs, data/saved-word-map.tsv from tools/ortho/build_saved_word_map.py, gated by --check):
+   - a. Misses, My Words lists and the older flat set are rewritten on load from the map, merging when the stored form already exists (counts summed, earlier due kept, stars and earliest added time kept); idempotent; every rewrite is logged to the device (key byear_ortho_rewrite_log_v1: list, lang, old, new, merged) so it can be reversed. The sync pull applies the same rewrite before storing.
+   - b. 5 quarantined fil rows have no twin (dae, dai, babaeng, babaing, lalakeng): hidden from the due queue (misses::due_misses_at), never deleted.
+   - c. A served saved word is graded through its current stored form (game.rs: resolve), so that row's accepted spellings apply.
+   - d. Scope is the map's languages: fil, es, fr, pt, vi, hi, ru (+1 zh row). 61 rows (22 fil, 22 ru, 7 hi, 4 pt, 2 es, 2 vi, 1 fr, 1 zh). Cover: Misses and both My Words stores. **Server sync does exist** (backend/accounts.py sync_records, kinds list and miss). I did not edit any server data: the client repairs pulled records before storing them, and the existing tombstone step then retires the old records. A device that never updates would keep pushing old spellings until it does.
+   - The map generator exits non-zero if an old form maps to two stored forms or is a current row. Neither happened.
+
+## Findings from this work
+
+- **zh quarantines from the first sweep never reached the app.** The app serves zh from the ZH_* consts in src/words.rs (scripts/build-zh-bank.py), which I did not regenerate. hu2li2|狐狸 is still served; the two banks already differ elsewhere (for example 牠 against 它). The map leaves it out ("NOT EFFECTIVE"). Fixing it means regenerating words.rs, which changes the served zh bank beyond this file: needs your call.
+- The "e/i, o/u" merges for the 10 pairs rely on the old spelling being accepted as a variant; a saved miss in the old spelling now rewrites to the stored one.
+
+## Verification
+
+cargo test: 1,675 lib tests pass, plus the golden files (es 252, fr 342, pt 329 rows). Quick checks pass: collision tables, sound-alike report, Impossible pools, purity gate, map check, profile check, provenance gate. The wasm app build succeeds; e2e specs mywords-lists, wordpic-vi-tone, review-queue, accounts and gameplay pass (33/33). Not run: the full gate, and no end-to-end test of the rewrite inside a browser with real saved data.

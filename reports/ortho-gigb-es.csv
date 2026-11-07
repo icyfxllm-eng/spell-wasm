@@ -18,6 +18,8 @@ es,sound-alike:true,es_tilde_only,mas,más,es-ES-Neural2-G,,,"authored by hand f
 es,sound-alike:true,es_tilde_only,se,sé,es-ES-Neural2-G,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 es,sound-alike:true,es_tilde_only,de,dé,es-ES-Neural2-G,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 es,sound-alike:true,es_tilde_only,te,té,es-ES-Neural2-G,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+es,tagged-pair,accent_only_bank_pair,dónde,donde,es-ES-Neural2-G,,,bank pair found by tools/ortho (C6)
+es,tagged-pair,accent_only_bank_pair,quién,quien,es-ES-Neural2-G,,,bank pair found by tools/ortho (C6)
 es,near-sound,es_r_rr,pero,perro,es-ES-Neural2-G,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 es,near-sound,es_r_rr,caro,carro,es-ES-Neural2-G,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 es,near-sound,es_n_ny,ano,año,es-ES-Neural2-G,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"

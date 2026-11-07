@@ -20,6 +20,7 @@ pt,sound-alike:true,pt_sibilant,ruço,russo,pt-BR-Neural2-B,,,"authored by hand 
 pt,sound-alike:true,pt_sibilant,apreçar,apressar,pt-BR-Neural2-B,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 pt,sound-alike:true,pt_sibilant,incipiente,insipiente,pt-BR-Neural2-B,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 pt,sound-alike:accent,pt_lu_final,mal,mau,pt-BR-Neural2-B,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
+pt,tagged-pair,accent_only_bank_pair,porquê,porque,pt-BR-Neural2-B,,,bank pair found by tools/ortho (C6)
 pt,near-sound,pt_open_closed_vowel,pode,pôde,pt-BR-Neural2-B,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 pt,near-sound,pt_open_closed_vowel,por,pôr,pt-BR-Neural2-B,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
 pt,near-sound,pt_ao_am,falarão,falaram,pt-BR-Neural2-B,,,"authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"

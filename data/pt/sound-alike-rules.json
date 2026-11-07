@@ -204,5 +204,15 @@
       "rule": "pt_lu_final",
       "source": "authored by hand for CC-ORTHO-SWEEP-ALL (Eric, Claude); the native-speaker auditor confirms on the Gig B sheet"
     }
+  ],
+  "gigb_pairs": [
+    {
+      "words": [
+        "porquê",
+        "porque"
+      ],
+      "note": "tilde/circumflex-only pair from the bank; tagged for the Gig B 'Same sound in your accent?' column (Eric 2026-11-06); the sound-alike table decides, nothing here accepts it",
+      "source": "bank pair found by tools/ortho (C6)"
+    }
   ]
 }

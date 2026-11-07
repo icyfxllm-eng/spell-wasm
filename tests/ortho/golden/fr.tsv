@@ -337,3 +337,7 @@ friction	sœur	soeur	medium	fr-FR-Neural2-F	close	oe/ae stand-in for œ/æ
 friction	sœur	soeur	hard	fr-FR-Neural2-F	close	oe/ae stand-in for œ/æ
 friction	sœur	soeur	expert	fr-FR-Neural2-F	close	oe/ae stand-in for œ/æ
 friction	sœur	soeur	jr	fr-FR-Neural2-F	correct	oe/ae stand-in for œ/æ
+friction	classé	classe	medium	fr-FR-Neural2-F	miss	different sound
+friction	classé	classe	jr	fr-FR-Neural2-F	miss	different sound
+friction	classe	classé	easy	fr-FR-Neural2-F	miss	different sound
+friction	classe	classé	jr	fr-FR-Neural2-F	miss	different sound

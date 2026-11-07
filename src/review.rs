@@ -114,6 +114,12 @@ pub fn untouched(r: &ReviewState) -> bool {
     r.step == 0 && r.fsrs.reps <= 1 && r.fsrs.lapses == 0
 }
 
+/// Merging two saved schedules for one word (a spelling the sweeps unified): the merged word comes up when the earlier of the two was
+/// due. This chooses between existing dates; it computes no schedule, so it is not a second review rule (L0 I5).
+pub fn earlier_due(a: f64, b: f64) -> f64 {
+    a.min(b)
+}
+
 /// Carry-over from the Leitner boxes (signed 2026-09-19): the entry keeps
 /// its due time. Boxes 1-2 were the same-day steps; boxes 3, 4 and 5 had
 /// 1, 3 and 7-day gaps, which become the FSRS stability. Every queued word

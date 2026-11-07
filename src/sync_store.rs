@@ -125,14 +125,20 @@ async fn cycle(app: &App) -> Outcome {
     let mut applied = Vec::new();
     let mut lists = word_lists::load();
     let list_changes = sm::apply_lists(&mut lists, &mut meta_now, &local, &pulled);
-    if !list_changes.is_empty() {
+    // CC-ORTHO-FIX-FIL-ROMANCE 4d: a pulled record can still carry an old spelling; repair it before it is stored. The old record
+    // then leaves this device and the existing tombstone step tells the server, so no server-side data is edited.
+    let sweep_log = crate::saved_words::rewrite_lists(&mut lists, at);
+    crate::saved_words::record(&sweep_log);
+    if !list_changes.is_empty() || !sweep_log.is_empty() {
         word_lists::store(&lists);
         applied.extend(list_changes);
     }
     let miss_changes = {
         let mut st = app.borrow_mut();
         let changes = sm::apply_misses(&mut st.misses, &local, &pulled, crate::model::MISS_CAP);
-        if !changes.is_empty() {
+        let sweep_log = crate::saved_words::rewrite_misses(&mut st.misses);
+        crate::saved_words::record(&sweep_log);
+        if !changes.is_empty() || !sweep_log.is_empty() {
             misses::save(&st);
         }
         changes

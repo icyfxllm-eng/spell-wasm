@@ -15,6 +15,8 @@ for lang in ("es", "fr", "pt"):
         for i, a in enumerate(s["words"]):
             for b in s["words"][i + 1:]:
                 rows.append([lang, "sound-alike:" + kind[s["rule"]], s["rule"], a, b, sa["voice_id"], "", "", s["source"]])
+    for g in sa.get("gigb_pairs", []):
+        rows.append([lang, "tagged-pair", "accent_only_bank_pair", g["words"][0], g["words"][1], sa["voice_id"], "", "", g["source"]])
     for r in ns["rules"]:
         for a, b in r.get("examples", []):
             rows.append([lang, "near-sound", r["id"], a, b, sa["voice_id"], "", "", r["source"]])

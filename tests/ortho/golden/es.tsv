@@ -243,3 +243,11 @@ friction	china	china	medium	es-ES-Neural2-G	correct	NFD input grades as NFC
 friction	hayan	HAYAN	medium	es-ES-Neural2-G	correct	capital letters fold
 friction	hayan	 hayan 	medium	es-ES-Neural2-G	correct	edge spaces are trimmed
 friction	hayan	hayan	medium	es-ES-Neural2-G	correct	NFD input grades as NFC
+friction	dónde	donde	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the es sound-alike table decides (it holds no tilde-only pairs yet)
+friction	dónde	donde	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the es sound-alike table decides (it holds no tilde-only pairs yet)
+friction	donde	dónde	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
+friction	donde	dónde	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
+friction	quién	quien	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
+friction	quién	quien	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
+friction	quien	quién	medium	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides
+friction	quien	quién	jr	es-ES-Neural2-G	pending_table	tilde-only, same sound: the table decides

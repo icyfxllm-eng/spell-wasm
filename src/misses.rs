@@ -16,6 +16,12 @@ pub fn miss_key(word: &str, lang: &str) -> String {
 pub fn load(state: &mut AppState) {
     state.misses = storage::get_json::<Vec<MissEntry>>(MISS_KEY).unwrap_or_default();
     carry_over_all(&mut state.misses);
+    // CC-ORTHO-FIX-FIL-ROMANCE 4a: a saved word the sweeps renamed or merged is rewritten to its stored form. Idempotent; logged.
+    let log = crate::saved_words::rewrite_misses(&mut state.misses);
+    if !log.is_empty() {
+        save(state);
+        crate::saved_words::record(&log);
+    }
 }
 
 /// L0 R2 carry-over: an entry stored by a pre-R2 build gets a `review`
@@ -32,12 +38,17 @@ pub(crate) fn save(state: &AppState) {
 }
 
 pub fn due_misses(state: &AppState) -> Vec<usize> {
-    let now = now_ms();
+    due_misses_at(state, now_ms())
+}
+
+/// `due_misses` with an injected clock, so it can run on a non-wasm target. 4b: a quarantined word with no stored twin (not Filipino,
+/// only root + linker) is hidden from the queue, and stays in storage.
+pub fn due_misses_at(state: &AppState, now: f64) -> Vec<usize> {
     state
         .misses
         .iter()
         .enumerate()
-        .filter(|(_, m)| m.due <= now)
+        .filter(|(_, m)| m.due <= now && !crate::saved_words::is_hidden(&m.lang, &m.word))
         .map(|(i, _)| i)
         .collect()
 }
