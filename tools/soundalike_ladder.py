@@ -22,10 +22,12 @@ from soundalike_keys import KEYS
 from soundalikes import layer1_voices, set_id
 
 OUT = ROOT / "assets/words"
-LADDER_LANGS = ("fr", "pt", "pl", "fil")
+LADDER_LANGS = ("fr", "pt", "pl", "fil", "sw")
 nfc = lambda s: unicodedata.normalize("NFC", s)
 # F3: seeds from a closed rule list need only IPA + loopback (the spec names these for fr; es tilde is in accent-collisions.tsv)
-CLOSED_LIST = {"fr": [("ou", "où"), ("a", "à"), ("la", "là"), ("sur", "sûr")], "pt": [], "pl": [], "fil": []}
+CLOSED_LIST = {"fr": [("ou", "où"), ("a", "à"), ("la", "là"), ("sur", "sûr")], "pt": [], "pl": [], "fil": [], "sw": []}
+# Decision 2026-11-07: sw is capped at machine_checked for v1 (92% of its bank has no kaikki IPA)
+CAPPED = {"sw": "no_ipa_coverage"}
 FR_INFLECT = re.compile(r"(ées?|és?|es|er|ez|ant|ent|e|s|x|t|d|z)$")
 
 
@@ -111,6 +113,8 @@ def build(lang, write=True):
             reason = "ipa_unchecked"
         elif ip != "agree":
             reason = "ipa_differ" if ip == "differ" else "ipa_missing"
+        elif lang in CAPPED:
+            reason = CAPPED[lang]
         else:
             status = "provisional"
         counts[status] += 1

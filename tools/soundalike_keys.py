@@ -151,6 +151,19 @@ def key_fil(word):
     return _squeeze(s)
 
 
+# ----------------------------------------------------------------------------- Swahili
+def key_sw(word):
+    """Swahili is near-phonetic: normalized spelling plus the Arabic-loan digraph spellings listed here (dh=z, th=s, kh=h, gh=g).
+    ng' (the velar nasal) is kept apart from ng, and l/r, b/mb, ch/sh are never merged."""
+    s = nfc(word.lower())
+    s = re.sub(r"[^a-z']", "", s).replace("ng'", "N")
+    s = s.replace("'", "")
+    if not s:
+        return ""
+    s = s.replace("dh", "z").replace("th", "s").replace("kh", "h").replace("gh", "g")
+    return s       # no squeeze: mm is a syllabic nasal (mmoja is not moja), and doubled vowels are long vowels
+
+
 # ----------------------------------------------------------------------------- tests
 # Pairs that must share a key: the staged closed-list seeds that this key is meant to derive (a missing merge is a
 # false negative, reported, not wrong), and pairs the key must NEVER merge (a merge would be a wrong accept-any set).
@@ -161,6 +174,7 @@ MUST_MERGE = {
     "pl": [("kot", "kod"), ("może", "morze"), ("grób", "grup"), ("hart", "chart"), ("ług", "łuk"), ("żaba", "rzaba"), ("bóg", "buk"),
            ("góra", "gura"), ("mur", "mór"), ("tuż", "tusz")],
     "fil": [("kasa", "casa"), ("kilo", "quilo"), ("sine", "cine"), ("kuwarto", "cuwarto"), ("taksi", "taxi"), ("senyor", "señor"), ("fotograpiya", "photograpiya"), ("kamatis", "kammatis")],
+    "sw": [("dhahabu", "zahabu"), ("thelathini", "selasini"), ("khabari", "habari"), ("ghali", "gali")],
     "pt": [("caça", "cassa"), ("cozer", "coser"), ("chá", "xá"), ("cheque", "xeque"), ("concerto", "conserto"), ("acento", "assento"),
            ("senso", "censo"), ("sessão", "cessão"), ("hora", "ora"), ("cela", "sela"), ("espiar", "expiar"), ("laço", "lasso"),
            ("cerrar", "serrar"), ("paço", "passo"), ("cinto", "sinto"), ("ruço", "russo"), ("apreçar", "apressar")],
@@ -174,11 +188,12 @@ MUST_NOT_MERGE = {
            ("bąk", "bak"), ("kura", "kora"), ("wąż", "waż"), ("rzeka", "zeka")],
     "fil": [("bata", "beta"), ("lalaki", "lalake"), ("dito", "rito"), ("pilipino", "filipino"), ("baso", "vaso"), ("bote", "buti"), ("mano", "manu"), ("ako", "aku"),
             ("kama", "gama"), ("aso", "asu"), ("tama", "tana"), ("bata", "bat"), ("mata", "mataa")],
+    "sw": [("ng'ombe", "ngombe"), ("mama", "mana"), ("lala", "rara"), ("baba", "mbaba"), ("chai", "shai"), ("kata", "gata"), ("pika", "bika"), ("mtu", "mtoto"), ("mmoja", "moja"), ("saa", "sa"), ("nyama", "nama")],
     "pt": [("mal", "mau"), ("pode", "pôde"), ("avó", "avô"), ("caça", "casa"), ("assar", "azar"), ("por", "pôr"), ("pera", "pêra"),
            ("ouço", "ouso"), ("são", "sou"), ("lã", "la"), ("pão", "pau"), ("mãe", "me"), ("vá", "vê"), ("rio", "rico"), ("caro", "carro"),
            ("cura", "curra"), ("ara", "arra"), ("gato", "jato")],
 }
-KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil}
+KEYS = {"fr": key_fr, "pt": key_pt, "pl": key_pl, "fil": key_fil, "sw": key_sw}
 
 
 def selftest():
