@@ -23,7 +23,7 @@ thread_local! {
 /// A date in the UI language, through Intl. Noon UTC, read back in UTC, so no
 /// zone can move it across a day boundary.
 fn date_label(y: i64, m: u32, d: u32, with_year: bool) -> String {
-    let ms = crate::reports_share::days_from_civil(y, m, d) as f64 * 86_400_000.0 + 43_200_000.0;
+    let ms = crate::report_days::day_noon_ms(crate::reports_share::days_from_civil(y, m, d));
     let date = js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(ms));
     let opts = js_sys::Object::new();
     let mut fields = vec![("month", "short"), ("day", "numeric"), ("timeZone", "UTC")];

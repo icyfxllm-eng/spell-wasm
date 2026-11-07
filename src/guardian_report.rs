@@ -13,7 +13,6 @@ use std::rc::Rc;
 use crate::learner_query::{AttemptDetail, ProfileId};
 use crate::reports_share::{self as rs, ComposeInput, Report, TypeGroup, Which, Zone};
 
-const DAY_S: i64 = 86_400;
 /// G-D18: at most 10 practice words per language.
 pub const PRACTICE_MAX: usize = 10;
 /// T-LONG: at least 8 units in the bank's stored unit.
@@ -184,9 +183,41 @@ pub struct GuardianInput<'a> {
 /// The REPORTS-SHARE report for the window, with each language's word types
 /// (F2) and practice list (F3) filled in. Pure.
 pub fn compose(input: &GuardianInput) -> Report {
+    compose_with(input, false)
+}
+
+/// CC-GUARDIAN-REPORT v1.1 F3/F4/F5: the same composer over any `[start, end)`
+/// window (`Which::Span`), with G-D26 applied per word type and the window's
+/// facts and "vs last report" deltas (`prev`, the previous window's input)
+/// carried on `Report::days`. Only reached with `guardian.reportDays` on.
+pub fn compose_days(input: &GuardianInput, prev: Option<&GuardianInput>) -> Report {
+    use crate::report_days as rd;
+    let mut r = compose_with(input, true);
+    let stats = |i: &GuardianInput, lang: &str| {
+        let w = rs::in_window(i.base.which, i.base.now_s, i.base.zone);
+        rd::lang_stats(i.base.q, i.base.profile, lang, i.bank, &w)
+    };
+    let mut info = rd::DaysInfo::default();
+    let mut deltas = Vec::new();
+    for lang in input.base.langs {
+        let cur = stats(input, lang);
+        info.attempts += cur.attempts;
+        info.correct += cur.attempts - cur.misses;
+        if let Some(p) = prev {
+            deltas.extend(rd::deltas(lang, &cur, &stats(p, lang)));
+        }
+    }
+    info.empty = info.attempts == 0;
+    info.not_enough = r.sections.iter().all(|s| s.types.is_empty());
+    info.deltas = deltas;
+    r.days = Some(info);
+    r
+}
+
+fn compose_with(input: &GuardianInput, gate: bool) -> Report {
     let mut r = rs::compose(&input.base);
     let (zone, monday, b) = (input.base.zone, r.monday, input.bank);
-    let in_window = |t: i64| rs::week_monday(t, zone) == monday;
+    let in_window = rs::in_window(input.base.which, input.base.now_s, zone);
     for s in &mut r.sections {
         let lang = s.lang.clone();
         let log = input.base.q.attempt_detail_log(input.base.profile, &lang);
@@ -199,7 +230,15 @@ pub fn compose(input: &GuardianInput) -> Report {
                 by.entry(t).or_default().push(m);
             }
         }
-        let mut shown: Vec<(WordType, Vec<&Missed>)> = by.into_iter().filter(|(_, v)| v.len() >= MIN_GROUP).collect();
+        // v1.1 G-D26 sits ON TOP of the group floor: a type shows only if it
+        // clears both, and a hidden type is never hinted at (it does not seed
+        // the top-up either).
+        let stats = gate.then(|| crate::report_days::lang_stats(input.base.q, input.base.profile, &lang, b, &in_window));
+        let clears = |t: &WordType| match &stats {
+            Some(st) => st.by_type.get(t).is_some_and(|&(a, m)| crate::report_days::passes_gate(a, m)),
+            None => true,
+        };
+        let mut shown: Vec<(WordType, Vec<&Missed>)> = by.into_iter().filter(|(t, v)| v.len() >= MIN_GROUP && clears(t)).collect();
         shown.sort_by(|a, b| b.1.len().cmp(&a.1.len()).then_with(|| a.0.cmp(&b.0)));
         shown.truncate(MAX_GROUPS);
         s.types = shown
@@ -272,8 +311,8 @@ pub fn compose(input: &GuardianInput) -> Report {
 /// The local Monday (day count) of the next 08:00 Monday strictly after now.
 pub fn next_ping_monday(now_s: i64, zone: &dyn Zone) -> i64 {
     let this_monday = rs::week_monday(now_s, zone);
-    let local = now_s + zone.offset_s(now_s);
-    if local < this_monday * DAY_S + i64::from(PING_HOUR) * 3600 {
+    let (day, sec) = crate::report_days::local_day_sec(now_s, zone);
+    if day == this_monday && sec < i64::from(PING_HOUR) * 3600 {
         this_monday
     } else {
         this_monday + 7
@@ -368,7 +407,7 @@ pub fn parse_monday(s: &str) -> Option<i64> {
         return None;
     }
     let day = rs::days_from_civil(y, m, d);
-    (rs::civil(day) == (y, m, d) && (day + 3).rem_euclid(7) == 0).then_some(day)
+    (rs::civil(day) == (y, m, d) && crate::report_days::weekday(day) == 0).then_some(day)
 }
 
 /// The deep link's in-app form (the router's hash).
@@ -868,6 +907,65 @@ mod tests {
         assert_eq!(out, std::fs::read_to_string(path).unwrap(), "v1 Guardian output changed");
     }
 
+    /// v1.1 A2 (days path): the default schedule's window is v1's week, and the
+    /// Report Days composer renders it byte-for-byte as the stored golden.
+    #[test]
+    fn the_default_schedule_through_the_days_path_is_the_v1_golden() {
+        use crate::report_days::{window, ScheduleLog};
+        let (fake, bank) = fixture();
+        let log = ScheduleLog::weekly_since(at(2026, 9, 1, 0, 0, 0, -4));
+        let w = window(NOW(), &log, &Indianapolis, None).unwrap();
+        let r = compose_days(
+            &GuardianInput {
+                base: ComposeInput { q: &fake, profile: DEVICE, langs: &["en"], now_s: NOW(), zone: &Indianapolis, which: w.which(false) },
+                bank: &bank,
+                junior: false,
+            },
+            None,
+        );
+        let mut out = String::new();
+        for lang in LOCALES {
+            out.push_str(&format!("=== {lang}\n{}\n", render_in(&r, lang)));
+        }
+        let golden = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/tests/golden/guardian_v1_fixture.txt")).unwrap();
+        assert_eq!(out, golden, "the default schedule must not change v1 output");
+        assert!(!r.days.unwrap().not_enough);
+    }
+
+    /// v1.1 A7: a 1-day window with 3 attempts on one word type. v1's group
+    /// floor would show it; G-D26 hides it, no type is hinted at, and the
+    /// words stay in Working on.
+    #[test]
+    fn a_thin_type_is_hidden_in_a_one_day_window() {
+        use crate::report_days::{window, ScheduleEntry, ScheduleLog, WeekdaySet};
+        let fake = Fake { details: vec![miss("cat", 9), miss("dog", 10), miss("sun", 11)], ..Fake::default() };
+        let bank = FakeBank::with(&[("cat", 1), ("dog", 1), ("sun", 1), ("hat", 1), ("map", 1)]);
+        let log = ScheduleLog::from_entries(vec![ScheduleEntry { days: WeekdaySet::DAILY, changed_at_s: at(2026, 9, 1, 0, 0, 0, -4) }]).unwrap();
+        let now = at(2026, 10, 21, 8, 0, 0, -4);
+        let w = window(now, &log, &Indianapolis, None).unwrap();
+        assert_eq!(w.days(), 1);
+        let input = GuardianInput {
+            base: ComposeInput { q: &fake, profile: DEVICE, langs: &["en"], now_s: now, zone: &Indianapolis, which: w.which(false) },
+            bank: &bank,
+            junior: false,
+        };
+        assert_eq!(compose(&input).sections[0].types.len(), 1, "v1 would show the Medium group");
+        let r = compose_days(&input, None);
+        assert!(r.sections[0].types.is_empty(), "G-D26 hides it");
+        assert_eq!(r.sections[0].working_on, ["cat", "dog", "sun"], "the words themselves stay");
+        let info = r.days.unwrap();
+        assert!(info.not_enough && !info.empty);
+        assert_eq!((info.attempts, info.correct), (3, 0));
+        // Fourth attempt, second day-type miss: the type clears the gate.
+        let fake = Fake { details: vec![miss("cat", 9), miss("cat", 12), miss("dog", 10), miss("sun", 11)], ..Fake::default() };
+        let r = compose_days(&GuardianInput { base: ComposeInput { q: &fake, ..input.base }, ..input }, None);
+        assert_eq!(r.sections[0].types.len(), 1);
+        // F6: nothing at all in the window.
+        let none = Fake::default();
+        let r = compose_days(&GuardianInput { base: ComposeInput { q: &none, ..input.base }, ..input }, None);
+        assert!(r.days.unwrap().empty);
+    }
+
     /// A11 / I13: every registry label renders from a key every locale holds,
     /// and the renderer refuses any key outside the pools.
     #[test]
@@ -885,6 +983,8 @@ mod tests {
         }
         let bad = Report {
             monday: monday_of(OCT19),
+            last_day: monday_of(OCT19) + 6,
+            days: None,
             partial: false,
             sections: vec![rs::LangSection {
                 lang: "en".into(),

@@ -9,58 +9,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use crate::learner::{Channel, OutcomeClass};
 use crate::learner_query::{LearnerQuery, ProfileId};
 
-const DAY_S: i64 = 86_400;
+pub use crate::report_days::{civil, days_from_civil, week_monday, DeviceZone, Zone, DAY_S};
 
 // ------------------------------------------------------------------ time
-
-/// A time zone, as seconds east of UTC at a given UTC instant. Injected: the
-/// live one asks the device (`DeviceZone`), tests name a rule.
-pub trait Zone {
-    fn offset_s(&self, utc_s: i64) -> i64;
-}
-
-/// The device's CURRENT zone, read at compose time (D-R6).
-pub struct DeviceZone;
-
-impl Zone for DeviceZone {
-    fn offset_s(&self, utc_s: i64) -> i64 {
-        let d = js_sys::Date::new(&wasm_bindgen::JsValue::from_f64(utc_s as f64 * 1000.0));
-        // getTimezoneOffset is minutes WEST of UTC.
-        -(d.get_timezone_offset() as i64) * 60
-    }
-}
-
-/// (year, month 1..=12, day 1..=31) of a day count since 1970-01-01.
-/// Howard Hinnant's civil_from_days, valid far beyond any date this app sees.
-pub fn civil(days: i64) -> (i64, u32, u32) {
-    let z = days + 719_468;
-    let era = z.div_euclid(146_097);
-    let doe = z.rem_euclid(146_097);
-    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
-    let mp = (5 * doy + 2) / 153;
-    let d = (doy - (153 * mp + 2) / 5 + 1) as u32;
-    let m = if mp < 10 { mp + 3 } else { mp - 9 } as u32;
-    (yoe + era * 400 + i64::from(m <= 2), m, d)
-}
-
-/// The day count of a civil date (inverse of [`civil`]).
-pub fn days_from_civil(y: i64, m: u32, d: u32) -> i64 {
-    let y = if m <= 2 { y - 1 } else { y };
-    let era = y.div_euclid(400);
-    let yoe = y.rem_euclid(400);
-    let mp = (i64::from(m) + 9) % 12;
-    let doy = (153 * mp + 2) / 5 + i64::from(d) - 1;
-    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
-    era * 146_097 + doe - 719_468
-}
-
-/// The local Monday (as a day count) of the week holding `utc_s`. Weeks start
-/// on Monday in every locale (D-R6); 1970-01-01 was a Thursday.
-pub fn week_monday(utc_s: i64, zone: &dyn Zone) -> i64 {
-    let local_day = (utc_s + zone.offset_s(utc_s)).div_euclid(DAY_S);
-    local_day - (local_day + 3).rem_euclid(7)
-}
 
 /// Which week a report covers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -72,15 +23,37 @@ pub enum Which {
     /// The week starting on this local Monday (a day count), for a deep link
     /// that names its week (CC-GUARDIAN-REPORT F7). Partial if it is this week.
     Week(i64),
+    /// CC-GUARDIAN-REPORT v1.1: any `[start, end)` window of 1 to 7 local
+    /// days (`report_days::window`, or an on-demand range).
+    Span { start_s: i64, end_s: i64, first_day: i64, last_day: i64, partial: bool },
 }
 
-/// The window's Monday and whether it is still running.
+/// The window's first local day and whether it is still running.
 pub fn window(which: Which, now_s: i64, zone: &dyn Zone) -> (i64, bool) {
     let this_monday = week_monday(now_s, zone);
     match which {
         Which::LastWeek => (this_monday - 7, false),
         Which::ThisWeek => (this_monday, true),
         Which::Week(m) => (m, m == this_monday),
+        Which::Span { first_day, partial, .. } => (first_day, partial),
+    }
+}
+
+/// The window's last local day (inclusive).
+pub fn last_day(which: Which, first_day: i64) -> i64 {
+    match which {
+        Which::Span { last_day, .. } => last_day,
+        _ => first_day + 6,
+    }
+}
+
+/// Whether a UTC instant falls in the window. The weekly windows keep their
+/// v1 test (the local Monday of the instant), so flag-off output cannot move.
+pub fn in_window<'a>(which: Which, now_s: i64, zone: &'a dyn Zone) -> impl Fn(i64) -> bool + Copy + 'a {
+    let (first, _) = window(which, now_s, zone);
+    move |t: i64| match which {
+        Which::Span { start_s, end_s, .. } => (start_s..end_s).contains(&t),
+        _ => week_monday(t, zone) == first,
     }
 }
 
@@ -125,9 +98,14 @@ impl LangSection {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Report {
-    /// The window's Monday, as a local day count.
+    /// The window's first local day, as a day count (a Monday for the weekly
+    /// windows, which is what the field was named for).
     pub monday: i64,
+    /// The window's last local day, inclusive (`monday + 6` for a week).
+    pub last_day: i64,
     pub partial: bool,
+    /// v1.1 facts for a Report Days window; `None` for every v1 window.
+    pub days: Option<crate::report_days::DaysInfo>,
     /// Languages with something to say, in the order asked for. Empty = an
     /// empty week, which still renders (D-R7).
     pub sections: Vec<LangSection>,
@@ -141,7 +119,7 @@ pub fn is_miss(o: OutcomeClass) -> bool {
 /// F1/F2 — compose one window. Read-only, contract-only (L0 I6).
 pub fn compose(input: &ComposeInput) -> Report {
     let (monday, partial) = window(input.which, input.now_s, input.zone);
-    let in_window = |utc_s: i64| week_monday(utc_s, input.zone) == monday;
+    let in_window = in_window(input.which, input.now_s, input.zone);
     let mut sections = Vec::new();
     for &lang in input.langs {
         let log = input.q.attempt_detail_log(input.profile, lang);
@@ -196,7 +174,7 @@ pub fn compose(input: &ComposeInput) -> Report {
             sections.push(s);
         }
     }
-    Report { monday, partial, sections }
+    Report { monday, last_day: last_day(input.which, monday), partial, days: None, sections }
 }
 
 /// An attempt any report may count: not Speech (Spell It voice results) and
@@ -232,7 +210,7 @@ fn fill(s: String, params: &[(&str, &str)]) -> String {
 /// before the buckets and the practice list after them.
 pub fn render_text(r: &Report, v: &Voice) -> String {
     let (sy, sm, sd) = civil(r.monday);
-    let (ey, em, ed) = civil(r.monday + 6);
+    let (ey, em, ed) = civil(r.last_day);
     let mut out = vec![
         (v.t)("greport.name"),
         fill((v.t)("rshare.week"), &[("start", &(v.date)(sy, sm, sd, false)), ("end", &(v.date)(ey, em, ed, true))]),
