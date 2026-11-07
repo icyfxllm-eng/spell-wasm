@@ -32,7 +32,7 @@
   "sameSoundFloor": 0.5925
  },
  "lang": "es",
- "measured": "2026-10-17",
+ "measured": "2026-11-06",
  "sets": {
   "es:1907745bb41e": {
    "flag": "voice-may-distinguish",
@@ -44,6 +44,18 @@
    "worstPair": [
     "cauce",
     "cause"
+   ]
+  },
+  "es:32e5c88964da": {
+   "flag": null,
+   "members": [
+    "quien",
+    "quién"
+   ],
+   "worst": 0.6269,
+   "worstPair": [
+    "quien",
+    "quién"
    ]
   },
   "es:338d88e0bf70": {
@@ -92,6 +104,18 @@
    "worstPair": [
     "cocer",
     "coser"
+   ]
+  },
+  "es:74dc3018d4dc": {
+   "flag": null,
+   "members": [
+    "donde",
+    "dónde"
+   ],
+   "worst": 0.5862,
+   "worstPair": [
+    "donde",
+    "dónde"
    ]
   },
   "es:9e4a427e317c": {

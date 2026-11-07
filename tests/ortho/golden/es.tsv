@@ -17,26 +17,26 @@ homophone	cayó	calló	medium	es-ES-Neural2-G	pending_table	pair not in the SENS
 homophone	calló	cayó	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
 homophone	valla	vaya	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
 homophone	vaya	valla	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	casa	caza	easy	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
-homophone	caza	casa	medium	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
-homophone	cocer	coser	medium	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
-homophone	coser	cocer	medium	es-ES-Neural2-G	correct_other_sense	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)
-homophone	abrasar	abrazar	medium	es-ES-Neural2-G	miss	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair
-homophone	abrazar	abrasar	medium	es-ES-Neural2-G	miss	es_scz is an accent rule for the es-ES-Neural2-G voice: not a homophone pair
-homophone	tu	tú	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	tú	tu	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	el	él	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	él	el	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	si	sí	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	sí	si	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	mas	más	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	más	mas	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	se	sé	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	sé	se	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	de	dé	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	dé	de	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	te	té	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
-homophone	té	te	easy	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
+homophone	casa	caza	easy	es-ES-Neural2-G	correct_other_sense	
+homophone	caza	casa	medium	es-ES-Neural2-G	correct_other_sense	
+homophone	cocer	coser	medium	es-ES-Neural2-G	correct_other_sense	
+homophone	coser	cocer	medium	es-ES-Neural2-G	correct_other_sense	
+homophone	abrasar	abrazar	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
+homophone	abrazar	abrasar	medium	es-ES-Neural2-G	pending_table	pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)
+homophone	tu	tú	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	tú	tu	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	el	él	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	él	el	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	si	sí	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	sí	si	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	mas	más	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	más	mas	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	se	sé	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	sé	se	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	de	dé	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	dé	de	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	te	té	medium	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
+homophone	té	te	easy	es-ES-Neural2-G	correct_other_sense	same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it
 homophone	esfera	esfkra	hard	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 homophone	menos	menks	medium	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair
 homophone	ermita	ermkta	expert	es-ES-Neural2-G	miss	control: one letter changed, not a same-sound pair

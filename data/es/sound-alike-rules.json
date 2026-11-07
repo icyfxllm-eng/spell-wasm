@@ -2,7 +2,7 @@
   "$doc": "CC-ORTHO-SWEEP-ALL: generator rules and seed pairs handed to CC-SENSE-CUE (it owns the table, its status and the read API). Nothing here changes grading. kind true = identical sound in this voice; accent = differs for some speakers or in some voices, never accepted as a homophone.",
   "lang": "es",
   "voice_id": "es-ES-Neural2-G",
-  "status": "table verified (7 true sets) by CC-SENSE-CUE; es_scz and the tilde rule need a re-check against the Spain voice",
+  "status": "table verified (9 true sets, loopback 2026-11-06) by CC-SENSE-CUE; tilde-only bank pairs donde/dónde and quien/quién are in the table; es_scz borderline, see its rule",
   "rules": [
     {
       "id": "es_bv",
@@ -21,8 +21,8 @@
     },
     {
       "id": "es_scz",
-      "kind": "accent",
-      "description": "c/z against s. The Spain voice distinguishes them (distincion), so casa/caza is NOT a same-sound pair here; it would be true for a seseante voice"
+      "kind": "true",
+      "description": "c/z against s. Measured 2026-11-06 on es-ES-Neural2-G: casa/caza 0.644 against a 0.652 bar, so the voice does not clearly distinguish them (a borderline margin of 0.008); accepted both ways, and the Gig B 'Same sound in your accent?' column decides for a native Spain ear"
     },
     {
       "id": "es_tilde_only",

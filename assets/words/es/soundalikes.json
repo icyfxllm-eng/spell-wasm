@@ -112,6 +112,23 @@
    "loopbackFlag": null,
    "members": [
     {
+     "memberId": "donde",
+     "wordId": "donde"
+    },
+    {
+     "memberId": "dónde",
+     "wordId": "dónde"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "es:74dc3018d4dc"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
      "memberId": "hora",
      "wordId": "hora"
     },
@@ -122,6 +139,23 @@
    ],
    "mergerRules": [],
    "setId": "es:655db904f786"
+  },
+  {
+   "confirmed": false,
+   "kind": "true",
+   "loopbackFlag": null,
+   "members": [
+    {
+     "memberId": "quien",
+     "wordId": "quien"
+    },
+    {
+     "memberId": "quién",
+     "wordId": "quién"
+    }
+   ],
+   "mergerRules": [],
+   "setId": "es:32e5c88964da"
   }
  ],
  "status": "verified",

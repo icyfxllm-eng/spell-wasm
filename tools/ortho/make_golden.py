@@ -79,6 +79,8 @@ def build(lang):
                     if (a, b) in tp: add("homophone", a, b, tier, "correct_other_sense", note + "; the SENSE-CUE table holds it as a true set and the F4 done-when says correct both ways (Eric 2026-11-06)")
                     else: add("homophone", a, b, tier, "miss", note)
                 elif (a, b) in tp: add("homophone", a, b, tier, "correct_other_sense")
+                elif {nfc(a), nfc(b)} in [{nfc(x), nfc(y)} for x, y, snd in COLL if snd == "same"]:
+                    add("homophone", a, b, tier, "correct_other_sense", "same-sound accent-only pair: the F4 same-sound list (accent-collisions.tsv) accepts it")
                 else: add("homophone", a, b, tier, "pending_table", "pair not in the SENSE-CUE table yet (words not both in the bank, or no generator for this language)")
     pool = sorted(w for w in B if w.isalpha() and 4 <= len(w) <= 7)
     for w in rnd.sample(pool, 14):   # controls: one letter changed, not a homophone, not a row

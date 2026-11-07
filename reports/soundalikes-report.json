@@ -88,10 +88,10 @@
   },
   "es": {
    "bankRows": 6264,
-   "bonusEligibleBankWords": 9,
+   "bonusEligibleBankWords": 13,
    "confirmedSets": 0,
    "generator": "build_collisions.key_es@1",
-   "impossibleFilterRemoves": 9,
+   "impossibleFilterRemoves": 13,
    "impossibleFilterRemovesExpert": 3,
    "loopbackFlags": 1,
    "proof": {
@@ -103,7 +103,7 @@
     "splitGroups": []
    },
    "sets": {
-    "true": 7
+    "true": 9
    },
    "status": "verified",
    "voice": "es-ES-Neural2-G",

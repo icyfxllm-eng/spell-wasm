@@ -14,3 +14,6 @@
 casa caza
 botar votar
 cocer coser
+# tilde-only pairs (CC-ORTHO-FIX F4, Eric 2026-11-06): same sound in isolation, both bank rows; Gig B confirms
+donde dónde
+quien quién
