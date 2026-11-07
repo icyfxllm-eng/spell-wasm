@@ -131,3 +131,10 @@ cargo test: 1,675 lib tests pass, plus the golden files (es 252, fr 342, pt 329 
 - komplikado←kumplikado and politika←pulitika merged (left form stored, right quarantined and accepted at every tier) by `tools/ortho/sweep_all_batch6.py`; saved-word map regenerated (67 rows, fil 24); generated files re-emitted.
 - `assets/words/purity/native-confirm/fil.tsv`: needs_native_confirm tags for komplikado, politika, politiko, kompanya, istilo, inhinyeriya, legal, sunod-sunod. Tags only, no grading change.
 - The first full gate run failed at soundalike-api-check because `make_golden.py` read the table file directly; it now uses `tools/soundalikes.py`. Golden output unchanged.
+
+## F7 in-app close check, es, 2026-11-07
+
+`tests/e2e/specs/ortho-close.mjs` (registered as `ortho-close`, 3/3 pass): with `spell_flag_ortho_profile_es` on, in a fixed level, an Easy es word typed without its accent (página→pagina) shows "Casi — esta palabra se escribe con a → á", the word is not revealed, and the free retry is granted; with the flag off the same slip is an ordinary miss that reveals the word (the mutation check); a plain word typed right still scores good with no fix line.
+
+Found while writing it: in The Climb (the default level) the close retry never shows, because shields own the miss. That is the same rule the German close follows ("Climb shields / extra attempts keep their rules"), so it is by design, but a player on the default level sees an ordinary miss for an accent slip even with the flag on. Whether Climb should show the close line is a product call, not made here.
+Not checked in the app: a second wrong try after the retry, pt and fr (their flags also wait on tables).

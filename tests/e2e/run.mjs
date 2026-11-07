@@ -47,6 +47,7 @@ import * as reduceMotion from './specs/reduce-motion.mjs';
 import * as frameLog from './specs/frame-log.mjs';
 import * as birthdayMonths from './specs/birthday-months.mjs';
 import * as answerFeedback from './specs/answer-feedback.mjs';
+import * as orthoClose from './specs/ortho-close.mjs';
 import * as orbStates from './specs/orb-states.mjs';
 import * as controlsColor from './specs/controls-color.mjs';
 import * as soundHaptics from './specs/sound-haptics.mjs';
@@ -150,6 +151,7 @@ const SPECS = [
   ['frame-log', frameLog],
   ['birthday-months', birthdayMonths],
   ['answer-feedback', answerFeedback],
+  ['ortho-close', orthoClose],
   ['orb-states', orbStates],
   ['controls-color', controlsColor],
   ['sound-haptics', soundHaptics],
