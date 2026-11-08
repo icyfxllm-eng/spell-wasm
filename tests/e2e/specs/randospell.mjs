@@ -81,10 +81,10 @@ const FLAG_M = () => {
 const state = (page) => page.evaluate(() => JSON.parse(window.__spelltest.randospellState() || 'null'));
 
 export async function run(browser, base, suite) {
-  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null, jr = false, jrFlag = true, v11 = false } = {}) => {
+  const open = async ({ lang = 'en', start = true, reduce = false, marathon = false, kind = null, jr = false, jrFlag = true, v11 = false, owns = 'all' } = {}) => {
     if (v11) marathon = true;
     const init = v11 ? FLAG_V11 : jr ? (jrFlag ? FLAG_JR : FLAG) : kind ? FLAG_ALL : marathon ? FLAG_M : FLAG;
-    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init, ...(jr ? { age: KID } : {}) });
+    const o = await openApp(browser, base, { lang, viewport: { width: 390, height: 844 }, init, owns, ...(jr ? { age: KID } : {}) });
     if (reduce) await o.page.emulateMedia({ reducedMotion: 'reduce' });
     await o.page.evaluate(() => document.getElementById('rsOpenBtn').click());
     await o.page.waitForSelector('#rsScreen.show', { timeout: 8000 });
@@ -497,12 +497,12 @@ export async function run(browser, base, suite) {
   await suite.test('randospell_d10_preview_owns_the_first_tier_and_an_unviable_bank_is_absent', async () => {
     // Free tier: es is Preview (first tier only). Its Easy bank cannot carry the
     // die, so the mode is absent for that player: Start is dead and says why.
-    const es = await open({ lang: 'es', start: false });
+    const es = await open({ lang: 'es', start: false, owns: 'none' });
     try {
       assert(await es.page.evaluate(() => document.getElementById('rsStart').disabled), 'es at Preview can start');
     } finally { await es.ctx.close(); }
     // ru's Easy bank does carry it: Start is live and only Easy is offered.
-    const ru = await open({ lang: 'ru', start: false });
+    const ru = await open({ lang: 'ru', start: false, owns: 'none' });
     try {
       assert(!(await ru.page.evaluate(() => document.getElementById('rsStart').disabled)), 'ru at Preview cannot start');
       const tiers = await ru.page.evaluate(() => [...document.querySelectorAll('#rsTiers [data-t]')].map((b) => b.dataset.t));

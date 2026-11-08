@@ -3,8 +3,10 @@
 // language, which is also the case the Mix lock copy is about.
 //
 //   * every flag OFF (the default)  -> no Impossible entry in the level picker.
-//   * flags ON, free English        -> "Impossible" is playable; "Impossible Mix" is shown LOCKED with the
+//   * flags ON, English owned       -> "Impossible" is playable; "Impossible Mix" is shown LOCKED with the
 //                                      Complete reason (F3), never "needs two languages".
+//   * flags ON, nothing owned       -> "Impossible" is shown LOCKED with the English reason (CC-LAUNCH-EN:
+//                                      English is no longer free above Easy).
 //   * an Impossible word            -> hint / definition / can't-hear buttons hidden; exactly one replay;
 //                                      one wrong submission is a miss with NO retry even with extra attempts
 //                                      on; the miss is filed under the impossible tag (M9).
@@ -13,9 +15,9 @@ import { typeOnKeyboard, assert, pinBaseline, clickSettled, openSettings } from 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const ON = { spell_flag_impossible: 'on', spell_flag_impossible_en: 'on', spell_flag_impossible_mix: 'on', spell_flag_en_retier: 'on' };
 
-async function open(browser, base, flags, extra = {}) {
+async function open(browser, base, flags, extra = {}, { owns = 'all' } = {}) {
   const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2, isMobile: true });
-  await pinBaseline(ctx);
+  await pinBaseline(ctx, { owns });
   await ctx.addInitScript(([age, f, x]) => {
     localStorage.setItem('byear_agegate_v1', age);
     for (const [k, v] of Object.entries({ ...f, ...x })) localStorage.setItem(k, v);
@@ -218,8 +220,8 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  await suite.test('flags ON, free English: Impossible playable, Mix locked with the Complete reason', async () => {
-    const { ctx, page } = await open(browser, base, ON);
+  await suite.test('flags ON, English owned: Impossible playable, Mix locked with the Complete reason', async () => {
+    const { ctx, page } = await open(browser, base, ON, {}, { owns: 'english' });
     try {
       const o = await options(page);
       const imp = o.find((x) => x.v === 'impossible');
@@ -227,6 +229,16 @@ export async function run(browser, base, suite) {
       assert(imp && !imp.d, `Impossible must be selectable: ${JSON.stringify(o)}`);
       assert(mix && mix.d, `Mix must be shown disabled: ${JSON.stringify(o)}`);
       assert(/complete/i.test(mix.t) && !/two/i.test(mix.t), `Mix lock must say Complete, got ${mix.t}`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('flags ON, nothing owned: Impossible locked with the English reason, never playable', async () => {
+    const { ctx, page } = await open(browser, base, ON, {}, { owns: 'none' });
+    try {
+      const o = await options(page);
+      const imp = o.find((x) => x.v === 'impossible');
+      assert(imp && imp.d, `Impossible must be shown disabled for a free player: ${JSON.stringify(o)}`);
+      assert(/SpellGame English/.test(imp.t), `the lock must name SpellGame English, got ${imp && imp.t}`);
     } finally { await ctx.close(); }
   });
 

@@ -23,7 +23,25 @@ thread_local! {
 
 /// What the player owns right now, as last reported by StoreKit.
 pub fn owned() -> Owned {
-    OWNED.with(|c| c.get())
+    dev_owned(OWNED.with(|c| c.get()))
+}
+
+/// Dev and test builds only: `localStorage['spell_dev_owned']`, a comma list of
+/// product ids, adds to what StoreKit reports. It exists so e2e can stand up an
+/// English-only owner, which the all-or-nothing `spell_dev_entitlements` grant
+/// cannot. It is compiled out of release builds (no `dev_preview`), and
+/// scripts/seam-absence-check.mjs fails a dist that carries the key.
+#[cfg(all(feature = "dev_preview", not(test)))]
+fn dev_owned(o: Owned) -> Owned {
+    let Some(v) = crate::storage::get_raw("spell_dev_owned") else { return o };
+    let ids: Vec<&str> = v.split(',').map(str::trim).collect();
+    let d = crate::entitlements::owned_from_product_ids(&ids);
+    Owned { english: o.english || d.english, complete: o.complete || d.complete }
+}
+
+#[cfg(not(all(feature = "dev_preview", not(test))))]
+fn dev_owned(o: Owned) -> Owned {
+    o
 }
 
 /// The event the page receives whenever the owned set changes, so an open

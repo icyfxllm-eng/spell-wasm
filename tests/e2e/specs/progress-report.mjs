@@ -26,7 +26,8 @@ function learnerStore(daysAgo = 7, words = [['because', 'misspelled', false], ['
 
 /** Init script: optional Complete (the dev grant), optional seeded learner. */
 const init = ({ complete, learner, daysAgo = 7, words }) => [
-  complete ? "localStorage.setItem('spell_dev_entitlements', 'on');" : '',
+  // Explicit both ways: the e2e baseline owns everything unless told otherwise.
+  complete ? "localStorage.setItem('spell_dev_entitlements', 'on');" : "localStorage.setItem('spell_dev_entitlements', 'off');",
   learner ? `localStorage.setItem('spell_learner_en', ${JSON.stringify(learnerStore(daysAgo, words))});` : '',
 ].join('\n');
 

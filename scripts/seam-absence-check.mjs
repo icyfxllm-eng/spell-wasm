@@ -19,6 +19,8 @@ const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_previe
   // CC-THEMES-COSMOS census: nor the Test entitlements switch, which granted
   // Complete to any player who tapped the logo five times.
   'devEntitlements', 'spell_dev_entitlements',
+  // CC-LAUNCH-EN e2e: the dev-only owned-products list (entitlements_adapter::dev_owned).
+  'spell_dev_owned',
   // CC-LAUNCH-EN item 3: nor the local flag-override reader, which let
   // localStorage switch on any flag. Release reads only defaults, the kill file
   // and the Tools screen's player flags (src/flags.rs PLAYER_FLAGS).

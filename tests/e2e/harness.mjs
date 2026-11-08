@@ -95,6 +95,52 @@ export const DEVICES = {
   large: { width: 430, height: 932, dpr: 3, mobile: true },
 };
 
+
+// CC-LAUNCH-EN (2026-11-08): the e2e BASELINE.
+//
+// 1. The test build owns everything. Phase A put every tier above Easy behind
+//    a purchase, and the test build owns nothing, so specs written before the
+//    paywall saw their levels and modes locked. `spell_dev_entitlements` is the
+//    dev-only grant (play_hub::dev_grant, compiled out of release builds). A
+//    spec about a free player opens with { owns: 'none' }, and an English-only
+//    owner with { owns: 'english' }.
+// 2. Every flag whose release default changed on 2026-11-08 (the flag table and
+//    the Eclipse flip) is pinned to the value the suite was written against,
+//    which is main's default before that day, generated from git. The release
+//    defaults themselves are pinned by the flags::tests unit tests and
+//    scripts/flags-audit.mjs. A spec that sets a flag still wins, and so does
+//    SPELL_FLAGS. SPELL_E2E_RELEASE_DEFAULTS=1 skips this pin to run the suite
+//    on the shipped defaults.
+export const E2E_FLAG_BASELINE = {
+  en_retier: 'on', ghost_racing: 'on', syllable_replay: 'on', photo_list: 'on',
+  boardStretch: 'on', boardBoosts: 'on', boardStreak: 'on',
+  spelluzzle: 'on', spelluzzle_pencil: 'on', spelluzzle_strip: 'on', spelluzzle_ripple: 'on',
+  spelluzzle_par: 'on', spelluzzle_expedition: 'on', spelluzzle_mywords: 'on', spelluzzle_duel: 'on',
+  spelluzzle_en: 'on',
+  spell_aloud: 'on', def_match: 'on', progress_report: 'on', streak_focal: 'on',
+  visual_type: 'off', visual_sound: 'off', visual_haptics: 'off', visual_icons: 'off',
+  visual_celebrate: 'off', visual_cards: 'off', visual_themes: 'off', visual_accents: 'off',
+  keyboard_constellation: 'off', keyboard_react: 'off',
+};
+
+/** Seed the baseline into a context. Runs after SPELL_FLAGS and a spec's own init. */
+async function seedBaseline(ctx, owns) {
+  const pins = process.env.SPELL_E2E_RELEASE_DEFAULTS === '1' ? {} : E2E_FLAG_BASELINE;
+  await ctx.addInitScript(([pins, owns]) => {
+    for (const [k, v] of Object.entries(pins)) {
+      if (!localStorage.getItem(`spell_flag_${k}`)) localStorage.setItem(`spell_flag_${k}`, v);
+    }
+    if (!localStorage.getItem('spell_dev_entitlements')) {
+      // 'all' = the dev grant (everything); 'none' = a free player; 'english' =
+      // owns SpellGame English only (entitlements_adapter::dev_owned).
+      localStorage.setItem('spell_dev_entitlements', owns === 'all' ? 'on' : 'off');
+      if (owns === 'english' && !localStorage.getItem('spell_dev_owned')) {
+        localStorage.setItem('spell_dev_owned', 'net.spellgame.english');
+      }
+    }
+  }, [pins, owns]);
+}
+
 export async function launch() {
   // The suite must be SILENT (Eric, 2026-08-05: "Whats with all the
   // voiced out words in the background"). Headless Chromium routes the
@@ -116,7 +162,8 @@ export async function launch() {
 /// pause a first serve), and speechSynthesis muted. A spec that is
 /// TESTING one of these turns it on explicitly, which is the only way
 /// the flag state under test is ever ambiguous-free.
-export async function pinBaseline(ctx) {
+export async function pinBaseline(ctx, { owns = 'all' } = {}) {
+  await seedBaseline(ctx, owns);
   await ctx.addInitScript(() => {
     try {
       Object.defineProperty(window, 'speechSynthesis', {
@@ -136,7 +183,7 @@ export async function pinBaseline(ctx) {
   return ctx;
 }
 
-export async function openApp(browser, base, { lang = null, device = 'se', viewport = null, age = AGE, telemetry = null, init = null } = {}) {
+export async function openApp(browser, base, { lang = null, device = 'se', viewport = null, age = AGE, telemetry = null, init = null, owns = 'all' } = {}) {
   const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
   await ctx.addInitScript(([age, l]) => {
@@ -180,6 +227,7 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
   }
   // A spec's own pre-app script (telemetry.spec seeds Math.random with it).
   if (init) await ctx.addInitScript(init);
+  await seedBaseline(ctx, owns);
   // Stub the backend audio so no real TTS traffic + deterministic timing.
   await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
   const page = await ctx.newPage();
