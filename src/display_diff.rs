@@ -454,7 +454,8 @@ mod tests {
 
     #[test]
     fn grading_is_identical_with_the_visual_flags_on_and_off() {
-        crate::flags::set_test_override(None);
+        // Explicit off: since the CC-LAUNCH-EN flag table, visual_type defaults on.
+        crate::flags::set_test_override(Some("off"));
         assert!(!crate::flags::visual_feedback() && !crate::flags::visual_orb() && !crate::flags::visual_type());
         let off = grade_corpus();
         crate::flags::set_test_override(Some("on"));

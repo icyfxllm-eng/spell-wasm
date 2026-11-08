@@ -100,9 +100,9 @@
     "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "keyboard_constellation": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "keyboard_flight": {
     "default": "false",
@@ -110,9 +110,9 @@
     "note": ""
   },
   "keyboard_react": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "learner_insight": {
     "default": "true",
@@ -370,19 +370,19 @@
     "note": ""
   },
   "visual_accents": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_cards": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_celebrate": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_feedback": {
     "default": "false",
@@ -390,14 +390,14 @@
     "note": ""
   },
   "visual_haptics": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_icons": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_orb": {
     "default": "false",
@@ -405,19 +405,19 @@
     "note": ""
   },
   "visual_sound": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_themes": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "visual_type": {
-    "default": "false",
-    "ship": false,
-    "note": ""
+    "default": "true",
+    "ship": true,
+    "note": "Eric 2026-11-08: ship ON, the Eclipse look testers had in builds 287-312 (release-branch flips that main never carried)"
   },
   "word_chains": {
     "default": "true",
