@@ -23,3 +23,4 @@
 - 2026-11-08: device (iPhone 15 Pro, Xcode 27.2, SpellGame.storekit): the app launches with the UIScene fix (f91de6c5), the paywall renders with StoreKit prices, A4.1 (buy English) PASS (Eric).
 - 2026-11-08: A4.2 (buy Complete) PASS on device (Eric).
 - 2026-11-08: A4.3 (English, then upgrade via Settings > Purchases) PASS on device (Eric).
+- 2026-11-08: A4.4 DEFERRED to sandbox. Local StoreKit testing wipes test purchases when the app is deleted. The Restore path itself worked on device and showed "No purchases to restore." without an error.
