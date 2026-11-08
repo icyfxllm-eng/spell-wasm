@@ -20,6 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // The scene manifest in Info.plist names SceneDelegate and Main.storyboard.
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
@@ -43,10 +48,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        // CC-IOS-SURFACES (BD-1): widget/intent deep links. spellgame://
-        // routes by setting the webview hash; the wasm hash router turns
-        // "#daily" / "#practice" into the mode. Everything else falls
-        // through to Capacitor's own handler.
+        // Under the scene life cycle URLs arrive at SceneDelegate; this stays for
+        // any path that still reaches the app delegate.
+        return AppDelegate.route(url: url, options: options)
+    }
+
+    /// The one deep-link router, shared with SceneDelegate.
+    ///
+    /// CC-IOS-SURFACES (BD-1): widget/intent deep links. spellgame:// routes by
+    /// setting the webview hash; the wasm hash router turns "#daily" /
+    /// "#practice" into the mode. Everything else falls through to Capacitor's
+    /// own handler.
+    @discardableResult
+    static func route(url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
         if url.scheme == "spellgame" {
             // CC-GUARDIAN-REPORT F7: a query rides along
             // (guardian-report?week=2026-10-19). Host and query are kept to a
@@ -55,15 +69,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let query = (url.query ?? "").filter(safe)
             let route = (url.host ?? "").filter(safe) + (query.isEmpty ? "" : "?" + query)
             DispatchQueue.main.async {
-                if let bridge = (self.window?.rootViewController as? CAPBridgeViewController)?.bridge {
+                if let bridge = bridgeViewController()?.bridge {
                     bridge.webView?.evaluateJavaScript("window.location.hash='" + route + "'; window.dispatchEvent(new HashChangeEvent('hashchange'));", completionHandler: nil)
                 }
             }
             return true
         }
-        // Called when the app was launched with a url. Feel free to add additional processing here,
-        // but if you want the App API to support tracking app url opens, make sure to keep this call
-        return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
+        // Keep Capacitor's own handler so the App API still sees URL opens.
+        return ApplicationDelegateProxy.shared.application(UIApplication.shared, open: url, options: options)
+    }
+
+    /// The Capacitor bridge controller, found through the connected window
+    /// scene (the app delegate no longer owns the window under scenes).
+    static func bridgeViewController() -> CAPBridgeViewController? {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+            for window in windowScene.windows {
+                if let vc = window.rootViewController as? CAPBridgeViewController {
+                    return vc
+                }
+            }
+        }
+        return nil
     }
 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
