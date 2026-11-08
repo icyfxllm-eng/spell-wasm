@@ -21,3 +21,4 @@
   - D23: the Daily's cycle-boundary guard now covers 30 days (daily::cycle_perm), and A7.1 passes.
   - Paywall hooks are marked "CC-LAUNCH-EN D21: paywall hook" but are not yet wired in the side modes. In those modes a locked tier is simply not offered.
 - 2026-11-08: device (iPhone 15 Pro, Xcode 27.2, SpellGame.storekit): the app launches with the UIScene fix (f91de6c5), the paywall renders with StoreKit prices, A4.1 (buy English) PASS (Eric).
+- 2026-11-08: A4.2 (buy Complete) PASS on device (Eric).
