@@ -1362,5 +1362,8 @@
   "paywall.done": "Открыто. Спасибо!",
   "paywall.restoreNone": "Нет покупок для восстановления.",
   "paywall.failed": "Покупка не прошла. Деньги не списаны.",
-  "complete.includesFutureLanguages": "Complete включает все языки, которые мы добавим."
+  "complete.includesFutureLanguages": "Complete включает все языки, которые мы добавим.",
+  "purchases.title": "Покупки",
+  "purchases.small": "Открой больше или восстанови покупки",
+  "paywall.allOwned": "У тебя уже есть всё, что продаётся."
 }

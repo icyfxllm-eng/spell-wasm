@@ -1362,5 +1362,8 @@
   "paywall.done": "Đã mở khóa. Cảm ơn bạn!",
   "paywall.restoreNone": "Không có giao dịch mua nào để khôi phục.",
   "paywall.failed": "Giao dịch không thành công. Không bị tính phí.",
-  "complete.includesFutureLanguages": "Complete bao gồm mọi ngôn ngữ chúng tôi bổ sung."
+  "complete.includesFutureLanguages": "Complete bao gồm mọi ngôn ngữ chúng tôi bổ sung.",
+  "purchases.title": "Giao dịch mua",
+  "purchases.small": "Mở khóa thêm hoặc khôi phục những gì bạn đã mua",
+  "paywall.allOwned": "Bạn đã có mọi thứ đang được bán."
 }

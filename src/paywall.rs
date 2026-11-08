@@ -101,7 +101,10 @@ fn render(products: &[crate::entitlements_adapter::StoreProduct]) {
             ));
         }
     }
-    if html.is_empty() {
+    if want.is_empty() {
+        // Everything on sale is owned: no rows, Restore stays.
+        html = format!("<p class=\"pw-note\">{}</p>", dom::escape_html(&crate::i18n::t("paywall.allOwned")));
+    } else if html.is_empty() {
         render_price_error();
         return;
     }
@@ -119,6 +122,13 @@ pub fn wire(app: &App) {
     {
         let a = app.clone();
         dom::on_click("paywallRestore", move || restore(&a));
+        // D5: the Settings "Purchases" row is the standing route to the sheet,
+        // so an English owner can reach the upgrade and anyone can Restore.
+        // Only where purchases can happen; a kid profile never sees it (CSS
+        // body.kid hides it, and open() refuses a kid anyway, D24).
+        dom::toggle_class("purchasesRow", "btn-hide", !crate::entitlements_adapter::store_available());
+        let a = app.clone();
+        dom::on_click("purchasesBtn", move || open(&a));
         let a = app.clone();
         dom::on::<web_sys::MouseEvent, _>("paywallProducts", "click", move |ev| {
             use wasm_bindgen::JsCast;

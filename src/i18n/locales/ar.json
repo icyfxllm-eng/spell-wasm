@@ -1362,5 +1362,8 @@
   "paywall.done": "تم الفتح. شكرًا!",
   "paywall.restoreNone": "لا توجد مشتريات لاستعادتها.",
   "paywall.failed": "لم تكتمل عملية الشراء. لم يُخصم أي مبلغ.",
-  "complete.includesFutureLanguages": "يشمل Complete كل لغة نضيفها."
+  "complete.includesFutureLanguages": "يشمل Complete كل لغة نضيفها.",
+  "purchases.title": "المشتريات",
+  "purchases.small": "افتح المزيد أو استعد ما اشتريته",
+  "paywall.allOwned": "لديك كل ما هو معروض للبيع."
 }

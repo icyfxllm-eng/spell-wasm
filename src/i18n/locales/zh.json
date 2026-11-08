@@ -1362,5 +1362,8 @@
   "paywall.done": "已解锁。谢谢！",
   "paywall.restoreNone": "没有可恢复的购买项目。",
   "paywall.failed": "购买未完成，未产生任何费用。",
-  "complete.includesFutureLanguages": "Complete 包含我们今后添加的所有语言。"
+  "complete.includesFutureLanguages": "Complete 包含我们今后添加的所有语言。",
+  "purchases.title": "购买",
+  "purchases.small": "解锁更多内容，或恢复已购买的项目",
+  "paywall.allOwned": "你已拥有所有在售内容。"
 }

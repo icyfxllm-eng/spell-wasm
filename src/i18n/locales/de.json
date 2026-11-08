@@ -1362,5 +1362,8 @@
   "paywall.done": "Freigeschaltet. Danke!",
   "paywall.restoreNone": "Keine Käufe zum Wiederherstellen.",
   "paywall.failed": "Der Kauf hat nicht geklappt. Es wurde nichts berechnet.",
-  "complete.includesFutureLanguages": "Complete enthält jede Sprache, die wir hinzufügen."
+  "complete.includesFutureLanguages": "Complete enthält jede Sprache, die wir hinzufügen.",
+  "purchases.title": "Käufe",
+  "purchases.small": "Mehr freischalten oder Käufe wiederherstellen",
+  "paywall.allOwned": "Du hast alles, was es zu kaufen gibt."
 }

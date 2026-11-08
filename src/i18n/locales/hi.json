@@ -1362,5 +1362,8 @@
   "paywall.done": "अनलॉक हो गया। धन्यवाद!",
   "paywall.restoreNone": "बहाल करने के लिए कोई खरीदारी नहीं है।",
   "paywall.failed": "खरीदारी पूरी नहीं हुई। कोई शुल्क नहीं लिया गया।",
-  "complete.includesFutureLanguages": "Complete में हमारी जोड़ी जाने वाली हर भाषा शामिल है।"
+  "complete.includesFutureLanguages": "Complete में हमारी जोड़ी जाने वाली हर भाषा शामिल है।",
+  "purchases.title": "खरीदारी",
+  "purchases.small": "और अनलॉक करें या अपनी खरीदारी बहाल करें",
+  "paywall.allOwned": "बिक्री पर मौजूद सब कुछ आपके पास है।"
 }

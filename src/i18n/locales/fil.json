@@ -1362,5 +1362,8 @@
   "paywall.done": "Na-unlock na. Salamat!",
   "paywall.restoreNone": "Walang binili na maire-restore.",
   "paywall.failed": "Hindi natuloy ang pagbili. Walang siningil.",
-  "complete.includesFutureLanguages": "Kasama sa Complete ang bawat wikang idaragdag namin."
+  "complete.includesFutureLanguages": "Kasama sa Complete ang bawat wikang idaragdag namin.",
+  "purchases.title": "Mga Binili",
+  "purchases.small": "Mag-unlock pa, o i-restore ang iyong binili",
+  "paywall.allOwned": "Nasa iyo na ang lahat ng ibinebenta."
 }

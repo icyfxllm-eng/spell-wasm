@@ -2842,6 +2842,7 @@
      answer the question the app just asked. */
   #parentScrim,#ageScrim{z-index:80}
   #paywallScrim{z-index:70}
+  body.kid #purchasesRow{display:none}
   #paywallProducts{display:grid;gap:10px;margin:12px 0}
   #paywallProducts .pw-note{margin:0;font-size:.9em;opacity:.8}
   #paywallProducts .btn{display:flex;width:100%;flex-direction:column;gap:2px}
@@ -5281,6 +5282,7 @@
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
       <label class="set-row" id="britishRow"><span class="lbl2"><span data-i18n="settings.british">British spellings</span><small data-i18n="settings.britishSmall">Show words like colour and centre the British way. Either spelling is always accepted.</small></span><input type="checkbox" class="switch" id="britishToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.realVoices">Real voices when available</span><small data-i18n="settings.realVoicesSmall">Hear a person say the word, where we have a checked recording</small></span><input type="checkbox" class="switch" id="realVoicesToggle" checked /></label>
+      <div class="set-row btn-hide" id="purchasesRow"><span class="lbl2"><span data-i18n="purchases.title">Purchases</span><small data-i18n="purchases.small">Unlock more, or restore what you bought</small></span><button class="ghost" id="purchasesBtn" data-i18n="lists.open" style="flex:none;border-radius:12px">Open</button></div>
       <div class="set-row" id="creditsRow"><span class="lbl2"><span data-i18n="credits.title">Credits</span><small data-i18n="credits.small">The people whose recordings you hear</small></span><button class="ghost" id="creditsBtn" data-i18n="lists.open" style="flex:none;border-radius:12px">Open</button></div>
       <!-- Third-party notices. The Credits row above is about VOICES; this one
            is the data and font attributions (Leipzig CC BY 4.0, CC-CEDICT and

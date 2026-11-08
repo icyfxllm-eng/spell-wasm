@@ -1362,5 +1362,8 @@
   "paywall.done": "Unlocked. Thank you!",
   "paywall.restoreNone": "No purchases to restore.",
   "paywall.failed": "The purchase didn't go through. Nothing was charged.",
-  "complete.includesFutureLanguages": "Complete includes every language we add."
+  "complete.includesFutureLanguages": "Complete includes every language we add.",
+  "purchases.title": "Purchases",
+  "purchases.small": "Unlock more, or restore what you bought",
+  "paywall.allOwned": "You have everything that's on sale."
 }

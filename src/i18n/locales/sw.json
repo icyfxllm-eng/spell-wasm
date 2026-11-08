@@ -1362,5 +1362,8 @@
   "paywall.done": "Imefunguliwa. Asante!",
   "paywall.restoreNone": "Hakuna ununuzi wa kurejesha.",
   "paywall.failed": "Ununuzi haukukamilika. Hakuna kilichotozwa.",
-  "complete.includesFutureLanguages": "Complete inajumuisha kila lugha tutakayoongeza."
+  "complete.includesFutureLanguages": "Complete inajumuisha kila lugha tutakayoongeza.",
+  "purchases.title": "Ununuzi",
+  "purchases.small": "Fungua zaidi au rejesha ulichonunua",
+  "paywall.allOwned": "Una kila kitu kinachouzwa."
 }

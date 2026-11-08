@@ -1362,5 +1362,8 @@
   "paywall.done": "Débloqué. Merci !",
   "paywall.restoreNone": "Aucun achat à restaurer.",
   "paywall.failed": "L'achat n'a pas abouti. Rien n'a été facturé.",
-  "complete.includesFutureLanguages": "Complete inclut toutes les langues que nous ajoutons."
+  "complete.includesFutureLanguages": "Complete inclut toutes les langues que nous ajoutons.",
+  "purchases.title": "Achats",
+  "purchases.small": "Débloquer plus ou restaurer tes achats",
+  "paywall.allOwned": "Tu as déjà tout ce qui est en vente."
 }

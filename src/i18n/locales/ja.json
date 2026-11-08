@@ -1362,5 +1362,8 @@
   "paywall.done": "解放しました。ありがとう！",
   "paywall.restoreNone": "復元できる購入はありません。",
   "paywall.failed": "購入できませんでした。料金は請求されていません。",
-  "complete.includesFutureLanguages": "Completeには今後追加するすべての言語が含まれます。"
+  "complete.includesFutureLanguages": "Completeには今後追加するすべての言語が含まれます。",
+  "purchases.title": "購入",
+  "purchases.small": "さらに解放するか、購入を復元します",
+  "paywall.allOwned": "販売中のものはすべて持っています。"
 }
