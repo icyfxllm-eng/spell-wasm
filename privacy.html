@@ -36,9 +36,10 @@
   }
   code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 5px; font-size: .9em; }
   .flow { width: 100%; border-collapse: collapse; margin: 14px 0 6px; font-size: .9rem; }
-  .flow th, .flow td { text-align: start; vertical-align: top; padding: 8px 8px; border-bottom: 1px solid rgba(255,255,255,.1); }
-  .flow th { color: #ffd98a; font-weight: 600; }
-  .flow td:first-child { color: #fff; }
+  /* No colours of their own: the table borrows the text colour, so it adds nothing to the token ratchet. */
+  .flow th, .flow td { text-align: start; vertical-align: top; padding: 8px 8px; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+  .flow th { font-weight: 700; }
+  .flow td:first-child { font-weight: 600; }
   .flow-wrap { overflow-x: auto; }
   footer { margin-top: 48px; color: #8b83a8; font-size: .85rem; }
   footer a { color: #8b83a8; }
@@ -51,177 +52,97 @@
     <div class="orb">S</div>
     <h1>Spell — Privacy Policy</h1>
   </header>
-  <p class="sub">Effective 7 November 2026</p>
+  <p class="sub">Effective 8 November 2026</p>
 
   <p>Spell is a spelling game published by the maker of <a href="https://spellgame.net">spellgame.net</a>.
-     We built Spell to be private by design. This policy explains, in plain language, exactly what
-     happens to information when you use the app or the website.</p>
+     This policy explains, in plain language, what happens to information when you use the Spell app
+     or the website.</p>
 
   <div class="card">
-    <strong>The short version:</strong> Playing Spell requires no account and collects no personal
-    information — your progress stays on your device. The only time we collect personal data is if you
-    <em>choose</em> to create an account to compete on the online leaderboard ("The Climb"). We never
-    show ads, and we use no third-party analytics or tracking. A few features do need our server to work
-    — checking English answers, spelling out loud on some devices, and (on the website) voting for a
-    language — and each is explained below, including exactly what is sent and what is kept. If you leave
-    "Help improve SpellGame" on, the app also sends us anonymous crash and speed reports. They never
-    include your words, your answers, or anything about you, and you can turn them off in Settings.
+    <strong>The short version:</strong> Spell collects no personal data. There are no accounts, no ads,
+    no analytics and no tracking. Your answers are checked on your device, and when you spell out loud
+    your voice is recognized on your device. Your progress stays on your device. To play a word, the
+    app asks our server for that word's sound and meaning; that request contains the word and nothing
+    about you.
   </div>
 
-
   <h2>At a glance: what leaves your device</h2>
-  <p>Each row is one kind of information. "Our server" means <code>spellgame.net</code>, reached over
-     HTTPS through Cloudflare. The sections below give the detail.</p>
+  <p>"Our server" means <code>spellgame.net</code>, reached over HTTPS through Cloudflare.</p>
   <div class="flow-wrap">
   <table class="flow">
-    <thead><tr><th>Information</th><th>Leaves your device?</th><th>Where it goes</th><th>Why</th><th>How to turn it off</th></tr></thead>
+    <thead><tr><th>Information</th><th>Leaves your device?</th><th>Where it goes</th><th>Why</th></tr></thead>
     <tbody>
-      <tr><td>Your progress, statistics, settings and word lists</td><td>No</td><td>Stays on your device</td><td>So the game remembers you</td><td>Delete the app or clear its data</td></tr>
-      <tr><td>The word being played</td><td>Yes</td><td>Our server, which makes the sound with Google Cloud Text-to-Speech (Microsoft Azure for Swahili) and looks up definitions</td><td>To play the word's sound, its definition and example sentence</td><td>It can't be turned off; the game needs it. Words with a built-in recording don't need it</td></tr>
-      <tr><td>The English word and the answer you typed</td><td>Yes</td><td>Our server, which replies "correct" or "not correct" and keeps nothing</td><td>To check English answers</td><td>It can't be turned off. Offline, the answer is checked on your device</td></tr>
-      <tr><td>Crash and speed reports</td><td>Yes, unless you turn them off</td><td>Our reporting service on Cloudflare</td><td>To find and fix problems</td><td>Settings → Help improve SpellGame (in Spell Jr, behind the parent check). The app also asks our server once per launch whether reports are switched off; that request sends nothing about you</td></tr>
-      <tr><td>Climb account: email, username, password, leaderboard results</td><td>Only if you create an account</td><td>Our server, plus an email provider and Cloudflare Turnstile at sign-up</td><td>To run the leaderboard</td><td>Don't create one, or use "Delete account". Not offered in Spell Jr</td></tr>
-      <tr><td>Your voice, when you spell out loud</td><td>No, normally</td><td>Recognized on your iPhone or iPad</td><td>To hear your spelling</td><td>Don't use the microphone</td></tr>
-      <tr><td>Short voice clips, server option</td><td>Only if you tap "Use the internet"</td><td>Our server, then Google Cloud Speech-to-Text; not saved</td><td>For devices that can't recognize speech themselves</td><td>Tap "No thanks" on the one-time screen. Never offered in Spell Jr or the Education edition</td></tr>
-      <tr><td>A photo of a spelling list</td><td>No</td><td>Read on your device</td><td>To make a word list</td><td>Don't use the camera</td></tr>
-      <tr><td>Progress reports for a grown-up</td><td>Only if you share one</td><td>Wherever you choose in the share sheet</td><td>To share progress</td><td>Don't share it</td></tr>
-      <tr><td>A language vote (website only)</td><td>Only if you tap the button</td><td>Our server: the language code and a random ID</td><td>To count interest in a language</td><td>Don't tap it</td></tr>
-      <tr><td>Downloads: the switch-off file, offline voice packs</td><td>Only the request</td><td>Our server</td><td>To switch a feature off remotely, and to fetch voice packs you ask for</td><td>Voice packs download only when you ask</td></tr>
+      <tr><td>Your progress, statistics, settings and word lists</td><td>No</td><td>Stays on your device</td><td>So the game remembers you</td></tr>
+      <tr><td>The answers you type</td><td>No</td><td>Checked on your device</td><td>To grade your spelling</td></tr>
+      <tr><td>Your voice, when you spell out loud</td><td>No</td><td>Recognized on your iPhone or iPad</td><td>To hear your spelling</td></tr>
+      <tr><td>A photo of a spelling list</td><td>No</td><td>Read on your device</td><td>To make a word list</td></tr>
+      <tr><td>The word being played</td><td>Yes, the word only</td><td>Our server</td><td>To play the word's sound, its meaning and an example sentence</td></tr>
+      <tr><td>A check for switched-off features</td><td>Only the request</td><td>Our server</td><td>So we can switch a feature off remotely if it misbehaves</td></tr>
+      <tr><td>Purchases</td><td>Handled by Apple</td><td>Apple's App Store</td><td>To buy SpellGame English</td></tr>
+      <tr><td>A language vote (website only)</td><td>Only if you tap the button</td><td>Our server: the language code and a random ID</td><td>To count interest in a language</td></tr>
     </tbody>
   </table>
   </div>
 
-  <h2>Playing the game — no data collected</h2>
-  <p>You can play Spell fully without an account. Your gameplay — streaks, statistics, settings, custom
-     word lists, and language choices — is saved only in your device's local storage. It stays on your
-     device, is never sent to us except as described below, and is removed if you delete
-     the app or clear its data.</p>
+  <h2>Playing the game</h2>
+  <p>You play Spell without an account. Your streaks, statistics, settings, word lists and choices are
+     saved only on your device. They are never sent to us, and they are removed if you delete the app or
+     clear its data. Your answers are checked on your device; they are not sent anywhere.</p>
 
-  <h2>What the app sends to our server to play</h2>
-  <p>To play a word, the app asks our server (<code>spellgame.net</code>) for that word's pronunciation
-     audio and dictionary definition. For this, only the dictionary word is sent — never anything about
-     you. Our server generates and caches audio for common words (using Google Cloud Text-to-Speech, and
-     Microsoft Azure Speech for Swahili) so the app loads quickly; this cache is by word, not by user.
-     All traffic uses HTTPS and reaches our server through Cloudflare, our network provider. We keep
-     standard, short-lived server logs for security and reliability; they are not used to identify or
-     profile you.</p>
-  <p><strong>Checking English answers.</strong> When you answer an English word, the app sends the word
-     and the answer you typed to our server, which replies only "correct" or "not correct". Your answer
-     is compared and then discarded: our server does not save it or write it to its logs, and it is not
-     linked to you or your device. This happens in every mode, including Spell Jr and the Education
-     edition. If our server can't be reached, the app checks your answer on your device instead.</p>
+  <h2>What the app asks our server for</h2>
+  <p>To play a word, the app asks our server for that word's pronunciation, its definition and an
+     example sentence. The request contains the word and nothing else: no name, account, device ID or
+     advertising ID. Our server makes and caches each word's sound with Google Cloud Text-to-Speech, and
+     may look the word up in Wiktionary or a public dictionary. Those services see our server, not you,
+     and the cache is kept by word, not by person.</p>
+  <p>The app also downloads one small signed file from our server that can only switch features off.
+     The request carries no information.</p>
+  <p>All traffic uses HTTPS and reaches our server through Cloudflare, our network provider, which sees
+     the IP address of each connection, as any network provider does. Our server does not keep a log of
+     your requests or your IP address.</p>
 
-  <h2>Crash and speed reports ("Help improve SpellGame")</h2>
-  <p>To find problems before players do, the app can send us short, anonymous reports when something
-     breaks or runs slowly. This is on by default for players 13 and over, and you can turn it off at any
-     time in Settings → Help improve SpellGame. Turning it off also deletes any reports still waiting on
-     your device.</p>
-  <p><strong>What a report contains:</strong></p>
-  <ul>
-    <li>The type of problem (for example "the app crashed" or "a sound couldn't play"), and a code for
-        where in our program it happened.</li>
-    <li>The app version, whether you're on iPhone, Android or the web, the language you were studying,
-        and which game mode you were last in.</li>
-    <li>How long some things took, in broad ranges (for example "under a quarter of a second"), such as
-        starting the app or playing a word's sound.</li>
-    <li>For players 13 and over, a random number that changes every time the app starts, so reports from
-        one session can be grouped. It's never saved on your device and can't be used to recognize you
-        later.</li>
-  </ul>
-  <p><strong>What a report never contains:</strong> the words you practice, what you type, your answers
-     or scores, your recordings or photos, your word lists, your account, email or username, or your
-     device's advertising ID. We don't record your IP address when a report arrives: our reporting
-     service never reads it, and no report is stored with it. (Cloudflare, our network provider, handles
-     every connection to <code>spellgame.net</code> and keeps a sample of network traffic, including IP
-     addresses, for its security tools. That sample is never connected to reports, and we don't use it
-     for them.) Reports are stored separately from Climb accounts, with no way to connect the two.</p>
-  <p><strong>Spell Jr and younger players.</strong> On a device in Spell Jr, or before the birthday
-     question has been answered, the app never sends individual reports. It keeps a simple tally of how
-     many times each kind of problem happened and sends it at most once a day, at a random time, with no
-     identifier of any kind. A grown-up can turn this off through the parent check in Settings.</p>
-  <p><strong>Schools.</strong> In the Education edition, reports are off until the school turns them on,
-     and even then only the daily tally is sent.</p>
-  <p><strong>How long we keep them.</strong> Individual reports are deleted after 90 days. We keep daily
-     totals (for example "12 crashes on version X in Russian"), which contain nothing about any person.</p>
-  <p><strong>Who handles them.</strong> Reports go to our own service, which runs on Cloudflare. No
-     analytics or advertising company receives them.</p>
+  <h2>Purchases</h2>
+  <p>Purchases are made through Apple's App Store with your Apple Account. We never see your name, email
+     or payment details. The app learns only which of our products you own, so it can unlock them.</p>
+
+  <h2>Crash reports</h2>
+  <p>Spell has no crash or analytics reporting of its own. If you have chosen in your iPhone or iPad
+     settings to share analytics with app developers, Apple may send us crash reports. Apple controls
+     that setting and what those reports contain.</p>
+
+  <h2>Microphone and camera</h2>
+  <p><strong>Microphone.</strong> The optional "Spell It" tool lets you say the letters instead of typing.
+     It is off until you turn it on in Settings, and your speech is recognized by your device's own
+     speech recognition. The audio never leaves your device.</p>
+  <p><strong>Camera and photos.</strong> Where available, you can photograph a spelling list, or pick a
+     photo of one, to turn it into your own word list. The photo is read on your device and is not
+     uploaded. This feature is not available in Spell Jr.</p>
 
   <h2>Language votes (website only)</h2>
   <p>The Spell app plays English and has no language vote. On spellgame.net, choosing a language the
      site does not play shows a "Vote for this language" button. Tapping it sends our server the
-     language code and a random ID that the site creates in your browser the first time you tap. The ID is
-     not your name, email, device name or advertising ID, and it is not linked to a Climb account. We use
-     it only so that repeated taps from the same browser count once when we count interest in each
-     language. If you are offline, the tap is saved and sent the next time the site opens.</p>
-  <p>We keep these IDs, grouped by language, for as long as we are counting interest. Because the ID is
-     random and not connected to you, we can't look up which one is yours. Clearing the site's data in your
-     browser removes the copy there. Voting does not sign you up for any email or message; see
-     Notifications below.</p>
-
-  <h2>The Climb — optional accounts &amp; leaderboard</h2>
-  <p>"The Climb" is an optional online leaderboard. It is the only part of Spell that collects personal
-     information, and only if you create an account. If you never create one, none of the following
-     applies to you.</p>
-  <p>When you create a Climb account, we store:</p>
-  <ul>
-    <li><strong>Username and display name</strong> — shown publicly on the leaderboard.</li>
-    <li><strong>Email address</strong> — used to verify your account and to reset your password. Not shown publicly.</li>
-    <li><strong>Phone number</strong> — only if you choose to add one for SMS password reset. Never shown publicly.</li>
-    <li><strong>Password</strong> — stored only as a salted <code>bcrypt</code> hash. We never store or log your actual password.</li>
-    <li><strong>Your leaderboard results</strong> — your best word chain per difficulty, when you achieved it,
-        and basic run details (e.g. word count and duration) used to rank fairly and detect cheating.</li>
-  </ul>
-  <p>We use this information only to run the leaderboard: to sign you in, show and rank scores, verify your
-     email, reset your password, prevent abuse, and let players report inappropriate usernames. We do
-     <strong>not</strong> sell or share it, and we do not use it for advertising.</p>
-  <p><strong>Service providers.</strong> To send verification and password-reset messages we use an email
-     provider, and to block automated sign-ups we use Cloudflare Turnstile (an anti-bot check that receives
-     your IP address to score the request — we do not store your IP address). These providers process the
-     minimum needed to perform their function.</p>
-  <p><strong>Delete your account any time.</strong> The app has a "Delete account" option that permanently
-     removes your account and all associated data — profile, leaderboard entries, and sessions — from our
-     database. You can also email us to request deletion.</p>
-
-  <h2>Microphone and camera</h2>
-  <p>The optional handwriting feature recognizes letters you draw on your own screen; the drawing is
-     processed on your device and is not uploaded.</p>
-  <p><strong>Microphone.</strong> On iPhone and iPad you can speak instead of typing. Normally your
-     device's own speech recognition handles this: the audio is recognized on your device and never sent
-     to us.</p>
-  <p>Some languages can't be recognized on some devices. For those, you can choose to use our server
-     instead. The app asks first, on a one-time screen, and only uses the server if you tap "Use the
-     internet". After that, while the microphone is on, the app sends short audio clips of what you say
-     to our server. Each clip goes with the language and a fixed list of that alphabet's letter names,
-     which helps recognition. Our server passes the clip to Google Cloud Speech-to-Text, which acts as
-     our service provider and returns the recognized text. Our server does not save the audio or write
-     it to its logs, and it is not linked to you or your device. This option is never offered in Spell Jr
-     or in the Education edition.</p>
-  <p><strong>Camera and photos.</strong> On iPhone and iPad you can photograph a spelling list, or pick a
-     photo of one, to turn it into your own word list. The photo is read on your device and is not
-     uploaded. This feature is not available in Spell Jr.</p>
+     language code and a random ID that the site creates in your browser the first time you tap. The ID
+     is not your name, email, device name or advertising ID. We use it only so that repeated taps from
+     the same browser count once. We keep these IDs, grouped by language, for as long as we are counting
+     interest; because the ID is random, we can't look up which one is yours. Clearing the site's data
+     in your browser removes the copy there.</p>
 
   <h2>Notifications</h2>
-  <p>If you turn on the daily practice reminder, it is scheduled locally on your device. We do not run a
-     push-notification server and cannot send you messages. Voting for a language on the
-     website records your interest (see above) but does not sign you up for any notification.</p>
+  <p>If you turn on the daily practice reminder, it is scheduled on your device. We do not run a push
+     notification server and cannot send you messages.</p>
 
   <h2>Children's privacy</h2>
-  <p>The game itself collects no personal information from anyone, including children. Creating a Climb
-     account requires an email address and is intended for players old enough to have one; children
-     playing in Spell Jr do not create accounts, and no personal information is collected from them.
-     In Spell Jr the app never sends voice audio to our server and the camera feature is hidden. Typed
-     English answers are still checked by our server, as described above, and are not stored. Crash
-     and speed reports from Spell Jr are only an anonymous daily tally (see "Crash and speed reports"
-     above). We
-     do not knowingly collect personal information from children under 13. If you believe a child has
-     created an account, contact us and we will delete it.</p>
+  <p>Spell collects no personal information from anyone, including children. Spell Jr shows no
+     purchases and no camera, and nothing a child types or says leaves the device. Every purchase sits
+     behind a question for grown-ups, and Apple's Ask to Buy applies to purchases made on a child's
+     Apple Account.</p>
 
   <h2>Changes to this policy</h2>
-  <p>If we change how the app handles information, we will update this page and revise the date above.
-     Material changes will be reflected here before they take effect.</p>
+  <p>If we change how Spell handles information, we will update this page and revise the date above
+     before the change takes effect.</p>
 
   <h2>Contact</h2>
-  <p>Questions about privacy, or want your data deleted? Email
+  <p>Questions about privacy? Email
      <a href="mailto:icyfxllm@gmail.com">icyfxllm@gmail.com</a>.</p>
 
   <footer>

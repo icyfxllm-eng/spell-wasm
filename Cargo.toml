@@ -64,9 +64,10 @@ all_langs = []
 #   telemetry     -- crash/perf/clip reports and the /v1/flags fetch.
 #   server_stt    -- Say-It's server speech rung (/api/stt). The on-device
 #                    recognizer is not behind it.
-# Dev, e2e and audit builds turn on `net_services`; the App Store, TestFlight
-# and education builds never do. `web` carries it so spellgame.net keeps the
-# behaviour it has today.
+# Dev, e2e and audit builds turn on `net_services`. The App Store, TestFlight,
+# education and spellgame.net builds never do. The site was stripped too on
+# Eric's call, 2026-11-08 (D7: the web mirrors the app), so the one privacy
+# policy can say "no data collected" for both.
 accounts_net = []
 server_check = []
 telemetry = []
@@ -75,7 +76,7 @@ net_services = ["accounts_net", "server_check", "telemetry", "server_stt"]
 # The spellgame.net build. English only (Eric, 2026-07-31): the site is the
 # free English experience, the app is where every language lives. Off by
 # default so `npm run build` still produces the APP artifact.
-web = ["net_services"]
+web = []
 # CC-GAME-SERVER F6: exposes `native_api` (re-exports only) so the room server can
 # call the same grader natively, and drops the wasm start export for the parity build.
 native = []
