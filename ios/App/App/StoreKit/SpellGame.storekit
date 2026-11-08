@@ -1,13 +1,29 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "5C1E7A2B",
-  "nonRenewingSubscriptions" : [ ],
+  "nonRenewingSubscriptions" : [
+
+  ],
   "products" : [
     {
       "displayPrice" : "4.99",
       "familyShareable" : true,
       "internalID" : "6A11E001",
       "localizations" : [
-        { "description" : "Every English tier and mode.", "displayName" : "SpellGame English", "locale" : "en_US" }
+        {
+          "description" : "Every English tier and mode.",
+          "displayName" : "SpellGame English",
+          "locale" : "en_US"
+        }
       ],
       "productID" : "net.spellgame.english",
       "referenceName" : "SpellGame English",
@@ -18,7 +34,11 @@
       "familyShareable" : true,
       "internalID" : "6A11E002",
       "localizations" : [
-        { "description" : "English, parent features, and every language we add.", "displayName" : "SpellGame Complete", "locale" : "en_US" }
+        {
+          "description" : "English, parent features, and every language we add.",
+          "displayName" : "SpellGame Complete",
+          "locale" : "en_US"
+        }
       ],
       "productID" : "net.spellgame.complete",
       "referenceName" : "SpellGame Complete",
@@ -29,7 +49,11 @@
       "familyShareable" : true,
       "internalID" : "6A11E003",
       "localizations" : [
-        { "description" : "Upgrade SpellGame English to Complete.", "displayName" : "Upgrade to Complete", "locale" : "en_US" }
+        {
+          "description" : "Upgrade SpellGame English to Complete.",
+          "displayName" : "Upgrade to Complete",
+          "locale" : "en_US"
+        }
       ],
       "productID" : "net.spellgame.complete_upgrade",
       "referenceName" : "SpellGame Complete Upgrade",
@@ -39,13 +63,30 @@
   "settings" : {
     "_applicationInternalID" : "0",
     "_askToBuyEnabled" : false,
-    "_billingIssuesEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : true,
     "_developerTeamID" : "",
+    "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
     "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "USA",
-    "_storeKitErrors" : [ ]
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
   },
-  "subscriptionGroups" : [ ],
-  "version" : { "major" : 3, "minor" : 0 }
+  "subscriptionBundleGroups" : [
+
+  ],
+  "subscriptionGroups" : [
+
+  ],
+  "subscriptionSuiteGroups" : [
+
+  ],
+  "version" : {
+    "major" : 6,
+    "minor" : 3
+  }
 }
