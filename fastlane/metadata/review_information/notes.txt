@@ -4,7 +4,7 @@ How to test:
 1. Tap the glowing orb to hear a word.
 2. Type the spelling and tap "Check spelling." Grading happens on the device.
 3. The Easy level, the Daily Challenge and Spell Jr are free.
-4. Choose Medium or higher in the difficulty menu to see the purchase sheet. An adult gate appears first: "Ask a grown-up", with a question such as "What is four times seven?" The purchase is "SpellGame English". Restore Purchases is on the sheet.
+4. Choose Medium or higher in the difficulty menu to see the purchase sheet. An adult gate appears first: "Ask a grown-up", with a question such as "What is four times seven?" The only purchase offered is "SpellGame English". Restore Purchases is on the sheet.
 5. Settings > Purchases opens the same sheet at any time, including Restore Purchases.
 
 Spell Jr never shows a purchase sheet.

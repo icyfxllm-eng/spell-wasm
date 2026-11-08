@@ -102,6 +102,15 @@ pub fn owned_from_product_ids(ids: &[&str]) -> Owned {
     o
 }
 
+/// CC-LAUNCH-EN D4 / O4, Eric 2026-11-08: Complete is not on sale in this
+/// release, because it unlocks nothing beyond English yet. While this is
+/// false, no purchase sheet offers net.spellgame.complete or
+/// net.spellgame.complete_upgrade, and the "every language we add" line goes
+/// with them. App Store Connect status alone is not enough: the sandbox still
+/// returns both products. Ownership is unaffected: a restored or
+/// family-shared Complete still unlocks everything.
+pub const COMPLETE_ON_SALE: bool = false;
+
 /// Which Complete product a purchase sheet may offer (I4.3, D5): the upgrade iff
 /// English is owned and Complete is not; full Complete iff neither is owned;
 /// nothing once Complete is owned. Never both, so nobody pays twice for English.

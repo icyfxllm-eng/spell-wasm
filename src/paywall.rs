@@ -24,12 +24,21 @@ pub(crate) const APP_STORE_URL: &str = "https://apps.apple.com/app/id6788927897"
 /// O4 is decided) never comes back from StoreKit, and so never renders.
 #[cfg(not(feature = "education"))]
 pub fn offers(o: Owned) -> Vec<&'static str> {
+    offers_with(o, crate::entitlements::COMPLETE_ON_SALE)
+}
+
+/// [`offers`] with the sale switch passed in, so tests cover both values.
+/// With `complete_on_sale` false the sheet offers English or nothing.
+#[cfg(not(feature = "education"))]
+fn offers_with(o: Owned, complete_on_sale: bool) -> Vec<&'static str> {
     let mut v = Vec::new();
     if !o.english && !o.complete {
         v.push(crate::entitlements::ENGLISH_PRODUCT_ID);
     }
-    if let Some(c) = crate::entitlements::complete_offer(o) {
-        v.push(c);
+    if complete_on_sale {
+        if let Some(c) = crate::entitlements::complete_offer(o) {
+            v.push(c);
+        }
     }
     v
 }
@@ -201,14 +210,35 @@ mod tests {
 
     /// D5 / I4.3 on the sheet: English plus full Complete for a new player,
     /// only the upgrade for an English owner, nothing once Complete is owned.
+    const ALL_OWNED: [Owned; 4] =
+        [Owned::NONE, Owned::ENGLISH, Owned::COMPLETE, Owned { english: true, complete: true }];
+
+    /// D5 / I4.3, for when Complete goes on sale: English plus full Complete for
+    /// a new player, only the upgrade for an English owner, nothing once
+    /// Complete is owned.
     #[test]
-    fn sheet_offers() {
-        assert_eq!(offers(Owned::NONE), vec![ENGLISH_PRODUCT_ID, COMPLETE_PRODUCT_ID]);
-        assert_eq!(offers(Owned::ENGLISH), vec![COMPLETE_UPGRADE_PRODUCT_ID]);
-        assert!(offers(Owned::COMPLETE).is_empty());
-        for o in [Owned::NONE, Owned::ENGLISH, Owned::COMPLETE] {
-            let v = offers(o);
+    fn sheet_offers_with_complete_on_sale() {
+        assert_eq!(offers_with(Owned::NONE, true), vec![ENGLISH_PRODUCT_ID, COMPLETE_PRODUCT_ID]);
+        assert_eq!(offers_with(Owned::ENGLISH, true), vec![COMPLETE_UPGRADE_PRODUCT_ID]);
+        assert!(offers_with(Owned::COMPLETE, true).is_empty());
+        for o in ALL_OWNED {
+            let v = offers_with(o, true);
             assert!(!(v.contains(&COMPLETE_PRODUCT_ID) && v.contains(&COMPLETE_UPGRADE_PRODUCT_ID)), "never both");
         }
+    }
+
+    /// Eric 2026-11-08: the release profile never offers Complete or the
+    /// upgrade. The sheet is English and Restore, or "everything on sale is
+    /// yours" plus Restore.
+    #[test]
+    fn release_profile_never_offers_complete_or_upgrade() {
+        assert!(!crate::entitlements::COMPLETE_ON_SALE, "Complete is held from sale in this release");
+        for o in ALL_OWNED {
+            let v = offers(o);
+            assert!(!v.contains(&COMPLETE_PRODUCT_ID), "{o:?} offered Complete");
+            assert!(!v.contains(&COMPLETE_UPGRADE_PRODUCT_ID), "{o:?} offered the upgrade");
+        }
+        assert_eq!(offers(Owned::NONE), vec![ENGLISH_PRODUCT_ID]);
+        assert!(offers(Owned::ENGLISH).is_empty(), "an English owner is offered nothing (Settings > Purchases: all owned)");
     }
 }
