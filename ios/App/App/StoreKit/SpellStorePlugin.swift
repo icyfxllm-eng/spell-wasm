@@ -34,6 +34,7 @@ public class SpellStorePlugin: CAPPlugin, CAPBridgedPlugin {
     override public func load() {
         updatesTask = Task.detached { [weak self] in
             for await result in Transaction.updates {
+                SpellStorePlugin.debugLog("Transaction.updates -> \(result)")
                 if case .verified(let t) = result {
                     await t.finish()
                 }
@@ -50,10 +51,22 @@ public class SpellStorePlugin: CAPPlugin, CAPBridgedPlugin {
     static func ownedIds() async -> [String] {
         var ids: [String] = []
         for await result in Transaction.currentEntitlements {
-            guard case .verified(let t) = result else { continue }
+            guard case .verified(let t) = result else {
+                debugLog("currentEntitlements: unverified entry skipped")
+                continue
+            }
+            debugLog("currentEntitlements: \(t.productID) id=\(t.id) purchased=\(t.purchaseDate) revoked=\(String(describing: t.revocationDate)) ownership=\(t.ownershipType.rawValue)")
             if t.revocationDate == nil { ids.append(t.productID) }
         }
+        debugLog("ownedIds -> \(ids)")
         return ids
+    }
+
+    /// CC-LAUNCH-EN A4.5 diagnosis: Debug builds only, never in a release.
+    static func debugLog(_ message: @autoclosure () -> String) {
+        #if DEBUG
+        print("[SpellStore] " + message())
+        #endif
     }
 
     private func pushEntitlements() async {
@@ -97,7 +110,9 @@ public class SpellStorePlugin: CAPPlugin, CAPBridgedPlugin {
                     return
                 }
                 var status = "unknown"
-                switch try await product.purchase() {
+                let result = try await product.purchase()
+                Self.debugLog("purchase(\(id)) -> \(result)")
+                switch result {
                 case .success(let verification):
                     if case .verified(let t) = verification {
                         await t.finish()

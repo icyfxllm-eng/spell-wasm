@@ -24,3 +24,4 @@
 - 2026-11-08: A4.2 (buy Complete) PASS on device (Eric).
 - 2026-11-08: A4.3 (English, then upgrade via Settings > Purchases) PASS on device (Eric).
 - 2026-11-08: A4.4 DEFERRED to sandbox. Local StoreKit testing wipes test purchases when the app is deleted. The Restore path itself worked on device and showed "No purchases to restore." without an error.
+- 2026-11-08: A4.5 pending half PASS on device. purchase returned pending, owned stayed [], nothing unlocked. A repeat buy tapped while the first was pending came back from StoreKit (Xcode environment) as a verified success with english owned, and Spell correctly followed it. That is StoreKit test behavior, to recheck in sandbox. The approval half (unlock without relaunch) is still to run. Debug-only [SpellStore] logging was added to the plugin.

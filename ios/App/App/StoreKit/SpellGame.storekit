@@ -38,7 +38,7 @@
   ],
   "settings" : {
     "_applicationInternalID" : "0",
-    "_askToBuyEnabled" : false,
+    "_askToBuyEnabled" : true,
     "_billingIssuesEnabled" : false,
     "_developerTeamID" : "",
     "_failTransactionsEnabled" : false,
