@@ -21,6 +21,10 @@
 //! is a spawned future whose failure only leaves the queue for next time.
 //! Nothing here returns an error to a caller or touches the game state.
 
+// The App Store build compiles the sender out (feature `telemetry` off) but
+// keeps the pure routing and schema code, whose tests still run there.
+#![cfg_attr(not(feature = "telemetry"), allow(dead_code, unused_imports))]
+
 pub mod schema;
 
 use std::cell::{Cell, RefCell};
@@ -354,6 +358,7 @@ fn clip_from_line(line: &str) -> Option<ClipReport> {
     p.next().is_none().then_some(r)
 }
 
+#[cfg(feature = "telemetry")]
 /// Send the clip queue. Called on the Events route only; a send that fails
 /// leaves the queue for next time.
 async fn flush_clips() {
@@ -437,6 +442,7 @@ pub fn install_panic_hook() {
     }));
 }
 
+#[cfg(feature = "telemetry")]
 /// F1 — MetricKit's crash and hang diagnostics, drained from the iOS bridge.
 /// Swift reports a kind and a signature; the mapping to error codes is here,
 /// so the schema stays the only place an event is defined (I9).
@@ -492,10 +498,12 @@ fn window_str(name: &str) -> Option<String> {
     js_sys::Reflect::get(&w, &JsValue::from_str(name)).ok()?.as_string()
 }
 
+#[cfg(feature = "telemetry")]
 fn base() -> String {
     window_str("SPELL_TELEMETRY_BASE").unwrap_or_else(|| format!("{}/telemetry", crate::api::api_base()))
 }
 
+#[cfg(feature = "telemetry")]
 fn platform() -> Platform {
     let Some(w) = web_sys::window() else { return Platform::Web };
     let get = |o: &JsValue, k: &str| js_sys::Reflect::get(o, &JsValue::from_str(k)).ok().filter(|v| !v.is_undefined() && !v.is_null());
@@ -515,10 +523,12 @@ fn platform() -> Platform {
     }
 }
 
+#[cfg(feature = "telemetry")]
 fn build() -> BuildId {
     BuildId::parse(&window_str("SPELL_BUILD").unwrap_or_default())
 }
 
+#[cfg(feature = "telemetry")]
 /// POST through index.html's gzip helper when present, plain JSON otherwise.
 async fn post(url: &str, body: String) -> bool {
     let helper = web_sys::window()
@@ -536,7 +546,21 @@ async fn post(url: &str, body: String) -> bool {
     }
 }
 
+/// CC-LAUNCH-EN Phase B item 2c: whether this build carries telemetry at all.
+/// The App Store build is compiled without the `telemetry` feature: nothing is
+/// recorded, nothing is sent, the /v1/flags fetch does not exist, and Settings
+/// hides the "Help improve SpellGame" switch.
+pub const COMPILED: bool = cfg!(feature = "telemetry");
+
+/// Without the feature there is nothing to send; anything a previous build
+/// left queued on the device is cleared instead.
+#[cfg(not(feature = "telemetry"))]
+pub fn flush() {
+    clear_all();
+}
+
 /// Send what the current route allows. At most one flush in flight.
+#[cfg(feature = "telemetry")]
 pub fn flush() {
     // JS errors buffered since the last flush join the route first.
     drain_js_buffer();
@@ -549,6 +573,7 @@ pub fn flush() {
     });
 }
 
+#[cfg(feature = "telemetry")]
 async fn flush_inner() {
     match route_now() {
         Route::Off => clear_all(),
@@ -625,6 +650,7 @@ async fn flush_inner() {
     }
 }
 
+#[cfg(feature = "telemetry")]
 /// R4 — ask the Worker whether telemetry is on; cache the answer for the next
 /// launch, and honour an "off" immediately.
 async fn refresh_flags() {
@@ -641,8 +667,18 @@ async fn refresh_flags() {
     }
 }
 
+/// Without the feature: the route is Off for the whole launch (so `record`
+/// writes nothing) and whatever an earlier build queued is cleared.
+#[cfg(not(feature = "telemetry"))]
+pub fn init(lang: &str) {
+    set_lang(lang);
+    KILLED.with(|k| k.set(true));
+    clear_all();
+}
+
 /// Called once from `start()`, after prefs and the age gate are read and
 /// before anything that could fail loudly. Everything here is best-effort.
+#[cfg(feature = "telemetry")]
 pub fn init(lang: &str) {
     set_lang(lang);
     let route = route_now();

@@ -16,7 +16,7 @@ DIST="$ROOT/dist-dev"
 # all_langs: a dev build carries every language (CC-LAUNCH-EN Phase B); store
 # builds carry the English-only release profile.
 echo "==> cargo build (release, wasm32, --features \"dev_preview all_langs\")"
-cargo build --release --target wasm32-unknown-unknown --features "dev_preview all_langs"
+cargo build --release --target wasm32-unknown-unknown --features "dev_preview all_langs net_services"
 
 echo "==> wasm-bindgen -> pkg-dev/"
 wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \

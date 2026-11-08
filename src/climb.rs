@@ -13,6 +13,10 @@ use web_sys::{Headers, Request, RequestInit, RequestMode, Response};
 use crate::App;
 use crate::{api, dom, storage};
 
+/// True here: this build carries the account path (`accounts_net`). The App
+/// Store build compiles climb_off.rs instead (CC-LAUNCH-EN Phase B item 2a).
+pub const ACCOUNTS: bool = true;
+
 const TOKEN_KEY: &str = "byear_climb_token_v1";
 const DIFFICULTIES: [&str; 3] = ["medium", "hard", "expert"];
 

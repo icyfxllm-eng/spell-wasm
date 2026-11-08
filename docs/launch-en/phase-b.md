@@ -100,3 +100,86 @@ Policy vs code, worth a look:
 - privacy.html lists an optional phone number for SMS reset. The subagent found no phone field in the client (unverified against the backend).
 - The "Can't tell" clip report sends a hash of lang|word (src/telemetry/mod.rs:341-343), which contradicts "a report never contains the words you practice". It is behind `cant_tell`, which is OFF on main.
 - There is no `PrivacyInfo.xcprivacy` in the repo.
+
+---
+
+# Phase B, round 2 (Eric's items 1-4, 2026-11-07)
+
+## 1. Rebased onto origin/main cbd6f0a9
+
+There were no conflicts; git merged en.json, the locales, index.html, privacy.html and the build scripts without stopping. Phase A's `store-native.js` is still in every build script's cp list. `scripts/placeholder-grep.sh` (Phase A's, on main) passes.
+
+## 2. Four network paths compiled out of the App Store build
+
+New Cargo features (Cargo.toml:56-78): `accounts_net`, `server_check`, `telemetry`, `server_stt`. `net_services` turns on all four.
+
+Where each build stands:
+- On: `build-web-dev.sh`, `build-web-test.sh` (default dist-test), `build-web-audit.sh`.
+- Off: `build-web.sh` (App Store / TestFlight / Lab), `build-web-edu.sh`, and the release-profile e2e build (`SPELL_RELEASE_LANGS=1`).
+- `web = ["net_services"]`: spellgame.net keeps exactly what it has today (see Decisions for Eric).
+
+| Path | Off means | Code | Needle (seam-absence-check) |
+|---|---|---|---|
+| a. Climb accounts + leaderboard | `src/climb_off.rs` stands in for `climb.rs` (lib.rs:10-14). No front door, sign-in, account sheet, leaderboard view or run upload. `climbBtn`, `accountBtn` and `setAccountRow` stay hidden. The drawer has no account row (drawer.rs:614, `climb::ACCOUNTS`). Local Climb play, its local board and Spell Racing are untouched. | climb_off.rs; climb.rs:18; celebrate.rs:31,120,212 | `/api/auth/`, `/api/climb/` |
+| b. /api/check | English is graded on the device only. `backend_verify` keeps its async hop but calls `en_grade_local` (game.rs:2480-2486). `api::check_answer` is not compiled (api.rs:692). The routing decision is now one pure function, `en_route`, used by `submit_guess` and by the parity check (game.rs:2445-2472). | game.rs, api.rs | `malformed /api/check response` |
+| c. Telemetry | The sender, the MetricKit drain and the `/v1/flags` fetch are not compiled (telemetry/mod.rs:361, 445, 501-531, 576, 653). `init` sets the route Off and clears whatever an earlier build queued (mod.rs:672). `flush` only clears (mod.rs:557). Settings hides "Help improve SpellGame" (settings.rs:431, `telemetry::COMPILED`). The pure routing/schema code and its tests stay. | telemetry/mod.rs, settings.rs | `/v1/events`, `/v1/flags` |
+| d. Say-It server STT | The "server" rung is never chosen (spell_aloud.rs:849). The native recognizer is never handed a server URL (spell_aloud.rs:1325-1333). The on-device recognizer is unchanged. | spell_aloud.rs | `/api/stt` |
+
+Proof, both directions (rerunnable):
+- `node scripts/seam-absence-check.mjs dist`: OK on the App Store dist.
+- `node scripts/seam-absence-check.mjs --services-present dist-dev`: all 6 needles found. On `dist` the same command reports all 6 MISSING.
+- `--selftest` adds a case: a dist carrying `/v1/events` fails.
+- e2e `release-langs: English grades locally and no compiled-out path is called`, on the release-profile bundle. It checks that `accountBtn`, `climbBtn`, `setAccountRow` and `telemetryRow` are hidden, then answers an English word correctly and requires zero requests to /api/check, /api/auth/, /api/climb/, /api/stt or /v1/{events,aggregate,clips,flags}. On dist-test (all four paths on) it fails, the positive control.
+
+What broke, and what changed:
+- `word_lists::tests::jr_ignores_persisted_stars...` broke because of item 4, not this item: its fixture holds a German word. The expectation now drops "hund" in the release profile only.
+- No test asserted telemetry sending or accounts at host level. The Climb module's own tests (`entrance_tests`) now compile only with `accounts_net`. They pass in `cargo test --lib --features all_langs,net_services`.
+- New dead-code warnings in the release build were silenced at the source (telemetry/mod.rs:26, celebrate.rs). No other warning was added.
+- No runtime flag was removed, so `config/flags.release.json` is unchanged and flags-audit is green.
+
+Left in place, unreachable in the App Store build:
+- index.html keeps the front door, the account sheet, the leaderboard markup and the `SpellTelemetryPost` helper. Only wasm calls that helper.
+- The Swift side of server STT is still in the iOS binary. Nothing hands it a URL.
+- `ghostStart` (Spell Racing, status hidden) clicks `climbBtn`, which used to open the leaderboard, not a run. In the App Store build that click does nothing. This is pre-existing and not changed.
+
+## 3. Parity: local English grade vs the server's /api/check
+
+    python3 tools/parity/en_check_parity.py            # requires 0 diffs
+    python3 tools/parity/en_check_parity.py --mutate   # self-test: a wrong server MUST diff
+
+How it works:
+- A Rust `#[ignore]` test (`src/en_check_parity.rs`) writes the local verdicts: `en_route` + `en_grade_local`.
+- The driver lifts `check()` out of `backend/app.py` with `ast` and runs that function body in-process. There is no Flask and no network.
+- It compares the verdict a player gets in each build: release (local) vs dev (server).
+- `other_sense` and `variant` are decided before any server call in both builds, so only `grade` cases reach the comparison.
+
+Result (2026-11-07):
+- 43,896 cases from 4,366 bank words, plus 209 UK/US pairs from data/en/accepted-variants.tsv. tests/fixtures/en-uk-variants.json does not exist.
+- Tiers covered: legacy easy 762, medium 798, hard 800, expert 797; retier easy 825, medium 2466, hard 596, expert 278.
+- Routes: grade 43,022, variant 738, other_sense 136.
+- 0 diffs.
+- `--mutate` (a server that accepts any prefix) gives 8,694 diffs, so the check can fail.
+
+Typed forms per word, each graded both normal and Spell Jr:
+- exact, UPPER, Capital
+- a dropped last letter and a swap of letters 2 and 3
+- curly apostrophe, no space, no hyphen and accents stripped, but only where the word has one of those features
+
+No bank word has an apostrophe, space, hyphen or accent, so those last four forms produced no cases. That is where the two graders would disagree if such a word were ever added: `fold_strict` folds apostrophes and drops whitespace, `fold_lenient` strips accents for Spell Jr, and the server does `lower().strip()` equality.
+
+## 4. Hidden-language My Words lists: kept, never played
+
+- `consts::speak_tag_servable` (consts.rs:387): in the release profile a saved word is served only if its speak tag's base is a listed language. That is English, plus untagged words, which CustomSet treats as English. A voice-only language (ro, id, ca) is no longer offered by the release "Speak in" picker, so it counts as unservable too.
+- Filtered at play time:
+  - `word_lists::play_entries_with` (word_lists.rs:452) and `starred_words` (:660)
+  - the legacy CustomSet fallback in `game::pool_for_tier` (game.rs:127)
+- `word_lists::refuses_play` (word_lists.rs:465) and `lists_ui::play`: a list that holds words, none of them servable, does not start. The toast is `mode.unavailable`, "Not ready in this language yet", and the saved selection is untouched. An empty list behaves as before.
+- Nothing is deleted. `all_words` and the list screen still show every word and star.
+- Word Search and WordCross from a list already filter to the current play language.
+- Test: `word_lists::hidden_lang_tests::the_release_profile_keeps_hidden_language_words_but_never_plays_them`. It also checks that the lists are unchanged (`assert_eq!(l, before)`). The mirror test runs in all-language builds.
+
+## Decisions for Eric
+
+1. **spellgame.net keeps all four paths** (`web = ["net_services"]`), so the site build is unchanged. If the site should drop any of them, remove it from `web` in Cargo.toml. seam-absence-check then needs SPELL_WEB=1 to stop allowing those needles.
+2. **The education build drops telemetry entirely.** Before, it sent daily aggregate counts (D7). Accounts were already gated off there.
+3. A launch whose saved study language is My Words, with only Hidden-language words chosen, serves the placeholder "word". That is the existing empty-My-Words behaviour, and none of the Hidden words are served.

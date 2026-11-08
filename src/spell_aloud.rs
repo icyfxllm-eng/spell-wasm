@@ -844,7 +844,10 @@ pub fn reflect(app: &App) {
         // Server rung (mic-everywhere): a language with NO on-device path may
         // still get the mic through the backend — explicit consent card, a 🌐
         // badge, and HARD exclusions: never Kid Mode, never education builds.
-        let state = if cap.state == "unavailable"
+        // CC-LAUNCH-EN Phase B item 2d: the rung exists only in builds with the
+        // `server_stt` feature. The App Store build has no server step at all.
+        let state = if cfg!(feature = "server_stt")
+            && cap.state == "unavailable"
             && crate::consts::server_stt(&lang)
             && !kid
             && !cfg!(feature = "education")
@@ -1319,11 +1322,15 @@ fn begin_session(app: &App) {
     let a_partial = app.clone();
     let a_final = app.clone();
     let a_error = app.clone();
+    #[cfg(feature = "server_stt")]
     let server_url = if CAP_STATE.with(|c| c.borrow().clone()) == "server" {
         Some(format!("{}/api/stt", crate::api::api_base()))
     } else {
         None
     };
+    // Without `server_stt` the native recognizer is never handed a server URL.
+    #[cfg(not(feature = "server_stt"))]
+    let server_url: Option<String> = None;
     let ok = native_lang::start_letter_capture(
         &lang,
         &ctx,

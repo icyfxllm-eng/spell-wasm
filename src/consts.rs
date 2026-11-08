@@ -378,6 +378,20 @@ pub fn is_hidden_builtin(lang: &str) -> bool {
     is_builtin_lang(lang) && lang_status(lang) == Hidden
 }
 
+/// A saved word's speak tag ("es-ES", "ko-KR", or a bare play code) names a
+/// language this build plays. In the release profile only listed languages
+/// qualify, so a My Words entry saved in a Hidden language (or in a voice-only
+/// language the release "Speak in" picker no longer offers) is kept but never
+/// served, as Misses are. An untagged entry is English (CustomSet's fallback).
+/// Every other build serves every saved word, as before.
+pub fn speak_tag_servable(tag: &str) -> bool {
+    if !RELEASE_LANG_PROFILE {
+        return true;
+    }
+    let base = tag.split(['-', '_']).next().unwrap_or("").to_ascii_lowercase();
+    base.is_empty() || is_listed_lang(&base)
+}
+
 /// The registry rows a surface may list, in registry order.
 pub fn listed_langs() -> impl Iterator<Item = &'static (&'static str, &'static str, LangStatus, Direction)> {
     BUILTIN_LANGS.iter().filter(|(c, _, _, _)| is_listed_lang(c))

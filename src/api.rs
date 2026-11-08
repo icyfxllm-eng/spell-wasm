@@ -685,6 +685,12 @@ async fn clip_in_hand(word: &str, lang: &str) -> bool {
     ok
 }
 
+/// CC-LAUNCH-EN Phase B item 2b: only in builds with `server_check` (dev, test,
+/// audit, web). The App Store build grades English locally and has no request
+/// to /api/check; in dev builds the server answer is the parity oracle that
+/// tools/parity/en_check_parity.py checks the local grader against.
+#[cfg(feature = "server_check")]
+///
 /// Double-checks a typed answer against the backend. Since the backend
 /// trusts whatever `word` it's given, this is only ever as strong as the
 /// client sending the real target word — callers should still be prepared

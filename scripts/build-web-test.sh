@@ -23,7 +23,10 @@ elif [ "${SPELL_RELEASE_LANGS:-0}" = "1" ]; then
   EXTRA=""
 else
   DIST="$ROOT/dist-test"
-  EXTRA="--features all_langs"
+  # net_services: the account, /api/check, telemetry and server-STT paths the
+  # store build compiles out (CC-LAUNCH-EN Phase B item 2). The release-profile
+  # build above leaves them out too, as the App Store build does.
+  EXTRA="--features all_langs,net_services"
 fi
 
 echo "==> cargo build (release, wasm32, --features \"testseam dev_preview\" $EXTRA)"

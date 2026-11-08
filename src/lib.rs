@@ -4,6 +4,13 @@ mod api;
 mod attempts;
 mod audio_boost;
 mod board;
+// CC-LAUNCH-EN Phase B item 2a: Climb accounts and the leaderboard are a
+// build-time feature. Without `accounts_net` (the App Store build) the stub
+// stands in and no account or leaderboard request is compiled.
+#[cfg(feature = "accounts_net")]
+mod climb;
+#[cfg(not(feature = "accounts_net"))]
+#[path = "climb_off.rs"]
 mod climb;
 mod consts;
 mod daily;
@@ -221,6 +228,8 @@ mod yearbook_ui;
 mod widgets;
 mod word_data;
 mod word_data_en_retier; // CC-EN-EXPERT-GROWTH F4: the re-tiered English bank, behind en.retier
+#[cfg(test)]
+mod en_check_parity; // CC-LAUNCH-EN Phase B item 3: local half of the /api/check parity check
 mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 #[cfg(test)]
 mod wordgrid_census; // CC-WORDGRID §3: measurement only

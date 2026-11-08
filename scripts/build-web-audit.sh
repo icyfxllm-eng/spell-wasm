@@ -29,8 +29,8 @@ PKG="$ROOT/pkg-audit$SUFFIX"
 echo "==> regenerate draft banks -> src/word_data_audit.rs"
 python3 scripts/build-draft-wordbanks.py
 
-echo "==> cargo build (release, wasm32, --features audit_preview, AUDIT_LANG=${AUDIT_LANG:-all})"
-cargo build --release --target wasm32-unknown-unknown --features audit_preview
+echo "==> cargo build (release, wasm32, --features audit_preview,net_services, AUDIT_LANG=${AUDIT_LANG:-all})"
+cargo build --release --target wasm32-unknown-unknown --features audit_preview,net_services
 
 echo "==> wasm-bindgen -> pkg-audit/"
 wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \

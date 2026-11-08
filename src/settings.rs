@@ -427,6 +427,8 @@ pub fn apply_settings(app: &App) {
     // the server's kill switch is off, since nothing is sent either way.
     dom::input("telemetryToggle").set_checked(crate::telemetry::switch_on() && !crate::telemetry::switch_overridden());
     set_suppressed("telemetryToggle", crate::telemetry::switch_overridden());
+    // CC-LAUNCH-EN Phase B item 2c: a build without telemetry has no switch for it.
+    dom::toggle_class("telemetryRow", "btn-hide", !crate::telemetry::COMPILED);
     dom::input("volumeSlider").set_value(&s.volume.to_string());
     audio_boost::set_gain(s.volume);
     drop(s);

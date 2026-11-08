@@ -52,10 +52,30 @@ audit_preview = []
 # Hidden (consts::RELEASE_LANG_PROFILE). Build-time only, so no flag or remote
 # file can un-hide a language. Dev and e2e builds turn it on; store builds never.
 all_langs = []
+# CC-LAUNCH-EN Phase B item 2: the four network paths the App Store build does
+# not carry. Build-time only, like `testseam`: with a feature off its code is
+# not compiled, so no flag, stored value or remote file can turn it back on,
+# and scripts/seam-absence-check.mjs greps dist/ for a string each one owns.
+#   accounts_net  -- Climb accounts (front door, sign-in, account sheet) and
+#                    the leaderboard (view + run upload): /api/auth/*, /api/climb/*.
+#                    Local Climb play is not behind it.
+#   server_check  -- the /api/check round trip; without it English is graded
+#                    on the device only (game::en_grade_local).
+#   telemetry     -- crash/perf/clip reports and the /v1/flags fetch.
+#   server_stt    -- Say-It's server speech rung (/api/stt). The on-device
+#                    recognizer is not behind it.
+# Dev, e2e and audit builds turn on `net_services`; the App Store, TestFlight
+# and education builds never do. `web` carries it so spellgame.net keeps the
+# behaviour it has today.
+accounts_net = []
+server_check = []
+telemetry = []
+server_stt = []
+net_services = ["accounts_net", "server_check", "telemetry", "server_stt"]
 # The spellgame.net build. English only (Eric, 2026-07-31): the site is the
 # free English experience, the app is where every language lives. Off by
 # default so `npm run build` still produces the APP artifact.
-web = []
+web = ["net_services"]
 # CC-GAME-SERVER F6: exposes `native_api` (re-exports only) so the room server can
 # call the same grader natively, and drops the wasm start export for the parity build.
 native = []

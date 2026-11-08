@@ -609,7 +609,9 @@ fn render(app: &App) {
     let ctx = crate::play_hub::ctx(app);
     let shown = modes::catalog(&all, &ctx);
     let (jr, signed_in) = (app.borrow().kid, crate::climb::is_logged_in());
-    let acct = account(signed_in, jr, crate::climb::username());
+    // CC-LAUNCH-EN Phase B item 2a: a build with no account path has no
+    // account row at all, never a "Sign in" that leads nowhere.
+    let acct = if crate::climb::ACCOUNTS { account(signed_in, jr, crate::climb::username()) } else { Account { identity: None, action: None } };
     // The context's language, never app.lang: ctx has already resolved the
     // word-SOURCE pseudo-codes (__mine, __review) to a real language, and
     // handing the raw one to the availability filter would drop every

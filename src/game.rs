@@ -118,7 +118,16 @@ fn pool_for_tier(state: &AppState, tier: &str) -> Vec<String> {
             state.list_words.iter().filter(|w| length_tier(w) == tier).cloned().collect();
         return if filtered.is_empty() { state.list_words.clone() } else { filtered };
     }
-    let all = &state.custom.words;
+    // CC-LAUNCH-EN Phase B item 4: the legacy set's fallback serves only words
+    // in a language this build plays, as the lists above do.
+    let servable: Vec<String> = state
+        .custom
+        .words
+        .iter()
+        .filter(|w| crate::consts::speak_tag_servable(state.custom.word_lang.get(*w).unwrap_or(&state.custom.speak_lang)))
+        .cloned()
+        .collect();
+    let all = &servable;
     if all.is_empty() {
         return vec!["word".to_string()];
     }
@@ -2309,17 +2318,15 @@ pub fn submit_guess(app: &App) {
     // would quietly remove backend verification from ordinary English answers.
     // Only a DIFFERENT member of the collision set resolves locally.
     let impossible = app.borrow().impossible_word;
-    let en_other_sense = !impossible
-        && cur_lang == EN
-        && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word)
-        && crate::homophones::accepts(EN, &word, &typed);
+    let en_route = (!impossible && cur_lang == EN).then(|| en_route(&word, &typed));
+    let en_other_sense = en_route == Some(EnRoute::OtherSense);
     if en_other_sense {
         VALID_OTHER_SENSE.with(|c| c.set(true));
     }
-    // Eric 2026-10-19: both national spellings are right (colour / color). Resolved here, locally, because the
-    // server compares one spelling only; it is a plain correct answer, not an "other sense".
+    // Read again for the local grade below, exactly as before: an answer can be
+    // both another sense and a national spelling.
     let en_variant = !impossible && cur_lang == EN && crate::variants::accepts(&word, &typed);
-    if cur_lang == EN && !en_other_sense && !impossible && !en_variant {
+    if en_route == Some(EnRoute::Grade) {
         spawn_local(backend_verify(app.clone(), word, typed, kid));
         return;
     }
@@ -2432,14 +2439,51 @@ fn keyboard_reacts(app: &App, correct: bool, typed: &str) {
     });
 }
 
-/// English words get double-checked against the backend's /api/check; if
-/// that request fails (server down, etc.) we fall back to comparing
-/// locally so a network hiccup doesn't stall the game.
+/// How `submit_guess` decides a non-Impossible English answer. Pure, so the
+/// parity check (tools/parity/en_check_parity.py) runs the very same decision.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum EnRoute {
+    /// CC-SENSE-CUE F2(a): a different, correctly spelled member of the word's
+    /// homophone set. Correct, resolved locally in every build.
+    OtherSense,
+    /// Eric 2026-10-19: both national spellings are right (colour / color).
+    /// Resolved locally because the server compares one spelling only; it is a
+    /// plain correct answer, not an "other sense".
+    Variant,
+    /// Everything else: graded by [`en_grade_local`] (the App Store build) or by
+    /// the server's /api/check with that as its fallback (`server_check` builds).
+    Grade,
+}
+
+pub(crate) fn en_route(word: &str, typed: &str) -> EnRoute {
+    if crate::norm::fold_strict(typed) != crate::norm::fold_strict(word) && crate::homophones::accepts(EN, word, typed) {
+        EnRoute::OtherSense
+    } else if crate::variants::accepts(word, typed) {
+        EnRoute::Variant
+    } else {
+        EnRoute::Grade
+    }
+}
+
+/// The local English grade for [`EnRoute::Grade`]: the App Store build's only
+/// grader, and the fallback when a `server_check` build cannot reach the server.
+pub(crate) fn en_grade_local(word: &str, typed: &str, kid: bool) -> bool {
+    crate::norm::answer_matches(typed, word, kid)
+}
+
+/// CC-LAUNCH-EN Phase B item 2b: the App Store build (no `server_check`) grades
+/// English on the device and sends nothing. A `server_check` build (dev, test,
+/// audit, web) still double-checks with the backend's /api/check and falls back
+/// to the local grade if that request fails, so a network hiccup never stalls
+/// the game.
 async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
+    #[cfg(feature = "server_check")]
     let correct = match api::check_answer(&word, &typed).await {
         Ok(c) => c,
-        Err(_) => crate::norm::answer_matches(&typed, &word, kid),
+        Err(_) => en_grade_local(&word, &typed, kid),
     };
+    #[cfg(not(feature = "server_check"))]
+    let correct = en_grade_local(&word, &typed, kid);
     // THE PLACEMENT PROBE COULD NEVER COMPLETE, AND THIS IS WHY.
     //
     // submit_guess routes English to this async path and RETURNS before its

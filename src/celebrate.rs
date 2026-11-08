@@ -28,6 +28,7 @@ pub enum Size {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Trigger {
     StreakTier(u32),
+    #[cfg_attr(not(feature = "accounts_net"), allow(dead_code))] // only a leaderboard reply ranks (CC-LAUNCH-EN Phase B item 2a)
     RankUp(u32),
     PerfectRun,
     PersonalBest(u32),
@@ -116,6 +117,7 @@ pub fn streak_tier(streak: u32) -> Option<Trigger> {
 
 /// A Climb rank, against the best one stored for that difficulty: a rank-up
 /// only when there was a stored rank and this one is better (smaller).
+#[cfg_attr(not(feature = "accounts_net"), allow(dead_code))] // only a leaderboard reply ranks (CC-LAUNCH-EN Phase B item 2a)
 pub fn rank_up(stored: Option<u32>, rank: u32) -> Option<Trigger> {
     match stored {
         Some(prev) if rank > 0 && rank < prev => Some(Trigger::RankUp(rank)),
@@ -207,6 +209,7 @@ pub fn ask(t: Trigger, message: String) {
 }
 
 /// A Climb record came back with `rank` on `difficulty`.
+#[cfg_attr(not(feature = "accounts_net"), allow(dead_code))] // only a leaderboard reply ranks (CC-LAUNCH-EN Phase B item 2a)
 pub fn climb_rank(difficulty: &str, rank: u32) {
     if !on() || rank == 0 {
         return;

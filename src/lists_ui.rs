@@ -149,6 +149,12 @@ pub fn refresh_pool(app: &App) {
 /// becomes the study language for this session.
 pub fn play(app: &App, chosen: &[String]) {
     let mut lists = word_lists::load();
+    // CC-LAUNCH-EN Phase B item 4: lists holding only Hidden-language words do
+    // not start, and the selection is left as it was.
+    if word_lists::refuses_play(&lists, chosen) {
+        dom::show_toast(&i18n::t("mode.unavailable"));
+        return;
+    }
     word_lists::remember_selection(&mut lists, chosen);
     word_lists::store(&lists);
     refresh_pool(app);

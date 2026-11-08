@@ -16,7 +16,7 @@
 // (flag forced on). The photo import's "Speak in" picker (#photoLang) is
 // iOS-only (no camera in a browser); it is built from the same accessor as
 // #importLang (words::speak_in_languages), which the I3.1 unit test pins.
-import { openApp, openMyWords, assert, assertEq, domSettled } from '../harness.mjs';
+import { openApp, openMyWords, assert, assertEq, domSettled, typeOnKeyboard } from '../harness.mjs';
 
 const MINE = '__mine';
 
@@ -130,6 +130,34 @@ export async function run(browser, base, suite) {
       await page.click('#vsOnline');
       await page.waitForSelector('#olEntry:not([hidden])', { timeout: 10000 });
       assertEq(JSON.stringify(await optionValues(page, '#olLang')), JSON.stringify(['en']), 'Online language options');
+    } finally { await ctx.close(); }
+  });
+
+  // CC-LAUNCH-EN Phase B item 2: this bundle, like the App Store build, has no
+  // account, /api/check, telemetry or server-STT path compiled in. An English
+  // answer is graded on the device, and no request to any of those leaves.
+  await suite.test('release-langs: English grades locally and no compiled-out path is called', async () => {
+    const { ctx, page } = await openApp(browser, base, {});
+    const calls = [];
+    page.on('request', (r) => {
+      const u = new URL(r.url());
+      if (/^\/api\/(check|auth\/|climb\/|stt)|^\/(telemetry\/)?v1\/(events|aggregate|clips|flags)/.test(u.pathname)) calls.push(u.pathname);
+    });
+    try {
+      for (const id of ['accountBtn', 'climbBtn', 'setAccountRow', 'telemetryRow']) {
+        const shown = await page.$eval(`#${id}`, (e) => !e.classList.contains('btn-hide') && getComputedStyle(e).display !== 'none');
+        assert(!shown, `#${id} is offered in a build without its path`);
+      }
+      await page.click('#orbWrap');
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 });
+      const word = await page.evaluate(() => window.__spelltest.currentWord());
+      assert([...word].every((c) => /[a-z]/.test(c)), `served a word the keyboard cannot type: ${word}`);
+      await typeOnKeyboard(page, word);
+      await page.click('#checkBtn');
+      await page.waitForFunction(() => /good|bad/.test(document.getElementById('feedback').className), null, { timeout: 5000 });
+      assert((await page.$eval('#feedback', (e) => e.className)).includes('good'), `the right spelling of ${word} was not accepted`);
+      await domSettled(page);
+      assertEq(JSON.stringify(calls), '[]', 'requests to compiled-out paths');
     } finally { await ctx.close(); }
   });
 }

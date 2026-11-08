@@ -447,7 +447,9 @@ pub fn play_entries_with(lists: &Lists, chosen: &[String], honour_stars: bool) -
                 entries.into_iter().partition(|e| e.starred);
             entries = starred.into_iter().chain(rest).collect();
         }
-        for e in entries {
+        // CC-LAUNCH-EN Phase B item 4: a word saved in a language this build
+        // does not play stays in the list (and on screen) but is never served.
+        for e in entries.into_iter().filter(|e| crate::consts::speak_tag_servable(&e.lang)) {
             let key = entry_key(&e.text, &e.lang);
             if !out.iter().any(|x| entry_key(&x.text, &x.lang) == key) {
                 out.push(e);
@@ -455,6 +457,14 @@ pub fn play_entries_with(lists: &Lists, chosen: &[String], honour_stars: bool) -
         }
     }
     out
+}
+
+/// CC-LAUNCH-EN Phase B item 4: Play is refused when the chosen lists hold
+/// words but none this build plays (every one is in a Hidden language), so
+/// starting them can never fall through to another pool. Nothing is removed.
+pub fn refuses_play(lists: &Lists, chosen: &[String]) -> bool {
+    let holds_words = chosen.iter().any(|id| lists.lists.iter().any(|l| &l.id == id && l.live() && !l.entries.is_empty()));
+    holds_words && play_entries_with(lists, chosen, false).is_empty()
 }
 
 /// F4.2: the remembered selection, with a deleted list falling back to the
@@ -647,7 +657,7 @@ pub fn starred_words(lists: &Lists, chosen: &[String]) -> Vec<(String, String)> 
     let mut out: Vec<(String, String)> = Vec::new();
     for id in chosen {
         let Some(l) = lists.lists.iter().find(|l| &l.id == id && l.live()) else { continue };
-        for e in l.entries.iter().filter(|e| e.starred) {
+        for e in l.entries.iter().filter(|e| e.starred && crate::consts::speak_tag_servable(&e.lang)) {
             let k = entry_key(&e.text, &e.lang);
             if !out.iter().any(|(t, g)| entry_key(t, g) == k) {
                 out.push((e.text.clone(), e.lang.clone()));
@@ -1010,8 +1020,10 @@ mod tests {
         let texts = |honour| -> Vec<String> {
             play_entries_with(&l, &[a.clone()], honour).into_iter().map(|e| e.text).collect()
         };
-        assert_eq!(texts(true), vec!["dog", "cat", "hund"]);
-        assert_eq!(texts(false), vec!["cat", "dog", "hund"], "saved order, star ignored");
+        // "hund" is German: kept, but not served in the release profile (Phase B item 4).
+        let de = |mut v: Vec<&'static str>| { if crate::consts::RELEASE_LANG_PROFILE { v.retain(|w| *w != "hund"); } v };
+        assert_eq!(texts(true), de(vec!["dog", "cat", "hund"]));
+        assert_eq!(texts(false), de(vec!["cat", "dog", "hund"]), "saved order, star ignored");
         // And honour=true is exactly play_entries (flag off is today's app).
         assert_eq!(play_entries(&l, &[a.clone()]), play_entries_with(&l, &[a], true));
     }
@@ -1235,5 +1247,61 @@ mod kc1_tests {
         ] {
             assert!(!s.contains("set_json(word_lists::LISTS_KEY") && !s.contains("set_raw(word_lists::LISTS_KEY"), "{f} writes the lists key directly");
         }
+    }
+}
+
+#[cfg(test)]
+mod hidden_lang_tests {
+    //! CC-LAUNCH-EN Phase B item 4: a My Words list in a Hidden language is kept,
+    //! shown and never played in the release profile, the way Misses are.
+    use super::*;
+
+    const T0: f64 = 1_700_000_000_000.0;
+
+    fn mixed() -> (Lists, String, String) {
+        let mut l = Lists::default();
+        let mixed = create(&mut l, "Mixed", ListSource::Photo, T0);
+        add_entries(&mut l, &mixed, &[("cat".into(), "en-US".into()), ("gato".into(), "es-ES".into()), ("sun".into(), "".into())], T0);
+        let korean = create(&mut l, "Korean", ListSource::Photo, T0);
+        add_entries(&mut l, &korean, &[("고양이".into(), "ko-KR".into()), ("개".into(), "ko".into())], T0);
+        set_star(&mut l, &korean, 0, true, T0);
+        set_star(&mut l, &mixed, 1, true, T0);
+        (l, mixed, korean)
+    }
+
+    #[test]
+    #[cfg(not(any(feature = "all_langs", feature = "audit_preview", feature = "web")))]
+    fn the_release_profile_keeps_hidden_language_words_but_never_plays_them() {
+        let (l, mixed, korean) = mixed();
+        let before = l.clone();
+        let both = [mixed.clone(), korean.clone()];
+
+        let served: Vec<String> = play_entries(&l, &both).into_iter().map(|e| e.text).collect();
+        assert_eq!(served, vec!["cat".to_string(), "sun".to_string()], "only English (and untagged) words are served");
+        assert!(play_entries(&l, &[korean.clone()]).is_empty());
+        assert!(starred_words(&l, &both).is_empty(), "a starred Hidden word does not lead a session either");
+
+        // The player cannot start a list that holds only Hidden words...
+        assert!(refuses_play(&l, &[korean.clone()]));
+        // ...but can start one with an English word in it, and an empty list
+        // behaves exactly as it did before.
+        assert!(!refuses_play(&l, &both));
+        let mut e = l.clone();
+        let empty = create(&mut e, "Empty", ListSource::Photo, T0);
+        assert!(!refuses_play(&e, &[empty]));
+
+        // Nothing was removed: the lists, the words and the stars are as saved,
+        // and the All words view still shows every one of them.
+        assert_eq!(l, before);
+        assert_eq!(all_words(&l).len(), 5);
+        assert!(l.lists.iter().any(|x| x.entries.iter().any(|e| e.text == "고양이" && e.starred)));
+    }
+
+    #[test]
+    #[cfg(any(feature = "all_langs", feature = "audit_preview", feature = "web"))]
+    fn a_build_with_every_language_plays_every_saved_word() {
+        let (l, mixed, korean) = mixed();
+        assert_eq!(play_entries(&l, &[mixed, korean.clone()]).len(), 5);
+        assert!(!refuses_play(&l, &[korean]));
     }
 }
