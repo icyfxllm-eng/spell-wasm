@@ -238,4 +238,4 @@ then enable the `ios` job in `.github/workflows/release.yml` (remove `if: false`
 and add the Apple secrets (match repo deploy key, `MATCH_PASSWORD`,
 App Store Connect API key). A `git tag vX.Y.Z` then ships both platforms.
 
-See `store/app-review-notes.md` for the App Review submission text.
+The App Review submission text is `fastlane/metadata/review_information/notes.txt` (CC-LAUNCH-EN, 2026-11-08).

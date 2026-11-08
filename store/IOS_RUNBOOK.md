@@ -101,6 +101,9 @@ The app now includes **The Climb** (optional accounts + leaderboard collecting
 username/email/phone/scores). Two artifacts still say the old "no accounts" story
 and are now **inaccurate** — Apple can reject on this:
 
+
+> **Superseded by CC-LAUNCH-EN (2026-11-08).** The English release compiles the Climb account, leaderboard upload, telemetry, `/api/check` and the Say-It server step out of the App Store build. The privacy label therefore becomes "Data Not Collected". The review notes now live in `fastlane/metadata/review_information/notes.txt`, and `store/app-review-notes.md` is deleted. The steps below describe the pre-launch plan and no longer apply to the release build.
+
 1. **App Store Connect → App Privacy** — the data-collection questionnaire must
    declare the collected data (Name, Email, Phone (optional), User ID, App
    activity), used for App Functionality + Account Management, not shared, not
@@ -111,7 +114,7 @@ and are now **inaccurate** — Apple can reject on this:
    ('The Climb') lets users create an account (username + email); the rest of the
    game needs no account. Account creation is gated behind a 13+ age screen."
 
-Ask Claude to update `app-review-notes.md` + the Fastfile strings + point you at
+Ask Claude to update the review notes + the Fastfile strings + point you at
 the exact App Privacy answers — it's the iOS twin of the Play data-safety fix.
 
 ---

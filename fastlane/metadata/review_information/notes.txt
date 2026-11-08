@@ -1,11 +1,14 @@
-Spell is a native iOS spelling game, fully playable offline. All content and game logic ship in the app bundle.
+Spell is an English spelling game. This release is English only. There is no account or sign-in anywhere in the app.
 
 How to test:
-1. Tap the glowing orb ("tap to hear a word") to hear a word spoken aloud.
-2. Spell it on the on-screen keyboard and tap "Check spelling."
-3. Correct answers grow your chain; try the Definition/Sentence hints.
-4. Offline: enable Airplane Mode and keep playing — recently-heard words still play from the on-device cache.
+1. Tap the glowing orb to hear a word.
+2. Type the spelling and tap "Check spelling." Grading happens on the device.
+3. The Easy level, the Daily Challenge and Spell Jr are free.
+4. Choose Medium or higher in the difficulty menu to see the purchase sheet. An adult gate appears first: "Ask a grown-up", with a question such as "What is four times seven?" The purchase is "SpellGame English". Restore Purchases is on the sheet.
+5. Settings > Purchases opens the same sheet at any time, including Restore Purchases.
 
-No account, login, or personal information is required. No demo account needed.
+Spell Jr never shows a purchase sheet.
 
-Privacy: no personal data is collected. Progress and any custom word lists are stored only on the device. See https://spellgame.net/privacy.
+Data: no personal data is collected. Answers are graded on the device. The app requests word audio and definitions from our server; those requests contain only the word, with no identifier. It also fetches a signed list of feature switches, which can only turn features off. Progress is stored only on the device.
+
+Microphone: used only by the optional "Spell It" tool (Settings > Tools & Features, off by default). Speech is recognized on the device and never sent anywhere.
