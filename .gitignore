@@ -51,6 +51,7 @@ ios/App/output/
 
 # E2E test build artifacts (seam-enabled — never shipped)
 dist-test/
+dist-test-release/
 pkg-test/
 
 # Education-edition build artifacts (CC-EDITIONS, scripts/build-web-edu.sh)

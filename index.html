@@ -1943,7 +1943,6 @@
   body.coming-soon #gameKeyboard,body.coming-soon #spellbox,body.coming-soon .field-head,
   body.coming-soon .modes-row,body.coming-soon .action-row,body.coming-soon .minor-row,
   body.coming-soon .tries-line{display:none!important}
-  .coming-badge{font-size:11.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--amber-soft);border:1px solid var(--amber);border-radius:999px;padding:5px 15px}
   .coming-notice{color:var(--ink);font-size:16px;line-height:1.5;margin:0}
   .coming-notify{min-width:230px}
   .coming-notify.confirmed{background:var(--teal);color:var(--chrome-notify-confirmed-text);border-color:var(--teal);cursor:default}
@@ -2345,7 +2344,6 @@
   .brand .tag:lang(ar), .brand .tag:lang(fa), .brand .tag:lang(ur), .brand .tag:lang(hi),
   .card h2 .scope:lang(ar), .card h2 .scope:lang(fa), .card h2 .scope:lang(ur), .card h2 .scope:lang(hi),
   .chain .lbl:lang(ar), .chain .lbl:lang(fa), .chain .lbl:lang(ur), .chain .lbl:lang(hi),
-  .coming-badge:lang(ar), .coming-badge:lang(fa), .coming-badge:lang(ur), .coming-badge:lang(hi),
   .field-label:lang(ar), .field-label:lang(fa), .field-label:lang(ur), .field-label:lang(hi),
   /* CC-LETTER-FORGE F1: the composed word tracks for Latin legibility, so it
      needs the same reset. forge_screen::reflect_direction stamps the BOARD's
@@ -3510,12 +3508,13 @@
       <span class="setup-chip-chev"><span class="icon-slot" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg><span class="ic-emoji">⚙</span></span></span>
     </button>
 
-    <!-- Coming-soon panel: shown (via body.coming-soon) when the selected study
-         language isn't active yet. The interface still switches to that language
-         (uiLang untouched); the play area shows this instead of a round. Its text
-         is filled by game::render_coming_soon. -->
+    <!-- Gated-language panel: shown (via body.coming-soon) when the selected study
+         language is Gated in the registry, which only a build carrying every
+         language (dev, audit, the site) has. The interface still switches to that
+         language (uiLang untouched); the play area shows this instead of a round.
+         game::render_coming_soon fills it with the language's name and the vote
+         button. CC-LAUNCH-EN D3: no badge and no forward-looking notice. -->
     <div class="coming-panel" id="comingPanel" aria-live="polite">
-      <div class="coming-badge" data-i18n="coming.badge">Coming soon</div>
       <p class="coming-notice" id="comingNotice"></p>
       <button class="btn btn-check coming-notify" id="notifyBtn"></button>
     </div>

@@ -14,7 +14,10 @@ const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
 // Which build this pass is exercising. The app config ships every language;
 // the site config ships English. Specs that assert platform behaviour must
 // run against the matching build or they assert nothing.
-const DIST = join(ROOT, process.env.SPELL_WEB === '1' ? 'dist-test-web' : 'dist-test');
+// SPELL_RELEASE_LANGS=1 serves the release-language-profile app build
+// (CC-LAUNCH-EN Phase B), built by `SPELL_RELEASE_LANGS=1 bash scripts/build-web-test.sh`.
+const DIST = join(ROOT, process.env.SPELL_WEB === '1' ? 'dist-test-web'
+  : process.env.SPELL_RELEASE_LANGS === '1' ? 'dist-test-release' : 'dist-test');
 export const IS_WEB_BUILD = process.env.SPELL_WEB === '1';
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.png': 'image/png', '.mjs': 'text/javascript' };

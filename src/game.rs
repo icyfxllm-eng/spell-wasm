@@ -277,13 +277,24 @@ pub fn tier_for_streak(streak: u32) -> &'static str {
     }
 }
 
-/// Show the coming-soon panel for a not-yet-active study language (registry):
-/// fills the localized notice + the Notify Me button (confirmed if already
-/// tapped on this device) and hides the play area via `body.coming-soon`. The
-/// interface language is switched separately by the caller (uiLang untouched).
+/// Show the coming-soon panel for a Gated study language (registry): names the
+/// language, fills the Notify Me button (confirmed if already tapped on this
+/// device) and hides the play area via `body.coming-soon`. The interface
+/// language is switched separately by the caller (uiLang untouched). Only a
+/// build that carries every language has a Gated one; the release profile has
+/// none, so this panel cannot render there. CC-LAUNCH-EN D3 removed its
+/// "Coming soon" badge and "coming back soon" notice: it names the language and
+/// says nothing about the future.
 pub fn render_coming_soon(lang: &str) {
+    // CC-LAUNCH-EN D3: a Hidden language never gets a coming-soon panel. No
+    // caller should get here with one (the pickers never list it), so this is
+    // the backstop, not the route.
+    if !crate::consts::is_listed_lang(lang) {
+        clear_coming_soon();
+        return;
+    }
     let name = crate::consts::BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, n, _, _)| *n).unwrap_or(lang);
-    dom::set_text("comingNotice", &crate::i18n::tp("coming.notice", &[("lang", name)]));
+    dom::set_text("comingNotice", name);
     let done = crate::notify::has(lang);
     dom::set_text("notifyBtn", &crate::i18n::t(if done { "coming.confirmed" } else { "coming.notify" }));
     dom::toggle_class("notifyBtn", "confirmed", done);
@@ -938,13 +949,13 @@ pub fn update_setup_chip(app: &App) {
 pub fn build_source_options(app: &App) {
     let s = app.borrow();
     let mut opts = String::new();
-    // NOTE: play-gating of coming-soon languages in the picker is intentionally
-    // NOT applied here yet — langSel currently drives BOTH the study language and
-    // the UI language (home-regroup unification), so disabling coming-soon here
-    // would also strand UI-language selection, which this feature must leave
-    // untouched. Pending the study/UI separation decision. Registry is the source
-    // of truth (consts::is_active_lang) once that lands.
-    for (code, name, _status, _) in crate::consts::BUILTIN_LANGS {
+    // NOTE: play-gating of coming-soon (Gated) languages in the picker is
+    // intentionally NOT applied here — langSel currently drives BOTH the study
+    // language and the UI language (home-regroup unification), so disabling a
+    // Gated row would also strand UI-language selection. A Hidden language is
+    // different: it is on no surface at all (CC-LAUNCH-EN D3), so its row is not
+    // built. In the release profile that leaves English alone.
+    for (code, name, _status, _) in crate::consts::listed_langs() {
         opts.push_str(&format!("<option value=\"{}\">{}</option>", code, name));
     }
     if !s.custom.words.is_empty() {

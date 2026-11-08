@@ -8,7 +8,8 @@
 //! REVIEW-GATED: reachable only via the hidden `spellRacingOpen` entry until
 //! activation. The shipped `ghost_racing` mode is untouched. Starting a live race
 //! (wiring the engine into the spelling loop, `game.rs`) is the remaining Phase 5
-//! integration — Start currently surfaces `racing.soon`.
+//! integration. (Its old placeholder string was removed by CC-LAUNCH-EN D3; it
+//! had no call site.)
 //!
 //! No Climb/shield references (D2).
 

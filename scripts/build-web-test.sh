@@ -10,12 +10,20 @@ ROOT="$(pwd)"
 # SPELL_WEB=1 builds the SITE configuration (English only) into its own dir,
 # so the platform-specific specs run against the platform they describe
 # instead of asserting web behaviour against an app build.
+#
+# SPELL_RELEASE_LANGS=1 builds the app with the RELEASE language profile
+# (CC-LAUNCH-EN Phase B: English only, every other language Hidden) into
+# dist-test-release/, for the release-langs spec. The default app test build
+# adds `all_langs`, so the rest of the suite keeps every language.
 if [ "${SPELL_WEB:-0}" = "1" ]; then
   DIST="$ROOT/dist-test-web"
   EXTRA="--features web"
+elif [ "${SPELL_RELEASE_LANGS:-0}" = "1" ]; then
+  DIST="$ROOT/dist-test-release"
+  EXTRA=""
 else
   DIST="$ROOT/dist-test"
-  EXTRA=""
+  EXTRA="--features all_langs"
 fi
 
 echo "==> cargo build (release, wasm32, --features \"testseam dev_preview\" $EXTRA)"

@@ -382,7 +382,7 @@ for k in tgt_json:
     if k not in en_json:
         add(6, "warning", "orphan-key", f"src/i18n/locales/{lang}.json", k, "key in target not in en", "remove or add to en")
 # recent-feature sweep: confirm the newest strings exist
-RECENT = ["coming.badge", "coming.notice", "coming.notify", "top.headToHead", "settings.kid", "mode.tricky_words.title", "share.button"]
+RECENT = ["coming.notify", "top.headToHead", "settings.kid", "mode.tricky_words.title", "share.button"]
 for k in RECENT:
     if k in en_json and k not in tgt_json:
         add(6, "critical", "missing-recent", f"src/i18n/locales/{lang}.json", k, "recent-feature key missing", "add translation")

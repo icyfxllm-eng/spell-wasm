@@ -325,8 +325,11 @@ pub fn start() -> Result<(), JsValue> {
     // untouched). Deferred to the study/UI separation decision.
     state.lang = match state.last_lang.clone() {
         Some(l) if l == MINE && !state.custom.words.is_empty() => MINE.to_string(),
-        Some(l) if consts::is_builtin_lang(&l) => l,
-        _ => i18n::device_lang().unwrap_or_else(|| EN.to_string()),
+        // CC-LAUNCH-EN Phase B: a saved or device language must still be LISTED
+        // (not Hidden) to be restored; otherwise the session opens in English.
+        // The interface language is resolved separately by i18n::init (I3.3).
+        Some(l) if consts::is_listed_lang(&l) => l,
+        _ => i18n::device_lang().filter(|l| consts::is_listed_lang(l)).unwrap_or_else(|| EN.to_string()),
     };
     // A per-language audit build opens in the language under review, whatever
     // the device language or an earlier session saved.
@@ -1275,8 +1278,7 @@ fn wire_source_level(app: &App) {
 
 fn build_import_lang_options(app: &App) {
     let s = app.borrow();
-    let opts: String = words::LANGUAGES
-        .iter()
+    let opts: String = words::speak_in_languages()
         .map(|(_, l)| format!("<option value=\"{}\">{}</option>", l.code, dom::escape_html(l.name)))
         .collect();
     dom::set_html("importLang", &opts);
@@ -1532,8 +1534,9 @@ async fn lang_hint(words: &[String], speak_lang: &str) -> Option<String> {
     if !supported || confidence < 0.7 || lang == speak_lang {
         return None;
     }
-    // Only hint toward a language the app actually has.
-    let name = consts::BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, n, _, _)| *n)?;
+    // Only hint toward a language the app actually has, and lists (a Hidden
+    // language is never named on a surface, CC-LAUNCH-EN D3).
+    let name = consts::listed_langs().find(|(c, _, _, _)| *c == lang).map(|(_, n, _, _)| *n)?;
     Some(i18n::tp("import.langHint", &[("lang", name)]))
     }
 

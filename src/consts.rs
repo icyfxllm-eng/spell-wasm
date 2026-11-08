@@ -60,17 +60,53 @@ pub const FA: &str = "fa";
 /// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
 /// makes it fully supported (audio + spelling). `MINE`/`REVIEW` aren't here.
 /// Availability of a study language. THE single source of truth (see
-/// `BUILTIN_LANGS`): `Active` = auditable + playable now; `ComingSoon` = visible
-/// roadmap, gated from play until it passes native-speaker audit. Every surface
-/// that lists / starts / routes to a language reads this — no scattered
-/// per-language checks. Deactivated languages keep all their assets + user data;
-/// reactivating is a one-line status flip.
+/// `BUILTIN_LANGS`). Every surface that lists / starts / routes to a language
+/// reads this — no scattered per-language checks. Deactivated languages keep all
+/// their assets + user data; reactivating is a one-line status flip.
+///
+/// * `Active` — auditable + playable now.
+/// * `Gated` — listed, but gated from play until it passes native-speaker audit
+///   (the coming-soon panel). Only builds that carry every language have one.
+/// * `Hidden` — on NO surface: no picker row, no tile, no greyed row, no
+///   coming-soon panel (CC-LAUNCH-EN D3). Not playable, not mentioned.
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum LangStatus {
     Active,
-    ComingSoon,
+    Gated,
+    Hidden,
 }
-use LangStatus::{Active, ComingSoon};
+use LangStatus::{Active, Gated, Hidden};
+
+/// CC-LAUNCH-EN Phase B: whether this binary carries the RELEASE language
+/// profile, in which English is the only language and every other one is
+/// [`Hidden`]. Build-time only, by design: no flag, local-storage value or
+/// remote kill file (src/killflags.rs) is read here, so nothing at run time can
+/// turn a Hidden language back on. The release profile is the DEFAULT (no
+/// feature), so a store build fails closed.
+///
+/// These builds carry every language instead, each at its authored status:
+/// * `all_langs` — dev and e2e builds (scripts/build-web-dev.sh,
+///   scripts/build-web-test.sh), so the suite keeps exercising every language.
+/// * `audit_preview` — the native-speaker audit builds.
+/// * `web` — spellgame.net keeps its own English-only rule in
+///   [`is_active_lang`] (other languages as coming-soon tiles) until the
+///   separate web-gating item (D7) is built. This profile does not change it.
+pub const RELEASE_LANG_PROFILE: bool = !cfg!(any(feature = "all_langs", feature = "audit_preview", feature = "web"));
+
+/// A registry row the English launch ships: its authored status in every build.
+const fn launch(s: LangStatus) -> LangStatus {
+    s
+}
+
+/// A registry row the English launch does not ship: [`Hidden`] in the release
+/// profile, its authored status in builds that carry every language.
+const fn later(s: LangStatus) -> LangStatus {
+    if RELEASE_LANG_PROFILE {
+        Hidden
+    } else {
+        s
+    }
+}
 
 /// Which edition this binary IS (CC-EDITIONS D1): exactly two, forever. A third
 /// requires a new decision from Eric — an instruction file asking for a `gov`
@@ -176,29 +212,31 @@ use Direction::{Ltr, Rtl};
 ///   word into per-letter elements.
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
 const LANGS_BASE: [(&str, &str, LangStatus, Direction); 16] = [
-    (EN, "English", Active, Ltr),
-    (ES, "Espa\u{f1}ol", Active, Ltr),
-    (FR, "Fran\u{e7}ais", Active, Ltr),
-    (DE, "Deutsch", Active, Ltr),
-    (PT, "Portugu\u{ea}s", Active, Ltr),
-    (PL, "Polski", Active, Ltr),
-    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", Active, Ltr),
-    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", Active, Ltr),
-    (JA, "\u{65e5}\u{672c}\u{8a9e}", Active, Ltr),
-    (FIL, "Filipino", Active, Ltr),
-    (ZH, "\u{4e2d}\u{6587}", Active, Ltr),
-    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", Active, Ltr),
-    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
-    (SW, "Kiswahili", Active, Ltr),
-    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", Active, Ltr),
-    // ComingSoon by Eric's ruling (2026-10-25): "keep persian non visable from the app until its
+    (EN, "English", launch(Active), Ltr),
+    (ES, "Espa\u{f1}ol", later(Active), Ltr),
+    (FR, "Fran\u{e7}ais", later(Active), Ltr),
+    (DE, "Deutsch", later(Active), Ltr),
+    (PT, "Portugu\u{ea}s", later(Active), Ltr),
+    (PL, "Polski", later(Active), Ltr),
+    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", later(Active), Ltr),
+    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", later(Active), Ltr),
+    (JA, "\u{65e5}\u{672c}\u{8a9e}", later(Active), Ltr),
+    (FIL, "Filipino", later(Active), Ltr),
+    (ZH, "\u{4e2d}\u{6587}", later(Active), Ltr),
+    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", later(Active), Ltr),
+    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", later(Active), Rtl),
+    (SW, "Kiswahili", later(Active), Ltr),
+    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", later(Active), Ltr),
+    // Gated (coming soon) by Eric's ruling (2026-10-25): "keep persian non visable from the app until its
     // ready" -- a coming-soon tile, not playable in the app, until its audio is warmed and its audit
     // is done. audit_preview still unlocks it, so dist-audit-fa keeps working for the auditors.
-    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, Rtl),
+    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", later(Gated), Rtl),
 ];
 
-/// THE registry. Fifteen are Active: the APP ships every language but Persian, which is
-/// ComingSoon (a teaser tile) until it is ready.
+/// THE registry. In the RELEASE profile ([`RELEASE_LANG_PROFILE`], CC-LAUNCH-EN)
+/// English is Active and the other fifteen are Hidden. In builds that carry
+/// every language, fifteen are Active and Persian is Gated (a teaser tile) until
+/// it is ready.
 ///
 /// The web is a different question and it is answered in exactly one place,
 /// [`is_active_lang`], via the `web` cargo feature -- not by a second
@@ -320,9 +358,29 @@ pub fn practice(lang: &str) -> bool {
     is_builtin_lang(lang) && lang != FA
 }
 
-/// A language's availability status (ComingSoon for anything not in the registry).
+/// A language's availability status ([`Hidden`] for anything not in the
+/// registry: an unknown code is on no surface).
 pub fn lang_status(lang: &str) -> LangStatus {
-    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(ComingSoon)
+    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(Hidden)
+}
+
+/// Whether `lang` may appear on a surface at all: a picker row, a tile, a hint,
+/// or the coming-soon panel. False for [`Hidden`] and for unknown codes. Every
+/// language picker filters through this (or through [`is_active_lang`], which
+/// implies it).
+pub fn is_listed_lang(lang: &str) -> bool {
+    lang_status(lang) != Hidden
+}
+
+/// A registry language this build Hides. Saved data in one (a miss, a drill
+/// entry from an earlier build) is kept but never served.
+pub fn is_hidden_builtin(lang: &str) -> bool {
+    is_builtin_lang(lang) && lang_status(lang) == Hidden
+}
+
+/// The registry rows a surface may list, in registry order.
+pub fn listed_langs() -> impl Iterator<Item = &'static (&'static str, &'static str, LangStatus, Direction)> {
+    BUILTIN_LANGS.iter().filter(|(c, _, _, _)| is_listed_lang(c))
 }
 
 /// CC-PHOTO-IMPORT Phase 0 — can Vision's on-device text recognizer read this
@@ -397,13 +455,15 @@ pub fn is_active_lang(lang: &str) -> bool {
     if let Some(only) = audit_lang() {
         return lang == only && is_builtin_lang(lang);
     }
-    if lang_status(lang) == Active {
-        return true;
+    match lang_status(lang) {
+        Active => true,
+        // Audit preview only: a registered Gated language is playable, so a native
+        // speaker can review it. Compile-time — the production build (feature off)
+        // never takes this branch, so Gated stays gated exactly as before.
+        Gated => cfg!(feature = "audit_preview") && is_builtin_lang(lang),
+        // Hidden is never playable, in any build.
+        Hidden => false,
     }
-    // Audit preview only: a registered ComingSoon language is playable, so a native
-    // speaker can review it. Compile-time — the production build (feature off) never
-    // takes this branch, so ComingSoon stays gated exactly as before.
-    cfg!(feature = "audit_preview") && is_builtin_lang(lang)
 }
 
 /// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).
@@ -508,17 +568,19 @@ pub const ACHIEVEMENTS: [Achievement; 7] = [
 #[cfg(test)]
 mod registry_tests {
     use super::*;
-    // Production invariant: audit_preview deliberately activates ComingSoon
+    // Production invariant: audit_preview deliberately activates Gated
     // languages so they can be reviewed, so this holds only with the feature off.
+    // Runs under `cargo test --lib --features all_langs`.
+    #[cfg(feature = "all_langs")]
     #[cfg(not(feature = "audit_preview"))]
     #[cfg(not(feature = "web"))]
     #[test]
-    fn every_registered_language_is_active_in_the_app() {
-        // The app ships every language (Eric, 2026-07-31) except the ones the
-        // registry marks ComingSoon: today that is Persian alone (Eric,
-        // 2026-10-25, "non visable from the app until its ready"). The web
-        // does not, and that is asserted separately below under the `web`
-        // feature -- deliberately two tests, because one test that changes its
+    fn every_registered_language_is_active_in_the_all_langs_build() {
+        // A build that carries every language (dev, e2e) plays every one of them
+        // except the ones the registry marks Gated: today that is Persian alone
+        // (Eric, 2026-10-25, "non visable from the app until its ready"). The
+        // release profile and the web do not, and each is asserted separately
+        // -- deliberately separate tests, because one test that changes its
         // expectation based on cfg proves whichever config you happened to run.
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
@@ -526,9 +588,47 @@ mod registry_tests {
             .map(|(c, _, _, _)| *c)
             .collect();
         let gated: Vec<&str> = BUILTIN_LANGS.iter().filter(|(c, _, _, _)| !is_active_lang(c)).map(|(c, _, _, _)| *c).collect();
-        assert_eq!(gated, vec!["fa"], "the app gates exactly Persian, which is ComingSoon");
-        assert_eq!(lang_status(FA), ComingSoon);
+        assert_eq!(gated, vec!["fa"], "the app gates exactly Persian, which is Gated");
+        assert_eq!(lang_status(FA), Gated);
         assert!(active.contains(&"en"));
+        assert!(!RELEASE_LANG_PROFILE);
+        assert_eq!(listed_langs().count(), 16, "every language is listed, Persian as a tile");
+    }
+
+    /// CC-LAUNCH-EN I3.1: in the RELEASE profile (no all_langs / audit_preview /
+    /// web feature: what `cargo test --lib` and the store build compile), no play
+    /// surface can select a language other than English. Every chooser a player
+    /// can reach reads one of the accessors below, so pinning them pins the
+    /// surfaces: the main picker (`listed_langs`), both "Speak in" pickers
+    /// (`words::speak_in_languages`), the Translate pickers
+    /// (`translate_screen::picker_languages`), and every play gate
+    /// (`is_active_lang`: Online, Daily, Impossible/Mix, packs, racing).
+    #[cfg(not(any(feature = "all_langs", feature = "audit_preview", feature = "web")))]
+    #[test]
+    fn i3_1_the_release_profile_plays_english_only() {
+        assert!(RELEASE_LANG_PROFILE);
+        let active: Vec<&str> = BUILTIN_LANGS.iter().map(|r| r.0).filter(|c| is_active_lang(c)).collect();
+        assert_eq!(active, vec![EN], "English is the only playable language");
+        let listed: Vec<&str> = listed_langs().map(|r| r.0).collect();
+        assert_eq!(listed, vec![EN], "English is the only language any surface lists");
+        for (code, _, status, _) in BUILTIN_LANGS.iter().filter(|r| r.0 != EN) {
+            assert_eq!(*status, Hidden, "{code} must be Hidden, not Gated (D3: no coming-soon rows)");
+            assert!(!is_listed_lang(code) && !is_active_lang(code) && is_hidden_builtin(code), "{code}");
+        }
+        assert_eq!(lang_status(EN), Active);
+        assert!(!is_hidden_builtin(EN) && !is_hidden_builtin(MINE), "My Words is not a registry language");
+        // Nothing hides by removal: the rows, their assets and user data stay.
+        assert_eq!(BUILTIN_LANGS.len(), 16);
+        // An unknown code is on no surface either.
+        assert_eq!(lang_status("xx"), Hidden);
+        assert!(!is_listed_lang("xx"));
+        // The "Speak in" pickers offer English alone (the voice-only ro/id/ca rows too are gone).
+        let speak: Vec<&str> = crate::words::speak_in_languages().map(|(k, _)| *k).collect();
+        assert_eq!(speak, vec![EN]);
+        // The Translate pickers can list no language but English, whatever the pair or device says.
+        for (pair, home) in [(("en", "es"), Some("ko")), (("ko", "ja"), Some("zh")), (("en", ""), None)] {
+            assert_eq!(crate::translate_screen::picker_languages(pair, home), vec![EN], "{pair:?} {home:?}");
+        }
     }
 
     /// The site is English-only. Runs under `cargo test --features web`.

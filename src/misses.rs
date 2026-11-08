@@ -37,7 +37,9 @@ pub fn due_misses(state: &AppState) -> Vec<usize> {
         .misses
         .iter()
         .enumerate()
-        .filter(|(_, m)| m.due <= now)
+        // CC-LAUNCH-EN Phase B: an entry saved in a language this build Hides
+        // stays stored but is never served (I3.1).
+        .filter(|(_, m)| m.due <= now && !crate::consts::is_hidden_builtin(&m.lang))
         .map(|(i, _)| i)
         .collect()
 }

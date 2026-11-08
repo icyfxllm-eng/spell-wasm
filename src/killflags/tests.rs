@@ -127,3 +127,23 @@ fn message_format_is_pinned() {
     assert_eq!(message("T", &[]), "spell-kill-v1\nT\n");
     assert!(include_str!("../../tools/killflags/sign.py").contains("\"spell-kill-v1\\n\""));
 }
+
+/// CC-LAUNCH-EN Phase B: the language profile is build-time only. A signed file naming a language
+/// (as a kill, or in an "on" list it never reads) cannot move a Hidden language off Hidden.
+#[cfg(not(any(feature = "all_langs", feature = "audit_preview", feature = "web")))]
+#[test]
+fn the_file_cannot_unhide_a_language() {
+    use crate::consts::{is_active_lang, is_listed_lang, lang_status, LangStatus};
+    reset();
+    let (sk, pk) = test_key();
+    let mut v: serde_json::Value = serde_json::from_str(&signed(&sk, "2026-11-07T00:00:00Z", &["lang_ko"])).unwrap();
+    v["on"] = serde_json::json!(["ko", "lang_ko", "all_langs"]);
+    v["unhide"] = serde_json::json!(["ko", "es"]);
+    assert!(adopt_with(&v.to_string(), &pk));
+    for lang in ["ko", "es", "fa"] {
+        assert_eq!(lang_status(lang), LangStatus::Hidden, "{lang}");
+        assert!(!is_active_lang(lang) && !is_listed_lang(lang), "{lang}");
+    }
+    assert!(is_active_lang("en"), "and English stays playable");
+    reset();
+}

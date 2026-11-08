@@ -217,7 +217,7 @@ fn serve_bank(app: &App, tier: Tier) -> bool {
         }
         None => {
             // Never a dead button: say so. (The 10,000-seed sweep serves every seed.)
-            note(&t("ws.avail"));
+            note(&t("mode.unavailable"));
             false
         }
     }
@@ -627,7 +627,7 @@ pub fn open_list(app: &App, list_id: &str) -> bool {
         (s.lang.clone(), s.kid)
     };
     if !playable(&lang) {
-        dom::show_toast(&t("ws.avail"));
+        dom::show_toast(&t("mode.unavailable"));
         return false;
     }
     let lists = crate::word_lists::load();

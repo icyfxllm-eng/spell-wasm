@@ -21,6 +21,7 @@ import * as placement from './specs/placement.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
+import * as releaseLangs from './specs/release-langs.mjs';
 import * as ghost from './specs/ghost.mjs';
 import * as spellaloud from './specs/spellaloud.mjs';
 import * as submitAdvance from './specs/submit-advance.mjs';
@@ -128,6 +129,7 @@ const SPECS = [
   ['impossible', impossible],
   ['translate-screen', translateScreen],
   ['coming', coming],
+  ['release-langs', releaseLangs],
   ['ghost', ghost],
   ['spellaloud', spellaloud],
   ['submit-advance', submitAdvance],
@@ -186,6 +188,12 @@ const WEB_ONLY_SPECS = new Set(['coming', 'picture-wall', 'boardgame-wall']);
 // one side only is half a check.
 const BOTH_SPECS = new Set(['platform', 'human-audio']);
 const IS_WEB = process.env.SPELL_WEB === '1';
+// CC-LAUNCH-EN Phase B: specs about the RELEASE language profile (English only,
+// every other language Hidden) run only against dist-test-release/
+// (SPELL_RELEASE_LANGS=1), and that build runs nothing else: the rest of the
+// suite exercises other languages and needs the all_langs build.
+const RELEASE_ONLY_SPECS = new Set(['release-langs']);
+const IS_RELEASE_LANGS = process.env.SPELL_RELEASE_LANGS === '1';
 
 const { server, base } = await startServer();
 const browser = await launch();
@@ -201,6 +209,10 @@ try {
   const only = process.argv.slice(2).filter((a) => !a.startsWith('-'));
   for (const [name, ...mods] of SPECS) {
     if (only.length && !only.includes(name)) continue;
+    if (RELEASE_ONLY_SPECS.has(name) !== IS_RELEASE_LANGS) {
+      process.stdout.write(`\n▶ ${name} — skipped (runs in the ${RELEASE_ONLY_SPECS.has(name) ? 'release-langs' : 'all_langs'} build)\n`);
+      continue;
+    }
     if (!BOTH_SPECS.has(name) && WEB_ONLY_SPECS.has(name) !== IS_WEB) {
       // Announced, never silent. A spec that vanishes without a word is how
       // the twelve-day language regression stayed invisible.
@@ -222,7 +234,8 @@ const total = suites.reduce((n, s) => n + s.results.length, 0);
 const failed = suites.reduce((n, s) => n + s.results.filter((r) => !r.ok).length, 0);
 
 // Merged report artifact.
-const lines = [`# TEST-REPORT — Web E2E (${IS_WEB ? 'site' : 'app'} build)`, '', `**${total - failed}/${total} passed** across ${suites.length} areas.`, ''];
+const CONFIG = IS_WEB ? 'site' : IS_RELEASE_LANGS ? 'release-langs' : 'app';
+const lines = [`# TEST-REPORT — Web E2E (${CONFIG} build)`, '', `**${total - failed}/${total} passed** across ${suites.length} areas.`, ''];
 for (const s of suites) {
   const f = s.results.filter((r) => !r.ok).length;
   lines.push(`## ${s.name} — ${s.results.length - f}/${s.results.length}`);
@@ -233,7 +246,7 @@ for (const s of suites) {
 // so the site's 11 results silently overwrote the app's 80 and nobody
 // could see WHICH app specs ran — which is how a placement spec
 // asserting an invisible card stayed invisible through the Aug 6 audit.
-const REPORT = `TEST-REPORT-${IS_WEB ? 'site' : 'app'}.md`;
+const REPORT = `TEST-REPORT-${CONFIG}.md`;
 writeFileSync(join(ROOT, 'tests', 'e2e', REPORT), lines.join('\n'));
 
 process.stdout.write(`\n${failed ? '❌' : '✅'} E2E: ${total - failed}/${total} passed. Report → tests/e2e/${REPORT}\n`);

@@ -47,6 +47,11 @@ dev_preview = ["theme_lab"]
 # RTL_SUPPORTED stays false, the languages stay gated, and word_data_audit is not
 # compiled in. Produces dist-audit/ via scripts/build-web-audit.sh.
 audit_preview = []
+# CC-LAUNCH-EN Phase B: carry EVERY play language at its authored status. Off,
+# the binary carries the release profile: English Active, every other language
+# Hidden (consts::RELEASE_LANG_PROFILE). Build-time only, so no flag or remote
+# file can un-hide a language. Dev and e2e builds turn it on; store builds never.
+all_langs = []
 # The spellgame.net build. English only (Eric, 2026-07-31): the site is the
 # free English experience, the app is where every language lives. Off by
 # default so `npm run build` still produces the APP artifact.

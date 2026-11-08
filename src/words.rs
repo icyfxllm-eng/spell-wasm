@@ -49,6 +49,15 @@ pub const LANGUAGES: [(&str, LangInfo); 19] = [
     ("ca", LangInfo { name: "Catal\u{e0}", code: "ca-ES" }),
 ];
 
+/// The "Speak in" rows the My Words importers offer (typed import and photo
+/// import). In the release language profile (CC-LAUNCH-EN Phase B) that is the
+/// rows whose language is listed in the registry, which is English alone; a
+/// build that carries every language offers the whole table, including the
+/// voice-only rows (ro, id, ca) the registry does not carry.
+pub fn speak_in_languages() -> impl Iterator<Item = &'static (&'static str, LangInfo)> {
+    LANGUAGES.iter().filter(|(k, _)| !crate::consts::RELEASE_LANG_PROFILE || crate::consts::is_listed_lang(k))
+}
+
 /// English's CURRENT bank, whatever en.retier says. The modes whose boards, seeds and goldens are pinned to
 /// this bank (Spelluzzle, Spell Search, WordCross, Randospell) read it through [`tier_for_fixed`], so that
 /// turning the re-tier on changes Normal practice, the Daily and the Climb and nothing else

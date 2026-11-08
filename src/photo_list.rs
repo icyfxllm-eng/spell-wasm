@@ -608,8 +608,7 @@ fn close() {
 /// the typed importer uses.
 fn build_lang_options(app: &App) {
     let s = app.borrow();
-    let opts: String = crate::words::LANGUAGES
-        .iter()
+    let opts: String = crate::words::speak_in_languages()
         .map(|(_, l)| format!("<option value=\"{}\">{}</option>", l.code, dom::escape_html(l.name)))
         .collect();
     dom::set_html("photoLang", &opts);

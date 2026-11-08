@@ -328,7 +328,10 @@ fn spell_cross_playable(_lang: &str) -> bool {
 /// live where the language registry's `voice_spell` flag holds — every registered
 /// language since the mic-everywhere ruling (2026-07-27) except ko, withdrawn
 /// 2026-10-03 because Korean voice spelling cannot compose a syllable; elsewhere
-/// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
+/// the drawer leaves the mode out (src/drawer.rs filters on this). The returned
+/// key names the reason; nothing renders it as a tile today, and CC-LAUNCH-EN
+/// D3 removed the old "coming soon" keys, so every per-language reason is the
+/// one neutral `mode.unavailable`.
 pub fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
         // Reachable only for an UNREGISTERED code now that voice_spell covers the
@@ -336,21 +339,21 @@ pub fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
         Some("tools.spellaloud.avail")
     } else if m.id == "practice" && !crate::consts::practice(lang) {
         // D7: curriculum drafted but not yet cleared for this language.
-        Some("tools.practice.avail")
+        Some("mode.unavailable")
     } else if m.id == "spelldoku" && !spelldoku_playable(lang) {
         // CC-SPELLDOKU D3: no servable number-word table for this language in
         // this build -- the tile says so instead of opening onto nothing.
-        Some("sd.avail")
+        Some("mode.unavailable")
     } else if m.id == "spell_search" && !spell_search_playable(lang) {
         // CC-WORDGRID v1: outside the launch set (ko and zh never, D4).
-        Some("ws.avail")
+        Some("mode.unavailable")
     } else if m.id == "spell_cross" && !spell_cross_playable(lang) {
         // CC-WORDGRID v1: outside the launch set (ko and zh never, D4).
-        Some("xw.avail")
+        Some("mode.unavailable")
     } else if m.id == "def_match" && !crate::consts::def_match(lang) {
         // Pool not landed/pinned for this language yet (Invariant 8) — a
         // non-tappable teaser, never a dead button.
-        Some("tools.defmatch.avail")
+        Some("mode.unavailable")
     } else {
         None
     }

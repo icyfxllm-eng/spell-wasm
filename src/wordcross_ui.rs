@@ -245,7 +245,7 @@ pub fn open_list(app: &App, list_id: &str) -> bool {
         (s.lang.clone(), s.kid)
     };
     if !playable(&lang) {
-        dom::show_toast(&t("ws.avail"));
+        dom::show_toast(&t("mode.unavailable"));
         return false;
     }
     let lists = crate::word_lists::load();

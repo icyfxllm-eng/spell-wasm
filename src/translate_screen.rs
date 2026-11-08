@@ -59,7 +59,9 @@ pub fn translit_default_on(ui_lang: &str, target_lang: &str) -> bool {
 /// Entitlement does not filter this (D3, signed); a gloss-dark language is
 /// simply absent (I8: absent or present, never locked).
 pub fn picker_languages(pair: (&str, &str), home: Option<&str>) -> Vec<&'static str> {
-    let all = crate::translate::glossed_languages();
+    // CC-LAUNCH-EN D3: a Hidden language is no picker row here either.
+    let all: Vec<&'static str> =
+        crate::translate::glossed_languages().into_iter().filter(|l| crate::consts::is_listed_lang(l)).collect();
     let endonym = |l: &str| {
         crate::consts::BUILTIN_LANGS
             .iter()

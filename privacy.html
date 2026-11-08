@@ -35,6 +35,11 @@
     border-radius: 14px; padding: 14px 18px; margin: 18px 0;
   }
   code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 5px; font-size: .9em; }
+  .flow { width: 100%; border-collapse: collapse; margin: 14px 0 6px; font-size: .9rem; }
+  .flow th, .flow td { text-align: start; vertical-align: top; padding: 8px 8px; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .flow th { color: #ffd98a; font-weight: 600; }
+  .flow td:first-child { color: #fff; }
+  .flow-wrap { overflow-x: auto; }
   footer { margin-top: 48px; color: #8b83a8; font-size: .85rem; }
   footer a { color: #8b83a8; }
   /* token-exempt:end */
@@ -46,7 +51,7 @@
     <div class="orb">S</div>
     <h1>Spell — Privacy Policy</h1>
   </header>
-  <p class="sub">Effective 18 September 2026</p>
+  <p class="sub">Effective 7 November 2026</p>
 
   <p>Spell is a spelling game published by the maker of <a href="https://spellgame.net">spellgame.net</a>.
      We built Spell to be private by design. This policy explains, in plain language, exactly what
@@ -57,10 +62,33 @@
     information — your progress stays on your device. The only time we collect personal data is if you
     <em>choose</em> to create an account to compete on the online leaderboard ("The Climb"). We never
     show ads, and we use no third-party analytics or tracking. A few features do need our server to work
-    — checking English answers, spelling out loud in some languages, and voting for a coming-soon
+    — checking English answers, spelling out loud on some devices, and (on the website) voting for a
     language — and each is explained below, including exactly what is sent and what is kept. If you leave
     "Help improve SpellGame" on, the app also sends us anonymous crash and speed reports. They never
     include your words, your answers, or anything about you, and you can turn them off in Settings.
+  </div>
+
+
+  <h2>At a glance: what leaves your device</h2>
+  <p>Each row is one kind of information. "Our server" means <code>spellgame.net</code>, reached over
+     HTTPS through Cloudflare. The sections below give the detail.</p>
+  <div class="flow-wrap">
+  <table class="flow">
+    <thead><tr><th>Information</th><th>Leaves your device?</th><th>Where it goes</th><th>Why</th><th>How to turn it off</th></tr></thead>
+    <tbody>
+      <tr><td>Your progress, statistics, settings and word lists</td><td>No</td><td>Stays on your device</td><td>So the game remembers you</td><td>Delete the app or clear its data</td></tr>
+      <tr><td>The word being played</td><td>Yes</td><td>Our server, which makes the sound with Google Cloud Text-to-Speech (Microsoft Azure for Swahili) and looks up definitions</td><td>To play the word's sound, its definition and example sentence</td><td>It can't be turned off; the game needs it. Words with a built-in recording don't need it</td></tr>
+      <tr><td>The English word and the answer you typed</td><td>Yes</td><td>Our server, which replies "correct" or "not correct" and keeps nothing</td><td>To check English answers</td><td>It can't be turned off. Offline, the answer is checked on your device</td></tr>
+      <tr><td>Crash and speed reports</td><td>Yes, unless you turn them off</td><td>Our reporting service on Cloudflare</td><td>To find and fix problems</td><td>Settings → Help improve SpellGame (in Spell Jr, behind the parent check). The app also asks our server once per launch whether reports are switched off; that request sends nothing about you</td></tr>
+      <tr><td>Climb account: email, username, password, leaderboard results</td><td>Only if you create an account</td><td>Our server, plus an email provider and Cloudflare Turnstile at sign-up</td><td>To run the leaderboard</td><td>Don't create one, or use "Delete account". Not offered in Spell Jr</td></tr>
+      <tr><td>Your voice, when you spell out loud</td><td>No, normally</td><td>Recognized on your iPhone or iPad</td><td>To hear your spelling</td><td>Don't use the microphone</td></tr>
+      <tr><td>Short voice clips, server option</td><td>Only if you tap "Use the internet"</td><td>Our server, then Google Cloud Speech-to-Text; not saved</td><td>For devices that can't recognize speech themselves</td><td>Tap "No thanks" on the one-time screen. Never offered in Spell Jr or the Education edition</td></tr>
+      <tr><td>A photo of a spelling list</td><td>No</td><td>Read on your device</td><td>To make a word list</td><td>Don't use the camera</td></tr>
+      <tr><td>Progress reports for a grown-up</td><td>Only if you share one</td><td>Wherever you choose in the share sheet</td><td>To share progress</td><td>Don't share it</td></tr>
+      <tr><td>A language vote (website only)</td><td>Only if you tap the button</td><td>Our server: the language code and a random ID</td><td>To count interest in a language</td><td>Don't tap it</td></tr>
+      <tr><td>Downloads: the switch-off file, offline voice packs</td><td>Only the request</td><td>Our server</td><td>To switch a feature off remotely, and to fetch voice packs you ask for</td><td>Voice packs download only when you ask</td></tr>
+    </tbody>
+  </table>
   </div>
 
   <h2>Playing the game — no data collected</h2>
@@ -118,16 +146,16 @@
   <p><strong>Who handles them.</strong> Reports go to our own service, which runs on Cloudflare. No
      analytics or advertising company receives them.</p>
 
-  <h2>Voting for coming-soon languages</h2>
-  <p>When a language is marked "coming soon", you can tap "Vote for this language" to tell us
-     you'd like it. The app then sends our server the language code and a random ID that the app creates on your device the first
-     time you tap. The ID is not your name, email, device name or advertising ID, and it is not linked to
-     a Climb account. We use it only so that repeated taps from the same device count once when we decide
-     which language to finish next. If the app is offline, the tap is saved and sent the next time it
-     starts.</p>
+  <h2>Language votes (website only)</h2>
+  <p>The Spell app plays English and has no language vote. On spellgame.net, choosing a language the
+     site does not play shows a "Vote for this language" button. Tapping it sends our server the
+     language code and a random ID that the site creates in your browser the first time you tap. The ID is
+     not your name, email, device name or advertising ID, and it is not linked to a Climb account. We use
+     it only so that repeated taps from the same browser count once when we count interest in each
+     language. If you are offline, the tap is saved and sent the next time the site opens.</p>
   <p>We keep these IDs, grouped by language, for as long as we are counting interest. Because the ID is
-     random and not connected to you, we can't look up which one is yours. Deleting the app removes the
-     copy on your device. Voting does not sign you up for any email or message; see
+     random and not connected to you, we can't look up which one is yours. Clearing the site's data in your
+     browser removes the copy there. Voting does not sign you up for any email or message; see
      Notifications below.</p>
 
   <h2>The Climb — optional accounts &amp; leaderboard</h2>
@@ -174,8 +202,8 @@
 
   <h2>Notifications</h2>
   <p>If you turn on the daily practice reminder, it is scheduled locally on your device. We do not run a
-     push-notification server and cannot send you messages. Voting for a coming-soon
-     language records your interest (see above) but does not sign you up for any notification.</p>
+     push-notification server and cannot send you messages. Voting for a language on the
+     website records your interest (see above) but does not sign you up for any notification.</p>
 
   <h2>Children's privacy</h2>
   <p>The game itself collects no personal information from anyone, including children. Creating a Climb
