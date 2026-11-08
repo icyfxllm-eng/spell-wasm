@@ -64,7 +64,7 @@
     "_applicationInternalID" : "0",
     "_askToBuyEnabled" : false,
     "_billingGracePeriodEnabled" : false,
-    "_billingIssuesEnabled" : true,
+    "_billingIssuesEnabled" : false,
     "_developerTeamID" : "",
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
