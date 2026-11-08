@@ -20,6 +20,6 @@ Each claim in the store text was checked against main at cbd6f0a9 and the releas
 | Offline Easy audio | **cut** | Easy audio is not bundled yet (F6). |
 | Release notes | "First release" kept | App Store Connect has only version 1.1, REJECTED. No version has been live. |
 
-**Conditional on Phase B.** "No account", "Data Not Collected", "nothing leaves the device" and "speech recognized on the device" are true only once launch-en/phase-b compiles the Climb front door and leaderboard upload, /api/check, telemetry and the Say-It server step out of the release build, and the seam check proves it. This branch ships with or after Phase B, never before.
+**Met by Phase B (6697a93d and cccfc7b4).** "No account", "Data Not Collected", "nothing leaves the device" and "speech recognized on the device" rest on the Phase B compile-outs: the Climb front door and leaderboard upload, /api/check, telemetry and the Say-It server step are absent from both the App Store build and the spellgame.net build. scripts/seam-absence-check.mjs proves it on each dist. This metadata ships together with Phase B.
 
 The Fastfile beta texts (beta_app_description and the beta review notes) dropped "Fully playable offline after first load", which is false because uncached audio needs the server, and now describe the paywall.
