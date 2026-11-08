@@ -109,6 +109,7 @@
 		D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+PhotoList.swift"; sourceTree = "<group>"; };
 		F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeLanguageKitPlugin.swift; sourceTree = "<group>"; };
 		5AE1A0021E57A0E0C0DE0002 /* SpellStorePlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpellStorePlugin.swift; path = StoreKit/SpellStorePlugin.swift; sourceTree = "<group>"; };
+		5AE1A0031E57A0E0C0DE0003 /* SpellGame.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = SpellGame.storekit; path = StoreKit/SpellGame.storekit; sourceTree = "<group>"; };
 		FADE0001000000000000EE01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = App/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		FADE0001000000000000EE02 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = App/es.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -176,6 +177,7 @@
 				50B271D01FEDC1A000F3C39B /* public */,
 				F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */,
 				5AE1A0021E57A0E0C0DE0002 /* SpellStorePlugin.swift */,
+				5AE1A0031E57A0E0C0DE0003 /* SpellGame.storekit */,
 				D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */,
 				A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */,
 				5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */,
