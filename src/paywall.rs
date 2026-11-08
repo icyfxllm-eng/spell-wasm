@@ -88,7 +88,7 @@ fn render(products: &[crate::entitlements_adapter::StoreProduct]) {
         let Some(p) = products.iter().find(|p| p.id == *id) else { continue };
         let label = crate::i18n::tp("paywall.buy", &[("price", &p.display_price)]);
         html.push_str(&format!(
-            "<button class=\"btn btn-check\" data-pw-buy=\"{}\"><strong>{}</strong><br>{}</button>",
+            "<button class=\"btn btn-check\" data-pw-buy=\"{}\"><strong>{}</strong><span>{}</span></button>",
             dom::escape_html(&p.id),
             dom::escape_html(&p.display_name),
             dom::escape_html(&label),
