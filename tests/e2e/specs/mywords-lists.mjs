@@ -252,8 +252,29 @@ export async function run(browser, base, suite) {
       await openScreen(page);
       const text = await page.$eval('#listsBody', (e) => e.innerText);
       assert(/no word lists yet/i.test(text), `the empty state speaks (got "${text}")`);
-      assert(await page.$('[data-l-snap]'), 'Snap a word list');
+      // Snap follows the play screen's camera door (photo_list::available);
+      // a Snap shown without it opens an unwired sheet (the build 315 freeze).
+      const photoDoor = await page.$eval('#photoBtn', (e) => !e.classList.contains('btn-hide'));
+      assert(!!(await page.$('[data-l-snap]')) === photoDoor, `Snap a word list shown iff the photo door is (door ${photoDoor})`);
       assert(await page.$('[data-l-add]'), 'Add words');
+    } finally { await ctx.close(); }
+  });
+
+  // Build 315 freeze: photo_list off (the release value) must not offer Snap,
+  // and the source chooser must never open, so the screen stays usable.
+  await suite.test('mywords_photo_off_has_no_dead_snap_door', async () => {
+    const { ctx, page } = await openApp(browser, base, {
+      lang: 'en',
+      init: () => localStorage.setItem('spell_flag_photo_list', 'off'),
+    });
+    try {
+      await openScreen(page);
+      assert(!(await page.$('[data-l-snap]')), 'no Snap a word list with the photo flag off');
+      // The remaining door still works: Add words opens the import sheet.
+      await page.click('[data-l-add]');
+      await page.waitForSelector('#importScrim.show', { timeout: 4000 });
+      const chooser = await page.$eval('#photoSrcScrim', (e) => e.classList.contains('show'));
+      assert(!chooser, 'the photo source chooser stays closed');
     } finally { await ctx.close(); }
   });
 

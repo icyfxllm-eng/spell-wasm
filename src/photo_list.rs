@@ -43,6 +43,17 @@ pub fn reflect_visibility(app: &App) {
     if !flags::photo_list() {
         return; // button keeps its default `btn-hide`; nothing to show.
     }
+    dom::toggle_class("photoBtn", "btn-hide", !available(app));
+}
+
+/// Whether the photo door may be offered at all: the one rule behind the play
+/// screen's camera button AND the My Words "Snap a word list" door. A door
+/// shown while this is false opens a sheet whose buttons were never wired
+/// (wire() returns early with the flag off), which froze build 315.
+pub fn available(app: &App) -> bool {
+    if !flags::photo_list() {
+        return false;
+    }
     let kid = dom::doc().body().map(|b| b.class_list().contains("kid")).unwrap_or(false);
     // OCR support is judged for the language the import would classify under —
     // the study language, or the saved speak-lang's primary subtag for My Words
@@ -55,18 +66,21 @@ pub fn reflect_visibility(app: &App) {
             s.lang.clone()
         }
     };
-    let show = button_allowed(
+    button_allowed(
         native_lang::supported(),
         kid,
         crate::play_hub::live_entitlements().photo_ocr,
         crate::consts::ocr_support(&study),
-    );
-    dom::toggle_class("photoBtn", "btn-hide", !show);
+    )
 }
 
 /// The camera door: a source chooser (camera or library), both feeding the same
-/// recognition pipeline. Callable from the My Words screen too (F3.4).
+/// recognition pipeline. Callable from the My Words screen too (F3.4). With the
+/// flag off the chooser's buttons are unwired, so it must never open.
 pub fn open_camera() {
+    if !flags::photo_list() {
+        return;
+    }
     dom::add_class("photoSrcScrim", "show");
 }
 

@@ -75,7 +75,7 @@ fn card(l: &word_lists::WordList) -> String {
     )
 }
 
-fn home_html(lists: &Lists) -> String {
+fn home_html(lists: &Lists, snap: bool) -> String {
     let (recent, older) = word_lists::folded(lists, now(), FOLD_AFTER_DAYS);
     let trash = word_lists::recently_deleted(lists);
     let mut html = String::new();
@@ -108,13 +108,21 @@ fn home_html(lists: &Lists) -> String {
             }
         }
     }
-    // The two doors, always reachable: saving words is the point of the screen.
+    // The doors: Add words always; Snap only where the photo door is offered
+    // (photo_list::available), or it opens an unwired sheet and freezes.
+    let snap_btn = if snap {
+        format!(
+            "<button type=\"button\" class=\"btn btn-check\" data-l-snap>{}</button>",
+            esc(&t("lists.snap"))
+        )
+    } else {
+        String::new()
+    };
+    let add_cls = if snap { "ghost" } else { "btn btn-check" };
     html.push_str(&format!(
-        "<div class=\"lists-actions\">\
-           <button type=\"button\" class=\"btn btn-check\" data-l-snap>{}</button>\
-           <button type=\"button\" class=\"ghost\" data-l-add>{}</button>\
+        "<div class=\"lists-actions\">{snap_btn}\
+           <button type=\"button\" class=\"{add_cls}\" data-l-add>{}</button>\
          </div>",
-        esc(&t("lists.snap")),
         esc(&t("lists.addWords")),
     ));
     if !trash.is_empty() {
@@ -392,7 +400,7 @@ fn render(app: &App) {
     let kid = app.borrow().kid;
     let html = match OPEN_LIST.with(|c| c.borrow().clone()) {
         Some(id) => detail_html(&lists, &id, kid, &app.borrow().misses),
-        None => home_html(&lists),
+        None => home_html(&lists, crate::photo_list::available(app)),
     };
     dom::set_html("listsBody", &html);
     crate::pick_ui::restore_search_focus();
