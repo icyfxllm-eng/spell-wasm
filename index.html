@@ -924,6 +924,7 @@
   .dm-streak{font-size:20px;font-weight:700;min-width:64px}
   .dm-status{text-align:center;min-height:22px;font-weight:600}
   .dm-field{position:relative;flex:1;overflow:hidden}
+  .dm-credit{margin:0;padding:2px 12px calc(env(safe-area-inset-bottom,0px) + 4px);text-align:center;font-size:11px;color:var(--muted-on-bg)}
   .dm-card{position:absolute;bottom:-30%;padding:10px 8px;border:1px solid var(--edge);border-radius:12px;
     background:var(--panel-2);color:var(--ink);font-size:14px;line-height:1.25;text-align:center;
     animation-name:dmFloat;animation-timing-function:linear;animation-fill-mode:forwards;
@@ -4425,6 +4426,8 @@
     <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->
     <div class="dm-prompt btn-hide" id="dmPrompt"></div>
     <div class="dm-field" id="dmField"></div>
+    <!-- CC-LAUNCH-EN D-DEF11: CC BY-SA attribution for the Wiktionary pool. Plain text, no link (Kid Mode); the licence link is in Notices. -->
+    <p class="dm-credit" id="dmCredit" lang="en" translate="no">Wiktionary · CC BY-SA 4.0</p>
     <!-- P5 run recap (Feature 7): reuses the result-card visual system. -->
     <div class="dm-recap" id="dmRecap">
       <div class="modal">

@@ -8,6 +8,17 @@ build inputs and are not redistributed.
 - **Wiktionary** (en.wiktionary.org) — non-English word definitions and example
   sentences, fetched at runtime by the backend's `/api/meaning` proxy and cached.
   Text © Wiktionary contributors, **CC BY-SA 4.0**; served with attribution.
+- **Wiktionary, English** (en.wiktionary.org) — the English definitions in
+  Definition Match, built by `scripts/build-def-pools.py` and served by
+  `/api/defpool`. Text © Wiktionary contributors, **CC BY-SA 4.0**
+  (https://creativecommons.org/licenses/by-sa/4.0/); credited on the Definition
+  Match screen. Being replaced by reviewed, original definitions before the
+  English release (CC-LAUNCH-EN D-DEF11).
+- **Free Dictionary API** (dictionaryapi.dev) — English definitions and example
+  sentences behind the Definition and Sentence buttons, fetched by the backend's
+  `/api/meaning` proxy and cached. The service states no source or licence for
+  its text; it is being replaced by reviewed, original definitions before the
+  English release (CC-LAUNCH-EN D-SRC1).
 - **CC-CEDICT** (mdbg.net) — Chinese-English glosses for the zh word bank,
   extracted by scripts/build-zh-glosses.py into backend/zh_glosses.json and
   served by /api/meaning. © CC-CEDICT contributors, **CC BY-SA 4.0**.
