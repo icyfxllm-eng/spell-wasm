@@ -1142,12 +1142,10 @@ async fn fetch_definition(word: String, code: String) -> Option<(String, String,
     if !api::meaning_supported(&base) {
         return None;
     }
-    let (pos, def, example) = api::fetch_meaning(&word, false, &base).await.ok()?;
-    if def.is_empty() {
-        None
-    } else {
-        Some((pos, def, example))
-    }
+    // D-DEF12: text comes only through the gate; an unreviewed field is absent.
+    let m = api::fetch_meaning(&word, false, &base).await.ok()?;
+    let def = m.definition()?.to_string();
+    Some((m.pos().to_string(), def, m.sentence().unwrap_or("").to_string()))
 }
 
 pub fn show_meaning(app: &App, word: String, lang_key: String) {
@@ -1248,7 +1246,7 @@ pub fn show_definition_hint(app: &App) {
     let lang_base = cur_lang;
     spawn_local(async move {
         let (pos, definition) = match api::fetch_meaning(&word, true, &lang_base).await {
-            Ok((pos, definition, _)) if !definition.is_empty() => (pos, definition),
+            Ok(m) if m.definition().is_some() => (m.pos().to_string(), m.definition().unwrap_or("").to_string()),
             _ => {
                 dom::set_html("meaning", &format!("<span class=\"m-pos\">{}</span>", crate::i18n::t("meaning.noDef")));
                 dom::add_class("meaning", "show");
@@ -1276,10 +1274,13 @@ pub fn show_sentence_hint(app: &App) {
         return;
     }
     let lang_base = cur_lang;
-    api::play_sentence_audio(&word, &lang_base);
     spawn_local(async move {
+        // D-DEF12: the sentence is spoken only once the gate has passed it.
         let example = match api::fetch_meaning(&word, true, &lang_base).await {
-            Ok((_, _, example)) if !example.is_empty() => example,
+            Ok(m) if m.sentence().is_some() => {
+                api::play_sentence_audio(&m, &word, &lang_base);
+                m.sentence().unwrap_or("").to_string()
+            }
             _ => {
                 dom::set_html("meaning", &format!("<span class=\"m-pos\">{}</span>", crate::i18n::t("meaning.noExample")));
                 dom::add_class("meaning", "show");

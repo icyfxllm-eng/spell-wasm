@@ -105,6 +105,7 @@ pub mod entitlements_adapter;
 pub mod paywall;
 #[cfg(test)]
 mod repetition_sim;
+mod defgate; // CC-LAUNCH-EN D-DEF12: the one definition/sentence render gate
 #[cfg(test)]
 mod en_quality; // CC-LAUNCH-EN Phase C acceptance tests (F2, F8)
 mod accepted; // CC-ORTHO-SWEEP-DE-JA F3/F5: accepted spelling variants (de/ja), data files only

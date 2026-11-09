@@ -273,6 +273,18 @@ async fn ensure_pool(lang: &str, tier: &str) -> bool {
         for item in arr.iter() {
             let s = |k: &str| get(&item, k).and_then(|x| x.as_string()).unwrap_or_default();
             let b = |k: &str| get(&item, k).and_then(|x| x.as_bool()).unwrap_or(false);
+            // D-DEF12: a row whose definition the gate refuses never enters the
+            // pool, so no card, prompt or recap can show it, and D-DEF6's tier
+            // floor (dealable_pool) counts reviewed rows only.
+            let meta = js_sys::JSON::stringify(&item)
+                .ok()
+                .and_then(|j| j.as_string())
+                .and_then(|j| serde_json::from_str::<serde_json::Value>(&j).ok())
+                .map(|j| crate::defgate::meta_from_json(&j))
+                .unwrap_or_default();
+            if !crate::defgate::can_render(&meta, crate::defgate::Field::Definition) {
+                continue;
+            }
             let word = s("word");
             // CC-LAUNCH-EN F9: the server's kid_register is mechanical (short,
             // easy/medium) and knows nothing of the kid word list, so Kid Def

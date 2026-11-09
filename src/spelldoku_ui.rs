@@ -364,7 +364,8 @@ fn show_definition(v: u8) {
     dom::set_text("sdBadge", &t("ws.meaning"));
     wasm_bindgen_futures::spawn_local(async move {
         let text = match crate::api::fetch_meaning(&word, true, &lang).await {
-            Ok((_, def, _)) if !def.is_empty() && crate::wordsearch::hint::passes(&word, &def) => def,
+            // D-DEF12: the definition only through the gate.
+            Ok(m) if m.definition().is_some_and(|d| crate::wordsearch::hint::passes(&word, d)) => m.definition().unwrap_or("").to_string(),
             _ => t("ws.noMeaning"),
         };
         dom::set_text("sdBadge", &text);

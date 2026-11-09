@@ -560,7 +560,8 @@ fn show_meaning() {
         let text = match crate::api::fetch_meaning(&word, true, &lang).await {
             // F-X4 / I10: a definition that shows the word or a chunk of it is
             // not shown at all; it is never rewritten.
-            Ok((_, def, _)) if !def.is_empty() && hint::passes(&word, &def) => def,
+            // D-DEF12: the definition only through the gate.
+            Ok(m) if m.definition().is_some_and(|d| hint::passes(&word, d)) => m.definition().unwrap_or("").to_string(),
             _ => t("ws.noMeaning"),
         };
         dom::set_text("wsMeaning", &text);

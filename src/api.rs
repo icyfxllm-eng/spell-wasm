@@ -731,7 +731,33 @@ pub fn sentence_supported(lang: &str) -> bool {
     meaning_supported(lang) && !matches!(base, "zh" | "cmn")
 }
 
-pub async fn fetch_meaning(word: &str, mask: bool, lang: &str) -> Result<(String, String, String), JsValue> {
+/// One `/api/meaning` row. CC-LAUNCH-EN D-DEF12: the text fields are private;
+/// the only way to read them is through [`crate::defgate::can_render`], so no
+/// render path can show (or speak) an unreviewed field.
+pub struct Meaning {
+    pos: String,
+    definition: String,
+    example: String,
+    meta: crate::defgate::Meta,
+}
+
+impl Meaning {
+    pub fn pos(&self) -> &str {
+        &self.pos
+    }
+    /// The definition, if there is one and the gate lets it render.
+    pub fn definition(&self) -> Option<&str> {
+        (!self.definition.is_empty() && crate::defgate::can_render(&self.meta, crate::defgate::Field::Definition))
+            .then_some(self.definition.as_str())
+    }
+    /// The example sentence, if there is one and the gate lets it render.
+    pub fn sentence(&self) -> Option<&str> {
+        (!self.example.is_empty() && crate::defgate::can_render(&self.meta, crate::defgate::Field::Sentence))
+            .then_some(self.example.as_str())
+    }
+}
+
+pub async fn fetch_meaning(word: &str, mask: bool, lang: &str) -> Result<Meaning, JsValue> {
     let url = format!(
         "{}/api/meaning?word={}&mask={}&lang={}",
         api_base(),
@@ -742,13 +768,18 @@ pub async fn fetch_meaning(word: &str, mask: bool, lang: &str) -> Result<(String
     let text = storage::fetch_text(&url).await?;
     let json: serde_json::Value = serde_json::from_str(&text).map_err(|e| JsValue::from_str(&e.to_string()))?;
     let get = |k: &str| json.get(k).and_then(|v| v.as_str()).unwrap_or("").to_string();
-    Ok((get("pos"), get("definition"), get("example")))
+    Ok(Meaning { pos: get("pos"), definition: get("definition"), example: get("example"), meta: crate::defgate::meta_from_json(&json) })
 }
 
 /// Plays the word's real (unmasked) example sentence via
 /// `/api/sentence-audio` — audio doesn't reveal spelling the way on-screen
 /// text would, so unlike the displayed sentence this is never masked.
-pub fn play_sentence_audio(word: &str, lang: &str) {
+/// D-DEF12: only for a `Meaning` whose sentence passes the gate, so an
+/// unreviewed sentence is never spoken either.
+pub fn play_sentence_audio(meaning: &Meaning, word: &str, lang: &str) {
+    if meaning.sentence().is_none() {
+        return;
+    }
     let url = format!("{}/api/sentence-audio?word={}&lang={}", api_base(), urlencode(word), urlencode(lang));
     let Ok(audio) = HtmlAudioElement::new_with_src(&url) else { return };
     audio.set_cross_origin(Some("anonymous"));
