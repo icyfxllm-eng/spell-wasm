@@ -237,7 +237,11 @@ pub fn open(app: &App) {
         let start = ladder.iter().position(|t| *t == tier.as_str()).unwrap_or(3);
         let mut ok = false;
         for t in &ladder[start..] {
-            if ensure_pool(&lang, t).await {
+            // D-DEF13: fetch the tier this view will actually DEAL (Spell Jr's
+            // ceiling may lower it), and accept it only if the dealer's own
+            // pool for this view clears the floor.
+            let t = defmatch::effective_tier(t, kid);
+            if ensure_pool(&lang, t).await && view_dealable(&lang, t, kid) {
                 TIER.with(|x| *x.borrow_mut() = t.to_string());
                 ok = true;
                 break;
@@ -299,11 +303,17 @@ async fn ensure_pool(lang: &str, tier: &str) -> bool {
             }
         }
     }
-    if rows.iter().filter(|r| r.prompt_grade).count() < defmatch::POOL_FLOOR {
-        return false;
-    }
     POOLS.with(|p| p.borrow_mut().insert(key, (rows, excl)));
     true
+}
+
+/// D-DEF13: the same question the dealer asks (`defmatch::dealable_pool`).
+fn view_dealable(lang: &str, tier: &str, kid: bool) -> bool {
+    POOLS.with(|p| {
+        p.borrow()
+            .get(&(lang.to_string(), tier.to_string()))
+            .is_some_and(|(rows, _)| defmatch::dealable_pool(rows, tier, kid).is_some())
+    })
 }
 
 fn splitmix(state: &mut u64) -> u64 {
@@ -338,16 +348,25 @@ fn next_round(app: &App) {
             USED.with(|u| u.borrow_mut().clear());
         }
         let pick_from = if fresh.is_empty() { eligible.iter().collect::<Vec<_>>() } else { fresh };
+        if pick_from.is_empty() {
+            return None;
+        }
         let mut st = SESSION_SEED.with(Cell::get) ^ ROUND_NO.with(Cell::get).wrapping_mul(0x9E37);
-        let target = pick_from[(splitmix(&mut st) % pick_from.len() as u64) as usize];
+        let start = (splitmix(&mut st) % pick_from.len() as u64) as usize;
         let seed = splitmix(&mut st);
         // D8 cadence: every REVERSE_EVERY-th round flips the format.
         let n = ROUND_NO.with(Cell::get) + 1;
-        if defmatch::REVERSE_EVERY > 0 && n % defmatch::REVERSE_EVERY == 0 {
-            defmatch::generate_reverse(rows, excl, &tier, &target.word, seed, kid)
-        } else {
-            defmatch::generate(rows, excl, &tier, &target.word, seed, kid)
-        }
+        let reverse = defmatch::REVERSE_EVERY > 0 && n % defmatch::REVERSE_EVERY == 0;
+        // D-DEF13: a target whose exclusions leave too few distractors cannot
+        // be dealt; try the next one instead of stalling the run.
+        (0..pick_from.len()).find_map(|i| {
+            let target = pick_from[(start + i) % pick_from.len()];
+            if reverse {
+                defmatch::generate_reverse(rows, excl, &tier, &target.word, seed, kid)
+            } else {
+                defmatch::generate(rows, excl, &tier, &target.word, seed, kid)
+            }
+        })
     });
     let Some(round) = round else {
         dom::set_text("dmStatus", &i18n::t("so.errGeneric"));

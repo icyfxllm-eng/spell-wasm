@@ -196,9 +196,20 @@ pub fn eligible<'a>(rows: &'a [DefRow], tier: &str, kid: bool) -> Vec<&'a DefRow
         .collect()
 }
 
+/// CC-LAUNCH-EN D-DEF13: THE one answer to "can this view deal?". The screen's
+/// pool check and the dealer both ask it, so a view that passes the check can
+/// always deal. They used to differ: the screen counted prompt-grade rows of the
+/// FETCHED tier, while the dealer filtered by the kid register and the Junior
+/// tier ceiling, so a Kid view could pass the check and then deal nothing (a
+/// stuck screen showing "something went wrong").
+pub fn dealable_pool<'a>(rows: &'a [DefRow], tier: &str, kid: bool) -> Option<Vec<&'a DefRow>> {
+    let pool = eligible(rows, tier, kid);
+    (pool.len() >= POOL_FLOOR).then_some(pool)
+}
+
 /// D3 activation floor for a (language, tier) pool view.
 pub fn pool_floor_met(rows: &[DefRow], tier: &str, kid: bool) -> bool {
-    eligible(rows, tier, kid).len() >= POOL_FLOOR
+    dealable_pool(rows, tier, kid).is_some()
 }
 
 /// Distractor craft (Feature 6): how well `cand` fits as a WRONG answer for
@@ -245,10 +256,7 @@ pub fn generate(
     seed: u64,
     kid: bool,
 ) -> Option<Round> {
-    let pool = eligible(rows, tier, kid);
-    if pool.len() < POOL_FLOOR {
-        return None;
-    }
+    let pool = dealable_pool(rows, tier, kid)?;
     let target = pool.iter().find(|r| r.word == word)?;
     let n_cards = if kid { CARDS_KID } else { CARDS_FULL };
 
@@ -348,6 +356,45 @@ fn fnv(s: &str) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// D-DEF13: any view that passes the pool check deals 10 rounds (forward
+    /// and reverse), standard and Kid, at every tier the view can reach.
+    #[test]
+    fn every_dealable_view_deals_ten_rounds() {
+        let rows = fixture_rows();
+        let ex = fixture_exclusions();
+        for kid in [false, true] {
+            for asked in ["easy", "medium", "hard", "expert"] {
+                let tier = effective_tier(asked, kid);
+                let Some(pool) = dealable_pool(&rows, tier, kid) else { continue };
+                for (i, t) in pool.iter().take(10).enumerate() {
+                    let r = if i % 4 == 3 {
+                        generate_reverse(&rows, &ex, tier, &t.word, i as u64, kid)
+                    } else {
+                        generate(&rows, &ex, tier, &t.word, i as u64, kid)
+                    };
+                    assert!(r.is_some(), "kid={kid} {asked}->{tier}: round {i} for {} did not deal", t.word);
+                }
+            }
+        }
+    }
+
+    /// D-DEF13: the old freeze. 60 prompt-grade rows but only 39 kid-register:
+    /// the screen's old check (prompt-grade count) passed, the dealer could not
+    /// deal. One function now answers both, and it says no.
+    #[test]
+    fn check_and_dealer_agree_when_kid_register_is_short() {
+        let mut rows: Vec<DefRow> = fixture_rows().into_iter().filter(|r| r.tier == "easy").collect();
+        for (i, r) in rows.iter_mut().enumerate() {
+            r.prompt_grade = true;
+            r.kid_register = i < 39;
+        }
+        assert!(rows.iter().filter(|r| r.prompt_grade).count() >= POOL_FLOOR, "old check would pass");
+        assert!(dealable_pool(&rows, "easy", true).is_none());
+        assert!(!pool_floor_met(&rows, "easy", true));
+        assert!(generate(&rows, &ExclusionSets::default(), "easy", &rows[0].word, 1, true).is_none());
+        assert!(dealable_pool(&rows, "easy", false).is_some(), "the standard view still deals");
+    }
 
     /// CC-LAUNCH-EN F9: the served pool marked dead, die, kill and dies
     /// kid_register; Kid Mode excludes them everywhere else, so here too.
