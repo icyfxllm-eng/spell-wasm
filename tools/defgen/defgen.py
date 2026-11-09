@@ -589,6 +589,7 @@ def main():
     p.add_argument("--n", type=int, default=50)
     p.add_argument("--seed", type=int, default=20261108)
     p.add_argument("--label", default="pilot")
+    p.add_argument("--all", action="store_true", help="every served word, not a sample")
     g = sub.add_parser("local-gen")
     g.add_argument("run_dir"); g.add_argument("candidates")
     sf = sub.add_parser("local-safety")
@@ -603,7 +604,8 @@ def main():
     if a.cmd == "local-safety":
         local_safety(Path(a.run_dir), Path(a.flags))
         return
-    rows = plan(pick_words(a.n, a.seed))
+    words = sorted((w, t) for w, t in bank().items()) if getattr(a, "all", False) else pick_words(a.n, a.seed)
+    rows = plan(words)
     leak = canary_check([r["prompt"] for r in rows], byasa_texts())
     if a.cmd == "prepare":
         if leak:
