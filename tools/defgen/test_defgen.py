@@ -67,6 +67,9 @@ class Validator(unittest.TestCase):
 
     def test_word_lists(self):
         self.assertTrue(any("blocklisted" in p for p in self.check("sentence", "They said a slurword in the garden today.")))
+        # Prose matches whole words: a blocked term inside another word is fine.
+        self.assertFalse(any("blocklisted" in p for p in defgen.check_field(
+            "sentence", "We ate all the grapes in the garden bowl.", "garden", "easy", (set(), {"rape"}))))
         lists = ({"kill"}, set())
         self.assertTrue(any("kid-excluded" in p for p in defgen.check_field("sentence", "The cat will kill a mouse in the garden.", "garden", "easy", lists)))
 

@@ -285,8 +285,11 @@ def check_field(field: str, text: str, headword: str, tier: str, lists=None) -> 
     for w in ws:
         if w != hw and w in kid:
             bad.append(f"kid-excluded word '{w}'")
-        if any(len(b) >= 4 and b in w for b in block) or w in block:
-            bad.append(f"blocklisted term in '{w}'")
+        # Whole words (and their inflections), not substrings: the list was built
+        # for usernames, where substring matching is right; in prose it would
+        # fail "grapes" and "therapist".
+        if w in block or any(w in forms(t) for t in block if " " not in t):
+            bad.append(f"blocklisted term '{w}'")
     return bad
 
 # ---------------------------------------------------------------- canary (A15.10)
@@ -384,22 +387,18 @@ def cost(usage: list[dict]) -> float:
     return i / 1e6 * BATCH_IN_PER_MTOK + o / 1e6 * BATCH_OUT_PER_MTOK
 
 
-def run(run_dir: Path):
+def load(run_dir: Path):
     st_path = run_dir / "state.json"
     st = json.loads(st_path.read_text())
-    save = lambda: st_path.write_text(json.dumps(st, indent=1, ensure_ascii=False))
-    c = client()
-    rows = st["rows"]
-    if "gen_batch" not in st:
-        b = submit(c, [(f"g{i}", gen_params(r["prompt"])) for i, r in enumerate(rows)])
-        st["gen_batch"] = b.id; save()
-        print(f"generation batch {b.id} submitted ({len(rows)} words)")
-    if "gen" not in st:
-        wait(c, st["gen_batch"])
-        st["gen"] = results(c, st["gen_batch"]); save()
+    return st, (lambda: st_path.write_text(json.dumps(st, indent=1, ensure_ascii=False)))
+
+
+def validate(st: dict) -> list[dict]:
+    """Parse each word's two candidates and run the code checks on every field.
+    Returns the fields that passed, for the safety review: {id, word, gloss}."""
     lists = blocked_terms()
     items = []
-    for i, r in enumerate(rows):
+    for i, r in enumerate(st["rows"]):
         g = st["gen"].get(f"g{i}", {})
         r["candidates"] = []
         if g.get("stop") == "end_turn" and g.get("text"):
@@ -413,6 +412,68 @@ def run(run_dir: Path):
                 cand[field + "_problems"] = check_field(field, cand.get(field, ""), r["word"], r["tier"], lists)
                 if not cand[field + "_problems"]:
                     items.append({"id": f"{i}.{j}.{field}", "word": r["word"], "gloss": cand[field]})
+    return items
+
+
+def finalize(run_dir: Path, st: dict, flagged: set, safety_failed: set, spent: float | None, soft: set = frozenset()):
+    """`soft`: field ids the reviewer flagged for quality only. Such a field is
+    kept only when the other candidate is not cleaner."""
+    rows = st["rows"]
+    out_rows, dark = [], []
+    for i, r in enumerate(rows):
+        for field in ("definition", "sentence"):
+            kept = None
+            ok = [j for j, cand in enumerate(r["candidates"])
+                  if not cand[field + "_problems"] and f"{i}.{j}.{field}" not in flagged
+                  and f"{i}.{j}.{field}" not in safety_failed]
+            ok.sort(key=lambda j: f"{i}.{j}.{field}" in soft)   # stable: clean first, then order
+            if ok:
+                kept = r["candidates"][ok[0]][field]
+            reasons = "; ".join(
+                f"c{j + 1}: " + (", ".join(cand[field + "_problems"]) or
+                                 ("safety flag" if f"{i}.{j}.{field}" in flagged else "safety unreadable"))
+                for j, cand in enumerate(r["candidates"])) or r["gen_status"]
+            out_rows.append({"word": r["word"], "tier": r["tier"], "pos": r["pos"], "synset": r["synset"] or "",
+                             "field": field, "text": kept or "", "status": "ok" if kept else "dark",
+                             "reasons": "" if kept else reasons,
+                             "source": st.get("source", f"spell-gen-{PROMPT_VERSION}"), "source_license": "original"})
+            if not kept:
+                dark.append(out_rows[-1])
+    with open(run_dir / "rows.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=list(out_rows[0].keys()))
+        w.writeheader(); w.writerows(out_rows)
+    full_words = len(bank())
+    projected = spent * full_words / len(rows) if spent is not None else None
+    leak = canary_check([r["prompt"] for r in rows], byasa_texts())
+    report = {
+        "run": run_dir.name, "generator": st.get("generator", f"{MODEL} (Batch API, effort {EFFORT})"),
+        "prompt": PROMPT_VERSION,
+        "words": len(rows), "fields": len(out_rows), "kept": len(out_rows) - len(dark), "dark": len(dark),
+        "safetyFlagged": len(flagged), "spentUsd": None if spent is None else round(spent, 4),
+        "projectedFullUsd": None if projected is None else round(projected, 2), "fullWords": full_words,
+        "canaryLeaks": len(leak), "noWordNetSense": sum(1 for r in rows if not r["sense"]),
+    }
+    (run_dir / "report.json").write_text(json.dumps(report, indent=1))
+    print(json.dumps(report, indent=1))
+    if leak:
+        print("CANARY: BY-SA text found in a prompt -- do not use this run"); sys.exit(2)
+    if projected is not None and projected > CAP_USD:
+        print(f"STOP: projected ${projected:.2f} for {full_words} words is over the ${CAP_USD} cap"); sys.exit(3)
+
+
+def run(run_dir: Path):
+    """The paid path: Message Batches API."""
+    st, save = load(run_dir)
+    c = client()
+    rows = st["rows"]
+    if "gen_batch" not in st:
+        b = submit(c, [(f"g{i}", gen_params(r["prompt"])) for i, r in enumerate(rows)])
+        st["gen_batch"] = b.id; save()
+        print(f"generation batch {b.id} submitted ({len(rows)} words)")
+    if "gen" not in st:
+        wait(c, st["gen_batch"])
+        st["gen"] = results(c, st["gen_batch"]); save()
+    items = validate(st)
     save()
     if "safety_batch" not in st:
         chunks = [items[k:k + 50] for k in range(0, len(items), 50)]
@@ -437,49 +498,63 @@ def run(run_dir: Path):
             continue
         bad_words = {f.get("word") for f in flags if f.get("category") == "inappropriate"}
         for fid in ids:
-            i = int(fid.split(".")[0])
-            if rows[i]["word"] in bad_words:
+            if rows[int(fid.split(".")[0])]["word"] in bad_words:
                 flagged.add(fid)
-    out_rows, dark = [], []
-    for i, r in enumerate(rows):
-        for field in ("definition", "sentence"):
-            kept = None
-            for j, cand in enumerate(r["candidates"]):
-                fid = f"{i}.{j}.{field}"
-                if not cand[field + "_problems"] and fid not in flagged and fid not in safety_failed:
-                    kept = cand[field]
-                    break
-            reasons = "; ".join(
-                f"c{j + 1}: " + (", ".join(cand[field + "_problems"]) or
-                                 ("safety flag" if f"{i}.{j}.{field}" in flagged else "safety unreadable"))
-                for j, cand in enumerate(r["candidates"])) or r["gen_status"]
-            out_rows.append({"word": r["word"], "tier": r["tier"], "pos": r["pos"], "synset": r["synset"] or "",
-                             "field": field, "text": kept or "", "status": "ok" if kept else "dark",
-                             "reasons": "" if kept else reasons,
-                             "source": f"spell-gen-{PROMPT_VERSION}", "source_license": "original"})
-            if not kept:
-                dark.append(out_rows[-1])
-    with open(run_dir / "rows.csv", "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(out_rows[0].keys()))
-        w.writeheader(); w.writerows(out_rows)
-    usage = list(st["gen"].values()) + list(st["safety"].values())
-    spent = cost(usage)
-    full_words = len(bank())
-    projected = spent * full_words / len(rows)
-    leak = canary_check([r["prompt"] for r in rows], byasa_texts())
-    report = {
-        "run": run_dir.name, "model": MODEL, "effort": EFFORT, "prompt": PROMPT_VERSION,
-        "words": len(rows), "fields": len(out_rows), "kept": len(out_rows) - len(dark), "dark": len(dark),
-        "spentUsd": round(spent, 4), "projectedFullUsd": round(projected, 2), "fullWords": full_words,
-        "capUsd": CAP_USD, "overCap": projected > CAP_USD,
-        "canaryLeaks": len(leak), "noWordNetSense": sum(1 for r in rows if not r["sense"]),
-    }
-    (run_dir / "report.json").write_text(json.dumps(report, indent=1))
-    print(json.dumps(report, indent=1))
-    if leak:
-        print("CANARY: BY-SA text found in a prompt -- do not use this run"); sys.exit(2)
-    if projected > CAP_USD:
-        print(f"STOP: projected ${projected:.2f} for {full_words} words is over the ${CAP_USD} cap"); sys.exit(3)
+    finalize(run_dir, st, flagged, safety_failed, cost(list(st["gen"].values()) + list(st["safety"].values())))
+
+
+# ---------------------------------------------------------------- local (no API bill)
+#
+# Eric 2026-11-09: generate in Claude Code instead of the paid API. The writer is
+# a FRESH subagent whose only input is requests.jsonl (word, part of speech,
+# WordNet sense, tier) and the gen-v1 prompt, so I5 holds the same way it does
+# for the API: nothing BY-SA is in its context. A second fresh subagent does the
+# safety review with the prescreen prompt, per field id.
+
+LOCAL_GENERATOR = "Claude Code subagent (claude-opus-5-5), fresh context, gen-v1 prompt"
+
+
+def prepare(rows: list[dict], label: str) -> Path:
+    run_dir = ROOT / "build" / "defgen" / f"{label}-{time.strftime('%Y%m%d-%H%M%S')}"
+    run_dir.mkdir(parents=True)
+    with open(run_dir / "prompts.jsonl", "w", encoding="utf-8") as f:
+        for i, r in enumerate(rows):
+            f.write(json.dumps({"id": f"g{i}", "word": r["word"], "prompt": r["prompt"],
+                                "sha256": hashlib.sha256(r["prompt"].encode()).hexdigest()}, ensure_ascii=False) + "\n")
+    with open(run_dir / "requests.jsonl", "w", encoding="utf-8") as f:
+        for i, r in enumerate(rows):
+            f.write(json.dumps({"id": f"g{i}", "word": r["word"], "pos": r["pos"],
+                                "sense": r["sense"] or "not given; use the most common everyday meaning",
+                                "tier": r["tier"]}, ensure_ascii=False) + "\n")
+    return run_dir
+
+
+def local_gen(run_dir: Path, cand_path: Path):
+    """candidates.json: {"g0": {"candidates": [{"definition", "sentence"}, x2]}, ...}"""
+    st, save = load(run_dir)
+    cands = json.loads(cand_path.read_text(encoding="utf-8"))
+    st["generator"], st["source"] = LOCAL_GENERATOR, f"spell-gen-{PROMPT_VERSION}"
+    st["gen"] = {gid: {"stop": "end_turn", "text": json.dumps(v)} for gid, v in cands.items()}
+    items = validate(st)
+    save()
+    (run_dir / "safety_items.jsonl").write_text(
+        "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in items), encoding="utf-8")
+    fields = sum(len(r["candidates"]) * 2 for r in st["rows"])
+    print(f"{len(st['gen'])}/{len(st['rows'])} words have candidates; {len(items)}/{fields} candidate fields passed "
+          f"the code checks -> {run_dir / 'safety_items.jsonl'}")
+
+
+def local_safety(run_dir: Path, flags_path: Path):
+    """flags.json: [{"id": "3.0.sentence", "category": "inappropriate|...", "reason_en": ...}, ...]
+    Every id in safety_items.jsonl must have been reviewed: reviewed.json lists them."""
+    st, _ = load(run_dir)
+    items = [json.loads(l) for l in (run_dir / "safety_items.jsonl").read_text(encoding="utf-8").splitlines() if l]
+    flags = json.loads(flags_path.read_text(encoding="utf-8"))
+    reviewed = set(json.loads((flags_path.parent / "reviewed.json").read_text()))
+    missing = {x["id"] for x in items} - reviewed
+    flagged = {f["id"] for f in flags if f.get("category") == "inappropriate"}
+    soft = {f["id"] for f in flags if f.get("category") != "inappropriate"}
+    finalize(run_dir, st, flagged, missing, None, soft)   # an unreviewed field fails closed
 
 
 def main():
@@ -491,12 +566,33 @@ def main():
         p.add_argument("--seed", type=int, default=20261108)
     r = sub.add_parser("resume")
     r.add_argument("run_dir")
+    p = sub.add_parser("prepare")
+    p.add_argument("--n", type=int, default=50)
+    p.add_argument("--seed", type=int, default=20261108)
+    p.add_argument("--label", default="pilot")
+    g = sub.add_parser("local-gen")
+    g.add_argument("run_dir"); g.add_argument("candidates")
+    sf = sub.add_parser("local-safety")
+    sf.add_argument("run_dir"); sf.add_argument("flags")
     a = ap.parse_args()
     if a.cmd == "resume":
         run(Path(a.run_dir))
         return
+    if a.cmd == "local-gen":
+        local_gen(Path(a.run_dir), Path(a.candidates))
+        return
+    if a.cmd == "local-safety":
+        local_safety(Path(a.run_dir), Path(a.flags))
+        return
     rows = plan(pick_words(a.n, a.seed))
     leak = canary_check([r["prompt"] for r in rows], byasa_texts())
+    if a.cmd == "prepare":
+        if leak:
+            print("CANARY: BY-SA text found in a prompt -- refusing"); sys.exit(2)
+        run_dir = prepare(rows, a.label)
+        (run_dir / "state.json").write_text(json.dumps({"rows": rows}, indent=1, ensure_ascii=False))
+        print(run_dir)
+        return
     if a.cmd == "dry-run":
         print(json.dumps({"words": len(rows), "noWordNetSense": sum(1 for r in rows if not r["sense"]),
                           "canaryLeaks": len(leak)}, indent=1))
