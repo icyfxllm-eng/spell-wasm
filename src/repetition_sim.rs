@@ -78,3 +78,20 @@ fn repetition_sim_daily_30_dates() {
     }
 }
 
+
+/// A7.2 for Spell Jr: free play draws from the legacy bank through the kid
+/// filter (game.rs active_word_list), which CC-EN-VARIANTS made stricter. Each
+/// tier a child can reach must still hold 200 words, and 200 draws must not
+/// repeat.
+#[test]
+fn repetition_sim_normal_200_draws_spell_jr_pool() {
+    for tier in ["easy", "medium", "hard"] {
+        let base: Vec<String> = crate::words::tier_for_fixed(crate::consts::EN, tier).iter().map(|s| s.to_string()).collect();
+        let pool = crate::kid_filter::filter_kid(crate::consts::EN, base);
+        assert!(pool.len() >= 200, "spell jr/{tier}: only {} words", pool.len());
+        let refs: Vec<&str> = pool.iter().map(String::as_str).collect();
+        for seed in [1u64, 42, 7_777_777] {
+            assert_no_repeat(&format!("spell jr/{tier} seed {seed}"), &draws(&refs, 200, seed));
+        }
+    }
+}

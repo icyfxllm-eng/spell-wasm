@@ -1,0 +1,206 @@
+{
+ "$doc": "CC-LAUNCH-EN F8 / A8.1: 50 English true homophones (different words, one sound) from the shipped kind:true sets in assets/words/en/soundalikes.json, spelling variants and one- or two-letter fragments left out, and seven generated sets that are not true homophones (capped/kept, lass/last, marc/mark, dos/dose, car/carr, pic/pick, mass/masse) swapped for clean pairs. Each must grade through the other-sense path in both directions, never a plain wrong. FROZEN 2026-11-08. read/red is left out: read is also said \"reed\", so its set accepts in one direction only (targetOnly), by design.",
+ "count": 50,
+ "pairs": [
+  {
+   "a": "sea",
+   "b": "see"
+  },
+  {
+   "a": "metal",
+   "b": "mettle"
+  },
+  {
+   "a": "mail",
+   "b": "male"
+  },
+  {
+   "a": "days",
+   "b": "daze"
+  },
+  {
+   "a": "knot",
+   "b": "not"
+  },
+  {
+   "a": "per",
+   "b": "purr"
+  },
+  {
+   "a": "plain",
+   "b": "plane"
+  },
+  {
+   "a": "sees",
+   "b": "seize"
+  },
+  {
+   "a": "weak",
+   "b": "week"
+  },
+  {
+   "a": "step",
+   "b": "steppe"
+  },
+  {
+   "a": "but",
+   "b": "butt"
+  },
+  {
+   "a": "flea",
+   "b": "flee"
+  },
+  {
+   "a": "morning",
+   "b": "mourning"
+  },
+  {
+   "a": "bare",
+   "b": "bear"
+  },
+  {
+   "a": "seam",
+   "b": "seem"
+  },
+  {
+   "a": "rout",
+   "b": "route"
+  },
+  {
+   "a": "beat",
+   "b": "beet"
+  },
+  {
+   "a": "holy",
+   "b": "wholly"
+  },
+  {
+   "a": "ball",
+   "b": "bawl"
+  },
+  {
+   "a": "vary",
+   "b": "very"
+  },
+  {
+   "a": "hear",
+   "b": "here"
+  },
+  {
+   "a": "coarse",
+   "b": "course"
+  },
+  {
+   "a": "flour",
+   "b": "flower"
+  },
+  {
+   "a": "hole",
+   "b": "whole"
+  },
+  {
+   "a": "hair",
+   "b": "hare"
+  },
+  {
+   "a": "pray",
+   "b": "prey"
+  },
+  {
+   "a": "billed",
+   "b": "build"
+  },
+  {
+   "a": "scene",
+   "b": "seen"
+  },
+  {
+   "a": "brake",
+   "b": "break"
+  },
+  {
+   "a": "gait",
+   "b": "gate"
+  },
+  {
+   "a": "wait",
+   "b": "weight"
+  },
+  {
+   "a": "some",
+   "b": "sum"
+  },
+  {
+   "a": "load",
+   "b": "lode"
+  },
+  {
+   "a": "allowed",
+   "b": "aloud"
+  },
+  {
+   "a": "loan",
+   "b": "lone"
+  },
+  {
+   "a": "whine",
+   "b": "wine"
+  },
+  {
+   "a": "tide",
+   "b": "tied"
+  },
+  {
+   "a": "humerus",
+   "b": "humorous"
+  },
+  {
+   "a": "grate",
+   "b": "great"
+  },
+  {
+   "a": "peace",
+   "b": "piece"
+  },
+  {
+   "a": "main",
+   "b": "mane"
+  },
+  {
+   "a": "made",
+   "b": "maid"
+  },
+  {
+   "a": "their",
+   "b": "there"
+  },
+  {
+   "a": "knight",
+   "b": "night"
+  },
+  {
+   "a": "sail",
+   "b": "sale"
+  },
+  {
+   "a": "tail",
+   "b": "tale"
+  },
+  {
+   "a": "one",
+   "b": "won"
+  },
+  {
+   "a": "ate",
+   "b": "eight"
+  },
+  {
+   "a": "hour",
+   "b": "our"
+  },
+  {
+   "a": "know",
+   "b": "no"
+  }
+ ]
+}

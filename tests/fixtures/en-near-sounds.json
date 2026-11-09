@@ -1,0 +1,142 @@
+{
+ "$doc": "CC-LAUNCH-EN F8 / A8.2: English near-sound pairs, both members bank words, neither pair a listed true homophone. A miss between them is a real miss, so the voice must keep them apart: tools/near_sound_loopback.py requires each pair's DTW distance to be at or above the SENSE-CUE Phase B bar. FROZEN 2026-11-08.",
+ "count": 34,
+ "pairs": [
+  {
+   "target": "worm",
+   "near": "were"
+  },
+  {
+   "target": "main",
+   "near": "made"
+  },
+  {
+   "target": "bit",
+   "near": "beat"
+  },
+  {
+   "target": "fan",
+   "near": "van"
+  },
+  {
+   "target": "pull",
+   "near": "pool"
+  },
+  {
+   "target": "live",
+   "near": "leave"
+  },
+  {
+   "target": "fill",
+   "near": "feel"
+  },
+  {
+   "target": "sit",
+   "near": "seat"
+  },
+  {
+   "target": "hit",
+   "near": "heat"
+  },
+  {
+   "target": "light",
+   "near": "right"
+  },
+  {
+   "target": "glass",
+   "near": "grass"
+  },
+  {
+   "target": "bed",
+   "near": "bad"
+  },
+  {
+   "target": "men",
+   "near": "man"
+  },
+  {
+   "target": "much",
+   "near": "match"
+  },
+  {
+   "target": "sell",
+   "near": "sale"
+  },
+  {
+   "target": "wet",
+   "near": "wait"
+  },
+  {
+   "target": "coat",
+   "near": "cold"
+  },
+  {
+   "target": "fat",
+   "near": "fit"
+  },
+  {
+   "target": "pick",
+   "near": "peak"
+  },
+  {
+   "target": "lift",
+   "near": "left"
+  },
+  {
+   "target": "cut",
+   "near": "cat"
+  },
+  {
+   "target": "run",
+   "near": "ran"
+  },
+  {
+   "target": "pot",
+   "near": "port"
+  },
+  {
+   "target": "gate",
+   "near": "get"
+  },
+  {
+   "target": "late",
+   "near": "let"
+  },
+  {
+   "target": "rice",
+   "near": "rise"
+  },
+  {
+   "target": "still",
+   "near": "steel"
+  },
+  {
+   "target": "mouse",
+   "near": "mouth"
+  },
+  {
+   "target": "three",
+   "near": "tree"
+  },
+  {
+   "target": "vote",
+   "near": "boat"
+  },
+  {
+   "target": "walk",
+   "near": "work"
+  },
+  {
+   "target": "bird",
+   "near": "board"
+  },
+  {
+   "target": "farm",
+   "near": "form"
+  },
+  {
+   "target": "star",
+   "near": "store"
+  }
+ ]
+}

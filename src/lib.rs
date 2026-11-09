@@ -105,6 +105,8 @@ pub mod entitlements_adapter;
 pub mod paywall;
 #[cfg(test)]
 mod repetition_sim;
+#[cfg(test)]
+mod en_quality; // CC-LAUNCH-EN Phase C acceptance tests (F2, F8)
 mod accepted; // CC-ORTHO-SWEEP-DE-JA F3/F5: accepted spelling variants (de/ja), data files only
 mod ja_canon; // CC-ORTHO-SWEEP-DE-JA F6: half-width katakana key
 mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; Persian answer grading)

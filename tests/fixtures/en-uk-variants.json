@@ -1,0 +1,1681 @@
+{
+ "$doc": "CC-LAUNCH-EN F2 / A2.1: British and Commonwealth spellings that must grade correct for their US row in Normal, Daily, Climb and Spell Jr. FROZEN 2026-11-08 from data/en/accepted-variants.tsv (the 209 pairs Eric signed 2026-10-19 plus the SCOWL pairs approved 2026-11-04). Never regenerate this file to make a failing test pass: a pair that stops grading is a regression in the table or the grader.",
+ "count": 335,
+ "pairs": [
+  {
+   "us": "color",
+   "uk": "colour",
+   "kind": "our"
+  },
+  {
+   "us": "honor",
+   "uk": "honour",
+   "kind": "our"
+  },
+  {
+   "us": "favor",
+   "uk": "favour",
+   "kind": "our"
+  },
+  {
+   "us": "labor",
+   "uk": "labour",
+   "kind": "our"
+  },
+  {
+   "us": "neighbor",
+   "uk": "neighbour",
+   "kind": "our"
+  },
+  {
+   "us": "behavior",
+   "uk": "behaviour",
+   "kind": "our"
+  },
+  {
+   "us": "flavor",
+   "uk": "flavour",
+   "kind": "our"
+  },
+  {
+   "us": "humor",
+   "uk": "humour",
+   "kind": "our"
+  },
+  {
+   "us": "rumor",
+   "uk": "rumour",
+   "kind": "our"
+  },
+  {
+   "us": "odor",
+   "uk": "odour",
+   "kind": "our"
+  },
+  {
+   "us": "vapor",
+   "uk": "vapour",
+   "kind": "our"
+  },
+  {
+   "us": "savior",
+   "uk": "saviour",
+   "kind": "our"
+  },
+  {
+   "us": "harbor",
+   "uk": "harbour",
+   "kind": "our"
+  },
+  {
+   "us": "splendor",
+   "uk": "splendour",
+   "kind": "our"
+  },
+  {
+   "us": "glamor",
+   "uk": "glamour",
+   "kind": "our"
+  },
+  {
+   "us": "vigor",
+   "uk": "vigour",
+   "kind": "our"
+  },
+  {
+   "us": "ardor",
+   "uk": "ardour",
+   "kind": "our"
+  },
+  {
+   "us": "candor",
+   "uk": "candour",
+   "kind": "our"
+  },
+  {
+   "us": "clamor",
+   "uk": "clamour",
+   "kind": "our"
+  },
+  {
+   "us": "endeavor",
+   "uk": "endeavour",
+   "kind": "our"
+  },
+  {
+   "us": "demeanor",
+   "uk": "demeanour",
+   "kind": "our"
+  },
+  {
+   "us": "fervor",
+   "uk": "fervour",
+   "kind": "our"
+  },
+  {
+   "us": "valor",
+   "uk": "valour",
+   "kind": "our"
+  },
+  {
+   "us": "rigor",
+   "uk": "rigour",
+   "kind": "our"
+  },
+  {
+   "us": "rancor",
+   "uk": "rancour",
+   "kind": "our"
+  },
+  {
+   "us": "parlor",
+   "uk": "parlour",
+   "kind": "our"
+  },
+  {
+   "us": "mold",
+   "uk": "mould",
+   "kind": "other"
+  },
+  {
+   "us": "mustache",
+   "uk": "moustache",
+   "kind": "other"
+  },
+  {
+   "us": "moldable",
+   "uk": "mouldable",
+   "kind": "other"
+  },
+  {
+   "us": "center",
+   "uk": "centre",
+   "kind": "re"
+  },
+  {
+   "us": "theater",
+   "uk": "theatre",
+   "kind": "re"
+  },
+  {
+   "us": "meter",
+   "uk": "metre",
+   "kind": "re"
+  },
+  {
+   "us": "liter",
+   "uk": "litre",
+   "kind": "re"
+  },
+  {
+   "us": "kilometer",
+   "uk": "kilometre",
+   "kind": "re"
+  },
+  {
+   "us": "centimeter",
+   "uk": "centimetre",
+   "kind": "re"
+  },
+  {
+   "us": "millimeter",
+   "uk": "millimetre",
+   "kind": "re"
+  },
+  {
+   "us": "fiber",
+   "uk": "fibre",
+   "kind": "re"
+  },
+  {
+   "us": "caliber",
+   "uk": "calibre",
+   "kind": "re"
+  },
+  {
+   "us": "somber",
+   "uk": "sombre",
+   "kind": "re"
+  },
+  {
+   "us": "specter",
+   "uk": "spectre",
+   "kind": "re"
+  },
+  {
+   "us": "scepter",
+   "uk": "sceptre",
+   "kind": "re"
+  },
+  {
+   "us": "luster",
+   "uk": "lustre",
+   "kind": "re"
+  },
+  {
+   "us": "meager",
+   "uk": "meagre",
+   "kind": "re"
+  },
+  {
+   "us": "maneuver",
+   "uk": "manoeuvre",
+   "kind": "other"
+  },
+  {
+   "us": "maneuverable",
+   "uk": "manoeuvrable",
+   "kind": "other"
+  },
+  {
+   "us": "miter",
+   "uk": "mitre",
+   "kind": "re"
+  },
+  {
+   "us": "saber",
+   "uk": "sabre",
+   "kind": "re"
+  },
+  {
+   "us": "goiter",
+   "uk": "goitre",
+   "kind": "re"
+  },
+  {
+   "us": "saltpeter",
+   "uk": "saltpetre",
+   "kind": "re"
+  },
+  {
+   "us": "reconnoiter",
+   "uk": "reconnoitre",
+   "kind": "re"
+  },
+  {
+   "us": "skeptical",
+   "uk": "sceptical",
+   "kind": "other"
+  },
+  {
+   "us": "skepticism",
+   "uk": "scepticism",
+   "kind": "other"
+  },
+  {
+   "us": "skeptic",
+   "uk": "sceptic",
+   "kind": "other"
+  },
+  {
+   "us": "organize",
+   "uk": "organise",
+   "kind": "ise"
+  },
+  {
+   "us": "realize",
+   "uk": "realise",
+   "kind": "ise"
+  },
+  {
+   "us": "recognize",
+   "uk": "recognise",
+   "kind": "ise"
+  },
+  {
+   "us": "apologize",
+   "uk": "apologise",
+   "kind": "ise"
+  },
+  {
+   "us": "memorize",
+   "uk": "memorise",
+   "kind": "ise"
+  },
+  {
+   "us": "specialize",
+   "uk": "specialise",
+   "kind": "ise"
+  },
+  {
+   "us": "centralize",
+   "uk": "centralise",
+   "kind": "ise"
+  },
+  {
+   "us": "localize",
+   "uk": "localise",
+   "kind": "ise"
+  },
+  {
+   "us": "modernize",
+   "uk": "modernise",
+   "kind": "ise"
+  },
+  {
+   "us": "nationalize",
+   "uk": "nationalise",
+   "kind": "ise"
+  },
+  {
+   "us": "industrialize",
+   "uk": "industrialise",
+   "kind": "ise"
+  },
+  {
+   "us": "legalize",
+   "uk": "legalise",
+   "kind": "ise"
+  },
+  {
+   "us": "criticize",
+   "uk": "criticise",
+   "kind": "ise"
+  },
+  {
+   "us": "emphasize",
+   "uk": "emphasise",
+   "kind": "ise"
+  },
+  {
+   "us": "summarize",
+   "uk": "summarise",
+   "kind": "ise"
+  },
+  {
+   "us": "characterize",
+   "uk": "characterise",
+   "kind": "ise"
+  },
+  {
+   "us": "prioritize",
+   "uk": "prioritise",
+   "kind": "ise"
+  },
+  {
+   "us": "standardize",
+   "uk": "standardise",
+   "kind": "ise"
+  },
+  {
+   "us": "maximize",
+   "uk": "maximise",
+   "kind": "ise"
+  },
+  {
+   "us": "minimize",
+   "uk": "minimise",
+   "kind": "ise"
+  },
+  {
+   "us": "optimize",
+   "uk": "optimise",
+   "kind": "ise"
+  },
+  {
+   "us": "stabilize",
+   "uk": "stabilise",
+   "kind": "ise"
+  },
+  {
+   "us": "sterilize",
+   "uk": "sterilise",
+   "kind": "ise"
+  },
+  {
+   "us": "fertilize",
+   "uk": "fertilise",
+   "kind": "ise"
+  },
+  {
+   "us": "civilize",
+   "uk": "civilise",
+   "kind": "ise"
+  },
+  {
+   "us": "visualize",
+   "uk": "visualise",
+   "kind": "ise"
+  },
+  {
+   "us": "conceptualize",
+   "uk": "conceptualise",
+   "kind": "ise"
+  },
+  {
+   "us": "authorize",
+   "uk": "authorise",
+   "kind": "ise"
+  },
+  {
+   "us": "categorize",
+   "uk": "categorise",
+   "kind": "ise"
+  },
+  {
+   "us": "colonize",
+   "uk": "colonise",
+   "kind": "ise"
+  },
+  {
+   "us": "demonize",
+   "uk": "demonise",
+   "kind": "ise"
+  },
+  {
+   "us": "generalize",
+   "uk": "generalise",
+   "kind": "ise"
+  },
+  {
+   "us": "personalize",
+   "uk": "personalise",
+   "kind": "ise"
+  },
+  {
+   "us": "publicize",
+   "uk": "publicise",
+   "kind": "ise"
+  },
+  {
+   "us": "rationalize",
+   "uk": "rationalise",
+   "kind": "ise"
+  },
+  {
+   "us": "socialize",
+   "uk": "socialise",
+   "kind": "ise"
+  },
+  {
+   "us": "sympathize",
+   "uk": "sympathise",
+   "kind": "ise"
+  },
+  {
+   "us": "terrorize",
+   "uk": "terrorise",
+   "kind": "ise"
+  },
+  {
+   "us": "utilize",
+   "uk": "utilise",
+   "kind": "ise"
+  },
+  {
+   "us": "vandalize",
+   "uk": "vandalise",
+   "kind": "ise"
+  },
+  {
+   "us": "symbolize",
+   "uk": "symbolise",
+   "kind": "ise"
+  },
+  {
+   "us": "synthesize",
+   "uk": "synthesise",
+   "kind": "ise"
+  },
+  {
+   "us": "analyze",
+   "uk": "analyse",
+   "kind": "ise"
+  },
+  {
+   "us": "paralyze",
+   "uk": "paralyse",
+   "kind": "ise"
+  },
+  {
+   "us": "catalyze",
+   "uk": "catalyse",
+   "kind": "ise"
+  },
+  {
+   "us": "dialyze",
+   "uk": "dialyse",
+   "kind": "ise"
+  },
+  {
+   "us": "hydrolyze",
+   "uk": "hydrolyse",
+   "kind": "ise"
+  },
+  {
+   "us": "electrolyze",
+   "uk": "electrolyse",
+   "kind": "ise"
+  },
+  {
+   "us": "catalog",
+   "uk": "catalogue",
+   "kind": "ogue"
+  },
+  {
+   "us": "dialog",
+   "uk": "dialogue",
+   "kind": "ogue"
+  },
+  {
+   "us": "analog",
+   "uk": "analogue",
+   "kind": "ogue"
+  },
+  {
+   "us": "monolog",
+   "uk": "monologue",
+   "kind": "ogue"
+  },
+  {
+   "us": "prolog",
+   "uk": "prologue",
+   "kind": "ogue"
+  },
+  {
+   "us": "epilog",
+   "uk": "epilogue",
+   "kind": "ogue"
+  },
+  {
+   "us": "travelog",
+   "uk": "travelogue",
+   "kind": "ogue"
+  },
+  {
+   "us": "anemia",
+   "uk": "anaemia",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "anemic",
+   "uk": "anaemic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "anesthetic",
+   "uk": "anaesthetic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "anesthesia",
+   "uk": "anaesthesia",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "anesthesiology",
+   "uk": "anaesthesiology",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "archeology",
+   "uk": "archaeology",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "archeological",
+   "uk": "archaeological",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "encyclopedia",
+   "uk": "encyclopaedia",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "fetus",
+   "uk": "foetus",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "fetal",
+   "uk": "foetal",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "estrogen",
+   "uk": "oestrogen",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "estrogenic",
+   "uk": "oestrogenic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "pediatric",
+   "uk": "paediatric",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "pediatrics",
+   "uk": "paediatrics",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "orthopedic",
+   "uk": "orthopaedic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "orthopedics",
+   "uk": "orthopaedics",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "gynecology",
+   "uk": "gynaecology",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "gynecologist",
+   "uk": "gynaecologist",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "hemoglobin",
+   "uk": "haemoglobin",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "hemorrhage",
+   "uk": "haemorrhage",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "hemorrhoids",
+   "uk": "haemorrhoids",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "leukemia",
+   "uk": "leukaemia",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "esophagus",
+   "uk": "oesophagus",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "medieval",
+   "uk": "mediaeval",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "diarrhea",
+   "uk": "diarrhoea",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "ameba",
+   "uk": "amoeba",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "enology",
+   "uk": "oenology",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "defense",
+   "uk": "defence",
+   "kind": "other"
+  },
+  {
+   "us": "offense",
+   "uk": "offence",
+   "kind": "other"
+  },
+  {
+   "us": "license",
+   "uk": "licence",
+   "kind": "other"
+  },
+  {
+   "us": "practice",
+   "uk": "practise",
+   "kind": "other"
+  },
+  {
+   "us": "pretense",
+   "uk": "pretence",
+   "kind": "other"
+  },
+  {
+   "us": "traveled",
+   "uk": "travelled",
+   "kind": "ll"
+  },
+  {
+   "us": "traveling",
+   "uk": "travelling",
+   "kind": "ll"
+  },
+  {
+   "us": "traveler",
+   "uk": "traveller",
+   "kind": "ll"
+  },
+  {
+   "us": "canceled",
+   "uk": "cancelled",
+   "kind": "ll"
+  },
+  {
+   "us": "canceling",
+   "uk": "cancelling",
+   "kind": "ll"
+  },
+  {
+   "us": "counselor",
+   "uk": "counsellor",
+   "kind": "ll"
+  },
+  {
+   "us": "counseling",
+   "uk": "counselling",
+   "kind": "ll"
+  },
+  {
+   "us": "labeled",
+   "uk": "labelled",
+   "kind": "ll"
+  },
+  {
+   "us": "labeling",
+   "uk": "labelling",
+   "kind": "ll"
+  },
+  {
+   "us": "modeling",
+   "uk": "modelling",
+   "kind": "ll"
+  },
+  {
+   "us": "modeled",
+   "uk": "modelled",
+   "kind": "ll"
+  },
+  {
+   "us": "marvelous",
+   "uk": "marvellous",
+   "kind": "ll"
+  },
+  {
+   "us": "jeweler",
+   "uk": "jeweller",
+   "kind": "ll"
+  },
+  {
+   "us": "jewelry",
+   "uk": "jewellery",
+   "kind": "other"
+  },
+  {
+   "us": "woolen",
+   "uk": "woollen",
+   "kind": "ll"
+  },
+  {
+   "us": "enrollment",
+   "uk": "enrolment",
+   "kind": "other"
+  },
+  {
+   "us": "fulfillment",
+   "uk": "fulfilment",
+   "kind": "other"
+  },
+  {
+   "us": "installment",
+   "uk": "instalment",
+   "kind": "other"
+  },
+  {
+   "us": "skillful",
+   "uk": "skilful",
+   "kind": "other"
+  },
+  {
+   "us": "willful",
+   "uk": "wilful",
+   "kind": "other"
+  },
+  {
+   "us": "distill",
+   "uk": "distil",
+   "kind": "other"
+  },
+  {
+   "us": "enroll",
+   "uk": "enrol",
+   "kind": "other"
+  },
+  {
+   "us": "fulfill",
+   "uk": "fulfil",
+   "kind": "other"
+  },
+  {
+   "us": "install",
+   "uk": "instal",
+   "kind": "other"
+  },
+  {
+   "us": "appall",
+   "uk": "appal",
+   "kind": "other"
+  },
+  {
+   "us": "enthrall",
+   "uk": "enthral",
+   "kind": "other"
+  },
+  {
+   "us": "bejeweled",
+   "uk": "bejewelled",
+   "kind": "ll"
+  },
+  {
+   "us": "shriveled",
+   "uk": "shrivelled",
+   "kind": "ll"
+  },
+  {
+   "us": "worshiped",
+   "uk": "worshipped",
+   "kind": "other"
+  },
+  {
+   "us": "worshiping",
+   "uk": "worshipping",
+   "kind": "other"
+  },
+  {
+   "us": "signaling",
+   "uk": "signalling",
+   "kind": "ll"
+  },
+  {
+   "us": "signaled",
+   "uk": "signalled",
+   "kind": "ll"
+  },
+  {
+   "us": "marshaling",
+   "uk": "marshalling",
+   "kind": "ll"
+  },
+  {
+   "us": "gray",
+   "uk": "grey",
+   "kind": "other"
+  },
+  {
+   "us": "tire",
+   "uk": "tyre",
+   "kind": "other"
+  },
+  {
+   "us": "plow",
+   "uk": "plough",
+   "kind": "other"
+  },
+  {
+   "us": "check",
+   "uk": "cheque",
+   "kind": "other"
+  },
+  {
+   "us": "airplane",
+   "uk": "aeroplane",
+   "kind": "other"
+  },
+  {
+   "us": "aluminum",
+   "uk": "aluminium",
+   "kind": "other"
+  },
+  {
+   "us": "aging",
+   "uk": "ageing",
+   "kind": "other"
+  },
+  {
+   "us": "cozy",
+   "uk": "cosy",
+   "kind": "other"
+  },
+  {
+   "us": "cozy-looking",
+   "uk": "cosy-looking",
+   "kind": "other"
+  },
+  {
+   "us": "curb",
+   "uk": "kerb",
+   "kind": "other"
+  },
+  {
+   "us": "pajamas",
+   "uk": "pyjamas",
+   "kind": "other"
+  },
+  {
+   "us": "draft",
+   "uk": "draught",
+   "kind": "other"
+  },
+  {
+   "us": "jail",
+   "uk": "gaol",
+   "kind": "other"
+  },
+  {
+   "us": "omelet",
+   "uk": "omelette",
+   "kind": "other"
+  },
+  {
+   "us": "sulfur",
+   "uk": "sulphur",
+   "kind": "other"
+  },
+  {
+   "us": "sulfate",
+   "uk": "sulphate",
+   "kind": "other"
+  },
+  {
+   "us": "sulfide",
+   "uk": "sulphide",
+   "kind": "other"
+  },
+  {
+   "us": "sulfuric",
+   "uk": "sulphuric",
+   "kind": "other"
+  },
+  {
+   "us": "sulfurable",
+   "uk": "sulphurable",
+   "kind": "other"
+  },
+  {
+   "us": "specialty",
+   "uk": "speciality",
+   "kind": "other"
+  },
+  {
+   "us": "learned",
+   "uk": "learnt",
+   "kind": "other"
+  },
+  {
+   "us": "dreamed",
+   "uk": "dreamt",
+   "kind": "other"
+  },
+  {
+   "us": "burned",
+   "uk": "burnt",
+   "kind": "other"
+  },
+  {
+   "us": "spilled",
+   "uk": "spilt",
+   "kind": "other"
+  },
+  {
+   "us": "smelled",
+   "uk": "smelt",
+   "kind": "other"
+  },
+  {
+   "us": "leaped",
+   "uk": "leapt",
+   "kind": "other"
+  },
+  {
+   "us": "spoiled",
+   "uk": "spoilt",
+   "kind": "other"
+  },
+  {
+   "us": "toward",
+   "uk": "towards",
+   "kind": "other"
+  },
+  {
+   "us": "backward",
+   "uk": "backwards",
+   "kind": "other"
+  },
+  {
+   "us": "forward",
+   "uk": "forwards",
+   "kind": "other"
+  },
+  {
+   "us": "afterward",
+   "uk": "afterwards",
+   "kind": "other"
+  },
+  {
+   "us": "judgment",
+   "uk": "judgement",
+   "kind": "other"
+  },
+  {
+   "us": "acknowledgment",
+   "uk": "acknowledgement",
+   "kind": "other"
+  },
+  {
+   "us": "abridgment",
+   "uk": "abridgement",
+   "kind": "other"
+  },
+  {
+   "us": "inquiry",
+   "uk": "enquiry",
+   "kind": "other"
+  },
+  {
+   "us": "inquire",
+   "uk": "enquire",
+   "kind": "other"
+  },
+  {
+   "us": "neuron",
+   "uk": "neurone",
+   "kind": "other"
+  },
+  {
+   "us": "annex",
+   "uk": "annexe",
+   "kind": "other"
+  },
+  {
+   "us": "doughnut",
+   "uk": "donut",
+   "kind": "other"
+  },
+  {
+   "us": "adios",
+   "uk": "adiós",
+   "kind": "diacritic"
+  },
+  {
+   "us": "clientele",
+   "uk": "clientèle",
+   "kind": "diacritic"
+  },
+  {
+   "us": "debutante",
+   "uk": "débutante",
+   "kind": "diacritic"
+  },
+  {
+   "us": "fete",
+   "uk": "fête",
+   "kind": "diacritic"
+  },
+  {
+   "us": "matinee",
+   "uk": "matinée",
+   "kind": "diacritic"
+  },
+  {
+   "us": "materiel",
+   "uk": "matériel",
+   "kind": "diacritic"
+  },
+  {
+   "us": "melee",
+   "uk": "mêlée",
+   "kind": "diacritic"
+  },
+  {
+   "us": "naive",
+   "uk": "naïve",
+   "kind": "diacritic"
+  },
+  {
+   "us": "adapter",
+   "uk": "adaptor",
+   "kind": "other"
+  },
+  {
+   "us": "amortization",
+   "uk": "amortisation",
+   "kind": "ise"
+  },
+  {
+   "us": "analyzer",
+   "uk": "analyser",
+   "kind": "ise"
+  },
+  {
+   "us": "anesthesiologist",
+   "uk": "anaesthesiologist",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "antagonize",
+   "uk": "antagonise",
+   "kind": "ise"
+  },
+  {
+   "us": "appetizing",
+   "uk": "appetising",
+   "kind": "ise"
+  },
+  {
+   "us": "arbor",
+   "uk": "arbour",
+   "kind": "our"
+  },
+  {
+   "us": "armor",
+   "uk": "armour",
+   "kind": "our"
+  },
+  {
+   "us": "artifact",
+   "uk": "artefact",
+   "kind": "other"
+  },
+  {
+   "us": "authorization",
+   "uk": "authorisation",
+   "kind": "ise"
+  },
+  {
+   "us": "balk",
+   "uk": "baulk",
+   "kind": "other"
+  },
+  {
+   "us": "capitalize",
+   "uk": "capitalise",
+   "kind": "ise"
+  },
+  {
+   "us": "carburetor",
+   "uk": "carburetter",
+   "kind": "other"
+  },
+  {
+   "us": "carburetor",
+   "uk": "carburettor",
+   "kind": "other"
+  },
+  {
+   "us": "centralization",
+   "uk": "centralisation",
+   "kind": "ise"
+  },
+  {
+   "us": "checker",
+   "uk": "chequer",
+   "kind": "other"
+  },
+  {
+   "us": "cipher",
+   "uk": "cypher",
+   "kind": "other"
+  },
+  {
+   "us": "civilized",
+   "uk": "civilised",
+   "kind": "ise"
+  },
+  {
+   "us": "colorful",
+   "uk": "colourful",
+   "kind": "our"
+  },
+  {
+   "us": "criminalize",
+   "uk": "criminalise",
+   "kind": "ise"
+  },
+  {
+   "us": "customize",
+   "uk": "customise",
+   "kind": "ise"
+  },
+  {
+   "us": "decriminalization",
+   "uk": "decriminalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "democratization",
+   "uk": "democratisation",
+   "kind": "ise"
+  },
+  {
+   "us": "discoloration",
+   "uk": "discolouration",
+   "kind": "our"
+  },
+  {
+   "us": "empathize",
+   "uk": "empathise",
+   "kind": "ise"
+  },
+  {
+   "us": "encyclopedic",
+   "uk": "encyclopaedic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "energize",
+   "uk": "energise",
+   "kind": "ise"
+  },
+  {
+   "us": "equalizer",
+   "uk": "equaliser",
+   "kind": "ise"
+  },
+  {
+   "us": "familiarize",
+   "uk": "familiarise",
+   "kind": "ise"
+  },
+  {
+   "us": "fantasize",
+   "uk": "fantasise",
+   "kind": "ise"
+  },
+  {
+   "us": "feces",
+   "uk": "faeces",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "fertilization",
+   "uk": "fertilisation",
+   "kind": "ise"
+  },
+  {
+   "us": "fertilizer",
+   "uk": "fertiliser",
+   "kind": "ise"
+  },
+  {
+   "us": "finalize",
+   "uk": "finalise",
+   "kind": "ise"
+  },
+  {
+   "us": "flavorful",
+   "uk": "flavourful",
+   "kind": "our"
+  },
+  {
+   "us": "flavoring",
+   "uk": "flavouring",
+   "kind": "our"
+  },
+  {
+   "us": "focused",
+   "uk": "focussed",
+   "kind": "other"
+  },
+  {
+   "us": "gonorrhea",
+   "uk": "gonorrhoea",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "gram",
+   "uk": "gramme",
+   "kind": "other"
+  },
+  {
+   "us": "harmonize",
+   "uk": "harmonise",
+   "kind": "ise"
+  },
+  {
+   "us": "hemorrhagic",
+   "uk": "haemorrhagic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "hemorrhoid",
+   "uk": "haemorrhoid",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "hospitalization",
+   "uk": "hospitalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "hybridization",
+   "uk": "hybridisation",
+   "kind": "ise"
+  },
+  {
+   "us": "hypothesize",
+   "uk": "hypothesise",
+   "kind": "ise"
+  },
+  {
+   "us": "immunization",
+   "uk": "immunisation",
+   "kind": "ise"
+  },
+  {
+   "us": "industrialization",
+   "uk": "industrialisation",
+   "kind": "ise"
+  },
+  {
+   "us": "internalize",
+   "uk": "internalise",
+   "kind": "ise"
+  },
+  {
+   "us": "internationalization",
+   "uk": "internationalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "ischemia",
+   "uk": "ischaemia",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "ischemic",
+   "uk": "ischaemic",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "jeopardize",
+   "uk": "jeopardise",
+   "kind": "ise"
+  },
+  {
+   "us": "kilogram",
+   "uk": "kilogramme",
+   "kind": "other"
+  },
+  {
+   "us": "laborer",
+   "uk": "labourer",
+   "kind": "our"
+  },
+  {
+   "us": "lasagna",
+   "uk": "lasagne",
+   "kind": "other"
+  },
+  {
+   "us": "legalization",
+   "uk": "legalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "legitimize",
+   "uk": "legitimise",
+   "kind": "ise"
+  },
+  {
+   "us": "liberalization",
+   "uk": "liberalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "licorice",
+   "uk": "liquorice",
+   "kind": "other"
+  },
+  {
+   "us": "likable",
+   "uk": "likeable",
+   "kind": "other"
+  },
+  {
+   "us": "marginalization",
+   "uk": "marginalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "materialize",
+   "uk": "materialise",
+   "kind": "ise"
+  },
+  {
+   "us": "matte",
+   "uk": "matt",
+   "kind": "other"
+  },
+  {
+   "us": "medalist",
+   "uk": "medallist",
+   "kind": "ll"
+  },
+  {
+   "us": "meow",
+   "uk": "miaow",
+   "kind": "other"
+  },
+  {
+   "us": "misbehavior",
+   "uk": "misbehaviour",
+   "kind": "our"
+  },
+  {
+   "us": "modernization",
+   "uk": "modernisation",
+   "kind": "ise"
+  },
+  {
+   "us": "moisturizer",
+   "uk": "moisturiser",
+   "kind": "ise"
+  },
+  {
+   "us": "molding",
+   "uk": "moulding",
+   "kind": "other"
+  },
+  {
+   "us": "monetize",
+   "uk": "monetise",
+   "kind": "ise"
+  },
+  {
+   "us": "neighborhood",
+   "uk": "neighbourhood",
+   "kind": "our"
+  },
+  {
+   "us": "normalization",
+   "uk": "normalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "normalize",
+   "uk": "normalise",
+   "kind": "ise"
+  },
+  {
+   "us": "organization",
+   "uk": "organisation",
+   "kind": "ise"
+  },
+  {
+   "us": "organizational",
+   "uk": "organisational",
+   "kind": "ise"
+  },
+  {
+   "us": "organizer",
+   "uk": "organiser",
+   "kind": "ise"
+  },
+  {
+   "us": "paleontologist",
+   "uk": "palaeontologist",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "paleontology",
+   "uk": "palaeontology",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "paralyzing",
+   "uk": "paralysing",
+   "kind": "ise"
+  },
+  {
+   "us": "patronize",
+   "uk": "patronise",
+   "kind": "ise"
+  },
+  {
+   "us": "patronizing",
+   "uk": "patronising",
+   "kind": "ise"
+  },
+  {
+   "us": "peddler",
+   "uk": "pedlar",
+   "kind": "other"
+  },
+  {
+   "us": "pediatrician",
+   "uk": "paediatrician",
+   "kind": "ae/oe"
+  },
+  {
+   "us": "penalize",
+   "uk": "penalise",
+   "kind": "ise"
+  },
+  {
+   "us": "polarization",
+   "uk": "polarisation",
+   "kind": "ise"
+  },
+  {
+   "us": "polymerization",
+   "uk": "polymerisation",
+   "kind": "ise"
+  },
+  {
+   "us": "practiced",
+   "uk": "practised",
+   "kind": "other"
+  },
+  {
+   "us": "privatization",
+   "uk": "privatisation",
+   "kind": "ise"
+  },
+  {
+   "us": "privatize",
+   "uk": "privatise",
+   "kind": "ise"
+  },
+  {
+   "us": "program",
+   "uk": "programme",
+   "kind": "other"
+  },
+  {
+   "us": "proselytize",
+   "uk": "proselytise",
+   "kind": "ise"
+  },
+  {
+   "us": "radicalization",
+   "uk": "radicalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "rationalization",
+   "uk": "rationalisation",
+   "kind": "ise"
+  },
+  {
+   "us": "realization",
+   "uk": "realisation",
+   "kind": "ise"
+  },
+  {
+   "us": "recognized",
+   "uk": "recognised",
+   "kind": "ise"
+  },
+  {
+   "us": "sizable",
+   "uk": "sizeable",
+   "kind": "other"
+  },
+  {
+   "us": "specialization",
+   "uk": "specialisation",
+   "kind": "ise"
+  },
+  {
+   "us": "specialized",
+   "uk": "specialised",
+   "kind": "ise"
+  },
+  {
+   "us": "stabilization",
+   "uk": "stabilisation",
+   "kind": "ise"
+  },
+  {
+   "us": "standardization",
+   "uk": "standardisation",
+   "kind": "ise"
+  },
+  {
+   "us": "sterilization",
+   "uk": "sterilisation",
+   "kind": "ise"
+  },
+  {
+   "us": "subsidize",
+   "uk": "subsidise",
+   "kind": "ise"
+  },
+  {
+   "us": "synchronization",
+   "uk": "synchronisation",
+   "kind": "ise"
+  },
+  {
+   "us": "synchronize",
+   "uk": "synchronise",
+   "kind": "ise"
+  },
+  {
+   "us": "synthesizer",
+   "uk": "synthesiser",
+   "kind": "ise"
+  },
+  {
+   "us": "theorize",
+   "uk": "theorise",
+   "kind": "ise"
+  },
+  {
+   "us": "tumor",
+   "uk": "tumour",
+   "kind": "our"
+  },
+  {
+   "us": "underutilized",
+   "uk": "underutilised",
+   "kind": "ise"
+  },
+  {
+   "us": "unsavory",
+   "uk": "unsavoury",
+   "kind": "our"
+  },
+  {
+   "us": "veranda",
+   "uk": "verandah",
+   "kind": "other"
+  },
+  {
+   "us": "visualization",
+   "uk": "visualisation",
+   "kind": "ise"
+  },
+  {
+   "us": "whiz",
+   "uk": "whizz",
+   "kind": "other"
+  },
+  {
+   "us": "womanizer",
+   "uk": "womaniser",
+   "kind": "ise"
+  },
+  {
+   "us": "yogurt",
+   "uk": "yoghurt",
+   "kind": "other"
+  },
+  {
+   "us": "yogurt",
+   "uk": "yogourt",
+   "kind": "other"
+  }
+ ]
+}
