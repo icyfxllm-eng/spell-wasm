@@ -68,6 +68,9 @@ const ENGLISH_BY_DECISION = [
   'vs',
   // (Its mountain moved into an icon slot in CC-VISUAL-ECLIPSE F8.)
   'The Climb',
+  // CC-LAUNCH-EN D-DEF11: the CC BY-SA credit on Definition Match. A source
+  // name and a licence identifier, both proper names; nothing to translate.
+  'Wiktionary · CC BY-SA 4.0',
 ];
 
 // Ids the Rust side writes through a VARIABLE rather than a literal, so the
