@@ -1,0 +1,176 @@
+# CC files: which are in the repo
+
+Built 2026-11-08 by scanning every tracked file (and the session memory index) for CC-<NAME> references, then matching names to `.md` files whose name carries CC-<NAME>. A name counts as present if any spec, census, plan, decisions or amendments file for it exists. Generated; re-run the scan before relying on it.
+
+## Present (77)
+
+| CC | files |
+|---|---|
+| CC-AR-HI-PREAUDIT | `docs/CC-AR-HI-PREAUDIT.md` |
+| CC-ARCADE-BATCH | `docs/CC-ARCADE-BATCH.md` |
+| CC-AUDIO-REPLAY | `docs/CC-AUDIO-REPLAY.md` |
+| CC-AUG6-AUDITPASS | `docs/CC-AUG6-AUDITPASS.md` |
+| CC-BANK-COMPLETE | `docs/CC-BANK-COMPLETE.md` |
+| CC-BOARD-GAME-ONLINE | `docs/CC-BOARD-GAME-ONLINE.md` |
+| CC-BUY-DRIVERS | `docs/CC-BUY-DRIVERS.md` |
+| CC-CALENDAR | `docs/CC-CALENDAR.md` |
+| CC-CJK-INK | `docs/CC-CJK-INK.md` |
+| CC-CLIP-REPORT | `docs/CC-CLIP-REPORT.md` |
+| CC-DEF-MATCH | `docs/CC-DEF-MATCH-PLAN.md` |
+| CC-FAMILY-VOICES | `docs/CC-FAMILY-VOICES.md` |
+| CC-FINALE | `docs/CC-FINALE.md` |
+| CC-GAME-SERVER | `docs/CC-GAME-SERVER.md`, `docs/recon/CC-GAME-SERVER-recon.md` |
+| CC-GUARDIAN-DASH | `docs/CC-GUARDIAN-DASH.md` |
+| CC-GUARDIAN-REPORT | `docs/CC-GUARDIAN-REPORT-v1.1-amendments.md`, `docs/CC-GUARDIAN-REPORT.md` |
+| CC-HUB-GROUP-L10N | `docs/CC-HUB-GROUP-L10N-census.md` |
+| CC-HUB-NAV | `docs/CC-HUB-NAV-v131-census.md`, `docs/CC-HUB-NAV-v132-census.md` |
+| CC-IMPOSSIBLE | `docs/CC-IMPOSSIBLE-v1.1-SOUNDALIKE.md`, `docs/CC-IMPOSSIBLE-v1.2-MIX.md` |
+| CC-IOS-SURFACES | `docs/CC-IOS-SURFACES.md` |
+| CC-LEARNING-ENGINE | `docs/CC-LEARNING-ENGINE.md` |
+| CC-LEARNING-ENGINE-L0 | `docs/CC-LEARNING-ENGINE-L0.md` |
+| CC-LEARNING-ENGINE-L0-CR1 | `docs/CC-LEARNING-ENGINE-L0-CR1.md` |
+| CC-LOCALE-TYPESET | `docs/CC-LOCALE-TYPESET.md` |
+| CC-MASTER-PARITY | `docs/CC-MASTER-PARITY.md` |
+| CC-MASTERPIECE-RECOG | `docs/CC-MASTERPIECE-RECOG.md` |
+| CC-MASTERPIECE-TONAL | `docs/CC-MASTERPIECE-TONAL.md` |
+| CC-MIC-EVERYWHERE | `docs/CC-MIC-EVERYWHERE.md` |
+| CC-MYWORDS-LISTS | `docs/CC-MYWORDS-LISTS.md` |
+| CC-MYWORDS-LISTS-KC1 | `docs/CC-MYWORDS-LISTS-KC1.md` |
+| CC-OFFLINE-PACKS | `docs/CC-OFFLINE-PACKS.md` |
+| CC-ONLINE-TURN | `docs/CC-ONLINE-TURN.md` |
+| CC-ORTHO-SWEEP-DE-JA | `docs/CC-ORTHO-SWEEP-DE-JA-decisions.md` |
+| CC-PERSIAN-FOUNDATION | `docs/CC-PERSIAN-FOUNDATION.md` |
+| CC-PHOTO-IMPORT | `docs/CC-PHOTO-IMPORT-PLAN.md` |
+| CC-PHOTO-PICTURE-V2 | `docs/CC-PHOTO-PICTURE-V2-PLAN.md` |
+| CC-PHOTO-SHADOWS | `docs/CC-PHOTO-SHADOWS.md` |
+| CC-PICTURE-BANK | `docs/CC-PICTURE-BANK.md` |
+| CC-PICTURE-BANK-SYMBOLS | `docs/CC-PICTURE-BANK-SYMBOLS.md` |
+| CC-PICTURE-COLOR | `docs/CC-PICTURE-COLOR.md` |
+| CC-PICTURE-INTEGRITY | `docs/CC-PICTURE-INTEGRITY-v2.md` |
+| CC-PICTURE-PLATFORM | `docs/CC-PICTURE-PLATFORM.md` |
+| CC-PLACEMENT-IDEMPOTENCE | `docs/CC-PLACEMENT-IDEMPOTENCE.md` |
+| CC-PRACTICE | `docs/CC-PRACTICE-PLAN.md` |
+| CC-PRACTICE-V2 | `docs/CC-PRACTICE-V2-PLAN.md` |
+| CC-REPORTS | `docs/CC-REPORTS.md` |
+| CC-REPORTS-SHARE | `docs/CC-REPORTS-SHARE.md` |
+| CC-RUSSIAN-STRESS | `docs/CC-RUSSIAN-STRESS.md` |
+| CC-SCAN-STACK | `docs/CC-SCAN-STACK.md` |
+| CC-SENSE-CUE | `docs/CC-SENSE-CUE-v1.1.md`, `docs/CC-SENSE-CUE-v1.2-mergers.md` |
+| CC-SNAP-BOXES | `docs/CC-SNAP-BOXES.md` |
+| CC-SNAP-CLEAN | `docs/CC-SNAP-CLEAN-census.md`, `docs/CC-SNAP-CLEAN-v1.1.md` |
+| CC-SNAP-DOC1 | `docs/CC-SNAP-DOC1-census.md` |
+| CC-SNAP-HIGHLIGHT | `docs/CC-SNAP-HIGHLIGHT.md` |
+| CC-SNAP-LEMMA | `docs/CC-SNAP-LEMMA-census.md` |
+| CC-SNAP-ROADMAP | `docs/CC-SNAP-ROADMAP.md` |
+| CC-SPELL-ALOUD | `docs/CC-SPELL-ALOUD-PLAN.md` |
+| CC-SPELL-ALOUD-INTEGRATION | `docs/CC-SPELL-ALOUD-INTEGRATION-PLAN.md` |
+| CC-SPELL-ALOUD-INTEGRATION-PR | `docs/CC-SPELL-ALOUD-INTEGRATION-PR.md` |
+| CC-SPELL-O-PHONES | `docs/CC-SPELL-O-PHONES.md` |
+| CC-SPELL-RACING | `docs/CC-SPELL-RACING-PLAN.md` |
+| CC-SPELLDOKU | `docs/CC-SPELLDOKU-v1.2.md`, `docs/CC-SPELLDOKU-v1.3.md`, `docs/CC-SPELLDOKU.md` |
+| CC-SPELLPIC-F0-DIAGNOSIS | `docs/CC-SPELLPIC-F0-DIAGNOSIS.md` |
+| CC-TELEMETRY-FOUNDATION | `docs/CC-TELEMETRY-FOUNDATION.md` |
+| CC-TONAL-FACEPASS | `docs/CC-TONAL-FACEPASS.md` |
+| CC-TONAL-POLISH | `docs/CC-TONAL-POLISH.md` |
+| CC-TRANSLATE-SCREEN | `docs/CC-TRANSLATE-SCREEN.md` |
+| CC-TRANSLATE-TOOLS | `docs/CC-TRANSLATE-TOOLS.md` |
+| CC-VOICE-CLARITY | `docs/cc/CC-VOICE-CLARITY-v1.md` |
+| CC-WORD-PICTURE-V5 | `docs/CC-WORD-PICTURE-V5-PLAN.md` |
+| CC-WORD-PICTURE-V7 | `docs/CC-WORD-PICTURE-V7-PLAN.md` |
+| CC-WORDGRID | `docs/CC-WORDGRID.md` |
+| CC-WORDPICTURE-SCANLOCK-V8 | `docs/CC-WORDPICTURE-SCANLOCK-V8.md` |
+| CC-YEARBOOK | `docs/CC-YEARBOOK.md` |
+| CC-ZH-PINYIN-DEPTH | `docs/CC-ZH-PINYIN-DEPTH.md` |
+| CC-ZH-PINYIN-DISPLAY | `docs/CC-ZH-PINYIN-DISPLAY.md` |
+| CC-ZH-TONE | `docs/CC-ZH-TONE.md` |
+
+## Recovery status (2026-11-08)
+
+- **Added:** `docs/cc/CC-VOICE-CLARITY-v1.md`, from Eric's pasted text (2026-10-29 session). Its D1: "Near-sound answers are never accepted. A miss stays a miss."
+- **Not on this Mac, Eric to paste:** CC-EN-EXPERT-GROWTH v1, and the July Gig A rater template.
+- **Recoverable from earlier sessions, not copied (Eric to choose):** CC-ACCOUNTS v1, CC-BANK-PURITY v1, CC-BANK-REBUILD v1, CC-BOARD-GAME-POLISH v1, CC-BUILD219-FIXES v1, CC-ECLIPSE-HOTFIX v1, CC-EN-VARIANTS v1, CC-FEEDBACK v1, CC-HUB-DEADROWS v1.1, CC-HUMAN-AUDIO v1, CC-LAUNCH-EN v1 and v1.1, CC-PICK-QUEUE v1, CC-QUICKBEE-DRAW v1, CC-SECURITY-BASELINE v1, CC-SOUNDALIKE-BONUS v1, CC-SPELL-KEYBOARD v1, CC-SPELLIT-MIC-FIX v1.1–v1.3, CC-SPELLUZZLE v1 and v1.1, CC-VI-BANK-GROWTH v1, CC-VISUAL-ECLIPSE v1, CC-WONDER-THEMES v1.
+
+## Referenced but no file in the repo (78)
+
+Referenced in 2+ files or in the session memory index, with no matching file. Some are sub-tasks or informal names, not specs.
+
+| CC | references |
+|---|---|
+| CC-ACCOUNTS | 17 |
+| CC-ATTEMPTS-SHIELDS | 11 |
+| CC-AUDIBILITY-TRIAGE | 3 |
+| CC-AUDIO-CLARITY | 38 |
+| CC-BANK-EXPANSION | 2 |
+| CC-BANK-PURITY | 66 |
+| CC-BANK-REBUILD | 6 |
+| CC-BANK-TRANSLATE | 22 |
+| CC-BEE-SIM | 6 |
+| CC-BLITZ | 4 |
+| CC-BOARD-GAME-POLISH | 11 |
+| CC-BUILD219-FIXES | 19 |
+| CC-BY-SA | 2 |
+| CC-CEDICT | 28 |
+| CC-CLIMB-SHIELDS | 2 |
+| CC-CONTRIBUTE | 6 |
+| CC-DEF-PRECHECK | 7 |
+| CC-DEFMATCH-POLISH | 2 |
+| CC-DEFS-DARK | 2 |
+| CC-ECLIPSE-HOTFIX | 23 |
+| CC-EDITIONS | 6 |
+| CC-EN-EXPERT-GROWTH | 33 |
+| CC-EN-GRADING-SHEET | 4 |
+| CC-EN-VARIANTS | 13 |
+| CC-ENTITLEMENTS | 9 |
+| CC-FEEDBACK | 12 |
+| CC-HINDI-PHASE0 | 6 |
+| CC-HOME-REGROUP | 2 |
+| CC-HUB-CLEANUP | 7 |
+| CC-HUB-DEADROWS | 12 |
+| CC-HUMAN-AUDIO | 29 |
+| CC-IMPOSTOR | 7 |
+| CC-LANG-SCOPE | 3 |
+| CC-LAUNCH-EN | 92 |
+| CC-LEARNING-DIAGNOSIS | 2 |
+| CC-LEARNING-MODES | 2 |
+| CC-LEARNING-SKILL | 2 |
+| CC-LETTER-FORGE | 9 |
+| CC-LINEUP-SWAP | 13 |
+| CC-LINEUP-TRIM | 2 |
+| CC-MODE-HUB | 10 |
+| CC-NEW-LANG-CONTENT | 4 |
+| CC-ONBOARD-JR | 55 |
+| CC-ORTHO-SWEEP-ALL | 0 |
+| CC-PICK-QUEUE | 20 |
+| CC-PICKER | 3 |
+| CC-PICKER-SEARCH | 7 |
+| CC-PLAYER-CONTRACT | 12 |
+| CC-QUICKBEE-DRAW | 17 |
+| CC-RAFU-SOURCES | 2 |
+| CC-RANDOSPELL | 23 |
+| CC-RANDOSPELL-ONLINE | 2 |
+| CC-RENDER-FIXPASS | 2 |
+| CC-RTL | 23 |
+| CC-RU-ORTHO | 11 |
+| CC-SCRIPT-PATHS | 2 |
+| CC-SECURITY-BASELINE | 8 |
+| CC-SNAP-LAYOUT | 7 |
+| CC-SNAP-LIST | 9 |
+| CC-SNAP-SCHEDULE | 2 |
+| CC-SNAP-SHARE | 4 |
+| CC-SOUNDALIKE-BONUS | 2 |
+| CC-SPELL-KEYBOARD | 26 |
+| CC-SPELLIT-MIC-FIX | 19 |
+| CC-SPELLOFF-MULTI | 2 |
+| CC-SPELLPIC-AUDITPASS | 5 |
+| CC-SPELLUZZLE | 23 |
+| CC-STRESS-LAYER | 2 |
+| CC-SWAHILI-WORDBANK | 2 |
+| CC-THEMES-COSMOS | 23 |
+| CC-TRACER-V7 | 3 |
+| CC-TRAP-BOSSES | 3 |
+| CC-VI-BANK-GROWTH | 4 |
+| CC-VISUAL-ECLIPSE | 74 |
+| CC-WONDER-THEMES | 0 |
+| CC-WORD-CHAINS | 8 |
+| CC-WORDLIST-RAFU | 5 |
+| CC-WORDLIST-SOURCES | 8 |
