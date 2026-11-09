@@ -104,6 +104,16 @@ mod tests {
         }
     }
 
+    /// Eric, 2026-11-05: sexual or medical words that a child should not be served, in both national spellings.
+    #[test]
+    fn the_sexual_and_medical_words_never_reach_a_child() {
+        for w in ["feces", "faeces", "gonorrhea", "gonorrhoea", "hemorrhoid", "haemorrhoid", "hemorrhoids", "haemorrhoids", "womanizer", "womaniser", "womanizers", "womanisers"] {
+            assert!(!kid_allowed("en", w), "{w} must not be served in Kid Mode or Spell Jr");
+        }
+        let pool: Vec<String> = ["cat", "feces", "gonorrhoea", "dog"].iter().map(|s| s.to_string()).collect();
+        assert_eq!(filter_kid("en", pool), vec!["cat".to_string(), "dog".to_string()]);
+    }
+
     #[test]
     fn cemetery_is_excluded_for_english() {
         assert!(!kid_allowed("en", "cemetery"));
@@ -159,5 +169,48 @@ mod tests {
         let easy: Vec<String> = crate::words::tier_for("ja", "easy").iter().map(|s| s.to_string()).collect();
         assert!(easy.iter().any(|w| w == "おっぱい"), "the row is still in the adult bank (quarantine is not this fix)");
         assert!(!filter_kid("ja", easy).iter().any(|w| w == "おっぱい"));
+    }
+}
+
+/// CC-EN-VARIANTS (Eric 2026-11-04, build order 3a): an English row with a space or a hyphen is never served at Easy
+/// or to a Spell Jr player. The keyboard has no space key and the hyphen sits behind a punctuation toggle, so a young
+/// or beginning speller cannot reach it. No English row has one today (census 2026-11-04); this keeps it true when one
+/// arrives. Other languages are untouched (Vietnamese keeps its own rule). Never returns an empty pool.
+pub fn without_splits_for_easy_and_jr(lang: &str, tier: &str, kid: bool, pool: Vec<String>) -> Vec<String> {
+    if lang != crate::consts::EN || !(kid || tier == "easy") {
+        return pool;
+    }
+    let kept: Vec<String> = pool.iter().filter(|w| !w.contains(' ') && !w.contains('-')).cloned().collect();
+    if kept.is_empty() {
+        pool
+    } else {
+        kept
+    }
+}
+
+#[cfg(test)]
+mod split_tests {
+    use super::*;
+
+    fn v(a: &[&str]) -> Vec<String> {
+        a.iter().map(|s| s.to_string()).collect()
+    }
+
+    #[test]
+    fn easy_and_jr_drop_split_rows_in_english_only() {
+        let pool = v(&["cat", "ice cream", "well-being", "dog"]);
+        assert_eq!(without_splits_for_easy_and_jr("en", "easy", false, pool.clone()), v(&["cat", "dog"]));
+        assert_eq!(without_splits_for_easy_and_jr("en", "hard", true, pool.clone()), v(&["cat", "dog"]), "Spell Jr at any tier");
+        assert_eq!(without_splits_for_easy_and_jr("en", "hard", false, pool.clone()), pool, "other tiers keep them");
+        assert_eq!(without_splits_for_easy_and_jr("vi", "easy", true, pool.clone()), pool, "vi keeps its own rule");
+        assert_eq!(without_splits_for_easy_and_jr("en", "easy", false, v(&["ice cream"])), v(&["ice cream"]), "never empty");
+    }
+
+    #[test]
+    fn no_english_bank_row_has_a_split_today() {
+        for tier in ["easy", "medium", "hard", "expert"] {
+            let rows: Vec<String> = crate::words::tier_for("en", tier).iter().map(|s| s.to_string()).collect();
+            assert!(rows.iter().all(|w| !w.contains(' ') && !w.contains('-')), "{tier}");
+        }
     }
 }
