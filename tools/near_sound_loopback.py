@@ -47,7 +47,7 @@ LEAD_IN = "the word is "   # VOICE-CLARITY: 124 English words are rendered with 
 
 def true_homophones():
     """word -> its true-homophone set members (bored hears right for board)."""
-    sa = json.loads((ROOT / "assets" / "words" / "en" / "soundalikes.json").read_text())
+    sa = sl.soundalikes("en")
     out = {}
     for s in sa["sets"]:
         if s["kind"] == "true":
