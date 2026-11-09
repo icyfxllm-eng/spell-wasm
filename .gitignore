@@ -127,3 +127,8 @@ content-pipeline/wordpic/.tone-probe/
 contact-sheet/
 tools/boardgame-golden/target/
 tools/boardgame-golden/Cargo.lock
+
+# CC-LAUNCH-EN D-SRC4 generator: local venv and WordNet data
+tools/defgen/.venv/
+tools/defgen/.nltk/
+tools/defgen/__pycache__/
