@@ -179,6 +179,13 @@ pub fn effective_tier<'a>(tier: &'a str, kid: bool) -> &'a str {
     crate::experience::serve_tier(crate::experience::Experience::Junior, "def_match", tier)
 }
 
+/// CC-LAUNCH-EN F9: a pool row is kid-register only if the server says so AND
+/// Kid Mode allows the word at all (kid_filter). The server's flag is mechanical
+/// (short text, easy/medium) and never saw the kid word list.
+pub fn kid_register(lang: &str, word: &str, server_kid_register: bool) -> bool {
+    server_kid_register && crate::kid_filter::kid_allowed(lang, word)
+}
+
 /// The mode's word pool for one (rows, tier, kid) view: prompt-grade AND
 /// audit-passing rows of that tier only (D1/Invariant 1); Kid Mode additionally
 /// requires kid-register text — including for distractors (Invariant 6).
@@ -341,6 +348,17 @@ fn fnv(s: &str) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// CC-LAUNCH-EN F9: the served pool marked dead, die, kill and dies
+    /// kid_register; Kid Mode excludes them everywhere else, so here too.
+    #[test]
+    fn kid_excluded_words_are_never_kid_register() {
+        for w in ["dead", "die", "kill", "dies"] {
+            assert!(!kid_register("en", w, true), "{w}");
+        }
+        assert!(kid_register("en", "cat", true));
+        assert!(!kid_register("en", "cat", false));
+    }
 
     /// Synthetic fixture pool — 60 rows per tier (over the D3 floor), topics
     /// cycling over 6 buckets, roots over 10, all prompt-grade + audit-passing,

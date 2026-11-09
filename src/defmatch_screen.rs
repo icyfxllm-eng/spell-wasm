@@ -269,12 +269,18 @@ async fn ensure_pool(lang: &str, tier: &str) -> bool {
         for item in arr.iter() {
             let s = |k: &str| get(&item, k).and_then(|x| x.as_string()).unwrap_or_default();
             let b = |k: &str| get(&item, k).and_then(|x| x.as_bool()).unwrap_or(false);
+            let word = s("word");
+            // CC-LAUNCH-EN F9: the server's kid_register is mechanical (short,
+            // easy/medium) and knows nothing of the kid word list, so Kid Def
+            // Match served dead/die/kill. A word Kid Mode excludes everywhere
+            // else is never kid-register here either, as target or distractor.
+            let kid_register = defmatch::kid_register(lang, &word, b("kid_register"));
             rows.push(DefRow {
-                word: s("word"),
+                word,
                 definition: s("definition"),
                 prompt_grade: b("prompt_grade"),
                 audit_pass: true, // rows in the artifact passed the interim prescreen
-                kid_register: b("kid_register"),
+                kid_register,
                 tier: tier.to_string(),
                 topic: String::new(), // craft metadata arrives with richer artifacts
                 root: String::new(),
