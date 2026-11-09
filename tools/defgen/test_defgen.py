@@ -3,6 +3,7 @@
     tools/defgen/.venv/bin/python -m unittest tools/defgen/test_defgen.py
 """
 import inspect
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -72,6 +73,32 @@ class Validator(unittest.TestCase):
             "sentence", "We ate all the grapes in the garden bowl.", "garden", "easy", (set(), {"rape"}))))
         lists = ({"kill"}, set())
         self.assertTrue(any("kid-excluded" in p for p in defgen.check_field("sentence", "The cat will kill a mouse in the garden.", "garden", "easy", lists)))
+
+
+class MeaningSwap(unittest.TestCase):
+    """Eric 2026-11-09: Easy/Medium may swap to the child's common meaning; the swap is logged."""
+
+    def st(self, tier, swapped):
+        out = {"meaning_used": "a mix of things dissolved in water" if not swapped else "an answer to a problem",
+               "swapped": swapped,
+               "candidates": [{"definition": "The answer that fixes a problem or puzzle.",
+                               "sentence": "We found a solution to the tricky maze puzzle."}] * 2}
+        return {"rows": [{"word": "solution", "tier": tier}],
+                "gen": {"g0": {"stop": "end_turn", "text": json.dumps(out)}}}
+
+    def test_swap_kept_and_logged_on_easy(self):
+        st = self.st("easy", True)
+        self.assertEqual(len(defgen.validate(st)), 4)
+        self.assertTrue(st["rows"][0]["swapped"])
+        self.assertEqual(st["rows"][0]["meaning_used"], "an answer to a problem")
+
+    def test_swap_outside_easy_medium_goes_dark(self):
+        st = self.st("expert", True)
+        self.assertEqual(defgen.validate(st), [])
+
+    def test_schema_requires_the_swap_fields(self):
+        self.assertEqual(set(defgen.GEN_SCHEMA["required"]), {"meaning_used", "swapped", "candidates"})
+        self.assertIn("swapped", defgen.build_prompt("solution", "noun", "a mixture", "easy"))
 
 
 if __name__ == "__main__":

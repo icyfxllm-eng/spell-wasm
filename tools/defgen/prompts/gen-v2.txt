@@ -1,0 +1,18 @@
+You write the definition and the example sentence for one word in a spelling game for children aged 5 and up.
+
+Word: {HEADWORD}
+Part of speech: {POS}
+Suggested meaning: {SENSE}
+Level: {TIER}
+
+Choose the meaning first.
+- Level easy or medium: use the suggested meaning only if it is the one a young child knows best for this word. If it is technical, rare, abstract or adult (for example a chemistry, military, legal or business sense), use instead the everyday meaning a child knows best, keeping the same spelling. Then set "swapped" to true.
+- Level hard or expert: use the suggested meaning. Set "swapped" to false.
+Write the meaning you used in "meaning_used" as a short plain phrase.
+
+Then write two different candidates for that meaning. Each has:
+- definition: one plain sentence of 15 words or fewer that explains this meaning. Do not use the word itself or any form of it (no plural, past tense, -ing or -ly form), because the definition is the clue a child uses to find the word.
+- sentence: one example sentence of 6 to 14 words that uses the word exactly once, spelled exactly as given above, in this meaning.
+
+Write for a young child at every level: short, common words, warm and concrete. Leave out violence, injury, death, crime, drugs, alcohol, romance, bodily detail and anything frightening. If the meaning is itself about a hard topic, say it as gently and plainly as a children's dictionary would.
+Write your own words; do not quote a dictionary.

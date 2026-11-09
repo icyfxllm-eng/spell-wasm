@@ -45,12 +45,13 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 MODEL = "claude-sonnet-5-5"   # D-SRC4: a current Sonnet-class model
 EFFORT = "low"                # Sonnet 5.5 rejects non-default temperature; low effort is the lever
-PROMPT_VERSION = "gen-v1"
+PROMPT_VERSION = "gen-v2"   # Eric 2026-11-09: child's common meaning for Easy/Medium, swaps logged
 SAFETY_PROMPT = ROOT / "tools" / "llm-prescreen" / "prompts" / "wordlist-v1.txt"
 CAP_USD = 25.0
 # Batch prices are half the list price; Sonnet 5.5 lists $2 / $10 per MTok.
 BATCH_IN_PER_MTOK, BATCH_OUT_PER_MTOK = 1.0, 5.0
 TIERS = ["easy", "medium", "hard", "expert"]
+SWAP_TIERS = {"easy", "medium"}
 NLTK_DIR = HERE / ".nltk"
 
 GEN_SCHEMA = {
@@ -64,9 +65,11 @@ GEN_SCHEMA = {
                 "required": ["definition", "sentence"],
                 "additionalProperties": False,
             },
-        }
+        },
+        "meaning_used": {"type": "string"},
+        "swapped": {"type": "boolean"},
     },
-    "required": ["candidates"],
+    "required": ["meaning_used", "swapped", "candidates"],
     "additionalProperties": False,
 }
 
@@ -400,16 +403,23 @@ def validate(st: dict) -> list[dict]:
     items = []
     for i, r in enumerate(st["rows"]):
         g = st["gen"].get(f"g{i}", {})
-        r["candidates"] = []
+        r["candidates"], r["meaning_used"], r["swapped"] = [], "", False
         if g.get("stop") == "end_turn" and g.get("text"):
             try:
-                r["candidates"] = json.loads(g["text"]).get("candidates", [])[:2]
+                out = json.loads(g["text"])
+                r["candidates"] = out.get("candidates", [])[:2]
+                r["meaning_used"] = str(out.get("meaning_used", ""))
+                r["swapped"] = out.get("swapped") is True
             except ValueError:
                 pass
+        # The swap is allowed for Easy and Medium only; elsewhere the word goes dark.
+        swap_bad = r["swapped"] and r["tier"] not in SWAP_TIERS
         r["gen_status"] = g.get("error") or g.get("stop") or "missing"
         for j, cand in enumerate(r["candidates"]):
             for field in ("definition", "sentence"):
                 cand[field + "_problems"] = check_field(field, cand.get(field, ""), r["word"], r["tier"], lists)
+                if swap_bad:
+                    cand[field + "_problems"].append("meaning swapped outside Easy/Medium")
                 if not cand[field + "_problems"]:
                     items.append({"id": f"{i}.{j}.{field}", "word": r["word"], "gloss": cand[field]})
     return items
@@ -434,6 +444,8 @@ def finalize(run_dir: Path, st: dict, flagged: set, safety_failed: set, spent: f
                                  ("safety flag" if f"{i}.{j}.{field}" in flagged else "safety unreadable"))
                 for j, cand in enumerate(r["candidates"])) or r["gen_status"]
             out_rows.append({"word": r["word"], "tier": r["tier"], "pos": r["pos"], "synset": r["synset"] or "",
+                             "swapped": "yes" if r.get("swapped") else "",
+                             "meaning_used": r.get("meaning_used", ""),
                              "field": field, "text": kept or "", "status": "ok" if kept else "dark",
                              "reasons": "" if kept else reasons,
                              "source": st.get("source", f"spell-gen-{PROMPT_VERSION}"), "source_license": "original"})
@@ -442,6 +454,11 @@ def finalize(run_dir: Path, st: dict, flagged: set, safety_failed: set, spent: f
     with open(run_dir / "rows.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(out_rows[0].keys()))
         w.writeheader(); w.writerows(out_rows)
+    swaps = [r for r in rows if r.get("swapped")]
+    with open(run_dir / "swaps.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["word", "tier", "wordnet_sense", "meaning_used"])
+        w.writerows([r["word"], r["tier"], r["sense"] or "", r.get("meaning_used", "")] for r in swaps)
     full_words = len(bank())
     projected = spent * full_words / len(rows) if spent is not None else None
     leak = canary_check([r["prompt"] for r in rows], byasa_texts())
@@ -452,6 +469,7 @@ def finalize(run_dir: Path, st: dict, flagged: set, safety_failed: set, spent: f
         "safetyFlagged": len(flagged), "spentUsd": None if spent is None else round(spent, 4),
         "projectedFullUsd": None if projected is None else round(projected, 2), "fullWords": full_words,
         "canaryLeaks": len(leak), "noWordNetSense": sum(1 for r in rows if not r["sense"]),
+        "meaningSwaps": len(swaps),
     }
     (run_dir / "report.json").write_text(json.dumps(report, indent=1))
     print(json.dumps(report, indent=1))
@@ -507,11 +525,11 @@ def run(run_dir: Path):
 #
 # Eric 2026-11-09: generate in Claude Code instead of the paid API. The writer is
 # a FRESH subagent whose only input is requests.jsonl (word, part of speech,
-# WordNet sense, tier) and the gen-v1 prompt, so I5 holds the same way it does
+# WordNet sense, tier) and the current gen prompt, so I5 holds the same way it does
 # for the API: nothing BY-SA is in its context. A second fresh subagent does the
 # safety review with the prescreen prompt, per field id.
 
-LOCAL_GENERATOR = "Claude Code subagent (claude-opus-5-5), fresh context, gen-v1 prompt"
+LOCAL_GENERATOR = f"Claude Code subagent (claude-opus-5-5), fresh context, {PROMPT_VERSION} prompt"
 
 
 def prepare(rows: list[dict], label: str) -> Path:
@@ -530,7 +548,8 @@ def prepare(rows: list[dict], label: str) -> Path:
 
 
 def local_gen(run_dir: Path, cand_path: Path):
-    """candidates.json: {"g0": {"candidates": [{"definition", "sentence"}, x2]}, ...}"""
+    """candidates.json: {"g0": {"meaning_used": str, "swapped": bool,
+    "candidates": [{"definition", "sentence"}, x2]}, ...}"""
     st, save = load(run_dir)
     cands = json.loads(cand_path.read_text(encoding="utf-8"))
     st["generator"], st["source"] = LOCAL_GENERATOR, f"spell-gen-{PROMPT_VERSION}"
