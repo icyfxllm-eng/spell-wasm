@@ -34,7 +34,7 @@ add_string_key() {
 # microphone + SFSpeechRecognizer (ON-DEVICE only) so a child can say a shown word
 # and have it checked locally. The prompts appear at first use of the mode. These
 # strings are shown in the system permission dialogs.
-add_string_key "NSMicrophoneUsageDescription" "Spell listens so you can say or spell a word out loud. Usually your voice is recognized on this device. For some languages, only if you agree first, short clips are sent to Spell's server and Google's speech service to be turned into text. Spell never saves them."
+add_string_key "NSMicrophoneUsageDescription" "Spell listens so you can say or spell a word out loud. Your voice is recognized on this device. It is never recorded, saved or sent anywhere."
 add_string_key "NSSpeechRecognitionUsageDescription" "Spell uses speech recognition on this device to understand what you say. Your voice isn't recorded or saved."
 
 echo "==> AVAudioSession (.playback) in AppDelegate"

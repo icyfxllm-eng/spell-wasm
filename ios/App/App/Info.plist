@@ -34,7 +34,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Spell listens so you can say or spell a word out loud. Usually your voice is recognized on this device. For some languages, only if you agree first, short clips are sent to Spell's server and Google's speech service to be turned into text. Spell never saves them.</string>
+	<string>Spell listens so you can say or spell a word out loud. Your voice is recognized on this device. It is never recorded, saved or sent anywhere.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Spell uses speech recognition on this device to understand what you say. Your voice isn't recorded or saved.</string>
 	<key>NSCameraUsageDescription</key>

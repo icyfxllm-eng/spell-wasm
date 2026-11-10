@@ -11,4 +11,6 @@ Spell Jr never shows a purchase sheet.
 
 Data: no personal data is collected. Answers are graded on the device. The app requests word audio and definitions from our server; those requests contain only the word, with no identifier. It also fetches a signed list of feature switches, which can only turn features off. Progress is stored only on the device.
 
-Microphone: used only by the optional "Spell It" tool (Settings > Tools & Features, off by default). Speech is recognized on the device and never sent anywhere.
+Photos: Spell Picture (in the menu) can save the finished picture to Photos. It only adds to the library and never reads it, so iOS asks for add-only access the first time.
+
+Microphone and camera: not used in this release. Their permission texts are in the app for features that are switched off, so neither prompt appears.
