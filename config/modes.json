@@ -561,7 +561,7 @@
       "platforms": [
         "ios"
       ],
-      "entitlementLevel": "preview",
+      "entitlementLevel": "full",
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-SPELLDOKU v1: Sudoku committed by spelling number words. App only (D9). A language plays only when its number-word table is servable in this build (D3); otherwise the tile is the unavailable teaser. Spell Jr: 4x4 Easy and 6x6 Medium (F7).",
@@ -587,7 +587,7 @@
       "platforms": [
         "ios"
       ],
-      "entitlementLevel": "preview",
+      "entitlementLevel": "full",
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-WORDGRID v1 Phase A: a word search where every target is heard, never shown (F-S1), with trap spellings from the hand-authored confusion list (F-S2). App only. Launch set en, es, ru, fr, de, pt, pl, fil; English alone has decoys and all five tiers, the rest play Easy (D11). Under-13 players get the Jr grid only (F-X5). ko and zh never (D4).",
@@ -613,7 +613,7 @@
       "platforms": [
         "ios"
       ],
-      "entitlementLevel": "preview",
+      "entitlementLevel": "full",
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-WORDGRID v1 Phase B: a criss-cross of the list's own words, every clue heard and never read (D1, F-C1). App only. Same launch set as Spell Search; crossings are weighted onto trap positions at Jr, Easy and Medium and off them at Hard and Expert (F-C2), and a list that will not interlock five words is offered as a Spell Search instead (D2, F-C7).",
@@ -667,7 +667,7 @@
       "platforms": [
         "ios"
       ],
-      "entitlementLevel": "preview",
+      "entitlementLevel": "full",
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-BOARD-GAME v1.2 D26: roll-and-spell race on a ring of tiles. App only (I13): cfg, registry strip, BOARDGAME markup sentinels and the bg. locale prefix. Spell Jr is the same mode with the Jr variant (ceiling:medium). The group is PROVISIONAL (spell_it): D26 leaves it to Eric at build time, and choosing one edits the signed d_n6_membership_is_what_was_signed test. Per-language availability is boardgame_pools::gate (F9): a language short of the unique-word floor shows coming soon.",

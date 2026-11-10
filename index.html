@@ -1540,6 +1540,8 @@
   /* CC-ECLIPSE-HOTFIX I4: at Big text on a small phone the column is taller than
      the screen; it scrolls rather than pushing Reveal off the bottom. */
   .fg-screen{overflow-y:auto}
+  /* The arcade screens sat under the status bar: Word Chain's Exit was unreachable (build 317). */
+  .bee-screen,.imp-screen,.cn-screen,.fg-screen{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
   .fg-top{display:flex;align-items:center;gap:10px}
   .fg-rank{font-weight:600}
   .fg-score{margin-inline-start:auto;font-variant-numeric:tabular-nums;font-weight:700}
@@ -3175,6 +3177,8 @@
   .set-row .lbl2{display:flex;flex-direction:column;font-size:14px;font-weight:600;color:var(--ink)}
   .set-row .lbl2 small{font-weight:400;color:var(--muted);font-size:11.5px;margin-top:2px}
   .set-row.btn-hide{display:none}
+  /* .set-row{display:flex} beat the hidden attribute, so "Play online with family" showed for everyone. */
+  .set-row[hidden]{display:none}
   /* Pillar 3 — Tools & Features hub. */
   .tools-hub{margin-top:6px}
   .tools-head{display:flex;flex-direction:column;padding:14px 0 2px;border-top:1px solid var(--lift-1)}
@@ -5325,13 +5329,13 @@
            only change it through the parent gate (lib.rs). -->
       <label class="set-row" id="telemetryRow"><span class="lbl2"><span data-i18n="settings.telemetry">Help improve SpellGame</span><small data-i18n="settings.telemetrySmall">Sends crash and speed reports. Never your words, answers, or anything about you.</small></span><input type="checkbox" class="switch" id="telemetryToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" data-i18n-aria="aria.reminderTime" /></label>
-      <div class="set-row">
+      <div class="set-row" id="volumeRow">
         <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
         <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" data-i18n-aria="settings.volume" />
       </div>
       <!-- CC-VISUAL-ECLIPSE Phase C: shown only with visual.sound / visual.haptics on. -->
       <label class="set-row snd-only"><span class="lbl2"><span data-i18n="settings.gameSounds">Game sounds</span><small data-i18n="settings.gameSoundsSmall">Taps and chimes, never over the spoken word</small></span><input type="checkbox" class="switch" id="gameSoundsToggle" /></label>
-      <div class="set-row snd-only">
+      <div class="set-row snd-only" id="gameSoundsLevelRow">
         <span class="lbl2"><span data-i18n="settings.gameSoundsLevel">Game sounds level</span><small data-i18n="settings.gameSoundsLevelSmall">Separate from the voice volume</small></span>
         <input type="range" id="gameSoundsLevel" min="0" max="1" step="0.1" value="0.4" aria-label="Game sounds level" data-i18n-aria="settings.gameSoundsLevel" />
       </div>

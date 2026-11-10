@@ -95,6 +95,7 @@ pub fn reflect(app: &App) {
         dom::input(tool.toggle).set_checked(flags::is_on(tool.flag));
         dom::set_text(tool.hint, &hint_text(tool, native));
     }
+    crate::launch_hide::apply();
 }
 
 /// Attach the change handler on every tool switch. Flipping a row writes the real

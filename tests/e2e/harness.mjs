@@ -118,6 +118,8 @@ export const E2E_FLAG_BASELINE = {
   spelluzzle_par: 'on', spelluzzle_expedition: 'on', spelluzzle_mywords: 'on', spelluzzle_duel: 'on',
   spelluzzle_en: 'on',
   spell_aloud: 'on', def_match: 'on', progress_report: 'on', streak_focal: 'on',
+  // Build 318 (2026-11-09): Letter Forge hidden from the English launch.
+  letter_forge: 'on',
   visual_type: 'off', visual_sound: 'off', visual_haptics: 'off', visual_icons: 'off',
   visual_celebrate: 'off', visual_cards: 'off', visual_themes: 'off', visual_accents: 'off',
   keyboard_constellation: 'off', keyboard_react: 'off',

@@ -130,9 +130,9 @@
     "note": "Eric 2026-11-07: ship (flags-recs.md)"
   },
   "letter_forge": {
-    "default": "true",
-    "ship": true,
-    "note": "Eric 2026-11-07: ship (flags-recs.md)"
+    "default": "false",
+    "ship": false,
+    "note": "Eric 2026-11-09: hide in 318 (device pass on build 317)"
   },
   "offline_packs": {
     "default": "false",

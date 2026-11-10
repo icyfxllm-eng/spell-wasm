@@ -331,8 +331,13 @@ fn same_script(lang: &str) -> &'static [&'static str] {
 }
 
 /// D3: a distractor may not be a real word anywhere in its script group.
+/// Nor may it be a rude word or one kept from children: a fake is still a word
+/// on screen, and doubling the s of "as" made one (Eric, build 317).
 fn is_fair(lang: &str, cand: &str, real: &str) -> bool {
     if cand.is_empty() || cand == real {
+        return false;
+    }
+    if crate::profanity::is_blocked(cand) || !crate::kid_filter::kid_allowed(lang, cand) {
         return false;
     }
     !same_script(lang).iter().any(|l| crate::word_index::is_valid(l, cand))
@@ -596,6 +601,25 @@ pub fn set_of_ten_for(exp: crate::experience::Experience, lang: &str, seed: u64,
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Build 317: Impostor showed "ass" ("as" with the s doubled). No fake card
+    /// may be a rude word or one kept from children, in any English round.
+    #[test]
+    fn no_fake_card_is_rude() {
+        assert!(!is_fair("en", "ass", "as"), "the build-317 card");
+        for tier in [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert] {
+            for w in vocabulary_in("en", &["easy", "medium", "hard", "expert"], false) {
+                if let Some(r) = round("en", w, 0, tier) {
+                    for (i, c) in r.cards.iter().enumerate() {
+                        if i != r.correct {
+                            assert!(!crate::profanity::is_blocked(c), "{c} (from {w})");
+                            assert!(crate::kid_filter::kid_allowed("en", c), "{c} (from {w})");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     const LANGS: [&str; 15] = [
         "en", "es", "fr", "de", "pt", "pl", "ru", "vi", "fil", "sw", "ja", "ko", "zh", "hi", "ar",

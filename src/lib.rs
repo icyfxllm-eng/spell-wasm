@@ -202,6 +202,7 @@ mod modes;
 mod modes_strip; // CC-HUB-NAV AE-1: the registry strips build.rs runs, under test
 mod play_hub;
 mod tools_hub;
+mod launch_hide; // CC-LAUNCH-EN build 318: surfaces the English launch does not show
 #[cfg(feature = "testseam")]
 mod testseam;
 mod versus;

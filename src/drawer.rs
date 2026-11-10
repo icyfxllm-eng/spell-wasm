@@ -224,10 +224,10 @@ pub fn help_rows() -> Vec<(&'static str, &'static str, &'static str)> {
     // this function's own rule for Credits. The label is the guide's existing
     // "How this works", already translated in all fifteen languages: a help row
     // is not worth a new string in fifteen locales that no speaker has read.
-    if dom::doc().get_element_by_id("spellItGuideAgain").is_some() {
+    if dom::doc().get_element_by_id("spellItGuideAgain").is_some() && !crate::launch_hide::drawer_hidden("spellItGuideAgain") {
         v.push(("spellit.guide.again", "mic", "spellItGuideAgain"));
     }
-    if dom::doc().get_element_by_id("creditsBtn").is_some() {
+    if dom::doc().get_element_by_id("creditsBtn").is_some() && !crate::launch_hide::drawer_hidden("creditsBtn") {
         v.push(("credits.title", "mic", "creditsBtn"));
     }
     v

@@ -46,7 +46,7 @@ fn stored(name: &str) -> Option<String> {
     if crate::killflags::is_killed(name) {
         return Some("off".to_string());
     }
-    if PLAYER_FLAGS.contains(&name) {
+    if PLAYER_FLAGS.contains(&name) && !crate::launch_hide::flag_hidden(name) {
         return storage::get_raw(&format!("spell_flag_{name}"));
     }
     local_override(name)
@@ -155,9 +155,10 @@ pub fn photo_list() -> bool {
 /// signed the strings and flipped it live (2026-08-13). He did so before Done
 /// #4's Korean block-assembly capture was reviewed and before F4/F5 exist, so a
 /// first-time player currently gets no how-to; that was his call, recorded here
-/// so the gap is not mistaken for an oversight.
+/// so the gap is not mistaken for an oversight. **Default OFF** again from build
+/// 318: Eric hid it from the English launch (2026-11-09).
 pub fn letter_forge() -> bool {
-    resolve(stored("letter_forge").as_deref(), true)
+    resolve(stored("letter_forge").as_deref(), false)
 }
 
 /// CC-WORD-CHAINS — per-language chaining (shiritori done right). **Default ON**

@@ -387,7 +387,13 @@ fn permitted(m: &Mode, ctx: &HubCtx, surface: Surface) -> bool {
         }
     }
     // A2.3: a mode needing Full on a previewed language is ABSENT, not locked.
-    if ctx.level < m.entitlement_level.as_access() {
+    // D24: Little Speller is free at every difficulty, so a kid profile keeps
+    // the modes the English purchase adds (build 318: Spelldoku, Spell Search,
+    // Spell Cross, Board Game). A language with no access at all stays absent.
+    let need = m.entitlement_level.as_access();
+    // Live modes only: the core rows (Climb) keep their own Jr rules.
+    let have = if ctx.kid && m.status == Status::Live && ctx.level > AccessLevel::None { AccessLevel::Full } else { ctx.level };
+    if have < need {
         return false;
     }
     // Parent-premium requirement (photo_list needs photo_ocr).
@@ -624,6 +630,7 @@ mod tests {
         ("spelluzzle", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off until a device-pass verdict is recorded"),
         ("photo_list", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off until Complete can be bought (D4)"),
         ("progress_report", "CC-LAUNCH-EN flag table (Eric, 2026-11-07): off until Complete can be bought (D4)"),
+        ("letter_forge", "CC-LAUNCH-EN build 318 (Eric, 2026-11-09): hidden from the English launch"),
     ];
 
     /// Every parent-premium entitlement, so a dark mode that also needs one
@@ -687,11 +694,19 @@ mod tests {
         let c = HubCtx { level: AccessLevel::Preview, ..ctx() };
         let got = ids(&visible(&all, &c));
         assert!(!got.contains(&"ghost_racing".to_string()), "absent on a previewed language — NOT locked");
-        assert!(
-            all.iter().filter(|m| m.status == Status::Live)
-                .all(|m| m.entitlement_level != Level::Full),
-            "a Full-tier mode went live — point this test at it and delete this note"
-        );
+        // Build 318 (Eric 2026-11-09): these four come with the English purchase.
+        let paid = ["spelldoku", "spell_search", "spell_cross", "boardgame"];
+        let live_full: Vec<&str> = all.iter()
+            .filter(|m| m.status == Status::Live && m.entitlement_level == Level::Full)
+            .map(|m| m.id.as_str()).collect();
+        assert_eq!(live_full, paid, "the live Full-only modes changed; Eric signs that list");
+        for id in paid {
+            assert!(!got.contains(&id.to_string()), "{id} absent at Preview, NOT locked");
+            let full = HubCtx { level: AccessLevel::Full, ..ctx() };
+            assert!(ids(&visible(&all, &full)).contains(&id.to_string()), "{id} present with the purchase");
+            let kid = HubCtx { level: AccessLevel::Preview, kid: true, audience: crate::experience::audience(true, true), ..ctx() };
+            assert!(ids(&visible(&all, &kid)).contains(&id.to_string()), "{id}: Little Speller is free (D24)");
+        }
         // ...and a preview-level mode survives (practice is free at PREVIEW).
         let c2 = HubCtx { level: AccessLevel::Preview, lang: "es".into(), ..ctx() };
         assert!(ids(&visible(&all, &c2)).contains(&"practice".to_string()));
