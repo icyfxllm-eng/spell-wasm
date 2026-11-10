@@ -228,7 +228,7 @@ export async function run(browser, base, suite) {
       const w = b.targets[0].word;
       await ctx.route('**/api/meaning**', (r) => r.fulfill({
         status: 200, contentType: 'application/json',
-        body: JSON.stringify({ pos: 'noun', definition: `a kind of ${w} you can see`, example: '' }),
+        body: JSON.stringify({ pos: 'noun', definition: `a kind of ${w} you can see`, example: '', reviewed_definition: true, reviewed_sentence: true, source: 'spell-gen-gen-v2', source_license: 'original' }),
       }));
       await page.click('#wsSlots [data-ws-play="0"]');
       await page.click('#wsMeaningBtn');

@@ -766,7 +766,7 @@ export async function run(browser, base, suite) {
       const w = b.words[0];
       await ctx.route('**/api/meaning**', (r) => r.fulfill({
         status: 200, contentType: 'application/json',
-        body: JSON.stringify({ pos: 'noun', definition: `a kind of ${w} you can see`, example: '' }),
+        body: JSON.stringify({ pos: 'noun', definition: `a kind of ${w} you can see`, example: '', reviewed_definition: true, reviewed_sentence: true, source: 'spell-gen-gen-v2', source_license: 'original' }),
       }));
       await page.click('#sdLegend [data-sd-def="1"]');
       await page.waitForFunction(() => !/^\s*$/.test(document.getElementById('sdBadge').textContent), null, { timeout: BADGE_MS });
@@ -808,7 +808,7 @@ export async function run(browser, base, suite) {
       await ctx.unroute('**/api/meaning**');
       await ctx.route('**/api/meaning**', (r) => r.fulfill({
         status: 200, contentType: 'application/json',
-        body: JSON.stringify({ pos: 'noun', definition: 'something you might find at home', example: '' }),
+        body: JSON.stringify({ pos: 'noun', definition: 'something you might find at home', example: '', reviewed_definition: true, reviewed_sentence: true, source: 'spell-gen-gen-v2', source_license: 'original' }),
       }));
       await page.click('#sdLegend [data-sd-def="1"]');
       await page.waitForFunction(() => /home/.test(document.getElementById('sdBadge').textContent), null, { timeout: BADGE_MS });

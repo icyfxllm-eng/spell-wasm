@@ -26,7 +26,11 @@ use serde_json::Value;
 /// D-DEF11: false until the App Store submission build, which must set it true
 /// so only reviewed rows render (the release has to carry no BY-SA text).
 /// A release check pins it, as `COMPLETE_ON_SALE` is pinned.
-pub const RELEASE_REVIEWED_ONLY: bool = false;
+///
+/// CC-LAUNCH-EN rev 4, Eric 2026-11-09 ("Cut it"): ON. English text comes from
+/// Spell's own reviewed rows (api::DEF_SRC); legacy rows (Wiktionary pools and
+/// dictionary text for the languages this release hides) no longer render.
+pub const RELEASE_REVIEWED_ONLY: bool = true;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Field {
@@ -87,6 +91,14 @@ pub fn can_render_in(meta: &Meta, field: Field, reviewed_only: bool) -> bool {
 mod tests {
     use super::*;
     use serde_json::json;
+
+    /// The submission build renders reviewed rows only, and asks the server for them.
+    #[test]
+    fn release_renders_reviewed_rows_only() {
+        assert!(RELEASE_REVIEWED_ONLY, "the English release renders reviewed definitions and sentences only");
+        assert_eq!(crate::api::DEF_SRC, "gen1");
+        assert!(!can_render(&meta_from_json(&json!({"definition": "legacy"})), Field::Definition));
+    }
 
     /// A15.1: one reviewed and one unreviewed row: exactly one renders, in the
     /// submission build; the unreviewed (rated, rejected) row never renders.
