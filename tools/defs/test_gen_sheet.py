@@ -154,6 +154,21 @@ class RoundTrip(unittest.TestCase):
         res = self.ingest(self.fill(), eric)
         self.assertEqual(res["verdict"], "VOID")
 
+    def test_solo_mode_rev4(self):
+        p = self.fill()
+        first = next(r for r in self._rows() if r["kid_visible"] == "yes" and r["word"].startswith("w"))
+        res = gen_ingest.ingest(p, None, True, keys_dir=self.keys, solo=True,
+                                hold=frozenset({(first["word"], first["tier"], "sentence")}))
+        self.assertEqual(res["verdict"], "ACCEPT", res)
+        self.assertEqual(res["heldForSecondLook"], 1)
+        out = {o["word"]: o for o in json.loads((self.out / "reviewed.en.json").read_text())}
+        self.assertTrue(out[first["word"]]["reviewed_definition"], "solo: Eric's 0 alone clears a Kid row")
+        self.assertFalse(out[first["word"]]["reviewed_sentence"], "held fields stay unreviewed")
+
+    def test_solo_rejects_a_second_sheet(self):
+        res = gen_ingest.ingest(self.fill(), self.fill("e.csv"), keys_dir=self.keys, solo=True)
+        self.assertEqual(res["verdict"], "REJECT")
+
 
 if __name__ == "__main__":
     unittest.main()

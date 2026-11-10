@@ -2,6 +2,7 @@
 """CC-LAUNCH-EN D-SRC4 / Gig A -- ingest a rated generated-text sheet.
 
     python3 tools/defs/gen_ingest.py <rater sheet.csv> [--eric <Eric's sheet.csv>] [--apply]
+    python3 tools/defs/gen_ingest.py <Eric's sheet.csv> --solo [--hold held.json] [--apply]   (rev 4)
 
 The rater (Gig A) rates every field. Eric rates every Kid-visible row (rev 3)
 on his own copy of the same sheet; a Kid-visible field is reviewed only when
@@ -95,7 +96,11 @@ def check(path, keys_dir, kid_only=False):
     return sheet_id, rows, decoys, errors, requeue
 
 
-def ingest(rater_path, eric_path=None, apply=False, keys_dir=None):
+def ingest(rater_path, eric_path=None, apply=False, keys_dir=None, solo=False, hold=frozenset()):
+    """solo (rev 4, Eric 2026-11-09): rater_path is ERIC's sheet and the only human rating;
+    no second rater, no spot-check. hold: (word, tier, field) keys that stay unreviewed
+    until Eric's second look (rev 4: his own rewrites that the code checks or the
+    fresh-context safety review flagged)."""
     keys_dir = keys_dir or ROOT / "keys"
     sheet_id, rows, decoys, errors, requeue = check(rater_path, keys_dir)
     meta = json.loads((rater_path.parent / "meta.json").read_text())
@@ -110,7 +115,9 @@ def ingest(rater_path, eric_path=None, apply=False, keys_dir=None):
         if changed:
             errors.append(f"SOURCE: {len(changed)} rows differ from the run's text (first: {changed[:5]})")
     eric = None
-    if eric_path:
+    if eric_path and solo:
+        errors.append("solo mode takes one sheet (Eric's); do not pass --eric")
+    if eric_path and not solo:
         e_id, e_rows, _, e_err, e_requeue = check(eric_path, keys_dir, kid_only=True)
         if e_id != sheet_id:
             e_err.append(f"Eric's sheet is {e_id}, not {sheet_id}")
@@ -135,20 +142,24 @@ def ingest(rater_path, eric_path=None, apply=False, keys_dir=None):
                 "disagreement": round(disagreement, 4),
                 "errors": [f"SPOTCHECK: rater and Eric disagree on {disagreement:.1%} of {both} fields (limit 5%)"]}
 
-    out, flagged, req_rows = [], [], []
+    out, flagged, req_rows, held_rows = [], [], [], []
     for r in real:
         o = {"word": r["word"], "tier": r["tier"], "kid_visible": r["kid_visible"] == "yes",
-             "source": "spell-gen-gen-v2", "source_license": "original"}
+             "source": "spell-gen-gen-v2", "source_license": "original",
+             "reviewer": "eric (solo, rev 4)" if solo else "gig-a + eric"}
         for f in FIELDS:
             s = sev(r, f)
             e = sev(eric[r["row"]], f) if eric else None
             ok = bool(r[f]) and s == 0 and r["chunk"] not in requeue
-            if o["kid_visible"]:
+            if o["kid_visible"] and not solo:
                 ok = ok and e == 0   # Eric rates every Kid-visible row; either rater > 0 blocks it
             o[f] = r[f]
             o[f + "_severity"] = s
             o["eric_" + f + "_severity"] = e
-            o["reviewed_" + f] = ok
+            held = (r["word"], r["tier"], f) in hold
+            if held and ok:
+                held_rows.append((r, f))
+            o["reviewed_" + f] = ok and not held
             if r[f] and ((s or 0) > 0 or (e or 0) > 0):
                 flagged.append((r, f, s, e))
         out.append(o)
@@ -156,7 +167,8 @@ def ingest(rater_path, eric_path=None, apply=False, keys_dir=None):
             req_rows.append(r)
     tiers = {t: sum(o["reviewed_definition"] for o in out if o["tier"] == t) for t in TIERS}
     kid_unreviewed = sum(1 for o in out if o["kid_visible"] and not o["reviewed_definition"] and o["definition"])
-    res = {"verdict": "ACCEPT", "sheet": sheet_id, "rows": len(out), "requeuedChunks": sorted(requeue),
+    res = {"verdict": "ACCEPT", "sheet": sheet_id, "mode": "solo (rev 4)" if solo else "rater + Eric",
+           "rows": len(out), "heldForSecondLook": len(held_rows), "requeuedChunks": sorted(requeue),
            "requeuedRows": len(req_rows), "fieldsFlagged": len(flagged),
            "reviewedDefinitionsPerTier": tiers, "tiersBelowN": [t for t, n in tiers.items() if n < N_FLOOR],
            "kidVisibleUnreviewedDefinitions": kid_unreviewed,
@@ -175,6 +187,8 @@ def ingest(rater_path, eric_path=None, apply=False, keys_dir=None):
                "| row | word | tier | kid | field | rater | Eric | text | note |", "|---|---|---|---|---|---|---|---|---|"]
         rep += [f"| {r['row']} | {r['word']} | {r['tier']} | {r['kid_visible']} | {f} | {s} | {'' if e is None else e} | "
                 f"{r[f][:100]} | {r.get('note', '')[:80]} |" for r, f, s, e in flagged] or ["| none |||||||||"]
+        rep += ["", "## Held for Eric's second look (rev 4)", "", "| row | word | tier | field | text |", "|---|---|---|---|---|"]
+        rep += [f"| {r['row']} | {r['word']} | {r['tier']} | {f} | {r[f][:120]} |" for r, f in held_rows] or ["| none |||||"]
         (d / "pass.md").write_text("\n".join(rep) + "\n", encoding="utf-8")
         res["wrote"] = [str(d / n) for n in ("reviewed.en.json", "requeue.csv", "pass.md")]
     return res
@@ -184,9 +198,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet")
     ap.add_argument("--eric")
+    ap.add_argument("--solo", action="store_true", help="rev 4: the sheet is Eric's, the only rating")
+    ap.add_argument("--hold", help="JSON list of [word, tier, field] kept unreviewed until a second look")
     ap.add_argument("--apply", action="store_true")
     a = ap.parse_args()
-    res = ingest(pathlib.Path(a.sheet), pathlib.Path(a.eric) if a.eric else None, a.apply)
+    hold = frozenset(tuple(x[:3]) for x in json.loads(pathlib.Path(a.hold).read_text())) if a.hold else frozenset()
+    res = ingest(pathlib.Path(a.sheet), pathlib.Path(a.eric) if a.eric else None, a.apply, solo=a.solo, hold=hold)
     print(json.dumps(res, indent=1))
     if res["verdict"] != "ACCEPT":
         sys.exit(1)
