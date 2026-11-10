@@ -38,11 +38,11 @@
    "voiceMatchesLayer1": true
   },
   "en": {
-   "bankRows": 3157,
-   "bonusEligibleBankWords": 277,
+   "bankRows": 3139,
+   "bonusEligibleBankWords": 275,
    "confirmedSets": 19,
    "generator": "build_collisions.key_en@1",
-   "impossibleFilterRemoves": 306,
+   "impossibleFilterRemoves": 304,
    "impossibleFilterRemovesExpert": null,
    "loopbackFlags": 36,
    "proof": {
@@ -55,18 +55,18 @@
    },
    "sets": {
     "accent": 27,
-    "true": 252
+    "true": 250
    },
    "status": "verified",
    "voice": "en-US-Neural2-E",
    "voiceMatchesLayer1": true
   },
   "en+retier": {
-   "bankRows": 4366,
-   "bonusEligibleBankWords": 304,
+   "bankRows": 4350,
+   "bonusEligibleBankWords": 302,
    "confirmedSets": 19,
    "generator": "build_collisions.key_en@1+retier",
-   "impossibleFilterRemoves": 334,
+   "impossibleFilterRemoves": 332,
    "impossibleFilterRemovesExpert": 8,
    "loopbackFlags": 39,
    "proof": {
@@ -80,7 +80,7 @@
    "servedOnlyWhen": "en.retier is on (not Spell Jr / Kid Mode)",
    "sets": {
     "accent": 28,
-    "true": 272
+    "true": 270
    },
    "status": "verified",
    "voice": "en-US-Neural2-E",

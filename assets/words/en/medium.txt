@@ -435,7 +435,6 @@ cards
 drive
 equal
 plays
-sexual
 stars
 useful
 joined
@@ -662,7 +661,6 @@ bottom
 extent
 poetry
 adult
-armed
 brief
 chance
 false
@@ -733,7 +731,6 @@ option
 secure
 texts
 usual
-weapon
 writer
 writes
 bound

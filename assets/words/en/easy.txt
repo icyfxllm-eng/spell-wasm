@@ -218,7 +218,6 @@ away
 fact
 uses
 art
-god
 six
 food
 army
@@ -385,7 +384,6 @@ nine
 bus
 card
 dry
-sex
 dark
 feet
 got
@@ -462,7 +460,6 @@ weak
 eyes
 seat
 draw
-guns
 sort
 lee
 knew
@@ -548,7 +545,6 @@ gone
 hour
 roll
 wing
-gun
 beam
 drew
 ions
@@ -561,7 +557,6 @@ keys
 solo
 sum
 warm
-wine
 bob
 fly
 tank
@@ -578,7 +573,6 @@ wish
 bone
 salt
 spin
-bomb
 feed
 hear
 mix
@@ -612,7 +606,6 @@ raw
 sees
 coal
 ages
-beer
 belt
 cuts
 fate
@@ -663,7 +656,6 @@ tip
 walk
 trek
 en
-gay
 maps
 sing
 sit
@@ -712,7 +704,6 @@ gear
 hunt
 span
 aims
-cult
 heir
 mile
 mine

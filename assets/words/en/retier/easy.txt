@@ -54,7 +54,6 @@ bear
 beat
 bed
 been
-beer
 bell
 belt
 best
@@ -74,7 +73,6 @@ blue
 boat
 bob
 body
-bomb
 bond
 bone
 book
@@ -137,7 +135,6 @@ cost
 cowgirl
 crew
 crop
-cult
 cup
 cut
 cuts
@@ -275,7 +272,6 @@ gas
 gate
 gatekeeper
 gave
-gay
 gear
 gene
 get
@@ -285,7 +281,6 @@ girl
 give
 go
 goal
-god
 gods
 goes
 gold
@@ -299,8 +294,6 @@ grew
 grid
 grow
 gulf
-gun
-guns
 had
 hair
 half
@@ -626,7 +619,6 @@ send
 sent
 set
 sets
-sex
 shave
 she
 ship
@@ -800,7 +792,6 @@ will
 win
 wind
 window
-wine
 wing
 wins
 wire

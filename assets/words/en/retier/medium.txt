@@ -68,7 +68,6 @@ agriculture
 aircraft
 airport
 album
-alcohol
 alleyway
 allow
 allowed
@@ -137,7 +136,6 @@ arctic
 areas
 argued
 argument
-armed
 around
 arouse
 arranged
@@ -787,7 +785,6 @@ exclusive
 exclusively
 exclusivity
 excretion
-executed
 execution
 executive
 exemplify
@@ -1984,7 +1981,6 @@ settlement
 seven
 several
 severe
-sexual
 shape
 share
 shared
@@ -2380,7 +2376,6 @@ viewed
 views
 village
 villages
-violence
 virology
 virtually
 visible
@@ -2402,8 +2397,6 @@ warning
 water
 wavelength
 waves
-weapon
-weapons
 weasel
 weather
 weaver

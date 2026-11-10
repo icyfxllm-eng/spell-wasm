@@ -317,7 +317,6 @@ behavior
 conflict
 purpose
 reading
-weapons
 families
 featured
 meeting
@@ -485,7 +484,6 @@ storage
 theories
 markets
 opposite
-violence
 director
 prepared
 transfer
@@ -626,7 +624,6 @@ sentence
 subjects
 approved
 brothers
-executed
 getting
 relation
 uniform
@@ -722,7 +719,6 @@ mixture
 offices
 proposal
 orthodox
-alcohol
 graphics
 grounds
 manager

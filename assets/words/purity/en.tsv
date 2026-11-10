@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
-#tier	easy	0x605353B8148DD91D
-#tier	medium	0xBE789A9607523573
-#tier	hard	0xC0F03B7FB52AFB66
-#tier	expert	0x2229BBCC85D8B570
+#tier	easy	0x4F0323B45E035465
+#tier	medium	0xFA77E70B378AFB45
+#tier	hard	0x815BF9CBBB167EE6
+#tier	expert	0xF0E24D56E872A5A5
 cat	dictionary	en_US
 dog	dictionary	en_US
 sun	dictionary	en_US
@@ -224,7 +224,6 @@ away	dictionary	en_US
 fact	dictionary	en_US
 uses	dictionary	en_US
 art	dictionary	en_US
-god	dictionary	en_US
 six	dictionary	en_US
 food	dictionary	en_US
 army	dictionary	en_US
@@ -391,7 +390,6 @@ nine	dictionary	en_US
 bus	dictionary	en_US
 card	dictionary	en_US
 dry	dictionary	en_US
-sex	dictionary	en_US
 dark	dictionary	en_US
 feet	dictionary	en_US
 got	dictionary	en_US
@@ -468,7 +466,6 @@ weak	dictionary	en_US
 eyes	dictionary	en_US
 seat	dictionary	en_US
 draw	dictionary	en_US
-guns	dictionary	en_US
 sort	dictionary	en_US
 lee	dictionary	en_US
 knew	dictionary	en_US
@@ -554,7 +551,6 @@ gone	dictionary	en_US
 hour	dictionary	en_US
 roll	dictionary	en_US
 wing	dictionary	en_US
-gun	dictionary	en_US
 beam	dictionary	en_US
 drew	dictionary	en_US
 ions	dictionary	en_US
@@ -567,7 +563,6 @@ keys	dictionary	en_US
 solo	dictionary	en_US
 sum	dictionary	en_US
 warm	dictionary	en_US
-wine	dictionary	en_US
 bob	dictionary	en_US
 fly	dictionary	en_US
 tank	dictionary	en_US
@@ -584,7 +579,6 @@ wish	dictionary	en_US
 bone	dictionary	en_US
 salt	dictionary	en_US
 spin	dictionary	en_US
-bomb	dictionary	en_US
 feed	dictionary	en_US
 hear	dictionary	en_US
 mix	dictionary	en_US
@@ -618,7 +612,6 @@ raw	dictionary	en_US
 sees	dictionary	en_US
 coal	dictionary	en_US
 ages	dictionary	en_US
-beer	dictionary	en_US
 belt	dictionary	en_US
 cuts	dictionary	en_US
 fate	dictionary	en_US
@@ -669,7 +662,6 @@ tip	dictionary	en_US
 walk	dictionary	en_US
 trek	dictionary	en_US
 en	dictionary	en_US
-gay	dictionary	en_US
 maps	dictionary	en_US
 sing	dictionary	en_US
 sit	dictionary	en_US
@@ -718,7 +710,6 @@ gear	dictionary	en_US
 hunt	dictionary	en_US
 span	dictionary	en_US
 aims	dictionary	en_US
-cult	dictionary	en_US
 heir	dictionary	en_US
 mile	dictionary	en_US
 mine	dictionary	en_US
@@ -1203,7 +1194,6 @@ cards	dictionary	en_US
 drive	dictionary	en_US
 equal	dictionary	en_US
 plays	dictionary	en_US
-sexual	dictionary	en_US
 stars	dictionary	en_US
 useful	dictionary	en_US
 joined	dictionary	en_US
@@ -1430,7 +1420,6 @@ bottom	dictionary	en_US
 extent	dictionary	en_US
 poetry	dictionary	en_US
 adult	dictionary	en_US
-armed	dictionary	en_US
 brief	dictionary	en_US
 chance	dictionary	en_US
 false	dictionary	en_US
@@ -1501,7 +1490,6 @@ option	dictionary	en_US
 secure	dictionary	en_US
 texts	dictionary	en_US
 usual	dictionary	en_US
-weapon	dictionary	en_US
 writer	dictionary	en_US
 writes	dictionary	en_US
 bound	dictionary	en_US
@@ -1883,7 +1871,6 @@ behavior	dictionary	en_US
 conflict	dictionary	en_US
 purpose	dictionary	en_US
 reading	dictionary	en_US
-weapons	dictionary	en_US
 families	dictionary	en_US
 featured	dictionary	en_US
 meeting	dictionary	en_US
@@ -2051,7 +2038,6 @@ storage	dictionary	en_US
 theories	dictionary	en_US
 markets	dictionary	en_US
 opposite	dictionary	en_US
-violence	dictionary	en_US
 director	dictionary	en_US
 prepared	dictionary	en_US
 transfer	dictionary	en_US
@@ -2192,7 +2178,6 @@ sentence	dictionary	en_US
 subjects	dictionary	en_US
 approved	dictionary	en_US
 brothers	dictionary	en_US
-executed	dictionary	en_US
 getting	dictionary	en_US
 relation	dictionary	en_US
 uniform	dictionary	en_US
@@ -2288,7 +2273,6 @@ mixture	dictionary	en_US
 offices	dictionary	en_US
 proposal	dictionary	en_US
 orthodox	dictionary	en_US
-alcohol	dictionary	en_US
 graphics	dictionary	en_US
 grounds	dictionary	en_US
 manager	dictionary	en_US
@@ -2938,7 +2922,6 @@ separation	dictionary	en_US
 territories	dictionary	en_US
 distinctive	dictionary	en_US
 equations	dictionary	en_US
-execution	dictionary	en_US
 operators	dictionary	en_US
 presidential	dictionary	en_US
 replacement	dictionary	en_US
@@ -3117,7 +3100,6 @@ oxidation	dictionary	en_US
 remainder	dictionary	en_US
 succession	dictionary	en_US
 universities	dictionary	en_US
-casualties	dictionary	en_US
 chemicals	dictionary	en_US
 combinations	dictionary	en_US
 competitive	dictionary	en_US

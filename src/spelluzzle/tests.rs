@@ -1109,8 +1109,18 @@ fn pencil_and_strip_markup_carries_no_answer() {
     let opts = Opts { marks: marks.clone(), highlight: Some(r), target: None };
     let view = board_view(&p.board, &p.entries);
     let html = board_html_with(&p, &view, &plain_tr, &opts) + &strip_html(&p, &view, &plain_tr, &opts);
+    // Whole words in what a player or a screen reader can see (text nodes and quoted
+    // attribute values), not raw substrings: the tag <small> must not count as the
+    // answer "all".
+    let mut seen: Vec<String> = text_nodes(&html);
+    seen.extend(html.split('"').skip(1).step_by(2).map(str::to_string));
+    let tokens: std::collections::BTreeSet<String> = seen
+        .iter()
+        .flat_map(|s| s.split(|c: char| !c.is_alphabetic()).map(str::to_lowercase).collect::<Vec<_>>())
+        .filter(|t| !t.is_empty())
+        .collect();
     for w in p.board.words() {
-        assert!(!html.contains(&w), "answer {w} is in the Phase E markup");
+        assert!(!tokens.contains(&w.to_lowercase()), "answer {w} is in the Phase E markup");
     }
     // The only letter shown on an untouched board is the player's own mark.
     for t in text_nodes(&html) {

@@ -221,7 +221,14 @@ fn wordgrid_property_10k() {
 /// ear) quarantined through CC-BANK-PURITY as dictation_unfair. The row left
 /// the bank, so these 500 seeds draw differently. Hold this pin back to the
 /// previous value if that quarantine is reversed.
-pub const GOLDEN: u64 = 0x81bb_1d05_6e8b_1863;
+///
+/// Re-pinned 2026-11-09, from 0x81bb_1d05_6e8b_1863, on Eric's CC-LAUNCH-EN rev 4
+/// second look: 18 English rows (alcohol armed beer bomb casualties cult executed
+/// execution gay god gun guns sex sexual violence weapon weapons wine) quarantined
+/// through CC-BANK-PURITY as auditor_cut, "out of the game completely". Those rows
+/// left the bank, so these 500 seeds draw differently. Hold this pin back to the
+/// previous value if that quarantine is reversed.
+pub const GOLDEN: u64 = 0xbbb4_bea7_9201_7775;
 
 #[test]
 fn wordgrid_determinism() {

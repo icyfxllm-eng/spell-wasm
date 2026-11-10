@@ -1,5 +1,5 @@
 {
- "$doc": "CC-LAUNCH-EN F8 / A8.1: 50 English true homophones (different words, one sound) from the shipped kind:true sets in assets/words/en/soundalikes.json, spelling variants and one- or two-letter fragments left out, and seven generated sets that are not true homophones (capped/kept, lass/last, marc/mark, dos/dose, car/carr, pic/pick, mass/masse) swapped for clean pairs. Each must grade through the other-sense path in both directions, never a plain wrong. FROZEN 2026-11-08. read/red is left out: read is also said \"reed\", so its set accepts in one direction only (targetOnly), by design.",
+ "$doc": "CC-LAUNCH-EN F8 / A8.1: 50 English true homophones (different words, one sound) from the shipped kind:true sets in assets/words/en/soundalikes.json, spelling variants and one- or two-letter fragments left out, and seven generated sets that are not true homophones (capped/kept, lass/last, marc/mark, dos/dose, car/carr, pic/pick, mass/masse) swapped for clean pairs. Each must grade through the other-sense path in both directions, never a plain wrong. FROZEN 2026-11-08. read/red is left out: read is also said \"reed\", so its set accepts in one direction only (targetOnly), by design. 2026-11-09: whine/wine swapped for son/sun because wine left the bank (CC-LAUNCH-EN rev 4, Eric's out words).",
  "count": 50,
  "pairs": [
   {
@@ -143,8 +143,8 @@
    "b": "lone"
   },
   {
-   "a": "whine",
-   "b": "wine"
+   "a": "son",
+   "b": "sun"
   },
   {
    "a": "tide",
