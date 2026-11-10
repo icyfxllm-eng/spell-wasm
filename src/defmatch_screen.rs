@@ -211,6 +211,11 @@ pub fn open(app: &App) {
     }
     let tier = defmatch::effective_tier(&tier, kid).to_string();
 
+    // CC-LAUNCH-EN rev 4: English Definition Match plays Spell's own reviewed
+    // definitions (api::DEF_SRC), so the Wiktionary credit is shown only for
+    // the languages whose pools still come from Wiktionary.
+    crate::dom::set_hidden("dmCredit", lang == "en");
+
     TIER.with(|t| *t.borrow_mut() = tier.clone());
     USED.with(|u| u.borrow_mut().clear());
     STREAK.with(|c| c.set(0));
@@ -262,7 +267,7 @@ async fn ensure_pool(lang: &str, tier: &str) -> bool {
     if POOLS.with(|p| p.borrow().contains_key(&key)) {
         return true;
     }
-    let url = format!("{}/api/defpool?lang={}&tier={}", api::api_base(), lang, tier);
+    let url = format!("{}/api/defpool?lang={}&tier={}&src={}", api::api_base(), lang, tier, api::DEF_SRC);
     let Ok(text) = crate::storage::fetch_text(&url).await else {
         return false;
     };

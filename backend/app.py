@@ -857,6 +857,23 @@ def check():
     return jsonify({"correct": answer == word})
 
 
+# CC-LAUNCH-EN rev 4: Spell's own reviewed English definitions and sentences
+# (backend/meanings/en.gen1.json, built by tools/defs/build_server_en.py from
+# Eric's rated sheet; source spell-gen-gen-v2, licence original). Served ONLY to
+# clients that ask with src=gen1, so builds already out keep today's content
+# (D-DEF11). A field that was not reviewed is "" with its reviewed_* flag false.
+GEN_MEANINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meanings", "en.gen1.json")
+try:
+    with open(GEN_MEANINGS_PATH, encoding="utf-8") as _f:
+        GEN_MEANINGS = json.load(_f)
+except (OSError, ValueError):
+    GEN_MEANINGS = {}
+
+
+def wants_gen1(lang: str) -> bool:
+    return lang == "en" and request.args.get("src") == "gen1"
+
+
 @app.route("/api/meaning")
 def meaning():
     """Definition + example sentence for a word, from dictionaryapi.dev.
@@ -871,6 +888,18 @@ def meaning():
         return jsonify({"error": "invalid word"}), 400
 
     lang = (request.args.get("lang") or "en").split("-")[0].lower()
+    if wants_gen1(lang):
+        row = GEN_MEANINGS.get(word)
+        if row is None:
+            # Not one of Spell's reviewed words (a My Words entry, say): say so,
+            # rather than fall back to unreviewed third-party text.
+            return jsonify({"error": "not found"}), 404
+        mask = request.args.get("mask", "1") != "0"
+        out = dict(row)
+        if mask:
+            out["definition"] = mask_word(out["definition"], word)
+            out["example"] = mask_word(out["example"], word)
+        return jsonify(out)
     if lang == "en":
         data = fetch_meaning(word)
     elif lang in ("zh", "cmn"):
@@ -891,6 +920,8 @@ def meaning():
 
 
 DEF_POOLS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "def_pools")
+# CC-LAUNCH-EN rev 4: Spell's own reviewed pools, served on src=gen1 only.
+DEF_POOLS_GEN1_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "def_pools_gen1")
 
 
 @app.route("/api/defpool")
@@ -904,7 +935,7 @@ def defpool():
     tier = request.args.get("tier") or ""
     if tier not in ("easy", "medium", "hard", "expert"):
         return jsonify({"error": "bad tier"}), 400
-    path = os.path.join(DEF_POOLS_DIR, f"{lang}.json")
+    path = os.path.join(DEF_POOLS_GEN1_DIR if wants_gen1(lang) else DEF_POOLS_DIR, f"{lang}.json")
     if not os.path.isfile(path):
         return jsonify({"error": "no pool"}), 404
     with open(path, encoding="utf-8") as f:
@@ -931,7 +962,11 @@ def sentence_audio():
         return jsonify({"error": "invalid word"}), 400
 
     lang = (request.args.get("lang") or "en").split("-")[0].lower()
-    if lang == "en":
+    gen1 = wants_gen1(lang)
+    if gen1:
+        row = GEN_MEANINGS.get(word)
+        data = row if row and row.get("reviewed_sentence") else None
+    elif lang == "en":
         data = fetch_meaning(word)
     elif lang in MEANING_LANGS:
         data = fetch_meaning_wiktionary(word, lang)
@@ -945,7 +980,10 @@ def sentence_audio():
     # words; its rare wiktionary examples fall back to the English voice
     # rather than growing an Azure sentence path here).
     v_lang, v_name = LANG_VOICES.get(lang, (LANGUAGE_CODE, VOICE_NAME))
-    path = cache_path_for(word, "sentence", lang)
+    # A gen1 sentence is different text from the old dictionaryapi.dev one, so it
+    # gets its own clip, keyed by the sentence itself: editing it re-renders it.
+    variant = "sentence-gen1-" + hashlib.md5(example.encode()).hexdigest()[:10] if gen1 else "sentence"
+    path = cache_path_for(word, variant, lang)
     if not os.path.exists(path):
         try:
             response = tts_client.synthesize_speech(

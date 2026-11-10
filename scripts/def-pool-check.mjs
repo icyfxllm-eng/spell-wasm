@@ -328,7 +328,12 @@ if (process.argv.includes("--selftest")) {
 }
 
 const POOLS = `${ROOT}/backend/def_pools`;
-const { bad, rows, files, offBank, thinnest, floor: floorUsed } = check(POOLS, `${ROOT}/assets/words`);
+const main = check(POOLS, `${ROOT}/assets/words`);
+// CC-LAUNCH-EN rev 4: Spell's own reviewed pools (served on src=gen1) obey the same laws.
+const gen1 = check(`${ROOT}/backend/def_pools_gen1`, `${ROOT}/assets/words`);
+const bad = [...main.bad, ...gen1.bad.map((b) => `def_pools_gen1/${b}`)];
+const { rows, files, thinnest, floor: floorUsed } = main;
+const offBank = main.offBank + gen1.offBank;
 if (bad.length) {
   console.error("def-pool-check: FAILED");
   for (const b of bad.slice(0, 40)) console.error("  " + b);

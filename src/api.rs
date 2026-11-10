@@ -757,13 +757,20 @@ impl Meaning {
     }
 }
 
+/// CC-LAUNCH-EN rev 4: ask the server for Spell's own reviewed English
+/// definitions and sentences (backend/meanings/en.gen1.json, def_pools/en.gen1.json).
+/// The server ignores it for every other language, and builds without it keep
+/// today's content (D-DEF11).
+pub const DEF_SRC: &str = "gen1";
+
 pub async fn fetch_meaning(word: &str, mask: bool, lang: &str) -> Result<Meaning, JsValue> {
     let url = format!(
-        "{}/api/meaning?word={}&mask={}&lang={}",
+        "{}/api/meaning?word={}&mask={}&lang={}&src={}",
         api_base(),
         urlencode(word),
         if mask { "1" } else { "0" },
-        urlencode(lang)
+        urlencode(lang),
+        DEF_SRC
     );
     let text = storage::fetch_text(&url).await?;
     let json: serde_json::Value = serde_json::from_str(&text).map_err(|e| JsValue::from_str(&e.to_string()))?;
@@ -780,7 +787,7 @@ pub fn play_sentence_audio(meaning: &Meaning, word: &str, lang: &str) {
     if meaning.sentence().is_none() {
         return;
     }
-    let url = format!("{}/api/sentence-audio?word={}&lang={}", api_base(), urlencode(word), urlencode(lang));
+    let url = format!("{}/api/sentence-audio?word={}&lang={}&src={}", api_base(), urlencode(word), urlencode(lang), DEF_SRC);
     let Ok(audio) = HtmlAudioElement::new_with_src(&url) else { return };
     audio.set_cross_origin(Some("anonymous"));
     audio_boost::wire(&audio);
