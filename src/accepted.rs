@@ -100,6 +100,7 @@ mod tests {
     fn de_official_double_spelling_is_accepted_and_umlaut_stand_ins_are_not() {
         assert!(accepts("de", "Ghetto", "Getto"));
         assert!(accepts("de", "Xylophon", "xylofon"), "case is folded outside Impossible");
+        assert!(accepts("de", "Porträts", "Portraits"), "Portrait was added alongside Porträt in 2024");
         assert!(!accepts("de", "Getto", "Ghetto"), "one direction: the stored form's variants only");
         for (w, t) in [("Straße", "Strasse"), ("Mädchen", "Maedchen"), ("Mädchen", "Madchen")] {
             assert!(!accepts("de", w, t) && !crate::norm::same_answer("de", t, w), "{t} for {w}");
