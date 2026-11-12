@@ -1,9 +1,9 @@
 # CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.
 # verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending.
-#tier	easy	0x6EF7E22284435407
-#tier	medium	0x4A5B8C1742F93B05
-#tier	hard	0xC69B8BDE91B661D1
-#tier	expert	0x14461D0765BB2998
+#tier	easy	0x83BDDF99AB8230E2
+#tier	medium	0x5EB8D73C0E550A82
+#tier	hard	0xA9A798F972B39CA2
+#tier	expert	0x2D752750084C02F4
 Auge	dictionary	de_DE_frami
 Auto	dictionary	de_DE_frami
 Ball	dictionary	de_DE_frami
@@ -65,7 +65,7 @@ Wolf	dictionary	de_DE_frami
 Wolke	dictionary	de_DE_frami
 acht	dictionary	de_DE_frami
 alt	dictionary	de_DE_frami
-angst	dictionary	de_DE_frami
+Angst	dictionary	de_DE_frami
 Arbeit	dictionary	de_DE_frami
 arm	dictionary	de_DE_frami
 Baby	dictionary	de_DE_frami
@@ -91,7 +91,7 @@ dunkel	dictionary	de_DE_frami
 eins	dictionary	de_DE_frami
 Eis	dictionary	de_DE_frami
 Eisen	dictionary	de_DE_frami
-erde	dictionary	de_DE_frami
+Erde	dictionary	de_DE_frami
 essen	dictionary	de_DE_frami
 Farbe	dictionary	de_DE_frami
 Feld	dictionary	de_DE_frami
@@ -136,7 +136,7 @@ jetzt	dictionary	de_DE_frami
 kalt	dictionary	de_DE_frami
 Kamera	dictionary	de_DE_frami
 kaufen	dictionary	de_DE_frami
-kette	dictionary	de_DE_frami
+Kette	dictionary	de_DE_frami
 Kirche	dictionary	de_DE_frami
 Kiste	dictionary	de_DE_frami
 klang	dictionary	de_DE_frami
@@ -162,7 +162,7 @@ Lehrer	dictionary	de_DE_frami
 leicht	dictionary	de_DE_frami
 lesen	dictionary	de_DE_frami
 Leute	dictionary	de_DE_frami
-licht	dictionary	de_DE_frami
+Licht	dictionary	de_DE_frami
 liebe	dictionary	de_DE_frami
 Lied	dictionary	de_DE_frami
 Linie	dictionary	de_DE_frami
@@ -190,7 +190,7 @@ nein	dictionary	de_DE_frami
 neu	dictionary	de_DE_frami
 neun	dictionary	de_DE_frami
 nie	dictionary	de_DE_frami
-norden	dictionary	de_DE_frami
+Norden	dictionary	de_DE_frami
 oft	dictionary	de_DE_frami
 Ort	dictionary	de_DE_frami
 Osten	dictionary	de_DE_frami
@@ -202,7 +202,7 @@ Punkt	dictionary	de_DE_frami
 Quadrat	dictionary	de_DE_frami
 recht	dictionary	de_DE_frami
 Reis	dictionary	de_DE_frami
-reise	dictionary	de_DE_frami
+Reise	dictionary	de_DE_frami
 Ring	dictionary	de_DE_frami
 rot	dictionary	de_DE_frami
 rücken	dictionary	de_DE_frami
@@ -1074,7 +1074,7 @@ Rechnung	dictionary	de_DE_frami
 Sammlung	dictionary	de_DE_frami
 Service	dictionary	de_DE_frami
 Standard	dictionary	de_DE_frami
-streit	dictionary	de_DE_frami
+Streit	dictionary	de_DE_frami
 Städten	dictionary	de_DE_frami
 Teams	dictionary	de_DE_frami
 Theorie	dictionary	de_DE_frami
@@ -2144,7 +2144,6 @@ Handys	dictionary	de_DE_frami
 haushalte	dictionary	de_DE_frami
 Hintern	dictionary	de_DE_frami
 häufigsten	dictionary	de_DE_frami
-isbn	pending	de_DE_frami
 Kaufmann	dictionary	de_DE_frami
 Koblenz	dictionary	de_DE_frami
 kurve	dictionary	de_DE_frami
@@ -2188,7 +2187,7 @@ Vorfall	dictionary	de_DE_frami
 Vorsprung	dictionary	de_DE_frami
 Vorträge	dictionary	de_DE_frami
 warnen	dictionary	de_DE_frami
-wiese	dictionary	de_DE_frami
+Wiese	dictionary	de_DE_frami
 Williams	dictionary	de_DE_frami
 zeitlich	dictionary	de_DE_frami
 zustände	dictionary	de_DE_frami
@@ -2244,7 +2243,6 @@ gewechselt	dictionary	de_DE_frami
 gezahlt	dictionary	de_DE_frami
 geäußert	dictionary	de_DE_frami
 griechische	dictionary	de_DE_frami
-grossvater	pending	de_DE_frami
 Helm	dictionary	de_DE_frami
 herstellen	dictionary	de_DE_frami
 Historiker	dictionary	de_DE_frami
@@ -2257,12 +2255,10 @@ Kreises	dictionary	de_DE_frami
 Landgericht	dictionary	de_DE_frami
 lerne	dictionary	de_DE_frami
 letztere	dictionary	de_DE_frami
-Linux	dictionary	de_DE_frami
 Lizenz	dictionary	de_DE_frami
 Mindestlohn	dictionary	de_DE_frami
 Möbel	dictionary	de_DE_frami
 münzen	dictionary	de_DE_frami
-nehm	pending	de_DE_frami
 Ostern	dictionary	de_DE_frami
 Podcast	dictionary	de_DE_frami
 probiert	dictionary	de_DE_frami
@@ -2508,7 +2504,7 @@ Garantie	dictionary	de_DE_frami
 geheime	dictionary	de_DE_frami
 geister	dictionary	de_DE_frami
 gewählten	dictionary	de_DE_frami
-gärten	dictionary	de_DE_frami
+Gärten	dictionary	de_DE_frami
 hessischen	dictionary	de_DE_frami
 Ideologie	dictionary	de_DE_frami
 iss	dictionary	de_DE_frami
@@ -2555,7 +2551,6 @@ Verhandlung	dictionary	de_DE_frami
 vorgelegt	dictionary	de_DE_frami
 werben	dictionary	de_DE_frami
 Willi	dictionary	de_DE_frami
-wirtschafts	pending	de_DE_frami
 wolltest	dictionary	de_DE_frami
 Wäsche	dictionary	de_DE_frami
 zelt	dictionary	de_DE_frami
@@ -2607,7 +2602,6 @@ Institution	dictionary	de_DE_frami
 interessanten	dictionary	de_DE_frami
 italienisch	dictionary	de_DE_frami
 Jahrhunderte	dictionary	de_DE_frami
-jänner	pending	de_DE_frami
 Kanton	dictionary	de_DE_frami
 Klimawandel	dictionary	de_DE_frami
 knoten	dictionary	de_DE_frami
@@ -2784,7 +2778,6 @@ alpha	dictionary	de_DE_frami
 Amtsgericht	dictionary	de_DE_frami
 ansprechen	dictionary	de_DE_frami
 aufgerufen	dictionary	de_DE_frami
-aufl	pending	de_DE_frami
 Ausblick	dictionary	de_DE_frami
 Bakterien	dictionary	de_DE_frami
 Bedingung	dictionary	de_DE_frami
@@ -3002,7 +2995,6 @@ kleinsten	dictionary	de_DE_frami
 Kohl	dictionary	de_DE_frami
 Lothar	dictionary	de_DE_frami
 Manchester	dictionary	de_DE_frami
-massstab	pending	de_DE_frami
 Melodie	dictionary	de_DE_frami
 mutig	dictionary	de_DE_frami
 Mängel	dictionary	de_DE_frami
@@ -3038,7 +3030,6 @@ Vertretung	dictionary	de_DE_frami
 verwiesen	dictionary	de_DE_frami
 verzicht	dictionary	de_DE_frami
 Wiederholung	dictionary	de_DE_frami
-wieviele	pending	de_DE_frami
 wohn	dictionary	de_DE_frami
 Wortes	dictionary	de_DE_frami
 worüber	dictionary	de_DE_frami
@@ -3104,14 +3095,12 @@ gewähren	dictionary	de_DE_frami
 gewährleistet	dictionary	de_DE_frami
 gezeichnet	dictionary	de_DE_frami
 glücklicherweise	dictionary	de_DE_frami
-grossmutter	pending	de_DE_frami
 grüner	dictionary	de_DE_frami
 Hamm	dictionary	de_DE_frami
 Hits	dictionary	de_DE_frami
 indischen	dictionary	de_DE_frami
 internen	dictionary	de_DE_frami
 Internetseite	dictionary	de_DE_frami
-jedesmal	pending	de_DE_frami
 Juristen	dictionary	de_DE_frami
 Kater	dictionary	de_DE_frami
 Kirchengemeinde	dictionary	de_DE_frami
@@ -4127,9 +4116,7 @@ Berechtigung	dictionary	de_DE_frami
 bereichern	dictionary	de_DE_frami
 bereichert	dictionary	de_DE_frami
 Bestrebungen	dictionary	de_DE_frami
-bieber	pending	de_DE_frami
 Bildhauer	dictionary	de_DE_frami
-bildungs	pending	de_DE_frami
 blutigen	dictionary	de_DE_frami
 bläst	dictionary	de_DE_frami
 Bäder	dictionary	de_DE_frami
@@ -4276,7 +4263,6 @@ Waffenstillstand	dictionary	de_DE_frami
 weiterführende	dictionary	de_DE_frami
 wiege	dictionary	de_DE_frami
 witzige	dictionary	de_DE_frami
-wordpress	pending	de_DE_frami
 Würzburger	dictionary	de_DE_frami
 Zombies	dictionary	de_DE_frami
 Zugabe	dictionary	de_DE_frami
@@ -4337,7 +4323,6 @@ Erwärmung	dictionary	de_DE_frami
 Expertise	dictionary	de_DE_frami
 Fahrplan	dictionary	de_DE_frami
 Fernando	dictionary	de_DE_frami
-fernseh	pending	de_DE_frami
 Flugplatz	dictionary	de_DE_frami
 formulierte	dictionary	de_DE_frami
 Fragebogen	dictionary	de_DE_frami
@@ -4360,7 +4345,6 @@ Gina	dictionary	de_DE_frami
 gnadenlos	dictionary	de_DE_frami
 Granit	dictionary	de_DE_frami
 großartiges	dictionary	de_DE_frami
-grossraum	pending	de_DE_frami
 Göring	dictionary	de_DE_frami
 Görlitz	dictionary	de_DE_frami
 göttliche	dictionary	de_DE_frami
@@ -4376,7 +4360,6 @@ Hingabe	dictionary	de_DE_frami
 hinterm	dictionary	de_DE_frami
 Images	dictionary	de_DE_frami
 islamistischen	dictionary	de_DE_frami
-ists	pending	de_DE_frami
 italienischer	dictionary	de_DE_frami
 Jupiter	dictionary	de_DE_frami
 kanadischen	dictionary	de_DE_frami
@@ -4760,12 +4743,10 @@ Genesung	dictionary	de_DE_frami
 Gesprächspartner	dictionary	de_DE_frami
 getäuscht	dictionary	de_DE_frami
 Gitarren	dictionary	de_DE_frami
-Gysi	dictionary	de_DE_frami
 Halter	dictionary	de_DE_frami
 handele	dictionary	de_DE_frami
 hartnäckig	dictionary	de_DE_frami
 hefte	dictionary	de_DE_frami
-heise	pending	de_DE_frami
 Herstellern	dictionary	de_DE_frami
 hervorgegangen	dictionary	de_DE_frami
 Hoden	dictionary	de_DE_frami
@@ -4805,7 +4786,6 @@ Meilenstein	dictionary	de_DE_frami
 Mitspieler	dictionary	de_DE_frami
 Moscheen	dictionary	de_DE_frami
 männlicher	dictionary	de_DE_frami
-Nadine	dictionary	de_DE_frami
 neutralen	dictionary	de_DE_frami
 Nietzsche	dictionary	de_DE_frami
 obgleich	dictionary	de_DE_frami
@@ -4848,7 +4828,6 @@ senkrecht	dictionary	de_DE_frami
 sinnvoller	dictionary	de_DE_frami
 sommers	dictionary	de_DE_frami
 Spekulation	dictionary	de_DE_frami
-spiess	pending	de_DE_frami
 Sportverein	dictionary	de_DE_frami
 stationiert	dictionary	de_DE_frami
 stationären	dictionary	de_DE_frami
@@ -4870,7 +4849,7 @@ umfangreich	dictionary	de_DE_frami
 umstrittenen	dictionary	de_DE_frami
 unberührt	dictionary	de_DE_frami
 ungestört	dictionary	de_DE_frami
-uniformen	dictionary	de_DE_frami
+Uniformen	dictionary	de_DE_frami
 unregelmäßig	dictionary	de_DE_frami
 unterbinden	dictionary	de_DE_frami
 Vegetation	dictionary	de_DE_frami
@@ -4893,7 +4872,6 @@ vielerlei	dictionary	de_DE_frami
 vorgeht	dictionary	de_DE_frami
 Vormarsch	dictionary	de_DE_frami
 Vorschlägen	dictionary	de_DE_frami
-vorstoss	pending	de_DE_frami
 vorzugsweise	dictionary	de_DE_frami
 Warnungen	dictionary	de_DE_frami
 Websites	dictionary	de_DE_frami
@@ -4979,7 +4957,6 @@ fragten	dictionary	de_DE_frami
 Frequenzen	dictionary	de_DE_frami
 frustriert	dictionary	de_DE_frami
 fröhlichen	dictionary	de_DE_frami
-fussboden	pending	de_DE_frami
 färben	dictionary	de_DE_frami
 Gasthof	dictionary	de_DE_frami
 geeigneter	dictionary	de_DE_frami
@@ -4997,7 +4974,6 @@ Gletscher	dictionary	de_DE_frami
 gläubige	dictionary	de_DE_frami
 Glücksspiel	dictionary	de_DE_frami
 Gremium	dictionary	de_DE_frami
-hach	pending	de_DE_frami
 Heimsieg	dictionary	de_DE_frami
 herbei	dictionary	de_DE_frami
 irrelevant	dictionary	de_DE_frami
@@ -5039,7 +5015,6 @@ Neuhaus	dictionary	de_DE_frami
 Nizza	dictionary	de_DE_frami
 nächtlichen	dictionary	de_DE_frami
 Oberkörper	dictionary	de_DE_frami
-oecd	pending	de_DE_frami
 offenkundig	dictionary	de_DE_frami
 organischen	dictionary	de_DE_frami
 orientierten	dictionary	de_DE_frami
@@ -5491,7 +5466,7 @@ Pandemie	dictionary	de_DE_frami
 Panne	dictionary	de_DE_frami
 Pendant	dictionary	de_DE_frami
 permanente	dictionary	de_DE_frami
-pharma	pending	de_DE_frami
+Pharma	pending	de_DE_frami
 Porträts	dictionary	de_DE_frami
 potenziellen	dictionary	de_DE_frami
 Pracht	dictionary	de_DE_frami
@@ -5548,7 +5523,6 @@ Wagens	dictionary	de_DE_frami
 Wahrheiten	dictionary	de_DE_frami
 Wahrzeichen	dictionary	de_DE_frami
 wegwerfen	dictionary	de_DE_frami
-wiesn	pending	de_DE_frami
 Wrack	dictionary	de_DE_frami
 Xaver	dictionary	de_DE_frami
 Zins	dictionary	de_DE_frami
@@ -5676,8 +5650,6 @@ münden	dictionary	de_DE_frami
 nachfolgend	dictionary	de_DE_frami
 negatives	dictionary	de_DE_frami
 Oberfranken	dictionary	de_DE_frami
-Odenwald	dictionary	de_DE_frami
-oesterreich	pending	de_DE_frami
 optimalen	dictionary	de_DE_frami
 ordnet	dictionary	de_DE_frami
 orthodoxen	dictionary	de_DE_frami
@@ -5686,7 +5658,6 @@ Penner	dictionary	de_DE_frami
 Planck	dictionary	de_DE_frami
 produktiv	dictionary	de_DE_frami
 Promille	dictionary	de_DE_frami
-prosieben	pending	de_DE_frami
 prägt	dictionary	de_DE_frami
 Prägung	dictionary	de_DE_frami
 prügeln	dictionary	de_DE_frami
@@ -5748,7 +5719,6 @@ Vortag	dictionary	de_DE_frami
 wahrzunehmen	dictionary	de_DE_frami
 Weihnachtszeit	dictionary	de_DE_frami
 Weiler	dictionary	de_DE_frami
-weils	pending	de_DE_frami
 westfälische	dictionary	de_DE_frami
 Wiederholungen	dictionary	de_DE_frami
 Wiederwahl	dictionary	de_DE_frami
@@ -5784,7 +5754,6 @@ aufgebrochen	dictionary	de_DE_frami
 aufgeräumt	dictionary	de_DE_frami
 aufgezogen	dictionary	de_DE_frami
 Ausgrenzung	dictionary	de_DE_frami
-ausstoss	pending	de_DE_frami
 auszubildende	dictionary	de_DE_frami
 Autofahren	dictionary	de_DE_frami
 bedrohte	dictionary	de_DE_frami
@@ -5879,7 +5848,7 @@ lautstark	dictionary	de_DE_frami
 Lebenswerk	dictionary	de_DE_frami
 Legitimation	dictionary	de_DE_frami
 Lehramt	dictionary	de_DE_frami
-liveticker	pending	de_DE_frami
+Liveticker	pending	de_DE_frami
 materiellen	dictionary	de_DE_frami
 merklich	dictionary	de_DE_frami
 militärischer	dictionary	de_DE_frami

@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "Não foi possível excluir. Verifique sua conexão e tente de novo.",
   "de.close.letters": "Quase — esta palavra se escreve com {fix}",
   "de.close.split": "Quase — escreve-se numa só palavra",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "Desbloqueie mais ortografia",
   "paywall.body": "Palavras dos níveis Médio, Difícil e Especialista, The Climb e todos os níveis de cada jogo.",
   "paywall.buy": "Comprar · {price}",

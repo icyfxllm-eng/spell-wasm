@@ -69,6 +69,50 @@ pub fn fold_strict(s: &str) -> String {
         .collect()
 }
 
+/// [`fold_strict`] without the case fold: NFC, whitespace and silent marks only.
+/// What a case-significant language (see `consts::case_significant`) compares in
+/// standard and expert play.
+pub fn fold_case_exact(s: &str) -> String {
+    s.nfc().collect::<String>().chars().filter(|c| !c.is_whitespace() && !is_silent_mark(*c)).collect()
+}
+
+/// CC-DE-BANK D3: is an answer the grader already accepted ALSO right on case?
+/// True where case carries no meaning. Where it does (see
+/// `consts::case_significant`), an answer that folds equal must match case
+/// exactly, and one accepted by a stand-in or alternate-spelling path (which fold
+/// case on their own) must at least match the initial. Applied in the spell
+/// game's standard and expert grading only; `same_answer` itself is unchanged so
+/// every other surface that shares it (Board game, crosswords, Say-It...) keeps
+/// its case fold.
+pub fn case_ok(lang: &str, typed: &str, word: &str) -> bool {
+    if !crate::consts::case_significant(lang) {
+        return true;
+    }
+    if fold_strict(typed) == fold_strict(word) {
+        fold_case_exact(typed) == fold_case_exact(word)
+    } else {
+        initial_case_matches(lang, typed, word)
+    }
+}
+
+/// For a case-significant language: does the typed answer start with the same
+/// letter case as the stored word? Always true where case carries no meaning.
+/// Keeps the stand-in and alternate-spelling paths, which fold case on their own,
+/// from accepting a wrong-case answer in standard play.
+pub fn initial_case_matches(lang: &str, typed: &str, word: &str) -> bool {
+    if !crate::consts::case_significant(lang) {
+        return true;
+    }
+    let up = |s: &str| s.trim().chars().next().map(char::is_uppercase);
+    up(typed) == up(word)
+}
+
+/// Spell Jr forgave a difference of case only: right once case is folded, not as
+/// typed. The caller shows the capitalization hint.
+pub fn case_only_miss(lang: &str, typed: &str, word: &str) -> bool {
+    crate::consts::case_significant(lang) && fold_case_exact(typed) != fold_case_exact(word) && fold_strict(typed) == fold_strict(word)
+}
+
 /// Accent-lenient fold for Spell Jr: strip combining marks and map the letters
 /// that have no NFD decomposition down to A–Z-ish equivalents.
 pub fn fold_lenient(s: &str) -> String {

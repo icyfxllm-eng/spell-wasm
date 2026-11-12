@@ -145,6 +145,13 @@ pub fn active_word_list(state: &AppState, tier: &str) -> Vec<String> {
     } else {
         words::tier_for(&state.lang, tier).iter().map(|s| s.to_string()).collect()
     };
+    // CC-DE-BANK F1: a word with a homophone and no carrier phrase is never served
+    // ambiguous. Kid Mode accepts every spelling in the group, so it keeps them.
+    let pool = if state.lang == MINE || state.kid {
+        pool
+    } else {
+        pool.into_iter().filter(|w| crate::homophones::serves_standard(&state.lang, w)).collect()
+    };
     // CC-EN-VARIANTS 3a: no space/hyphen English row at Easy or for Spell Jr.
     let pool = if state.lang == MINE { pool } else { crate::kid_filter::without_splits_for_easy_and_jr(&state.lang, tier, state.kid, pool) };
     // Kid Mode "friendly words": drop age-inappropriate terms (the content layer
@@ -2305,6 +2312,7 @@ pub fn submit_guess(app: &App) {
     stop_timer(true);
     lock_inputs();
     VALID_OTHER_SENSE.with(|c| c.set(false));
+    ANSWER_HINT.with(|h| *h.borrow_mut() = None);
 
     // CC-SENSE-CUE F2(a) -- ACCEPT-ALL. A learner who hears [pɛər] and types
     // "pear" for "pair" has typed a real English word, spelled correctly, from
@@ -2368,15 +2376,38 @@ pub fn submit_guess(app: &App) {
         // homophone of the prompt (audio can't carry b/v, silent h, seseo,
         // yeísmo) is accepted. Empty table for languages without a file -> no-op.
         // Easy accepts the German umlaut / ß stand-ins; Spell Jr does through `answer_matches_in` (Eric 2026-11-04).
-        let de_easy = cur_lang == crate::consts::DE && app.borrow().cur_tier == "easy" && crate::norm::de_stand_in_accepted(&typed, &word);
-        crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid) || en_variant || de_easy || {
+        let de_easy = cur_lang == crate::consts::DE
+            && app.borrow().cur_tier == "easy"
+            && crate::norm::de_stand_in_accepted(&typed, &word);
+        let ok = crate::norm::answer_matches_in(&cur_lang, &typed, &word, kid) || en_variant || de_easy || {
             let other = crate::homophones::accepts(&cur_lang, &word, &typed)
                 && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
             if other {
                 VALID_OTHER_SENSE.with(|c| c.set(true));
             }
             other
-        }
+        };
+        // CC-DE-BANK F1/F2 (D1, D3): Kid Mode only. Any spelling in a bank homophone
+        // group is right (the target is then shown); a case-only miss is right with a
+        // capitalization hint. Standard and expert get neither: a carrier phrase tells
+        // the player which word they are hearing instead.
+        // `answer_matches_in` folds case for every surface that shares it; the spell game's
+        // standard and expert grading then holds the case where the language's registry says it matters.
+        let ok = ok && (kid || crate::norm::case_ok(&cur_lang, &typed, &word));
+        let group = kid && !ok && crate::homophones::bank_group_accepts(&cur_lang, &word, &typed);
+        let hint = if kid && (ok || group) {
+            if group {
+                Some(crate::i18n::t("de.homophone.shown").replace("{word}", &word))
+            } else if crate::norm::case_only_miss(&cur_lang, &typed, &word) {
+                Some(crate::i18n::t("de.case.hint").replace("{word}", &word))
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        ANSWER_HINT.with(|h| *h.borrow_mut() = hint);
+        ok || group
     };
     DE_CLOSE.with(|c| {
         *c.borrow_mut() = if !correct && !impossible && cur_lang == crate::consts::DE { crate::norm::de_near_miss(&typed, &word) } else { None };
@@ -2415,6 +2446,9 @@ pub fn submit_guess(app: &App) {
     let voided = round_voided(app);
     if correct {
         on_correct(app);
+        if let Some(msg) = ANSWER_HINT.with(|h| h.borrow_mut().take()) {
+            dom::set_text("feedback", &msg);
+        }
     } else {
         on_wrong(app);
     }
@@ -3762,6 +3796,9 @@ struct TimerState {
 /// row will need, and what the acceptance tests assert.
 thread_local! {
     static VALID_OTHER_SENSE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+    /// CC-DE-BANK: the Kid Mode note shown with a CORRECT answer that was forgiven
+    /// (a case-only miss, or another spelling from a homophone group).
+    static ANSWER_HINT: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
 }
 
 /// Test/e2e seam: was the last graded submission accepted as a different

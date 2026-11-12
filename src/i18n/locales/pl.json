@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "Nie udało się usunąć. Sprawdź połączenie i spróbuj ponownie.",
   "de.close.letters": "Prawie — to słowo pisze się z {fix}",
   "de.close.split": "Prawie — to się pisze razem",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "Odblokuj więcej ortografii",
   "paywall.body": "Słowa na poziomach Średni, Trudny i Ekspert, The Climb i każdy poziom każdej gry.",
   "paywall.buy": "Kup · {price}",

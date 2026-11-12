@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "Löschen nicht möglich. Prüfe deine Verbindung und versuche es erneut.",
   "de.close.letters": "Fast — hier steht {fix}",
   "de.close.split": "Fast — das schreibt man zusammen",
+  "de.case.hint": "Nomen werden großgeschrieben: {word}",
+  "de.homophone.shown": "Das klingt gleich! Hier schreibt man es {word}",
   "paywall.title": "Mehr Rechtschreibung freischalten",
   "paywall.body": "Wörter für Mittel, Schwer und Experte, The Climb und jede Stufe jedes Spiels.",
   "paywall.buy": "Kaufen · {price}",

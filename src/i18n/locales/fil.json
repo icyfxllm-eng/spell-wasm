@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "Hindi mabura. Suriin ang koneksyon at subukan ulit.",
   "de.close.letters": "Malapit na — ang salitang ito ay isinusulat nang may {fix}",
   "de.close.split": "Malapit na — isulat ito bilang isang salita",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "I-unlock ang mas maraming spelling",
   "paywall.body": "Mga salitang Medium, Hard at Expert, The Climb, at bawat level ng bawat laro.",
   "paywall.buy": "Bilhin · {price}",

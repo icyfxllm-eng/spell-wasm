@@ -1,0 +1,1177 @@
+{
+ "source": "de-spelling_b1_clean.xlsx",
+ "entries": [
+  {
+   "row_id": "DE-B1-001",
+   "word": "stark",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-002",
+   "word": "geographische",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-003",
+   "word": "erlitt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-004",
+   "word": "mündet",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-005",
+   "word": "hundert",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-006",
+   "word": "Name",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-007",
+   "word": "meist",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-008",
+   "word": "gemeldet",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-009",
+   "word": "wärst",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-010",
+   "word": "Zeilen",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-013",
+   "word": "während",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-014",
+   "word": "Behörden",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-015",
+   "word": "wenigen",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-016",
+   "word": "ausgelöst",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-017",
+   "word": "worden",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-018",
+   "word": "Himmel",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-020",
+   "word": "rufen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-021",
+   "word": "zugewiesen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-022",
+   "word": "produzierten",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-023",
+   "word": "zeugen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-024",
+   "word": "fanden",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-025",
+   "word": "Bild",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-026",
+   "word": "inhaltlichen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-027",
+   "word": "Ära",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-028",
+   "word": "Muschel",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-029",
+   "word": "Auswertung",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-030",
+   "word": "überleg",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-031",
+   "word": "kräftig",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-032",
+   "word": "rasch",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-033",
+   "word": "Schmerz",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-034",
+   "word": "hierfür",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-035",
+   "word": "besten",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-036",
+   "word": "verhält",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-037",
+   "word": "Wolf",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-041",
+   "word": "laufenden",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-042",
+   "word": "grau",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-043",
+   "word": "eifrig",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-044",
+   "word": "Sonde",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-045",
+   "word": "gelobt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-046",
+   "word": "Liveticker",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-047",
+   "word": "stürzen",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-049",
+   "word": "Linsen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-051",
+   "word": "Kunst",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-052",
+   "word": "äußere",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-053",
+   "word": "bislang",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-054",
+   "word": "Abteilungsleiter",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-056",
+   "word": "erschweren",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-057",
+   "word": "Ei",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-059",
+   "word": "Licht",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-060",
+   "word": "Umgang",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-061",
+   "word": "russische",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-062",
+   "word": "Süden",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-063",
+   "word": "freu",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-064",
+   "word": "verkündet",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-066",
+   "word": "Vermögens",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-067",
+   "word": "beschließt",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-068",
+   "word": "Kopf",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-069",
+   "word": "glauben",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-070",
+   "word": "Zielsetzung",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-071",
+   "word": "getrieben",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-072",
+   "word": "starke",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-073",
+   "word": "Gärten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-075",
+   "word": "größeren",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-076",
+   "word": "seine",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-077",
+   "word": "acht",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-078",
+   "word": "widmet",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-079",
+   "word": "nein",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-080",
+   "word": "Blatt",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-081",
+   "word": "sorgen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-082",
+   "word": "konnten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-083",
+   "word": "Baum",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-084",
+   "word": "Regen",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-085",
+   "word": "Angst",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-086",
+   "word": "Handelns",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-087",
+   "word": "ihren",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-088",
+   "word": "Zug",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-089",
+   "word": "lebendigen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-090",
+   "word": "stieg",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-091",
+   "word": "leg",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-093",
+   "word": "beschränkte",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-095",
+   "word": "erfüllte",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-096",
+   "word": "nächste",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-097",
+   "word": "Ausblick",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-098",
+   "word": "selbständig",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-099",
+   "word": "jedes",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-100",
+   "word": "bekomm",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-101",
+   "word": "unserer",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-102",
+   "word": "Pharma",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-103",
+   "word": "richtig",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-104",
+   "word": "Mann",
+   "tier": "easy",
+   "homophones": [
+    "man"
+   ]
+  },
+  {
+   "row_id": "DE-B1-105",
+   "word": "Uniformen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-106",
+   "word": "hinaus",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-107",
+   "word": "Störungen",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-108",
+   "word": "Versand",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-109",
+   "word": "meinen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-110",
+   "word": "Komfort",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-111",
+   "word": "jemand",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-112",
+   "word": "Broker",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-113",
+   "word": "erwachsenen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-114",
+   "word": "stimmten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-115",
+   "word": "jetzt",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-118",
+   "word": "gesamtes",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-119",
+   "word": "dienten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-120",
+   "word": "Samen",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-121",
+   "word": "sitzt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-122",
+   "word": "unterstützt",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-123",
+   "word": "Fluss",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-124",
+   "word": "Abteilung",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-125",
+   "word": "Bundesland",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-126",
+   "word": "erweitern",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-127",
+   "word": "Auge",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-130",
+   "word": "Fuß",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-131",
+   "word": "fehlt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-132",
+   "word": "Kantons",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-133",
+   "word": "Analyse",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-134",
+   "word": "erhalten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-137",
+   "word": "sechs",
+   "tier": "easy",
+   "homophones": [
+    "Sex"
+   ]
+  },
+  {
+   "row_id": "DE-B1-138",
+   "word": "dreht",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-139",
+   "word": "gelte",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-141",
+   "word": "kalt",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-142",
+   "word": "starten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-143",
+   "word": "mögen",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-145",
+   "word": "sollten",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-146",
+   "word": "liefern",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-148",
+   "word": "große",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-149",
+   "word": "lösen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-150",
+   "word": "sogenannte",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-154",
+   "word": "Wiese",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-155",
+   "word": "ansässig",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-157",
+   "word": "blonden",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-158",
+   "word": "Erde",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-161",
+   "word": "Prüfung",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-162",
+   "word": "gesteht",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-163",
+   "word": "fliegt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-164",
+   "word": "weißen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-166",
+   "word": "langen",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-168",
+   "word": "frühesten",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-169",
+   "word": "überholt",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-170",
+   "word": "Unfällen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-171",
+   "word": "Blut",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-172",
+   "word": "geheime",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-173",
+   "word": "weist",
+   "tier": "medium",
+   "homophones": [
+    "weißt"
+   ]
+  },
+  {
+   "row_id": "DE-B1-174",
+   "word": "biegen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-175",
+   "word": "dauert",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-178",
+   "word": "kühl",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-179",
+   "word": "rechts",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-180",
+   "word": "Streit",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-181",
+   "word": "fühlt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-182",
+   "word": "heute",
+   "tier": "easy",
+   "homophones": [
+    "Häute"
+   ]
+  },
+  {
+   "row_id": "DE-B1-183",
+   "word": "Tag",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-185",
+   "word": "gefördert",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-186",
+   "word": "warm",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-187",
+   "word": "treuen",
+   "tier": "expert",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-191",
+   "word": "Norden",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-192",
+   "word": "gelebt",
+   "tier": "medium",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-194",
+   "word": "Kette",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-195",
+   "word": "Eisen",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-196",
+   "word": "Helm",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-197",
+   "word": "Junioren",
+   "tier": "hard",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-199",
+   "word": "Auto",
+   "tier": "easy",
+   "homophones": []
+  },
+  {
+   "row_id": "DE-B1-200",
+   "word": "Reise",
+   "tier": "easy",
+   "homophones": []
+  }
+ ],
+ "cuts": [
+  {
+   "row_id": "DE-B1-011",
+   "word": "prosieben",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-012",
+   "word": "bieber",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-019",
+   "word": "jänner",
+   "note": "Austrian-only word"
+  },
+  {
+   "row_id": "DE-B1-038",
+   "word": "hach",
+   "note": "very uncommon interjection"
+  },
+  {
+   "row_id": "DE-B1-039",
+   "word": "Spagetti",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-040",
+   "word": "fussboden",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-048",
+   "word": "grossvater",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-050",
+   "word": "weils",
+   "note": "nonstandard contraction"
+  },
+  {
+   "row_id": "DE-B1-055",
+   "word": "Maedchen",
+   "note": "nonstandard or incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-058",
+   "word": "jedesmal",
+   "note": "old spelling"
+  },
+  {
+   "row_id": "DE-B1-065",
+   "word": "spiess",
+   "note": "nonstandard or incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-074",
+   "word": "daß",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-092",
+   "word": "heise",
+   "note": "misspelling of heiße, or the brand Heise"
+  },
+  {
+   "row_id": "DE-B1-094",
+   "word": "Fluß",
+   "note": "nonstandard or incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-116",
+   "word": "Strasse",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-117",
+   "word": "vorstoss",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-128",
+   "word": "wieviele",
+   "note": "nonstandard"
+  },
+  {
+   "row_id": "DE-B1-129",
+   "word": "Gysi",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-135",
+   "word": "ists",
+   "note": "nonstandard contraction"
+  },
+  {
+   "row_id": "DE-B1-136",
+   "word": "Fahrad",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-140",
+   "word": "grossraum",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-144",
+   "word": "wirtschafts",
+   "note": "fragment, not a complete word"
+  },
+  {
+   "row_id": "DE-B1-147",
+   "word": "nehm",
+   "note": "nonstandard verb form"
+  },
+  {
+   "row_id": "DE-B1-151",
+   "word": "aufl",
+   "note": "fragment, not a complete word"
+  },
+  {
+   "row_id": "DE-B1-152",
+   "word": "oecd",
+   "note": "abbreviation or initialism"
+  },
+  {
+   "row_id": "DE-B1-153",
+   "word": "wiesn",
+   "note": "regional/dialect form"
+  },
+  {
+   "row_id": "DE-B1-156",
+   "word": "isbn",
+   "note": "abbreviation or initialism"
+  },
+  {
+   "row_id": "DE-B1-159",
+   "word": "bildungs",
+   "note": "fragment, not a complete word"
+  },
+  {
+   "row_id": "DE-B1-160",
+   "word": "massstab",
+   "note": "incorrect spelling"
+  },
+  {
+   "row_id": "DE-B1-165",
+   "word": "fernseh",
+   "note": "fragment, not a complete word"
+  },
+  {
+   "row_id": "DE-B1-167",
+   "word": "wordpress",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-176",
+   "word": "Jogurt",
+   "note": "variant removed in 2024"
+  },
+  {
+   "row_id": "DE-B1-177",
+   "word": "Linux",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-184",
+   "word": "Nadine",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-188",
+   "word": "grossmutter",
+   "note": "ss used where ß is required"
+  },
+  {
+   "row_id": "DE-B1-189",
+   "word": "oesterreich",
+   "note": "proper name (country); oe used for ö"
+  },
+  {
+   "row_id": "DE-B1-190",
+   "word": "Odenwald",
+   "note": "proper name or brand"
+  },
+  {
+   "row_id": "DE-B1-193",
+   "word": "ausstoss",
+   "note": "ss used where ß is required"
+  },
+  {
+   "row_id": "DE-B1-198",
+   "word": "Schiffahrt",
+   "note": "old spelling (pre-1996)"
+  }
+ ],
+ "unsure": []
+}

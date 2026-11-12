@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "삭제하지 못했습니다. 연결을 확인하고 다시 시도하세요.",
   "de.close.letters": "거의 맞아요 — 이 단어는 {fix}(으)로 씁니다",
   "de.close.split": "거의 맞아요 — 한 단어로 붙여 쓰세요",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "더 많은 철자 연습 열기",
   "paywall.body": "보통·어려움·전문가 단어, The Climb, 모든 게임의 모든 단계.",
   "paywall.buy": "구입 · {price}",

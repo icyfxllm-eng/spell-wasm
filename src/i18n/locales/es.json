@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "No se pudo eliminar. Revisa tu conexión e inténtalo de nuevo.",
   "de.close.letters": "Casi — esta palabra se escribe con {fix}",
   "de.close.split": "Casi — se escribe en una sola palabra",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "Desbloquea más ortografía",
   "paywall.body": "Palabras de nivel Medio, Difícil y Experto, The Climb y todos los niveles de cada juego.",
   "paywall.buy": "Comprar · {price}",

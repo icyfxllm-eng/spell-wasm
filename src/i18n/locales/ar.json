@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "تعذر الحذف. تحقق من اتصالك وحاول مرة أخرى.",
   "de.close.letters": "قريب — تُكتب هذه الكلمة بـ {fix}",
   "de.close.split": "قريب — تُكتب كلمة واحدة",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "افتح المزيد من التهجئة",
   "paywall.body": "كلمات المستويات المتوسط والصعب والخبير، وThe Climb، وكل مستوى في كل لعبة.",
   "paywall.buy": "شراء · {price}",

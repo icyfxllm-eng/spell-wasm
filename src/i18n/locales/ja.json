@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "削除できませんでした。接続を確認してもう一度お試しください。",
   "de.close.letters": "惜しい — この語は {fix} で綴ります",
   "de.close.split": "惜しい — 続けて一語で書きます",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "もっとスペル練習を解放",
   "paywall.body": "中級・上級・エキスパートの単語、The Climb、すべてのゲームのすべてのレベル。",
   "paywall.buy": "購入 · {price}",

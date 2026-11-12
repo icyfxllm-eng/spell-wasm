@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "Haikuweza kufuta. Angalia muunganisho wako ujaribu tena.",
   "de.close.letters": "Karibu — neno hili huandikwa kwa {fix}",
   "de.close.split": "Karibu — andika kama neno moja",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "Fungua tahajia zaidi",
   "paywall.body": "Maneno ya viwango vya Kati, Kigumu na Mtaalamu, The Climb, na kila kiwango cha kila mchezo.",
   "paywall.buy": "Nunua · {price}",

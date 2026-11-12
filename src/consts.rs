@@ -318,6 +318,15 @@ pub fn script_joins(lang: &str) -> bool {
     matches!(lang, AR | FA | HI)
 }
 
+/// CC-DE-BANK F2/D3: does letter CASE change the written word in this language?
+/// A registry property, so grading never branches on a language code. German
+/// capitalises nouns (Reise/reise, Licht/licht), so standard and expert grading
+/// are case-sensitive and Kid Mode forgives a case-only miss with a hint.
+/// Adding a language whose case carries meaning means adding it HERE, once.
+pub fn case_significant(lang: &str) -> bool {
+    matches!(lang, DE)
+}
+
 /// CC-DEF-MATCH per-language activation (Invariant 7/8: THE registry flag, no
 /// other per-language logic anywhere). True only when the language's definition
 /// pool meets the D3 floor (40 prompt-grade rows) in at least one tier under

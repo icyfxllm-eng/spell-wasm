@@ -796,7 +796,7 @@ Rechnung
 Sammlung
 Service
 Standard
-streit
+Streit
 Städten
 Teams
 Theorie

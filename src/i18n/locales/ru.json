@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "Не удалось удалить. Проверьте подключение и попробуйте снова.",
   "de.close.letters": "Почти — это слово пишется с {fix}",
   "de.close.split": "Почти — это слово пишется слитно",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "Открой больше заданий",
   "paywall.body": "Слова уровней «Средний», «Сложный» и «Эксперт», The Climb и все уровни каждой игры.",
   "paywall.buy": "Купить · {price}",

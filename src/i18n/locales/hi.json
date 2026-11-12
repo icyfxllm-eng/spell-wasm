@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "हटाया नहीं जा सका। कनेक्शन जाँचकर फिर कोशिश करें।",
   "de.close.letters": "लगभग — यह शब्द {fix} के साथ लिखा जाता है",
   "de.close.split": "लगभग — इसे एक ही शब्द में लिखें",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "और स्पेलिंग अनलॉक करें",
   "paywall.body": "मध्यम, कठिन और विशेषज्ञ शब्द, The Climb, और हर खेल का हर स्तर।",
   "paywall.buy": "खरीदें · {price}",

@@ -1343,6 +1343,8 @@
   "acn.delete.failed": "无法删除。请检查网络后重试。",
   "de.close.letters": "差一点 — 这个词要写成 {fix}",
   "de.close.split": "差一点 — 这个词要连写成一个词",
+  "de.case.hint": "Nouns are capitalized: {word}",
+  "de.homophone.shown": "Those sound the same! Here it is spelled {word}",
   "paywall.title": "解锁更多拼写练习",
   "paywall.body": "中等、困难和专家级单词，The Climb，以及每个游戏的每个级别。",
   "paywall.buy": "购买 · {price}",

@@ -101,6 +101,89 @@ pub fn accepts(lang: &str, word: &str, typed: &str) -> bool {
     }
 }
 
+// ---- CC-DE-BANK F1: bank homophone groups with carrier phrases -------------------
+//
+// One line per target word in `assets/words/<lang>/homophone-groups.tsv`:
+//     target <TAB> other,other <TAB> carrier        (carrier may be empty)
+// Written by tools/bank/de/de_ingest.py from the auditor's Same Sound column
+// (Keep rows only); carriers are written by a human, never generated (no LLM
+// text in bank content). Standard and expert disambiguate with the carrier; Kid
+// Mode accepts any spelling in the group.
+
+/// One bank homophone entry.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BankGroup {
+    pub target: String,
+    pub others: Vec<String>,
+    pub carrier: String,
+}
+
+fn parse_groups(src: &str) -> Vec<BankGroup> {
+    src.lines()
+        .filter(|l| !l.trim().is_empty() && !l.starts_with('#'))
+        .filter_map(|l| {
+            let mut c = l.split('\t');
+            let target = c.next()?.trim().to_string();
+            let others: Vec<String> = c.next()?.split(',').map(|x| x.trim().to_string()).filter(|x| !x.is_empty()).collect();
+            let carrier = c.next().unwrap_or("").trim().to_string();
+            (!target.is_empty() && !others.is_empty()).then_some(BankGroup { target, others, carrier })
+        })
+        .collect()
+}
+
+fn group_source(lang: &str) -> &'static str {
+    match lang {
+        c if c == crate::consts::DE => include_str!("../assets/words/de/homophone-groups.tsv"),
+        _ => "",
+    }
+}
+
+fn bank_groups(lang: &str) -> &'static Vec<BankGroup> {
+    static CACHE: OnceLock<std::sync::Mutex<HashMap<String, &'static Vec<BankGroup>>>> = OnceLock::new();
+    let cache = CACHE.get_or_init(|| std::sync::Mutex::new(HashMap::new()));
+    if let Some(g) = cache.lock().unwrap().get(lang) {
+        return g;
+    }
+    let leaked: &'static Vec<BankGroup> = Box::leak(Box::new(parse_groups(group_source(lang))));
+    cache.lock().unwrap().insert(lang.to_string(), leaked);
+    leaked
+}
+
+/// The bank entry whose TARGET is `word` (the form the key holds).
+pub fn bank_entry(lang: &str, word: &str) -> Option<&'static BankGroup> {
+    let k = fold_strict(word);
+    bank_groups(lang).iter().find(|g| fold_strict(&g.target) == k)
+}
+
+/// Kid Mode: `typed` is another member of `word`'s bank homophone group.
+pub fn bank_group_accepts(lang: &str, word: &str, typed: &str) -> bool {
+    let t = fold_strict(typed);
+    bank_entry(lang, word).is_some_and(|g| g.others.iter().any(|o| fold_strict(o) == t))
+}
+
+/// The carrier phrase to play after `word`, when it has homophones and one is written.
+pub fn carrier(lang: &str, word: &str) -> Option<&'static str> {
+    bank_entry(lang, word).map(|g| g.carrier.as_str()).filter(|c| !c.is_empty())
+}
+
+/// Standard and expert serving: a word with homophones but no carrier is never
+/// served, because the player could not tell which spelling is meant.
+pub fn serves_standard(lang: &str, word: &str) -> bool {
+    bank_entry(lang, word).map_or(true, |g| !g.carrier.is_empty())
+}
+
+/// The build gate (CC-DE-BANK F1): every entry with homophones needs a carrier
+/// WHILE it can be served in standard mode. `serves` says whether it can. Returns
+/// the offending targets; empty means the bank may build.
+pub fn gate_violations(groups: &[BankGroup], serves: impl Fn(&str) -> bool) -> Vec<String> {
+    groups.iter().filter(|g| !g.others.is_empty() && g.carrier.is_empty() && serves(&g.target)).map(|g| g.target.clone()).collect()
+}
+
+/// Entries excluded from standard serving for want of a carrier (the report list).
+pub fn awaiting_carrier(lang: &str) -> Vec<&'static str> {
+    bank_groups(lang).iter().filter(|g| g.carrier.is_empty()).map(|g| g.target.as_str()).collect()
+}
+
 #[cfg(test)]
 mod phase_b_tests {
     use super::*;
@@ -242,5 +325,71 @@ mod tests {
         // The whole point: the strict fold rejects casa/caza, homophones accept.
         assert!(!crate::norm::answer_matches("caza", "casa", false));
         assert!(accepts(ES, "casa", "caza"));
+    }
+}
+
+#[cfg(test)]
+mod de_bank_tests {
+    use super::*;
+    use crate::consts::DE;
+    use crate::norm::{answer_matches_in, case_only_miss};
+
+    #[test]
+    fn gate_fails_without_a_carrier_and_passes_once_excluded_or_written() {
+        let bare = vec![BankGroup { target: "Mann".into(), others: vec!["man".into()], carrier: String::new() }];
+        assert_eq!(gate_violations(&bare, |_| true), vec!["Mann".to_string()], "served ambiguous: the build fails");
+        assert!(gate_violations(&bare, |_| false).is_empty(), "excluded from standard serving: passes");
+        let written = vec![BankGroup { carrier: "der Mann, nicht man".into(), ..bare[0].clone() }];
+        assert!(gate_violations(&written, |_| true).is_empty(), "carrier written: passes");
+    }
+
+    /// The shipped bank passes its own gate: serving agrees with the carrier column.
+    #[test]
+    fn shipped_german_bank_passes_the_gate() {
+        assert!(gate_violations(bank_groups(DE), |w| serves_standard(DE, w)).is_empty());
+        for g in bank_groups(DE) {
+            assert_eq!(serves_standard(DE, &g.target), !g.carrier.is_empty(), "{}", g.target);
+        }
+    }
+
+    #[test]
+    fn seeded_pairs_are_present() {
+        for (t, o) in [("Mann", "man"), ("weist", "weißt"), ("heute", "Häute"), ("sechs", "Sex")] {
+            assert!(bank_group_accepts(DE, t, o), "{t}/{o}");
+        }
+    }
+
+    /// Acceptance 6: the answer key stays the one target spelling in standard play.
+    #[test]
+    fn homophone_grading_standard_is_strict_kid_accepts_the_group() {
+        assert!(!answer_matches_in(DE, "man", "Mann", false), "standard: man for Mann is wrong");
+        assert!(answer_matches_in(DE, "Mann", "Mann", false));
+        // Kid: the strict fold rejects it, and the group layer (game.rs) accepts it, showing Mann.
+        assert!(bank_group_accepts(DE, "Mann", "man"));
+        assert!(!bank_group_accepts(DE, "Mann", "Hund"), "not a free pass");
+    }
+
+    /// Acceptance 7. `answer_matches_in` folds case for every shared surface;
+    /// `case_ok` is the spell game's standard/expert layer on top of it.
+    #[test]
+    fn case_grading_standard_is_exact_kid_forgives_with_a_hint() {
+        let std = |t: &str, w: &str| answer_matches_in(DE, t, w, false) && crate::norm::case_ok(DE, t, w);
+        assert!(!std("licht", "Licht"), "standard: licht for Licht is wrong");
+        assert!(std("Licht", "Licht"));
+        assert!(!std("LICHT", "Licht"));
+        assert!(answer_matches_in(DE, "licht", "Licht", true), "Kid: case-insensitive");
+        assert!(case_only_miss(DE, "licht", "Licht"), "and the hint is owed");
+        assert!(!case_only_miss(DE, "Licht", "Licht"));
+        assert!(!case_only_miss(DE, "lickt", "Licht"), "a real misspelling is not a case miss");
+        // A language where case carries no meaning is untouched.
+        assert!(crate::norm::case_ok(crate::consts::EN, "Cat", "cat"));
+        assert!(!case_only_miss(crate::consts::EN, "Cat", "cat"));
+    }
+
+    #[test]
+    fn german_alternates_do_not_slip_past_case() {
+        assert!(!crate::norm::case_ok(DE, "xylofon", "Xylophon"), "wrong-case alternate");
+        assert!(crate::norm::case_ok(DE, "Xylofon", "Xylophon"));
+        assert!(crate::norm::case_ok(DE, "Maedchen", "Mädchen"), "a stand-in keeps its capital");
     }
 }

@@ -59,7 +59,7 @@ Wolf
 Wolke
 acht
 alt
-angst
+Angst
 Arbeit
 arm
 Baby
@@ -85,7 +85,7 @@ dunkel
 eins
 Eis
 Eisen
-erde
+Erde
 essen
 Farbe
 Feld
@@ -130,7 +130,7 @@ jetzt
 kalt
 Kamera
 kaufen
-kette
+Kette
 Kirche
 Kiste
 klang
@@ -156,7 +156,7 @@ Lehrer
 leicht
 lesen
 Leute
-licht
+Licht
 liebe
 Lied
 Linie
@@ -184,7 +184,7 @@ nein
 neu
 neun
 nie
-norden
+Norden
 oft
 Ort
 Osten
@@ -196,7 +196,7 @@ Punkt
 Quadrat
 recht
 Reis
-reise
+Reise
 Ring
 rot
 rücken

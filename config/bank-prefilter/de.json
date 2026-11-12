@@ -1,0 +1,9 @@
+{
+  "_note": "CC-DE-BANK F3 seed lists. Flag-only: a hit is a reason code for the auditor, never a cut. Seeds come from batch 1 (so batch-1 recall is optimistic); grow them from batch 2+ findings.",
+  "dictionary": {"hunspell": "de/de_DE_frami", "note": "igerman98 frami, the same dictionary tools/bank/purity_check.py uses for de"},
+  "removed_spellings": ["daß", "fluß", "jogurt", "spagetti", "schiffahrt", "jedesmal", "wieviele"],
+  "abbreviations": ["isbn", "oecd", "aufl"],
+  "proper_nouns": ["prosieben", "bieber", "gysi", "wordpress", "linux", "nadine", "odenwald", "heise"],
+  "clipped": ["ists", "weils", "nehm"],
+  "regional": ["jänner", "wiesn"]
+}
